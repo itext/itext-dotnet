@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Kernel.Geom
-{
+namespace iTextSharp.Kernel.Geom {
     /// <summary>Represents a Bezier curve.</summary>
-    public class BezierCurve : IShape
-    {
+    public class BezierCurve : IShape {
         /// <summary>
         /// If the distance between a point and a line is less than
         /// this constant, then we consider the point lies on the line.
@@ -92,14 +90,12 @@ namespace iTextSharp.Kernel.Geom
 
         /// <summary>Constructs new bezier curve.</summary>
         /// <param name="controlPoints">Curve's control points.</param>
-        public BezierCurve(IList<Point> controlPoints)
-        {
+        public BezierCurve(IList<Point> controlPoints) {
             this.controlPoints = new List<Point>(controlPoints);
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual IList<Point> GetBasePoints()
-        {
+        public virtual IList<Point> GetBasePoints() {
             return controlPoints;
         }
 
@@ -118,8 +114,7 @@ namespace iTextSharp.Kernel.Geom
         /// containing points of piecewise linear approximation
         /// for this bezier curve.
         /// </returns>
-        public virtual IList<Point> GetPiecewiseLinearApproximation()
-        {
+        public virtual IList<Point> GetPiecewiseLinearApproximation() {
             IList<Point> points = new List<Point>();
             points.Add(controlPoints[0]);
             RecursiveApproximation(controlPoints[0].GetX(), controlPoints[0].GetY(), controlPoints[1].GetX(), controlPoints
@@ -131,8 +126,7 @@ namespace iTextSharp.Kernel.Geom
 
         // Based on the De Casteljau's algorithm
         private void RecursiveApproximation(double x1, double y1, double x2, double y2, double x3, double y3, double
-             x4, double y4, IList<Point> points)
-        {
+             x4, double y4, IList<Point> points) {
             // Subdivision using the De Casteljau's algorithm (t = 0.5)
             double x12 = (x1 + x2) / 2;
             double y12 = (y1 + y2) / 2;
@@ -155,21 +149,17 @@ namespace iTextSharp.Kernel.Geom
             double d3 = Math.Abs(((x3 - x4) * dy - (y3 - y4) * dx));
             // True if neither the line passes through both (x2, y2) and (x3, y3)
             // nor (x1, y1) = (x4, y4)
-            if (d2 > curveCollinearityEpsilon || d3 > curveCollinearityEpsilon)
-            {
+            if (d2 > curveCollinearityEpsilon || d3 > curveCollinearityEpsilon) {
                 // True if the square of the distance between (x2, y2) and the line plus
                 // the distance between (x3, y3) and the line is lower than the tolerance square
-                if ((d2 + d3) * (d2 + d3) <= distanceToleranceSquare * (dx * dx + dy * dy))
-                {
+                if ((d2 + d3) * (d2 + d3) <= distanceToleranceSquare * (dx * dx + dy * dy)) {
                     points.Add(new Point(x1234, y1234));
                     return;
                 }
             }
-            else
-            {
+            else {
                 if ((Math.Abs(x1 + x3 - x2 - x2) + Math.Abs(y1 + y3 - y2 - y2) + Math.Abs(x2 + x4 - x3 - x3) + Math.Abs(y2
-                     + y4 - y3 - y3)) <= distanceToleranceManhattan)
-                {
+                     + y4 - y3 - y3)) <= distanceToleranceManhattan) {
                     points.Add(new Point(x1234, y1234));
                     return;
                 }

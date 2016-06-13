@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Geom
-{
-    public class AffineTransform
-    {
+namespace iTextSharp.Kernel.Geom {
+    public class AffineTransform {
         public const int TYPE_IDENTITY = 0;
 
         public const int TYPE_TRANSLATION = 1;
@@ -91,15 +89,13 @@ namespace iTextSharp.Kernel.Geom
         [System.NonSerialized]
         internal int type;
 
-        public AffineTransform()
-        {
+        public AffineTransform() {
             type = TYPE_IDENTITY;
             m00 = m11 = 1;
             m10 = m01 = m02 = m12 = 0;
         }
 
-        public AffineTransform(iTextSharp.Kernel.Geom.AffineTransform t)
-        {
+        public AffineTransform(iTextSharp.Kernel.Geom.AffineTransform t) {
             this.type = t.type;
             this.m00 = t.m00;
             this.m10 = t.m10;
@@ -109,8 +105,7 @@ namespace iTextSharp.Kernel.Geom
             this.m12 = t.m12;
         }
 
-        public AffineTransform(double m00, double m10, double m01, double m11, double m02, double m12)
-        {
+        public AffineTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
             this.type = TYPE_UNKNOWN;
             this.m00 = m00;
             this.m10 = m10;
@@ -120,29 +115,25 @@ namespace iTextSharp.Kernel.Geom
             this.m12 = m12;
         }
 
-        public AffineTransform(float[] matrix)
-        {
+        public AffineTransform(float[] matrix) {
             this.type = TYPE_UNKNOWN;
             m00 = matrix[0];
             m10 = matrix[1];
             m01 = matrix[2];
             m11 = matrix[3];
-            if (matrix.Length > 4)
-            {
+            if (matrix.Length > 4) {
                 m02 = matrix[4];
                 m12 = matrix[5];
             }
         }
 
-        public AffineTransform(double[] matrix)
-        {
+        public AffineTransform(double[] matrix) {
             this.type = TYPE_UNKNOWN;
             m00 = matrix[0];
             m10 = matrix[1];
             m01 = matrix[2];
             m11 = matrix[3];
-            if (matrix.Length > 4)
-            {
+            if (matrix.Length > 4) {
                 m02 = matrix[4];
                 m12 = matrix[5];
             }
@@ -167,129 +158,103 @@ namespace iTextSharp.Kernel.Geom
         *   TYPE_GENERAL_ROTATION - new basis is rotated by arbitrary angle
         *   TYPE_GENERAL_TRANSFORM - transformation can't be inversed
         */
-        public virtual int GetTransformType()
-        {
-            if (this.type != TYPE_UNKNOWN)
-            {
+        public virtual int GetTransformType() {
+            if (this.type != TYPE_UNKNOWN) {
                 return this.type;
             }
             int type = 0;
-            if (m00 * m01 + m10 * m11 != 0.0)
-            {
+            if (m00 * m01 + m10 * m11 != 0.0) {
                 type |= TYPE_GENERAL_TRANSFORM;
                 return type;
             }
-            if (m02 != 0.0 || m12 != 0.0)
-            {
+            if (m02 != 0.0 || m12 != 0.0) {
                 type |= TYPE_TRANSLATION;
             }
-            else
-            {
-                if (m00 == 1.0 && m11 == 1.0 && m01 == 0.0 && m10 == 0.0)
-                {
+            else {
+                if (m00 == 1.0 && m11 == 1.0 && m01 == 0.0 && m10 == 0.0) {
                     type = TYPE_IDENTITY;
                     return type;
                 }
             }
-            if (m00 * m11 - m01 * m10 < 0.0)
-            {
+            if (m00 * m11 - m01 * m10 < 0.0) {
                 type |= TYPE_FLIP;
             }
             double dx = m00 * m00 + m10 * m10;
             double dy = m01 * m01 + m11 * m11;
-            if (dx != dy)
-            {
+            if (dx != dy) {
                 type |= TYPE_GENERAL_SCALE;
             }
-            else
-            {
-                if (dx != 1.0)
-                {
+            else {
+                if (dx != 1.0) {
                     type |= TYPE_UNIFORM_SCALE;
                 }
             }
-            if ((m00 == 0.0 && m11 == 0.0) || (m10 == 0.0 && m01 == 0.0 && (m00 < 0.0 || m11 < 0.0)))
-            {
+            if ((m00 == 0.0 && m11 == 0.0) || (m10 == 0.0 && m01 == 0.0 && (m00 < 0.0 || m11 < 0.0))) {
                 type |= TYPE_QUADRANT_ROTATION;
             }
-            else
-            {
-                if (m01 != 0.0 || m10 != 0.0)
-                {
+            else {
+                if (m01 != 0.0 || m10 != 0.0) {
                     type |= TYPE_GENERAL_ROTATION;
                 }
             }
             return type;
         }
 
-        public virtual double GetScaleX()
-        {
+        public virtual double GetScaleX() {
             return m00;
         }
 
-        public virtual double GetScaleY()
-        {
+        public virtual double GetScaleY() {
             return m11;
         }
 
-        public virtual double GetShearX()
-        {
+        public virtual double GetShearX() {
             return m01;
         }
 
-        public virtual double GetShearY()
-        {
+        public virtual double GetShearY() {
             return m10;
         }
 
-        public virtual double GetTranslateX()
-        {
+        public virtual double GetTranslateX() {
             return m02;
         }
 
-        public virtual double GetTranslateY()
-        {
+        public virtual double GetTranslateY() {
             return m12;
         }
 
-        public virtual bool IsIdentity()
-        {
+        public virtual bool IsIdentity() {
             return GetTransformType() == TYPE_IDENTITY;
         }
 
-        public virtual void GetMatrix(float[] matrix)
-        {
+        public virtual void GetMatrix(float[] matrix) {
             matrix[0] = (float)m00;
             matrix[1] = (float)m10;
             matrix[2] = (float)m01;
             matrix[3] = (float)m11;
-            if (matrix.Length > 4)
-            {
+            if (matrix.Length > 4) {
                 matrix[4] = (float)m02;
                 matrix[5] = (float)m12;
             }
         }
 
-        public virtual void GetMatrix(double[] matrix)
-        {
+        public virtual void GetMatrix(double[] matrix) {
             matrix[0] = m00;
             matrix[1] = m10;
             matrix[2] = m01;
             matrix[3] = m11;
-            if (matrix.Length > 4)
-            {
+            if (matrix.Length > 4) {
                 matrix[4] = m02;
                 matrix[5] = m12;
             }
         }
 
-        public virtual double GetDeterminant()
-        {
+        public virtual double GetDeterminant() {
             return m00 * m11 - m01 * m10;
         }
 
-        public virtual void SetTransform(float m00, float m10, float m01, float m11, float m02, float m12)
-        {
+        public virtual void SetTransform(float m00, float m10, float m01, float m11, float m02, float m12) {
             this.type = TYPE_UNKNOWN;
             this.m00 = m00;
             this.m10 = m10;
@@ -299,8 +264,7 @@ namespace iTextSharp.Kernel.Geom
             this.m12 = m12;
         }
 
-        public virtual void SetTransform(double m00, double m10, double m01, double m11, double m02, double m12)
-        {
+        public virtual void SetTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
             this.type = TYPE_UNKNOWN;
             this.m00 = m00;
             this.m10 = m10;
@@ -310,79 +274,64 @@ namespace iTextSharp.Kernel.Geom
             this.m12 = m12;
         }
 
-        public virtual void SetTransform(iTextSharp.Kernel.Geom.AffineTransform t)
-        {
+        public virtual void SetTransform(iTextSharp.Kernel.Geom.AffineTransform t) {
             type = t.type;
             SetTransform(t.m00, t.m10, t.m01, t.m11, t.m02, t.m12);
         }
 
-        public virtual void SetToIdentity()
-        {
+        public virtual void SetToIdentity() {
             type = TYPE_IDENTITY;
             m00 = m11 = 1;
             m10 = m01 = m02 = m12 = 0;
         }
 
-        public virtual void SetToTranslation(double mx, double my)
-        {
+        public virtual void SetToTranslation(double mx, double my) {
             m00 = m11 = 1;
             m01 = m10 = 0;
             m02 = mx;
             m12 = my;
-            if (mx == 0 && my == 0)
-            {
+            if (mx == 0 && my == 0) {
                 type = TYPE_IDENTITY;
             }
-            else
-            {
+            else {
                 type = TYPE_TRANSLATION;
             }
         }
 
-        public virtual void SetToScale(double scx, double scy)
-        {
+        public virtual void SetToScale(double scx, double scy) {
             m00 = scx;
             m11 = scy;
             m10 = m01 = m02 = m12 = 0;
-            if (scx != 1.0 || scy != 1)
-            {
+            if (scx != 1.0 || scy != 1) {
                 type = TYPE_UNKNOWN;
             }
-            else
-            {
+            else {
                 type = TYPE_IDENTITY;
             }
         }
 
-        public virtual void SetToShear(double shx, double shy)
-        {
+        public virtual void SetToShear(double shx, double shy) {
             m00 = m11 = 1;
             m02 = m12 = 0;
             m01 = shx;
             m10 = shy;
-            if (shx != 0.0 || shy != 0.0)
-            {
+            if (shx != 0.0 || shy != 0.0) {
                 type = TYPE_UNKNOWN;
             }
-            else
-            {
+            else {
                 type = TYPE_IDENTITY;
             }
         }
 
-        public virtual void SetToRotation(double angle)
-        {
+        public virtual void SetToRotation(double angle) {
             double sin = Math.Sin(angle);
             double cos = Math.Cos(angle);
-            if (Math.Abs(cos) < ZERO)
-            {
+            if (Math.Abs(cos) < ZERO) {
                 cos = 0.0;
                 sin = sin > 0.0 ? 1.0 : -1.0;
             }
-            else
-            {
-                if (Math.Abs(sin) < ZERO)
-                {
+            else {
+                if (Math.Abs(sin) < ZERO) {
                     sin = 0.0;
                     cos = cos > 0.0 ? 1.0 : -1.0;
                 }
@@ -394,71 +343,60 @@ namespace iTextSharp.Kernel.Geom
             type = TYPE_UNKNOWN;
         }
 
-        public virtual void SetToRotation(double angle, double px, double py)
-        {
+        public virtual void SetToRotation(double angle, double px, double py) {
             SetToRotation(angle);
             m02 = px * (1 - m00) + py * m10;
             m12 = py * (1 - m00) - px * m10;
             type = TYPE_UNKNOWN;
         }
 
-        public static iTextSharp.Kernel.Geom.AffineTransform GetTranslateInstance(double mx, double my)
-        {
+        public static iTextSharp.Kernel.Geom.AffineTransform GetTranslateInstance(double mx, double my) {
             iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform();
             t.SetToTranslation(mx, my);
             return t;
         }
 
-        public static iTextSharp.Kernel.Geom.AffineTransform GetScaleInstance(double scx, double scY)
-        {
+        public static iTextSharp.Kernel.Geom.AffineTransform GetScaleInstance(double scx, double scY) {
             iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform();
             t.SetToScale(scx, scY);
             return t;
         }
 
-        public static iTextSharp.Kernel.Geom.AffineTransform GetShearInstance(double shx, double shy)
-        {
+        public static iTextSharp.Kernel.Geom.AffineTransform GetShearInstance(double shx, double shy) {
             iTextSharp.Kernel.Geom.AffineTransform m = new iTextSharp.Kernel.Geom.AffineTransform();
             m.SetToShear(shx, shy);
             return m;
         }
 
-        public static iTextSharp.Kernel.Geom.AffineTransform GetRotateInstance(double angle)
-        {
+        public static iTextSharp.Kernel.Geom.AffineTransform GetRotateInstance(double angle) {
             iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform();
             t.SetToRotation(angle);
             return t;
         }
 
-        public static iTextSharp.Kernel.Geom.AffineTransform GetRotateInstance(double angle, double x, double y)
-        {
+        public static iTextSharp.Kernel.Geom.AffineTransform GetRotateInstance(double angle, double x, double y) {
             iTextSharp.Kernel.Geom.AffineTransform t = new iTextSharp.Kernel.Geom.AffineTransform();
             t.SetToRotation(angle, x, y);
             return t;
         }
 
-        public virtual void Translate(double mx, double my)
-        {
+        public virtual void Translate(double mx, double my) {
             Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetTranslateInstance(mx, my));
         }
 
-        public virtual void Scale(double scx, double scy)
-        {
+        public virtual void Scale(double scx, double scy) {
             Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetScaleInstance(scx, scy));
         }
 
-        public virtual void Shear(double shx, double shy)
-        {
+        public virtual void Shear(double shx, double shy) {
             Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetShearInstance(shx, shy));
         }
 
-        public virtual void Rotate(double angle)
-        {
+        public virtual void Rotate(double angle) {
             Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetRotateInstance(angle));
         }
 
-        public virtual void Rotate(double angle, double px, double py)
-        {
+        public virtual void Rotate(double angle, double px, double py) {
             Concatenate(iTextSharp.Kernel.Geom.AffineTransform.GetRotateInstance(angle, px, py));
         }
 
@@ -467,8 +405,7 @@ namespace iTextSharp.Kernel.Geom
         /// <param name="t2">- the AffineTransform object is a multiplier</param>
         /// <returns>an AffineTransform object that is a result of t1 multiplied by matrix t2.</returns>
         internal virtual iTextSharp.Kernel.Geom.AffineTransform Multiply(iTextSharp.Kernel.Geom.AffineTransform t1
-            , iTextSharp.Kernel.Geom.AffineTransform t2)
-        {
+            , iTextSharp.Kernel.Geom.AffineTransform t2) {
             return new iTextSharp.Kernel.Geom.AffineTransform(t1.m00 * t2.m00 + t1.m10 * t2.m01, t1.m00 * t2.m10 + t1.
                 m10 * t2.m11, t1.m01 * t2.m00 + t1.m11 * t2.m01, t1.m01 * t2.m10 + t1.m11 * t2.m11, t1.m02 * t2.m00 + 
                 t1.m12 * t2.m01 + t2.m02, t1.m02 * t2.m10 + t1.m12 * t2.m11 + t2.m12);
@@ -480,22 +417,18 @@ namespace iTextSharp.Kernel.Geom
         // m11
         // m02
         // m12
-        public virtual void Concatenate(iTextSharp.Kernel.Geom.AffineTransform t)
-        {
+        public virtual void Concatenate(iTextSharp.Kernel.Geom.AffineTransform t) {
             SetTransform(Multiply(t, this));
         }
 
-        public virtual void PreConcatenate(iTextSharp.Kernel.Geom.AffineTransform t)
-        {
+        public virtual void PreConcatenate(iTextSharp.Kernel.Geom.AffineTransform t) {
             SetTransform(Multiply(this, t));
         }
 
         /// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
-        public virtual iTextSharp.Kernel.Geom.AffineTransform CreateInverse()
-        {
+        public virtual iTextSharp.Kernel.Geom.AffineTransform CreateInverse() {
             double det = GetDeterminant();
-            if (Math.Abs(det) < ZERO)
-            {
+            if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
@@ -510,10 +443,8 @@ namespace iTextSharp.Kernel.Geom
         // m11
         // m02
         // m12
-        public virtual Point Transform(Point src, Point dst)
-        {
-            if (dst == null)
-            {
+        public virtual Point Transform(Point src, Point dst) {
+            if (dst == null) {
                 dst = new Point();
             }
             double x = src.GetX();
@@ -522,16 +453,13 @@ namespace iTextSharp.Kernel.Geom
             return dst;
         }
 
-        public virtual void Transform(Point[] src, int srcOff, Point[] dst, int dstOff, int length)
-        {
-            while (--length >= 0)
-            {
+        public virtual void Transform(Point[] src, int srcOff, Point[] dst, int dstOff, int length) {
+            while (--length >= 0) {
                 Point srcPoint = src[srcOff++];
                 double x = srcPoint.GetX();
                 double y = srcPoint.GetY();
                 Point dstPoint = dst[dstOff];
-                if (dstPoint == null)
-                {
+                if (dstPoint == null) {
                     dstPoint = new Point();
                 }
                 dstPoint.SetLocation(x * m00 + y * m01 + m02, x * m10 + y * m11 + m12);
@@ -539,17 +467,14 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        public virtual void Transform(double[] src, int srcOff, double[] dst, int dstOff, int length)
-        {
+        public virtual void Transform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
             int step = 2;
-            if (src == dst && srcOff < dstOff && dstOff < srcOff + length * 2)
-            {
+            if (src == dst && srcOff < dstOff && dstOff < srcOff + length * 2) {
                 srcOff = srcOff + length * 2 - 2;
                 dstOff = dstOff + length * 2 - 2;
                 step = -2;
             }
-            while (--length >= 0)
-            {
+            while (--length >= 0) {
                 double x = src[srcOff + 0];
                 double y = src[srcOff + 1];
                 dst[dstOff + 0] = x * m00 + y * m01 + m02;
@@ -559,17 +484,14 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        public virtual void Transform(float[] src, int srcOff, float[] dst, int dstOff, int length)
-        {
+        public virtual void Transform(float[] src, int srcOff, float[] dst, int dstOff, int length) {
             int step = 2;
-            if (src == dst && srcOff < dstOff && dstOff < srcOff + length * 2)
-            {
+            if (src == dst && srcOff < dstOff && dstOff < srcOff + length * 2) {
                 srcOff = srcOff + length * 2 - 2;
                 dstOff = dstOff + length * 2 - 2;
                 step = -2;
             }
-            while (--length >= 0)
-            {
+            while (--length >= 0) {
                 float x = src[srcOff + 0];
                 float y = src[srcOff + 1];
                 dst[dstOff + 0] = (float)(x * m00 + y * m01 + m02);
@@ -579,10 +501,8 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        public virtual void Transform(float[] src, int srcOff, double[] dst, int dstOff, int length)
-        {
-            while (--length >= 0)
-            {
+        public virtual void Transform(float[] src, int srcOff, double[] dst, int dstOff, int length) {
+            while (--length >= 0) {
                 float x = src[srcOff++];
                 float y = src[srcOff++];
                 dst[dstOff++] = x * m00 + y * m01 + m02;
@@ -590,10 +510,8 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        public virtual void Transform(double[] src, int srcOff, float[] dst, int dstOff, int length)
-        {
-            while (--length >= 0)
-            {
+        public virtual void Transform(double[] src, int srcOff, float[] dst, int dstOff, int length) {
+            while (--length >= 0) {
                 double x = src[srcOff++];
                 double y = src[srcOff++];
                 dst[dstOff++] = (float)(x * m00 + y * m01 + m02);
@@ -601,10 +519,8 @@ namespace iTextSharp.Kernel.Geom
             }
         }
 
-        public virtual Point DeltaTransform(Point src, Point dst)
-        {
-            if (dst == null)
-            {
+        public virtual Point DeltaTransform(Point src, Point dst) {
+            if (dst == null) {
                 dst = new Point();
             }
             double x = src.GetX();
@@ -613,10 +529,8 @@ namespace iTextSharp.Kernel.Geom
             return dst;
         }
 
-        public virtual void DeltaTransform(double[] src, int srcOff, double[] dst, int dstOff, int length)
-        {
-            while (--length >= 0)
-            {
+        public virtual void DeltaTransform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
+            while (--length >= 0) {
                 double x = src[srcOff++];
                 double y = src[srcOff++];
                 dst[dstOff++] = x * m00 + y * m01;
@@ -625,17 +539,14 @@ namespace iTextSharp.Kernel.Geom
         }
 
         /// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
-        public virtual Point InverseTransform(Point src, Point dst)
-        {
+        public virtual Point InverseTransform(Point src, Point dst) {
             double det = GetDeterminant();
-            if (Math.Abs(det) < ZERO)
-            {
+            if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
             //$NON-NLS-1$
-            if (dst == null)
-            {
+            if (dst == null) {
                 dst = new Point();
             }
             double x = src.GetX() - m02;
@@ -645,17 +556,14 @@ namespace iTextSharp.Kernel.Geom
         }
 
         /// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
-        public virtual void InverseTransform(double[] src, int srcOff, double[] dst, int dstOff, int length)
-        {
+        public virtual void InverseTransform(double[] src, int srcOff, double[] dst, int dstOff, int length) {
             double det = GetDeterminant();
-            if (Math.Abs(det) < ZERO)
-            {
+            if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
             //$NON-NLS-1$
-            while (--length >= 0)
-            {
+            while (--length >= 0) {
                 double x = src[srcOff++] - m02;
                 double y = src[srcOff++] - m12;
                 dst[dstOff++] = (x * m11 - y * m01) / det;
@@ -664,17 +572,14 @@ namespace iTextSharp.Kernel.Geom
         }
 
         /// <exception cref="iTextSharp.Kernel.Geom.NoninvertibleTransformException"/>
-        public virtual void InverseTransform(float[] src, int srcOff, float[] dst, int dstOff, int length)
-        {
+        public virtual void InverseTransform(float[] src, int srcOff, float[] dst, int dstOff, int length) {
             float det = (float)GetDeterminant();
-            if (Math.Abs(det) < ZERO)
-            {
+            if (Math.Abs(det) < ZERO) {
                 // awt.204=Determinant is zero
                 throw new NoninvertibleTransformException("Determinant is zero. Cannot invert transformation");
             }
             //$NON-NLS-1$
-            while (--length >= 0)
-            {
+            while (--length >= 0) {
                 float x = (float)(src[srcOff++] - m02);
                 float y = (float)(src[srcOff++] - m12);
                 dst[dstOff++] = (float)((x * m11 - y * m01) / det);
@@ -683,8 +588,7 @@ namespace iTextSharp.Kernel.Geom
         }
 
         /// <exception cref="Java.Lang.CloneNotSupportedException"/>
-        public virtual iTextSharp.Kernel.Geom.AffineTransform Clone()
-        {
+        public virtual iTextSharp.Kernel.Geom.AffineTransform Clone() {
             return new iTextSharp.Kernel.Geom.AffineTransform(this);
         }
     }

@@ -47,31 +47,26 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
     /// <summary>
     /// Internal class which is essentially a
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState"/>
     /// which supports tracking of
     /// clipping path state and changes.
     /// </summary>
-    public class ParserGraphicsState : CanvasGraphicsState
-    {
+    public class ParserGraphicsState : CanvasGraphicsState {
         private Path clippingPath;
 
         /// <summary>Internal empty & default constructor.</summary>
-        internal ParserGraphicsState()
-        {
+        internal ParserGraphicsState() {
         }
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
         internal ParserGraphicsState(iTextSharp.Kernel.Pdf.Canvas.Parser.ParserGraphicsState source)
-            : base(source)
-        {
+            : base(source) {
             // NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
-            if (source.clippingPath != null)
-            {
+            if (source.clippingPath != null) {
                 clippingPath = new Path(source.clippingPath);
             }
         }
@@ -84,18 +79,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// it simply replaces it with the new one instead.
         /// </remarks>
         /// <param name="clippingPath">New clipping path.</param>
-        public virtual void SetClippingPath(Path clippingPath)
-        {
+        public virtual void SetClippingPath(Path clippingPath) {
             Path pathCopy = new Path(clippingPath);
             pathCopy.CloseAllSubpaths();
             this.clippingPath = pathCopy;
         }
 
-        public override void UpdateCtm(Matrix newCtm)
-        {
+        public override void UpdateCtm(Matrix newCtm) {
             base.UpdateCtm(newCtm);
-            if (clippingPath != null)
-            {
+            if (clippingPath != null) {
                 TransformClippingPath(newCtm);
             }
         }
@@ -115,10 +107,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// or
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// </param>
-        public virtual void Clip(Path path, int fillingRule)
-        {
-            if (clippingPath == null || clippingPath.IsEmpty())
-            {
+        public virtual void Clip(Path path, int fillingRule) {
+            if (clippingPath == null || clippingPath.IsEmpty()) {
                 return;
             }
             Path pathCopy = new Path(path);
@@ -142,54 +132,44 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// ).
         /// </remarks>
         /// <returns>The current clipping path.</returns>
-        public virtual Path GetClippingPath()
-        {
+        public virtual Path GetClippingPath() {
             return clippingPath;
         }
 
-        private void TransformClippingPath(Matrix newCtm)
-        {
+        private void TransformClippingPath(Matrix newCtm) {
             Path path = new Path();
-            foreach (Subpath subpath in clippingPath.GetSubpaths())
-            {
+            foreach (Subpath subpath in clippingPath.GetSubpaths()) {
                 Subpath transformedSubpath = TransformSubpath(subpath, newCtm);
                 path.AddSubpath(transformedSubpath);
             }
             clippingPath = path;
         }
 
-        private Subpath TransformSubpath(Subpath subpath, Matrix newCtm)
-        {
+        private Subpath TransformSubpath(Subpath subpath, Matrix newCtm) {
             Subpath newSubpath = new Subpath();
             newSubpath.SetClosed(subpath.IsClosed());
-            foreach (IShape segment in subpath.GetSegments())
-            {
+            foreach (IShape segment in subpath.GetSegments()) {
                 IShape transformedSegment = TransformSegment(segment, newCtm);
                 newSubpath.AddSegment(transformedSegment);
             }
             return newSubpath;
         }
 
-        private IShape TransformSegment(IShape segment, Matrix newCtm)
-        {
+        private IShape TransformSegment(IShape segment, Matrix newCtm) {
             IShape newSegment;
             IList<Point> segBasePts = segment.GetBasePoints();
             Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[segBasePts.Count]));
-            if (segment is BezierCurve)
-            {
+            if (segment is BezierCurve) {
                 newSegment = new BezierCurve(iTextSharp.IO.Util.JavaUtil.ArraysAsList(transformedPoints));
             }
-            else
-            {
+            else {
                 newSegment = new Line(transformedPoints[0], transformedPoints[1]);
             }
             return newSegment;
         }
 
-        private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points)
-        {
-            try
-            {
+        private Point[] TransformPoints(Matrix transformationMatrix, params Point[] points) {
+            try {
                 AffineTransform t = new AffineTransform(transformationMatrix.Get(Matrix.I11), transformationMatrix.Get(Matrix
                     .I12), transformationMatrix.Get(Matrix.I21), transformationMatrix.Get(Matrix.I22), transformationMatrix
                     .Get(Matrix.I31), transformationMatrix.Get(Matrix.I32));
@@ -198,8 +178,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
                 t.Transform(points, 0, transformed, 0, points.Length);
                 return transformed;
             }
-            catch (NoninvertibleTransformException e)
-            {
+            catch (NoninvertibleTransformException e) {
                 throw new Exception(e.Message, e);
             }
         }

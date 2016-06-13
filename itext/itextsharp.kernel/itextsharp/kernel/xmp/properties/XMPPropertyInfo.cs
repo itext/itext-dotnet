@@ -29,16 +29,14 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Properties
-{
+namespace iTextSharp.Kernel.XMP.Properties {
     /// <summary>This interface is used to return a property together with its path and namespace.</summary>
     /// <remarks>
     /// This interface is used to return a property together with its path and namespace.
     /// It is returned when properties are iterated with the <code>XMPIterator</code>.
     /// </remarks>
     /// <since>06.07.2006</since>
-    public interface XMPPropertyInfo : XMPProperty
-    {
+    public interface XMPPropertyInfo : XMPProperty {
         /// <returns>Returns the namespace of the property</returns>
         String GetNamespace();
 

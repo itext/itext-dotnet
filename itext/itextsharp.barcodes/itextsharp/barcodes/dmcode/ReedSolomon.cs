@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Barcodes.Dmcode
-{
-    public sealed class ReedSolomon
-    {
+namespace iTextSharp.Barcodes.Dmcode {
+    public sealed class ReedSolomon {
         private static readonly int[] log = new int[] { 0, 255, 1, 240, 2, 225, 241, 53, 3, 38, 226, 133, 242, 43, 
             54, 210, 4, 195, 39, 114, 227, 106, 134, 28, 243, 140, 44, 23, 55, 118, 211, 234, 5, 219, 196, 96, 40, 
             222, 115, 103, 228, 78, 107, 125, 135, 8, 29, 162, 244, 186, 141, 180, 45, 99, 24, 49, 56, 13, 119, 153
@@ -123,131 +121,105 @@ namespace iTextSharp.Barcodes.Dmcode
             , 153, 185, 202, 167, 179, 25, 220, 232, 96, 210, 231, 136, 223, 239, 181, 241, 59, 52, 172, 25, 49, 232
             , 211, 189, 64, 54, 108, 153, 132, 63, 96, 103, 82, 186 };
 
-        private static int[] GetPoly(int nc)
-        {
-            switch (nc)
-            {
-                case 5:
-                {
+        private static int[] GetPoly(int nc) {
+            switch (nc) {
+                case 5: {
                     return poly5;
                 }
 
-                case 7:
-                {
+                case 7: {
                     return poly7;
                 }
 
-                case 10:
-                {
+                case 10: {
                     return poly10;
                 }
 
-                case 11:
-                {
+                case 11: {
                     return poly11;
                 }
 
-                case 12:
-                {
+                case 12: {
                     return poly12;
                 }
 
-                case 14:
-                {
+                case 14: {
                     return poly14;
                 }
 
-                case 18:
-                {
+                case 18: {
                     return poly18;
                 }
 
-                case 20:
-                {
+                case 20: {
                     return poly20;
                 }
 
-                case 24:
-                {
+                case 24: {
                     return poly24;
                 }
 
-                case 28:
-                {
+                case 28: {
                     return poly28;
                 }
 
-                case 36:
-                {
+                case 36: {
                     return poly36;
                 }
 
-                case 42:
-                {
+                case 42: {
                     return poly42;
                 }
 
-                case 48:
-                {
+                case 48: {
                     return poly48;
                 }
 
-                case 56:
-                {
+                case 56: {
                     return poly56;
                 }
 
-                case 62:
-                {
+                case 62: {
                     return poly62;
                 }
 
-                case 68:
-                {
+                case 68: {
                     return poly68;
                 }
             }
             return null;
         }
 
-        private static void ReedSolomonBlock(byte[] wd, int nd, byte[] ncout, int nc, int[] c)
-        {
+        private static void ReedSolomonBlock(byte[] wd, int nd, byte[] ncout, int nc, int[] c) {
             int i;
             int j;
             int k;
-            for (i = 0; i <= nc; i++)
-            {
+            for (i = 0; i <= nc; i++) {
                 ncout[i] = 0;
             }
-            for (i = 0; i < nd; i++)
-            {
+            for (i = 0; i < nd; i++) {
                 k = (ncout[0] ^ wd[i]) & 0xff;
-                for (j = 0; j < nc; j++)
-                {
+                for (j = 0; j < nc; j++) {
                     ncout[j] = (byte)(ncout[j + 1] ^ (k == 0 ? 0 : (byte)alog[(log[k] + log[c[nc - j - 1]]) % 255]));
                 }
             }
         }
 
-        public static void GenerateECC(byte[] wd, int nd, int datablock, int nc)
-        {
+        public static void GenerateECC(byte[] wd, int nd, int datablock, int nc) {
             int blocks = (nd + 2) / datablock;
             int b;
             byte[] buf = new byte[256];
             byte[] ecc = new byte[256];
             int[] c = GetPoly(nc);
-            for (b = 0; b < blocks; b++)
-            {
+            for (b = 0; b < blocks; b++) {
                 int n;
                 int p = 0;
-                for (n = b; n < nd; n += blocks)
-                {
+                for (n = b; n < nd; n += blocks) {
                     buf[p++] = wd[n];
                 }
                 ReedSolomonBlock(buf, p, ecc, nc, c);
                 p = 0;
-                for (n = b; n < nc * blocks; n += blocks)
-                {
+                for (n = b; n < nc * blocks; n += blocks) {
                     wd[nd + n] = ecc[p++];
                 }
             }

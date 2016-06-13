@@ -6,18 +6,15 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfCopyTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfCopyTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfCopyTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfCopyTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -25,8 +22,7 @@ namespace iTextSharp.Kernel.Pdf
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         [LogMessage(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
-        public virtual void CopySignedDocuments()
-        {
+        public virtual void CopySignedDocuments() {
             FileStream fis1 = new FileStream(sourceFolder + "hello_signed.pdf", FileMode.Open, FileAccess.Read);
             PdfReader reader1 = new PdfReader(fis1);
             PdfDocument pdfDoc1 = new PdfDocument(reader1);
@@ -44,8 +40,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Copying1()
-        {
+        public virtual void Copying1() {
             FileStream fos1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -78,13 +73,11 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Copying2()
-        {
+        public virtual void Copying2() {
             FileStream fos1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 0; i < 10; i++)
-            {
+            for (int i = 0; i < 10; i++) {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + (i + 1).ToString() + "\n"
                     ));
@@ -97,10 +90,8 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(destinationFolder + "copying2_2.pdf", FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(writer2);
-            for (int i_1 = 0; i_1 < 10; i_1++)
-            {
-                if (i_1 % 2 == 0)
-                {
+            for (int i_1 = 0; i_1 < 10; i_1++) {
+                if (i_1 % 2 == 0) {
                     pdfDoc2.AddPage(pdfDoc1.GetPage(i_1 + 1).CopyTo(pdfDoc2));
                 }
             }
@@ -109,8 +100,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(destinationFolder + "copying2_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 0; i_2 < 5; i_2++)
-            {
+            for (int i_2 = 0; i_2 < 5; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2 + 1).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + (i_2 * 2 + 1).ToString() + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
                     (bytes));
@@ -120,8 +110,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Copying3()
-        {
+        public virtual void Copying3() {
             FileStream fos = new FileStream(destinationFolder + "copying3_1.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -170,8 +159,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
-        public virtual void CopyDocumentsWithFormFieldsTest()
-        {
+        public virtual void CopyDocumentsWithFormFieldsTest() {
             String filename = sourceFolder + "fieldsOn2-sPage.pdf";
             PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             FileStream fos = new FileStream(destinationFolder + "copyDocumentsWithFormFields.pdf", FileMode.Create);

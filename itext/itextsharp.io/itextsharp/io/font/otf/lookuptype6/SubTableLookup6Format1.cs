@@ -45,31 +45,25 @@ using System.Collections.Generic;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf.Lookuptype6
-{
+namespace iTextSharp.IO.Font.Otf.Lookuptype6 {
     /// <summary>Chaining Contextual Substitution Subtable: Simple Chaining Context Glyph Substitution</summary>
-    public class SubTableLookup6Format1 : SubTableLookup6
-    {
+    public class SubTableLookup6Format1 : SubTableLookup6 {
         private IDictionary<int, IList<ContextualSubstRule>> substMap;
 
         public SubTableLookup6Format1(OpenTypeFontTableReader openReader, int lookupFlag, IDictionary<int, IList<ContextualSubstRule
             >> substMap)
-            : base(openReader, lookupFlag)
-        {
+            : base(openReader, lookupFlag) {
             this.substMap = substMap;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startGlyphId)
-        {
-            if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag))
-            {
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startGlyphId) {
+            if (substMap.ContainsKey(startGlyphId) && !openReader.IsSkip(startGlyphId, lookupFlag)) {
                 return substMap.Get(startGlyphId);
             }
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
-        public class SubstRuleFormat1 : ContextualSubstRule
-        {
+        public class SubstRuleFormat1 : ContextualSubstRule {
             private int[] inputGlyphIds;
 
             private int[] backtrackGlyphIds;
@@ -79,8 +73,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
             private SubstLookupRecord[] substLookupRecords;
 
             public SubstRuleFormat1(int[] backtrackGlyphIds, int[] inputGlyphIds, int[] lookAheadGlyphIds, SubstLookupRecord
-                [] substLookupRecords)
-            {
+                [] substLookupRecords) {
                 // inputGlyphIds array omits the first glyph in the sequence,
                 // the first glyph is defined by corresponding coverage glyph
                 this.backtrackGlyphIds = backtrackGlyphIds;
@@ -89,38 +82,31 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype6
                 this.substLookupRecords = substLookupRecords;
             }
 
-            public override int GetContextLength()
-            {
+            public override int GetContextLength() {
                 return inputGlyphIds.Length + 1;
             }
 
-            public override int GetLookaheadContextLength()
-            {
+            public override int GetLookaheadContextLength() {
                 return lookAheadGlyphIds.Length;
             }
 
-            public override int GetBacktrackContextLength()
-            {
+            public override int GetBacktrackContextLength() {
                 return backtrackGlyphIds.Length;
             }
 
-            public override SubstLookupRecord[] GetSubstLookupRecords()
-            {
+            public override SubstLookupRecord[] GetSubstLookupRecords() {
                 return substLookupRecords;
             }
 
-            public override bool IsGlyphMatchesInput(int glyphId, int atIdx)
-            {
+            public override bool IsGlyphMatchesInput(int glyphId, int atIdx) {
                 return glyphId == inputGlyphIds[atIdx - 1];
             }
 
-            public override bool IsGlyphMatchesLookahead(int glyphId, int atIdx)
-            {
+            public override bool IsGlyphMatchesLookahead(int glyphId, int atIdx) {
                 return glyphId == lookAheadGlyphIds[atIdx];
             }
 
-            public override bool IsGlyphMatchesBacktrack(int glyphId, int atIdx)
-            {
+            public override bool IsGlyphMatchesBacktrack(int glyphId, int atIdx) {
                 return glyphId == backtrackGlyphIds[atIdx];
             }
         }

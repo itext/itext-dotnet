@@ -51,12 +51,10 @@ using iTextSharp.Kernel;
 using iTextSharp.Kernel.Crypto;
 using iTextSharp.Kernel.Crypto.Securityhandler;
 
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     /// <author>Paulo Soares</author>
     /// <author>Kazuya Ujihara</author>
-    public class PdfEncryption : PdfObjectWrapper<PdfDictionary>
-    {
+    public class PdfEncryption : PdfObjectWrapper<PdfDictionary> {
         private const int STANDARD_ENCRYPTION_40 = 2;
 
         private const int STANDARD_ENCRYPTION_128 = 3;
@@ -98,14 +96,11 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.PdfException">if the document is already open</exception>
         public PdfEncryption(byte[] userPassword, byte[] ownerPassword, int permissions, int encryptionType, byte[]
              documentId)
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
             this.documentId = documentId;
             int revision = SetCryptoMode(encryptionType);
-            switch (revision)
-            {
-                case STANDARD_ENCRYPTION_40:
-                {
+            switch (revision) {
+                case STANDARD_ENCRYPTION_40: {
                     StandardHandlerUsingStandard40 handlerStd40 = new StandardHandlerUsingStandard40(this.GetPdfObject(), userPassword
                         , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, documentId);
                     this.permissions = handlerStd40.GetPermissions();
@@ -113,8 +108,7 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case STANDARD_ENCRYPTION_128:
-                {
+                case STANDARD_ENCRYPTION_128: {
                     StandardHandlerUsingStandard128 handlerStd128 = new StandardHandlerUsingStandard128(this.GetPdfObject(), userPassword
                         , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, documentId);
                     this.permissions = handlerStd128.GetPermissions();
@@ -122,8 +116,7 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case AES_128:
-                {
+                case AES_128: {
                     StandardHandlerUsingAes128 handlerAes128 = new StandardHandlerUsingAes128(this.GetPdfObject(), userPassword
                         , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, documentId);
                     this.permissions = handlerAes128.GetPermissions();
@@ -131,8 +124,7 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case AES_256:
-                {
+                case AES_256: {
                     StandardHandlerUsingAes256 handlerAes256 = new StandardHandlerUsingAes256(this.GetPdfObject(), userPassword
                         , ownerPassword, permissions, encryptMetadata, embeddedFilesOnly);
                     this.permissions = handlerAes256.GetPermissions();
@@ -158,34 +150,28 @@ namespace iTextSharp.Kernel.Pdf
         ///     </param>
         /// <exception cref="iTextSharp.Kernel.PdfException">if the document is already open</exception>
         public PdfEncryption(X509Certificate[] certs, int[] permissions, int encryptionType)
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
             int revision = SetCryptoMode(encryptionType);
-            switch (revision)
-            {
-                case STANDARD_ENCRYPTION_40:
-                {
+            switch (revision) {
+                case STANDARD_ENCRYPTION_40: {
                     securityHandler = new PubSecHandlerUsingStandard40(this.GetPdfObject(), certs, permissions, encryptMetadata
                         , embeddedFilesOnly);
                     break;
                 }
 
-                case STANDARD_ENCRYPTION_128:
-                {
+                case STANDARD_ENCRYPTION_128: {
                     securityHandler = new PubSecHandlerUsingStandard128(this.GetPdfObject(), certs, permissions, encryptMetadata
                         , embeddedFilesOnly);
                     break;
                 }
 
-                case AES_128:
-                {
+                case AES_128: {
                     securityHandler = new PubSecHandlerUsingAes128(this.GetPdfObject(), certs, permissions, encryptMetadata, embeddedFilesOnly
                         );
                     break;
                 }
 
-                case AES_256:
-                {
+                case AES_256: {
                     securityHandler = new PubSecHandlerUsingAes256(this.GetPdfObject(), certs, permissions, encryptMetadata, embeddedFilesOnly
                         );
                     break;
@@ -194,15 +180,12 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         public PdfEncryption(PdfDictionary pdfDict, byte[] password, byte[] documentId)
-            : base(pdfDict)
-        {
+            : base(pdfDict) {
             SetForbidRelease();
             this.documentId = documentId;
             int revision = ReadAndSetCryptoModeForStdHandler(pdfDict);
-            switch (revision)
-            {
-                case STANDARD_ENCRYPTION_40:
-                {
+            switch (revision) {
+                case STANDARD_ENCRYPTION_40: {
                     StandardHandlerUsingStandard40 handlerStd40 = new StandardHandlerUsingStandard40(this.GetPdfObject(), password
                         , documentId, encryptMetadata);
                     permissions = handlerStd40.GetPermissions();
@@ -210,8 +193,7 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case STANDARD_ENCRYPTION_128:
-                {
+                case STANDARD_ENCRYPTION_128: {
                     StandardHandlerUsingStandard128 handlerStd128 = new StandardHandlerUsingStandard128(this.GetPdfObject(), password
                         , documentId, encryptMetadata);
                     permissions = handlerStd128.GetPermissions();
@@ -219,8 +201,7 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case AES_128:
-                {
+                case AES_128: {
                     StandardHandlerUsingAes128 handlerAes128 = new StandardHandlerUsingAes128(this.GetPdfObject(), password, documentId
                         , encryptMetadata);
                     permissions = handlerAes128.GetPermissions();
@@ -228,8 +209,7 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case AES_256:
-                {
+                case AES_256: {
                     StandardHandlerUsingAes256 aes256Handler = new StandardHandlerUsingAes256(this.GetPdfObject(), password);
                     permissions = aes256Handler.GetPermissions();
                     encryptMetadata = aes256Handler.IsEncryptMetadata();
@@ -240,35 +220,29 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         public PdfEncryption(PdfDictionary pdfDict, ICipherParameters certificateKey, X509Certificate certificate)
-            : base(pdfDict)
-        {
+            : base(pdfDict) {
             SetForbidRelease();
             int revision = ReadAndSetCryptoModeForPubSecHandler(pdfDict);
-            switch (revision)
-            {
-                case STANDARD_ENCRYPTION_40:
-                {
+            switch (revision) {
+                case STANDARD_ENCRYPTION_40: {
                     securityHandler = new PubSecHandlerUsingStandard40(this.GetPdfObject(), certificateKey, certificate, encryptMetadata
                         );
                     break;
                 }
 
-                case STANDARD_ENCRYPTION_128:
-                {
+                case STANDARD_ENCRYPTION_128: {
                     securityHandler = new PubSecHandlerUsingStandard128(this.GetPdfObject(), certificateKey, certificate, encryptMetadata
                         );
                     break;
                 }
 
-                case AES_128:
-                {
+                case AES_128: {
                     securityHandler = new PubSecHandlerUsingAes128(this.GetPdfObject(), certificateKey, certificate, encryptMetadata
                         );
                     break;
                 }
 
-                case AES_256:
-                {
+                case AES_256: {
                     securityHandler = new PubSecHandlerUsingAes256(this.GetPdfObject(), certificateKey, certificate, encryptMetadata
                         );
                     break;
@@ -276,15 +250,12 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        public static byte[] GenerateNewDocumentId()
-        {
+        public static byte[] GenerateNewDocumentId() {
             IDigest md5;
-            try
-            {
+            try {
                 md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
             long time = SystemUtil.GetSystemTimeTicks();
@@ -293,118 +264,94 @@ namespace iTextSharp.Kernel.Pdf
             return md5.Digest(s.GetBytes());
         }
 
-        public static PdfObject CreateInfoId(byte[] id, bool modified)
-        {
+        public static PdfObject CreateInfoId(byte[] id, bool modified) {
             ByteBuffer buf = new ByteBuffer(90);
             buf.Append('[').Append('<');
-            if (id.Length != 16)
-            {
+            if (id.Length != 16) {
                 id = GenerateNewDocumentId();
             }
-            for (int k = 0; k < 16; ++k)
-            {
+            for (int k = 0; k < 16; ++k) {
                 buf.AppendHex(id[k]);
             }
             buf.Append('>').Append('<');
-            if (modified)
-            {
+            if (modified) {
                 id = GenerateNewDocumentId();
             }
-            for (int k_1 = 0; k_1 < 16; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < 16; ++k_1) {
                 buf.AppendHex(id[k_1]);
             }
             buf.Append('>').Append(']');
             return new PdfLiteral(buf.ToByteArray());
         }
 
-        public virtual long? GetPermissions()
-        {
+        public virtual long? GetPermissions() {
             return permissions;
         }
 
-        public virtual int GetCryptoMode()
-        {
+        public virtual int GetCryptoMode() {
             return cryptoMode;
         }
 
-        public virtual bool IsMetadataEncrypted()
-        {
+        public virtual bool IsMetadataEncrypted() {
             return encryptMetadata;
         }
 
-        public virtual bool IsEmbeddedFilesOnly()
-        {
+        public virtual bool IsEmbeddedFilesOnly() {
             return embeddedFilesOnly;
         }
 
         /// <returns>document id which was used for encryption. Could be null, if encryption doesn't rely on document id.
         ///     </returns>
-        public virtual byte[] GetDocumentId()
-        {
+        public virtual byte[] GetDocumentId() {
             return documentId;
         }
 
-        public virtual void SetHashKeyForNextObject(int objNumber, int objGeneration)
-        {
+        public virtual void SetHashKeyForNextObject(int objNumber, int objGeneration) {
             securityHandler.SetHashKeyForNextObject(objNumber, objGeneration);
         }
 
-        public virtual OutputStreamEncryption GetEncryptionStream(Stream os)
-        {
+        public virtual OutputStreamEncryption GetEncryptionStream(Stream os) {
             return securityHandler.GetEncryptionStream(os);
         }
 
-        public virtual byte[] EncryptByteArray(byte[] b)
-        {
+        public virtual byte[] EncryptByteArray(byte[] b) {
             MemoryStream ba = new MemoryStream();
             OutputStreamEncryption ose = GetEncryptionStream(ba);
-            try
-            {
+            try {
                 ose.Write(b);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
             ose.Finish();
             return ba.ToArray();
         }
 
-        public virtual byte[] DecryptByteArray(byte[] b)
-        {
-            try
-            {
+        public virtual byte[] DecryptByteArray(byte[] b) {
+            try {
                 MemoryStream ba = new MemoryStream();
                 IDecryptor dec = securityHandler.GetDecryptor();
                 byte[] b2 = dec.Update(b, 0, b.Length);
-                if (b2 != null)
-                {
+                if (b2 != null) {
                     ba.Write(b2);
                 }
                 b2 = dec.Finish();
-                if (b2 != null)
-                {
+                if (b2 != null) {
                     ba.Write(b2);
                 }
                 return ba.ToArray();
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
         }
 
-        public virtual bool IsOpenedWithFullPermission()
-        {
-            if (securityHandler is PubKeySecurityHandler)
-            {
+        public virtual bool IsOpenedWithFullPermission() {
+            if (securityHandler is PubKeySecurityHandler) {
                 return true;
             }
-            else
-            {
-                if (securityHandler is StandardSecurityHandler)
-                {
+            else {
+                if (securityHandler is StandardSecurityHandler) {
                     return ((StandardSecurityHandler)securityHandler).IsUsedOwnerPassword();
                 }
             }
@@ -415,47 +362,38 @@ namespace iTextSharp.Kernel.Pdf
         ///     </summary>
         /// <param name="ownerPassword">owner password of the encrypted document.</param>
         /// <returns>user password, or null if not a standard encryption handler was used.</returns>
-        public virtual byte[] ComputeUserPassword(byte[] ownerPassword)
-        {
+        public virtual byte[] ComputeUserPassword(byte[] ownerPassword) {
             byte[] userPassword = null;
-            if (securityHandler is StandardHandlerUsingStandard40)
-            {
+            if (securityHandler is StandardHandlerUsingStandard40) {
                 userPassword = ((StandardHandlerUsingStandard40)securityHandler).ComputeUserPassword(ownerPassword, GetPdfObject
                     ());
             }
             return userPassword;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
-        private void SetKeyLength(int keyLength)
-        {
+        private void SetKeyLength(int keyLength) {
             // 40 - is default value;
-            if (keyLength != 40)
-            {
+            if (keyLength != 40) {
                 GetPdfObject().Put(PdfName.Length, new PdfNumber(keyLength));
             }
         }
 
-        private int SetCryptoMode(int mode)
-        {
+        private int SetCryptoMode(int mode) {
             return SetCryptoMode(mode, 0);
         }
 
-        private int SetCryptoMode(int mode, int length)
-        {
+        private int SetCryptoMode(int mode, int length) {
             int revision;
             cryptoMode = mode;
             encryptMetadata = (mode & EncryptionConstants.DO_NOT_ENCRYPT_METADATA) != EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
             embeddedFilesOnly = (mode & EncryptionConstants.EMBEDDED_FILES_ONLY) == EncryptionConstants.EMBEDDED_FILES_ONLY;
             mode &= EncryptionConstants.ENCRYPTION_MASK;
-            switch (mode)
-            {
-                case EncryptionConstants.STANDARD_ENCRYPTION_40:
-                {
+            switch (mode) {
+                case EncryptionConstants.STANDARD_ENCRYPTION_40: {
                     encryptMetadata = true;
                     embeddedFilesOnly = false;
                     SetKeyLength(40);
@@ -463,125 +401,101 @@ namespace iTextSharp.Kernel.Pdf
                     break;
                 }
 
-                case EncryptionConstants.STANDARD_ENCRYPTION_128:
-                {
+                case EncryptionConstants.STANDARD_ENCRYPTION_128: {
                     embeddedFilesOnly = false;
-                    if (length > 0)
-                    {
+                    if (length > 0) {
                         SetKeyLength(length);
                     }
-                    else
-                    {
+                    else {
                         SetKeyLength(128);
                     }
                     revision = STANDARD_ENCRYPTION_128;
                     break;
                 }
 
-                case EncryptionConstants.ENCRYPTION_AES_128:
-                {
+                case EncryptionConstants.ENCRYPTION_AES_128: {
                     SetKeyLength(128);
                     revision = AES_128;
                     break;
                 }
 
-                case EncryptionConstants.ENCRYPTION_AES_256:
-                {
+                case EncryptionConstants.ENCRYPTION_AES_256: {
                     SetKeyLength(256);
                     revision = AES_256;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     throw new PdfException(PdfException.NoValidEncryptionMode);
                 }
             }
             return revision;
         }
 
-        private int ReadAndSetCryptoModeForStdHandler(PdfDictionary encDict)
-        {
+        private int ReadAndSetCryptoModeForStdHandler(PdfDictionary encDict) {
             int cryptoMode;
             int length = 0;
             PdfNumber rValue = encDict.GetAsNumber(PdfName.R);
-            if (rValue == null)
-            {
+            if (rValue == null) {
                 throw new PdfException(PdfException.IllegalRValue);
             }
             int revision = rValue.IntValue();
-            switch (revision)
-            {
-                case 2:
-                {
+            switch (revision) {
+                case 2: {
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_40;
                     break;
                 }
 
-                case 3:
-                {
+                case 3: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
-                    if (lengthValue == null)
-                    {
+                    if (lengthValue == null) {
                         throw new PdfException(PdfException.IllegalLengthValue);
                     }
                     length = lengthValue.IntValue();
-                    if (length > 128 || length < 40 || length % 8 != 0)
-                    {
+                    if (length > 128 || length < 40 || length % 8 != 0) {
                         throw new PdfException(PdfException.IllegalLengthValue);
                     }
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
                     break;
                 }
 
-                case 4:
-                {
+                case 4: {
                     PdfDictionary dic = (PdfDictionary)encDict.Get(PdfName.CF);
-                    if (dic == null)
-                    {
+                    if (dic == null) {
                         throw new PdfException(PdfException.CfNotFoundEncryption);
                     }
                     dic = (PdfDictionary)dic.Get(PdfName.StdCF);
-                    if (dic == null)
-                    {
+                    if (dic == null) {
                         throw new PdfException(PdfException.StdcfNotFoundEncryption);
                     }
-                    if (PdfName.V2.Equals(dic.Get(PdfName.CFM)))
-                    {
+                    if (PdfName.V2.Equals(dic.Get(PdfName.CFM))) {
                         cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
                     }
-                    else
-                    {
-                        if (PdfName.AESV2.Equals(dic.Get(PdfName.CFM)))
-                        {
+                    else {
+                        if (PdfName.AESV2.Equals(dic.Get(PdfName.CFM))) {
                             cryptoMode = EncryptionConstants.ENCRYPTION_AES_128;
                         }
-                        else
-                        {
+                        else {
                             throw new PdfException(PdfException.NoCompatibleEncryptionFound);
                         }
                     }
                     PdfBoolean em = encDict.GetAsBoolean(PdfName.EncryptMetadata);
-                    if (em != null && !em.GetValue())
-                    {
+                    if (em != null && !em.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
                     }
                     break;
                 }
 
-                case 5:
-                {
+                case 5: {
                     cryptoMode = EncryptionConstants.ENCRYPTION_AES_256;
                     PdfBoolean em5 = encDict.GetAsBoolean(PdfName.EncryptMetadata);
-                    if (em5 != null && !em5.GetValue())
-                    {
+                    if (em5 != null && !em5.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
                     }
                     break;
                 }
 
-                default:
-                {
+                default: {
                     throw new PdfException(PdfException.UnknownEncryptionTypeREq1).SetMessageParams(rValue);
                 }
             }
@@ -589,35 +503,28 @@ namespace iTextSharp.Kernel.Pdf
             return revision;
         }
 
-        private int ReadAndSetCryptoModeForPubSecHandler(PdfDictionary encDict)
-        {
+        private int ReadAndSetCryptoModeForPubSecHandler(PdfDictionary encDict) {
             int cryptoMode;
             int length = 0;
             PdfNumber vValue = encDict.GetAsNumber(PdfName.V);
-            if (vValue == null)
-            {
+            if (vValue == null) {
                 throw new PdfException(PdfException.IllegalVValue);
             }
             int v = vValue.IntValue();
-            switch (v)
-            {
-                case 1:
-                {
+            switch (v) {
+                case 1: {
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_40;
                     length = 40;
                     break;
                 }
 
-                case 2:
-                {
+                case 2: {
                     PdfNumber lengthValue = encDict.GetAsNumber(PdfName.Length);
-                    if (lengthValue == null)
-                    {
+                    if (lengthValue == null) {
                         throw new PdfException(PdfException.IllegalLengthValue);
                     }
                     length = lengthValue.IntValue();
-                    if (length > 128 || length < 40 || length % 8 != 0)
-                    {
+                    if (length > 128 || length < 40 || length % 8 != 0) {
                         throw new PdfException(PdfException.IllegalLengthValue);
                     }
                     cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
@@ -625,53 +532,42 @@ namespace iTextSharp.Kernel.Pdf
                 }
 
                 case 4:
-                case 5:
-                {
+                case 5: {
                     PdfDictionary dic = encDict.GetAsDictionary(PdfName.CF);
-                    if (dic == null)
-                    {
+                    if (dic == null) {
                         throw new PdfException(PdfException.CfNotFoundEncryption);
                     }
                     dic = (PdfDictionary)dic.Get(PdfName.DefaultCryptFilter);
-                    if (dic == null)
-                    {
+                    if (dic == null) {
                         throw new PdfException(PdfException.DefaultcryptfilterNotFoundEncryption);
                     }
-                    if (PdfName.V2.Equals(dic.Get(PdfName.CFM)))
-                    {
+                    if (PdfName.V2.Equals(dic.Get(PdfName.CFM))) {
                         cryptoMode = EncryptionConstants.STANDARD_ENCRYPTION_128;
                         length = 128;
                     }
-                    else
-                    {
-                        if (PdfName.AESV2.Equals(dic.Get(PdfName.CFM)))
-                        {
+                    else {
+                        if (PdfName.AESV2.Equals(dic.Get(PdfName.CFM))) {
                             cryptoMode = EncryptionConstants.ENCRYPTION_AES_128;
                             length = 128;
                         }
-                        else
-                        {
-                            if (PdfName.AESV3.Equals(dic.Get(PdfName.CFM)))
-                            {
+                        else {
+                            if (PdfName.AESV3.Equals(dic.Get(PdfName.CFM))) {
                                 cryptoMode = EncryptionConstants.ENCRYPTION_AES_256;
                                 length = 256;
                             }
-                            else
-                            {
+                            else {
                                 throw new PdfException(PdfException.NoCompatibleEncryptionFound);
                             }
                         }
                     }
                     PdfBoolean em = dic.GetAsBoolean(PdfName.EncryptMetadata);
-                    if (em != null && !em.GetValue())
-                    {
+                    if (em != null && !em.GetValue()) {
                         cryptoMode |= EncryptionConstants.DO_NOT_ENCRYPT_METADATA;
                     }
                     break;
                 }
 
-                default:
-                {
+                default: {
                     throw new PdfException(PdfException.UnknownEncryptionTypeVEq1, vValue);
                 }
             }

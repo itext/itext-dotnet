@@ -49,11 +49,9 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Forms.Fields
-{
+namespace iTextSharp.Forms.Fields {
     /// <summary>An interactive control on the screen that raises events and/or can retain data.</summary>
-    public class PdfButtonFormField : PdfFormField
-    {
+    public class PdfButtonFormField : PdfFormField {
         /// <summary>Button field flags</summary>
         public static readonly int FF_NO_TOGGLE_TO_OFF = MakeFieldFlag(15);
 
@@ -64,18 +62,15 @@ namespace iTextSharp.Forms.Fields
         public static readonly int FF_RADIOS_IN_UNISON = MakeFieldFlag(26);
 
         protected internal PdfButtonFormField(PdfDocument pdfDocument)
-            : base(pdfDocument)
-        {
+            : base(pdfDocument) {
         }
 
         protected internal PdfButtonFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
-            : base(widget, pdfDocument)
-        {
+            : base(widget, pdfDocument) {
         }
 
         protected internal PdfButtonFormField(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         /// <summary>Returns <code>Btn</code>, the form type for choice form fields.</summary>
@@ -83,8 +78,7 @@ namespace iTextSharp.Forms.Fields
         /// the form type, as a
         /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
         /// </returns>
-        public override PdfName GetFormType()
-        {
+        public override PdfName GetFormType() {
             return PdfName.Btn;
         }
 
@@ -97,8 +91,7 @@ namespace iTextSharp.Forms.Fields
         /// check box. This flag only works if the Pushbutton flag is set to false.
         /// </remarks>
         /// <returns>whether the field is currently radio buttons or a checkbox</returns>
-        public virtual bool IsRadio()
-        {
+        public virtual bool IsRadio() {
             return GetFieldFlag(FF_RADIO);
         }
 
@@ -115,8 +108,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadio(bool radio)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadio(bool radio) {
             return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIO, radio);
         }
 
@@ -130,8 +122,7 @@ namespace iTextSharp.Forms.Fields
         /// times. Only valid for radio buttons.
         /// </remarks>
         /// <returns>whether a radio button currently allows to choose no options</returns>
-        public virtual bool IsToggleOff()
-        {
+        public virtual bool IsToggleOff() {
             return !GetFieldFlag(FF_NO_TOGGLE_TO_OFF);
         }
 
@@ -145,15 +136,13 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetToggleOff(bool toggleOff)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetToggleOff(bool toggleOff) {
             return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_NO_TOGGLE_TO_OFF, !toggleOff);
         }
 
         /// <summary>If true, the field is a pushbutton that does not retain a permanent value.</summary>
         /// <returns>whether or not the field is currently a pushbutton</returns>
-        public virtual bool IsPushButton()
-        {
+        public virtual bool IsPushButton() {
             return GetFieldFlag(FF_PUSH_BUTTON);
         }
 
@@ -163,8 +152,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetPushButton(bool pushButton)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetPushButton(bool pushButton) {
             return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_PUSH_BUTTON, pushButton);
         }
 
@@ -180,8 +168,7 @@ namespace iTextSharp.Forms.Fields
         /// If false, the buttons are mutually exclusive
         /// </remarks>
         /// <returns>whether or not buttons are turned off in unison</returns>
-        public virtual bool IsRadiosInUnison()
-        {
+        public virtual bool IsRadiosInUnison() {
             return GetFieldFlag(FF_RADIOS_IN_UNISON);
         }
 
@@ -201,21 +188,18 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadiosInUnison(bool radiosInUnison)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadiosInUnison(bool radiosInUnison) {
             return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON, radiosInUnison);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImage(String image)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImage(String image) {
             Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
             String str = System.Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));
             return (iTextSharp.Forms.Fields.PdfButtonFormField)SetValue(str);
         }
 
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImageAsForm(PdfFormXObject form)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImageAsForm(PdfFormXObject form) {
             this.form = form;
             RegenerateField();
             return this;

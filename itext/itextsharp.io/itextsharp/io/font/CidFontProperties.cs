@@ -46,10 +46,8 @@ using System.Collections.Generic;
 using System.IO;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class CidFontProperties
-    {
+namespace iTextSharp.IO.Font {
+    public class CidFontProperties {
         /// <summary>The path to the font resources.</summary>
         [Obsolete]
         public const String RESOURCE_PATH_CMAP = FontConstants.RESOURCE_PATH + "cmap/";
@@ -60,18 +58,14 @@ namespace iTextSharp.IO.Font
         private static readonly IDictionary<String, ICollection<String>> registryNames = new Dictionary<String, ICollection
             <String>>();
 
-        static CidFontProperties()
-        {
-            try
-            {
+        static CidFontProperties() {
+            try {
                 LoadRegistry();
-                foreach (String font in registryNames.Get("fonts"))
-                {
+                foreach (String font in registryNames.Get("fonts")) {
                     allFonts[font] = ReadFontProperties(font);
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
         }
 
@@ -83,18 +77,14 @@ namespace iTextSharp.IO.Font
         /// <see langword="true"/>
         /// if it is CJKFont.
         /// </returns>
-        public static bool IsCidFont(String fontName, String enc)
-        {
-            if (!registryNames.ContainsKey("fonts"))
-            {
+        public static bool IsCidFont(String fontName, String enc) {
+            if (!registryNames.ContainsKey("fonts")) {
                 return false;
             }
-            if (!registryNames.Get("fonts").Contains(fontName))
-            {
+            if (!registryNames.Get("fonts").Contains(fontName)) {
                 return false;
             }
-            if (enc.Equals(PdfEncodings.IDENTITY_H) || enc.Equals(PdfEncodings.IDENTITY_V))
-            {
+            if (enc.Equals(PdfEncodings.IDENTITY_H) || enc.Equals(PdfEncodings.IDENTITY_V)) {
                 return true;
             }
             String registry = (String)allFonts.Get(fontName).Get("Registry");
@@ -102,17 +92,12 @@ namespace iTextSharp.IO.Font
             return encodings != null && encodings.Contains(enc);
         }
 
-        public static String GetCompatibleFont(String enc)
-        {
-            foreach (KeyValuePair<String, ICollection<String>> e in registryNames)
-            {
-                if (e.Value.Contains(enc))
-                {
+        public static String GetCompatibleFont(String enc) {
+            foreach (KeyValuePair<String, ICollection<String>> e in registryNames) {
+                if (e.Value.Contains(enc)) {
                     String registry = e.Key;
-                    foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts)
-                    {
-                        if (registry.Equals(e1.Value.Get("Registry")))
-                        {
+                    foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts) {
+                        if (registry.Equals(e1.Value.Get("Registry"))) {
                             return e1.Key;
                         }
                     }
@@ -121,33 +106,27 @@ namespace iTextSharp.IO.Font
             return null;
         }
 
-        public static IDictionary<String, IDictionary<String, Object>> GetAllFonts()
-        {
+        public static IDictionary<String, IDictionary<String, Object>> GetAllFonts() {
             return allFonts;
         }
 
-        public static IDictionary<String, ICollection<String>> GetRegistryNames()
-        {
+        public static IDictionary<String, ICollection<String>> GetRegistryNames() {
             return registryNames;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void LoadRegistry()
-        {
+        private static void LoadRegistry() {
             Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + "cjk_registry.properties"
                 );
             Properties p = new Properties();
             p.Load(resource);
             resource.Close();
-            foreach (Object key in p.Keys)
-            {
+            foreach (Object key in p.Keys) {
                 String value = p.GetProperty((String)key);
                 String[] sp = value.Split(" ");
                 ICollection<String> hs = new HashSet<String>();
-                foreach (String s in sp)
-                {
-                    if (s.Length > 0)
-                    {
+                foreach (String s in sp) {
+                    if (s.Length > 0) {
                         hs.Add(s);
                     }
                 }
@@ -156,8 +135,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static IDictionary<String, Object> ReadFontProperties(String name)
-        {
+        private static IDictionary<String, Object> ReadFontProperties(String name) {
             name += ".properties";
             Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name);
             Properties p = new Properties();
@@ -168,8 +146,7 @@ namespace iTextSharp.IO.Font
             IntHashtable W2 = CreateMetric(p.GetProperty("W2"));
             p.Remove("W2");
             IDictionary<String, Object> map = new Dictionary<String, Object>();
-            foreach (Object obj in p.Keys)
-            {
+            foreach (Object obj in p.Keys) {
                 map[(String)obj] = p.GetProperty((String)obj);
             }
             map["W"] = W;
@@ -177,12 +154,10 @@ namespace iTextSharp.IO.Font
             return map;
         }
 
-        private static IntHashtable CreateMetric(String s)
-        {
+        private static IntHashtable CreateMetric(String s) {
             IntHashtable h = new IntHashtable();
             StringTokenizer tk = new StringTokenizer(s);
-            while (tk.HasMoreTokens())
-            {
+            while (tk.HasMoreTokens()) {
                 int n1 = System.Convert.ToInt32(tk.NextToken());
                 h.Put(n1, System.Convert.ToInt32(tk.NextToken()));
             }

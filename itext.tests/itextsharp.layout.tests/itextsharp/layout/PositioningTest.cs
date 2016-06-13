@@ -10,26 +10,22 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class PositioningTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class PositioningTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PositioningTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/PositioningTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RelativePositioningTest01()
-        {
+        public virtual void RelativePositioningTest01() {
             String outFileName = destinationFolder + "relativePositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -47,8 +43,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RelativePositioningTest02()
-        {
+        public virtual void RelativePositioningTest02() {
             String outFileName = destinationFolder + "relativePositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -66,8 +61,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FixedPositioningTest01()
-        {
+        public virtual void FixedPositioningTest01() {
             String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -84,8 +78,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FixedPositioningTest02()
-        {
+        public virtual void FixedPositioningTest02() {
             String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -104,8 +97,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ShowTextAlignedTest01()
-        {
+        public virtual void ShowTextAlignedTest01() {
             String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -170,8 +162,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ShowTextAlignedTest02()
-        {
+        public virtual void ShowTextAlignedTest02() {
             String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -190,14 +181,12 @@ namespace iTextSharp.Layout
                 , "diff"));
         }
 
-        private void DrawCross(PdfCanvas canvas, float x, float y)
-        {
+        private void DrawCross(PdfCanvas canvas, float x, float y) {
             DrawLine(canvas, x - 50, y, x + 50, y);
             DrawLine(canvas, x, y - 50, x, y + 50);
         }
 
-        private void DrawLine(PdfCanvas canvas, float x1, float y1, float x2, float y2)
-        {
+        private void DrawLine(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             canvas.SaveState().SetLineWidth(0.5f).SetLineDash(3).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
     }

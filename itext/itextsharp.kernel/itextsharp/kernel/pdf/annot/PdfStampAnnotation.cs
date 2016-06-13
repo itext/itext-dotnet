@@ -44,32 +44,25 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfStampAnnotation : PdfMarkupAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfStampAnnotation : PdfMarkupAnnotation {
         public PdfStampAnnotation(Rectangle rect)
-            : base(rect)
-        {
+            : base(rect) {
         }
 
         public PdfStampAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Stamp;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation SetStampName(PdfName name)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation SetStampName(PdfName name) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfStampAnnotation)Put(PdfName.Name, name);
         }
 
-        public virtual PdfName GetStampName()
-        {
+        public virtual PdfName GetStampName() {
             return GetPdfObject().GetAsName(PdfName.Name);
         }
     }

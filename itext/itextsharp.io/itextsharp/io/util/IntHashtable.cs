@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Util
-{
+namespace iTextSharp.IO.Util {
     /// <summary>
     /// <p>A hash map that uses primitive ints for the key rather than objects.</p>
     /// <p>Note that this class is for internal optimization purposes only, and may
@@ -61,8 +60,7 @@ namespace iTextSharp.IO.Util
     /// <author>Stephen Colebourne</author>
     /// <author>Bruno Lowagie (change Objects as keys into int values)</author>
     /// <author>Paulo Soares (added extra methods)</author>
-    public class IntHashtable : ICloneable
-    {
+    public class IntHashtable : ICloneable {
         /// <summary>The hash table data.</summary>
         [System.NonSerialized]
         private IntHashtable.Entry[] table;
@@ -88,8 +86,7 @@ namespace iTextSharp.IO.Util
         /// factor, which is <code>20</code> and <code>0.75</code> respectively.</p>
         /// </summary>
         public IntHashtable()
-            : this(150, 0.75f)
-        {
+            : this(150, 0.75f) {
         }
 
         /// <summary>
@@ -102,8 +99,7 @@ namespace iTextSharp.IO.Util
         /// than zero.
         /// </exception>
         public IntHashtable(int initialCapacity)
-            : this(initialCapacity, 0.75f)
-        {
+            : this(initialCapacity, 0.75f) {
         }
 
         /// <summary>
@@ -117,18 +113,14 @@ namespace iTextSharp.IO.Util
         /// than zero, or if the load factor is nonpositive.
         /// </exception>
         public IntHashtable(int initialCapacity, float loadFactor)
-            : base()
-        {
-            if (initialCapacity < 0)
-            {
+            : base() {
+            if (initialCapacity < 0) {
                 throw new ArgumentException(String.Format("Illegal Capacity: {0}", initialCapacity));
             }
-            if (loadFactor <= 0)
-            {
+            if (loadFactor <= 0) {
                 throw new ArgumentException(String.Format("Illegal Load: {0}", loadFactor));
             }
-            if (initialCapacity == 0)
-            {
+            if (initialCapacity == 0) {
                 initialCapacity = 1;
             }
             this.loadFactor = loadFactor;
@@ -137,14 +129,12 @@ namespace iTextSharp.IO.Util
         }
 
         public IntHashtable(iTextSharp.IO.Util.IntHashtable o)
-            : this(o.table.Length, o.loadFactor)
-        {
+            : this(o.table.Length, o.loadFactor) {
         }
 
         /// <summary><p>Returns the number of keys in this hashtable.</p></summary>
         /// <returns>the number of keys in this hashtable.</returns>
-        public virtual int Size()
-        {
+        public virtual int Size() {
             return count;
         }
 
@@ -153,8 +143,7 @@ namespace iTextSharp.IO.Util
         /// <code>true</code> if this hashtable maps no keys to values;
         /// <code>false</code> otherwise.
         /// </returns>
-        public virtual bool IsEmpty()
-        {
+        public virtual bool IsEmpty() {
             return count == 0;
         }
 
@@ -177,15 +166,11 @@ namespace iTextSharp.IO.Util
         /// <seealso cref="ContainsKey(int)"/>
         /// <seealso cref="ContainsValue(int)"/>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
-        public virtual bool Contains(int value)
-        {
+        public virtual bool Contains(int value) {
             IntHashtable.Entry[] tab = table;
-            for (int i = tab.Length; i-- > 0; )
-            {
-                for (IntHashtable.Entry e = tab[i]; e != null; e = e.next)
-                {
-                    if (e.value == value)
-                    {
+            for (int i = tab.Length; i-- > 0; ) {
+                for (IntHashtable.Entry e = tab[i]; e != null; e = e.next) {
+                    if (e.value == value) {
                         return true;
                     }
                 }
@@ -202,8 +187,7 @@ namespace iTextSharp.IO.Util
         /// <param name="value">value whose presence in this HashMap is to be tested.</param>
         /// <returns>boolean <code>true</code> if the value is contained</returns>
         /// <seealso cref="System.Collections.IDictionary{K, V}"/>
-        public virtual bool ContainsValue(int value)
-        {
+        public virtual bool ContainsValue(int value) {
             return Contains(value);
         }
 
@@ -215,14 +199,11 @@ namespace iTextSharp.IO.Util
         /// method; <code>false</code> otherwise.
         /// </returns>
         /// <seealso cref="Contains(int)"/>
-        public virtual bool ContainsKey(int key)
-        {
+        public virtual bool ContainsKey(int key) {
             IntHashtable.Entry[] tab = table;
             int index = (key & 0x7FFFFFFF) % tab.Length;
-            for (IntHashtable.Entry e = tab[index]; e != null; e = e.next)
-            {
-                if (e.key == key)
-                {
+            for (IntHashtable.Entry e = tab[index]; e != null; e = e.next) {
+                if (e.key == key) {
                     return true;
                 }
             }
@@ -237,14 +218,11 @@ namespace iTextSharp.IO.Util
         /// this hashtable.
         /// </returns>
         /// <seealso cref="Put(int, int)"/>
-        public virtual int Get(int key)
-        {
+        public virtual int Get(int key) {
             IntHashtable.Entry[] tab = table;
             int index = (key & 0x7FFFFFFF) % tab.Length;
-            for (IntHashtable.Entry e = tab[index]; e != null; e = e.next)
-            {
-                if (e.key == key)
-                {
+            for (IntHashtable.Entry e = tab[index]; e != null; e = e.next) {
+                if (e.key == key) {
                     return e.value;
                 }
             }
@@ -259,18 +237,15 @@ namespace iTextSharp.IO.Util
         /// in the hashtable exceeds this hashtable's capacity and load
         /// factor.</p>
         /// </summary>
-        protected internal virtual void Rehash()
-        {
+        protected internal virtual void Rehash() {
             int oldCapacity = table.Length;
             IntHashtable.Entry[] oldMap = table;
             int newCapacity = oldCapacity * 2 + 1;
             IntHashtable.Entry[] newMap = new IntHashtable.Entry[newCapacity];
             threshold = (int)(newCapacity * loadFactor);
             table = newMap;
-            for (int i = oldCapacity; i-- > 0; )
-            {
-                for (IntHashtable.Entry old = oldMap[i]; old != null; )
-                {
+            for (int i = oldCapacity; i-- > 0; ) {
+                for (IntHashtable.Entry old = oldMap[i]; old != null; ) {
                     IntHashtable.Entry e = old;
                     old = old.next;
                     int index = (e.key & 0x7FFFFFFF) % newCapacity;
@@ -299,23 +274,19 @@ namespace iTextSharp.IO.Util
         /// </returns>
         /// <exception cref="System.ArgumentNullException">if the key is <code>null</code>.</exception>
         /// <seealso cref="Get(int)"/>
-        public virtual int Put(int key, int value)
-        {
+        public virtual int Put(int key, int value) {
             // Makes sure the key is not already in the hashtable.
             IntHashtable.Entry[] tab = table;
             int index = (key & 0x7FFFFFFF) % tab.Length;
-            for (IntHashtable.Entry e = tab[index]; e != null; e = e.next)
-            {
-                if (e.key == key)
-                {
+            for (IntHashtable.Entry e = tab[index]; e != null; e = e.next) {
+                if (e.key == key) {
                     int old = e.value;
                     //e.addValue(old);
                     e.value = value;
                     return old;
                 }
             }
-            if (count >= threshold)
-            {
+            if (count >= threshold) {
                 // Rehash the table if the threshold is exceeded
                 Rehash();
                 tab = table;
@@ -339,22 +310,17 @@ namespace iTextSharp.IO.Util
         /// the value to which the key had been mapped in this hashtable,
         /// or <code>null</code> if the key did not have a mapping.
         /// </returns>
-        public virtual int Remove(int key)
-        {
+        public virtual int Remove(int key) {
             IntHashtable.Entry[] tab = table;
             int index = (key & 0x7FFFFFFF) % tab.Length;
             IntHashtable.Entry e;
             IntHashtable.Entry prev;
-            for (e = tab[index], prev = null; e != null; prev = e, e = e.next)
-            {
-                if (e.key == key)
-                {
-                    if (prev != null)
-                    {
+            for (e = tab[index], prev = null; e != null; prev = e, e = e.next) {
+                if (e.key == key) {
+                    if (prev != null) {
                         prev.next = e.next;
                     }
-                    else
-                    {
+                    else {
                         tab[index] = e.next;
                     }
                     count--;
@@ -367,11 +333,9 @@ namespace iTextSharp.IO.Util
         }
 
         /// <summary><p>Clears this hashtable so that it contains no keys.</p></summary>
-        public virtual void Clear()
-        {
+        public virtual void Clear() {
             IntHashtable.Entry[] tab = table;
-            for (int index = tab.Length; --index >= 0; )
-            {
+            for (int index = tab.Length; --index >= 0; ) {
                 tab[index] = null;
             }
             count = 0;
@@ -381,8 +345,7 @@ namespace iTextSharp.IO.Util
         /// <p>Innerclass that acts as a datastructure to create a new entry in the
         /// table.</p>
         /// </summary>
-        public class Entry
-        {
+        public class Entry {
             internal int key;
 
             internal int value;
@@ -393,8 +356,7 @@ namespace iTextSharp.IO.Util
             /// <param name="key">The key used to enter this in the table</param>
             /// <param name="value">The value for this key</param>
             /// <param name="next">A reference to the next entry in the table</param>
-            internal Entry(int key, int value, IntHashtable.Entry next)
-            {
+            internal Entry(int key, int value, IntHashtable.Entry next) {
                 //ArrayList<Integer> values = new ArrayList<Integer>();
                 this.key = key;
                 this.value = value;
@@ -403,46 +365,37 @@ namespace iTextSharp.IO.Util
 
             //values.add(value);
             // extra methods for inner class Entry by Paulo
-            public virtual int GetKey()
-            {
+            public virtual int GetKey() {
                 return key;
             }
 
-            public virtual int GetValue()
-            {
+            public virtual int GetValue() {
                 return value;
             }
 
             /// <exception cref="Java.Lang.CloneNotSupportedException"/>
-            protected internal virtual Object Clone()
-            {
+            protected internal virtual Object Clone() {
                 return new IntHashtable.Entry(key, value, next != null ? (IntHashtable.Entry)next.Clone() : null);
             }
         }
 
-        public virtual int[] ToOrderedKeys()
-        {
+        public virtual int[] ToOrderedKeys() {
             int[] res = GetKeys();
             iTextSharp.IO.Util.JavaUtil.Sort(res);
             return res;
         }
 
-        public virtual int[] GetKeys()
-        {
+        public virtual int[] GetKeys() {
             int[] res = new int[count];
             int ptr = 0;
             int index = table.Length;
             IntHashtable.Entry entry = null;
-            while (true)
-            {
-                if (entry == null)
-                {
-                    while (index-- > 0 && (entry = table[index]) == null)
-                    {
+            while (true) {
+                if (entry == null) {
+                    while (index-- > 0 && (entry = table[index]) == null) {
                     }
                 }
-                if (entry == null)
-                {
+                if (entry == null) {
                     break;
                 }
                 IntHashtable.Entry e = entry;
@@ -452,31 +405,25 @@ namespace iTextSharp.IO.Util
             return res;
         }
 
-        public virtual int GetOneKey()
-        {
-            if (count == 0)
-            {
+        public virtual int GetOneKey() {
+            if (count == 0) {
                 return 0;
             }
             int index = table.Length;
             IntHashtable.Entry entry = null;
-            while (index-- > 0 && (entry = table[index]) == null)
-            {
+            while (index-- > 0 && (entry = table[index]) == null) {
             }
-            if (entry == null)
-            {
+            if (entry == null) {
                 return 0;
             }
             return entry.key;
         }
 
         /// <exception cref="Java.Lang.CloneNotSupportedException"/>
-        public virtual Object Clone()
-        {
+        public virtual Object Clone() {
             IntHashtable t = new IntHashtable(this);
             t.table = new IntHashtable.Entry[table.Length];
-            for (int i = table.Length; i-- > 0; )
-            {
+            for (int i = table.Length; i-- > 0; ) {
                 t.table[i] = table[i] != null ? (IntHashtable.Entry)table[i].Clone() : null;
             }
             return t;

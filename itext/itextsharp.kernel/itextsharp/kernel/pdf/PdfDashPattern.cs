@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfDashPattern
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfDashPattern {
         /// <summary>This is the length of a dash.</summary>
         private float dash = -1;
 
@@ -54,39 +52,32 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>This is the phase.</summary>
         private float phase = -1;
 
-        public PdfDashPattern()
-        {
+        public PdfDashPattern() {
         }
 
-        public PdfDashPattern(float dash)
-        {
+        public PdfDashPattern(float dash) {
             this.dash = dash;
         }
 
-        public PdfDashPattern(float dash, float gap)
-        {
+        public PdfDashPattern(float dash, float gap) {
             this.dash = dash;
             this.gap = gap;
         }
 
         public PdfDashPattern(float dash, float gap, float phase)
-            : this(dash, gap)
-        {
+            : this(dash, gap) {
             this.phase = phase;
         }
 
-        public virtual float GetDash()
-        {
+        public virtual float GetDash() {
             return dash;
         }
 
-        public virtual float GetGap()
-        {
+        public virtual float GetGap() {
             return gap;
         }
 
-        public virtual float GetPhase()
-        {
+        public virtual float GetPhase() {
             return phase;
         }
     }

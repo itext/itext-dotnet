@@ -45,10 +45,8 @@ using System;
 using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Layout
-{
-    public class LayoutResult
-    {
+namespace iTextSharp.Layout.Layout {
+    public class LayoutResult {
         public const int FULL = 1;
 
         public const int PARTIAL = 2;
@@ -66,80 +64,65 @@ namespace iTextSharp.Layout.Layout
         protected internal AreaBreak areaBreak;
 
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            )
-        {
+            ) {
             this.status = status;
             this.occupiedArea = occupiedArea;
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
         }
 
-        public virtual int GetStatus()
-        {
+        public virtual int GetStatus() {
             return status;
         }
 
-        public virtual LayoutArea GetOccupiedArea()
-        {
+        public virtual LayoutArea GetOccupiedArea() {
             return occupiedArea;
         }
 
-        public virtual IRenderer GetSplitRenderer()
-        {
+        public virtual IRenderer GetSplitRenderer() {
             return splitRenderer;
         }
 
-        public virtual void SetSplitRenderer(IRenderer splitRenderer)
-        {
+        public virtual void SetSplitRenderer(IRenderer splitRenderer) {
             this.splitRenderer = splitRenderer;
         }
 
-        public virtual IRenderer GetOverflowRenderer()
-        {
+        public virtual IRenderer GetOverflowRenderer() {
             return overflowRenderer;
         }
 
-        public virtual void SetOverflowRenderer(IRenderer overflowRenderer)
-        {
+        public virtual void SetOverflowRenderer(IRenderer overflowRenderer) {
             this.overflowRenderer = overflowRenderer;
         }
 
-        public virtual AreaBreak GetAreaBreak()
-        {
+        public virtual AreaBreak GetAreaBreak() {
             return areaBreak;
         }
 
-        public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak)
-        {
+        public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak) {
             this.areaBreak = areaBreak;
             return this;
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             String status;
-            switch (GetStatus())
-            {
-                case FULL:
-                {
+            switch (GetStatus()) {
+                case FULL: {
                     status = "Full";
                     break;
                 }
 
-                case NOTHING:
-                {
+                case NOTHING: {
                     status = "Nothing";
                     break;
                 }
 
-                case PARTIAL:
-                {
+                case PARTIAL: {
                     status = "Partial";
                     break;
                 }
 
-                default:
-                {
+                default: {
                     status = "None";
                     break;
                 }

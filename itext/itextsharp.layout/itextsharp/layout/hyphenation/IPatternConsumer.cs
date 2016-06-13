@@ -17,15 +17,13 @@
 using System;
 using System.Collections;
 
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary>
     /// <p>This interface is used to connect the XML pattern file parser to
     /// the hyphenation tree.</p>
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
     /// </summary>
-    public interface IPatternConsumer
-    {
+    public interface IPatternConsumer {
         /// <summary>Add a character class.</summary>
         /// <remarks>
         /// Add a character class.

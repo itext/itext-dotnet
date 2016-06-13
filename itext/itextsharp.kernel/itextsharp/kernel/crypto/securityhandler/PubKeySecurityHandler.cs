@@ -54,102 +54,82 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
-{
+namespace iTextSharp.Kernel.Crypto.Securityhandler {
     /// <author>Aiken Sam (aikensam@ieee.org)</author>
-    public abstract class PubKeySecurityHandler : SecurityHandler
-    {
+    public abstract class PubKeySecurityHandler : SecurityHandler {
         private const int SEED_LENGTH = 20;
 
         private IList<PublicKeyRecipient> recipients = null;
 
         private byte[] seed;
 
-        protected internal PubKeySecurityHandler()
-        {
+        protected internal PubKeySecurityHandler() {
             seed = EncryptionUtils.GenerateSeed(SEED_LENGTH);
             recipients = new List<PublicKeyRecipient>();
         }
 
-        protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, bool encryptMetadata)
-        {
+        protected internal virtual byte[] ComputeGlobalKey(String messageDigestAlgorithm, bool encryptMetadata) {
             IDigest md;
             byte[] encodedRecipient;
-            try
-            {
+            try {
                 md = Org.BouncyCastle.Security.DigestUtilities.GetDigest(messageDigestAlgorithm);
                 md.Update(GetSeed());
-                for (int i = 0; i < GetRecipientsSize(); i++)
-                {
+                for (int i = 0; i < GetRecipientsSize(); i++) {
                     encodedRecipient = GetEncodedRecipient(i);
                     md.Update(encodedRecipient);
                 }
-                if (!encryptMetadata)
-                {
+                if (!encryptMetadata) {
                     md.Update(new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 });
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
             return md.Digest();
         }
 
         protected internal static byte[] ComputeGlobalKeyOnReading(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata, String digestAlgorithm)
-        {
+             certificateKey, X509Certificate certificate, bool encryptMetadata, String digestAlgorithm) {
             PdfArray recipients = encryptionDictionary.GetAsArray(PdfName.Recipients);
-            if (recipients == null)
-            {
+            if (recipients == null) {
                 recipients = encryptionDictionary.GetAsDictionary(PdfName.CF).GetAsDictionary(PdfName.DefaultCryptFilter).
                     GetAsArray(PdfName.Recipients);
             }
             byte[] envelopedData = EncryptionUtils.FetchEnvelopedData(certificateKey, certificate, recipients);
             byte[] encryptionKey;
             IDigest md;
-            try
-            {
+            try {
                 md = Org.BouncyCastle.Security.DigestUtilities.GetDigest(digestAlgorithm);
                 md.Update(envelopedData, 0, 20);
-                for (int i = 0; i < recipients.Size(); i++)
-                {
+                for (int i = 0; i < recipients.Size(); i++) {
                     byte[] encodedRecipient = recipients.GetAsString(i).GetValueBytes();
                     md.Update(encodedRecipient);
                 }
-                if (!encryptMetadata)
-                {
+                if (!encryptMetadata) {
                     md.Update(new byte[] { (byte)255, (byte)255, (byte)255, (byte)255 });
                 }
                 encryptionKey = md.Digest();
             }
-            catch (Exception f)
-            {
+            catch (Exception f) {
                 throw new PdfException(PdfException.PdfDecryption, f);
             }
             return encryptionKey;
         }
 
-        protected internal virtual void AddAllRecipients(X509Certificate[] certs, int[] permissions)
-        {
-            if (certs != null)
-            {
-                for (int i = 0; i < certs.Length; i++)
-                {
+        protected internal virtual void AddAllRecipients(X509Certificate[] certs, int[] permissions) {
+            if (certs != null) {
+                for (int i = 0; i < certs.Length; i++) {
                     AddRecipient(certs[i], permissions[i]);
                 }
             }
         }
 
-        protected internal virtual PdfArray CreateRecipientsArray()
-        {
+        protected internal virtual PdfArray CreateRecipientsArray() {
             PdfArray recipients;
-            try
-            {
+            try {
                 recipients = GetEncodedRecipients();
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
             return recipients;
@@ -163,8 +143,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         protected internal abstract void InitKey(byte[] globalKey, int keyLength);
 
         protected internal virtual void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, X509Certificate
-            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly)
-        {
+            [] certs, int[] permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             AddAllRecipients(certs, permissions);
             int? keyLen = encryptionDictionary.GetAsInt(PdfName.Length);
             int keyLength = keyLen != null ? (int)keyLen : 40;
@@ -175,8 +154,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         }
 
         protected internal virtual void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, ICipherParameters
-             certificateKey, X509Certificate certificate, bool encryptMetadata)
-        {
+             certificateKey, X509Certificate certificate, bool encryptMetadata) {
             String digestAlgorithm = GetDigestAlgorithm();
             byte[] encryptionKey = ComputeGlobalKeyOnReading(encryptionDictionary, (ICipherParameters)certificateKey, 
                 certificate, encryptMetadata, digestAlgorithm);
@@ -185,32 +163,27 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             InitKey(encryptionKey, keyLength);
         }
 
-        private void AddRecipient(X509Certificate cert, int permission)
-        {
+        private void AddRecipient(X509Certificate cert, int permission) {
             recipients.Add(new PublicKeyRecipient(cert, permission));
         }
 
-        private byte[] GetSeed()
-        {
+        private byte[] GetSeed() {
             byte[] clonedSeed = new byte[seed.Length];
             System.Array.Copy(seed, 0, clonedSeed, 0, seed.Length);
             return clonedSeed;
         }
 
-        private int GetRecipientsSize()
-        {
+        private int GetRecipientsSize() {
             return recipients.Count;
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        private byte[] GetEncodedRecipient(int index)
-        {
+        private byte[] GetEncodedRecipient(int index) {
             //Certificate certificate = recipient.getX509();
             PublicKeyRecipient recipient = recipients[index];
             byte[] cms = recipient.GetCms();
-            if (cms != null)
-            {
+            if (cms != null) {
                 return cms;
             }
             X509Certificate certificate = recipient.GetCertificate();
@@ -246,25 +219,20 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        private PdfArray GetEncodedRecipients()
-        {
+        private PdfArray GetEncodedRecipients() {
             PdfArray EncodedRecipients = new PdfArray();
             byte[] cms;
-            for (int i = 0; i < recipients.Count; i++)
-            {
-                try
-                {
+            for (int i = 0; i < recipients.Count; i++) {
+                try {
                     cms = GetEncodedRecipient(i);
                     EncodedRecipients.Add(new PdfLiteral(StreamUtil.CreateEscapedString(cms)));
                 }
-                catch (GeneralSecurityException)
-                {
+                catch (GeneralSecurityException) {
                     EncodedRecipients = null;
                     // break was added while porting to itext7
                     break;
                 }
-                catch (System.IO.IOException)
-                {
+                catch (System.IO.IOException) {
                     EncodedRecipients = null;
                     // break was added while porting to itext7
                     break;
@@ -275,8 +243,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        private Asn1Object CreateDERForRecipient(byte[] @in, X509Certificate cert)
-        {
+        private Asn1Object CreateDERForRecipient(byte[] @in, X509Certificate cert) {
             EncryptionUtils.DERForRecipientParams parameters = EncryptionUtils.CalculateDERForRecipientParams(@in);
             KeyTransRecipientInfo keytransrecipientinfo = ComputeRecipientInfo(cert, parameters.abyte0);
             DerOctetString deroctetstring = new DerOctetString(parameters.abyte1);
@@ -291,8 +258,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        private KeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509certificate, byte[] abyte0)
-        {
+        private KeyTransRecipientInfo ComputeRecipientInfo(X509Certificate x509certificate, byte[] abyte0) {
             Asn1InputStream asn1inputstream = new Asn1InputStream(new MemoryStream(x509certificate.GetTbsCertificate()
                 ));
             TbsCertificateStructure tbscertificatestructure = TbsCertificateStructure.GetInstance(asn1inputstream.ReadObject

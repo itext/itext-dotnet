@@ -41,11 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <author>psoares</author>
-    public abstract class OpenTableLookup
-    {
+    public abstract class OpenTableLookup {
         protected internal int lookupFlag;
 
         protected internal int[] subTableLocations;
@@ -53,23 +51,19 @@ namespace iTextSharp.IO.Font.Otf
         protected internal OpenTypeFontTableReader openReader;
 
         protected internal OpenTableLookup(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations
-            )
-        {
+            ) {
             this.lookupFlag = lookupFlag;
             this.subTableLocations = subTableLocations;
             this.openReader = openReader;
         }
 
-        public virtual int GetLookupFlag()
-        {
+        public virtual int GetLookupFlag() {
             return lookupFlag;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadSubTables()
-        {
-            foreach (int subTableLocation in subTableLocations)
-            {
+        protected internal virtual void ReadSubTables() {
+            foreach (int subTableLocation in subTableLocations) {
                 ReadSubTable(subTableLocation);
             }
         }
@@ -79,47 +73,38 @@ namespace iTextSharp.IO.Font.Otf
 
         public abstract bool TransformOne(GlyphLine line);
 
-        public virtual bool TransformLine(GlyphLine line)
-        {
+        public virtual bool TransformLine(GlyphLine line) {
             bool changed = false;
             line.idx = line.start;
-            while (line.idx < line.end && line.idx >= line.start)
-            {
+            while (line.idx < line.end && line.idx >= line.start) {
                 changed = TransformOne(line) || changed;
             }
             return changed;
         }
 
-        public class GlyphIndexer
-        {
+        public class GlyphIndexer {
             public GlyphLine line;
 
             public Glyph glyph;
 
             public int idx;
 
-            public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag)
-            {
+            public virtual void NextGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
-                while (++idx < line.end)
-                {
+                while (++idx < line.end) {
                     Glyph g = line.Get(idx);
-                    if (!openReader.IsSkip(g.GetCode(), lookupFlag))
-                    {
+                    if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                         glyph = g;
                         break;
                     }
                 }
             }
 
-            public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag)
-            {
+            public virtual void PreviousGlyph(OpenTypeFontTableReader openReader, int lookupFlag) {
                 glyph = null;
-                while (--idx >= line.start)
-                {
+                while (--idx >= line.start) {
                     Glyph g = line.Get(idx);
-                    if (!openReader.IsSkip(g.GetCode(), lookupFlag))
-                    {
+                    if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                         glyph = g;
                         break;
                     }
@@ -127,8 +112,7 @@ namespace iTextSharp.IO.Font.Otf
             }
         }
 
-        public virtual bool HasSubstitution(int index)
-        {
+        public virtual bool HasSubstitution(int index) {
             return false;
         }
     }

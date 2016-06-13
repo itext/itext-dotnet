@@ -44,31 +44,25 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class PatternColor : iTextSharp.Kernel.Color.Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class PatternColor : iTextSharp.Kernel.Color.Color {
         private PdfPattern pattern;
 
         private iTextSharp.Kernel.Color.Color underlyingColor;
 
         public PatternColor(PdfPattern coloredPattern)
-            : base(new PdfSpecialCs.Pattern(), null)
-        {
+            : base(new PdfSpecialCs.Pattern(), null) {
             // The underlying color for uncolored patterns. Will be null for colored ones.
             this.pattern = coloredPattern;
         }
 
         public PatternColor(PdfPattern.Tiling uncoloredPattern, iTextSharp.Kernel.Color.Color color)
-            : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue())
-        {
+            : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue()) {
         }
 
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS, float[] colorValue)
-            : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue)
-        {
-            if (underlyingCS is PdfSpecialCs.Pattern)
-            {
+            : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue) {
+            if (underlyingCS is PdfSpecialCs.Pattern) {
                 throw new ArgumentException("underlyingCS");
             }
             this.pattern = uncoloredPattern;
@@ -77,27 +71,22 @@ namespace iTextSharp.Kernel.Color
 
         public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
             , float[] colorValue)
-            : base(uncoloredTilingCS, colorValue)
-        {
+            : base(uncoloredTilingCS, colorValue) {
             this.pattern = uncoloredPattern;
             this.underlyingColor = iTextSharp.Kernel.Color.Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace()
                 , colorValue);
         }
 
-        public virtual PdfPattern GetPattern()
-        {
+        public virtual PdfPattern GetPattern() {
             return pattern;
         }
 
-        public virtual void SetPattern(PdfPattern pattern)
-        {
+        public virtual void SetPattern(PdfPattern pattern) {
             this.pattern = pattern;
         }
 
-        public override bool Equals(Object o)
-        {
-            if (!base.Equals(o))
-            {
+        public override bool Equals(Object o) {
+            if (!base.Equals(o)) {
                 return false;
             }
             iTextSharp.Kernel.Color.PatternColor color = (iTextSharp.Kernel.Color.PatternColor)o;

@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font.Otf
-{
-    public abstract class ContextualSubstRule
-    {
+namespace iTextSharp.IO.Font.Otf {
+    public abstract class ContextualSubstRule {
         /// <returns>length of the context glyph sequence defined by this rule.</returns>
         public abstract int GetContextLength();
 
@@ -66,30 +64,26 @@ namespace iTextSharp.IO.Font.Otf
         public abstract bool IsGlyphMatchesInput(int glyphId, int atIdx);
 
         /// <returns>length of the lookahead context glyph sequence defined by this rule.</returns>
-        public virtual int GetLookaheadContextLength()
-        {
+        public virtual int GetLookaheadContextLength() {
             return 0;
         }
 
         /// <returns>length of the backtrack context glyph sequence defined by this rule.</returns>
-        public virtual int GetBacktrackContextLength()
-        {
+        public virtual int GetBacktrackContextLength() {
             return 0;
         }
 
         /// <summary>Checks if glyph line element matches element from lookahead sequence of the rule.</summary>
         /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getLookaheadContextLength().
         ///     </param>
-        public virtual bool IsGlyphMatchesLookahead(int glyphId, int atIdx)
-        {
+        public virtual bool IsGlyphMatchesLookahead(int glyphId, int atIdx) {
             return false;
         }
 
         /// <summary>Checks if glyph line element matches element from backtrack sequence of the rule.</summary>
         /// <param name="atIdx">index in rule sequence. Shall be: 0 &lt;= atIdx &lt; ContextualSubstRule.getBacktrackContextLength().
         ///     </param>
-        public virtual bool IsGlyphMatchesBacktrack(int glyphId, int atIdx)
-        {
+        public virtual bool IsGlyphMatchesBacktrack(int glyphId, int atIdx) {
             return false;
         }
     }

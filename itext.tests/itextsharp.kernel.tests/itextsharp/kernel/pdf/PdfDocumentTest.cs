@@ -6,25 +6,21 @@ using iTextSharp.Kernel.Pdf.Navigation;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfDocumentTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfDocumentTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfDocumentTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfDocumentTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void WritingVersionTest01()
-        {
+        public virtual void WritingVersionTest01() {
             // There is a possibility to override version in stamping mode
             String @out = destinationFolder + "writing_pdf_version.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(@out, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0
@@ -42,8 +38,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddOutlinesWithNamedDestinations01()
-        {
+        public virtual void AddOutlinesWithNamedDestinations01() {
             PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
                 ));
             String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
@@ -85,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void FreeReferencesInObjectStream()
-        {
+        public virtual void FreeReferencesInObjectStream() {
             PdfReader reader = new PdfReader(sourceFolder + "styledLineArts_Redacted.pdf");
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument document = new PdfDocument(reader, writer, new StampingProperties().UseAppendMode());
@@ -98,8 +92,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RemoveUnusedObjectsInWriterModeTest()
-        {
+        public virtual void RemoveUnusedObjectsInWriterModeTest() {
             String filename = "removeUnusedObjectsInWriter.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
@@ -121,8 +114,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RemoveUnusedObjectsInStampingModeTest()
-        {
+        public virtual void RemoveUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_1.pdf";
             String filenameOut = "removeUnusedObjectsInStamping.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
@@ -149,8 +141,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddUnusedObjectsInWriterModeTest()
-        {
+        public virtual void AddUnusedObjectsInWriterModeTest() {
             String filename = "addUnusedObjectsInWriter.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
@@ -172,8 +163,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddUnusedObjectsInStampingModeTest()
-        {
+        public virtual void AddUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_2.pdf";
             String filenameOut = "addUnusedObjectsInStamping.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
@@ -200,8 +190,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddUnusedStreamObjectsTest()
-        {
+        public virtual void AddUnusedStreamObjectsTest() {
             String filenameIn = "docWithUnusedObjects_3.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
             PdfDocument pdfDocument = new PdfDocument(writer);
@@ -223,8 +212,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void TestImageCompressLevel()
-        {
+        public virtual void TestImageCompressLevel() {
             byte[] b = ImageDataFactory.Create(sourceFolder + "berlin2013.jpg").GetData();
             ByteArrayOutputStream image = new ByteArrayOutputStream();
             image.AssignBytes(b, b.Length);
@@ -242,8 +230,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestFreeReference()
-        {
+        public virtual void TestFreeReference() {
             PdfWriter writer = new PdfWriter(destinationFolder + "freeReference.pdf", new WriterProperties().SetFullCompressionMode
                 (false));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "baseFreeReference.pdf"), writer);
@@ -261,8 +248,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CheckAndResolveCircularReferences()
-        {
+        public virtual void CheckAndResolveCircularReferences() {
             PdfReader pdfReader = new PdfReader(sourceFolder + "datasheet.pdf");
             PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(destinationFolder + "datasheet_mode.pdf"
                 ));
@@ -275,8 +261,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void ReadEncryptedDocumentWithFullCompression()
-        {
+        public virtual void ReadEncryptedDocumentWithFullCompression() {
             PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode.Open, FileAccess.Read
                 ), new ReaderProperties().SetPassword("123".GetBytes()));
             PdfDocument pdfDocument = new PdfDocument(reader);

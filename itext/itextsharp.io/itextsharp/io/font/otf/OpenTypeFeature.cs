@@ -43,23 +43,19 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font.Otf
-{
-    public class OpenTypeFeature
-    {
+namespace iTextSharp.IO.Font.Otf {
+    public class OpenTypeFeature {
         private OpenTypeFontTableReader openTypeReader;
 
         private IList<FeatureRecord> records;
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable)
-        {
+        public OpenTypeFeature(OpenTypeFontTableReader openTypeReader, int locationFeatureTable) {
             this.openTypeReader = openTypeReader;
             records = new List<FeatureRecord>();
             openTypeReader.rf.Seek(locationFeatureTable);
             TagAndLocation[] tagsLocs = openTypeReader.ReadTagAndLocations(locationFeatureTable);
-            foreach (TagAndLocation tagLoc in tagsLocs)
-            {
+            foreach (TagAndLocation tagLoc in tagsLocs) {
                 openTypeReader.rf.Seek(tagLoc.location + 2);
                 //+2 don't use FeatureParams
                 int lookupCount = openTypeReader.rf.ReadUnsignedShort();
@@ -70,15 +66,12 @@ namespace iTextSharp.IO.Font.Otf
             }
         }
 
-        public virtual IList<FeatureRecord> GetRecords()
-        {
+        public virtual IList<FeatureRecord> GetRecords() {
             return records;
         }
 
-        public virtual FeatureRecord GetRecord(int idx)
-        {
-            if (idx < 0 || idx >= records.Count)
-            {
+        public virtual FeatureRecord GetRecord(int idx) {
+            if (idx < 0 || idx >= records.Count) {
                 return null;
             }
             return records[idx];

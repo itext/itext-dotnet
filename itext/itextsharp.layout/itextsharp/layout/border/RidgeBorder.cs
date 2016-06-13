@@ -44,69 +44,54 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border
-{
-    public class RidgeBorder : Border3D
-    {
+namespace iTextSharp.Layout.Border {
+    public class RidgeBorder : Border3D {
         public RidgeBorder(float width)
-            : base(width)
-        {
+            : base(width) {
         }
 
         public RidgeBorder(DeviceRgb color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
         public RidgeBorder(DeviceCmyk color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
         public RidgeBorder(DeviceGray color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
-        public override int GetBorderType()
-        {
+        public override int GetBorderType() {
             return iTextSharp.Layout.Border.Border._3D_RIDGE;
         }
 
-        protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side side)
-        {
-            switch (side)
-            {
+        protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side side) {
+            switch (side) {
                 case Border.Side.TOP:
-                case Border.Side.LEFT:
-                {
+                case Border.Side.LEFT: {
                     canvas.SetFillColor(GetDarkerColor());
                     break;
                 }
 
                 case Border.Side.BOTTOM:
-                case Border.Side.RIGHT:
-                {
+                case Border.Side.RIGHT: {
                     canvas.SetFillColor(GetColor());
                     break;
                 }
             }
         }
 
-        protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side side)
-        {
-            switch (side)
-            {
+        protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side side) {
+            switch (side) {
                 case Border.Side.TOP:
-                case Border.Side.LEFT:
-                {
+                case Border.Side.LEFT: {
                     canvas.SetFillColor(GetColor());
                     break;
                 }
 
                 case Border.Side.BOTTOM:
-                case Border.Side.RIGHT:
-                {
+                case Border.Side.RIGHT: {
                     canvas.SetFillColor(GetDarkerColor());
                     break;
                 }

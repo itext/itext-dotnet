@@ -45,16 +45,13 @@ using System;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Represents the signature dictionary.</summary>
     /// <author>Paulo Soares</author>
-    public class PdfSignature : PdfObjectWrapper<PdfDictionary>
-    {
+    public class PdfSignature : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Creates new PdfSignature.</summary>
         public PdfSignature()
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
             Put(PdfName.Type, PdfName.Sig);
         }
 
@@ -62,8 +59,7 @@ namespace iTextSharp.Signatures
         /// <param name="filter">PdfName of the signature handler to use when validating this signature</param>
         /// <param name="subFilter">PdfName that describes the encoding of the signature</param>
         public PdfSignature(PdfName filter, PdfName subFilter)
-            : this()
-        {
+            : this() {
             Put(PdfName.Filter, filter);
             Put(PdfName.SubFilter, subFilter);
         }
@@ -71,11 +67,9 @@ namespace iTextSharp.Signatures
         /// <summary>Sets the /ByteRange.</summary>
         /// <param name="range">an array of pairs of integers that specifies the byte range used in the digest calculation. A pair consists of the starting byte offset and the length
         ///     </param>
-        public virtual void SetByteRange(int[] range)
-        {
+        public virtual void SetByteRange(int[] range) {
             PdfArray array = new PdfArray();
-            for (int k = 0; k < range.Length; ++k)
-            {
+            for (int k = 0; k < range.Length; ++k) {
                 array.Add(new PdfNumber(range[k]));
             }
             Put(PdfName.ByteRange, array);
@@ -83,44 +77,38 @@ namespace iTextSharp.Signatures
 
         /// <summary>Sets the /Contents value to the specified byte[].</summary>
         /// <param name="contents">a byte[] representing the digest</param>
-        public virtual void SetContents(byte[] contents)
-        {
+        public virtual void SetContents(byte[] contents) {
             Put(PdfName.Contents, new PdfString(contents).SetHexWriting(true));
         }
 
         /// <summary>Sets the /Cert value of this signature.</summary>
         /// <param name="cert">the byte[] representing the certificate chain</param>
-        public virtual void SetCert(byte[] cert)
-        {
+        public virtual void SetCert(byte[] cert) {
             Put(PdfName.Cert, new PdfString(cert));
         }
 
         /// <summary>Sets the /Name of the person signing the document.</summary>
         /// <param name="name">name of the person signing the document</param>
-        public virtual void SetName(String name)
-        {
+        public virtual void SetName(String name) {
             Put(PdfName.Name, new PdfString(name, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>Sets the /M value.</summary>
         /// <remarks>Sets the /M value. Should only be used if the time of signing is not available in the signature.</remarks>
         /// <param name="date">time of signing</param>
-        public virtual void SetDate(PdfDate date)
-        {
+        public virtual void SetDate(PdfDate date) {
             Put(PdfName.M, date.GetPdfObject());
         }
 
         /// <summary>Sets the /Location value.</summary>
         /// <param name="location">physical location of signing</param>
-        public virtual void SetLocation(String location)
-        {
+        public virtual void SetLocation(String location) {
             Put(PdfName.Location, new PdfString(location, PdfEncodings.UNICODE_BIG));
         }
 
         /// <summary>Sets the /Reason value.</summary>
         /// <param name="reason">reason for signing</param>
-        public virtual void SetReason(String reason)
-        {
+        public virtual void SetReason(String reason) {
             Put(PdfName.Reason, new PdfString(reason, PdfEncodings.UNICODE_BIG));
         }
 
@@ -130,29 +118,24 @@ namespace iTextSharp.Signatures
         /// dictionary.
         /// </summary>
         /// <param name="signatureCreator">name of the signature creator</param>
-        public virtual void SetSignatureCreator(String signatureCreator)
-        {
-            if (signatureCreator != null)
-            {
+        public virtual void SetSignatureCreator(String signatureCreator) {
+            if (signatureCreator != null) {
                 GetPdfSignatureBuildProperties().SetSignatureCreator(signatureCreator);
             }
         }
 
         /// <summary>Sets the /ContactInfo value.</summary>
         /// <param name="contactInfo">information to contact the person who signed this document</param>
-        public virtual void SetContact(String contactInfo)
-        {
+        public virtual void SetContact(String contactInfo) {
             Put(PdfName.ContactInfo, new PdfString(contactInfo, PdfEncodings.UNICODE_BIG));
         }
 
-        public virtual iTextSharp.Signatures.PdfSignature Put(PdfName key, PdfObject value)
-        {
+        public virtual iTextSharp.Signatures.PdfSignature Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
-        protected override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
@@ -166,11 +149,9 @@ namespace iTextSharp.Signatures
         /// 
         /// <see cref="PdfSignatureBuildProperties"/>
         /// </returns>
-        private PdfSignatureBuildProperties GetPdfSignatureBuildProperties()
-        {
+        private PdfSignatureBuildProperties GetPdfSignatureBuildProperties() {
             PdfDictionary buildPropDict = GetPdfObject().GetAsDictionary(PdfName.Prop_Build);
-            if (buildPropDict == null)
-            {
+            if (buildPropDict == null) {
                 buildPropDict = new PdfDictionary();
                 Put(PdfName.Prop_Build, buildPropDict);
             }

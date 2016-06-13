@@ -5,16 +5,13 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
-    public class IndicTextExtractionTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+    public class IndicTextExtractionTest : ExtendedITextTest {
         private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/IndicTextExtractionTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Test01()
-        {
+        public virtual void Test01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"));
             String[] expectedText = new String[] { "\u0928\u093F\u0930\u094D\u0935\u093E\u091A\u0915", "\u0928\u0917\u0930\u0928\u093F\u0917\u092E / "
                  + "\u0928\u0917\u0930\u092A\u0930\u093F\u0937\u0926" + " / \u0928\u0917\u0930\u092A\u093E\u0932\u093F\u0915\u093E \u0915\u093E \u0928\u093E\u092E"
@@ -25,21 +22,18 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
                 Rectangle(30, 713, 42, 20), new Rectangle(30, 679, 80, 20), new Rectangle(30, 647, 73, 20), new Rectangle
                 (30, 612, 93, 20) };
             TextRegionEventFilter[] regionFilters = new TextRegionEventFilter[regions.Length];
-            for (int i = 0; i < regions.Length; i++)
-            {
+            for (int i = 0; i < regions.Length; i++) {
                 regionFilters[i] = new TextRegionEventFilter(regions[i]);
             }
             FilteredEventListener listener = new FilteredEventListener();
             LocationTextExtractionStrategy[] extractionStrategies = new LocationTextExtractionStrategy[regions.Length]
                 ;
-            for (int i_1 = 0; i_1 < regions.Length; i_1++)
-            {
+            for (int i_1 = 0; i_1 < regions.Length; i_1++) {
                 extractionStrategies[i_1] = listener.AttachEventListener(new LocationTextExtractionStrategy().SetUseActualText
                     (true), regionFilters[i_1]);
             }
             new PdfCanvasProcessor(listener).ProcessPageContent(pdfDocument.GetPage(1));
-            for (int i_2 = 0; i_2 < regions.Length; i_2++)
-            {
+            for (int i_2 = 0; i_2 < regions.Length; i_2++) {
                 String actualText = extractionStrategies[i_2].GetResultantText();
                 NUnit.Framework.Assert.AreEqual(expectedText[i_2], actualText);
             }
@@ -47,8 +41,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Test02()
-        {
+        public virtual void Test02() {
             String expectedText = "\u0926\u0947\u0935\u0928\u093E\u0917\u0930\u0940 \u090F\u0915 \u0932\u093F\u092A\u093F \u0939\u0948 \u091C\u093F\u0938\u092E\u0947\u0902 \u0905\u0928\u0947\u0915 \u092D\u093E\u0930\u0924\u0940\u092F \u092D\u093E\u0937\u093E\u090F\u0901 \u0924\u0925\u093E \u0915\u0941\u091B \u0935\u093F\u0926\u0947\u0936\u0940 \u092D\u093E\u0937\u093E\u090F\u0902 \u0932\u093F\u0916\u0940\u0902 \u091C\u093E\u0924\u0940 \u0939\u0948\u0902\u0964 \u0926\u0947\u0935\u0928\u093E\u0917\u0930\u0940 \u092C\u093E\u092F\u0947\u0902 \u0938\u0947 \u0926\u093E\u092F\u0947\u0902 \u0932\u093F\u0916\u0940"
                  + "\n" + "\u091C\u093E\u0924\u0940 \u0939\u0948, \u0907\u0938\u0915\u0940 \u092A\u0939\u091A\u093E\u0928 \u090F\u0915 \u0915\u094D\u0937\u0948\u0924\u093F\u091C \u0930\u0947\u0916\u093E \u0938\u0947 \u0939\u0948 \u091C\u093F\u0938\u0947 \'\u0936\u093F\u0930\u093F\u0930\u0947\u0916\u093E\' \u0915\u0939\u0924\u0947 \u0939\u0948\u0902\u0964 \u0938\u0902\u0938\u094D\u0915\u0943\u0924, \u092A\u093E\u0932\u093F, \u0939\u093F\u0928\u094D\u0926\u0940, \u092E\u0930\u093E\u0920\u0940, \u0915\u094B\u0902\u0915\u0923\u0940, \u0938\u093F\u0928\u094D\u0927\u0940,"
                  + "\n" + "\u0915\u0936\u094D\u092E\u0940\u0930\u0940, \u0921\u094B\u0917\u0930\u0940, \u0928\u0947\u092A\u093E\u0932\u0940, \u0928\u0947\u092A\u093E\u0932 \u092D\u093E\u0937\u093E (\u0924\u0925\u093E \u0905\u0928\u094D\u092F \u0928\u0947\u092A\u093E\u0932\u0940 \u0909\u092A\u092D\u093E\u0937\u093E\u090F\u0901), \u0924\u093E\u092E\u093E\u0919 \u092D\u093E\u0937\u093E, \u0917\u0922\u093C\u0935\u093E\u0932\u0940, \u092C\u094B\u0921\u094B, \u0905\u0902\u0917\u093F\u0915\u093E, \u092E\u0917\u0939\u0940, \u092D\u094B\u091C\u092A\u0941\u0930\u0940,"

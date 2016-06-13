@@ -47,44 +47,34 @@ using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Function;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace
-{
-    public abstract class PdfSpecialCs : PdfColorSpace
-    {
+namespace iTextSharp.Kernel.Pdf.Colorspace {
+    public abstract class PdfSpecialCs : PdfColorSpace {
         protected internal PdfSpecialCs(PdfArray pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
-        public class Indexed : PdfSpecialCs
-        {
+        public class Indexed : PdfSpecialCs {
             public Indexed(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public Indexed(PdfObject @base, int hival, PdfString lookup)
-                : this(GetIndexedCsArray(@base, hival, lookup))
-            {
+                : this(GetIndexedCsArray(@base, hival, lookup)) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 1;
             }
 
-            public virtual PdfColorSpace GetBaseCs()
-            {
+            public virtual PdfColorSpace GetBaseCs() {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(1));
             }
 
-            private static PdfArray GetIndexedCsArray(PdfObject @base, int hival, PdfString lookup)
-            {
+            private static PdfArray GetIndexedCsArray(PdfObject @base, int hival, PdfString lookup) {
                 PdfArray indexed = new PdfArray();
                 indexed.Add(PdfName.Indexed);
                 indexed.Add(@base);
@@ -94,45 +84,36 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
         }
 
-        public class Separation : PdfSpecialCs
-        {
+        public class Separation : PdfSpecialCs {
             public Separation(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public Separation(PdfName name, PdfObject alternateSpace, PdfObject tintTransform)
-                : this(GetSeparationCsArray(name, alternateSpace, tintTransform))
-            {
+                : this(GetSeparationCsArray(name, alternateSpace, tintTransform)) {
             }
 
             public Separation(String name, PdfColorSpace alternateSpace, PdfFunction tintTransform)
-                : this(new PdfName(name), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject())
-            {
-                if (!tintTransform.CheckCompatibilityWithColorSpace(alternateSpace))
-                {
+                : this(new PdfName(name), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject()) {
+                if (!tintTransform.CheckCompatibilityWithColorSpace(alternateSpace)) {
                     throw new PdfException(PdfException.FunctionIsNotCompatibleWitColorSpace, this);
                 }
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 1;
             }
 
-            public virtual PdfColorSpace GetBaseCs()
-            {
+            public virtual PdfColorSpace GetBaseCs() {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(2));
             }
 
-            public virtual PdfName GetName()
-            {
+            public virtual PdfName GetName() {
                 return ((PdfArray)GetPdfObject()).GetAsName(1);
             }
 
             private static PdfArray GetSeparationCsArray(PdfName name, PdfObject alternateSpace, PdfObject tintTransform
-                )
-            {
+                ) {
                 PdfArray separation = new PdfArray();
                 separation.Add(PdfName.Separation);
                 separation.Add(name);
@@ -142,49 +123,40 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
         }
 
-        public class DeviceN : PdfSpecialCs
-        {
+        public class DeviceN : PdfSpecialCs {
             protected internal int numOfComponents = 0;
 
             public DeviceN(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
                 numOfComponents = pdfObject.GetAsArray(1).Size();
             }
 
             public DeviceN(PdfArray names, PdfObject alternateSpace, PdfObject tintTransform)
-                : this(GetDeviceNCsArray(names, alternateSpace, tintTransform))
-            {
+                : this(GetDeviceNCsArray(names, alternateSpace, tintTransform)) {
             }
 
             public DeviceN(IList<String> names, PdfColorSpace alternateSpace, PdfFunction tintTransform)
-                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject())
-            {
+                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject()) {
                 if (tintTransform.GetInputSize() != GetNumberOfComponents() || tintTransform.GetOutputSize() != alternateSpace
-                    .GetNumberOfComponents())
-                {
+                    .GetNumberOfComponents()) {
                     throw new PdfException(PdfException.FunctionIsNotCompatibleWitColorSpace, this);
                 }
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return numOfComponents;
             }
 
-            public virtual PdfColorSpace GetBaseCs()
-            {
+            public virtual PdfColorSpace GetBaseCs() {
                 return MakeColorSpace(((PdfArray)GetPdfObject()).Get(2));
             }
 
-            public virtual PdfArray GetNames()
-            {
+            public virtual PdfArray GetNames() {
                 return ((PdfArray)GetPdfObject()).GetAsArray(1);
             }
 
             protected internal static PdfArray GetDeviceNCsArray(PdfArray names, PdfObject alternateSpace, PdfObject tintTransform
-                )
-            {
+                ) {
                 PdfArray deviceN = new PdfArray();
                 deviceN.Add(PdfName.DeviceN);
                 deviceN.Add(names);
@@ -194,87 +166,70 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
         }
 
-        public class NChannel : PdfSpecialCs.DeviceN
-        {
+        public class NChannel : PdfSpecialCs.DeviceN {
             public NChannel(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public NChannel(PdfArray names, PdfObject alternateSpace, PdfObject tintTransform, PdfDictionary attributes
                 )
-                : this(GetNChannelCsArray(names, alternateSpace, tintTransform, attributes))
-            {
+                : this(GetNChannelCsArray(names, alternateSpace, tintTransform, attributes)) {
             }
 
             public NChannel(IList<String> names, PdfColorSpace alternateSpace, PdfFunction tintTransform, PdfDictionary
                  attributes)
-                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject(), attributes)
-            {
+                : this(new PdfArray(names, true), alternateSpace.GetPdfObject(), tintTransform.GetPdfObject(), attributes) {
                 if (tintTransform.GetInputSize() != 1 || tintTransform.GetOutputSize() != alternateSpace.GetNumberOfComponents
-                    ())
-                {
+                    ()) {
                     throw new PdfException(PdfException.FunctionIsNotCompatibleWitColorSpace, this);
                 }
             }
 
             protected internal static PdfArray GetNChannelCsArray(PdfArray names, PdfObject alternateSpace, PdfObject 
-                tintTransform, PdfDictionary attributes)
-            {
+                tintTransform, PdfDictionary attributes) {
                 PdfArray nChannel = GetDeviceNCsArray(names, alternateSpace, tintTransform);
                 nChannel.Add(attributes);
                 return nChannel;
             }
         }
 
-        public class Pattern : PdfColorSpace
-        {
-            protected internal override bool IsWrappedObjectMustBeIndirect()
-            {
+        public class Pattern : PdfColorSpace {
+            protected internal override bool IsWrappedObjectMustBeIndirect() {
                 return false;
             }
 
             public Pattern()
-                : base(PdfName.Pattern)
-            {
+                : base(PdfName.Pattern) {
             }
 
             protected internal Pattern(PdfObject pdfObj)
-                : base(pdfObj)
-            {
+                : base(pdfObj) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 0;
             }
         }
 
-        public class UncoloredTilingPattern : PdfSpecialCs.Pattern
-        {
-            protected internal override bool IsWrappedObjectMustBeIndirect()
-            {
+        public class UncoloredTilingPattern : PdfSpecialCs.Pattern {
+            protected internal override bool IsWrappedObjectMustBeIndirect() {
                 return true;
             }
 
             public UncoloredTilingPattern(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public UncoloredTilingPattern(PdfColorSpace underlyingColorSpace)
                 : base(new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.Pattern, underlyingColorSpace.GetPdfObject
-                    ())))
-            {
+                    ()))) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return PdfColorSpace.MakeColorSpace(((PdfArray)GetPdfObject()).Get(1)).GetNumberOfComponents();
             }
 
-            public virtual PdfColorSpace GetUnderlyingColorSpace()
-            {
+            public virtual PdfColorSpace GetUnderlyingColorSpace() {
                 return PdfColorSpace.MakeColorSpace(((PdfArray)GetPdfObject()).Get(1));
             }
         }

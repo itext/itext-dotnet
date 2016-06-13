@@ -46,11 +46,9 @@ using System.Collections.Generic;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
-    public abstract class OpenTypeFontTableReader
-    {
+    public abstract class OpenTypeFontTableReader {
         protected internal readonly RandomAccessFileOrArray rf;
 
         protected internal readonly int tableLocation;
@@ -69,8 +67,7 @@ namespace iTextSharp.IO.Font.Otf
 
         /// <exception cref="System.IO.IOException"/>
         protected internal OpenTypeFontTableReader(RandomAccessFileOrArray rf, int tableLocation, OpenTypeGdefTableReader
-             gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
-        {
+             gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm) {
             this.rf = rf;
             this.tableLocation = tableLocation;
             this.indexGlyphMap = indexGlyphMap;
@@ -78,126 +75,99 @@ namespace iTextSharp.IO.Font.Otf
             this.unitsPerEm = unitsPerEm;
         }
 
-        public virtual Glyph GetGlyph(int index)
-        {
+        public virtual Glyph GetGlyph(int index) {
             return indexGlyphMap.Get(index);
         }
 
-        public virtual OpenTableLookup GetLookupTable(int idx)
-        {
-            if (idx < 0 || idx >= lookupList.Count)
-            {
+        public virtual OpenTableLookup GetLookupTable(int idx) {
+            if (idx < 0 || idx >= lookupList.Count) {
                 return null;
             }
             return lookupList[idx];
         }
 
-        public virtual IList<ScriptRecord> GetScriptRecords()
-        {
+        public virtual IList<ScriptRecord> GetScriptRecords() {
             return scriptsType.GetScriptRecords();
         }
 
-        public virtual IList<FeatureRecord> GetFeatureRecords()
-        {
+        public virtual IList<FeatureRecord> GetFeatureRecords() {
             return featuresType.GetRecords();
         }
 
-        public virtual IList<FeatureRecord> GetFeatures(String[] scripts, String language)
-        {
+        public virtual IList<FeatureRecord> GetFeatures(String[] scripts, String language) {
             LanguageRecord rec = scriptsType.GetLanguageRecord(scripts, language);
-            if (rec == null)
-            {
+            if (rec == null) {
                 return null;
             }
             IList<FeatureRecord> ret = new List<FeatureRecord>();
-            foreach (int f in rec.features)
-            {
+            foreach (int f in rec.features) {
                 ret.Add(featuresType.GetRecord(f));
             }
             return ret;
         }
 
-        public virtual IList<FeatureRecord> GetSpecificFeatures(IList<FeatureRecord> features, String[] specific)
-        {
-            if (specific == null)
-            {
+        public virtual IList<FeatureRecord> GetSpecificFeatures(IList<FeatureRecord> features, String[] specific) {
+            if (specific == null) {
                 return features;
             }
             ICollection<String> hs = new HashSet<String>();
             //noinspection ManualArrayToCollectionCopy
-            foreach (String s in specific)
-            {
+            foreach (String s in specific) {
                 hs.Add(s);
             }
             IList<FeatureRecord> recs = new List<FeatureRecord>();
-            foreach (FeatureRecord rec in features)
-            {
-                if (hs.Contains(rec.tag))
-                {
+            foreach (FeatureRecord rec in features) {
+                if (hs.Contains(rec.tag)) {
                     recs.Add(rec);
                 }
             }
             return recs;
         }
 
-        public virtual FeatureRecord GetRequiredFeature(String[] scripts, String language)
-        {
+        public virtual FeatureRecord GetRequiredFeature(String[] scripts, String language) {
             LanguageRecord rec = scriptsType.GetLanguageRecord(scripts, language);
-            if (rec == null)
-            {
+            if (rec == null) {
                 return null;
             }
             return featuresType.GetRecord(rec.featureRequired);
         }
 
-        public virtual IList<OpenTableLookup> GetLookups(FeatureRecord[] features)
-        {
+        public virtual IList<OpenTableLookup> GetLookups(FeatureRecord[] features) {
             IntHashtable hash = new IntHashtable();
-            foreach (FeatureRecord rec in features)
-            {
-                foreach (int idx in rec.lookups)
-                {
+            foreach (FeatureRecord rec in features) {
+                foreach (int idx in rec.lookups) {
                     hash.Put(idx, 1);
                 }
             }
             IList<OpenTableLookup> ret = new List<OpenTableLookup>();
-            foreach (int idx_1 in hash.ToOrderedKeys())
-            {
+            foreach (int idx_1 in hash.ToOrderedKeys()) {
                 ret.Add(lookupList[idx_1]);
             }
             return ret;
         }
 
-        public virtual IList<OpenTableLookup> GetLookups(FeatureRecord feature)
-        {
+        public virtual IList<OpenTableLookup> GetLookups(FeatureRecord feature) {
             //TODO see getLookups(FeatureRecord[]) method. Is it realy make sense to order features?
             IList<OpenTableLookup> ret = new List<OpenTableLookup>(feature.lookups.Length);
-            foreach (int idx in feature.lookups)
-            {
+            foreach (int idx in feature.lookups) {
                 ret.Add(lookupList[idx]);
             }
             return ret;
         }
 
-        public virtual bool IsSkip(int glyph, int flag)
-        {
+        public virtual bool IsSkip(int glyph, int flag) {
             return gdef.IsSkip(glyph, flag);
         }
 
-        public virtual int GetUnitsPerEm()
-        {
+        public virtual int GetUnitsPerEm() {
             return unitsPerEm;
         }
 
-        public virtual LanguageRecord GetLanguageRecord(String otfScriptTag)
-        {
+        public virtual LanguageRecord GetLanguageRecord(String otfScriptTag) {
             LanguageRecord languageRecord = null;
-            if (otfScriptTag != null)
-            {
-                foreach (ScriptRecord record in GetScriptRecords())
-                {
-                    if (otfScriptTag.Equals(record.tag))
-                    {
+            if (otfScriptTag != null) {
+                foreach (ScriptRecord record in GetScriptRecords()) {
+                    if (otfScriptTag.Equals(record.tag)) {
                         languageRecord = record.defaultLanguage;
                         break;
                     }
@@ -211,48 +181,40 @@ namespace iTextSharp.IO.Font.Otf
             );
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal OtfClass ReadClassDefinition(int classLocation)
-        {
+        protected internal OtfClass ReadClassDefinition(int classLocation) {
             return new OtfClass(rf, classLocation);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal int[] ReadUShortArray(int size, int location)
-        {
+        protected internal int[] ReadUShortArray(int size, int location) {
             return OtfReadCommon.ReadUShortArray(rf, size, location);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal int[] ReadUShortArray(int size)
-        {
+        protected internal int[] ReadUShortArray(int size) {
             return OtfReadCommon.ReadUShortArray(rf, size);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadCoverages(int[] locations, IList<ICollection<int>> coverage)
-        {
+        protected internal virtual void ReadCoverages(int[] locations, IList<ICollection<int>> coverage) {
             OtfReadCommon.ReadCoverages(rf, locations, coverage);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal IList<int> ReadCoverageFormat(int coverageLocation)
-        {
+        protected internal IList<int> ReadCoverageFormat(int coverageLocation) {
             return OtfReadCommon.ReadCoverageFormat(rf, coverageLocation);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual SubstLookupRecord[] ReadSubstLookupRecords(int substCount)
-        {
+        protected internal virtual SubstLookupRecord[] ReadSubstLookupRecords(int substCount) {
             return OtfReadCommon.ReadSubstLookupRecords(rf, substCount);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual TagAndLocation[] ReadTagAndLocations(int baseLocation)
-        {
+        protected internal virtual TagAndLocation[] ReadTagAndLocations(int baseLocation) {
             int count = rf.ReadUnsignedShort();
             TagAndLocation[] tagslLocs = new TagAndLocation[count];
-            for (int k = 0; k < count; ++k)
-            {
+            for (int k = 0; k < count; ++k) {
                 TagAndLocation tl = new TagAndLocation();
                 tl.tag = rf.ReadString(4, "utf-8");
                 tl.location = rf.ReadUnsignedShort() + baseLocation;
@@ -270,10 +232,8 @@ namespace iTextSharp.IO.Font.Otf
         /// </remarks>
         /// <exception cref="FontReadingException"/>
         /// <exception cref="iTextSharp.IO.Font.Otf.FontReadingException"/>
-        internal void StartReadingTable()
-        {
-            try
-            {
+        internal void StartReadingTable() {
+            try {
                 rf.Seek(tableLocation);
                 /*int version =*/
                 rf.ReadInt();
@@ -288,29 +248,25 @@ namespace iTextSharp.IO.Font.Otf
                 // read LookUpList table
                 ReadLookupListTable(tableLocation + lookupListOffset);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new FontReadingException("Error reading font file", e);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void ReadLookupListTable(int lookupListTableLocation)
-        {
+        private void ReadLookupListTable(int lookupListTableLocation) {
             lookupList = new List<OpenTableLookup>();
             rf.Seek(lookupListTableLocation);
             int lookupCount = rf.ReadUnsignedShort();
             int[] lookupTableLocations = ReadUShortArray(lookupCount, lookupListTableLocation);
             // read LookUp tables
-            foreach (int lookupLocation in lookupTableLocations)
-            {
+            foreach (int lookupLocation in lookupTableLocations) {
                 ReadLookupTable(lookupLocation);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void ReadLookupTable(int lookupTableLocation)
-        {
+        private void ReadLookupTable(int lookupTableLocation) {
             rf.Seek(lookupTableLocation);
             int lookupType = rf.ReadUnsignedShort();
             int lookupFlag = rf.ReadUnsignedShort();

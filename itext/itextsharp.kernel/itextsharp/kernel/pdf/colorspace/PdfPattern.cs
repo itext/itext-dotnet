@@ -45,61 +45,48 @@ using System;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace
-{
-    public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Colorspace {
+    public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary> {
         protected internal PdfPattern(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public static iTextSharp.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary pdfObject)
-        {
+        public static iTextSharp.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary pdfObject) {
             PdfNumber type = pdfObject.GetAsNumber(PdfName.PatternType);
-            if (type.IntValue() == 1 && pdfObject is PdfStream)
-            {
+            if (type.IntValue() == 1 && pdfObject is PdfStream) {
                 return new PdfPattern.Tiling((PdfStream)pdfObject);
             }
-            else
-            {
-                if (type.IntValue() == 2)
-                {
+            else {
+                if (type.IntValue() == 2) {
                     return new PdfPattern.Shading(pdfObject);
                 }
             }
             throw new ArgumentException("pdfObject");
         }
 
-        public virtual PdfArray GetMatrix()
-        {
+        public virtual PdfArray GetMatrix() {
             return GetPdfObject().GetAsArray(PdfName.Matrix);
         }
 
-        public virtual void SetMatrix(PdfArray matrix)
-        {
+        public virtual void SetMatrix(PdfArray matrix) {
             GetPdfObject().Put(PdfName.Matrix, matrix);
             SetModified();
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
-        public class Tiling : PdfPattern
-        {
+        public class Tiling : PdfPattern {
             private PdfResources resources = null;
 
-            public class PaintType
-            {
+            public class PaintType {
                 public const int COLORED = 1;
 
                 public const int UNCOLORED = 2;
             }
 
-            public class TilingType
-            {
+            public class TilingType {
                 public const int CONSTANT_SPACING = 1;
 
                 public const int NO_DISTORTION = 2;
@@ -108,48 +95,39 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
 
             public Tiling(PdfStream pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public Tiling(float width, float height)
-                : this(width, height, true)
-            {
+                : this(width, height, true) {
             }
 
             public Tiling(float width, float height, bool colored)
-                : this(new Rectangle(width, height), colored)
-            {
+                : this(new Rectangle(width, height), colored) {
             }
 
             public Tiling(Rectangle bbox)
-                : this(bbox, true)
-            {
+                : this(bbox, true) {
             }
 
             public Tiling(Rectangle bbox, bool colored)
-                : this(bbox, bbox.GetWidth(), bbox.GetHeight(), colored)
-            {
+                : this(bbox, bbox.GetWidth(), bbox.GetHeight(), colored) {
             }
 
             public Tiling(float width, float height, float xStep, float yStep)
-                : this(width, height, xStep, yStep, true)
-            {
+                : this(width, height, xStep, yStep, true) {
             }
 
             public Tiling(float width, float height, float xStep, float yStep, bool colored)
-                : this(new Rectangle(width, height), xStep, yStep, colored)
-            {
+                : this(new Rectangle(width, height), xStep, yStep, colored) {
             }
 
             public Tiling(Rectangle bbox, float xStep, float yStep)
-                : this(bbox, xStep, yStep, true)
-            {
+                : this(bbox, xStep, yStep, true) {
             }
 
             public Tiling(Rectangle bbox, float xStep, float yStep, bool colored)
-                : base(new PdfStream())
-            {
+                : base(new PdfStream()) {
                 GetPdfObject().Put(PdfName.Type, PdfName.Pattern);
                 GetPdfObject().Put(PdfName.PatternType, new PdfNumber(1));
                 GetPdfObject().Put(PdfName.PaintType, new PdfNumber(colored ? PdfPattern.Tiling.PaintType.COLORED : PdfPattern.Tiling.PaintType
@@ -162,74 +140,60 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
             }
 
-            public virtual bool IsColored()
-            {
+            public virtual bool IsColored() {
                 return GetPdfObject().GetAsNumber(PdfName.PaintType).IntValue() == PdfPattern.Tiling.PaintType.COLORED;
             }
 
-            public virtual void SetColored(bool colored)
-            {
+            public virtual void SetColored(bool colored) {
                 GetPdfObject().Put(PdfName.PaintType, new PdfNumber(colored ? PdfPattern.Tiling.PaintType.COLORED : PdfPattern.Tiling.PaintType
                     .UNCOLORED));
                 SetModified();
             }
 
-            public virtual int GetTilingType()
-            {
+            public virtual int GetTilingType() {
                 return GetPdfObject().GetAsNumber(PdfName.TilingType).IntValue();
             }
 
-            public virtual void SetTilingType(int tilingType)
-            {
+            public virtual void SetTilingType(int tilingType) {
                 if (tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING && tilingType != PdfPattern.Tiling.TilingType
-                    .NO_DISTORTION && tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING_AND_FASTER_TILING)
-                {
+                    .NO_DISTORTION && tilingType != PdfPattern.Tiling.TilingType.CONSTANT_SPACING_AND_FASTER_TILING) {
                     throw new ArgumentException("tilingType");
                 }
                 GetPdfObject().Put(PdfName.TilingType, new PdfNumber(tilingType));
                 SetModified();
             }
 
-            public virtual Rectangle GetBBox()
-            {
+            public virtual Rectangle GetBBox() {
                 return GetPdfObject().GetAsArray(PdfName.BBox).ToRectangle();
             }
 
-            public virtual void SetBBox(Rectangle bbox)
-            {
+            public virtual void SetBBox(Rectangle bbox) {
                 GetPdfObject().Put(PdfName.BBox, new PdfArray(bbox));
                 SetModified();
             }
 
-            public virtual float GetXStep()
-            {
+            public virtual float GetXStep() {
                 return GetPdfObject().GetAsNumber(PdfName.XStep).FloatValue();
             }
 
-            public virtual void SetXStep(float xStep)
-            {
+            public virtual void SetXStep(float xStep) {
                 GetPdfObject().Put(PdfName.XStep, new PdfNumber(xStep));
                 SetModified();
             }
 
-            public virtual float GetYStep()
-            {
+            public virtual float GetYStep() {
                 return GetPdfObject().GetAsNumber(PdfName.YStep).FloatValue();
             }
 
-            public virtual void SetYStep(float yStep)
-            {
+            public virtual void SetYStep(float yStep) {
                 GetPdfObject().Put(PdfName.YStep, new PdfNumber(yStep));
                 SetModified();
             }
 
-            public virtual PdfResources GetResources()
-            {
-                if (this.resources == null)
-                {
+            public virtual PdfResources GetResources() {
+                if (this.resources == null) {
                     PdfDictionary resourcesDict = GetPdfObject().GetAsDictionary(PdfName.Resources);
-                    if (resourcesDict == null)
-                    {
+                    if (resourcesDict == null) {
                         resourcesDict = new PdfDictionary();
                         GetPdfObject().Put(PdfName.Resources, resourcesDict);
                     }
@@ -238,41 +202,34 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
                 return resources;
             }
 
-            public override void Flush()
-            {
+            public override void Flush() {
                 resources = null;
                 base.Flush();
             }
         }
 
-        public class Shading : PdfPattern
-        {
+        public class Shading : PdfPattern {
             public Shading(PdfDictionary pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public Shading(PdfShading shading)
-                : base(new PdfDictionary())
-            {
+                : base(new PdfDictionary()) {
                 GetPdfObject().Put(PdfName.Type, PdfName.Pattern);
                 GetPdfObject().Put(PdfName.PatternType, new PdfNumber(2));
                 GetPdfObject().Put(PdfName.Shading, shading.GetPdfObject());
             }
 
-            public virtual PdfDictionary GetShading()
-            {
+            public virtual PdfDictionary GetShading() {
                 return (PdfDictionary)GetPdfObject().Get(PdfName.Shading);
             }
 
-            public virtual void SetShading(PdfShading shading)
-            {
+            public virtual void SetShading(PdfShading shading) {
                 GetPdfObject().Put(PdfName.Shading, shading.GetPdfObject());
                 SetModified();
             }
 
-            public virtual void SetShading(PdfDictionary shading)
-            {
+            public virtual void SetShading(PdfDictionary shading) {
                 GetPdfObject().Put(PdfName.Shading, shading);
                 SetModified();
             }

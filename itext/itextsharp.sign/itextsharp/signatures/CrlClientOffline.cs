@@ -46,15 +46,13 @@ using System.Collections.Generic;
 using Org.BouncyCastle.X509;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// An implementation of the CrlClient that handles offline
     /// Certificate Revocation Lists.
     /// </summary>
     /// <author>Paulo Soares</author>
-    public class CrlClientOffline : ICrlClient
-    {
+    public class CrlClientOffline : ICrlClient {
         /// <summary>The CRL as a byte array.</summary>
         private IList<byte[]> crls = new List<byte[]>();
 
@@ -63,8 +61,7 @@ namespace iTextSharp.Signatures
         /// have a local cache of the Certificate Revocation List.
         /// </summary>
         /// <param name="crlEncoded">the CRL bytes</param>
-        public CrlClientOffline(byte[] crlEncoded)
-        {
+        public CrlClientOffline(byte[] crlEncoded) {
             crls.Add(crlEncoded);
         }
 
@@ -73,22 +70,18 @@ namespace iTextSharp.Signatures
         /// have a local cache of the Certificate Revocation List.
         /// </summary>
         /// <param name="crl">a CRL object</param>
-        public CrlClientOffline(X509Crl crl)
-        {
-            try
-            {
+        public CrlClientOffline(X509Crl crl) {
+            try {
                 crls.Add(((X509Crl)crl).GetEncoded());
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 throw new PdfException(ex);
             }
         }
 
         /// <summary>Returns the CRL bytes (the parameters are ignored).</summary>
         /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)"/>
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url)
-        {
+        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
             return crls;
         }
     }

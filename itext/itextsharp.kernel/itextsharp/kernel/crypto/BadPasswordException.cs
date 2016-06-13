@@ -44,20 +44,16 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Crypto
-{
-    public class BadPasswordException : PdfException
-    {
+namespace iTextSharp.Kernel.Crypto {
+    public class BadPasswordException : PdfException {
         public const String PdfReaderNotOpenedWithOwnerPassword = "PdfReader is not opened with owner password";
 
         public BadPasswordException(String message, Exception cause)
-            : base(message, cause)
-        {
+            : base(message, cause) {
         }
 
         public BadPasswordException(String message)
-            : base(message)
-        {
+            : base(message) {
         }
     }
 }

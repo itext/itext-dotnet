@@ -53,8 +53,7 @@ using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Time Stamp Authority Client interface implementation using Bouncy Castle
     /// org.bouncycastle.tsp package.
@@ -67,8 +66,7 @@ namespace iTextSharp.Signatures
     /// for ease of subclassing.
     /// </p>
     /// </remarks>
-    public class TSAClientBouncyCastle : ITSAClient
-    {
+    public class TSAClientBouncyCastle : ITSAClient {
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.TSAClientBouncyCastle
             ));
@@ -100,8 +98,7 @@ namespace iTextSharp.Signatures
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
         /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         public TSAClientBouncyCastle(String url)
-            : this(url, null, null, DEFAULTTOKENSIZE, DEFAULTHASHALGORITHM)
-        {
+            : this(url, null, null, DEFAULTTOKENSIZE, DEFAULTHASHALGORITHM) {
         }
 
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
@@ -109,8 +106,7 @@ namespace iTextSharp.Signatures
         /// <param name="username">String - user(account) name</param>
         /// <param name="password">String - password</param>
         public TSAClientBouncyCastle(String url, String username, String password)
-            : this(url, username, password, 4096, DEFAULTHASHALGORITHM)
-        {
+            : this(url, username, password, 4096, DEFAULTHASHALGORITHM) {
         }
 
         /// <summary>Constructor.</summary>
@@ -125,8 +121,7 @@ namespace iTextSharp.Signatures
         /// <param name="password">String - password</param>
         /// <param name="tokSzEstimate">int - estimated size of received time stamp token (DER encoded)</param>
         public TSAClientBouncyCastle(String url, String username, String password, int tokSzEstimate, String digestAlgorithm
-            )
-        {
+            ) {
             this.tsaURL = url;
             this.tsaUsername = username;
             this.tsaPassword = password;
@@ -135,8 +130,7 @@ namespace iTextSharp.Signatures
         }
 
         /// <param name="tsaInfo">the tsaInfo to set</param>
-        public virtual void SetTSAInfo(ITSAInfoBouncyCastle tsaInfo)
-        {
+        public virtual void SetTSAInfo(ITSAInfoBouncyCastle tsaInfo) {
             this.tsaInfo = tsaInfo;
         }
 
@@ -146,16 +140,14 @@ namespace iTextSharp.Signatures
         /// Returned value reflects the result of the last succesfull call, padded
         /// </remarks>
         /// <returns>an estimate of the token size</returns>
-        public virtual int GetTokenSizeEstimate()
-        {
+        public virtual int GetTokenSizeEstimate() {
             return tokenSizeEstimate;
         }
 
         /// <summary>Gets the MessageDigest to digest the data imprint</summary>
         /// <returns>the digest algorithm name</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual IDigest GetMessageDigest()
-        {
+        public virtual IDigest GetMessageDigest() {
             return SignUtils.GetMessageDigest(digestAlgorithm);
         }
 
@@ -168,8 +160,7 @@ namespace iTextSharp.Signatures
         /// <returns>encoded, TSA signed data of the timeStampToken</returns>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.Bouncycastle.Tsp.TSPException"/>
-        public virtual byte[] GetTimeStampToken(byte[] imprint)
-        {
+        public virtual byte[] GetTimeStampToken(byte[] imprint) {
             byte[] respBytes = null;
             // Setup the time stamp request
             TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
@@ -187,8 +178,7 @@ namespace iTextSharp.Signatures
             response.Validate(request);
             PkiFailureInfo failure = response.GetFailInfo();
             int value = (failure == null) ? 0 : failure.IntValue;
-            if (value != 0)
-            {
+            if (value != 0) {
                 // @todo: Translate value of 15 error codes defined by PKIFailureInfo to string
                 throw new PdfException(PdfException.InvalidTsa1ResponseCode2).SetMessageParams(tsaURL, value.ToString());
             }
@@ -196,8 +186,7 @@ namespace iTextSharp.Signatures
             //        assure we do not sign using an invalid timestamp).
             // extract just the time stamp token (removes communication status info)
             TimeStampToken tsToken = response.TimeStampToken;
-            if (tsToken == null)
-            {
+            if (tsToken == null) {
                 throw new PdfException(PdfException.Tsa1FailedToReturnTimeStampToken2).SetMessageParams(tsaURL, response.GetStatusString
                     ());
             }
@@ -205,8 +194,7 @@ namespace iTextSharp.Signatures
             // to view details
             byte[] encoded = tsToken.GetEncoded();
             LOGGER.Info("Timestamp generated: " + tsTokenInfo.GenTime);
-            if (tsaInfo != null)
-            {
+            if (tsaInfo != null) {
                 tsaInfo.InspectTimeStampTokenInfo(tsTokenInfo);
             }
             // Update our token size estimate for the next call (padded to be safe)
@@ -217,8 +205,7 @@ namespace iTextSharp.Signatures
         /// <summary>Get timestamp token - communications layer</summary>
         /// <returns>- byte[] - TSA response, raw bytes (RFC 3161 encoded)</returns>
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual byte[] GetTSAResponse(byte[] requestBytes)
-        {
+        protected internal virtual byte[] GetTSAResponse(byte[] requestBytes) {
             // Setup the TSA connection
             SignUtils.TsaResponse response = SignUtils.GetTsaResponseForUserRequest(tsaURL, requestBytes, tsaUsername, 
                 tsaPassword);
@@ -227,14 +214,12 @@ namespace iTextSharp.Signatures
             MemoryStream baos = new MemoryStream();
             byte[] buffer = new byte[1024];
             int bytesRead = 0;
-            while ((bytesRead = inp.JRead(buffer, 0, buffer.Length)) >= 0)
-            {
+            while ((bytesRead = inp.JRead(buffer, 0, buffer.Length)) >= 0) {
                 baos.Write(buffer, 0, bytesRead);
             }
             byte[] respBytes = baos.ToArray();
             if (response.encoding != null && response.encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture)))
-            {
+                ).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
                 respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"
                     ));
             }

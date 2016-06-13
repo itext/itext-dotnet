@@ -44,98 +44,69 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace
-{
-    public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject>
-    {
+namespace iTextSharp.Kernel.Pdf.Colorspace {
+    public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject> {
         public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
             (PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, PdfName.Pattern));
 
         protected internal PdfColorSpace(PdfObject pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         public abstract int GetNumberOfComponents();
 
-        public static iTextSharp.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject pdfObject)
-        {
-            if (pdfObject.IsIndirectReference())
-            {
+        public static iTextSharp.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject pdfObject) {
+            if (pdfObject.IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
             }
-            if (PdfName.DeviceGray.Equals(pdfObject))
-            {
+            if (PdfName.DeviceGray.Equals(pdfObject)) {
                 return new PdfDeviceCs.Gray();
             }
-            else
-            {
-                if (PdfName.DeviceRGB.Equals(pdfObject))
-                {
+            else {
+                if (PdfName.DeviceRGB.Equals(pdfObject)) {
                     return new PdfDeviceCs.Rgb();
                 }
-                else
-                {
-                    if (PdfName.DeviceCMYK.Equals(pdfObject))
-                    {
+                else {
+                    if (PdfName.DeviceCMYK.Equals(pdfObject)) {
                         return new PdfDeviceCs.Cmyk();
                     }
-                    else
-                    {
-                        if (PdfName.Pattern.Equals(pdfObject))
-                        {
+                    else {
+                        if (PdfName.Pattern.Equals(pdfObject)) {
                             return new PdfSpecialCs.Pattern();
                         }
-                        else
-                        {
-                            if (pdfObject.IsArray())
-                            {
+                        else {
+                            if (pdfObject.IsArray()) {
                                 PdfArray array = (PdfArray)pdfObject;
                                 PdfName csType = array.GetAsName(0);
-                                if (PdfName.CalGray.Equals(csType))
-                                {
+                                if (PdfName.CalGray.Equals(csType)) {
                                     return new PdfCieBasedCs.CalGray(array);
                                 }
-                                else
-                                {
-                                    if (PdfName.CalRGB.Equals(csType))
-                                    {
+                                else {
+                                    if (PdfName.CalRGB.Equals(csType)) {
                                         return new PdfCieBasedCs.CalRgb(array);
                                     }
-                                    else
-                                    {
-                                        if (PdfName.Lab.Equals(csType))
-                                        {
+                                    else {
+                                        if (PdfName.Lab.Equals(csType)) {
                                             return new PdfCieBasedCs.Lab(array);
                                         }
-                                        else
-                                        {
-                                            if (PdfName.ICCBased.Equals(csType))
-                                            {
+                                        else {
+                                            if (PdfName.ICCBased.Equals(csType)) {
                                                 return new PdfCieBasedCs.IccBased(array);
                                             }
-                                            else
-                                            {
-                                                if (PdfName.Indexed.Equals(csType))
-                                                {
+                                            else {
+                                                if (PdfName.Indexed.Equals(csType)) {
                                                     return new PdfSpecialCs.Indexed(array);
                                                 }
-                                                else
-                                                {
-                                                    if (PdfName.Separation.Equals(csType))
-                                                    {
+                                                else {
+                                                    if (PdfName.Separation.Equals(csType)) {
                                                         return new PdfSpecialCs.Separation(array);
                                                     }
-                                                    else
-                                                    {
-                                                        if (PdfName.DeviceN.Equals(csType))
-                                                        {
+                                                    else {
+                                                        if (PdfName.DeviceN.Equals(csType)) {
                                                             return array.Size() == 4 ? new PdfSpecialCs.DeviceN(array) : new PdfSpecialCs.NChannel(array);
                                                         }
-                                                        else
-                                                        {
-                                                            if (PdfName.Pattern.Equals(csType))
-                                                            {
+                                                        else {
+                                                            if (PdfName.Pattern.Equals(csType)) {
                                                                 return new PdfSpecialCs.UncoloredTilingPattern(array);
                                                             }
                                                         }

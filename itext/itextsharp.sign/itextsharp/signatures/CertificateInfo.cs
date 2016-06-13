@@ -50,17 +50,14 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Class containing static methods that allow you to get information from
     /// an X509 Certificate: the issuer and the subject.
     /// </summary>
-    public class CertificateInfo
-    {
+    public class CertificateInfo {
         /// <summary>Class that holds an X509 name.</summary>
-        public class X500Name
-        {
+        public class X500Name {
             /// <summary>Country code - StringType(SIZE(2)).</summary>
             public static readonly DerObjectIdentifier C = new DerObjectIdentifier("2.5.4.6");
 
@@ -120,8 +117,7 @@ namespace iTextSharp.Signatures
             public static readonly IDictionary<DerObjectIdentifier, String> DefaultSymbols = new Dictionary<DerObjectIdentifier
                 , String>();
 
-            static X500Name()
-            {
+            static X500Name() {
                 // Inner classes
                 DefaultSymbols[C] = "C";
                 DefaultSymbols[O] = "O";
@@ -145,23 +141,18 @@ namespace iTextSharp.Signatures
 
             /// <summary>Constructs an X509 name.</summary>
             /// <param name="seq">an ASN1 Sequence</param>
-            public X500Name(Asn1Sequence seq)
-            {
+            public X500Name(Asn1Sequence seq) {
                 IEnumerator e = seq.GetObjects();
-                while (e.MoveNext())
-                {
+                while (e.MoveNext()) {
                     Asn1Set set = (Asn1Set)e.Current;
-                    for (int i = 0; i < set.Count; i++)
-                    {
+                    for (int i = 0; i < set.Count; i++) {
                         Asn1Sequence s = (Asn1Sequence)set[i];
                         String id = DefaultSymbols.Get((DerObjectIdentifier)s[0]);
-                        if (id == null)
-                        {
+                        if (id == null) {
                             continue;
                         }
                         IList<String> vs = values.Get(id);
-                        if (vs == null)
-                        {
+                        if (vs == null) {
                             vs = new List<String>();
                             values[id] = vs;
                         }
@@ -172,23 +163,19 @@ namespace iTextSharp.Signatures
 
             /// <summary>Constructs an X509 name.</summary>
             /// <param name="dirName">a directory name</param>
-            public X500Name(String dirName)
-            {
+            public X500Name(String dirName) {
                 CertificateInfo.X509NameTokenizer nTok = new CertificateInfo.X509NameTokenizer(dirName);
-                while (nTok.HasMoreTokens())
-                {
+                while (nTok.HasMoreTokens()) {
                     String token = nTok.NextToken();
                     int index = token.IndexOf('=');
-                    if (index == -1)
-                    {
+                    if (index == -1) {
                         throw new ArgumentException();
                     }
                     /*MessageLocalization.getComposedMessage("badly.formated.directory.string")*/
                     String id = token.JSubstring(0, index).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
                     String value = token.Substring(index + 1);
                     IList<String> vs = values.Get(id);
-                    if (vs == null)
-                    {
+                    if (vs == null) {
                         vs = new List<String>();
                         values[id] = vs;
                     }
@@ -199,8 +186,7 @@ namespace iTextSharp.Signatures
             /// <summary>Gets the first entry from the field array retrieved from the values Map.</summary>
             /// <param name="name">the field name</param>
             /// <returns>the (first) field value</returns>
-            public virtual String GetField(String name)
-            {
+            public virtual String GetField(String name) {
                 IList<String> vs = values.Get(name);
                 return vs == null ? null : (String)vs[0];
             }
@@ -208,20 +194,17 @@ namespace iTextSharp.Signatures
             /// <summary>Gets a field array from the values Map.</summary>
             /// <param name="name"/>
             /// <returns>List</returns>
-            public virtual IList<String> GetFieldArray(String name)
-            {
+            public virtual IList<String> GetFieldArray(String name) {
                 return values.Get(name);
             }
 
             /// <summary>Getter for values.</summary>
             /// <returns>Map with the fields of the X509 name</returns>
-            public virtual IDictionary<String, IList<String>> GetFields()
-            {
+            public virtual IDictionary<String, IList<String>> GetFields() {
                 return values;
             }
 
-            public override String ToString()
-            {
+            public override String ToString() {
                 return values.ToString();
             }
         }
@@ -232,8 +215,7 @@ namespace iTextSharp.Signatures
         /// Class for breaking up an X500 Name into it's component tokens, similar to java.util.StringTokenizer.
         /// We need this class as some of the lightweight Java environments don't support classes such as StringTokenizer.
         /// </remarks>
-        public class X509NameTokenizer
-        {
+        public class X509NameTokenizer {
             private String oid;
 
             private int index;
@@ -242,67 +224,52 @@ namespace iTextSharp.Signatures
 
             /// <summary>Creates an X509NameTokenizer.</summary>
             /// <param name="oid">the oid that needs to be parsed</param>
-            public X509NameTokenizer(String oid)
-            {
+            public X509NameTokenizer(String oid) {
                 this.oid = oid;
                 this.index = -1;
             }
 
             /// <summary>Checks if the tokenizer has any tokens left.</summary>
             /// <returns>true if there are any tokens left, false if there aren't</returns>
-            public virtual bool HasMoreTokens()
-            {
+            public virtual bool HasMoreTokens() {
                 return index != oid.Length;
             }
 
             /// <summary>Returns the next token.</summary>
             /// <returns>the next token</returns>
-            public virtual String NextToken()
-            {
-                if (index == oid.Length)
-                {
+            public virtual String NextToken() {
+                if (index == oid.Length) {
                     return null;
                 }
                 int end = index + 1;
                 bool quoted = false;
                 bool escaped = false;
                 buf.Length = 0;
-                while (end != oid.Length)
-                {
+                while (end != oid.Length) {
                     char c = oid[end];
-                    if (c == '"')
-                    {
-                        if (!escaped)
-                        {
+                    if (c == '"') {
+                        if (!escaped) {
                             quoted = !quoted;
                         }
-                        else
-                        {
+                        else {
                             buf.Append(c);
                         }
                         escaped = false;
                     }
-                    else
-                    {
-                        if (escaped || quoted)
-                        {
+                    else {
+                        if (escaped || quoted) {
                             buf.Append(c);
                             escaped = false;
                         }
-                        else
-                        {
-                            if (c == '\\')
-                            {
+                        else {
+                            if (c == '\\') {
                                 escaped = true;
                             }
-                            else
-                            {
-                                if (c == ',')
-                                {
+                            else {
+                                if (c == ',') {
                                     break;
                                 }
-                                else
-                                {
+                                else {
                                     buf.Append(c);
                                 }
                             }
@@ -319,14 +286,11 @@ namespace iTextSharp.Signatures
         /// <summary>Get the issuer fields from an X509 Certificate.</summary>
         /// <param name="cert">an X509Certificate</param>
         /// <returns>an X500Name</returns>
-        public static CertificateInfo.X500Name GetIssuerFields(X509Certificate cert)
-        {
-            try
-            {
+        public static CertificateInfo.X500Name GetIssuerFields(X509Certificate cert) {
+            try {
                 return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetIssuer(cert.GetTbsCertificate()));
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new PdfException(e);
             }
         }
@@ -334,16 +298,13 @@ namespace iTextSharp.Signatures
         /// <summary>Get the "issuer" from the TBSCertificate bytes that are passed in.</summary>
         /// <param name="enc">a TBSCertificate in a byte array</param>
         /// <returns>an ASN1Primitive</returns>
-        public static Asn1Object GetIssuer(byte[] enc)
-        {
-            try
-            {
+        public static Asn1Object GetIssuer(byte[] enc) {
+            try {
                 Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
                 Asn1Sequence seq = (Asn1Sequence)@in.ReadObject();
                 return (Asn1Object)seq[seq[0] is Asn1TaggedObject ? 3 : 2];
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(e);
             }
         }
@@ -352,17 +313,13 @@ namespace iTextSharp.Signatures
         /// <summary>Get the subject fields from an X509 Certificate.</summary>
         /// <param name="cert">an X509Certificate</param>
         /// <returns>an X500Name</returns>
-        public static CertificateInfo.X500Name GetSubjectFields(X509Certificate cert)
-        {
-            try
-            {
-                if (cert != null)
-                {
+        public static CertificateInfo.X500Name GetSubjectFields(X509Certificate cert) {
+            try {
+                if (cert != null) {
                     return new CertificateInfo.X500Name((Asn1Sequence)CertificateInfo.GetSubject(cert.GetTbsCertificate()));
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new PdfException(e);
             }
             return null;
@@ -371,16 +328,13 @@ namespace iTextSharp.Signatures
         /// <summary>Get the "subject" from the TBSCertificate bytes that are passed in.</summary>
         /// <param name="enc">A TBSCertificate in a byte array</param>
         /// <returns>a ASN1Primitive</returns>
-        public static Asn1Object GetSubject(byte[] enc)
-        {
-            try
-            {
+        public static Asn1Object GetSubject(byte[] enc) {
+            try {
                 Asn1InputStream @in = new Asn1InputStream(new MemoryStream(enc));
                 Asn1Sequence seq = (Asn1Sequence)@in.ReadObject();
                 return (Asn1Object)seq[seq[0] is Asn1TaggedObject ? 5 : 4];
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(e);
             }
         }

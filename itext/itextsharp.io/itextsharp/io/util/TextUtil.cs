@@ -45,17 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace iTextSharp.IO.Util
-{
+namespace iTextSharp.IO.Util {
     /// <summary>This file is a helper class for internal usage only.</summary>
     /// <remarks>
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </remarks>
-    public sealed class TextUtil
-    {
-        private TextUtil()
-        {
+    public sealed class TextUtil {
+        private TextUtil() {
         }
 
         /// <summary>
@@ -64,8 +61,7 @@ namespace iTextSharp.IO.Util
         /// </summary>
         /// <param name="c">the character</param>
         /// <returns>true if the character belongs to the interval</returns>
-        public static bool IsSurrogateHigh(char c)
-        {
+        public static bool IsSurrogateHigh(char c) {
             return c >= '\ud800' && c <= '\udbff';
         }
 
@@ -75,8 +71,7 @@ namespace iTextSharp.IO.Util
         /// </summary>
         /// <param name="c">the character</param>
         /// <returns>true if the character belongs to the interval</returns>
-        public static bool IsSurrogateLow(char c)
-        {
+        public static bool IsSurrogateLow(char c) {
             return c >= '\udc00' && c <= '\udfff';
         }
 
@@ -88,8 +83,7 @@ namespace iTextSharp.IO.Util
         /// <param name="text">the String with the high and low surrogate characters</param>
         /// <param name="idx">the index of the 'high' character in the pair</param>
         /// <returns>true if the characters are surrogate pairs</returns>
-        public static bool IsSurrogatePair(String text, int idx)
-        {
+        public static bool IsSurrogatePair(String text, int idx) {
             return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow(text[idx + 1]);
         }
 
@@ -101,8 +95,7 @@ namespace iTextSharp.IO.Util
         /// <param name="text">the character array with the high and low surrogate characters</param>
         /// <param name="idx">the index of the 'high' character in the pair</param>
         /// <returns>true if the characters are surrogate pairs</returns>
-        public static bool IsSurrogatePair(char[] text, int idx)
-        {
+        public static bool IsSurrogatePair(char[] text, int idx) {
             return !(idx < 0 || idx > text.Length - 2) && IsSurrogateHigh(text[idx]) && IsSurrogateLow(text[idx + 1]);
         }
 
@@ -113,8 +106,7 @@ namespace iTextSharp.IO.Util
         /// <param name="highSurrogate">the high surrogate value</param>
         /// <param name="lowSurrogate">the low surrogate value</param>
         /// <returns>a code point value</returns>
-        public static int ConvertToUtf32(char highSurrogate, char lowSurrogate)
-        {
+        public static int ConvertToUtf32(char highSurrogate, char lowSurrogate) {
             return (highSurrogate - 0xd800) * 0x400 + lowSurrogate - 0xdc00 + 0x10000;
         }
 
@@ -122,8 +114,7 @@ namespace iTextSharp.IO.Util
         /// <param name="text">a character array that has the unicode character(s)</param>
         /// <param name="idx">the index of the 'high' character</param>
         /// <returns>the code point value</returns>
-        public static int ConvertToUtf32(char[] text, int idx)
-        {
+        public static int ConvertToUtf32(char[] text, int idx) {
             return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
         }
 
@@ -131,28 +122,22 @@ namespace iTextSharp.IO.Util
         /// <param name="text">a String that has the unicode character(s)</param>
         /// <param name="idx">the index of the 'high' character</param>
         /// <returns>the codepoint value</returns>
-        public static int ConvertToUtf32(String text, int idx)
-        {
+        public static int ConvertToUtf32(String text, int idx) {
             return (text[idx] - 0xd800) * 0x400 + text[idx + 1] - 0xdc00 + 0x10000;
         }
 
-        public static int[] ConvertToUtf32(String text)
-        {
-            if (text == null)
-            {
+        public static int[] ConvertToUtf32(String text) {
+            if (text == null) {
                 return null;
             }
             IList<int> charCodes = new List<int>(text.Length);
             int pos = 0;
-            while (pos < text.Length)
-            {
-                if (IsSurrogatePair(text, pos))
-                {
+            while (pos < text.Length) {
+                if (IsSurrogatePair(text, pos)) {
                     charCodes.Add(ConvertToUtf32(text, pos));
                     pos += 2;
                 }
-                else
-                {
+                else {
                     charCodes.Add((int)text[pos]);
                     pos++;
                 }
@@ -163,10 +148,8 @@ namespace iTextSharp.IO.Util
         /// <summary>Converts a UTF32 code point value to a String with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
         /// <returns>the corresponding characters in a String</returns>
-        public static char[] ConvertFromUtf32(int codePoint)
-        {
-            if (codePoint < 0x10000)
-            {
+        public static char[] ConvertFromUtf32(int codePoint) {
+            if (codePoint < 0x10000) {
                 return new char[] { (char)codePoint };
             }
             codePoint -= 0x10000;
@@ -181,11 +164,9 @@ namespace iTextSharp.IO.Util
         /// <param name="startPos">start position of text to convert, inclusive</param>
         /// <param name="endPos">end position of txt to convert, exclusive</param>
         /// <returns>the corresponding characters in a String</returns>
-        public static String ConvertFromUtf32(int[] text, int startPos, int endPos)
-        {
+        public static String ConvertFromUtf32(int[] text, int startPos, int endPos) {
             StringBuilder sb = new StringBuilder();
-            for (int i = startPos; i < endPos; i++)
-            {
+            for (int i = startPos; i < endPos; i++) {
                 sb.Append(ConvertFromUtf32ToCharArray(text[i]));
             }
             return sb.ToString();
@@ -194,10 +175,8 @@ namespace iTextSharp.IO.Util
         /// <summary>Converts a UTF32 code point value to a char array with the corresponding character(s).</summary>
         /// <param name="codePoint">a Unicode value</param>
         /// <returns>the corresponding characters in a char arrat</returns>
-        public static char[] ConvertFromUtf32ToCharArray(int codePoint)
-        {
-            if (codePoint < 0x10000)
-            {
+        public static char[] ConvertFromUtf32ToCharArray(int codePoint) {
+            if (codePoint < 0x10000) {
                 return new char[] { (char)codePoint };
             }
             codePoint -= 0x10000;

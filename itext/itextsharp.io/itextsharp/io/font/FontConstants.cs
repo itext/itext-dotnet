@@ -44,14 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font
-{
-    public class FontConstants
-    {
+namespace iTextSharp.IO.Font {
+    public class FontConstants {
         internal static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String>();
 
-        static FontConstants()
-        {
+        static FontConstants() {
             BUILTIN_FONTS_14.Add(FontConstants.COURIER);
             BUILTIN_FONTS_14.Add(FontConstants.COURIER_BOLD);
             BUILTIN_FONTS_14.Add(FontConstants.COURIER_BOLDOBLIQUE);

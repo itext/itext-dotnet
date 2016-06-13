@@ -45,29 +45,24 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas.Parser;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter {
     /// <summary>
     /// This
     /// <see cref="IEventFilter"/>
     /// implementation only accepts text render events within the specified
     /// rectangular region.
     /// </summary>
-    public class TextRegionEventFilter : IEventFilter
-    {
+    public class TextRegionEventFilter : IEventFilter {
         private readonly Rectangle filterRect;
 
         /// <summary>Constructs a filter instance.</summary>
         /// <param name="filterRect">the rectangle to filter text against</param>
-        public TextRegionEventFilter(Rectangle filterRect)
-        {
+        public TextRegionEventFilter(Rectangle filterRect) {
             this.filterRect = filterRect;
         }
 
-        public virtual bool Accept(IEventData data, EventType type)
-        {
-            if (type.Equals(EventType.RENDER_TEXT))
-            {
+        public virtual bool Accept(IEventData data, EventType type) {
+            if (type.Equals(EventType.RENDER_TEXT)) {
                 TextRenderInfo renderInfo = (TextRenderInfo)data;
                 LineSegment segment = renderInfo.GetBaseline();
                 Vector startPoint = segment.GetStartPoint();
@@ -78,8 +73,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter
                 float y2 = endPoint.Get(Vector.I2);
                 return filterRect == null || filterRect.IntersectsLine(x1, y1, x2, y2);
             }
-            else
-            {
+            else {
                 return false;
             }
         }

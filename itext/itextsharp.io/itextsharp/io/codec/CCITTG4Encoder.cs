@@ -43,11 +43,9 @@ Copyright (c) 1998-2016 iText Group NV
 */
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Codec
-{
+namespace iTextSharp.IO.Codec {
     /// <summary>Encodes data in the CCITT G4 FAX format.</summary>
-    public class CCITTG4Encoder
-    {
+    public class CCITTG4Encoder {
         private int rowbytes;
 
         private int rowpixels;
@@ -68,8 +66,7 @@ namespace iTextSharp.IO.Codec
 
         /// <summary>Creates a new encoder.</summary>
         /// <param name="width">the line width</param>
-        public CCITTG4Encoder(int width)
-        {
+        public CCITTG4Encoder(int width) {
             rowpixels = width;
             rowbytes = (rowpixels + 7) / 8;
             refline = new byte[rowbytes];
@@ -79,13 +76,11 @@ namespace iTextSharp.IO.Codec
         /// <param name="data">the data to be encoded</param>
         /// <param name="offset">the offset into the data</param>
         /// <param name="size">the size of the data to be encoded</param>
-        public virtual void Fax4Encode(byte[] data, int offset, int size)
-        {
+        public virtual void Fax4Encode(byte[] data, int offset, int size) {
             dataBp = data;
             offsetData = offset;
             sizeData = size;
-            while (sizeData > 0)
-            {
+            while (sizeData > 0) {
                 Fax3Encode2DRow();
                 System.Array.Copy(dataBp, offsetData, refline, 0, rowbytes);
                 offsetData += rowbytes;
@@ -98,8 +93,7 @@ namespace iTextSharp.IO.Codec
         /// <param name="width">the image width</param>
         /// <param name="height">the image height</param>
         /// <returns>the encoded image</returns>
-        public static byte[] Compress(byte[] data, int width, int height)
-        {
+        public static byte[] Compress(byte[] data, int width, int height) {
             iTextSharp.IO.Codec.CCITTG4Encoder g4 = new iTextSharp.IO.Codec.CCITTG4Encoder(width);
             g4.Fax4Encode(data, 0, g4.rowbytes * height);
             return g4.Close();
@@ -108,30 +102,25 @@ namespace iTextSharp.IO.Codec
         /// <summary>Encodes a number of lines.</summary>
         /// <param name="data">the data to be encoded</param>
         /// <param name="height">the number of lines to encode</param>
-        public virtual void Fax4Encode(byte[] data, int height)
-        {
+        public virtual void Fax4Encode(byte[] data, int height) {
             Fax4Encode(data, 0, rowbytes * height);
         }
 
-        private void Putcode(int[] table)
-        {
+        private void Putcode(int[] table) {
             PutBits(table[CODE], table[LENGTH]);
         }
 
-        private void Putspan(int span, int[][] tab)
-        {
+        private void Putspan(int span, int[][] tab) {
             int code;
             int length;
-            while (span >= 2624)
-            {
+            while (span >= 2624) {
                 int[] te = tab[63 + (2560 >> 6)];
                 code = te[CODE];
                 length = te[LENGTH];
                 PutBits(code, length);
                 span -= te[RUNLEN];
             }
-            if (span >= 64)
-            {
+            if (span >= 64) {
                 int[] te = tab[63 + (span >> 6)];
                 code = te[CODE];
                 length = te[LENGTH];
@@ -143,10 +132,8 @@ namespace iTextSharp.IO.Codec
             PutBits(code, length);
         }
 
-        private void PutBits(int bits, int length)
-        {
-            while (length > bit)
-            {
+        private void PutBits(int bits, int length) {
+            while (length > bit) {
                 data |= bits >> (length - bit);
                 length -= bit;
                 outBuf.Append((byte)data);
@@ -155,59 +142,49 @@ namespace iTextSharp.IO.Codec
             }
             data |= (bits & msbmask[length]) << (bit - length);
             bit -= length;
-            if (bit == 0)
-            {
+            if (bit == 0) {
                 outBuf.Append((byte)data);
                 data = 0;
                 bit = 8;
             }
         }
 
-        private void Fax3Encode2DRow()
-        {
+        private void Fax3Encode2DRow() {
             int a0 = 0;
             int a1 = (Pixel(dataBp, offsetData, 0) != 0 ? 0 : Finddiff(dataBp, offsetData, 0, rowpixels, 0));
             int b1 = (Pixel(refline, 0, 0) != 0 ? 0 : Finddiff(refline, 0, 0, rowpixels, 0));
             int a2;
             int b2;
-            for (; ; )
-            {
+            for (; ; ) {
                 b2 = Finddiff2(refline, 0, b1, rowpixels, Pixel(refline, 0, b1));
-                if (b2 >= a1)
-                {
+                if (b2 >= a1) {
                     int d = b1 - a1;
-                    if (!(-3 <= d && d <= 3))
-                    {
+                    if (!(-3 <= d && d <= 3)) {
                         /* horizontal mode */
                         a2 = Finddiff2(dataBp, offsetData, a1, rowpixels, Pixel(dataBp, offsetData, a1));
                         Putcode(horizcode);
-                        if (a0 + a1 == 0 || Pixel(dataBp, offsetData, a0) == 0)
-                        {
+                        if (a0 + a1 == 0 || Pixel(dataBp, offsetData, a0) == 0) {
                             Putspan(a1 - a0, TIFFFaxWhiteCodes);
                             Putspan(a2 - a1, TIFFFaxBlackCodes);
                         }
-                        else
-                        {
+                        else {
                             Putspan(a1 - a0, TIFFFaxBlackCodes);
                             Putspan(a2 - a1, TIFFFaxWhiteCodes);
                         }
                         a0 = a2;
                     }
-                    else
-                    {
+                    else {
                         /* vertical mode */
                         Putcode(vcodes[d + 3]);
                         a0 = a1;
                     }
                 }
-                else
-                {
+                else {
                     /* pass mode */
                     Putcode(passcode);
                     a0 = b2;
                 }
-                if (a0 >= rowpixels)
-                {
+                if (a0 >= rowpixels) {
                     break;
                 }
                 a1 = Finddiff(dataBp, offsetData, a0, rowpixels, Pixel(dataBp, offsetData, a0));
@@ -216,12 +193,10 @@ namespace iTextSharp.IO.Codec
             }
         }
 
-        private void Fax4PostEncode()
-        {
+        private void Fax4PostEncode() {
             PutBits(EOL, 12);
             PutBits(EOL, 12);
-            if (bit != 8)
-            {
+            if (bit != 8) {
                 outBuf.Append((byte)data);
                 data = 0;
                 bit = 8;
@@ -230,23 +205,19 @@ namespace iTextSharp.IO.Codec
 
         /// <summary>Closes the encoder and returns the encoded data.</summary>
         /// <returns>the encoded data</returns>
-        public virtual byte[] Close()
-        {
+        public virtual byte[] Close() {
             Fax4PostEncode();
             return outBuf.ToByteArray();
         }
 
-        private int Pixel(byte[] data, int offset, int bit)
-        {
-            if (bit >= rowpixels)
-            {
+        private int Pixel(byte[] data, int offset, int bit) {
+            if (bit >= rowpixels) {
                 return 0;
             }
             return ((data[offset + (bit >> 3)] & 0xff) >> (7 - ((bit) & 7))) & 1;
         }
 
-        private static int Find1span(byte[] bp, int offset, int bs, int be)
-        {
+        private static int Find1span(byte[] bp, int offset, int bs, int be) {
             int bits = be - bs;
             int n;
             int span;
@@ -254,38 +225,31 @@ namespace iTextSharp.IO.Codec
             /*
             * Check partial byte on lhs.
             */
-            if (bits > 0 && (n = (bs & 7)) != 0)
-            {
+            if (bits > 0 && (n = (bs & 7)) != 0) {
                 span = oneruns[(bp[pos] << n) & 0xff];
-                if (span > 8 - n)
-                {
+                if (span > 8 - n) {
                     /* table value too generous */
                     span = 8 - n;
                 }
-                if (span > bits)
-                {
+                if (span > bits) {
                     /* constrain span to bit range */
                     span = bits;
                 }
-                if (n + span < 8)
-                {
+                if (n + span < 8) {
                     /* doesn't extend to edge of byte */
                     return span;
                 }
                 bits -= span;
                 pos++;
             }
-            else
-            {
+            else {
                 span = 0;
             }
             /*
             * Scan full bytes for all 1's.
             */
-            while (bits >= 8)
-            {
-                if (bp[pos] != -1)
-                {
+            while (bits >= 8) {
+                if (bp[pos] != -1) {
                     /* end of run */
                     return (span + oneruns[bp[pos] & 0xff]);
                 }
@@ -296,16 +260,14 @@ namespace iTextSharp.IO.Codec
             /*
             * Check partial byte on rhs.
             */
-            if (bits > 0)
-            {
+            if (bits > 0) {
                 n = oneruns[bp[pos] & 0xff];
                 span += (n > bits ? bits : n);
             }
             return span;
         }
 
-        private static int Find0span(byte[] bp, int offset, int bs, int be)
-        {
+        private static int Find0span(byte[] bp, int offset, int bs, int be) {
             int bits = be - bs;
             int n;
             int span;
@@ -313,38 +275,31 @@ namespace iTextSharp.IO.Codec
             /*
             * Check partial byte on lhs.
             */
-            if (bits > 0 && (n = (bs & 7)) != 0)
-            {
+            if (bits > 0 && (n = (bs & 7)) != 0) {
                 span = zeroruns[(bp[pos] << n) & 0xff];
-                if (span > 8 - n)
-                {
+                if (span > 8 - n) {
                     /* table value too generous */
                     span = 8 - n;
                 }
-                if (span > bits)
-                {
+                if (span > bits) {
                     /* constrain span to bit range */
                     span = bits;
                 }
-                if (n + span < 8)
-                {
+                if (n + span < 8) {
                     /* doesn't extend to edge of byte */
                     return span;
                 }
                 bits -= span;
                 pos++;
             }
-            else
-            {
+            else {
                 span = 0;
             }
             /*
             * Scan full bytes for all 1's.
             */
-            while (bits >= 8)
-            {
-                if (bp[pos] != 0)
-                {
+            while (bits >= 8) {
+                if (bp[pos] != 0) {
                     /* end of run */
                     return (span + zeroruns[bp[pos] & 0xff]);
                 }
@@ -355,21 +310,18 @@ namespace iTextSharp.IO.Codec
             /*
             * Check partial byte on rhs.
             */
-            if (bits > 0)
-            {
+            if (bits > 0) {
                 n = zeroruns[bp[pos] & 0xff];
                 span += (n > bits ? bits : n);
             }
             return span;
         }
 
-        private static int Finddiff(byte[] bp, int offset, int bs, int be, int color)
-        {
+        private static int Finddiff(byte[] bp, int offset, int bs, int be, int color) {
             return bs + (color != 0 ? Find1span(bp, offset, bs, be) : Find0span(bp, offset, bs, be));
         }
 
-        private static int Finddiff2(byte[] bp, int offset, int bs, int be, int color)
-        {
+        private static int Finddiff2(byte[] bp, int offset, int bs, int be, int color) {
             return bs < be ? Finddiff(bp, offset, bs, be, color) : be;
         }
 

@@ -44,21 +44,17 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Forms.Xfa
-{
+namespace iTextSharp.Forms.Xfa {
     /// <summary>A class to process "classic" fields.</summary>
-    internal class AcroFieldsSearch : Xml2Som
-    {
+    internal class AcroFieldsSearch : Xml2Som {
         private IDictionary<String, String> acroShort2LongName;
 
         /// <summary>Creates a new instance from a Collection with the full names.</summary>
         /// <param name="items">the Collection</param>
-        public AcroFieldsSearch(ICollection<String> items)
-        {
+        public AcroFieldsSearch(ICollection<String> items) {
             inverseSearch = new Dictionary<String, InverseStore>();
             acroShort2LongName = new Dictionary<String, String>();
-            foreach (String itemName in items)
-            {
+            foreach (String itemName in items) {
                 String itemShort = GetShortName(itemName);
                 acroShort2LongName[itemShort] = itemName;
                 InverseSearchAdd(inverseSearch, SplitParts(itemShort), itemName);
@@ -71,8 +67,7 @@ namespace iTextSharp.Forms.Xfa
         /// name may contain the #subform name part.
         /// </remarks>
         /// <returns>the mapping from short names to long names</returns>
-        public virtual IDictionary<String, String> GetAcroShort2LongName()
-        {
+        public virtual IDictionary<String, String> GetAcroShort2LongName() {
             return acroShort2LongName;
         }
 
@@ -82,8 +77,7 @@ namespace iTextSharp.Forms.Xfa
         /// name may contain the #subform name part.
         /// </remarks>
         /// <param name="acroShort2LongName">the mapping from short names to long names</param>
-        public virtual void SetAcroShort2LongName(IDictionary<String, String> acroShort2LongName)
-        {
+        public virtual void SetAcroShort2LongName(IDictionary<String, String> acroShort2LongName) {
             this.acroShort2LongName = acroShort2LongName;
         }
     }

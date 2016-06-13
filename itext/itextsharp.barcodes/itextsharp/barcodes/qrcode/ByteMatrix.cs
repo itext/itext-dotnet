@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>A class which wraps a 2D array of bytes.</summary>
     /// <remarks>
     /// A class which wraps a 2D array of bytes. The default usage is signed. If you want to use it as a
@@ -54,89 +53,70 @@ namespace iTextSharp.Barcodes.Qrcode
     /// -1, 0, and 1, I'm going to use less memory and go with bytes.
     /// </remarks>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    public sealed class ByteMatrix
-    {
+    public sealed class ByteMatrix {
         private readonly byte[][] bytes;
 
         private readonly int width;
 
         private readonly int height;
 
-        public ByteMatrix(int width, int height)
-        {
+        public ByteMatrix(int width, int height) {
             bytes = new byte[height][];
-            for (int i = 0; i < height; i++)
-            {
+            for (int i = 0; i < height; i++) {
                 bytes[i] = new byte[width];
             }
             this.width = width;
             this.height = height;
         }
 
-        public int GetHeight()
-        {
+        public int GetHeight() {
             return height;
         }
 
-        public int GetWidth()
-        {
+        public int GetWidth() {
             return width;
         }
 
-        public byte Get(int x, int y)
-        {
+        public byte Get(int x, int y) {
             return bytes[y][x];
         }
 
-        public byte[][] GetArray()
-        {
+        public byte[][] GetArray() {
             return bytes;
         }
 
-        public void Set(int x, int y, byte value)
-        {
+        public void Set(int x, int y, byte value) {
             bytes[y][x] = value;
         }
 
-        public void Set(int x, int y, int value)
-        {
+        public void Set(int x, int y, int value) {
             bytes[y][x] = (byte)value;
         }
 
-        public void Clear(byte value)
-        {
-            for (int y = 0; y < height; ++y)
-            {
-                for (int x = 0; x < width; ++x)
-                {
+        public void Clear(byte value) {
+            for (int y = 0; y < height; ++y) {
+                for (int x = 0; x < width; ++x) {
                     bytes[y][x] = value;
                 }
             }
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             StringBuilder result = new StringBuilder(2 * width * height + 2);
-            for (int y = 0; y < height; ++y)
-            {
-                for (int x = 0; x < width; ++x)
-                {
-                    switch (bytes[y][x])
-                    {
-                        case 0:
-                        {
+            for (int y = 0; y < height; ++y) {
+                for (int x = 0; x < width; ++x) {
+                    switch (bytes[y][x]) {
+                        case 0: {
                             result.Append(" 0");
                             break;
                         }
 
-                        case 1:
-                        {
+                        case 1: {
                             result.Append(" 1");
                             break;
                         }
 
-                        default:
-                        {
+                        default: {
                             result.Append("  ");
                             break;
                         }

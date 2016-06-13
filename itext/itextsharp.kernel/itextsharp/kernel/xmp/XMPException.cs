@@ -29,12 +29,10 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>This exception wraps all errors that occur in the XMP Toolkit.</summary>
     /// <since>16.02.2006</since>
-    public class XMPException : Exception
-    {
+    public class XMPException : Exception {
         /// <summary>the errorCode of the XMP toolkit</summary>
         private int errorCode;
 
@@ -42,8 +40,7 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="message">the message</param>
         /// <param name="errorCode">the error code</param>
         public XMPException(String message, int errorCode)
-            : base(message)
-        {
+            : base(message) {
             this.errorCode = errorCode;
         }
 
@@ -52,14 +49,12 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="errorCode">the error code</param>
         /// <param name="t">the exception source</param>
         public XMPException(String message, int errorCode, Exception t)
-            : base(message, t)
-        {
+            : base(message, t) {
             this.errorCode = errorCode;
         }
 
         /// <returns>Returns the errorCode.</returns>
-        public virtual int GetErrorCode()
-        {
+        public virtual int GetErrorCode() {
             return errorCode;
         }
     }

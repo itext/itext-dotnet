@@ -47,8 +47,7 @@ using System.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Codec
-{
+namespace iTextSharp.IO.Codec {
     /// <summary>
     /// Class to read a JBIG2 file at a basic level: understand all the segments,
     /// understand what segments belong to which pages, how many pages there are,
@@ -64,8 +63,7 @@ namespace iTextSharp.IO.Codec
     /// in a PDF.
     /// TODO: the indeterminate-segment-size value of dataLength, else?
     /// </remarks>
-    public class Jbig2SegmentReader
-    {
+    public class Jbig2SegmentReader {
         public const int SYMBOL_DICTIONARY = 0;
 
         public const int INTERMEDIATE_TEXT_REGION = 4;
@@ -128,8 +126,7 @@ namespace iTextSharp.IO.Codec
         private bool read = false;
 
         /// <summary>Inner class that holds information about a JBIG2 segment.</summary>
-        public class Jbig2Segment : IComparable<Jbig2SegmentReader.Jbig2Segment>
-        {
+        public class Jbig2Segment : IComparable<Jbig2SegmentReader.Jbig2Segment> {
             public readonly int segmentNumber;
 
             public long dataLength = -1;
@@ -154,8 +151,7 @@ namespace iTextSharp.IO.Codec
 
             public int page_association_offset = -1;
 
-            public Jbig2Segment(int segment_number)
-            {
+            public Jbig2Segment(int segment_number) {
                 //see 7.4.2.
                 //see 7.4.3.
                 //see 7.4.3.
@@ -180,15 +176,13 @@ namespace iTextSharp.IO.Codec
                 this.segmentNumber = segment_number;
             }
 
-            public virtual int CompareTo(Jbig2SegmentReader.Jbig2Segment s)
-            {
+            public virtual int CompareTo(Jbig2SegmentReader.Jbig2Segment s) {
                 return this.segmentNumber - s.segmentNumber;
             }
         }
 
         /// <summary>Inner class that holds information about a JBIG2 page.</summary>
-        public class Jbig2Page
-        {
+        public class Jbig2Page {
             public readonly int page;
 
             private readonly Jbig2SegmentReader sr;
@@ -200,8 +194,7 @@ namespace iTextSharp.IO.Codec
 
             public int pageBitmapHeight = -1;
 
-            public Jbig2Page(int page, Jbig2SegmentReader sr)
-            {
+            public Jbig2Page(int page, Jbig2SegmentReader sr) {
                 this.page = page;
                 this.sr = sr;
             }
@@ -218,37 +211,30 @@ namespace iTextSharp.IO.Codec
             /// <param name="for_embedding"/>
             /// <exception cref="System.IO.IOException"/>
             /// <returns>a byte array</returns>
-            public virtual byte[] GetData(bool for_embedding)
-            {
+            public virtual byte[] GetData(bool for_embedding) {
                 MemoryStream os = new MemoryStream();
-                foreach (int sn in segs.Keys)
-                {
+                foreach (int sn in segs.Keys) {
                     Jbig2SegmentReader.Jbig2Segment s = segs.Get(sn);
                     // pdf reference 1.4, section 3.3.6 Jbig2Decode Filter
                     // D.3 Embedded organisation
-                    if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE))
-                    {
+                    if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE)) {
                         continue;
                     }
-                    if (for_embedding)
-                    {
+                    if (for_embedding) {
                         // change the page association to page 1
                         byte[] headerData_emb = CopyByteArray(s.headerData);
-                        if (s.page_association_size)
-                        {
+                        if (s.page_association_size) {
                             headerData_emb[s.page_association_offset] = 0x0;
                             headerData_emb[s.page_association_offset + 1] = 0x0;
                             headerData_emb[s.page_association_offset + 2] = 0x0;
                             headerData_emb[s.page_association_offset + 3] = 0x1;
                         }
-                        else
-                        {
+                        else {
                             headerData_emb[s.page_association_offset] = 0x1;
                         }
                         os.Write(headerData_emb);
                     }
-                    else
-                    {
+                    else {
                         os.Write(s.headerData);
                     }
                     os.Write(s.data);
@@ -257,39 +243,32 @@ namespace iTextSharp.IO.Codec
                 return os.ToArray();
             }
 
-            public virtual void AddSegment(Jbig2SegmentReader.Jbig2Segment s)
-            {
+            public virtual void AddSegment(Jbig2SegmentReader.Jbig2Segment s) {
                 segs[s.segmentNumber] = s;
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public Jbig2SegmentReader(RandomAccessFileOrArray ra)
-        {
+        public Jbig2SegmentReader(RandomAccessFileOrArray ra) {
             this.ra = ra;
         }
 
-        public static byte[] CopyByteArray(byte[] b)
-        {
+        public static byte[] CopyByteArray(byte[] b) {
             byte[] bc = new byte[b.Length];
             System.Array.Copy(b, 0, bc, 0, b.Length);
             return bc;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Read()
-        {
-            if (this.read)
-            {
+        public virtual void Read() {
+            if (this.read) {
                 throw new InvalidOperationException("already.attempted.a.read.on.this.jbig2.file");
             }
             this.read = true;
             ReadFileHeader();
             // Annex D
-            if (this.sequential)
-            {
-                do
-                {
+            if (this.sequential) {
+                do {
                     // D.1
                     Jbig2SegmentReader.Jbig2Segment tmp = ReadHeader();
                     ReadSegment(tmp);
@@ -297,45 +276,38 @@ namespace iTextSharp.IO.Codec
                 }
                 while (this.ra.GetPosition() < this.ra.Length());
             }
-            else
-            {
+            else {
                 // D.2
                 Jbig2SegmentReader.Jbig2Segment tmp;
-                do
-                {
+                do {
                     tmp = ReadHeader();
                     segments[tmp.segmentNumber] = tmp;
                 }
                 while (tmp.type != END_OF_FILE);
-                foreach (int integer in segments.Keys)
-                {
+                foreach (int integer in segments.Keys) {
                     ReadSegment(segments.Get(integer));
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s)
-        {
+        internal virtual void ReadSegment(Jbig2SegmentReader.Jbig2Segment s) {
             int ptr = (int)ra.GetPosition();
-            if (s.dataLength == unchecked((long)(0xffffffffl)))
-            {
+            if (s.dataLength == unchecked((long)(0xffffffffl))) {
                 // TODO figure this bit out, 7.2.7
                 return;
             }
             byte[] data = new byte[(int)s.dataLength];
             ra.Read(data);
             s.data = data;
-            if (s.type == PAGE_INFORMATION)
-            {
+            if (s.type == PAGE_INFORMATION) {
                 int last = (int)ra.GetPosition();
                 ra.Seek(ptr);
                 int page_bitmap_width = ra.ReadInt();
                 int page_bitmap_height = ra.ReadInt();
                 ra.Seek(last);
                 Jbig2SegmentReader.Jbig2Page p = pages.Get(s.page);
-                if (p == null)
-                {
+                if (p == null) {
                     throw new iTextSharp.IO.IOException("referring.to.widht.height.of.page.we.havent.seen.yet.1").SetMessageParams
                         (s.page);
                 }
@@ -345,8 +317,7 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal virtual Jbig2SegmentReader.Jbig2Segment ReadHeader()
-        {
+        internal virtual Jbig2SegmentReader.Jbig2Segment ReadHeader() {
             int ptr = (int)ra.GetPosition();
             // 7.2.1
             int segment_number = ra.ReadInt();
@@ -363,19 +334,16 @@ namespace iTextSharp.IO.Codec
             int count_of_referred_to_segments = (referred_to_byte0 & 0xE0) >> 5;
             int[] referred_to_segment_numbers = null;
             bool[] segment_retention_flags = null;
-            if (count_of_referred_to_segments == 7)
-            {
+            if (count_of_referred_to_segments == 7) {
                 // at least five bytes
                 ra.Seek(ra.GetPosition() - 1);
                 count_of_referred_to_segments = ra.ReadInt() & 0x1fffffff;
                 segment_retention_flags = new bool[count_of_referred_to_segments + 1];
                 int i = 0;
                 int referred_to_current_byte = 0;
-                do
-                {
+                do {
                     int j = i % 8;
-                    if (j == 0)
-                    {
+                    if (j == 0) {
                         referred_to_current_byte = ra.Read();
                     }
                     segment_retention_flags[i] = (0x1 << j & referred_to_current_byte) >> j == 0x1;
@@ -383,22 +351,17 @@ namespace iTextSharp.IO.Codec
                 }
                 while (i <= count_of_referred_to_segments);
             }
-            else
-            {
-                if (count_of_referred_to_segments <= 4)
-                {
+            else {
+                if (count_of_referred_to_segments <= 4) {
                     // only one byte
                     segment_retention_flags = new bool[count_of_referred_to_segments + 1];
                     referred_to_byte0 &= 0x1f;
-                    for (int i = 0; i <= count_of_referred_to_segments; i++)
-                    {
+                    for (int i = 0; i <= count_of_referred_to_segments; i++) {
                         segment_retention_flags[i] = (0x1 << i & referred_to_byte0) >> i == 0x1;
                     }
                 }
-                else
-                {
-                    if (count_of_referred_to_segments == 5 || count_of_referred_to_segments == 6)
-                    {
+                else {
+                    if (count_of_referred_to_segments == 5 || count_of_referred_to_segments == 6) {
                         throw new iTextSharp.IO.IOException("count.of.referred.to.segments.had.bad.value.in.header.for.segment.1.starting.at.2"
                             ).SetMessageParams(segment_number, ptr);
                     }
@@ -408,20 +371,15 @@ namespace iTextSharp.IO.Codec
             s.countOfReferredToSegments = count_of_referred_to_segments;
             // 7.2.5
             referred_to_segment_numbers = new int[count_of_referred_to_segments + 1];
-            for (int i_1 = 1; i_1 <= count_of_referred_to_segments; i_1++)
-            {
-                if (segment_number <= 256)
-                {
+            for (int i_1 = 1; i_1 <= count_of_referred_to_segments; i_1++) {
+                if (segment_number <= 256) {
                     referred_to_segment_numbers[i_1] = ra.Read();
                 }
-                else
-                {
-                    if (segment_number <= 65536)
-                    {
+                else {
+                    if (segment_number <= 65536) {
                         referred_to_segment_numbers[i_1] = ra.ReadUnsignedShort();
                     }
-                    else
-                    {
+                    else {
                         referred_to_segment_numbers[i_1] = (int)ra.ReadUnsignedInt();
                     }
                 }
@@ -431,16 +389,13 @@ namespace iTextSharp.IO.Codec
             // 7.2.6
             int segment_page_association;
             int page_association_offset = (int)ra.GetPosition() - ptr;
-            if (page_association_size)
-            {
+            if (page_association_size) {
                 segment_page_association = ra.ReadInt();
             }
-            else
-            {
+            else {
                 segment_page_association = ra.Read();
             }
-            if (segment_page_association < 0)
-            {
+            if (segment_page_association < 0) {
                 throw new iTextSharp.IO.IOException("page.1.invalid.for.segment.2.starting.at.3").SetMessageParams(segment_page_association
                     , segment_number, ptr);
             }
@@ -448,16 +403,13 @@ namespace iTextSharp.IO.Codec
             // so we can change the page association at embedding time.
             s.page_association_size = page_association_size;
             s.page_association_offset = page_association_offset;
-            if (segment_page_association > 0 && !pages.ContainsKey(segment_page_association))
-            {
+            if (segment_page_association > 0 && !pages.ContainsKey(segment_page_association)) {
                 pages[segment_page_association] = new Jbig2SegmentReader.Jbig2Page(segment_page_association, this);
             }
-            if (segment_page_association > 0)
-            {
+            if (segment_page_association > 0) {
                 pages.Get(segment_page_association).AddSegment(s);
             }
-            else
-            {
+            else {
                 globals.Add(s);
             }
             // 7.2.7
@@ -473,90 +425,72 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal virtual void ReadFileHeader()
-        {
+        internal virtual void ReadFileHeader() {
             ra.Seek(0);
             byte[] idstring = new byte[8];
             ra.Read(idstring);
             byte[] refidstring = new byte[] { (byte)0x97, 0x4A, 0x42, 0x32, 0x0D, 0x0A, 0x1A, 0x0A };
-            for (int i = 0; i < idstring.Length; i++)
-            {
-                if (idstring[i] != refidstring[i])
-                {
+            for (int i = 0; i < idstring.Length; i++) {
+                if (idstring[i] != refidstring[i]) {
                     throw new iTextSharp.IO.IOException("file.header.idstring.not.good.at.byte.1").SetMessageParams(i);
                 }
             }
             int fileheaderflags = ra.Read();
             this.sequential = (fileheaderflags & 0x1) == 0x1;
             this.number_of_pages_known = (fileheaderflags & 0x2) == 0x0;
-            if ((fileheaderflags & 0xfc) != 0x0)
-            {
+            if ((fileheaderflags & 0xfc) != 0x0) {
                 throw new iTextSharp.IO.IOException("file.header.flags.bits.2.7.not.0");
             }
-            if (this.number_of_pages_known)
-            {
+            if (this.number_of_pages_known) {
                 this.number_of_pages = ra.ReadInt();
             }
         }
 
-        public virtual int NumberOfPages()
-        {
+        public virtual int NumberOfPages() {
             return pages.Count;
         }
 
-        public virtual int GetPageHeight(int i)
-        {
+        public virtual int GetPageHeight(int i) {
             return pages.Get(i).pageBitmapHeight;
         }
 
-        public virtual int GetPageWidth(int i)
-        {
+        public virtual int GetPageWidth(int i) {
             return pages.Get(i).pageBitmapWidth;
         }
 
-        public virtual Jbig2SegmentReader.Jbig2Page GetPage(int page)
-        {
+        public virtual Jbig2SegmentReader.Jbig2Page GetPage(int page) {
             return pages.Get(page);
         }
 
-        public virtual byte[] GetGlobal(bool for_embedding)
-        {
+        public virtual byte[] GetGlobal(bool for_embedding) {
             MemoryStream os = new MemoryStream();
             byte[] streamBytes = null;
-            try
-            {
-                foreach (Object element in globals)
-                {
+            try {
+                foreach (Object element in globals) {
                     Jbig2SegmentReader.Jbig2Segment s = (Jbig2SegmentReader.Jbig2Segment)element;
-                    if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE))
-                    {
+                    if (for_embedding && (s.type == END_OF_FILE || s.type == END_OF_PAGE)) {
                         continue;
                     }
                     os.Write(s.headerData);
                     os.Write(s.data);
                 }
-                if (os.Length > 0)
-                {
+                if (os.Length > 0) {
                     streamBytes = os.ToArray();
                 }
                 os.Close();
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(Jbig2SegmentReader));
                 logger.Debug(e.Message);
             }
             return streamBytes;
         }
 
-        public override String ToString()
-        {
-            if (this.read)
-            {
+        public override String ToString() {
+            if (this.read) {
                 return "Jbig2SegmentReader: number of pages: " + this.NumberOfPages();
             }
-            else
-            {
+            else {
                 return "Jbig2SegmentReader in indeterminate state.";
             }
         }

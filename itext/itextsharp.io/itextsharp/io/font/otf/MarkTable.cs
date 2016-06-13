@@ -41,25 +41,19 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <author>psoares</author>
-    public class MarkTable
-    {
-        private MarkTable()
-        {
+    public class MarkTable {
+        private MarkTable() {
         }
 
-        public static bool IsMark(int charPoint)
-        {
+        public static bool IsMark(int charPoint) {
             int p = iTextSharp.IO.Util.JavaUtil.ArraysBinarySearch(markTable, charPoint);
-            if (p >= 0)
-            {
+            if (p >= 0) {
                 return true;
             }
             p = ~p;
-            if (p >= markTable.Length)
-            {
+            if (p >= markTable.Length) {
                 return false;
             }
             return (p & 1) != 0;

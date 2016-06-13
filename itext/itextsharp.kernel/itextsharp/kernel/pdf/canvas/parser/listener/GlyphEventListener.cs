@@ -45,8 +45,7 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf.Canvas.Parser;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>
     /// This class expands each
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
@@ -57,8 +56,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
     /// instances for each glyph occurred.
     /// </summary>
-    public class GlyphEventListener : IEventListener
-    {
+    public class GlyphEventListener : IEventListener {
         protected internal readonly IEventListener delegate_;
 
         /// <summary>
@@ -68,29 +66,23 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         /// glyph occurred will be passed on.
         /// </summary>
         /// <param name="delegate_">delegate to pass the expanded glyph render events to.</param>
-        public GlyphEventListener(IEventListener delegate_)
-        {
+        public GlyphEventListener(IEventListener delegate_) {
             this.delegate_ = delegate_;
         }
 
-        public virtual void EventOccurred(IEventData data, EventType type)
-        {
-            if (type.Equals(EventType.RENDER_TEXT))
-            {
+        public virtual void EventOccurred(IEventData data, EventType type) {
+            if (type.Equals(EventType.RENDER_TEXT)) {
                 TextRenderInfo textRenderInfo = (TextRenderInfo)data;
-                foreach (TextRenderInfo glyphRenderInfo in textRenderInfo.GetCharacterRenderInfos())
-                {
+                foreach (TextRenderInfo glyphRenderInfo in textRenderInfo.GetCharacterRenderInfos()) {
                     delegate_.EventOccurred(glyphRenderInfo, type);
                 }
             }
-            else
-            {
+            else {
                 delegate_.EventOccurred(data, type);
             }
         }
 
-        public virtual ICollection<EventType> GetSupportedEvents()
-        {
+        public virtual ICollection<EventType> GetSupportedEvents() {
             return delegate_.GetSupportedEvents();
         }
     }

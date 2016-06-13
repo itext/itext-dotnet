@@ -45,8 +45,7 @@ using System.Collections.Generic;
 using iTextSharp.Layout;
 using iTextSharp.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer
-{
+namespace iTextSharp.Layout.Renderer {
     /// <summary>
     /// A renderer object is responsible for drawing a corresponding layout object on
     /// a document or canvas.
@@ -62,8 +61,7 @@ namespace iTextSharp.Layout.Renderer
     /// Renderers are designed to be extensible, and custom implementations can be
     /// seeded to layout objects (or their custom subclasses) at runtime.
     /// </remarks>
-    public interface IRenderer : IPropertyContainer
-    {
+    public interface IRenderer : IPropertyContainer {
         /// <summary>Adds a child to the current renderer</summary>
         /// <param name="renderer">a child to be added</param>
         void AddChild(IRenderer renderer);

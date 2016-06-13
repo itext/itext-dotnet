@@ -41,8 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property
-{
+namespace iTextSharp.Layout.Property {
     /// <summary>
     /// A specialized class holding configurable properties related to an
     /// <see cref="iTextSharp.Layout.Element.IElement"/>
@@ -54,8 +53,7 @@ namespace iTextSharp.Layout.Property
     /// to define a background color, and positive or negative changes to the
     /// location of the edges of the background coloring.
     /// </summary>
-    public class Background
-    {
+    public class Background {
         protected internal iTextSharp.Kernel.Color.Color color;
 
         protected internal float extraLeft;
@@ -69,8 +67,7 @@ namespace iTextSharp.Layout.Property
         /// <summary>Creates a background with a specified color.</summary>
         /// <param name="color">the background color</param>
         public Background(iTextSharp.Kernel.Color.Color color)
-            : this(color, 0, 0, 0, 0)
-        {
+            : this(color, 0, 0, 0, 0) {
         }
 
         /// <summary>
@@ -88,8 +85,7 @@ namespace iTextSharp.Layout.Property
         /// <param name="extraRight">extra coloring to the right side</param>
         /// <param name="extraBottom">extra coloring at the bottom</param>
         public Background(iTextSharp.Kernel.Color.Color color, float extraLeft, float extraTop, float extraRight, 
-            float extraBottom)
-        {
+            float extraBottom) {
             this.color = color;
             this.extraLeft = extraLeft;
             this.extraRight = extraRight;
@@ -103,36 +99,31 @@ namespace iTextSharp.Layout.Property
         /// <see cref="iTextSharp.Kernel.Color.Color"/>
         /// of any supported kind
         /// </returns>
-        public virtual iTextSharp.Kernel.Color.Color GetColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetColor() {
             return color;
         }
 
         /// <summary>Gets the extra space that must be filled to the left of the Element.</summary>
         /// <returns>a float value</returns>
-        public virtual float GetExtraLeft()
-        {
+        public virtual float GetExtraLeft() {
             return extraLeft;
         }
 
         /// <summary>Gets the extra space that must be filled to the right of the Element.</summary>
         /// <returns>a float value</returns>
-        public virtual float GetExtraRight()
-        {
+        public virtual float GetExtraRight() {
             return extraRight;
         }
 
         /// <summary>Gets the extra space that must be filled at the top of the Element.</summary>
         /// <returns>a float value</returns>
-        public virtual float GetExtraTop()
-        {
+        public virtual float GetExtraTop() {
             return extraTop;
         }
 
         /// <summary>Gets the extra space that must be filled at the bottom of the Element.</summary>
         /// <returns>a float value</returns>
-        public virtual float GetExtraBottom()
-        {
+        public virtual float GetExtraBottom() {
             return extraBottom;
         }
     }

@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
-    public class EncryptionConstants
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class EncryptionConstants {
         /// <summary>Type of encryption.</summary>
         public const int STANDARD_ENCRYPTION_40 = 0;
 

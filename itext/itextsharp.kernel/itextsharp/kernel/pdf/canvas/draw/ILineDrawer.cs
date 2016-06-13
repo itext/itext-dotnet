@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Draw
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
     /// <summary>
     /// The
     /// <see cref="ILineDrawer"/>
@@ -57,8 +56,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw
     /// through a Strategy design
     /// pattern
     /// </summary>
-    public interface ILineDrawer
-    {
+    public interface ILineDrawer {
         /// <summary>
         /// Performs configurable drawing operations related to specific region
         /// coordinates on a canvas.

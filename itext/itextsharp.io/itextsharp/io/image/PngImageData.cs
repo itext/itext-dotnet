@@ -43,18 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Image
-{
-    public class PngImageData : RawImageData
-    {
+namespace iTextSharp.IO.Image {
+    public class PngImageData : RawImageData {
         protected internal PngImageData(byte[] bytes)
-            : base(bytes, ImageType.PNG)
-        {
+            : base(bytes, ImageType.PNG) {
         }
 
         protected internal PngImageData(Uri url)
-            : base(url, ImageType.PNG)
-        {
+            : base(url, ImageType.PNG) {
         }
     }
 }

@@ -46,8 +46,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="Text"/>
@@ -56,8 +55,7 @@ namespace iTextSharp.Layout.Element
     /// ,
     /// it is the smallest piece of content that may bear specific layout attributes.
     /// </summary>
-    public class Text : AbstractElement<iTextSharp.Layout.Element.Text>, ILeafElement, IAccessibleElement
-    {
+    public class Text : AbstractElement<iTextSharp.Layout.Element.Text>, ILeafElement, IAccessibleElement {
         protected internal String text;
 
         protected internal PdfName role = PdfName.Span;
@@ -69,37 +67,31 @@ namespace iTextSharp.Layout.Element
         /// the contents, as a
         /// <see cref="System.String"/>
         /// </param>
-        public Text(String text)
-        {
-            if (null == text)
-            {
+        public Text(String text) {
+            if (null == text) {
                 throw new ArgumentException();
             }
             this.text = text;
         }
 
-        public virtual String GetText()
-        {
+        public virtual String GetText() {
             return text;
         }
 
-        public virtual void SetText(String text)
-        {
+        public virtual void SetText(String text) {
             this.text = text;
         }
 
         /// <summary>Gets the text rise.</summary>
         /// <returns>the vertical distance from the text's default base line, as a float.</returns>
-        public virtual float GetTextRise()
-        {
+        public virtual float GetTextRise() {
             return (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.TEXT_RISE);
         }
 
         /// <summary>Sets the text rise.</summary>
         /// <param name="textRise">a vertical distance from the text's default base line.</param>
         /// <returns>this Text</returns>
-        public virtual iTextSharp.Layout.Element.Text SetTextRise(float textRise)
-        {
+        public virtual iTextSharp.Layout.Element.Text SetTextRise(float textRise) {
             SetProperty(iTextSharp.Layout.Property.Property.TEXT_RISE, textRise);
             return (iTextSharp.Layout.Element.Text)(Object)this;
         }
@@ -109,8 +101,7 @@ namespace iTextSharp.Layout.Element
         /// should be stretched.
         /// </summary>
         /// <returns>the horizontal spacing, as a <code>float</code></returns>
-        public virtual float? GetHorizontalScaling()
-        {
+        public virtual float? GetHorizontalScaling() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING);
         }
 
@@ -122,8 +113,7 @@ namespace iTextSharp.Layout.Element
         /// <param name="alpha">the first angle in degrees</param>
         /// <param name="beta">the second angle in degrees</param>
         /// <returns>this <CODE>Text</CODE></returns>
-        public virtual iTextSharp.Layout.Element.Text SetSkew(float alpha, float beta)
-        {
+        public virtual iTextSharp.Layout.Element.Text SetSkew(float alpha, float beta) {
             alpha = (float)Math.Tan(alpha * Math.PI / 180);
             beta = (float)Math.Tan(beta * Math.PI / 180);
             SetProperty(iTextSharp.Layout.Property.Property.SKEW, new float[] { alpha, beta });
@@ -140,33 +130,27 @@ namespace iTextSharp.Layout.Element
         /// 2 means the text will be twice as wide as normal one.
         /// </param>
         /// <returns>this Text</returns>
-        public virtual iTextSharp.Layout.Element.Text SetHorizontalScaling(float horizontalScaling)
-        {
+        public virtual iTextSharp.Layout.Element.Text SetHorizontalScaling(float horizontalScaling) {
             SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling);
             return (iTextSharp.Layout.Element.Text)(Object)this;
         }
 
-        public virtual PdfName GetRole()
-        {
+        public virtual PdfName GetRole() {
             return role;
         }
 
-        public virtual void SetRole(PdfName role)
-        {
+        public virtual void SetRole(PdfName role) {
             this.role = role;
         }
 
-        public virtual AccessibilityProperties GetAccessibilityProperties()
-        {
-            if (tagProperties == null)
-            {
+        public virtual AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;
         }
 
-        protected internal override IRenderer MakeNewRenderer()
-        {
+        protected internal override IRenderer MakeNewRenderer() {
             return new TextRenderer(this, text);
         }
     }

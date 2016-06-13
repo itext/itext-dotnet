@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Layer
-{
+namespace iTextSharp.Kernel.Pdf.Layer {
     /// <summary>The interface generalizing the layer types (PdfLayer, PdfLayerMembership).</summary>
-    public interface IPdfOCG
-    {
+    public interface IPdfOCG {
         /// <summary>Gets the object representing the layer.</summary>
         /// <returns>the object representing the layer</returns>
         PdfDictionary GetPdfObject();

@@ -29,11 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Impl
-{
+namespace iTextSharp.Kernel.XMP.Impl {
     /// <since>09.11.2006</since>
-    public class QName
-    {
+    public class QName {
         /// <summary>XML namespace prefix</summary>
         private String prefix;
 
@@ -42,16 +40,13 @@ namespace iTextSharp.Kernel.XMP.Impl
 
         /// <summary>Splits a qname into prefix and localname.</summary>
         /// <param name="qname">a QName</param>
-        public QName(String qname)
-        {
+        public QName(String qname) {
             int colon = qname.IndexOf(':');
-            if (colon >= 0)
-            {
+            if (colon >= 0) {
                 prefix = qname.JSubstring(0, colon);
                 localName = qname.Substring(colon + 1);
             }
-            else
-            {
+            else {
                 prefix = "";
                 localName = qname;
             }
@@ -60,27 +55,23 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <summary>Constructor that initializes the fields</summary>
         /// <param name="prefix">the prefix</param>
         /// <param name="localName">the name</param>
-        public QName(String prefix, String localName)
-        {
+        public QName(String prefix, String localName) {
             this.prefix = prefix;
             this.localName = localName;
         }
 
         /// <returns>Returns whether the QName has a prefix.</returns>
-        public virtual bool HasPrefix()
-        {
+        public virtual bool HasPrefix() {
             return prefix != null && prefix.Length > 0;
         }
 
         /// <returns>the localName</returns>
-        public virtual String GetLocalName()
-        {
+        public virtual String GetLocalName() {
             return localName;
         }
 
         /// <returns>the prefix</returns>
-        public virtual String GetPrefix()
-        {
+        public virtual String GetPrefix() {
             return prefix;
         }
     }

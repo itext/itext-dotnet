@@ -46,8 +46,7 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// <summary>
     /// This class contains variety of methods allowing to convert iText
     /// abstractions into the abstractions of the Clipper library and vise versa.
@@ -76,8 +75,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
     /// </ul>
     /// </p>
     /// </remarks>
-    public class ClipperBridge
-    {
+    public class ClipperBridge {
         /// <summary>
         /// Since the clipper library uses integer coordinates, we should convert
         /// our floating point numbers into fixed point numbers by multiplying by
@@ -97,12 +95,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="iTextSharp.Kernel.Geom.Path"/>
         /// object.
         /// </summary>
-        public static Path ConvertToPath(PolyTree result)
-        {
+        public static Path ConvertToPath(PolyTree result) {
             Path path = new Path();
             PolyNode node = result.GetFirst();
-            while (node != null)
-            {
+            while (node != null) {
                 AddContour(path, node.Contour, !node.IsOpen);
                 node = node.GetNext();
             }
@@ -133,12 +129,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="PolyType"/>
         /// .
         /// </param>
-        public static void AddPath(Clipper clipper, Path path, PolyType polyType)
-        {
-            foreach (Subpath subpath in path.GetSubpaths())
-            {
-                if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen())
-                {
+        public static void AddPath(Clipper clipper, Path path, PolyType polyType) {
+            foreach (Subpath subpath in path.GetSubpaths()) {
+                if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen()) {
                     IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
                     clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(linearApproxPoints)), polyType, subpath.IsClosed());
                 }
@@ -162,26 +155,20 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="iTextSharp.Kernel.Geom.Subpath"/>
         /// s of the path.
         /// </returns>
-        public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType, EndType endType)
-        {
+        public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType, EndType endType) {
             IList<Subpath> degenerateSubpaths = new List<Subpath>();
-            foreach (Subpath subpath in path.GetSubpaths())
-            {
-                if (subpath.IsDegenerate())
-                {
+            foreach (Subpath subpath in path.GetSubpaths()) {
+                if (subpath.IsDegenerate()) {
                     degenerateSubpaths.Add(subpath);
                     continue;
                 }
-                if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen())
-                {
+                if (!subpath.IsSinglePointClosed() && !subpath.IsSinglePointOpen()) {
                     EndType et;
-                    if (subpath.IsClosed())
-                    {
+                    if (subpath.IsClosed()) {
                         // Offsetting is never used for path being filled
                         et = EndType.CLOSED_LINE;
                     }
-                    else
-                    {
+                    else {
                         et = endType;
                     }
                     IList<Point> linearApproxPoints = subpath.GetPiecewiseLinearApproximation();
@@ -198,11 +185,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="iTextSharp.Kernel.Geom.Point"/>
         /// objects.
         /// </summary>
-        public static IList<Point> ConvertToFloatPoints(IList<IntPoint> points)
-        {
+        public static IList<Point> ConvertToFloatPoints(IList<IntPoint> points) {
             IList<Point> convertedPoints = new List<Point>(points.Count);
-            foreach (IntPoint point in points)
-            {
+            foreach (IntPoint point in points) {
                 convertedPoints.Add(new Point(point.X / floatMultiplier, point.Y / floatMultiplier));
             }
             return convertedPoints;
@@ -215,11 +200,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="IntPoint"/>
         /// objects.
         /// </summary>
-        public static IList<IntPoint> ConvertToLongPoints(IList<Point> points)
-        {
+        public static IList<IntPoint> ConvertToLongPoints(IList<Point> points) {
             IList<IntPoint> convertedPoints = new List<IntPoint>(points.Count);
-            foreach (Point point in points)
-            {
+            foreach (Point point in points) {
                 convertedPoints.Add(new IntPoint(floatMultiplier * point.GetX(), floatMultiplier * point.GetY()));
             }
             return convertedPoints;
@@ -234,17 +217,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
         /// </param>
         /// <returns>Clipper line join style constant.</returns>
-        public static JoinType GetJoinType(int lineJoinStyle)
-        {
-            switch (lineJoinStyle)
-            {
-                case PdfCanvasConstants.LineJoinStyle.BEVEL:
-                {
+        public static JoinType GetJoinType(int lineJoinStyle) {
+            switch (lineJoinStyle) {
+                case PdfCanvasConstants.LineJoinStyle.BEVEL: {
                     return JoinType.BEVEL;
                 }
 
-                case PdfCanvasConstants.LineJoinStyle.MITER:
-                {
+                case PdfCanvasConstants.LineJoinStyle.MITER: {
                     return JoinType.MITER;
                 }
             }
@@ -260,17 +239,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
         /// </param>
         /// <returns>Clipper line cap (end type) style constant.</returns>
-        public static EndType GetEndType(int lineCapStyle)
-        {
-            switch (lineCapStyle)
-            {
-                case PdfCanvasConstants.LineCapStyle.BUTT:
-                {
+        public static EndType GetEndType(int lineCapStyle) {
+            switch (lineCapStyle) {
+                case PdfCanvasConstants.LineCapStyle.BUTT: {
                     return EndType.OPEN_BUTT;
                 }
 
-                case PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE:
-                {
+                case PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE: {
                     return EndType.OPEN_SQUARE;
                 }
             }
@@ -289,35 +264,29 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib
         /// .
         /// </param>
         /// <returns>Clipper fill type constant.</returns>
-        public static PolyFillType GetFillType(int fillingRule)
-        {
+        public static PolyFillType GetFillType(int fillingRule) {
             PolyFillType fillType = PolyFillType.NON_ZERO;
-            if (fillingRule == PdfCanvasConstants.FillingRule.EVEN_ODD)
-            {
+            if (fillingRule == PdfCanvasConstants.FillingRule.EVEN_ODD) {
                 fillType = PolyFillType.EVEN_ODD;
             }
             return fillType;
         }
 
         [Obsolete]
-        public static void AddContour(Path path, IList<IntPoint> contour, bool? close)
-        {
+        public static void AddContour(Path path, IList<IntPoint> contour, bool? close) {
             IList<Point> floatContour = ConvertToFloatPoints(contour);
             Point point = floatContour[0];
             path.MoveTo((float)point.GetX(), (float)point.GetY());
-            for (int i = 1; i < floatContour.Count; i++)
-            {
+            for (int i = 1; i < floatContour.Count; i++) {
                 point = floatContour[i];
                 path.LineTo((float)point.GetX(), (float)point.GetY());
             }
-            if ((bool)close)
-            {
+            if ((bool)close) {
                 path.CloseSubpath();
             }
         }
 
-        public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType)
-        {
+        public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
             clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
                 (rectVertices)))), polyType, true);
         }

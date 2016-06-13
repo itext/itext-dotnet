@@ -44,77 +44,61 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.IO.Font;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfLiteral : PdfPrimitiveObject
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfLiteral : PdfPrimitiveObject {
         private long position;
 
         public PdfLiteral(byte[] content)
-            : base(true)
-        {
+            : base(true) {
             this.content = content;
         }
 
         public PdfLiteral(int size)
-            : this(new byte[size])
-        {
+            : this(new byte[size]) {
             iTextSharp.IO.Util.JavaUtil.Fill(content, (byte)32);
         }
 
         public PdfLiteral(String content)
-            : this(PdfEncodings.ConvertToBytes(content, null))
-        {
+            : this(PdfEncodings.ConvertToBytes(content, null)) {
         }
 
         private PdfLiteral()
-            : this((byte[])null)
-        {
+            : this((byte[])null) {
         }
 
-        public override byte GetObjectType()
-        {
+        public override byte GetObjectType() {
             return LITERAL;
         }
 
-        public override String ToString()
-        {
-            if (content != null)
-            {
+        public override String ToString() {
+            if (content != null) {
                 return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
             }
-            else
-            {
+            else {
                 return "";
             }
         }
 
-        public virtual long GetPosition()
-        {
+        public virtual long GetPosition() {
             return position;
         }
 
-        public virtual void SetPosition(long position)
-        {
+        public virtual void SetPosition(long position) {
             this.position = position;
         }
 
-        public virtual int GetBytesCount()
-        {
+        public virtual int GetBytesCount() {
             return content.Length;
         }
 
-        protected internal override void GenerateContent()
-        {
+        protected internal override void GenerateContent() {
         }
 
-        protected internal override PdfObject NewInstance()
-        {
+        protected internal override PdfObject NewInstance() {
             return new iTextSharp.Kernel.Pdf.PdfLiteral();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document)
-        {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfLiteral literal = (iTextSharp.Kernel.Pdf.PdfLiteral)from;
             this.content = literal.GetInternalContent();

@@ -46,28 +46,24 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Verifies a certificate against a <code>KeyStore</code>
     /// containing trusted anchors.
     /// </summary>
-    public class RootStoreVerifier : CertificateVerifier
-    {
+    public class RootStoreVerifier : CertificateVerifier {
         /// <summary>A key store against which certificates can be verified.</summary>
         protected internal List<X509Certificate> rootStore = null;
 
         /// <summary>Creates a RootStoreVerifier in a chain of verifiers.</summary>
         /// <param name="verifier">the next verifier in the chain</param>
         public RootStoreVerifier(CertificateVerifier verifier)
-            : base(verifier)
-        {
+            : base(verifier) {
         }
 
         /// <summary>Sets the Key Store against which a certificate can be checked.</summary>
         /// <param name="keyStore">a root store</param>
-        public virtual void SetRootStore(List<X509Certificate> keyStore)
-        {
+        public virtual void SetRootStore(List<X509Certificate> keyStore) {
             this.rootStore = keyStore;
         }
 
@@ -82,36 +78,29 @@ namespace iTextSharp.Signatures
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
-             signDate)
-        {
+             signDate) {
             // verify using the CertificateVerifier if root store is missing
-            if (rootStore == null)
-            {
+            if (rootStore == null) {
                 return base.Verify(signCert, issuerCert, signDate);
             }
-            try
-            {
+            try {
                 IList<VerificationOK> result = new List<VerificationOK>();
                 // loop over the trusted anchors in the root store
-                foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore))
-                {
-                    try
-                    {
+                foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore)) {
+                    try {
                         signCert.Verify(anchor.GetPublicKey());
                         result.Add(new VerificationOK(signCert, this.GetType(), "Certificate verified against root store."));
                         result.AddAll(base.Verify(signCert, issuerCert, signDate));
                         return result;
                     }
-                    catch (GeneralSecurityException)
-                    {
+                    catch (GeneralSecurityException) {
                         continue;
                     }
                 }
                 result.AddAll(base.Verify(signCert, issuerCert, signDate));
                 return result;
             }
-            catch (GeneralSecurityException)
-            {
+            catch (GeneralSecurityException) {
                 return base.Verify(signCert, issuerCert, signDate);
             }
         }

@@ -50,10 +50,8 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font
-{
-    public abstract class PdfFont : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Font {
+    public abstract class PdfFont : PdfObjectWrapper<PdfDictionary> {
         protected internal FontProgram fontProgram;
 
         protected internal static readonly byte[] emptyBytes = new byte[0];
@@ -73,37 +71,30 @@ namespace iTextSharp.Kernel.Font
         protected internal IList<int[]> subsetRanges;
 
         protected internal PdfFont(PdfDictionary fontDictionary)
-            : base(fontDictionary)
-        {
+            : base(fontDictionary) {
             GetPdfObject().Put(PdfName.Type, PdfName.Font);
         }
 
         protected internal PdfFont()
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
             MarkObjectAsIndirect(GetPdfObject());
             GetPdfObject().Put(PdfName.Type, PdfName.Font);
         }
 
         public abstract Glyph GetGlyph(int unicode);
 
-        public virtual bool ContainsGlyph(char unicode)
-        {
+        public virtual bool ContainsGlyph(char unicode) {
             Glyph glyph = GetGlyph(unicode);
-            if (glyph != null)
-            {
-                if (GetFontProgram() != null && GetFontProgram().IsFontSpecific())
-                {
+            if (glyph != null) {
+                if (GetFontProgram() != null && GetFontProgram().IsFontSpecific()) {
                     //if current is symbolic, zero code is valid value
                     return glyph.GetCode() > -1;
                 }
-                else
-                {
+                else {
                     return glyph.GetCode() > 0;
                 }
             }
-            else
-            {
+            else {
                 return false;
             }
         }
@@ -132,21 +123,18 @@ namespace iTextSharp.Kernel.Font
 
         public abstract void WriteText(String text, PdfOutputStream stream);
 
-        public virtual void WriteText(GlyphLine text, PdfOutputStream stream)
-        {
+        public virtual void WriteText(GlyphLine text, PdfOutputStream stream) {
             WriteText(text, 0, text.Size() - 1, stream);
         }
 
-        public virtual double[] GetFontMatrix()
-        {
+        public virtual double[] GetFontMatrix() {
             return FontConstants.DefaultFontMatrix;
         }
 
         /// <summary>Returns the width of a certain character of this font in 1000 normalized units.</summary>
         /// <param name="unicode">a certain character.</param>
         /// <returns>a width in Text Space.</returns>
-        public virtual int GetWidth(int unicode)
-        {
+        public virtual int GetWidth(int unicode) {
             Glyph glyph = GetGlyph(unicode);
             return glyph != null ? glyph.GetWidth() : 0;
         }
@@ -155,32 +143,26 @@ namespace iTextSharp.Kernel.Font
         /// <param name="unicode">a certain character.</param>
         /// <param name="fontSize">the font size.</param>
         /// <returns>a width in points.</returns>
-        public virtual float GetWidth(int unicode, float fontSize)
-        {
+        public virtual float GetWidth(int unicode, float fontSize) {
             return GetWidth(unicode) * fontSize / FontProgram.UNITS_NORMALIZATION;
         }
 
         /// <summary>Returns the width of a string of this font in 1000 normalized units.</summary>
         /// <param name="text">a string content.</param>
         /// <returns>a width of string in Text Space.</returns>
-        public virtual int GetWidth(String text)
-        {
+        public virtual int GetWidth(String text) {
             int total = 0;
-            for (int i = 0; i < text.Length; i++)
-            {
+            for (int i = 0; i < text.Length; i++) {
                 int ch;
-                if (TextUtil.IsSurrogatePair(text, i))
-                {
+                if (TextUtil.IsSurrogatePair(text, i)) {
                     ch = TextUtil.ConvertToUtf32(text, i);
                     i++;
                 }
-                else
-                {
+                else {
                     ch = text[i];
                 }
                 Glyph glyph = GetGlyph(ch);
-                if (glyph != null)
-                {
+                if (glyph != null) {
                     total += glyph.GetWidth();
                 }
             }
@@ -199,8 +181,7 @@ namespace iTextSharp.Kernel.Font
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the width in points</returns>
-        public virtual float GetWidth(String text, float fontSize)
-        {
+        public virtual float GetWidth(String text, float fontSize) {
             return GetWidth(text) * fontSize / FontProgram.UNITS_NORMALIZATION;
         }
 
@@ -217,30 +198,23 @@ namespace iTextSharp.Kernel.Font
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the descent in points</returns>
-        public virtual int GetDescent(String text, float fontSize)
-        {
+        public virtual int GetDescent(String text, float fontSize) {
             int min = 0;
-            for (int k = 0; k < text.Length; ++k)
-            {
+            for (int k = 0; k < text.Length; ++k) {
                 int ch;
-                if (TextUtil.IsSurrogatePair(text, k))
-                {
+                if (TextUtil.IsSurrogatePair(text, k)) {
                     ch = TextUtil.ConvertToUtf32(text, k);
                     k++;
                 }
-                else
-                {
+                else {
                     ch = text[k];
                 }
                 int[] bbox = GetGlyph(ch).GetBbox();
-                if (bbox != null && bbox[1] < min)
-                {
+                if (bbox != null && bbox[1] < min) {
                     min = bbox[1];
                 }
-                else
-                {
-                    if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoDescender() < min)
-                    {
+                else {
+                    if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoDescender() < min) {
                         min = GetFontProgram().GetFontMetrics().GetTypoDescender();
                     }
                 }
@@ -256,18 +230,14 @@ namespace iTextSharp.Kernel.Font
         /// <param name="unicode">the char code to get the descent of</param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the descent in points</returns>
-        public virtual int GetDescent(int unicode, float fontSize)
-        {
+        public virtual int GetDescent(int unicode, float fontSize) {
             int min = 0;
             int[] bbox = GetGlyph(unicode).GetBbox();
-            if (bbox != null && bbox[1] < min)
-            {
+            if (bbox != null && bbox[1] < min) {
                 min = bbox[1];
             }
-            else
-            {
-                if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoDescender() < min)
-                {
+            else {
+                if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoDescender() < min) {
                     min = GetFontProgram().GetFontMetrics().GetTypoDescender();
                 }
             }
@@ -287,30 +257,23 @@ namespace iTextSharp.Kernel.Font
         /// </param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the ascent in points</returns>
-        public virtual int GetAscent(String text, float fontSize)
-        {
+        public virtual int GetAscent(String text, float fontSize) {
             int max = 0;
-            for (int k = 0; k < text.Length; ++k)
-            {
+            for (int k = 0; k < text.Length; ++k) {
                 int ch;
-                if (TextUtil.IsSurrogatePair(text, k))
-                {
+                if (TextUtil.IsSurrogatePair(text, k)) {
                     ch = TextUtil.ConvertToUtf32(text, k);
                     k++;
                 }
-                else
-                {
+                else {
                     ch = text[k];
                 }
                 int[] bbox = GetGlyph(ch).GetBbox();
-                if (bbox != null && bbox[3] > max)
-                {
+                if (bbox != null && bbox[3] > max) {
                     max = bbox[3];
                 }
-                else
-                {
-                    if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoAscender() > max)
-                    {
+                else {
+                    if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoAscender() > max) {
                         max = GetFontProgram().GetFontMetrics().GetTypoAscender();
                     }
                 }
@@ -326,31 +289,25 @@ namespace iTextSharp.Kernel.Font
         /// <param name="unicode">the char code to get the ascent of</param>
         /// <param name="fontSize">the font size</param>
         /// <returns>the ascent in points</returns>
-        public virtual int GetAscent(int unicode, float fontSize)
-        {
+        public virtual int GetAscent(int unicode, float fontSize) {
             int max = 0;
             int[] bbox = GetGlyph(unicode).GetBbox();
-            if (bbox != null && bbox[3] > max)
-            {
+            if (bbox != null && bbox[3] > max) {
                 max = bbox[3];
             }
-            else
-            {
-                if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoAscender() > max)
-                {
+            else {
+                if (bbox == null && GetFontProgram().GetFontMetrics().GetTypoAscender() > max) {
                     max = GetFontProgram().GetFontMetrics().GetTypoAscender();
                 }
             }
             return (int)(max * fontSize / FontProgram.UNITS_NORMALIZATION);
         }
 
-        public virtual FontProgram GetFontProgram()
-        {
+        public virtual FontProgram GetFontProgram() {
             return fontProgram;
         }
 
-        public virtual bool IsEmbedded()
-        {
+        public virtual bool IsEmbedded() {
             return embedded;
         }
 
@@ -359,8 +316,7 @@ namespace iTextSharp.Kernel.Font
         /// encoding should be included in the document.
         /// </summary>
         /// <returns><CODE>false</CODE> to include all the glyphs and widths.</returns>
-        public virtual bool IsSubset()
-        {
+        public virtual bool IsSubset() {
             return subset;
         }
 
@@ -378,8 +334,7 @@ namespace iTextSharp.Kernel.Font
         /// otherwise just the characters ranges will be included.
         /// </remarks>
         /// <param name="subset">new value of property subset</param>
-        public virtual void SetSubset(bool subset)
-        {
+        public virtual void SetSubset(bool subset) {
             this.subset = subset;
         }
 
@@ -390,40 +345,32 @@ namespace iTextSharp.Kernel.Font
         /// end range inclusive. Several ranges are allowed in the same array.
         /// </remarks>
         /// <param name="range">the character range</param>
-        public virtual void AddSubsetRange(int[] range)
-        {
-            if (subsetRanges == null)
-            {
+        public virtual void AddSubsetRange(int[] range) {
+            if (subsetRanges == null) {
                 subsetRanges = new List<int[]>();
             }
             subsetRanges.Add(range);
         }
 
-        public virtual IList<String> SplitString(String text, int fontSize, float maxWidth)
-        {
+        public virtual IList<String> SplitString(String text, int fontSize, float maxWidth) {
             IList<String> resultString = new List<String>();
             int lastWhiteSpace = 0;
             int startPos = 0;
             float tokenLength = 0;
-            for (int i = 0; i < text.Length; i++)
-            {
+            for (int i = 0; i < text.Length; i++) {
                 char ch = text[i];
-                if (char.IsWhiteSpace(ch))
-                {
+                if (char.IsWhiteSpace(ch)) {
                     lastWhiteSpace = i;
                 }
                 tokenLength += GetWidth(ch, fontSize);
-                if (tokenLength >= maxWidth || ch == '\n')
-                {
-                    if (startPos < lastWhiteSpace)
-                    {
+                if (tokenLength >= maxWidth || ch == '\n') {
+                    if (startPos < lastWhiteSpace) {
                         resultString.Add(text.JSubstring(startPos, lastWhiteSpace));
                         startPos = lastWhiteSpace + 1;
                         tokenLength = 0;
                         i = lastWhiteSpace;
                     }
-                    else
-                    {
+                    else {
                         resultString.Add(text.JSubstring(startPos, i + 1));
                         startPos = i + 1;
                         tokenLength = 0;
@@ -437,28 +384,22 @@ namespace iTextSharp.Kernel.Font
 
         protected internal abstract PdfDictionary GetFontDescriptor(String fontName);
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
-        protected internal virtual bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType)
-        {
+        protected internal virtual bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType) {
             return PdfFontFactory.CheckFontDictionary(fontDic, fontType, true);
         }
 
-        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic)
-        {
+        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic) {
             return CheckTrueTypeFontDictionary(fontDic, true);
         }
 
-        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic, bool isException)
-        {
+        protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
-                .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1)))
-            {
-                if (isException)
-                {
+                .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1))) {
+                if (isException) {
                     throw new PdfException(PdfException.DictionaryNotContainFontData).SetMessageParams(PdfName.TrueType.GetValue
                         ());
                 }
@@ -470,11 +411,9 @@ namespace iTextSharp.Kernel.Font
         /// <summary>Creates a unique subset prefix to be added to the font name when the font is embedded and subset.
         ///     </summary>
         /// <returns>the subset prefix</returns>
-        protected internal static String CreateSubsetPrefix()
-        {
+        protected internal static String CreateSubsetPrefix() {
             StringBuilder s = new StringBuilder("");
-            for (int k = 0; k < 6; ++k)
-            {
+            for (int k = 0; k < 6; ++k) {
                 s.Append((char)(iTextSharp.IO.Util.JavaUtil.Random() * 26 + 'A'));
             }
             return s + "+";
@@ -506,39 +445,30 @@ namespace iTextSharp.Kernel.Font
         /// <see langword="null"/>
         /// .
         /// </exception>
-        protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths)
-        {
-            if (fontStreamBytes == null)
-            {
+        protected internal virtual PdfStream GetPdfFontStream(byte[] fontStreamBytes, int[] fontStreamLengths) {
+            if (fontStreamBytes == null) {
                 throw new PdfException(PdfException.FontEmbeddingIssue);
             }
             PdfStream fontStream = new PdfStream(fontStreamBytes);
-            for (int k = 0; k < fontStreamLengths.Length; ++k)
-            {
+            for (int k = 0; k < fontStreamLengths.Length; ++k) {
                 fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
             }
             return fontStream;
         }
 
-        protected internal static int[] CompactRanges(IList<int[]> ranges)
-        {
+        protected internal static int[] CompactRanges(IList<int[]> ranges) {
             IList<int[]> simp = new List<int[]>();
-            foreach (int[] range in ranges)
-            {
-                for (int j = 0; j < range.Length; j += 2)
-                {
+            foreach (int[] range in ranges) {
+                for (int j = 0; j < range.Length; j += 2) {
                     simp.Add(new int[] { Math.Max(0, Math.Min(range[j], range[j + 1])), Math.Min(0xffff, Math.Max(range[j], range
                         [j + 1])) });
                 }
             }
-            for (int k1 = 0; k1 < simp.Count - 1; ++k1)
-            {
-                for (int k2 = k1 + 1; k2 < simp.Count; ++k2)
-                {
+            for (int k1 = 0; k1 < simp.Count - 1; ++k1) {
+                for (int k2 = k1 + 1; k2 < simp.Count; ++k2) {
                     int[] r1 = simp[k1];
                     int[] r2 = simp[k2];
-                    if (r1[0] >= r2[0] && r1[0] <= r2[1] || r1[1] >= r2[0] && r1[0] <= r2[1])
-                    {
+                    if (r1[0] >= r2[0] && r1[0] <= r2[1] || r1[1] >= r2[0] && r1[0] <= r2[1]) {
                         r1[0] = Math.Min(r1[0], r2[0]);
                         r1[1] = Math.Max(r1[1], r2[1]);
                         simp.JRemoveAt(k2);
@@ -547,8 +477,7 @@ namespace iTextSharp.Kernel.Font
                 }
             }
             int[] s = new int[simp.Count * 2];
-            for (int k = 0; k < simp.Count; ++k)
-            {
+            for (int k = 0; k < simp.Count; ++k) {
                 int[] r = simp[k];
                 s[k * 2] = r[0];
                 s[k * 2 + 1] = r[1];

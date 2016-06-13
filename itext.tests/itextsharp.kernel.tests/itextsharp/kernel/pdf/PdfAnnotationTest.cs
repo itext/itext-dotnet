@@ -13,25 +13,21 @@ using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfAnnotationTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfAnnotationTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddLinkAnnotation01()
-        {
+        public virtual void AddLinkAnnotation01() {
             PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation01.pdf"
                 , FileMode.Create)));
             PdfPage page1 = document.AddNewPage();
@@ -63,8 +59,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddLinkAnnotation02()
-        {
+        public virtual void AddLinkAnnotation02() {
             PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation02.pdf"
                 , FileMode.Create)));
             PdfPage page = document.AddNewPage();
@@ -86,8 +81,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddAndGetLinkAnnotations()
-        {
+        public virtual void AddAndGetLinkAnnotations() {
             PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation03.pdf"
                 , FileMode.Create)));
             PdfPage page = document.AddNewPage();
@@ -129,8 +123,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddTextAnnotation01()
-        {
+        public virtual void AddTextAnnotation01() {
             PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "textAnnotation01.pdf"
                 , FileMode.Create)));
             PdfPage page = document.AddNewPage();
@@ -151,8 +144,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CaretTest()
-        {
+        public virtual void CaretTest() {
             String filename = destinationFolder + "caretAnnotation.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -176,16 +168,14 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_CaretAnnotation.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddFreeTextAnnotation01()
-        {
+        public virtual void AddFreeTextAnnotation01() {
             PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "freeTextAnnotation01.pdf"
                 , FileMode.Create)));
             PdfPage page = document.AddNewPage();
@@ -206,8 +196,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AddSquareAndCircleAnnotations01()
-        {
+        public virtual void AddSquareAndCircleAnnotations01() {
             PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "squareAndCircleAnnotations01.pdf"
                 , FileMode.Create)));
             PdfPage page = document.AddNewPage();
@@ -228,8 +217,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FileAttachmentTest()
-        {
+        public virtual void FileAttachmentTest() {
             String filename = destinationFolder + "fileAttachmentAnnotation.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -246,8 +234,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_fileAttachmentAnnotation.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -255,8 +242,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RubberStampTest()
-        {
+        public virtual void RubberStampTest() {
             String filename = destinationFolder + "rubberStampAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -309,8 +295,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_rubberStampAnnotation01.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -318,8 +303,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RubberStampWrongStampTest()
-        {
+        public virtual void RubberStampWrongStampTest() {
             String filename = destinationFolder + "rubberStampAnnotation02.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -333,8 +317,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_rubberStampAnnotation02.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
             }
         }
@@ -342,8 +325,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void InkTest()
-        {
+        public virtual void InkTest() {
             String filename = destinationFolder + "inkAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -367,8 +349,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_inkAnnotation01.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
             }
         }
@@ -376,8 +357,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextMarkupTest01()
-        {
+        public virtual void TextMarkupTest01() {
             String filename = destinationFolder + "textMarkupAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -399,8 +379,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation01.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
             }
         }
@@ -408,8 +387,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextMarkupTest02()
-        {
+        public virtual void TextMarkupTest02() {
             String filename = destinationFolder + "textMarkupAnnotation02.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -431,8 +409,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation02.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
             }
         }
@@ -440,8 +417,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextMarkupTest03()
-        {
+        public virtual void TextMarkupTest03() {
             String filename = destinationFolder + "textMarkupAnnotation03.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -463,8 +439,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation03.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.IsNull(errorMessage);
             }
         }
@@ -472,8 +447,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextMarkupTest04()
-        {
+        public virtual void TextMarkupTest04() {
             String filename = destinationFolder + "textMarkupAnnotation04.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -495,8 +469,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation04.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -504,8 +477,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PrinterMarkText()
-        {
+        public virtual void PrinterMarkText() {
             String filename = destinationFolder + "printerMarkAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -526,8 +498,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_printerMarkAnnotation01.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -535,8 +506,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TrapNetworkText()
-        {
+        public virtual void TrapNetworkText() {
             String filename = destinationFolder + "trapNetworkAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -558,8 +528,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_trapNetworkAnnotation01.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -568,8 +537,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
-        public virtual void SoundTestAif()
-        {
+        public virtual void SoundTestAif() {
             String filename = destinationFolder + "soundAnnotation02.pdf";
             String audioFile = sourceFolder + "sample.aif";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
@@ -578,17 +546,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             String @string = "";
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 @string = @string + (char)@is.Read();
             }
-            if (@string.Equals("RIFF"))
-            {
+            if (@string.Equals("RIFF")) {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
                 @is.Read();
             }
-            else
-            {
+            else {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             }
             PdfStream sound1 = new PdfStream(pdfDoc1, @is);
@@ -603,8 +568,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation02.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -612,8 +576,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SoundTestAiff()
-        {
+        public virtual void SoundTestAiff() {
             String filename = destinationFolder + "soundAnnotation03.pdf";
             String audioFile = sourceFolder + "sample.aiff";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
@@ -622,17 +585,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             String @string = "";
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 @string = @string + (char)@is.Read();
             }
-            if (@string.Equals("RIFF"))
-            {
+            if (@string.Equals("RIFF")) {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
                 @is.Read();
             }
-            else
-            {
+            else {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             }
             PdfStream sound1 = new PdfStream(pdfDoc1, @is);
@@ -647,8 +607,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation03.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -657,8 +616,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
-        public virtual void SoundTestSnd()
-        {
+        public virtual void SoundTestSnd() {
             String filename = destinationFolder + "soundAnnotation04.pdf";
             String audioFile = sourceFolder + "sample.snd";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
@@ -674,8 +632,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation04.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -684,8 +641,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
-        public virtual void SoundTestWav()
-        {
+        public virtual void SoundTestWav() {
             String filename = destinationFolder + "soundAnnotation01.pdf";
             String audioFile = sourceFolder + "sample.wav";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
@@ -701,8 +657,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation01.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -711,8 +666,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Sound.Sampled.UnsupportedAudioFileException"/>
         [NUnit.Framework.Test]
-        public virtual void SoundTestWav01()
-        {
+        public virtual void SoundTestWav01() {
             String filename = destinationFolder + "soundAnnotation05.pdf";
             String audioFile = sourceFolder + "sample.wav";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
@@ -721,17 +675,14 @@ namespace iTextSharp.Kernel.Pdf
             PdfPage page1 = pdfDoc1.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             String header = "";
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 header = header + (char)@is.Read();
             }
-            if (header.Equals("RIFF"))
-            {
+            if (header.Equals("RIFF")) {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
                 @is.Read();
             }
-            else
-            {
+            else {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             }
             PdfStream soundStream = new PdfStream(pdfDoc1, @is);
@@ -746,8 +697,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation05.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -755,8 +705,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ScreenTestExternalWavFile()
-        {
+        public virtual void ScreenTestExternalWavFile() {
             String filename = destinationFolder + "screenAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -783,8 +732,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ScreenTestEmbeddedWavFile01()
-        {
+        public virtual void ScreenTestEmbeddedWavFile01() {
             String filename = destinationFolder + "screenAnnotation02.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -811,8 +759,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ScreenTestEmbeddedWavFile02()
-        {
+        public virtual void ScreenTestEmbeddedWavFile02() {
             String filename = destinationFolder + "screenAnnotation03.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -839,8 +786,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ScreenTestEmbeddedWavFile03()
-        {
+        public virtual void ScreenTestEmbeddedWavFile03() {
             String filename = destinationFolder + "screenAnnotation04.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -853,8 +799,7 @@ namespace iTextSharp.Kernel.Pdf
             Stream @is = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
             MemoryStream baos = new MemoryStream();
             int reads = @is.Read();
-            while (reads != -1)
-            {
+            while (reads != -1) {
                 baos.Write(reads);
                 reads = @is.Read();
             }
@@ -875,8 +820,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void WaterMarkTest()
-        {
+        public virtual void WaterMarkTest() {
             String filename = destinationFolder + "waterMarkAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -902,8 +846,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_watermarkAnnotation01.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -911,8 +854,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RedactionTest()
-        {
+        public virtual void RedactionTest() {
             String filename = destinationFolder + "redactionAnnotation01.pdf";
             FileStream fos1 = new FileStream(filename, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
@@ -947,8 +889,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_redactionAnnotation01.pdf"
                 , destinationFolder, "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }

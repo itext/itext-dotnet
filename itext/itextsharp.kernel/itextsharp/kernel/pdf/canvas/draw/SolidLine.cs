@@ -44,59 +44,50 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Draw
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
     /// <summary>
     /// Implementation of
     /// <see cref="ILineDrawer"/>
     /// which draws a solid horizontal line along
     /// the bottom edge of the specified rectangle.
     /// </summary>
-    public class SolidLine : ILineDrawer
-    {
+    public class SolidLine : ILineDrawer {
         private float lineWidth = 1;
 
         private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
 
         /// <summary>Constructs an instance of solid line drawer</summary>
-        public SolidLine()
-        {
+        public SolidLine() {
         }
 
         /// <summary>Constructs an instance of solid line drawer with the specified line thickness</summary>
         /// <param name="lineWidth">line width</param>
-        public SolidLine(float lineWidth)
-        {
+        public SolidLine(float lineWidth) {
             this.lineWidth = lineWidth;
         }
 
-        public virtual void Draw(PdfCanvas canvas, Rectangle drawArea)
-        {
+        public virtual void Draw(PdfCanvas canvas, Rectangle drawArea) {
             canvas.SaveState().SetStrokeColor(color).MoveTo(drawArea.GetX(), drawArea.GetY()).LineTo(drawArea.GetX() +
                  drawArea.GetWidth(), drawArea.GetY()).Stroke().RestoreState();
         }
 
         /// <summary>Gets line width in points</summary>
         /// <returns>line thickness</returns>
-        public virtual float GetLineWidth()
-        {
+        public virtual float GetLineWidth() {
             return lineWidth;
         }
 
         /// <summary>Sets line width in points</summary>
         /// <param name="lineWidth">new line width</param>
-        public virtual void SetLineWidth(float lineWidth)
-        {
+        public virtual void SetLineWidth(float lineWidth) {
             this.lineWidth = lineWidth;
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetColor() {
             return color;
         }
 
-        public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
-        {
+        public virtual void SetColor(iTextSharp.Kernel.Color.Color color) {
             this.color = color;
         }
     }

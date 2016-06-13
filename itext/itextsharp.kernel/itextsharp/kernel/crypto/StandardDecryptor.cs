@@ -41,28 +41,23 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Crypto
-{
-    public class StandardDecryptor : IDecryptor
-    {
+namespace iTextSharp.Kernel.Crypto {
+    public class StandardDecryptor : IDecryptor {
         protected internal ARCFOUREncryption arcfour;
 
         /// <summary>Creates a new instance of StandardDecryption</summary>
-        public StandardDecryptor(byte[] key, int off, int len)
-        {
+        public StandardDecryptor(byte[] key, int off, int len) {
             arcfour = new ARCFOUREncryption();
             arcfour.PrepareARCFOURKey(key, off, len);
         }
 
-        public virtual byte[] Update(byte[] b, int off, int len)
-        {
+        public virtual byte[] Update(byte[] b, int off, int len) {
             byte[] b2 = new byte[len];
             arcfour.EncryptARCFOUR(b, off, len, b2, 0);
             return b2;
         }
 
-        public virtual byte[] Finish()
-        {
+        public virtual byte[] Finish() {
             return null;
         }
     }

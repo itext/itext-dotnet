@@ -44,19 +44,15 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection
-{
-    public class PdfCollectionSchema : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Collection {
+    public class PdfCollectionSchema : PdfObjectWrapper<PdfDictionary> {
         public PdfCollectionSchema(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         /// <summary>Creates a Collection Schema dictionary.</summary>
         public PdfCollectionSchema()
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
         }
 
         /// <summary>Adds a Collection field to the Schema.</summary>
@@ -64,19 +60,16 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <param name="field">a Collection Field</param>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSchema AddField(String name, PdfCollectionField
-             field)
-        {
+             field) {
             GetPdfObject().Put(new PdfName(name), field.GetPdfObject());
             return this;
         }
 
-        public virtual PdfCollectionField GetField(String name)
-        {
+        public virtual PdfCollectionField GetField(String name) {
             return new PdfCollectionField(GetPdfObject().GetAsDictionary(new PdfName(name)));
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

@@ -52,11 +52,9 @@ using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
-    public class LtvVerifier : RootStoreVerifier
-    {
+    public class LtvVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
         protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerifier
             ));
@@ -94,8 +92,7 @@ namespace iTextSharp.Signatures
         /// <param name="document">The document we want to verify.</param>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public LtvVerifier(PdfDocument document)
-            : base(null)
-        {
+            : base(null) {
             this.document = document;
             this.acroForm = PdfAcroForm.GetAcroForm(document, true);
             this.sgnUtil = new SignatureUtil(document);
@@ -109,22 +106,19 @@ namespace iTextSharp.Signatures
 
         /// <summary>Sets an extra verifier.</summary>
         /// <param name="verifier">the verifier to set</param>
-        public virtual void SetVerifier(CertificateVerifier verifier)
-        {
+        public virtual void SetVerifier(CertificateVerifier verifier) {
             this.verifier = verifier;
         }
 
         /// <summary>Sets the certificate option.</summary>
         /// <param name="option">Either CertificateOption.SIGNING_CERTIFICATE (default) or CertificateOption.WHOLE_CHAIN
         ///     </param>
-        public virtual void SetCertificateOption(LtvVerification.CertificateOption option)
-        {
+        public virtual void SetCertificateOption(LtvVerification.CertificateOption option) {
             this.option = option;
         }
 
         /// <summary>Set the verifyRootCertificate to false if you can't verify the root certificate.</summary>
-        public virtual void SetVerifyRootCertificate(bool verifyRootCertificate)
-        {
+        public virtual void SetVerifyRootCertificate(bool verifyRootCertificate) {
             this.verifyRootCertificate = verifyRootCertificate;
         }
 
@@ -134,24 +128,19 @@ namespace iTextSharp.Signatures
         /// </summary>
         /// <returns>a PdfPKCS7 object</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        protected internal virtual PdfPKCS7 CoversWholeDocument()
-        {
+        protected internal virtual PdfPKCS7 CoversWholeDocument() {
             PdfPKCS7 pkcs7 = sgnUtil.VerifySignature(signatureName);
-            if (sgnUtil.SignatureCoversWholeDocument(signatureName))
-            {
+            if (sgnUtil.SignatureCoversWholeDocument(signatureName)) {
                 LOGGER.Info("The timestamp covers whole document.");
             }
-            else
-            {
+            else {
                 throw new VerificationException((X509Certificate)null, "Signature doesn't cover whole document.");
             }
-            if (pkcs7.Verify())
-            {
+            if (pkcs7.Verify()) {
                 LOGGER.Info("The signed document has not been modified.");
                 return pkcs7;
             }
-            else
-            {
+            else {
                 throw new VerificationException((X509Certificate)null, "The document was altered after the final signature was applied."
                     );
             }
@@ -160,14 +149,11 @@ namespace iTextSharp.Signatures
         /// <summary>Verifies all the document-level timestamps and all the signatures in the document.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual IList<VerificationOK> Verify(IList<VerificationOK> result)
-        {
-            if (result == null)
-            {
+        public virtual IList<VerificationOK> Verify(IList<VerificationOK> result) {
+            if (result == null) {
                 result = new List<VerificationOK>();
             }
-            while (pkcs7 != null)
-            {
+            while (pkcs7 != null) {
                 result.AddAll(VerifySignature());
             }
             return result;
@@ -176,8 +162,7 @@ namespace iTextSharp.Signatures
         /// <summary>Verifies a document level timestamp.</summary>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual IList<VerificationOK> VerifySignature()
-        {
+        public virtual IList<VerificationOK> VerifySignature() {
             LOGGER.Info("Verifying signature.");
             IList<VerificationOK> result = new List<VerificationOK>();
             // Get the certificate chain
@@ -185,49 +170,39 @@ namespace iTextSharp.Signatures
             VerifyChain(chain);
             // how many certificates in the chain do we need to check?
             int total = 1;
-            if (LtvVerification.CertificateOption.WHOLE_CHAIN.Equals(option))
-            {
+            if (LtvVerification.CertificateOption.WHOLE_CHAIN.Equals(option)) {
                 total = chain.Length;
             }
             // loop over the certificates
             X509Certificate signCert;
             X509Certificate issuerCert;
-            for (int i = 0; i < total; )
-            {
+            for (int i = 0; i < total; ) {
                 // the certificate to check
                 signCert = (X509Certificate)chain[i++];
                 // its issuer
                 issuerCert = (X509Certificate)null;
-                if (i < chain.Length)
-                {
+                if (i < chain.Length) {
                     issuerCert = (X509Certificate)chain[i];
                 }
                 // now lets verify the certificate
                 LOGGER.Info(signCert.SubjectDN.ToString());
                 IList<VerificationOK> list = Verify(signCert, issuerCert, signDate);
-                if (list.Count == 0)
-                {
-                    try
-                    {
+                if (list.Count == 0) {
+                    try {
                         signCert.Verify(signCert.GetPublicKey());
-                        if (latestRevision && chain.Length > 1)
-                        {
+                        if (latestRevision && chain.Length > 1) {
                             list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate in final revision"));
                         }
-                        if (list.Count == 0 && verifyRootCertificate)
-                        {
+                        if (list.Count == 0 && verifyRootCertificate) {
                             throw new GeneralSecurityException();
                         }
-                        else
-                        {
-                            if (chain.Length > 1)
-                            {
+                        else {
+                            if (chain.Length > 1) {
                                 list.Add(new VerificationOK(signCert, this.GetType(), "Root certificate passed without checking"));
                             }
                         }
                     }
-                    catch (GeneralSecurityException)
-                    {
+                    catch (GeneralSecurityException) {
                         throw new VerificationException(signCert, "Couldn't verify with CRL or OCSP or trusted anchor");
                     }
                 }
@@ -245,17 +220,14 @@ namespace iTextSharp.Signatures
         /// </summary>
         /// <param name="chain">the certificate chain</param>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual void VerifyChain(X509Certificate[] chain)
-        {
+        public virtual void VerifyChain(X509Certificate[] chain) {
             // Loop over the certificates in the chain
-            for (int i = 0; i < chain.Length; i++)
-            {
+            for (int i = 0; i < chain.Length; i++) {
                 X509Certificate cert = (X509Certificate)chain[i];
                 // check if the certificate was/is valid
                 cert.CheckValidity(signDate);
                 // check if the previous certificate was issued by this certificate
-                if (i > 0)
-                {
+                if (i > 0) {
                     chain[i - 1].Verify(chain[i].GetPublicKey());
                 }
             }
@@ -274,8 +246,7 @@ namespace iTextSharp.Signatures
         /// <seealso cref="RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
         ///     "/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
-             signDate)
-        {
+             signDate) {
             // we'll verify agains the rootstore (if present)
             RootStoreVerifier rootStoreVerifier = new RootStoreVerifier(verifier);
             rootStoreVerifier.SetRootStore(rootStore);
@@ -294,21 +265,18 @@ namespace iTextSharp.Signatures
         /// <summary>Switches to the previous revision.</summary>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual void SwitchToPreviousRevision()
-        {
+        public virtual void SwitchToPreviousRevision() {
             LOGGER.Info("Switching to previous revision.");
             latestRevision = false;
             dss = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.DSS);
             DateTime cal = pkcs7.GetTimeStampDate();
-            if (cal == SignUtils.UNDEFINED_TIMESTAMP_DATE)
-            {
+            if (cal == SignUtils.UNDEFINED_TIMESTAMP_DATE) {
                 cal = pkcs7.GetSignDate();
             }
             // TODO: get date from signature
             signDate = cal.ToUniversalTime();
             IList<String> names = sgnUtil.GetSignatureNames();
-            if (names.Count > 1)
-            {
+            if (names.Count > 1) {
                 signatureName = names[names.Count - 2];
                 document = new PdfDocument(new PdfReader(sgnUtil.ExtractRevision(signatureName)));
                 this.acroForm = PdfAcroForm.GetAcroForm(document, true);
@@ -318,8 +286,7 @@ namespace iTextSharp.Signatures
                 LOGGER.Info(String.Format("Checking {0}signature {1}", pkcs7.IsTsp() ? "document-level timestamp " : "", signatureName
                     ));
             }
-            else
-            {
+            else {
                 LOGGER.Info("No signatures in revision");
                 pkcs7 = null;
             }
@@ -329,20 +296,16 @@ namespace iTextSharp.Signatures
         /// <returns>a list of CRLs</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public virtual IList<X509Crl> GetCRLsFromDSS()
-        {
+        public virtual IList<X509Crl> GetCRLsFromDSS() {
             IList<X509Crl> crls = new List<X509Crl>();
-            if (dss == null)
-            {
+            if (dss == null) {
                 return crls;
             }
             PdfArray crlarray = dss.GetAsArray(PdfName.CRLs);
-            if (crlarray == null)
-            {
+            if (crlarray == null) {
                 return crls;
             }
-            for (int i = 0; i < crlarray.Size(); i++)
-            {
+            for (int i = 0; i < crlarray.Size(); i++) {
                 PdfStream stream = crlarray.GetAsStream(i);
                 crls.Add((X509Crl)SignUtils.ParseCrlFromStream(new MemoryStream(stream.GetBytes())));
             }
@@ -353,30 +316,23 @@ namespace iTextSharp.Signatures
         /// <returns>a list of BasicOCSPResp objects</returns>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual IList<BasicOcspResp> GetOCSPResponsesFromDSS()
-        {
+        public virtual IList<BasicOcspResp> GetOCSPResponsesFromDSS() {
             IList<BasicOcspResp> ocsps = new List<BasicOcspResp>();
-            if (dss == null)
-            {
+            if (dss == null) {
                 return ocsps;
             }
             PdfArray ocsparray = dss.GetAsArray(PdfName.OCSPs);
-            if (ocsparray == null)
-            {
+            if (ocsparray == null) {
                 return ocsps;
             }
-            for (int i = 0; i < ocsparray.Size(); i++)
-            {
+            for (int i = 0; i < ocsparray.Size(); i++) {
                 PdfStream stream = ocsparray.GetAsStream(i);
                 OcspResp ocspResponse = new OcspResp(stream.GetBytes());
-                if (ocspResponse.Status == 0)
-                {
-                    try
-                    {
+                if (ocspResponse.Status == 0) {
+                    try {
                         ocsps.Add((BasicOcspResp)ocspResponse.GetResponseObject());
                     }
-                    catch (OcspException e)
-                    {
+                    catch (OcspException e) {
                         throw new GeneralSecurityException(e.ToString());
                     }
                 }

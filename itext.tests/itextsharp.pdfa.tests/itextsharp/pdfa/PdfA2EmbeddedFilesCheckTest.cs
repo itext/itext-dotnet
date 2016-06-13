@@ -6,10 +6,8 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA2EmbeddedFilesCheckTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA2EmbeddedFilesCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2EmbeddedFilesCheckTest/";
@@ -18,8 +16,7 @@ namespace iTextSharp.Pdfa
              + "/test/itextsharp/pdfa/PdfA2EmbeddedFilesCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -28,8 +25,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("ignore")]
-        public virtual void FileSpecCheckTest01()
-        {
+        public virtual void FileSpecCheckTest01() {
             // According to spec, only pdfa-1 or pdfa-2 compliant pdf document are allowed to be added to the
             // conforming pdfa-2 document. We only check they mime type, to define embedded file type, but we don't check
             // the bytes of the file. That's why this test creates invalid pdfa document.
@@ -56,8 +52,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest02()
-        {
+        public virtual void FileSpecCheckTest02() {
             String outPdf = destinationFolder + "pdfA2b_fileSpecCheckTest02.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2b_fileSpecCheckTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -74,8 +69,7 @@ namespace iTextSharp.Pdfa
             MemoryStream os = new MemoryStream();
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = fis.JRead(buffer, 0, buffer.Length)) > 0)
-            {
+            while ((length = fis.JRead(buffer, 0, buffer.Length)) > 0) {
                 os.Write(buffer, 0, length);
             }
             pdfDocument.AddFileAttachment("some pdf file", os.ToArray(), "foo.pdf", PdfName.ApplicationPdf, null, null
@@ -87,10 +81,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest03()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void FileSpecCheckTest03() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -115,11 +107,9 @@ namespace iTextSharp.Pdfa
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareResult(String outPdf, String cmpPdf)
-        {
+        private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (result != null)
-            {
+            if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
         }

@@ -45,10 +45,8 @@ using System;
 using iTextSharp.IO.Font.Cmap;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class CMapEncoding
-    {
+namespace iTextSharp.IO.Font {
+    public class CMapEncoding {
         private String cmap;
 
         private String uniMap;
@@ -62,119 +60,93 @@ namespace iTextSharp.IO.Font
         private IntHashtable code2Cid;
 
         /// <param name="cmap">CMap name.</param>
-        public CMapEncoding(String cmap)
-        {
+        public CMapEncoding(String cmap) {
             // true if CMap is Identity-H/V
             this.cmap = cmap;
-            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
-            {
+            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V)) {
                 isDirect = true;
             }
         }
 
         /// <param name="cmap">CMap name.</param>
         /// <param name="uniMap">CMap to convert Unicode value to CID.</param>
-        public CMapEncoding(String cmap, String uniMap)
-        {
+        public CMapEncoding(String cmap, String uniMap) {
             this.cmap = cmap;
             this.uniMap = uniMap;
-            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
-            {
+            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V)) {
                 cid2Uni = FontCache.GetCid2UniCmap(uniMap);
                 isDirect = true;
             }
-            else
-            {
+            else {
                 cid2Code = FontCache.GetCid2Byte(cmap);
                 code2Cid = cid2Code.GetReversMap();
             }
         }
 
-        public virtual bool IsDirect()
-        {
+        public virtual bool IsDirect() {
             return isDirect;
         }
 
-        public virtual bool HasUniMap()
-        {
+        public virtual bool HasUniMap() {
             return uniMap != null && uniMap.Length > 0;
         }
 
-        public virtual String GetRegistry()
-        {
-            if (IsDirect())
-            {
+        public virtual String GetRegistry() {
+            if (IsDirect()) {
                 return "Adobe";
             }
-            else
-            {
+            else {
                 return cid2Code.GetRegistry();
             }
         }
 
-        public virtual String GetOrdering()
-        {
-            if (IsDirect())
-            {
+        public virtual String GetOrdering() {
+            if (IsDirect()) {
                 return "Identity";
             }
-            else
-            {
+            else {
                 return cid2Code.GetOrdering();
             }
         }
 
-        public virtual int GetSupplement()
-        {
-            if (IsDirect())
-            {
+        public virtual int GetSupplement() {
+            if (IsDirect()) {
                 return 0;
             }
-            else
-            {
+            else {
                 return cid2Code.GetSupplement();
             }
         }
 
-        public virtual String GetUniMapName()
-        {
+        public virtual String GetUniMapName() {
             return uniMap;
         }
 
-        public virtual String GetCmapName()
-        {
+        public virtual String GetCmapName() {
             return cmap;
         }
 
-        public virtual int GetCmapCode(int cid)
-        {
-            if (isDirect)
-            {
+        public virtual int GetCmapCode(int cid) {
+            if (isDirect) {
                 return cid;
             }
-            else
-            {
+            else {
                 return ToInteger(cid2Code.Lookup(cid));
             }
         }
 
-        public virtual int GetCidCode(int cmapCode)
-        {
-            if (isDirect)
-            {
+        public virtual int GetCidCode(int cmapCode) {
+            if (isDirect) {
                 return cmapCode;
             }
-            else
-            {
+            else {
                 return code2Cid.Get(cmapCode);
             }
         }
 
-        private static int ToInteger(byte[] bytes)
-        {
+        private static int ToInteger(byte[] bytes) {
             int result = 0;
-            foreach (byte b in bytes)
-            {
+            foreach (byte b in bytes) {
                 result <<= 8;
                 result += b & 0xff;
             }

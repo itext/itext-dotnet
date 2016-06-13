@@ -43,16 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary><p>See ISO 18004:2006, 6.5.1.</summary>
     /// <remarks>
     /// <p>See ISO 18004:2006, 6.5.1. This enum encapsulates the four error correction levels
     /// defined by the QR code standard.</p>
     /// </remarks>
     /// <author>Sean Owen</author>
-    public sealed class ErrorCorrectionLevel
-    {
+    public sealed class ErrorCorrectionLevel {
         /// <summary>L = ~7% correction</summary>
         public static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel L = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
             (0, 0x01, "L");
@@ -78,8 +76,7 @@ namespace iTextSharp.Barcodes.Qrcode
 
         private readonly String name;
 
-        private ErrorCorrectionLevel(int ordinal, int bits, String name)
-        {
+        private ErrorCorrectionLevel(int ordinal, int bits, String name) {
             this.ordinal = ordinal;
             this.bits = bits;
             this.name = name;
@@ -87,23 +84,19 @@ namespace iTextSharp.Barcodes.Qrcode
 
         /// <summary>Gets the ordinal value.</summary>
         /// <returns>the ordinal</returns>
-        public int Ordinal()
-        {
+        public int Ordinal() {
             return ordinal;
         }
 
-        public int GetBits()
-        {
+        public int GetBits() {
             return bits;
         }
 
-        public String GetName()
-        {
+        public String GetName() {
             return name;
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return name;
         }
 
@@ -113,10 +106,8 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <see cref="ErrorCorrectionLevel"/>
         /// representing the encoded error correction level
         /// </returns>
-        public static iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel ForBits(int bits)
-        {
-            if (bits < 0 || bits >= FOR_BITS.Length)
-            {
+        public static iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel ForBits(int bits) {
+            if (bits < 0 || bits >= FOR_BITS.Length) {
                 throw new ArgumentException();
             }
             return FOR_BITS[bits];

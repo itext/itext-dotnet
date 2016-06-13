@@ -5,10 +5,8 @@ using iTextSharp.Kernel.Font;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfEncryptionTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfEncryptionTest : ExtendedITextTest {
         /// <summary>User password.</summary>
         public static byte[] USER = "Hello".GetBytes();
 
@@ -25,8 +23,7 @@ namespace iTextSharp.Kernel.Pdf
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfEncryptionTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
@@ -34,8 +31,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordStandard128()
-        {
+        public virtual void EncryptWithPasswordStandard128() {
             String filename = "encryptWithPasswordStandard128.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
@@ -45,8 +41,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordStandard40()
-        {
+        public virtual void EncryptWithPasswordStandard40() {
             String filename = "encryptWithPasswordStandard40.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
@@ -56,8 +51,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordStandard128NoCompression()
-        {
+        public virtual void EncryptWithPasswordStandard128NoCompression() {
             String filename = "encryptWithPasswordStandard128NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_128;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
@@ -67,8 +61,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordStandard40NoCompression()
-        {
+        public virtual void EncryptWithPasswordStandard40NoCompression() {
             String filename = "encryptWithPasswordStandard40NoCompression.pdf";
             int encryptionType = EncryptionConstants.STANDARD_ENCRYPTION_40;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
@@ -78,8 +71,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordAes128()
-        {
+        public virtual void EncryptWithPasswordAes128() {
             String filename = "encryptWithPasswordAes128.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
@@ -89,8 +81,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordAes256()
-        {
+        public virtual void EncryptWithPasswordAes256() {
             String filename = "encryptWithPasswordAes256.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.DEFAULT_COMPRESSION);
@@ -100,8 +91,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordAes128NoCompression()
-        {
+        public virtual void EncryptWithPasswordAes128NoCompression() {
             String filename = "encryptWithPasswordAes128NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_128;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
@@ -111,8 +101,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptWithPasswordAes256NoCompression()
-        {
+        public virtual void EncryptWithPasswordAes256NoCompression() {
             String filename = "encryptWithPasswordAes256NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
             EncryptWithPassword(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
@@ -121,8 +110,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression)
-        {
+        public virtual void EncryptWithPassword(String filename, int encryptionType, int compression) {
             String outFileName = destinationFolder + filename;
             int permissions = EncryptionConstants.ALLOW_SCREENREADERS;
             PdfWriter writer = new PdfWriter(new FileStream(outFileName, FileMode.Create), new WriterProperties().SetStandardEncryption
@@ -139,8 +127,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
                 , "diff_", USER, USER);
-            if (compareResult != null)
-            {
+            if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
             CheckDecryptedContent(filename, OWNER, "(Hello world!)");
@@ -150,8 +137,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void CheckDecryptedContent(String filename, byte[] password, String pageContent)
-        {
+        public virtual void CheckDecryptedContent(String filename, byte[] password, String pageContent) {
             String src = destinationFolder + filename;
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(password));
             PdfDocument document = new PdfDocument(reader);
@@ -165,8 +151,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void CheckDocumentStamping(String filename, byte[] password)
-        {
+        public virtual void CheckDocumentStamping(String filename, byte[] password) {
             String srcFileName = destinationFolder + filename;
             String outFileName = destinationFolder + "stamped_" + filename;
             PdfReader reader = new PdfReader(srcFileName, new ReaderProperties().SetPassword(password));
@@ -175,16 +160,14 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_" + filename, destinationFolder
                 , "diff_", USER, USER);
-            if (compareResult != null)
-            {
+            if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        public virtual void CheckDocumentAppending(String filename, byte[] password)
-        {
+        public virtual void CheckDocumentAppending(String filename, byte[] password) {
             String srcFileName = destinationFolder + filename;
             String outFileName = destinationFolder + "appended_" + filename;
             PdfReader reader = new PdfReader(srcFileName, new ReaderProperties().SetPassword(password));
@@ -196,8 +179,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_appended_" + filename
                 , destinationFolder, "diff_", USER, USER);
-            if (compareResult != null)
-            {
+            if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
         }

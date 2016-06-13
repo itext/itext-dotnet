@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Canvas
-{
+namespace iTextSharp.Kernel.Pdf.Canvas {
     /// <summary>
     /// A subclass of
     /// <see cref="CanvasTag"/>
@@ -54,8 +53,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
     /// Examples are page headers, layout features, etc. Screen readers can choose to
     /// ignore Artifacts.
     /// </summary>
-    public class CanvasArtifact : CanvasTag
-    {
+    public class CanvasArtifact : CanvasTag {
         /// <summary>
         /// Creates a CanvasArtifact object, which is a
         /// <see cref="CanvasTag"/>
@@ -65,8 +63,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// .
         /// </summary>
         public CanvasArtifact()
-            : base(PdfName.Artifact)
-        {
+            : base(PdfName.Artifact) {
         }
     }
 }

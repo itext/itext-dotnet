@@ -43,34 +43,27 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging
-{
-    public class PdfMcrDictionary : PdfMcr
-    {
+namespace iTextSharp.Kernel.Pdf.Tagging {
+    public class PdfMcrDictionary : PdfMcr {
         public PdfMcrDictionary(PdfDictionary pdfObject, PdfStructElem parent)
-            : base(pdfObject, parent)
-        {
+            : base(pdfObject, parent) {
         }
 
         public PdfMcrDictionary(PdfPage page, PdfStructElem parent)
-            : base(new PdfDictionary(), parent)
-        {
+            : base(new PdfDictionary(), parent) {
             PdfDictionary dict = (PdfDictionary)GetPdfObject();
             dict.Put(PdfName.Type, PdfName.MCR);
             dict.Put(PdfName.Pg, page.GetPdfObject());
             dict.Put(PdfName.MCID, new PdfNumber(page.GetNextMcid()));
         }
 
-        public override int GetMcid()
-        {
+        public override int GetMcid() {
             return ((PdfDictionary)GetPdfObject()).GetAsNumber(PdfName.MCID).IntValue();
         }
 
-        public override PdfDictionary GetPageObject()
-        {
+        public override PdfDictionary GetPageObject() {
             PdfDictionary page = ((PdfDictionary)GetPdfObject()).GetAsDictionary(PdfName.Pg);
-            if (page == null)
-            {
+            if (page == null) {
                 page = parent.GetPdfObject().GetAsDictionary(PdfName.Pg);
             }
             return page;

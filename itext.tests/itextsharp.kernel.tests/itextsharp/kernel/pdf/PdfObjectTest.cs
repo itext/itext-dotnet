@@ -1,13 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfObjectTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfObjectTest {
         [NUnit.Framework.Test]
-        public virtual void IndirectsChain1()
-        {
+        public virtual void IndirectsChain1() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -21,8 +18,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         [NUnit.Framework.Test]
-        public virtual void IndirectsChain2()
-        {
+        public virtual void IndirectsChain2() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -30,8 +26,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfDictionary dictionary = GetTestPdfDictionary();
             PdfObject @object = dictionary;
-            for (int i = 0; i < 200; i++)
-            {
+            for (int i = 0; i < 200; i++) {
                 @object = @object.MakeIndirect(document).GetIndirectReference();
             }
             catalog.Put(new PdfName("a"), @object);
@@ -41,8 +36,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         [NUnit.Framework.Test]
-        public virtual void IndirectsChain3()
-        {
+        public virtual void IndirectsChain3() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -50,8 +44,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfDictionary dictionary = GetTestPdfDictionary();
             PdfObject @object = dictionary;
-            for (int i = 0; i < 31; i++)
-            {
+            for (int i = 0; i < 31; i++) {
                 @object = @object.MakeIndirect(document).GetIndirectReference();
             }
             catalog.Put(new PdfName("a"), @object);
@@ -63,8 +56,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         [NUnit.Framework.Test]
-        public virtual void IndirectsChain4()
-        {
+        public virtual void IndirectsChain4() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -72,8 +64,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfDictionary dictionary = GetTestPdfDictionary();
             PdfObject @object = dictionary;
-            for (int i = 0; i < 31; i++)
-            {
+            for (int i = 0; i < 31; i++) {
                 @object = @object.MakeIndirect(document).GetIndirectReference();
             }
             PdfArray array = new PdfArray();
@@ -87,8 +78,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         [NUnit.Framework.Test]
-        public virtual void PdfIndirectReferenceFlags()
-        {
+        public virtual void PdfIndirectReferenceFlags() {
             PdfIndirectReference reference = new PdfIndirectReference(null, 1);
             reference.SetState(PdfObject.FREE);
             reference.SetState(PdfObject.READING);
@@ -123,8 +113,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void PdtIndirectReferenceLateInitializing1()
-        {
+        public virtual void PdtIndirectReferenceLateInitializing1() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -149,8 +138,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void PdtIndirectReferenceLateInitializing2()
-        {
+        public virtual void PdtIndirectReferenceLateInitializing2() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -176,8 +164,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void PdtIndirectReferenceLateInitializing3()
-        {
+        public virtual void PdtIndirectReferenceLateInitializing3() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -212,8 +199,7 @@ namespace iTextSharp.Kernel.Pdf
             document.Close();
         }
 
-        private static PdfDictionary GetTestPdfDictionary()
-        {
+        private static PdfDictionary GetTestPdfDictionary() {
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
             tmpMap[new PdfName("b")] = new PdfName("c");
             return new PdfDictionary(tmpMap);

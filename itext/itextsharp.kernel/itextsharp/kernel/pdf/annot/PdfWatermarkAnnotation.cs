@@ -44,33 +44,26 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfWatermarkAnnotation : PdfAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfWatermarkAnnotation : PdfAnnotation {
         public PdfWatermarkAnnotation(Rectangle rect)
-            : base(rect)
-        {
+            : base(rect) {
         }
 
         public PdfWatermarkAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Watermark;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint fixedPrint)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint fixedPrint) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint, fixedPrint.GetPdfObject
                 ());
         }
 
-        public virtual PdfDictionary GetFixedPrint()
-        {
+        public virtual PdfDictionary GetFixedPrint() {
             return GetPdfObject().GetAsDictionary(PdfName.FixedPrint);
         }
     }

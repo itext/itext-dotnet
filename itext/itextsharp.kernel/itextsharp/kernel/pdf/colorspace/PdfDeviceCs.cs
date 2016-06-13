@@ -43,55 +43,42 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace
-{
-    public abstract class PdfDeviceCs : PdfColorSpace
-    {
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+namespace iTextSharp.Kernel.Pdf.Colorspace {
+    public abstract class PdfDeviceCs : PdfColorSpace {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
 
         protected internal PdfDeviceCs(PdfName pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public class Gray : PdfDeviceCs
-        {
+        public class Gray : PdfDeviceCs {
             public Gray()
-                : base(PdfName.DeviceGray)
-            {
+                : base(PdfName.DeviceGray) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 1;
             }
         }
 
-        public class Rgb : PdfDeviceCs
-        {
+        public class Rgb : PdfDeviceCs {
             public Rgb()
-                : base(PdfName.DeviceRGB)
-            {
+                : base(PdfName.DeviceRGB) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 3;
             }
         }
 
-        public class Cmyk : PdfDeviceCs
-        {
+        public class Cmyk : PdfDeviceCs {
             public Cmyk()
-                : base(PdfName.DeviceCMYK)
-            {
+                : base(PdfName.DeviceCMYK) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 4;
             }
         }

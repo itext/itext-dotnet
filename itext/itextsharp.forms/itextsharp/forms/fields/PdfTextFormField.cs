@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Forms.Fields
-{
+namespace iTextSharp.Forms.Fields {
     /// <summary>An AcroForm field containing textual data.</summary>
-    public class PdfTextFormField : PdfFormField
-    {
+    public class PdfTextFormField : PdfFormField {
         public static readonly int FF_FILE_SELECT = MakeFieldFlag(21);
 
         public static readonly int FF_DO_NOT_SPELL_CHECK = MakeFieldFlag(23);
@@ -60,18 +58,15 @@ namespace iTextSharp.Forms.Fields
         public static readonly int FF_RICH_TEXT = MakeFieldFlag(26);
 
         protected internal PdfTextFormField(PdfDocument pdfDocument)
-            : base(pdfDocument)
-        {
+            : base(pdfDocument) {
         }
 
         protected internal PdfTextFormField(PdfWidgetAnnotation widget, PdfDocument pdfDocument)
-            : base(widget, pdfDocument)
-        {
+            : base(widget, pdfDocument) {
         }
 
         protected internal PdfTextFormField(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
             SetBorderWidth(0);
         }
 
@@ -80,8 +75,7 @@ namespace iTextSharp.Forms.Fields
         /// the form type, as a
         /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
         /// </returns>
-        public override PdfName GetFormType()
-        {
+        public override PdfName GetFormType() {
             return PdfName.Tx;
         }
 
@@ -92,8 +86,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMultiline(bool multiline)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMultiline(bool multiline) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_MULTILINE, multiline);
         }
 
@@ -108,8 +101,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetPassword(bool password)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetPassword(bool password) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_PASSWORD, password);
         }
 
@@ -118,8 +110,7 @@ namespace iTextSharp.Forms.Fields
         /// whose contents are to be submitted as the value of the field.
         /// </summary>
         /// <returns>whether or not this field currently represents a path</returns>
-        public virtual bool IsFileSelect()
-        {
+        public virtual bool IsFileSelect() {
             return GetFieldFlag(FF_FILE_SELECT);
         }
 
@@ -132,15 +123,13 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetFileSelect(bool fileSelect)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetFileSelect(bool fileSelect) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_FILE_SELECT, fileSelect);
         }
 
         /// <summary>If true, text entered in the field is spell-checked.</summary>
         /// <returns>whether or not spell-checking is currently enabled</returns>
-        public virtual bool IsSpellCheck()
-        {
+        public virtual bool IsSpellCheck() {
             return !GetFieldFlag(FF_DO_NOT_SPELL_CHECK);
         }
 
@@ -150,8 +139,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetSpellCheck(bool spellCheck)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetSpellCheck(bool spellCheck) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SPELL_CHECK, !spellCheck);
         }
 
@@ -165,8 +153,7 @@ namespace iTextSharp.Forms.Fields
         /// Once the field is full, no further text is accepted.
         /// </remarks>
         /// <returns>whether or not longer texts are currently allowed</returns>
-        public virtual bool IsScroll()
-        {
+        public virtual bool IsScroll() {
             return !GetFieldFlag(FF_DO_NOT_SCROLL);
         }
 
@@ -184,8 +171,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetScroll(bool scroll)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetScroll(bool scroll) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_DO_NOT_SCROLL, !scroll);
         }
 
@@ -200,8 +186,7 @@ namespace iTextSharp.Forms.Fields
         /// or combs, as the value of MaxLen, and the text is laid out into those combs.
         /// </remarks>
         /// <returns>whether or not combing is enabled</returns>
-        public virtual bool IsComb()
-        {
+        public virtual bool IsComb() {
             return GetFieldFlag(FF_COMB);
         }
 
@@ -220,8 +205,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetComb(bool comb)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetComb(bool comb) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_COMB, comb);
         }
 
@@ -231,8 +215,7 @@ namespace iTextSharp.Forms.Fields
         /// If the field has a value, the RV entry of the field dictionary specifies the rich text string.
         /// </remarks>
         /// <returns>whether or not text is currently represented as rich text</returns>
-        public virtual bool IsRichText()
-        {
+        public virtual bool IsRichText() {
             return GetFieldFlag(FF_RICH_TEXT);
         }
 
@@ -246,8 +229,7 @@ namespace iTextSharp.Forms.Fields
         /// current
         /// <see cref="PdfTextFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetRichText(bool richText)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetRichText(bool richText) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)SetFieldFlag(FF_RICH_TEXT, richText);
         }
 
@@ -257,8 +239,7 @@ namespace iTextSharp.Forms.Fields
         /// This is an optional parameter, so if it is not specified, <code>null</code> will be returned.
         /// </remarks>
         /// <returns>the current maximum text length</returns>
-        public virtual int GetMaxLen()
-        {
+        public virtual int GetMaxLen() {
             PdfNumber number = GetPdfObject().GetAsNumber(PdfName.MaxLen);
             return number != null ? number.IntValue() : 0;
         }
@@ -266,8 +247,7 @@ namespace iTextSharp.Forms.Fields
         /// <summary>Sets the maximum length of the field?s text, in characters.</summary>
         /// <param name="maxLen">the maximum text length</param>
         /// <returns>current</returns>
-        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMaxLen(int maxLen)
-        {
+        public virtual iTextSharp.Forms.Fields.PdfTextFormField SetMaxLen(int maxLen) {
             return (iTextSharp.Forms.Fields.PdfTextFormField)Put(PdfName.MaxLen, new PdfNumber(maxLen));
         }
     }

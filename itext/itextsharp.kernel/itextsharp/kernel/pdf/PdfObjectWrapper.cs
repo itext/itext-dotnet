@@ -43,24 +43,19 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     public abstract class PdfObjectWrapper<T>
-        where T : PdfObject
-    {
+        where T : PdfObject {
         private T pdfObject = null;
 
-        protected internal PdfObjectWrapper(T pdfObject)
-        {
+        protected internal PdfObjectWrapper(T pdfObject) {
             this.pdfObject = pdfObject;
-            if (IsWrappedObjectMustBeIndirect())
-            {
+            if (IsWrappedObjectMustBeIndirect()) {
                 MarkObjectAsIndirect(this.pdfObject);
             }
         }
 
-        public virtual T GetPdfObject()
-        {
+        public virtual T GetPdfObject() {
             return pdfObject;
         }
 
@@ -68,8 +63,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document, PdfIndirectReference
-             reference)
-        {
+             reference) {
             GetPdfObject().MakeIndirect(document, reference);
             return this;
         }
@@ -77,27 +71,22 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document) {
             return MakeIndirect(document, null);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> SetModified()
-        {
-            if (pdfObject != null)
-            {
+        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> SetModified() {
+            if (pdfObject != null) {
                 pdfObject.SetModified();
             }
             return this;
         }
 
-        public virtual void Flush()
-        {
+        public virtual void Flush() {
             pdfObject.Flush();
         }
 
-        public virtual bool IsFlushed()
-        {
+        public virtual bool IsFlushed() {
             return pdfObject.IsFlushed();
         }
 
@@ -123,31 +112,24 @@ namespace iTextSharp.Kernel.Pdf
         /// </returns>
         protected internal abstract bool IsWrappedObjectMustBeIndirect();
 
-        protected internal virtual void SetPdfObject(T pdfObject)
-        {
+        protected internal virtual void SetPdfObject(T pdfObject) {
             this.pdfObject = pdfObject;
         }
 
-        protected internal virtual void SetForbidRelease()
-        {
-            if (pdfObject != null)
-            {
+        protected internal virtual void SetForbidRelease() {
+            if (pdfObject != null) {
                 pdfObject.SetState(PdfObject.FORBID_RELEASE);
             }
         }
 
-        protected internal virtual void UnsetForbidRelease()
-        {
-            if (pdfObject != null)
-            {
+        protected internal virtual void UnsetForbidRelease() {
+            if (pdfObject != null) {
                 pdfObject.ClearState(PdfObject.FORBID_RELEASE);
             }
         }
 
-        protected internal static void MarkObjectAsIndirect(PdfObject pdfObject)
-        {
-            if (pdfObject.GetIndirectReference() == null)
-            {
+        protected internal static void MarkObjectAsIndirect(PdfObject pdfObject) {
+            if (pdfObject.GetIndirectReference() == null) {
                 pdfObject.SetState(PdfObject.MUST_BE_INDIRECT);
             }
         }
@@ -171,10 +153,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>PdfObject</c>
         /// to be checked if it is indirect.
         /// </param>
-        protected internal static void EnsureObjectIsAddedToDocument(PdfObject @object)
-        {
-            if (@object.GetIndirectReference() == null)
-            {
+        protected internal static void EnsureObjectIsAddedToDocument(PdfObject @object) {
+            if (@object.GetIndirectReference() == null) {
                 throw new PdfException(PdfException.ObjectMustBeIndirectToWorkWithThisWrapper);
             }
         }

@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using iTextSharp.IO.Font.Otf;
 
-namespace iTextSharp.Layout.Splitting
-{
+namespace iTextSharp.Layout.Splitting {
     /// <summary>Interface for customizing the split character.</summary>
-    public interface ISplitCharacters
-    {
+    public interface ISplitCharacters {
         /// <summary>Returns <CODE>true</CODE> if the character can split a line.</summary>
         /// <remarks>
         /// Returns <CODE>true</CODE> if the character can split a line. The splitting implementation

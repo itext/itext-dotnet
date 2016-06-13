@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Geom
-{
-    public class PageSize : Rectangle
-    {
+namespace iTextSharp.Kernel.Geom {
+    public class PageSize : Rectangle {
         public static iTextSharp.Kernel.Geom.PageSize A0 = new iTextSharp.Kernel.Geom.PageSize(2384, 3370);
 
         public static iTextSharp.Kernel.Geom.PageSize A1 = new iTextSharp.Kernel.Geom.PageSize(1684, 2384);
@@ -66,23 +64,19 @@ namespace iTextSharp.Kernel.Geom
         public static iTextSharp.Kernel.Geom.PageSize Default = A4;
 
         public PageSize(float width, float height)
-            : base(0, 0, width, height)
-        {
+            : base(0, 0, width, height) {
         }
 
         public PageSize(Rectangle box)
-            : base(box.GetX(), box.GetY(), box.GetWidth(), box.GetHeight())
-        {
+            : base(box.GetX(), box.GetY(), box.GetWidth(), box.GetHeight()) {
         }
 
         /// <summary>Rotates PageSize clockwise.</summary>
-        public virtual iTextSharp.Kernel.Geom.PageSize Rotate()
-        {
+        public virtual iTextSharp.Kernel.Geom.PageSize Rotate() {
             return new iTextSharp.Kernel.Geom.PageSize(height, width);
         }
 
-        public override Rectangle Clone()
-        {
+        public override Rectangle Clone() {
             return new iTextSharp.Kernel.Geom.PageSize(this);
         }
     }

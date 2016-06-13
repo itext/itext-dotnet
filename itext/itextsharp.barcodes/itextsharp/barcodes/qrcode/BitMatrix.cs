@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary><p>Represents a 2D matrix of bits.</summary>
     /// <remarks>
     /// <p>Represents a 2D matrix of bits. In function arguments below, and throughout the common
@@ -59,8 +58,7 @@ namespace iTextSharp.Barcodes.Qrcode
     /// </remarks>
     /// <author>Sean Owen</author>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    internal sealed class BitMatrix
-    {
+    internal sealed class BitMatrix {
         private readonly int width;
 
         private readonly int height;
@@ -70,22 +68,18 @@ namespace iTextSharp.Barcodes.Qrcode
         private readonly int[] bits;
 
         public BitMatrix(int dimension)
-            : this(dimension, dimension)
-        {
+            : this(dimension, dimension) {
         }
 
-        public BitMatrix(int width, int height)
-        {
+        public BitMatrix(int width, int height) {
             // A helper to construct a square matrix.
-            if (width < 1 || height < 1)
-            {
+            if (width < 1 || height < 1) {
                 throw new ArgumentException("Both dimensions must be greater than 0");
             }
             this.width = width;
             this.height = height;
             int rowSize = width >> 5;
-            if ((width & 0x1f) != 0)
-            {
+            if ((width & 0x1f) != 0) {
                 rowSize++;
             }
             this.rowSize = rowSize;
@@ -96,8 +90,7 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
         /// <returns>value of given bit in matrix</returns>
-        public bool Get(int x, int y)
-        {
+        public bool Get(int x, int y) {
             int offset = y * rowSize + (x >> 5);
             return (((int)(((uint)bits[offset]) >> (x & 0x1f))) & 1) != 0;
         }
@@ -105,8 +98,7 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <summary><p>Sets the given bit to true.</p></summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
-        public void Set(int x, int y)
-        {
+        public void Set(int x, int y) {
             int offset = y * rowSize + (x >> 5);
             bits[offset] |= 1 << (x & 0x1f);
         }
@@ -114,18 +106,15 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <summary><p>Flips the given bit.</p></summary>
         /// <param name="x">The horizontal component (i.e. which column)</param>
         /// <param name="y">The vertical component (i.e. which row)</param>
-        public void Flip(int x, int y)
-        {
+        public void Flip(int x, int y) {
             int offset = y * rowSize + (x >> 5);
             bits[offset] ^= 1 << (x & 0x1f);
         }
 
         /// <summary>Clears all bits (sets to false).</summary>
-        public void Clear()
-        {
+        public void Clear() {
             int max = bits.Length;
-            for (int i = 0; i < max; i++)
-            {
+            for (int i = 0; i < max; i++) {
                 bits[i] = 0;
             }
         }
@@ -135,27 +124,21 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <param name="top">The vertical position to begin at (inclusive)</param>
         /// <param name="width">The width of the region</param>
         /// <param name="height">The height of the region</param>
-        public void SetRegion(int left, int top, int width, int height)
-        {
-            if (top < 0 || left < 0)
-            {
+        public void SetRegion(int left, int top, int width, int height) {
+            if (top < 0 || left < 0) {
                 throw new ArgumentException("Left and top must be nonnegative");
             }
-            if (height < 1 || width < 1)
-            {
+            if (height < 1 || width < 1) {
                 throw new ArgumentException("Height and width must be at least 1");
             }
             int right = left + width;
             int bottom = top + height;
-            if (bottom > this.height || right > this.width)
-            {
+            if (bottom > this.height || right > this.width) {
                 throw new ArgumentException("The region must fit inside the matrix");
             }
-            for (int y = top; y < bottom; y++)
-            {
+            for (int y = top; y < bottom; y++) {
                 int offset = y * rowSize;
-                for (int x = left; x < right; x++)
-                {
+                for (int x = left; x < right; x++) {
                     bits[offset + (x >> 5)] |= 1 << (x & 0x1f);
                 }
             }
@@ -168,29 +151,24 @@ namespace iTextSharp.Barcodes.Qrcode
         /// The resulting BitArray - this reference should always be used even when passing
         /// your own row
         /// </returns>
-        public BitArray GetRow(int y, BitArray row)
-        {
-            if (row == null || row.GetSize() < width)
-            {
+        public BitArray GetRow(int y, BitArray row) {
+            if (row == null || row.GetSize() < width) {
                 row = new BitArray(width);
             }
             int offset = y * rowSize;
-            for (int x = 0; x < rowSize; x++)
-            {
+            for (int x = 0; x < rowSize; x++) {
                 row.SetBulk(x << 5, bits[offset + x]);
             }
             return row;
         }
 
         /// <returns>The width of the matrix</returns>
-        public int GetWidth()
-        {
+        public int GetWidth() {
             return width;
         }
 
         /// <returns>The height of the matrix</returns>
-        public int GetHeight()
-        {
+        public int GetHeight() {
             return height;
         }
 
@@ -200,22 +178,17 @@ namespace iTextSharp.Barcodes.Qrcode
         /// is square, so I'm throwing if that's not the case.
         /// </remarks>
         /// <returns>row/column dimension of this matrix</returns>
-        public int GetDimension()
-        {
-            if (width != height)
-            {
+        public int GetDimension() {
+            if (width != height) {
                 throw new Exception("Can't call getDimension() on a non-square matrix");
             }
             return width;
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             StringBuilder result = new StringBuilder(height * (width + 1));
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
                     result.Append(Get(x, y) ? "X " : "  ");
                 }
                 result.Append('\n');

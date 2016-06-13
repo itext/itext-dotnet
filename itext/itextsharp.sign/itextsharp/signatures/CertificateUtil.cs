@@ -48,14 +48,12 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// This class contains a series of static methods that
     /// allow you to retrieve information from a Certificate.
     /// </summary>
-    public class CertificateUtil
-    {
+    public class CertificateUtil {
         // Certificate Revocation Lists
         /// <summary>Gets a CRL from a certificate</summary>
         /// <param name="certificate"/>
@@ -63,8 +61,7 @@ namespace iTextSharp.Signatures
         /// <exception cref="Java.Security.Cert.CertificateException"/>
         /// <exception cref="Java.Security.Cert.CRLException"/>
         /// <exception cref="System.IO.IOException"/>
-        public static X509Crl GetCRL(X509Certificate certificate)
-        {
+        public static X509Crl GetCRL(X509Certificate certificate) {
             return CertificateUtil.GetCRL(CertificateUtil.GetCRLURL(certificate));
         }
 
@@ -73,36 +70,28 @@ namespace iTextSharp.Signatures
         /// <returns>the String where you can check if the certificate was revoked</returns>
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateParsingException"/>
         /// <exception cref="System.IO.IOException"/>
-        public static String GetCRLURL(X509Certificate certificate)
-        {
+        public static String GetCRLURL(X509Certificate certificate) {
             Asn1Object obj;
-            try
-            {
+            try {
                 obj = GetExtensionValue(certificate, X509Extensions.CrlDistributionPoints.Id);
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 obj = (Asn1Object)null;
             }
-            if (obj == null)
-            {
+            if (obj == null) {
                 return null;
             }
             CrlDistPoint dist = CrlDistPoint.GetInstance(obj);
             DistributionPoint[] dists = dist.GetDistributionPoints();
-            foreach (DistributionPoint p in dists)
-            {
+            foreach (DistributionPoint p in dists) {
                 DistributionPointName distributionPointName = p.DistributionPointName;
-                if (DistributionPointName.FullName != distributionPointName.PointType)
-                {
+                if (DistributionPointName.FullName != distributionPointName.PointType) {
                     continue;
                 }
                 GeneralNames generalNames = (GeneralNames)distributionPointName.Name;
                 GeneralName[] names = generalNames.GetNames();
-                foreach (GeneralName name in names)
-                {
-                    if (name.TagNo != GeneralName.UniformResourceIdentifier)
-                    {
+                foreach (GeneralName name in names) {
+                    if (name.TagNo != GeneralName.UniformResourceIdentifier) {
                         continue;
                     }
                     DerIA5String derStr = DerIA5String.GetInstance((Asn1TaggedObject)name.ToAsn1Object(), false);
@@ -118,10 +107,8 @@ namespace iTextSharp.Signatures
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Java.Security.Cert.CertificateException"/>
         /// <exception cref="Java.Security.Cert.CRLException"/>
-        public static X509Crl GetCRL(String url)
-        {
-            if (url == null)
-            {
+        public static X509Crl GetCRL(String url) {
+            if (url == null) {
                 return null;
             }
             return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(url)));
@@ -132,39 +119,29 @@ namespace iTextSharp.Signatures
         /// <param name="certificate">the certificate</param>
         /// <returns>the URL or null</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static String GetOCSPURL(X509Certificate certificate)
-        {
+        public static String GetOCSPURL(X509Certificate certificate) {
             Asn1Object obj;
-            try
-            {
+            try {
                 obj = GetExtensionValue(certificate, X509Extensions.AuthorityInfoAccess.Id);
-                if (obj == null)
-                {
+                if (obj == null) {
                     return null;
                 }
                 Asn1Sequence AccessDescriptions = (Asn1Sequence)obj;
-                for (int i = 0; i < AccessDescriptions.Count; i++)
-                {
+                for (int i = 0; i < AccessDescriptions.Count; i++) {
                     Asn1Sequence AccessDescription = (Asn1Sequence)AccessDescriptions[i];
-                    if (AccessDescription.Count != 2)
-                    {
+                    if (AccessDescription.Count != 2) {
                         continue;
                     }
-                    else
-                    {
-                        if (AccessDescription[0] is DerObjectIdentifier)
-                        {
+                    else {
+                        if (AccessDescription[0] is DerObjectIdentifier) {
                             DerObjectIdentifier id = (DerObjectIdentifier)AccessDescription[0];
-                            if (SecurityIDs.ID_OCSP.Equals(id.Id))
-                            {
+                            if (SecurityIDs.ID_OCSP.Equals(id.Id)) {
                                 Asn1Object description = (Asn1Object)AccessDescription[1];
                                 String AccessLocation = GetStringFromGeneralName(description);
-                                if (AccessLocation == null)
-                                {
+                                if (AccessLocation == null) {
                                     return "";
                                 }
-                                else
-                                {
+                                else {
                                     return AccessLocation;
                                 }
                             }
@@ -172,8 +149,7 @@ namespace iTextSharp.Signatures
                     }
                 }
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 return null;
             }
             return null;
@@ -184,24 +160,20 @@ namespace iTextSharp.Signatures
         /// <param name="certificate">a certificate</param>
         /// <returns>a TSA URL</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static String GetTSAURL(X509Certificate certificate)
-        {
+        public static String GetTSAURL(X509Certificate certificate) {
             byte[] der = SignUtils.GetExtensionValueByOid(certificate, SecurityIDs.ID_TSA);
-            if (der == null)
-            {
+            if (der == null) {
                 return null;
             }
             Asn1Object asn1obj;
-            try
-            {
+            try {
                 asn1obj = Asn1Object.FromByteArray(der);
                 DerOctetString octets = (DerOctetString)asn1obj;
                 asn1obj = Asn1Object.FromByteArray(octets.GetOctets());
                 Asn1Sequence asn1seq = Asn1Sequence.GetInstance(asn1obj);
                 return GetStringFromGeneralName(asn1seq[1].ToAsn1Object());
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 return null;
             }
         }
@@ -211,11 +183,9 @@ namespace iTextSharp.Signatures
         /// <param name="oid">the Object Identifier value for the extension.</param>
         /// <returns>the extension value as an ASN1Primitive object</returns>
         /// <exception cref="System.IO.IOException"/>
-        private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid)
-        {
+        private static Asn1Object GetExtensionValue(X509Certificate certificate, String oid) {
             byte[] bytes = SignUtils.GetExtensionValueByOid(certificate, oid);
-            if (bytes == null)
-            {
+            if (bytes == null) {
                 return null;
             }
             Asn1InputStream aIn = new Asn1InputStream(new MemoryStream(bytes));
@@ -228,8 +198,7 @@ namespace iTextSharp.Signatures
         /// <param name="names">the ASN1Primitive</param>
         /// <returns>a human-readable String</returns>
         /// <exception cref="System.IO.IOException"/>
-        private static String GetStringFromGeneralName(Asn1Object names)
-        {
+        private static String GetStringFromGeneralName(Asn1Object names) {
             Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
             return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
                 (), "ISO-8859-1");

@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     /// <summary>Enum listing all official PDF versions.</summary>
-    public class PdfVersion : IComparable<iTextSharp.Kernel.Pdf.PdfVersion>
-    {
+    public class PdfVersion : IComparable<iTextSharp.Kernel.Pdf.PdfVersion> {
         private static readonly IList<iTextSharp.Kernel.Pdf.PdfVersion> values = new List<iTextSharp.Kernel.Pdf.PdfVersion
             >();
 
@@ -77,19 +75,16 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Creates a PdfVersion enum.</summary>
         /// <param name="major">major version number</param>
         /// <param name="minor">minor version number</param>
-        private PdfVersion(int major, int minor)
-        {
+        private PdfVersion(int major, int minor) {
             this.major = major;
             this.minor = minor;
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return String.Format("PDF-{0}.{1}", major, minor);
         }
 
-        public virtual PdfName ToPdfName()
-        {
+        public virtual PdfName ToPdfName() {
             return new PdfName(String.Format("{0}.{1}", major, minor));
         }
 
@@ -99,12 +94,9 @@ namespace iTextSharp.Kernel.Pdf
         /// </summary>
         /// <param name="value">version number</param>
         /// <returns>PdfVersion of the specified version</returns>
-        public static iTextSharp.Kernel.Pdf.PdfVersion FromString(String value)
-        {
-            foreach (iTextSharp.Kernel.Pdf.PdfVersion version in values)
-            {
-                if (version.ToString().Equals(value))
-                {
+        public static iTextSharp.Kernel.Pdf.PdfVersion FromString(String value) {
+            foreach (iTextSharp.Kernel.Pdf.PdfVersion version in values) {
+                if (version.ToString().Equals(value)) {
                     return version;
                 }
             }
@@ -119,33 +111,26 @@ namespace iTextSharp.Kernel.Pdf
         /// </summary>
         /// <param name="name">version number</param>
         /// <returns>PdfVersion of the specified version</returns>
-        public static iTextSharp.Kernel.Pdf.PdfVersion FromPdfName(PdfName name)
-        {
-            foreach (iTextSharp.Kernel.Pdf.PdfVersion version in values)
-            {
-                if (version.ToPdfName().Equals(name))
-                {
+        public static iTextSharp.Kernel.Pdf.PdfVersion FromPdfName(PdfName name) {
+            foreach (iTextSharp.Kernel.Pdf.PdfVersion version in values) {
+                if (version.ToPdfName().Equals(name)) {
                     return version;
                 }
             }
             throw new ArgumentException("The provided pdf version was not found.");
         }
 
-        public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfVersion o)
-        {
+        public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfVersion o) {
             int majorResult = iTextSharp.IO.Util.JavaUtil.IntegerCompare(major, o.major);
-            if (majorResult != 0)
-            {
+            if (majorResult != 0) {
                 return majorResult;
             }
-            else
-            {
+            else {
                 return iTextSharp.IO.Util.JavaUtil.IntegerCompare(minor, o.minor);
             }
         }
 
-        private static iTextSharp.Kernel.Pdf.PdfVersion CreatePdfVersion(int major, int minor)
-        {
+        private static iTextSharp.Kernel.Pdf.PdfVersion CreatePdfVersion(int major, int minor) {
             iTextSharp.Kernel.Pdf.PdfVersion pdfVersion = new iTextSharp.Kernel.Pdf.PdfVersion(major, minor);
             values.Add(pdfVersion);
             return pdfVersion;

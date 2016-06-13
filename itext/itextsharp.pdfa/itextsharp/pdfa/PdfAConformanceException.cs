@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Pdfa
-{
+namespace iTextSharp.Pdfa {
     /// <summary>Exception that is thrown when the PDF Document doesn't adhere to the PDF/A specification.</summary>
-    public class PdfAConformanceException : PdfException
-    {
+    public class PdfAConformanceException : PdfException {
         public const String _1ActionsAreNotAllowed = "1.actions.are.not.allowed";
 
         public const String AllFontsMustBeEmbeddedThisOneIsnt1 = "all.the.fonts.must.be.embedded.this.one.isn.t.1";
@@ -259,16 +257,14 @@ namespace iTextSharp.Pdfa
         /// <summary>Creates a PdfAConformanceException.</summary>
         /// <param name="message">the error message</param>
         public PdfAConformanceException(String message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         /// <summary>Creates a PdfAConformanceException.</summary>
         /// <param name="message">the error message</param>
         /// <param name="object">an object</param>
         public PdfAConformanceException(String message, Object @object)
-            : base(message, @object)
-        {
+            : base(message, @object) {
         }
     }
 }

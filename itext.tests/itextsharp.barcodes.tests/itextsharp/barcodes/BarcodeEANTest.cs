@@ -4,18 +4,15 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodeEANTest : ExtendedITextTest
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodeEANTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/barcodes/BarcodeEAN/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
@@ -23,8 +20,7 @@ namespace iTextSharp.Barcodes
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Barcode01Test()
-        {
+        public virtual void Barcode01Test() {
             String filename = "barcodeEAN_01.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
@@ -44,8 +40,7 @@ namespace iTextSharp.Barcodes
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Barcode02Test()
-        {
+        public virtual void Barcode02Test() {
             String filename = "barcodeEAN_02.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfReader reader = new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf");
@@ -65,8 +60,7 @@ namespace iTextSharp.Barcodes
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Barcode03Test()
-        {
+        public virtual void Barcode03Test() {
             String filename = "barcodeEANSUP.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);

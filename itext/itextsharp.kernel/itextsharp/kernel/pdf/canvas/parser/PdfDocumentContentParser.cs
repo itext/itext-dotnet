@@ -46,19 +46,16 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
     /// <summary>
     /// A utility class that makes it cleaner to process content from pages of a
     /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
     /// through a specified RenderListener.
     /// </summary>
-    public class PdfDocumentContentParser
-    {
+    public class PdfDocumentContentParser {
         private readonly PdfDocument pdfDocument;
 
-        public PdfDocumentContentParser(PdfDocument pdfDocument)
-        {
+        public PdfDocumentContentParser(PdfDocument pdfDocument) {
             this.pdfDocument = pdfDocument;
         }
 
@@ -75,11 +72,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <returns>the provided renderListener</returns>
         public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<String, IContentOperator>
              additionalContentOperators)
-            where E : IEventListener
-        {
+            where E : IEventListener {
             PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
-            foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators)
-            {
+            foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators) {
                 processor.RegisterContentOperator(entry.Key, entry.Value);
             }
             processor.ProcessPageContent(pdfDocument.GetPage(pageNumber));
@@ -92,8 +87,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <param name="renderListener">the listener that will receive render callbacks</param>
         /// <returns>the provided renderListener</returns>
         public virtual E ProcessContent<E>(int pageNumber, E renderListener)
-            where E : IEventListener
-        {
+            where E : IEventListener {
             return ProcessContent(pageNumber, renderListener, new Dictionary<String, IContentOperator>());
         }
     }

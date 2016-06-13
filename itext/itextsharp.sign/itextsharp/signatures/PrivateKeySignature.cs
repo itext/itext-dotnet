@@ -44,8 +44,7 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Implementation of the
     /// <see cref="IExternalSignature"/>
@@ -55,8 +54,7 @@ namespace iTextSharp.Signatures
     /// object.
     /// </summary>
     /// <author>Paulo Soares</author>
-    public class PrivateKeySignature : IExternalSignature
-    {
+    public class PrivateKeySignature : IExternalSignature {
         /// <summary>The private key object.</summary>
         private ICipherParameters pk;
 
@@ -78,33 +76,28 @@ namespace iTextSharp.Signatures
         /// </param>
         /// <param name="hashAlgorithm">A hash algorithm (e.g. "SHA-1", "SHA-256",...).</param>
         /// <param name="provider">A security provider (e.g. "BC").</param>
-        public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm)
-        {
+        public PrivateKeySignature(ICipherParameters pk, String hashAlgorithm) {
             this.pk = pk;
             this.hashAlgorithm = DigestAlgorithms.GetDigest(DigestAlgorithms.GetAllowedDigest(hashAlgorithm));
             encryptionAlgorithm = pk.GetAlgorithm();
-            if (encryptionAlgorithm.StartsWith("EC"))
-            {
+            if (encryptionAlgorithm.StartsWith("EC")) {
                 encryptionAlgorithm = "ECDSA";
             }
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetHashAlgorithm()
-        {
+        public virtual String GetHashAlgorithm() {
             return hashAlgorithm;
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual String GetEncryptionAlgorithm()
-        {
+        public virtual String GetEncryptionAlgorithm() {
             return encryptionAlgorithm;
         }
 
         /// <summary><inheritDoc/></summary>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual byte[] Sign(byte[] message)
-        {
+        public virtual byte[] Sign(byte[] message) {
             String algorithm = hashAlgorithm + "with" + encryptionAlgorithm;
             ISigner sig = SignUtils.GetSignatureHelper(algorithm);
             sig.InitSign(pk);

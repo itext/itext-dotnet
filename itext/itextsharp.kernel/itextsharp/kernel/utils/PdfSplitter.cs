@@ -48,10 +48,8 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Utils
-{
-    public class PdfSplitter
-    {
+namespace iTextSharp.Kernel.Utils {
+    public class PdfSplitter {
         private PdfDocument pdfDocument;
 
         private bool preserveTagged;
@@ -60,10 +58,8 @@ namespace iTextSharp.Kernel.Utils
 
         /// <summary>Creates a new instance of PdfSplitter class.</summary>
         /// <param name="pdfDocument">the document to be split.</param>
-        public PdfSplitter(PdfDocument pdfDocument)
-        {
-            if (pdfDocument.GetWriter() != null)
-            {
+        public PdfSplitter(PdfDocument pdfDocument) {
+            if (pdfDocument.GetWriter() != null) {
                 throw new PdfException(PdfException.CannotSplitDocumentThatIsBeingWritten);
             }
             this.pdfDocument = pdfDocument;
@@ -77,8 +73,7 @@ namespace iTextSharp.Kernel.Utils
         /// This could be changed with this flag - if set to false, resultant documents will be not tagged, even if
         /// original document is tagged.
         /// </remarks>
-        public virtual void SetPreserveTagged(bool preserveTagged)
-        {
+        public virtual void SetPreserveTagged(bool preserveTagged) {
             this.preserveTagged = preserveTagged;
         }
 
@@ -89,8 +84,7 @@ namespace iTextSharp.Kernel.Utils
         /// This could be changed with this flag - if set to false, resultant documents won't contain outlines, even if
         /// original document had them.
         /// </remarks>
-        public virtual void SetPreserveOutlines(bool preserveOutlines)
-        {
+        public virtual void SetPreserveOutlines(bool preserveOutlines) {
             this.preserveOutlines = preserveOutlines;
         }
 
@@ -100,13 +94,11 @@ namespace iTextSharp.Kernel.Utils
         /// The documents which the source document was split into.
         /// Be warned that these documents are not closed.
         /// </returns>
-        public virtual IList<PdfDocument> SplitBySize(long size)
-        {
+        public virtual IList<PdfDocument> SplitBySize(long size) {
             IList<PageRange> splitRanges = new List<PageRange>();
             int currentPage = 1;
             int numOfPages = pdfDocument.GetNumberOfPages();
-            while (currentPage <= numOfPages)
-            {
+            while (currentPage <= numOfPages) {
                 PageRange nextRange = GetNextRange(currentPage, numOfPages, size);
                 splitRanges.Add(nextRange);
                 IList<int> allPages = nextRange.GetAllPages();
@@ -126,14 +118,11 @@ namespace iTextSharp.Kernel.Utils
         /// </param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public virtual void SplitByPageNumbers(IList<int> pageNumbers, PdfSplitter.IDocumentReadyListener documentReady
-            )
-        {
+            ) {
             int currentPageNumber = 1;
-            for (int ind = 0; ind <= pageNumbers.Count; ind++)
-            {
+            for (int ind = 0; ind <= pageNumbers.Count; ind++) {
                 int nextPageNumber = ind == pageNumbers.Count ? pdfDocument.GetNumberOfPages() + 1 : (int)pageNumbers[ind];
-                if (ind == 0 && nextPageNumber == 1)
-                {
+                if (ind == 0 && nextPageNumber == 1) {
                     continue;
                 }
                 PageRange currentPageRange = new PageRange().AddPageSequence(currentPageNumber, nextPageNumber - 1);
@@ -151,22 +140,18 @@ namespace iTextSharp.Kernel.Utils
         /// </param>
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers)
-        {
+        public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
             SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_157(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_157 : PdfSplitter.IDocumentReadyListener
-        {
-            public _IDocumentReadyListener_157(IList<PdfDocument> splitDocuments)
-            {
+        private sealed class _IDocumentReadyListener_157 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_157(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
-            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange)
-            {
+            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
                 splitDocuments.Add(pdfDocument);
             }
 
@@ -180,10 +165,8 @@ namespace iTextSharp.Kernel.Utils
         /// You can close this document in this listener, for instance.
         /// </param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void SplitByPageCount(int pageCount, PdfSplitter.IDocumentReadyListener documentReady)
-        {
-            for (int startPage = 1; startPage <= pdfDocument.GetNumberOfPages(); startPage += pageCount)
-            {
+        public virtual void SplitByPageCount(int pageCount, PdfSplitter.IDocumentReadyListener documentReady) {
+            for (int startPage = 1; startPage <= pdfDocument.GetNumberOfPages(); startPage += pageCount) {
                 int endPage = Math.Min(startPage + pageCount - 1, pdfDocument.GetNumberOfPages());
                 PageRange currentPageRange = new PageRange().AddPageSequence(startPage, endPage);
                 PdfDocument currentDocument = CreatePdfDocument(currentPageRange);
@@ -196,22 +179,18 @@ namespace iTextSharp.Kernel.Utils
         /// <param name="pageCount">the biggest possible number of pages in a split document.</param>
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual IList<PdfDocument> SplitByPageCount(int pageCount)
-        {
+        public virtual IList<PdfDocument> SplitByPageCount(int pageCount) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
             SplitByPageCount(pageCount, new _IDocumentReadyListener_196(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_196 : PdfSplitter.IDocumentReadyListener
-        {
-            public _IDocumentReadyListener_196(IList<PdfDocument> splitDocuments)
-            {
+        private sealed class _IDocumentReadyListener_196 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_196(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
-            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange)
-            {
+            public void DocumentReady(PdfDocument pdfDocument, PageRange pageRange) {
                 splitDocuments.Add(pdfDocument);
             }
 
@@ -225,11 +204,9 @@ namespace iTextSharp.Kernel.Utils
         /// Be warned that these documents are not closed.
         /// </returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual IList<PdfDocument> ExtractPageRanges(IList<PageRange> pageRanges)
-        {
+        public virtual IList<PdfDocument> ExtractPageRanges(IList<PageRange> pageRanges) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            foreach (PageRange currentPageRange in pageRanges)
-            {
+            foreach (PageRange currentPageRange in pageRanges) {
                 PdfDocument currentPdfDocument = CreatePdfDocument(currentPageRange);
                 splitDocuments.Add(currentPdfDocument);
                 pdfDocument.CopyPagesTo(currentPageRange.GetAllPages(), currentPdfDocument);
@@ -244,13 +221,11 @@ namespace iTextSharp.Kernel.Utils
         /// Be warned that this document is not closed.
         /// </returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual PdfDocument ExtractPageRange(PageRange pageRange)
-        {
+        public virtual PdfDocument ExtractPageRange(PageRange pageRange) {
             return ExtractPageRanges(JavaCollectionsUtil.SingletonList(pageRange))[0];
         }
 
-        public virtual PdfDocument GetPdfDocument()
-        {
+        public virtual PdfDocument GetPdfDocument() {
             return pdfDocument;
         }
 
@@ -264,27 +239,22 @@ namespace iTextSharp.Kernel.Utils
         /// <param name="documentPageRange">the page range of the original document to be included in the document being created now.
         ///     </param>
         /// <returns>the PdfWriter instance for the document which is being created.</returns>
-        protected internal virtual PdfWriter GetNextPdfWriter(PageRange documentPageRange)
-        {
+        protected internal virtual PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
             return new PdfWriter(new ByteArrayOutputStream());
         }
 
-        private PdfDocument CreatePdfDocument(PageRange currentPageRange)
-        {
+        private PdfDocument CreatePdfDocument(PageRange currentPageRange) {
             PdfDocument newDocument = new PdfDocument(GetNextPdfWriter(currentPageRange));
-            if (pdfDocument.IsTagged() && preserveTagged)
-            {
+            if (pdfDocument.IsTagged() && preserveTagged) {
                 newDocument.SetTagged();
             }
-            if (pdfDocument.HasOutlines() && preserveOutlines)
-            {
+            if (pdfDocument.HasOutlines() && preserveOutlines) {
                 newDocument.InitializeOutlines();
             }
             return newDocument;
         }
 
-        public interface IDocumentReadyListener
-        {
+        public interface IDocumentReadyListener {
             void DocumentReady(PdfDocument pdfDocument, PageRange pageRange);
         }
 
@@ -294,53 +264,41 @@ namespace iTextSharp.Kernel.Utils
         /// </summary>
         /// <param name="outlineTitles">list of outline titles .</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual IList<PdfDocument> SplitByOutlines(IList<String> outlineTitles)
-        {
-            if (outlineTitles == null || outlineTitles.Count == 0)
-            {
+        public virtual IList<PdfDocument> SplitByOutlines(IList<String> outlineTitles) {
+            if (outlineTitles == null || outlineTitles.Count == 0) {
                 return JavaCollectionsUtil.EmptyList<PdfDocument>();
             }
             IList<PdfDocument> documentList = new List<PdfDocument>(outlineTitles.Count);
-            foreach (String title in outlineTitles)
-            {
+            foreach (String title in outlineTitles) {
                 PdfDocument document = SplitByOutline(title);
-                if (document != null)
-                {
+                if (document != null) {
                     documentList.Add(document);
                 }
             }
             return documentList;
         }
 
-        private PdfDocument SplitByOutline(String outlineTitle)
-        {
+        private PdfDocument SplitByOutline(String outlineTitle) {
             int startPage = -1;
             int endPage = -1;
             PdfDocument toDocument = CreatePdfDocument(null);
             int size = pdfDocument.GetNumberOfPages();
-            for (int i = 1; i <= size; i++)
-            {
+            for (int i = 1; i <= size; i++) {
                 PdfPage pdfPage = pdfDocument.GetPage(i);
                 IList<PdfOutline> outlineList = pdfPage.GetOutlines(false);
-                if (outlineList != null)
-                {
-                    foreach (PdfOutline pdfOutline in outlineList)
-                    {
-                        if (pdfOutline.GetTitle().Equals(outlineTitle))
-                        {
+                if (outlineList != null) {
+                    foreach (PdfOutline pdfOutline in outlineList) {
+                        if (pdfOutline.GetTitle().Equals(outlineTitle)) {
                             startPage = pdfDocument.GetPageNumber(pdfPage);
                             PdfOutline nextOutLine = GetAbsoluteTreeNextOutline(pdfOutline);
-                            if (nextOutLine != null)
-                            {
+                            if (nextOutLine != null) {
                                 endPage = pdfDocument.GetPageNumber(GetPageByOutline(i, nextOutLine)) - 1;
                             }
-                            else
-                            {
+                            else {
                                 endPage = size;
                             }
                             // fix case: if two sequential bookmark point to one page
-                            if (startPage - endPage == 1)
-                            {
+                            if (startPage - endPage == 1) {
                                 endPage = startPage;
                             }
                             break;
@@ -348,27 +306,21 @@ namespace iTextSharp.Kernel.Utils
                     }
                 }
             }
-            if (startPage == -1 || endPage == -1)
-            {
+            if (startPage == -1 || endPage == -1) {
                 return null;
             }
             pdfDocument.CopyPagesTo(startPage, endPage, toDocument);
             return toDocument;
         }
 
-        private PdfPage GetPageByOutline(int fromPage, PdfOutline outline)
-        {
+        private PdfPage GetPageByOutline(int fromPage, PdfOutline outline) {
             int size = pdfDocument.GetNumberOfPages();
-            for (int i = fromPage; i <= size; i++)
-            {
+            for (int i = fromPage; i <= size; i++) {
                 PdfPage pdfPage = pdfDocument.GetPage(i);
                 IList<PdfOutline> outlineList = pdfPage.GetOutlines(false);
-                if (outlineList != null)
-                {
-                    foreach (PdfOutline pdfOutline in outlineList)
-                    {
-                        if (pdfOutline.Equals(outline))
-                        {
+                if (outlineList != null) {
+                    foreach (PdfOutline pdfOutline in outlineList) {
+                        if (pdfOutline.Equals(outline)) {
                             return pdfPage;
                         }
                     }
@@ -380,51 +332,42 @@ namespace iTextSharp.Kernel.Utils
         /// <summary>the next element in the entire hierarchy</summary>
         /// <param name="outline"></param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        private PdfOutline GetAbsoluteTreeNextOutline(PdfOutline outline)
-        {
+        private PdfOutline GetAbsoluteTreeNextOutline(PdfOutline outline) {
             PdfObject nextPdfObject = outline.GetContent().Get(PdfName.Next);
             PdfOutline nextPdfOutline = null;
-            if (outline.GetParent() != null && nextPdfObject != null)
-            {
-                foreach (PdfOutline pdfOutline in outline.GetParent().GetAllChildren())
-                {
-                    if (pdfOutline.GetContent().GetIndirectReference().Equals(nextPdfObject.GetIndirectReference()))
-                    {
+            if (outline.GetParent() != null && nextPdfObject != null) {
+                foreach (PdfOutline pdfOutline in outline.GetParent().GetAllChildren()) {
+                    if (pdfOutline.GetContent().GetIndirectReference().Equals(nextPdfObject.GetIndirectReference())) {
                         nextPdfOutline = pdfOutline;
                         break;
                     }
                 }
             }
-            if (nextPdfOutline == null && outline.GetParent() != null)
-            {
+            if (nextPdfOutline == null && outline.GetParent() != null) {
                 nextPdfOutline = GetAbsoluteTreeNextOutline(outline.GetParent());
             }
             return nextPdfOutline;
         }
 
-        private PageRange GetNextRange(int startPage, int endPage, long size)
-        {
+        private PageRange GetNextRange(int startPage, int endPage, long size) {
             PdfResourceCounter counter = new PdfResourceCounter(pdfDocument.GetTrailer());
             IDictionary<int, PdfObject> resources = counter.GetResources();
             long lengthWithoutXref = counter.GetLength(null);
             // initialize with trailer length
             int currentPage = startPage;
             bool oversized = false;
-            do
-            {
+            do {
                 PdfPage page = pdfDocument.GetPage(currentPage++);
                 counter = new PdfResourceCounter(page.GetPdfObject());
                 lengthWithoutXref += counter.GetLength(resources);
                 resources.AddAll(counter.GetResources());
-                if (lengthWithoutXref + XrefLength(resources.Count) > size)
-                {
+                if (lengthWithoutXref + XrefLength(resources.Count) > size) {
                     oversized = true;
                 }
             }
             while (currentPage <= endPage && !oversized);
             // true if at least the first page to be copied didn't cause the oversize
-            if (oversized && (currentPage - 1) != startPage)
-            {
+            if (oversized && (currentPage - 1) != startPage) {
                 // we shouldn't copy previous page because it caused
                 // the oversize and it isn't the first page to be copied
                 --currentPage;
@@ -432,8 +375,7 @@ namespace iTextSharp.Kernel.Utils
             return new PageRange().AddPageSequence(startPage, currentPage - 1);
         }
 
-        private long XrefLength(int size)
-        {
+        private long XrefLength(int size) {
             return 20L * (size + 1);
         }
     }

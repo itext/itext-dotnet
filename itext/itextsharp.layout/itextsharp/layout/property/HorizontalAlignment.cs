@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property
-{
-    public enum HorizontalAlignment
-    {
+namespace iTextSharp.Layout.Property {
+    public enum HorizontalAlignment {
         LEFT,
         CENTER,
         RIGHT

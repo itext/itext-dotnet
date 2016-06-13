@@ -45,10 +45,8 @@ using System;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection
-{
-    public class PdfCollectionField : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Collection {
+    public class PdfCollectionField : PdfObjectWrapper<PdfDictionary> {
         /// <summary>A possible type of collection field.</summary>
         public const int TEXT = 0;
 
@@ -76,55 +74,45 @@ namespace iTextSharp.Kernel.Pdf.Collection
         protected internal int subType;
 
         protected internal PdfCollectionField(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
             String subType = pdfObject.GetAsName(PdfName.Subtype).GetValue();
-            switch (subType)
-            {
-                case "D":
-                {
+            switch (subType) {
+                case "D": {
                     this.subType = DATE;
                     break;
                 }
 
-                case "N":
-                {
+                case "N": {
                     this.subType = NUMBER;
                     break;
                 }
 
-                case "F":
-                {
+                case "F": {
                     this.subType = FILENAME;
                     break;
                 }
 
-                case "Desc":
-                {
+                case "Desc": {
                     this.subType = DESC;
                     break;
                 }
 
-                case "ModDate":
-                {
+                case "ModDate": {
                     this.subType = MODDATE;
                     break;
                 }
 
-                case "CreationDate":
-                {
+                case "CreationDate": {
                     this.subType = CREATIONDATE;
                     break;
                 }
 
-                case "Size":
-                {
+                case "Size": {
                     this.subType = SIZE;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     this.subType = TEXT;
                     break;
                 }
@@ -135,56 +123,46 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <param name="name">the field name</param>
         /// <param name="subType">the field subtype</param>
         public PdfCollectionField(String name, int subType)
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.N, new PdfString(name));
             this.subType = subType;
-            switch (subType)
-            {
-                default:
-                {
+            switch (subType) {
+                default: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.S);
                     break;
                 }
 
-                case DATE:
-                {
+                case DATE: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.D);
                     break;
                 }
 
-                case NUMBER:
-                {
+                case NUMBER: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.N);
                     break;
                 }
 
-                case FILENAME:
-                {
+                case FILENAME: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.F);
                     break;
                 }
 
-                case DESC:
-                {
+                case DESC: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.Desc);
                     break;
                 }
 
-                case MODDATE:
-                {
+                case MODDATE: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.ModDate);
                     break;
                 }
 
-                case CREATIONDATE:
-                {
+                case CREATIONDATE: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.CreationDate);
                     break;
                 }
 
-                case SIZE:
-                {
+                case SIZE: {
                     GetPdfObject().Put(PdfName.Subtype, PdfName.Size);
                     break;
                 }
@@ -195,61 +173,50 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// <remarks>The relative order of the field name. Fields are sorted in ascending order.</remarks>
         /// <param name="order">a number indicating the order of the field</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order) {
             GetPdfObject().Put(PdfName.O, new PdfNumber(order));
             return this;
         }
 
-        public virtual PdfNumber GetOrder()
-        {
+        public virtual PdfNumber GetOrder() {
             return GetPdfObject().GetAsNumber(PdfName.O);
         }
 
         /// <summary>Sets the initial visibility of the field.</summary>
         /// <param name="visible"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible) {
             GetPdfObject().Put(PdfName.V, new PdfBoolean(visible));
             return this;
         }
 
-        public virtual PdfBoolean GetVisibility()
-        {
+        public virtual PdfBoolean GetVisibility() {
             return GetPdfObject().GetAsBoolean(PdfName.V);
         }
 
         /// <summary>Indication if the field value should be editable in the viewer.</summary>
         /// <param name="editable"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable) {
             GetPdfObject().Put(PdfName.E, new PdfBoolean(editable));
             return this;
         }
 
-        public virtual PdfBoolean GetEditable()
-        {
+        public virtual PdfBoolean GetEditable() {
             return GetPdfObject().GetAsBoolean(PdfName.E);
         }
 
-        public virtual PdfObject GetValue(String value)
-        {
-            switch (subType)
-            {
-                case TEXT:
-                {
+        public virtual PdfObject GetValue(String value) {
+            switch (subType) {
+                case TEXT: {
                     return new PdfString(value);
                 }
 
-                case DATE:
-                {
+                case DATE: {
                     return new PdfDate(PdfDate.Decode(value)).GetPdfObject();
                 }
 
-                case NUMBER:
-                {
+                case NUMBER: {
                     return new PdfNumber(System.Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
@@ -257,8 +224,7 @@ namespace iTextSharp.Kernel.Pdf.Collection
                 ().GetAsName(PdfName.N).GetValue());
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

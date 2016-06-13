@@ -45,38 +45,30 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Navigation
-{
-    public class PdfNamedDestination : PdfDestination
-    {
+namespace iTextSharp.Kernel.Pdf.Navigation {
+    public class PdfNamedDestination : PdfDestination {
         public PdfNamedDestination(String name)
-            : this(new PdfName(name))
-        {
+            : this(new PdfName(name)) {
         }
 
         public PdfNamedDestination(PdfName pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names)
-        {
+        public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names) {
             PdfArray array = (PdfArray)names.Get(((PdfName)GetPdfObject()).GetValue());
             return array != null ? array.Get(0) : null;
         }
 
-        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names)
-        {
+        public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {
             PdfArray array = (PdfArray)names.Get(GetPdfObject());
-            if (array != null)
-            {
+            if (array != null) {
                 return PdfDestination.MakeDestination(array);
             }
             return null;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

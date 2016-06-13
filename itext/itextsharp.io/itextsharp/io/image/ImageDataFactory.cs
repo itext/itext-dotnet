@@ -47,10 +47,8 @@ using System.IO;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Image
-{
-    public sealed class ImageDataFactory
-    {
+namespace iTextSharp.IO.Image {
+    public sealed class ImageDataFactory {
         private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
 
         private static readonly byte[] jpeg = new byte[] { (byte)0xFF, (byte)0xD8 };
@@ -72,58 +70,47 @@ namespace iTextSharp.IO.Image
         private static readonly byte[] jbig2 = new byte[] { (byte)0x97, (byte)'J', (byte)'B', (byte)'2', (byte)'\r'
             , (byte)'\n', 0x1a, (byte)'\n' };
 
-        private ImageDataFactory()
-        {
+        private ImageDataFactory() {
         }
 
-        public static ImageData Create(byte[] bytes, bool recoverImage)
-        {
+        public static ImageData Create(byte[] bytes, bool recoverImage) {
             return CreateImageInstance(bytes, recoverImage);
         }
 
-        public static ImageData Create(byte[] bytes)
-        {
+        public static ImageData Create(byte[] bytes) {
             return Create(bytes, false);
         }
 
-        public static ImageData Create(Uri url, bool recoverImage)
-        {
+        public static ImageData Create(Uri url, bool recoverImage) {
             return CreateImageInstance(url, recoverImage);
         }
 
-        public static ImageData Create(Uri url)
-        {
+        public static ImageData Create(Uri url) {
             return Create(url, false);
         }
 
         /// <exception cref="Java.Net.MalformedURLException"/>
-        public static ImageData Create(String filename, bool recoverImage)
-        {
+        public static ImageData Create(String filename, bool recoverImage) {
             return Create(UrlUtil.ToURL(filename), recoverImage);
         }
 
         /// <exception cref="Java.Net.MalformedURLException"/>
-        public static ImageData Create(String filename)
-        {
+        public static ImageData Create(String filename) {
             return Create(filename, false);
         }
 
         public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT, int parameters, byte
-            [] data, int[] transparency)
-        {
-            if (transparency != null && transparency.Length != 2)
-            {
+            [] data, int[] transparency) {
+            if (transparency != null && transparency.Length != 2) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
                     );
             }
             if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && typeCCITT != RawImageData
-                .CCITTG3_2D)
-            {
+                .CCITTG3_2D) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
             }
-            if (reverseBits)
-            {
+            if (reverseBits) {
                 TIFFFaxDecoder.ReverseBits(data);
             }
             RawImageData image = new RawImageData(data, ImageType.RAW);
@@ -136,15 +123,12 @@ namespace iTextSharp.IO.Image
         }
 
         public static ImageData Create(int width, int height, int components, int bpc, byte[] data, int[] transparency
-            )
-        {
-            if (transparency != null && transparency.Length != components * 2)
-            {
+            ) {
+            if (transparency != null && transparency.Length != components * 2) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
                     );
             }
-            if (components == 1 && bpc == 1)
-            {
+            if (components == 1 && bpc == 1) {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
                 return iTextSharp.IO.Image.ImageDataFactory.Create(width, height, false, RawImageData.CCITTG4, RawImageData
                     .CCITT_BLACKIS1, g4, transparency);
@@ -152,12 +136,10 @@ namespace iTextSharp.IO.Image
             RawImageData image = new RawImageData(data, ImageType.RAW);
             image.height = height;
             image.width = width;
-            if (components != 1 && components != 3 && components != 4)
-            {
+            if (components != 1 && components != 3 && components != 4) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4);
             }
-            if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8)
-            {
+            if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
             image.colorSpace = components;
@@ -173,8 +155,7 @@ namespace iTextSharp.IO.Image
         ///     </param>
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color)
-        {
+        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color) {
             return iTextSharp.IO.Image.ImageDataFactory.Create(image, color, false);
         }
 
@@ -185,16 +166,13 @@ namespace iTextSharp.IO.Image
         /// <param name="forceBW">if <CODE>true</CODE> the image is treated as black and white</param>
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color, bool forceBW)
-        {
+        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
 
-        public static ImageData CreateBmp(Uri url, bool noHeader, int size)
-        {
+        public static ImageData CreateBmp(Uri url, bool noHeader, int size) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, bmp))
-            {
+            if (ImageTypeIs(imageType, bmp)) {
                 ImageData image = new BmpImageData(url, noHeader, size);
                 BmpImageHelper.ProcessImage(image);
                 return image;
@@ -202,11 +180,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("BMP image expected.");
         }
 
-        public static ImageData CreateBmp(byte[] bytes, bool noHeader, int size)
-        {
+        public static ImageData CreateBmp(byte[] bytes, bool noHeader, int size) {
             byte[] imageType = ReadImageType(bytes);
-            if (noHeader || ImageTypeIs(imageType, bmp))
-            {
+            if (noHeader || ImageTypeIs(imageType, bmp)) {
                 ImageData image = new BmpImageData(bytes, noHeader, size);
                 BmpImageHelper.ProcessImage(image);
                 return image;
@@ -218,11 +194,9 @@ namespace iTextSharp.IO.Image
         /// <remarks>Return a GifImage object. This object cannot be added to a document</remarks>
         /// <param name="bytes"/>
         /// <returns/>
-        public static GifImageData CreateGif(byte[] bytes)
-        {
+        public static GifImageData CreateGif(byte[] bytes) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image);
                 return image;
@@ -234,11 +208,9 @@ namespace iTextSharp.IO.Image
         /// <param name="url">url of gif image</param>
         /// <param name="frame">number of frame to be returned</param>
         /// <returns/>
-        public static ImageData CreateGifFrame(Uri url, int frame)
-        {
+        public static ImageData CreateGifFrame(Uri url, int frame) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(url);
                 GifImageHelper.ProcessImage(image, frame - 1);
                 return image.GetFrames()[frame - 1];
@@ -250,11 +222,9 @@ namespace iTextSharp.IO.Image
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frame">number of frame to be returned</param>
         /// <returns/>
-        public static ImageData CreateGifFrame(byte[] bytes, int frame)
-        {
+        public static ImageData CreateGifFrame(byte[] bytes, int frame) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image, frame - 1);
                 return image.GetFrames()[frame - 1];
@@ -266,17 +236,14 @@ namespace iTextSharp.IO.Image
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image</param>
         /// <returns/>
-        public static IList<ImageData> CreateGifFrames(byte[] bytes, int[] frameNumbers)
-        {
+        public static IList<ImageData> CreateGifFrames(byte[] bytes, int[] frameNumbers) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(bytes);
                 iTextSharp.IO.Util.JavaUtil.Sort(frameNumbers);
                 GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
                 IList<ImageData> frames = new List<ImageData>();
-                foreach (int frame in frameNumbers)
-                {
+                foreach (int frame in frameNumbers) {
                     frames.Add(image.GetFrames()[frame - 1]);
                 }
                 return frames;
@@ -288,17 +255,14 @@ namespace iTextSharp.IO.Image
         /// <param name="url">url of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image</param>
         /// <returns/>
-        public static IList<ImageData> CreateGifFrames(Uri url, int[] frameNumbers)
-        {
+        public static IList<ImageData> CreateGifFrames(Uri url, int[] frameNumbers) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(url);
                 iTextSharp.IO.Util.JavaUtil.Sort(frameNumbers);
                 GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
                 IList<ImageData> frames = new List<ImageData>();
-                foreach (int frame in frameNumbers)
-                {
+                foreach (int frame in frameNumbers) {
                     frames.Add(image.GetFrames()[frame - 1]);
                 }
                 return frames;
@@ -309,11 +273,9 @@ namespace iTextSharp.IO.Image
         /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <returns>all frames of gif image</returns>
-        public static IList<ImageData> CreateGifFrames(byte[] bytes)
-        {
+        public static IList<ImageData> CreateGifFrames(byte[] bytes) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image);
                 return image.GetFrames();
@@ -324,11 +286,9 @@ namespace iTextSharp.IO.Image
         /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
         /// <param name="url">url of gif image</param>
         /// <returns>all frames of gif image</returns>
-        public static IList<ImageData> CreateGifFrames(Uri url)
-        {
+        public static IList<ImageData> CreateGifFrames(Uri url) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(url);
                 GifImageHelper.ProcessImage(image);
                 return image.GetFrames();
@@ -336,15 +296,12 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("GIF image expected.");
         }
 
-        public static ImageData CreateJbig2(Uri url, int page)
-        {
-            if (page < 1)
-            {
+        public static ImageData CreateJbig2(Uri url, int page) {
+            if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
             }
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, jbig2))
-            {
+            if (ImageTypeIs(imageType, jbig2)) {
                 ImageData image = new Jbig2ImageData(url, page);
                 Jbig2ImageHelper.ProcessImage(image);
                 return image;
@@ -352,15 +309,12 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("JBIG2 image expected.");
         }
 
-        public static ImageData CreateJbig2(byte[] bytes, int page)
-        {
-            if (page < 1)
-            {
+        public static ImageData CreateJbig2(byte[] bytes, int page) {
+            if (page < 1) {
                 throw new ArgumentException("The page number must be greater than 0");
             }
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, jbig2))
-            {
+            if (ImageTypeIs(imageType, jbig2)) {
                 ImageData image = new Jbig2ImageData(bytes, page);
                 Jbig2ImageHelper.ProcessImage(image);
                 return image;
@@ -368,11 +322,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("JBIG2 image expected.");
         }
 
-        public static ImageData CreateJpeg(Uri url)
-        {
+        public static ImageData CreateJpeg(Uri url) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, jpeg))
-            {
+            if (ImageTypeIs(imageType, jpeg)) {
                 ImageData image = new JpegImageData(url);
                 JpegImageHelper.ProcessImage(image);
                 return image;
@@ -380,11 +332,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("JPEG image expected.");
         }
 
-        public static ImageData CreateJpeg(byte[] bytes)
-        {
+        public static ImageData CreateJpeg(byte[] bytes) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, jpeg))
-            {
+            if (ImageTypeIs(imageType, jpeg)) {
                 ImageData image = new JpegImageData(bytes);
                 JpegImageHelper.ProcessImage(image);
                 return image;
@@ -392,11 +342,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("JPEG image expected.");
         }
 
-        public static ImageData CreateJpeg2000(Uri url)
-        {
+        public static ImageData CreateJpeg2000(Uri url) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
-            {
+            if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
                 ImageData image = new Jpeg2000ImageData(url);
                 Jpeg2000ImageHelper.ProcessImage(image);
                 return image;
@@ -404,11 +352,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("JPEG2000 image expected.");
         }
 
-        public static ImageData CreateJpeg2000(byte[] bytes)
-        {
+        public static ImageData CreateJpeg2000(byte[] bytes) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
-            {
+            if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
                 ImageData image = new Jpeg2000ImageData(bytes);
                 Jpeg2000ImageHelper.ProcessImage(image);
                 return image;
@@ -416,11 +362,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("JPEG2000 image expected.");
         }
 
-        public static ImageData CreatePng(Uri url)
-        {
+        public static ImageData CreatePng(Uri url) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, png))
-            {
+            if (ImageTypeIs(imageType, png)) {
                 ImageData image = new PngImageData(url);
                 PngImageHelper.ProcessImage(image);
                 return image;
@@ -428,11 +372,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("PNG image expected.");
         }
 
-        public static ImageData CreatePng(byte[] bytes)
-        {
+        public static ImageData CreatePng(byte[] bytes) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, png))
-            {
+            if (ImageTypeIs(imageType, png)) {
                 ImageData image = new PngImageData(bytes);
                 PngImageHelper.ProcessImage(image);
                 return image;
@@ -440,11 +382,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("PNG image expected.");
         }
 
-        public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, bool direct)
-        {
+        public static ImageData CreateTiff(Uri url, bool recoverFromImageError, int page, bool direct) {
             byte[] imageType = ReadImageType(url);
-            if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
-            {
+            if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
                 ImageData image = new TiffImageData(url, recoverFromImageError, page, direct);
                 TiffImageHelper.ProcessImage(image);
                 return image;
@@ -452,11 +392,9 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("TIFF image expected.");
         }
 
-        public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int page, bool direct)
-        {
+        public static ImageData CreateTiff(byte[] bytes, bool recoverFromImageError, int page, bool direct) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
-            {
+            if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
                 ImageData image = new TiffImageData(bytes, recoverFromImageError, page, direct);
                 TiffImageHelper.ProcessImage(image);
                 return image;
@@ -464,64 +402,49 @@ namespace iTextSharp.IO.Image
             throw new ArgumentException("TIFF image expected.");
         }
 
-        public static ImageData CreateRawImage(byte[] bytes)
-        {
+        public static ImageData CreateRawImage(byte[] bytes) {
             return new RawImageData(bytes, ImageType.RAW);
         }
 
-        private static ImageData CreateImageInstance(Uri source, bool recoverImage)
-        {
+        private static ImageData CreateImageInstance(Uri source, bool recoverImage) {
             byte[] imageType = ReadImageType(source);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(source);
                 GifImageHelper.ProcessImage(image, 0);
                 return image.GetFrames()[0];
             }
-            else
-            {
-                if (ImageTypeIs(imageType, jpeg))
-                {
+            else {
+                if (ImageTypeIs(imageType, jpeg)) {
                     ImageData image = new JpegImageData(source);
                     JpegImageHelper.ProcessImage(image);
                     return image;
                 }
-                else
-                {
-                    if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
-                    {
+                else {
+                    if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
                         ImageData image = new Jpeg2000ImageData(source);
                         Jpeg2000ImageHelper.ProcessImage(image);
                         return image;
                     }
-                    else
-                    {
-                        if (ImageTypeIs(imageType, png))
-                        {
+                    else {
+                        if (ImageTypeIs(imageType, png)) {
                             ImageData image = new PngImageData(source);
                             PngImageHelper.ProcessImage(image);
                             return image;
                         }
-                        else
-                        {
-                            if (ImageTypeIs(imageType, bmp))
-                            {
+                        else {
+                            if (ImageTypeIs(imageType, bmp)) {
                                 ImageData image = new BmpImageData(source, false, 0);
                                 BmpImageHelper.ProcessImage(image);
                                 return image;
                             }
-                            else
-                            {
-                                if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
-                                {
+                            else {
+                                if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
                                     ImageData image = new TiffImageData(source, recoverImage, 1, false);
                                     TiffImageHelper.ProcessImage(image);
                                     return image;
                                 }
-                                else
-                                {
-                                    if (ImageTypeIs(imageType, jbig2))
-                                    {
+                                else {
+                                    if (ImageTypeIs(imageType, jbig2)) {
                                         ImageData image = new Jbig2ImageData(source, 1);
                                         Jbig2ImageHelper.ProcessImage(image);
                                         return image;
@@ -535,59 +458,45 @@ namespace iTextSharp.IO.Image
             throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
-        private static ImageData CreateImageInstance(byte[] bytes, bool recoverImage)
-        {
+        private static ImageData CreateImageInstance(byte[] bytes, bool recoverImage) {
             byte[] imageType = ReadImageType(bytes);
-            if (ImageTypeIs(imageType, gif))
-            {
+            if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(bytes);
                 GifImageHelper.ProcessImage(image, 0);
                 return image.GetFrames()[0];
             }
-            else
-            {
-                if (ImageTypeIs(imageType, jpeg))
-                {
+            else {
+                if (ImageTypeIs(imageType, jpeg)) {
                     ImageData image = new JpegImageData(bytes);
                     JpegImageHelper.ProcessImage(image);
                     return image;
                 }
-                else
-                {
-                    if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2))
-                    {
+                else {
+                    if (ImageTypeIs(imageType, jpeg2000_1) || ImageTypeIs(imageType, jpeg2000_2)) {
                         ImageData image = new Jpeg2000ImageData(bytes);
                         Jpeg2000ImageHelper.ProcessImage(image);
                         return image;
                     }
-                    else
-                    {
-                        if (ImageTypeIs(imageType, png))
-                        {
+                    else {
+                        if (ImageTypeIs(imageType, png)) {
                             ImageData image = new PngImageData(bytes);
                             PngImageHelper.ProcessImage(image);
                             return image;
                         }
-                        else
-                        {
-                            if (ImageTypeIs(imageType, bmp))
-                            {
+                        else {
+                            if (ImageTypeIs(imageType, bmp)) {
                                 ImageData image = new BmpImageData(bytes, false, 0);
                                 BmpImageHelper.ProcessImage(image);
                                 return image;
                             }
-                            else
-                            {
-                                if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2))
-                                {
+                            else {
+                                if (ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2)) {
                                     ImageData image = new TiffImageData(bytes, recoverImage, 1, false);
                                     TiffImageHelper.ProcessImage(image);
                                     return image;
                                 }
-                                else
-                                {
-                                    if (ImageTypeIs(imageType, jbig2))
-                                    {
+                                else {
+                                    if (ImageTypeIs(imageType, jbig2)) {
                                         ImageData image = new Jbig2ImageData(bytes, 1);
                                         Jbig2ImageHelper.ProcessImage(image);
                                         return image;
@@ -601,58 +510,45 @@ namespace iTextSharp.IO.Image
             throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
-        private static bool ImageTypeIs(byte[] imageType, byte[] compareWith)
-        {
-            for (int i = 0; i < compareWith.Length; i++)
-            {
-                if (imageType[i] != compareWith[i])
-                {
+        private static bool ImageTypeIs(byte[] imageType, byte[] compareWith) {
+            for (int i = 0; i < compareWith.Length; i++) {
+                if (imageType[i] != compareWith[i]) {
                     return false;
                 }
             }
             return true;
         }
 
-        private static byte[] ReadImageType(Uri source)
-        {
+        private static byte[] ReadImageType(Uri source) {
             Stream stream = null;
-            try
-            {
+            try {
                 stream = UrlUtil.OpenStream(source);
                 byte[] bytes = new byte[8];
                 stream.Read(bytes);
                 return bytes;
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
-            finally
-            {
-                if (stream != null)
-                {
-                    try
-                    {
+            finally {
+                if (stream != null) {
+                    try {
                         stream.Close();
                     }
-                    catch (System.IO.IOException)
-                    {
+                    catch (System.IO.IOException) {
                     }
                 }
             }
         }
 
-        private static byte[] ReadImageType(byte[] source)
-        {
-            try
-            {
+        private static byte[] ReadImageType(byte[] source) {
+            try {
                 Stream stream = new MemoryStream(source);
                 byte[] bytes = new byte[8];
                 stream.Read(bytes);
                 return bytes;
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 return null;
             }
         }

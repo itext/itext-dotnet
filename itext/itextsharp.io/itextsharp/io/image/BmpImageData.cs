@@ -43,35 +43,29 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Image
-{
-    public class BmpImageData : RawImageData
-    {
+namespace iTextSharp.IO.Image {
+    public class BmpImageData : RawImageData {
         private int size;
 
         private bool noHeader;
 
         protected internal BmpImageData(Uri url, bool noHeader, int size)
-            : base(url, ImageType.BMP)
-        {
+            : base(url, ImageType.BMP) {
             this.noHeader = noHeader;
             this.size = size;
         }
 
         protected internal BmpImageData(byte[] bytes, bool noHeader, int size)
-            : base(bytes, ImageType.BMP)
-        {
+            : base(bytes, ImageType.BMP) {
             this.noHeader = noHeader;
             this.size = size;
         }
 
-        public virtual int GetSize()
-        {
+        public virtual int GetSize() {
             return size;
         }
 
-        public virtual bool IsNoHeader()
-        {
+        public virtual bool IsNoHeader() {
             return noHeader;
         }
     }

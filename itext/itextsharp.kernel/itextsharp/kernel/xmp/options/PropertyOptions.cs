@@ -30,15 +30,13 @@
 using System;
 using iTextSharp.Kernel.XMP;
 
-namespace iTextSharp.Kernel.XMP.Options
-{
+namespace iTextSharp.Kernel.XMP.Options {
     /// <summary>
     /// The property flags are used when properties are fetched from the <code>XMPMeta</code>-object
     /// and provide more detailed information about the property.
     /// </summary>
     /// <since>03.07.2006</since>
-    public sealed class PropertyOptions : iTextSharp.Kernel.XMP.Options.Options
-    {
+    public sealed class PropertyOptions : iTextSharp.Kernel.XMP.Options.Options {
         public const int NO_OPTIONS = 0x00000000;
 
         public const int URI = 0x00000002;
@@ -71,16 +69,14 @@ namespace iTextSharp.Kernel.XMP.Options
         public const int SEPARATE_NODE = 0x40000000;
 
         /// <summary>Default constructor</summary>
-        public PropertyOptions()
-        {
+        public PropertyOptions() {
         }
 
         /// <summary>Intialization constructor</summary>
         /// <param name="options">the initialization options</param>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not valid</exception>
         public PropertyOptions(int options)
-            : base(options)
-        {
+            : base(options) {
         }
 
         // reveal default constructor
@@ -88,15 +84,13 @@ namespace iTextSharp.Kernel.XMP.Options
         /// Return whether the property value is a URI. It is serialized to RDF using the
         /// <tt>rdf:resource</tt> attribute. Not mandatory for URIs, but considered RDF-savvy.
         /// </returns>
-        public bool IsURI()
-        {
+        public bool IsURI() {
             return GetOption(URI);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetURI(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetURI(bool value) {
             SetOption(URI, value);
             return this;
         }
@@ -106,15 +100,13 @@ namespace iTextSharp.Kernel.XMP.Options
         /// attribute, an <tt>rdf:type</tt> property, or a general qualifier. See the
         /// introductory discussion of qualified properties for more information.
         /// </returns>
-        public bool GetHasQualifiers()
-        {
+        public bool GetHasQualifiers() {
             return GetOption(HAS_QUALIFIERS);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasQualifiers(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasQualifiers(bool value) {
             SetOption(HAS_QUALIFIERS, value);
             return this;
         }
@@ -125,57 +117,49 @@ namespace iTextSharp.Kernel.XMP.Options
         /// the qualifier's subtree. Qualifiers may have arbitrary structure, and may even have
         /// qualifiers.
         /// </returns>
-        public bool IsQualifier()
-        {
+        public bool IsQualifier() {
             return GetOption(QUALIFIER);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetQualifier(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetQualifier(bool value) {
             SetOption(QUALIFIER, value);
             return this;
         }
 
         /// <returns>Return whether this property has an <tt>xml:lang</tt> qualifier.</returns>
-        public bool GetHasLanguage()
-        {
+        public bool GetHasLanguage() {
             return GetOption(HAS_LANGUAGE);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasLanguage(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasLanguage(bool value) {
             SetOption(HAS_LANGUAGE, value);
             return this;
         }
 
         /// <returns>Return whether this property has an <tt>rdf:type</tt> qualifier.</returns>
-        public bool GetHasType()
-        {
+        public bool GetHasType() {
             return GetOption(HAS_TYPE);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasType(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasType(bool value) {
             SetOption(HAS_TYPE, value);
             return this;
         }
 
         /// <returns>Return whether this property contains nested fields.</returns>
-        public bool IsStruct()
-        {
+        public bool IsStruct() {
             return GetOption(STRUCT);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetStruct(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetStruct(bool value) {
             SetOption(STRUCT, value);
             return this;
         }
@@ -184,15 +168,13 @@ namespace iTextSharp.Kernel.XMP.Options
         /// Return whether this property is an array. By itself this indicates a general
         /// unordered array. It is serialized using an <tt>rdf:Bag</tt> container.
         /// </returns>
-        public bool IsArray()
-        {
+        public bool IsArray() {
             return GetOption(ARRAY);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArray(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArray(bool value) {
             SetOption(ARRAY, value);
             return this;
         }
@@ -201,15 +183,13 @@ namespace iTextSharp.Kernel.XMP.Options
         /// Return whether this property is an ordered array. Appears in conjunction with
         /// getPropValueIsArray(). It is serialized using an <tt>rdf:Seq</tt> container.
         /// </returns>
-        public bool IsArrayOrdered()
-        {
+        public bool IsArrayOrdered() {
             return GetOption(ARRAY_ORDERED);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayOrdered(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayOrdered(bool value) {
             SetOption(ARRAY_ORDERED, value);
             return this;
         }
@@ -218,15 +198,13 @@ namespace iTextSharp.Kernel.XMP.Options
         /// Return whether this property is an alternative array. Appears in conjunction with
         /// getPropValueIsArray(). It is serialized using an <tt>rdf:Alt</tt> container.
         /// </returns>
-        public bool IsArrayAlternate()
-        {
+        public bool IsArrayAlternate() {
             return GetOption(ARRAY_ALTERNATE);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAlternate(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAlternate(bool value) {
             SetOption(ARRAY_ALTERNATE, value);
             return this;
         }
@@ -236,51 +214,44 @@ namespace iTextSharp.Kernel.XMP.Options
         /// getPropArrayIsAlternate(). It is serialized using an <tt>rdf:Alt</tt> container.
         /// Each array element is a simple property with an <tt>xml:lang</tt> attribute.
         /// </returns>
-        public bool IsArrayAltText()
-        {
+        public bool IsArrayAltText() {
             return GetOption(ARRAY_ALT_TEXT);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAltText(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAltText(bool value) {
             SetOption(ARRAY_ALT_TEXT, value);
             return this;
         }
 
         /// <returns>Returns whether the SCHEMA_NODE option is set.</returns>
-        public bool IsSchemaNode()
-        {
+        public bool IsSchemaNode() {
             return GetOption(SCHEMA_NODE);
         }
 
         /// <param name="value">the option DELETE_EXISTING to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetSchemaNode(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetSchemaNode(bool value) {
             SetOption(SCHEMA_NODE, value);
             return this;
         }
 
         //-------------------------------------------------------------------------- convenience methods
         /// <returns>Returns whether the property is of composite type - an array or a struct.</returns>
-        public bool IsCompositeProperty()
-        {
+        public bool IsCompositeProperty() {
             return (GetOptions() & (ARRAY | STRUCT)) > 0;
         }
 
         /// <returns>Returns whether the property is of composite type - an array or a struct.</returns>
-        public bool IsSimple()
-        {
+        public bool IsSimple() {
             return (GetOptions() & (ARRAY | STRUCT)) == 0;
         }
 
         /// <summary>Compares two options set for array compatibility.</summary>
         /// <param name="options">other options</param>
         /// <returns>Returns true if the array options of the sets are equal.</returns>
-        public bool EqualArrayTypes(iTextSharp.Kernel.XMP.Options.PropertyOptions options)
-        {
+        public bool EqualArrayTypes(iTextSharp.Kernel.XMP.Options.PropertyOptions options) {
             return IsArray() == options.IsArray() && IsArrayOrdered() == options.IsArrayOrdered() && IsArrayAlternate(
                 ) == options.IsArrayAlternate() && IsArrayAltText() == options.IsArrayAltText();
         }
@@ -292,89 +263,71 @@ namespace iTextSharp.Kernel.XMP.Options
         /// </remarks>
         /// <param name="options">other options</param>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If illegal options are provided</exception>
-        public void MergeWith(iTextSharp.Kernel.XMP.Options.PropertyOptions options)
-        {
-            if (options != null)
-            {
+        public void MergeWith(iTextSharp.Kernel.XMP.Options.PropertyOptions options) {
+            if (options != null) {
                 SetOptions(GetOptions() | options.GetOptions());
             }
         }
 
         /// <returns>Returns true if only array options are set.</returns>
-        public bool IsOnlyArrayOptions()
-        {
+        public bool IsOnlyArrayOptions() {
             return (GetOptions() & ~(ARRAY | ARRAY_ORDERED | ARRAY_ALTERNATE | ARRAY_ALT_TEXT)) == 0;
         }
 
         /// <seealso cref="Options.GetValidOptions()"/>
-        protected internal override int GetValidOptions()
-        {
+        protected internal override int GetValidOptions() {
             return URI | HAS_QUALIFIERS | QUALIFIER | HAS_LANGUAGE | HAS_TYPE | STRUCT | ARRAY | ARRAY_ORDERED | ARRAY_ALTERNATE
                  | ARRAY_ALT_TEXT | SCHEMA_NODE | SEPARATE_NODE;
         }
 
         /// <seealso cref="Options.DefineOptionName(int)"/>
-        protected internal override String DefineOptionName(int option)
-        {
-            switch (option)
-            {
-                case URI:
-                {
+        protected internal override String DefineOptionName(int option) {
+            switch (option) {
+                case URI: {
                     return "URI";
                 }
 
-                case HAS_QUALIFIERS:
-                {
+                case HAS_QUALIFIERS: {
                     return "HAS_QUALIFIER";
                 }
 
-                case QUALIFIER:
-                {
+                case QUALIFIER: {
                     return "QUALIFIER";
                 }
 
-                case HAS_LANGUAGE:
-                {
+                case HAS_LANGUAGE: {
                     return "HAS_LANGUAGE";
                 }
 
-                case HAS_TYPE:
-                {
+                case HAS_TYPE: {
                     return "HAS_TYPE";
                 }
 
-                case STRUCT:
-                {
+                case STRUCT: {
                     return "STRUCT";
                 }
 
-                case ARRAY:
-                {
+                case ARRAY: {
                     return "ARRAY";
                 }
 
-                case ARRAY_ORDERED:
-                {
+                case ARRAY_ORDERED: {
                     return "ARRAY_ORDERED";
                 }
 
-                case ARRAY_ALTERNATE:
-                {
+                case ARRAY_ALTERNATE: {
                     return "ARRAY_ALTERNATE";
                 }
 
-                case ARRAY_ALT_TEXT:
-                {
+                case ARRAY_ALT_TEXT: {
                     return "ARRAY_ALT_TEXT";
                 }
 
-                case SCHEMA_NODE:
-                {
+                case SCHEMA_NODE: {
                     return "SCHEMA_NODE";
                 }
 
-                default:
-                {
+                default: {
                     return null;
                 }
             }
@@ -386,16 +339,12 @@ namespace iTextSharp.Kernel.XMP.Options
         /// </summary>
         /// <param name="options">the bitmask to check.</param>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
-        protected internal override void AssertConsistency(int options)
-        {
-            if ((options & STRUCT) > 0 && (options & ARRAY) > 0)
-            {
+        protected internal override void AssertConsistency(int options) {
+            if ((options & STRUCT) > 0 && (options & ARRAY) > 0) {
                 throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError.BADOPTIONS);
             }
-            else
-            {
-                if ((options & URI) > 0 && (options & (ARRAY | STRUCT)) > 0)
-                {
+            else {
+                if ((options & URI) > 0 && (options & (ARRAY | STRUCT)) > 0) {
                     throw new XMPException("Structs and arrays can't have \"value\" options", XMPError.BADOPTIONS);
                 }
             }

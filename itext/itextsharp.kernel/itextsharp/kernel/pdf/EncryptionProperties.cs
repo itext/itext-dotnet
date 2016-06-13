@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class EncryptionProperties
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class EncryptionProperties {
         protected internal int encryptionAlgorithm;
 
         /// <summary>StandardEncryption properties</summary>
@@ -82,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf
         /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
         /// </param>
         public virtual EncryptionProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword, int permissions
-            , int encryptionAlgorithm)
-        {
+            , int encryptionAlgorithm) {
             ClearEncryption();
             this.userPassword = userPassword;
             this.ownerPassword = ownerPassword;
@@ -112,8 +109,7 @@ namespace iTextSharp.Kernel.Pdf
         /// ENCRYPTION_AES128 or ENCRYPTION_AES256.
         /// </param>
         public virtual EncryptionProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions, int
-             encryptionAlgorithm)
-        {
+             encryptionAlgorithm) {
             ClearEncryption();
             this.publicCertificates = certs;
             this.publicKeyEncryptPermissions = permissions;
@@ -121,18 +117,15 @@ namespace iTextSharp.Kernel.Pdf
             return this;
         }
 
-        internal virtual bool IsStandardEncryptionUsed()
-        {
+        internal virtual bool IsStandardEncryptionUsed() {
             return ownerPassword != null;
         }
 
-        internal virtual bool IsPublicKeyEncryptionUsed()
-        {
+        internal virtual bool IsPublicKeyEncryptionUsed() {
             return publicCertificates != null;
         }
 
-        private void ClearEncryption()
-        {
+        private void ClearEncryption() {
             this.publicCertificates = null;
             this.publicKeyEncryptPermissions = null;
             this.userPassword = null;

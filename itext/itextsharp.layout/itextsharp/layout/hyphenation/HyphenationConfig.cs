@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary>This is the class used to configure hyphenation on layout level</summary>
-    public class HyphenationConfig
-    {
+    public class HyphenationConfig {
         /// <summary>The Hyphenator object.</summary>
         protected internal Hyphenator hyphenator;
 
@@ -62,8 +60,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// </summary>
         /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
-        public HyphenationConfig(int leftMin, int rightMin)
-        {
+        public HyphenationConfig(int leftMin, int rightMin) {
             this.hyphenator = new Hyphenator(null, null, leftMin, rightMin);
         }
 
@@ -80,8 +77,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <see cref="Hyphenator"/>
         /// instance
         /// </param>
-        public HyphenationConfig(Hyphenator hyphenator)
-        {
+        public HyphenationConfig(Hyphenator hyphenator) {
             this.hyphenator = hyphenator;
         }
 
@@ -94,8 +90,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="country">the optional country code (may be null or "none")</param>
         /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
-        public HyphenationConfig(String lang, String country, int leftMin, int rightMin)
-        {
+        public HyphenationConfig(String lang, String country, int leftMin, int rightMin) {
             this.hyphenator = new Hyphenator(lang, country, leftMin, rightMin);
         }
 
@@ -108,22 +103,19 @@ namespace iTextSharp.Layout.Hyphenation
         /// <see langword="null"/>
         /// if no hyphenation points are found.
         /// </returns>
-        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word)
-        {
+        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word) {
             return hyphenator != null ? hyphenator.Hyphenate(word) : null;
         }
 
         /// <summary>Gets the hyphenation symbol.</summary>
         /// <returns>the hyphenation symbol</returns>
-        public virtual char GetHyphenSymbol()
-        {
+        public virtual char GetHyphenSymbol() {
             return hyphenSymbol;
         }
 
         /// <summary>Sets the hyphenation symbol to the specified value.</summary>
         /// <param name="hyphenSymbol">the new hyphenation symbol</param>
-        public virtual void SetHyphenSymbol(char hyphenSymbol)
-        {
+        public virtual void SetHyphenSymbol(char hyphenSymbol) {
             this.hyphenSymbol = hyphenSymbol;
         }
     }

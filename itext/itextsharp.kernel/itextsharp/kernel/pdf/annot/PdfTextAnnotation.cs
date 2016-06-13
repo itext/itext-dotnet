@@ -44,42 +44,33 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfTextAnnotation : PdfMarkupAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfTextAnnotation : PdfMarkupAnnotation {
         public PdfTextAnnotation(Rectangle rect)
-            : base(rect)
-        {
+            : base(rect) {
         }
 
         public PdfTextAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Text;
         }
 
-        public virtual PdfString GetState()
-        {
+        public virtual PdfString GetState() {
             return GetPdfObject().GetAsString(PdfName.State);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetState(PdfString state)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetState(PdfString state) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.State, state);
         }
 
-        public virtual PdfString GetStateModel()
-        {
+        public virtual PdfString GetStateModel() {
             return GetPdfObject().GetAsString(PdfName.StateModel);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString stateModel)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString stateModel) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.StateModel, stateModel);
         }
     }

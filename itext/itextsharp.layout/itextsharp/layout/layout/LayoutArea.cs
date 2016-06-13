@@ -46,74 +46,61 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Layout
-{
-    public class LayoutArea
-    {
+namespace iTextSharp.Layout.Layout {
+    public class LayoutArea {
         protected internal int pageNumber;
 
         protected internal Rectangle bBox;
 
         protected internal bool emptyArea = true;
 
-        public LayoutArea(int pageNumber, Rectangle bBox)
-        {
+        public LayoutArea(int pageNumber, Rectangle bBox) {
             this.pageNumber = pageNumber;
             this.bBox = bBox;
         }
 
-        public virtual int GetPageNumber()
-        {
+        public virtual int GetPageNumber() {
             return pageNumber;
         }
 
-        public virtual Rectangle GetBBox()
-        {
+        public virtual Rectangle GetBBox() {
             return bBox;
         }
 
-        public virtual void SetBBox(Rectangle bbox)
-        {
+        public virtual void SetBBox(Rectangle bbox) {
             this.bBox = bbox;
         }
 
-        public virtual bool IsEmptyArea()
-        {
+        public virtual bool IsEmptyArea() {
             return emptyArea;
         }
 
-        public virtual void SetEmptyArea(bool emptyArea)
-        {
+        public virtual void SetEmptyArea(bool emptyArea) {
             this.emptyArea = emptyArea;
         }
 
-        public virtual iTextSharp.Layout.Layout.LayoutArea Clone()
-        {
+        public virtual iTextSharp.Layout.Layout.LayoutArea Clone() {
             iTextSharp.Layout.Layout.LayoutArea area = new iTextSharp.Layout.Layout.LayoutArea(pageNumber, bBox.Clone(
                 ));
             area.SetEmptyArea(emptyArea);
             return area;
         }
 
-        public override bool Equals(Object obj)
-        {
-            if (!(obj is iTextSharp.Layout.Layout.LayoutArea))
-            {
+        public override bool Equals(Object obj) {
+            if (!(obj is iTextSharp.Layout.Layout.LayoutArea)) {
                 return false;
             }
             iTextSharp.Layout.Layout.LayoutArea that = (iTextSharp.Layout.Layout.LayoutArea)obj;
             return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer.EPS);
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             HashCode hashCode = new HashCode();
             hashCode.Append(pageNumber).Append(bBox.GetHashCode()).Append(emptyArea);
             return hashCode.GetHashCode();
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return String.Format("{0}, page {1}", bBox.ToString(), pageNumber);
         }
     }

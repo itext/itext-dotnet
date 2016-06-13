@@ -46,8 +46,7 @@ using iTextSharp.Kernel.Pdf.Canvas.Draw;
 using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// This is a line separator element which is basically just a horizontal line with
     /// a style specified by
@@ -55,8 +54,7 @@ namespace iTextSharp.Layout.Element
     /// custom drawing interface instance.
     /// This might be thought of as an HTML's <hr> element alternative.
     /// </summary>
-    public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator>
-    {
+    public class LineSeparator : BlockElement<iTextSharp.Layout.Element.LineSeparator> {
         protected internal PdfName role = PdfName.Artifact;
 
         protected internal AccessibilityProperties tagProperties;
@@ -67,30 +65,24 @@ namespace iTextSharp.Layout.Element
         /// interface instance
         /// </summary>
         /// <param name="lineDrawer">line drawer instance</param>
-        public LineSeparator(ILineDrawer lineDrawer)
-        {
+        public LineSeparator(ILineDrawer lineDrawer) {
             SetProperty(iTextSharp.Layout.Property.Property.LINE_DRAWER, lineDrawer);
         }
 
-        protected internal override IRenderer MakeNewRenderer()
-        {
+        protected internal override IRenderer MakeNewRenderer() {
             return new LineSeparatorRenderer(this);
         }
 
-        public override PdfName GetRole()
-        {
+        public override PdfName GetRole() {
             return role;
         }
 
-        public override void SetRole(PdfName role)
-        {
+        public override void SetRole(PdfName role) {
             this.role = role;
         }
 
-        public override AccessibilityProperties GetAccessibilityProperties()
-        {
-            if (tagProperties == null)
-            {
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;

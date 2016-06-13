@@ -46,36 +46,29 @@ using iTextSharp.Layout.Layout;
 using iTextSharp.Layout.Property;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout
-{
+namespace iTextSharp.Layout {
     /// <summary>This class is used for convenient multi-column Document Layouting</summary>
-    public class ColumnDocumentRenderer : DocumentRenderer
-    {
+    public class ColumnDocumentRenderer : DocumentRenderer {
         private Rectangle[] columns;
 
         private int nextAreaNumber;
 
         public ColumnDocumentRenderer(Document document, Rectangle[] columns)
-            : base(document)
-        {
+            : base(document) {
             this.columns = columns;
         }
 
         public ColumnDocumentRenderer(Document document, bool immediateFlush, Rectangle[] columns)
-            : base(document, immediateFlush)
-        {
+            : base(document, immediateFlush) {
             this.columns = columns;
         }
 
-        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult)
-        {
+        protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             if (overflowResult != null && overflowResult.GetAreaBreak() != null && overflowResult.GetAreaBreak().GetAreaType
-                () != AreaBreakType.NEXT_AREA)
-            {
+                () != AreaBreakType.NEXT_AREA) {
                 nextAreaNumber = 0;
             }
-            if (nextAreaNumber % columns.Length == 0)
-            {
+            if (nextAreaNumber % columns.Length == 0) {
                 base.UpdateCurrentArea(overflowResult);
             }
             return (currentArea = new LayoutArea(currentPageNumber, columns[nextAreaNumber++ % columns.Length].Clone()

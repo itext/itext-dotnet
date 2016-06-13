@@ -46,10 +46,8 @@ using System.Collections.Generic;
 using System.Text;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Font
-{
-    public class CFFFont
-    {
+namespace iTextSharp.IO.Font {
+    public class CFFFont {
         internal static readonly String[] operatorNames = new String[] { "version", "Notice", "FullName", "FamilyName"
             , "Weight", "FontBBox", "BlueValues", "OtherBlues", "FamilyBlues", "FamilyOtherBlues", "StdHW", "StdVW"
             , "UNKNOWN_12", "UniqueID", "XUID", "charset", "Encoding", "CharStrings", "Private", "Subrs", "defaultWidthX"
@@ -111,14 +109,11 @@ namespace iTextSharp.IO.Font
         // Automatically generated from Appendix A of the CFF specification; do
         // not edit. Size should be 391.
         //private String[] strings;
-        public virtual String GetString(char sid)
-        {
-            if (sid < standardStrings.Length)
-            {
+        public virtual String GetString(char sid) {
+            if (sid < standardStrings.Length) {
                 return standardStrings[sid];
             }
-            if (sid >= standardStrings.Length + stringOffsets.Length - 1)
-            {
+            if (sid >= standardStrings.Length + stringOffsets.Length - 1) {
                 return null;
             }
             int j = sid - standardStrings.Length;
@@ -126,94 +121,73 @@ namespace iTextSharp.IO.Font
             int p = GetPosition();
             Seek(stringOffsets[j]);
             StringBuilder s = new StringBuilder();
-            for (int k = stringOffsets[j]; k < stringOffsets[j + 1]; k++)
-            {
+            for (int k = stringOffsets[j]; k < stringOffsets[j + 1]; k++) {
                 s.Append(GetCard8());
             }
             Seek(p);
             return s.ToString();
         }
 
-        internal virtual char GetCard8()
-        {
-            try
-            {
+        internal virtual char GetCard8() {
+            try {
                 byte i = buf.ReadByte();
                 return (char)(i & 0xff);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
 
-        internal virtual char GetCard16()
-        {
-            try
-            {
+        internal virtual char GetCard16() {
+            try {
                 return buf.ReadChar();
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
 
-        internal virtual int GetOffset(int offSize)
-        {
+        internal virtual int GetOffset(int offSize) {
             int offset = 0;
-            for (int i = 0; i < offSize; i++)
-            {
+            for (int i = 0; i < offSize; i++) {
                 offset *= 256;
                 offset += GetCard8();
             }
             return offset;
         }
 
-        internal virtual void Seek(int offset)
-        {
-            try
-            {
+        internal virtual void Seek(int offset) {
+            try {
                 buf.Seek(offset);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
 
-        internal virtual short GetShort()
-        {
-            try
-            {
+        internal virtual short GetShort() {
+            try {
                 return buf.ReadShort();
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
 
-        internal virtual int GetInt()
-        {
-            try
-            {
+        internal virtual int GetInt() {
+            try {
                 return buf.ReadInt();
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
 
-        internal virtual int GetPosition()
-        {
-            try
-            {
+        internal virtual int GetPosition() {
+            try {
                 return (int)buf.GetPosition();
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
@@ -224,23 +198,20 @@ namespace iTextSharp.IO.Font
         // data structure, convert to global
         // offsets, and return them.
         // Sets the nextIndexOffset.
-        internal virtual int[] GetIndex(int nextIndexOffset)
-        {
+        internal virtual int[] GetIndex(int nextIndexOffset) {
             int count;
             int indexOffSize;
             Seek(nextIndexOffset);
             count = GetCard16();
             int[] offsets = new int[count + 1];
-            if (count == 0)
-            {
+            if (count == 0) {
                 offsets[0] = -1;
                 nextIndexOffset += 2;
                 // TODO death store to local var .. should this be this.nextIndexOffset ?
                 return offsets;
             }
             indexOffSize = GetCard8();
-            for (int j = 0; j <= count; j++)
-            {
+            for (int j = 0; j <= count; j++) {
                 //nextIndexOffset = ofset to relative segment
                 offsets[j] = nextIndexOffset + 2 + 1 + (count + 1) * indexOffSize - 1 + GetOffset(indexOffSize);
             }
@@ -258,44 +229,37 @@ namespace iTextSharp.IO.Font
 
         protected internal int arg_count = 0;
 
-        protected internal virtual void GetDictItem()
-        {
-            for (int i = 0; i < arg_count; i++)
-            {
+        protected internal virtual void GetDictItem() {
+            for (int i = 0; i < arg_count; i++) {
                 args[i] = null;
             }
             arg_count = 0;
             key = null;
             bool gotKey = false;
-            while (!gotKey)
-            {
+            while (!gotKey) {
                 char b0 = GetCard8();
-                if (b0 == 29)
-                {
+                if (b0 == 29) {
                     int item = GetInt();
                     args[arg_count] = item;
                     arg_count++;
                     //System.err.println(item+" ");
                     continue;
                 }
-                if (b0 == 28)
-                {
+                if (b0 == 28) {
                     short item = GetShort();
                     args[arg_count] = (int)item;
                     arg_count++;
                     //System.err.println(item+" ");
                     continue;
                 }
-                if (b0 >= 32 && b0 <= 246)
-                {
+                if (b0 >= 32 && b0 <= 246) {
                     byte item = (byte)(b0 - 139);
                     args[arg_count] = (int)item;
                     arg_count++;
                     //System.err.println(item+" ");
                     continue;
                 }
-                if (b0 >= 247 && b0 <= 250)
-                {
+                if (b0 >= 247 && b0 <= 250) {
                     char b1 = GetCard8();
                     short item = (short)((b0 - 247) * 256 + b1 + 108);
                     args[arg_count] = (int)item;
@@ -303,8 +267,7 @@ namespace iTextSharp.IO.Font
                     //System.err.println(item+" ");
                     continue;
                 }
-                if (b0 >= 251 && b0 <= 254)
-                {
+                if (b0 >= 251 && b0 <= 254) {
                     char b1 = GetCard8();
                     short item = (short)(-(b0 - 251) * 256 - b1 - 108);
                     args[arg_count] = (int)item;
@@ -312,71 +275,57 @@ namespace iTextSharp.IO.Font
                     //System.err.println(item+" ");
                     continue;
                 }
-                if (b0 == 30)
-                {
+                if (b0 == 30) {
                     StringBuilder item = new StringBuilder("");
                     bool done = false;
                     char buffer = (char)0;
                     byte avail = 0;
                     int nibble = 0;
-                    while (!done)
-                    {
+                    while (!done) {
                         // get a nibble
-                        if (avail == 0)
-                        {
+                        if (avail == 0) {
                             buffer = GetCard8();
                             avail = 2;
                         }
-                        if (avail == 1)
-                        {
+                        if (avail == 1) {
                             nibble = buffer / 16;
                             avail--;
                         }
-                        if (avail == 2)
-                        {
+                        if (avail == 2) {
                             nibble = buffer % 16;
                             avail--;
                         }
-                        switch (nibble)
-                        {
-                            case 0xa:
-                            {
+                        switch (nibble) {
+                            case 0xa: {
                                 item.Append(".");
                                 break;
                             }
 
-                            case 0xb:
-                            {
+                            case 0xb: {
                                 item.Append("E");
                                 break;
                             }
 
-                            case 0xc:
-                            {
+                            case 0xc: {
                                 item.Append("E-");
                                 break;
                             }
 
-                            case 0xe:
-                            {
+                            case 0xe: {
                                 item.Append("-");
                                 break;
                             }
 
-                            case 0xf:
-                            {
+                            case 0xf: {
                                 done = true;
                                 break;
                             }
 
-                            default:
-                            {
-                                if (nibble >= 0 && nibble <= 9)
-                                {
+                            default: {
+                                if (nibble >= 0 && nibble <= 9) {
                                     item.Append(nibble);
                                 }
-                                else
-                                {
+                                else {
                                     item.Append("<NIBBLE ERROR: ").Append(nibble).Append('>');
                                     done = true;
                                 }
@@ -389,15 +338,12 @@ namespace iTextSharp.IO.Font
                     //System.err.println(" real=["+item+"]");
                     continue;
                 }
-                if (b0 <= 21)
-                {
+                if (b0 <= 21) {
                     gotKey = true;
-                    if (b0 != 12)
-                    {
+                    if (b0 != 12) {
                         key = operatorNames[b0];
                     }
-                    else
-                    {
+                    else {
                         key = operatorNames[32 + GetCard8()];
                     }
                     //for (int i=0; i<arg_count; i++)
@@ -409,29 +355,24 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>List items for the linked list that builds the new CID font.</summary>
-        protected internal abstract class Item
-        {
+        protected internal abstract class Item {
             protected internal int myOffset = -1;
 
             /// <summary>remember the current offset and increment by item's size in bytes.</summary>
-            public virtual void Increment(int[] currentOffset)
-            {
+            public virtual void Increment(int[] currentOffset) {
                 myOffset = currentOffset[0];
             }
 
             /// <summary>Emit the byte stream for this item.</summary>
-            public virtual void Emit(byte[] buffer)
-            {
+            public virtual void Emit(byte[] buffer) {
             }
 
             /// <summary>Fix up cross references to this item (applies only to markers).</summary>
-            public virtual void Xref()
-            {
+            public virtual void Xref() {
             }
         }
 
-        protected internal abstract class OffsetItem : CFFFont.Item
-        {
+        protected internal abstract class OffsetItem : CFFFont.Item {
             public int value;
 
             /// <summary>set the value of an offset item that was initially unknown.</summary>
@@ -439,47 +380,39 @@ namespace iTextSharp.IO.Font
             /// set the value of an offset item that was initially unknown.
             /// It will be fixed up latex by a call to xref on some marker.
             /// </remarks>
-            public virtual void Set(int offset)
-            {
+            public virtual void Set(int offset) {
                 this.value = offset;
             }
         }
 
         /// <summary>A range item.</summary>
-        protected internal sealed class RangeItem : CFFFont.Item
-        {
+        protected internal sealed class RangeItem : CFFFont.Item {
             public int offset;
 
             public int length;
 
             private RandomAccessFileOrArray buf;
 
-            public RangeItem(RandomAccessFileOrArray buf, int offset, int length)
-            {
+            public RangeItem(RandomAccessFileOrArray buf, int offset, int length) {
                 this.offset = offset;
                 this.length = length;
                 this.buf = buf;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += length;
             }
 
-            public override void Emit(byte[] buffer)
-            {
+            public override void Emit(byte[] buffer) {
                 //System.err.println("range emit offset "+offset+" size="+length);
-                try
-                {
+                try {
                     buf.Seek(offset);
-                    for (int i = myOffset; i < myOffset + length; i++)
-                    {
+                    for (int i = myOffset; i < myOffset + length; i++) {
                         buffer[i] = buf.ReadByte();
                     }
                 }
-                catch (System.IO.IOException e)
-                {
+                catch (System.IO.IOException e) {
                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
                 }
             }
@@ -494,60 +427,48 @@ namespace iTextSharp.IO.Font
         /// and a negative value means that this is a dict item that uses a
         /// variable-size representation.
         /// </remarks>
-        protected internal sealed class IndexOffsetItem : CFFFont.OffsetItem
-        {
+        protected internal sealed class IndexOffsetItem : CFFFont.OffsetItem {
             public readonly int size;
 
-            public IndexOffsetItem(int size, int value)
-            {
+            public IndexOffsetItem(int size, int value) {
                 this.size = size;
                 this.value = value;
             }
 
-            public IndexOffsetItem(int size)
-            {
+            public IndexOffsetItem(int size) {
                 this.size = size;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += size;
             }
 
-            public override void Emit(byte[] buffer)
-            {
-                if (size >= 1 && size <= 4)
-                {
-                    for (int i = 0; i < size; i++)
-                    {
+            public override void Emit(byte[] buffer) {
+                if (size >= 1 && size <= 4) {
+                    for (int i = 0; i < size; i++) {
                         buffer[myOffset + i] = (byte)((int)(((uint)value) >> ((size - 1 - i) << 3)) & 0xFF);
                     }
                 }
             }
         }
 
-        protected internal sealed class IndexBaseItem : CFFFont.Item
-        {
-            public IndexBaseItem()
-            {
+        protected internal sealed class IndexBaseItem : CFFFont.Item {
+            public IndexBaseItem() {
             }
         }
 
-        protected internal sealed class IndexMarkerItem : CFFFont.Item
-        {
+        protected internal sealed class IndexMarkerItem : CFFFont.Item {
             private CFFFont.OffsetItem offItem;
 
             private CFFFont.IndexBaseItem indexBase;
 
-            public IndexMarkerItem(CFFFont.OffsetItem offItem, CFFFont.IndexBaseItem indexBase)
-            {
+            public IndexMarkerItem(CFFFont.OffsetItem offItem, CFFFont.IndexBaseItem indexBase) {
                 this.offItem = offItem;
                 this.indexBase = indexBase;
             }
 
-            public override void Xref()
-            {
+            public override void Xref() {
                 //System.err.println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
                 offItem.Set(this.myOffset - indexBase.myOffset + 1);
             }
@@ -557,20 +478,17 @@ namespace iTextSharp.IO.Font
         /// TODO To change the template for this generated type comment go to
         /// Window - Preferences - Java - Code Generation - Code and Comments
         /// </summary>
-        protected internal sealed class SubrMarkerItem : CFFFont.Item
-        {
+        protected internal sealed class SubrMarkerItem : CFFFont.Item {
             private CFFFont.OffsetItem offItem;
 
             private CFFFont.IndexBaseItem indexBase;
 
-            public SubrMarkerItem(CFFFont.OffsetItem offItem, CFFFont.IndexBaseItem indexBase)
-            {
+            public SubrMarkerItem(CFFFont.OffsetItem offItem, CFFFont.IndexBaseItem indexBase) {
                 this.offItem = offItem;
                 this.indexBase = indexBase;
             }
 
-            public override void Xref()
-            {
+            public override void Xref() {
                 //System.err.println("index marker item, base="+indexBase.myOffset+" my="+this.myOffset);
                 offItem.Set(this.myOffset - indexBase.myOffset);
             }
@@ -581,26 +499,21 @@ namespace iTextSharp.IO.Font
         /// an unknown offset in a dictionary for the list.
         /// We will fix up the offset later; for now, assume it's large.
         /// </remarks>
-        protected internal sealed class DictOffsetItem : CFFFont.OffsetItem
-        {
+        protected internal sealed class DictOffsetItem : CFFFont.OffsetItem {
             public readonly int size;
 
-            public DictOffsetItem()
-            {
+            public DictOffsetItem() {
                 this.size = 5;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += size;
             }
 
             // this is incomplete!
-            public override void Emit(byte[] buffer)
-            {
-                if (size == 5)
-                {
+            public override void Emit(byte[] buffer) {
+                if (size == 5) {
                     buffer[myOffset] = 29;
                     buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 24) & 0xff);
                     buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 16) & 0xff);
@@ -611,24 +524,20 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>Card24 item.</summary>
-        protected internal sealed class UInt24Item : CFFFont.Item
-        {
+        protected internal sealed class UInt24Item : CFFFont.Item {
             public int value;
 
-            public UInt24Item(int value)
-            {
+            public UInt24Item(int value) {
                 this.value = value;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += 3;
             }
 
             // this is incomplete!
-            public override void Emit(byte[] buffer)
-            {
+            public override void Emit(byte[] buffer) {
                 buffer[myOffset + 0] = (byte)((int)(((uint)value) >> 16) & 0xff);
                 buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 8) & 0xff);
                 buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 0) & 0xff);
@@ -636,24 +545,20 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>Card32 item.</summary>
-        protected internal sealed class UInt32Item : CFFFont.Item
-        {
+        protected internal sealed class UInt32Item : CFFFont.Item {
             public int value;
 
-            public UInt32Item(int value)
-            {
+            public UInt32Item(int value) {
                 this.value = value;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += 4;
             }
 
             // this is incomplete!
-            public override void Emit(byte[] buffer)
-            {
+            public override void Emit(byte[] buffer) {
                 buffer[myOffset + 0] = (byte)((int)(((uint)value) >> 24) & 0xff);
                 buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 16) & 0xff);
                 buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 8) & 0xff);
@@ -662,24 +567,20 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>A SID or Card16 item.</summary>
-        protected internal sealed class UInt16Item : CFFFont.Item
-        {
+        protected internal sealed class UInt16Item : CFFFont.Item {
             public char value;
 
-            public UInt16Item(char value)
-            {
+            public UInt16Item(char value) {
                 this.value = value;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += 2;
             }
 
             // this is incomplete!
-            public override void Emit(byte[] buffer)
-            {
+            public override void Emit(byte[] buffer) {
                 //            Simplify from: there is no sense in >>> for unsigned char.
                 //            buffer[myOffset+0] = (byte) (value >>> 8 & 0xff);
                 //            buffer[myOffset+1] = (byte) (value >>> 0 & 0xff);
@@ -689,48 +590,39 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>A Card8 item.</summary>
-        protected internal sealed class UInt8Item : CFFFont.Item
-        {
+        protected internal sealed class UInt8Item : CFFFont.Item {
             public char value;
 
-            public UInt8Item(char value)
-            {
+            public UInt8Item(char value) {
                 this.value = value;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += 1;
             }
 
             // this is incomplete!
-            public override void Emit(byte[] buffer)
-            {
+            public override void Emit(byte[] buffer) {
                 //buffer[myOffset+0] = (byte) (value >>> 0 & 0xff);
                 buffer[myOffset + 0] = (byte)(value & 0xff);
             }
         }
 
-        protected internal sealed class StringItem : CFFFont.Item
-        {
+        protected internal sealed class StringItem : CFFFont.Item {
             public String s;
 
-            public StringItem(String s)
-            {
+            public StringItem(String s) {
                 this.s = s;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += s.Length;
             }
 
-            public override void Emit(byte[] buffer)
-            {
-                for (int i = 0; i < s.Length; i++)
-                {
+            public override void Emit(byte[] buffer) {
+                for (int i = 0; i < s.Length; i++) {
                     buffer[myOffset + i] = (byte)(s[i] & 0xff);
                 }
             }
@@ -742,28 +634,23 @@ namespace iTextSharp.IO.Font
         /// This implementation is inefficient: it doesn't use the variable-length
         /// representation.
         /// </remarks>
-        protected internal sealed class DictNumberItem : CFFFont.Item
-        {
+        protected internal sealed class DictNumberItem : CFFFont.Item {
             public readonly int value;
 
             public int size = 5;
 
-            public DictNumberItem(int value)
-            {
+            public DictNumberItem(int value) {
                 this.value = value;
             }
 
-            public override void Increment(int[] currentOffset)
-            {
+            public override void Increment(int[] currentOffset) {
                 base.Increment(currentOffset);
                 currentOffset[0] += size;
             }
 
             // this is incomplete!
-            public override void Emit(byte[] buffer)
-            {
-                if (size == 5)
-                {
+            public override void Emit(byte[] buffer) {
+                if (size == 5) {
                     buffer[myOffset] = 29;
                     buffer[myOffset + 1] = (byte)((int)(((uint)value) >> 24) & 0xff);
                     buffer[myOffset + 2] = (byte)((int)(((uint)value) >> 16) & 0xff);
@@ -778,17 +665,14 @@ namespace iTextSharp.IO.Font
         /// An offset-marker item for the list.
         /// It is used to mark an offset and to set the offset list item.
         /// </remarks>
-        protected internal sealed class MarkerItem : CFFFont.Item
-        {
+        protected internal sealed class MarkerItem : CFFFont.Item {
             internal CFFFont.OffsetItem p;
 
-            public MarkerItem(CFFFont.OffsetItem pointerToMarker)
-            {
+            public MarkerItem(CFFFont.OffsetItem pointerToMarker) {
                 p = pointerToMarker;
             }
 
-            public override void Xref()
-            {
+            public override void Xref() {
                 p.Set(this.myOffset);
             }
         }
@@ -796,16 +680,13 @@ namespace iTextSharp.IO.Font
         /// <summary>a utility that creates a range item for an entire index</summary>
         /// <param name="indexOffset">where the index is</param>
         /// <returns>a range item representing the entire index</returns>
-        protected internal virtual CFFFont.RangeItem GetEntireIndexRange(int indexOffset)
-        {
+        protected internal virtual CFFFont.RangeItem GetEntireIndexRange(int indexOffset) {
             Seek(indexOffset);
             int count = GetCard16();
-            if (count == 0)
-            {
+            if (count == 0) {
                 return new CFFFont.RangeItem(buf, indexOffset, 2);
             }
-            else
-            {
+            else {
                 int indexOffSize = GetCard8();
                 Seek(indexOffset + 2 + 1 + count * indexOffSize);
                 int size = GetOffset(indexOffSize) - 1;
@@ -824,19 +705,15 @@ namespace iTextSharp.IO.Font
         /// a PDF restriction) and to subset the CharStrings glyph
         /// description.
         /// </remarks>
-        public virtual byte[] GetCID(String fontName)
-        {
+        public virtual byte[] GetCID(String fontName) {
             //throws java.io.FileNotFoundException
             int j;
-            for (j = 0; j < fonts.Length; j++)
-            {
-                if (fontName.Equals(fonts[j].name))
-                {
+            for (j = 0; j < fonts.Length; j++) {
+                if (fontName.Equals(fonts[j].name)) {
                     break;
                 }
             }
-            if (j == fonts.Length)
-            {
+            if (j == fonts.Length) {
                 return null;
             }
             LinkedList<CFFFont.Item> l = new LinkedList<CFFFont.Item>();
@@ -850,8 +727,7 @@ namespace iTextSharp.IO.Font
             l.AddLast(new CFFFont.RangeItem(buf, 0, hdrSize));
             int nglyphs = -1;
             int nstrings = -1;
-            if (!fonts[j].isCID)
-            {
+            if (!fonts[j].isCID) {
                 // count the glyphs
                 Seek(fonts[j].charstringsOffset);
                 nglyphs = GetCard16();
@@ -891,8 +767,7 @@ namespace iTextSharp.IO.Font
             CFFFont.OffsetItem charstringsRef = new CFFFont.DictOffsetItem();
             CFFFont.OffsetItem fdarrayRef = new CFFFont.DictOffsetItem();
             CFFFont.OffsetItem fdselectRef = new CFFFont.DictOffsetItem();
-            if (!fonts[j].isCID)
-            {
+            if (!fonts[j].isCID) {
                 // create a ROS key
                 l.AddLast(new CFFFont.DictNumberItem(nstrings));
                 l.AddLast(new CFFFont.DictNumberItem(nstrings + 1));
@@ -921,17 +796,14 @@ namespace iTextSharp.IO.Font
             l.AddLast(charstringsRef);
             l.AddLast(new CFFFont.UInt8Item((char)17));
             Seek(topdictOffsets[j]);
-            while (GetPosition() < topdictOffsets[j + 1])
-            {
+            while (GetPosition() < topdictOffsets[j + 1]) {
                 int p1 = GetPosition();
                 GetDictItem();
                 int p2 = GetPosition();
                 if ("Encoding".Equals(key) || "Private".Equals(key) || "FDSelect".Equals(key) || "FDArray".Equals(key) || 
-                    "charset".Equals(key) || "CharStrings".Equals(key))
-                {
+                    "charset".Equals(key) || "CharStrings".Equals(key)) {
                 }
-                else
-                {
+                else {
                     // just drop them
                     l.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
                 }
@@ -940,39 +812,30 @@ namespace iTextSharp.IO.Font
             // Copy the string index and append new strings.
             // We need 3 more strings: Registry, Ordering, and a FontName for one FD.
             // The total length is at most "Adobe"+"Identity"+63 = 76
-            if (fonts[j].isCID)
-            {
+            if (fonts[j].isCID) {
                 l.AddLast(GetEntireIndexRange(stringIndexOffset));
             }
-            else
-            {
+            else {
                 String fdFontName = fonts[j].name + "-OneRange";
-                if (fdFontName.Length > 127)
-                {
+                if (fdFontName.Length > 127) {
                     fdFontName = fdFontName.JSubstring(0, 127);
                 }
                 String extraStrings = "Adobe" + "Identity" + fdFontName;
                 int origStringsLen = stringOffsets[stringOffsets.Length - 1] - stringOffsets[0];
                 int stringsBaseOffset = stringOffsets[0] - 1;
                 byte stringsIndexOffSize;
-                if (origStringsLen + extraStrings.Length <= 0xff)
-                {
+                if (origStringsLen + extraStrings.Length <= 0xff) {
                     stringsIndexOffSize = 1;
                 }
-                else
-                {
-                    if (origStringsLen + extraStrings.Length <= 0xffff)
-                    {
+                else {
+                    if (origStringsLen + extraStrings.Length <= 0xffff) {
                         stringsIndexOffSize = 2;
                     }
-                    else
-                    {
-                        if (origStringsLen + extraStrings.Length <= 0xffffff)
-                        {
+                    else {
+                        if (origStringsLen + extraStrings.Length <= 0xffffff) {
                             stringsIndexOffSize = 3;
                         }
-                        else
-                        {
+                        else {
                             stringsIndexOffSize = 4;
                         }
                     }
@@ -981,8 +844,7 @@ namespace iTextSharp.IO.Font
                 // count
                 l.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
                 // offSize
-                foreach (int stringOffset in stringOffsets)
-                {
+                foreach (int stringOffset in stringOffsets) {
                     l.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, stringOffset - stringsBaseOffset));
                 }
                 int currentStringsOffset = stringOffsets[stringOffsets.Length - 1] - stringsBaseOffset;
@@ -999,11 +861,9 @@ namespace iTextSharp.IO.Font
             // copy the global subroutine index
             l.AddLast(GetEntireIndexRange(gsubrIndexOffset));
             // deal with fdarray, fdselect, and the font descriptors
-            if (fonts[j].isCID)
-            {
+            if (fonts[j].isCID) {
             }
-            else
-            {
+            else {
                 // copy the FDArray, FDSelect, charset
                 // create FDSelect
                 l.AddLast(new CFFFont.MarkerItem(fdselectRef));
@@ -1056,8 +916,7 @@ namespace iTextSharp.IO.Font
                 // the length of the private dict seems to NOT include
                 // the local subroutines.
                 l.AddLast(new CFFFont.RangeItem(buf, fonts[j].privateOffset, fonts[j].privateLength));
-                if (fonts[j].privateSubrs >= 0)
-                {
+                if (fonts[j].privateSubrs >= 0) {
                     //System.err.println("has subrs="+fonts[j].privateSubrs+" ,len="+fonts[j].privateLength);
                     l.AddLast(GetEntireIndexRange(fonts[j].privateSubrs));
                 }
@@ -1068,54 +927,43 @@ namespace iTextSharp.IO.Font
             // now create the new CFF font
             int[] currentOffset = new int[1];
             currentOffset[0] = 0;
-            foreach (CFFFont.Item item in l)
-            {
+            foreach (CFFFont.Item item in l) {
                 item.Increment(currentOffset);
             }
-            foreach (CFFFont.Item item_1 in l)
-            {
+            foreach (CFFFont.Item item_1 in l) {
                 item_1.Xref();
             }
             int size = currentOffset[0];
             byte[] b = new byte[size];
-            foreach (CFFFont.Item item_2 in l)
-            {
+            foreach (CFFFont.Item item_2 in l) {
                 item_2.Emit(b);
             }
             return b;
         }
 
-        public virtual bool IsCID(String fontName)
-        {
+        public virtual bool IsCID(String fontName) {
             int j;
-            for (j = 0; j < fonts.Length; j++)
-            {
-                if (fontName.Equals(fonts[j].name))
-                {
+            for (j = 0; j < fonts.Length; j++) {
+                if (fontName.Equals(fonts[j].name)) {
                     return fonts[j].isCID;
                 }
             }
             return false;
         }
 
-        public virtual bool Exists(String fontName)
-        {
+        public virtual bool Exists(String fontName) {
             int j;
-            for (j = 0; j < fonts.Length; j++)
-            {
-                if (fontName.Equals(fonts[j].name))
-                {
+            for (j = 0; j < fonts.Length; j++) {
+                if (fontName.Equals(fonts[j].name)) {
                     return true;
                 }
             }
             return false;
         }
 
-        public virtual String[] GetNames()
-        {
+        public virtual String[] GetNames() {
             String[] names = new String[fonts.Length];
-            for (int i = 0; i < fonts.Length; i++)
-            {
+            for (int i = 0; i < fonts.Length; i++) {
                 names[i] = fonts[i].name;
             }
             return names;
@@ -1142,8 +990,7 @@ namespace iTextSharp.IO.Font
 
         protected internal int[] gsubrOffsets;
 
-        protected internal sealed class Font
-        {
+        protected internal sealed class Font {
             public String name;
 
             public String fullName;
@@ -1202,8 +1049,7 @@ namespace iTextSharp.IO.Font
 
             public int[] SubrsOffsets;
 
-            internal Font(CFFFont _enclosing)
-            {
+            internal Font(CFFFont _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1219,8 +1065,7 @@ namespace iTextSharp.IO.Font
 
         internal RandomAccessSourceFactory rasFactory = new RandomAccessSourceFactory();
 
-        public CFFFont(byte[] cff)
-        {
+        public CFFFont(byte[] cff) {
             // Changed from private to protected by Ygal&Oren
             //System.err.println("CFF: nStdString = "+standardStrings.length);
             buf = new RandomAccessFileOrArray(rasFactory.CreateSource(cff));
@@ -1253,13 +1098,11 @@ namespace iTextSharp.IO.Font
             fdarrayOffset     = new int[nfonts];
             fdselectOffset    = new int[nfonts];
             */
-            for (int j = 0; j < nameOffsets.Length - 1; j++)
-            {
+            for (int j = 0; j < nameOffsets.Length - 1; j++) {
                 fonts[j] = new CFFFont.Font(this);
                 Seek(nameOffsets[j]);
                 fonts[j].name = "";
-                for (int k = nameOffsets[j]; k < nameOffsets[j + 1]; k++)
-                {
+                for (int k = nameOffsets[j]; k < nameOffsets[j + 1]; k++) {
                     fonts[j].name += GetCard8();
                 }
             }
@@ -1280,39 +1123,29 @@ namespace iTextSharp.IO.Font
             }
             */
             // top dict
-            for (int j_1 = 0; j_1 < topdictOffsets.Length - 1; j_1++)
-            {
+            for (int j_1 = 0; j_1 < topdictOffsets.Length - 1; j_1++) {
                 Seek(topdictOffsets[j_1]);
-                while (GetPosition() < topdictOffsets[j_1 + 1])
-                {
+                while (GetPosition() < topdictOffsets[j_1 + 1]) {
                     GetDictItem();
-                    if (key == "FullName")
-                    {
+                    if (key == "FullName") {
                         //System.err.println("getting fullname sid = "+((Integer)args[0]).intValue());
                         fonts[j_1].fullName = GetString((char)((int?)args[0]));
                     }
-                    else
-                    {
+                    else {
                         //System.err.println("got it");
-                        if (key == "ROS")
-                        {
+                        if (key == "ROS") {
                             fonts[j_1].isCID = true;
                         }
-                        else
-                        {
-                            if (key == "Private")
-                            {
+                        else {
+                            if (key == "Private") {
                                 fonts[j_1].privateLength = (int)((int?)args[0]);
                                 fonts[j_1].privateOffset = (int)((int?)args[1]);
                             }
-                            else
-                            {
-                                if (key == "charset")
-                                {
+                            else {
+                                if (key == "charset") {
                                     fonts[j_1].charsetOffset = (int)((int?)args[0]);
                                 }
-                                else
-                                {
+                                else {
                                     //                else if (key=="Encoding"){
                                     //                    int encOffset = ((Integer)args[0]).intValue();
                                     //                    if (encOffset > 0) {
@@ -1320,8 +1153,7 @@ namespace iTextSharp.IO.Font
                                     //                        ReadEncoding(fonts[j].encodingOffset);
                                     //                    }
                                     //                }
-                                    if (key == "CharStrings")
-                                    {
+                                    if (key == "CharStrings") {
                                         fonts[j_1].charstringsOffset = (int)((int?)args[0]);
                                         //System.err.println("charstrings "+fonts[j].charstringsOffset);
                                         // Added by Oren & Ygal
@@ -1329,22 +1161,16 @@ namespace iTextSharp.IO.Font
                                         fonts[j_1].charstringsOffsets = GetIndex(fonts[j_1].charstringsOffset);
                                         Seek(p);
                                     }
-                                    else
-                                    {
-                                        if (key == "FDArray")
-                                        {
+                                    else {
+                                        if (key == "FDArray") {
                                             fonts[j_1].fdarrayOffset = (int)((int?)args[0]);
                                         }
-                                        else
-                                        {
-                                            if (key == "FDSelect")
-                                            {
+                                        else {
+                                            if (key == "FDSelect") {
                                                 fonts[j_1].fdselectOffset = (int)((int?)args[0]);
                                             }
-                                            else
-                                            {
-                                                if (key == "CharstringType")
-                                                {
+                                            else {
+                                                if (key == "CharstringType") {
                                                     fonts[j_1].CharstringType = (int)((int?)args[0]);
                                                 }
                                             }
@@ -1356,15 +1182,12 @@ namespace iTextSharp.IO.Font
                     }
                 }
                 // private dict
-                if (fonts[j_1].privateOffset >= 0)
-                {
+                if (fonts[j_1].privateOffset >= 0) {
                     //System.err.println("PRIVATE::");
                     Seek(fonts[j_1].privateOffset);
-                    while (GetPosition() < fonts[j_1].privateOffset + fonts[j_1].privateLength)
-                    {
+                    while (GetPosition() < fonts[j_1].privateOffset + fonts[j_1].privateLength) {
                         GetDictItem();
-                        if (key == "Subrs")
-                        {
+                        if (key == "Subrs") {
                             //Add the private offset to the lsubrs since the offset is
                             // relative to the beginning of the PrivateDict
                             fonts[j_1].privateSubrs = (int)((int?)args[0]) + fonts[j_1].privateOffset;
@@ -1372,20 +1195,16 @@ namespace iTextSharp.IO.Font
                     }
                 }
                 // fdarray index
-                if (fonts[j_1].fdarrayOffset >= 0)
-                {
+                if (fonts[j_1].fdarrayOffset >= 0) {
                     int[] fdarrayOffsets = GetIndex(fonts[j_1].fdarrayOffset);
                     fonts[j_1].fdprivateOffsets = new int[fdarrayOffsets.Length - 1];
                     fonts[j_1].fdprivateLengths = new int[fdarrayOffsets.Length - 1];
                     //System.err.println("FD Font::");
-                    for (int k = 0; k < fdarrayOffsets.Length - 1; k++)
-                    {
+                    for (int k = 0; k < fdarrayOffsets.Length - 1; k++) {
                         Seek(fdarrayOffsets[k]);
-                        while (GetPosition() < fdarrayOffsets[k + 1])
-                        {
+                        while (GetPosition() < fdarrayOffsets[k + 1]) {
                             GetDictItem();
-                            if (key == "Private")
-                            {
+                            if (key == "Private") {
                                 fonts[j_1].fdprivateLengths[k] = (int)((int?)args[0]);
                                 fonts[j_1].fdprivateOffsets[k] = (int)((int?)args[1]);
                             }
@@ -1397,8 +1216,7 @@ namespace iTextSharp.IO.Font
 
         //System.err.println("CFF: done");
         // ADDED BY Oren & Ygal
-        internal virtual void ReadEncoding(int nextIndexOffset)
-        {
+        internal virtual void ReadEncoding(int nextIndexOffset) {
             int format;
             Seek(nextIndexOffset);
             format = GetCard8();

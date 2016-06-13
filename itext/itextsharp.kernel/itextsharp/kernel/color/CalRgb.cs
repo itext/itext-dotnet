@@ -43,28 +43,22 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class CalRgb : iTextSharp.Kernel.Color.Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class CalRgb : iTextSharp.Kernel.Color.Color {
         public CalRgb(PdfCieBasedCs.CalRgb cs)
-            : this(cs, new float[cs.GetNumberOfComponents()])
-        {
+            : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
         public CalRgb(PdfCieBasedCs.CalRgb cs, float[] value)
-            : base(cs, value)
-        {
+            : base(cs, value) {
         }
 
         public CalRgb(float[] whitePoint, float[] value)
-            : base(new PdfCieBasedCs.CalRgb(whitePoint), value)
-        {
+            : base(new PdfCieBasedCs.CalRgb(whitePoint), value) {
         }
 
         public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix, float[] value)
-            : this(new PdfCieBasedCs.CalRgb(whitePoint, blackPoint, gamma, matrix), value)
-        {
+            : this(new PdfCieBasedCs.CalRgb(whitePoint, blackPoint, gamma, matrix), value) {
         }
     }
 }

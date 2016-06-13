@@ -45,37 +45,30 @@ using System.IO;
 using iTextSharp.Kernel.Crypto;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
-{
-    public class StandardHandlerUsingAes128 : StandardHandlerUsingStandard128
-    {
+namespace iTextSharp.Kernel.Crypto.Securityhandler {
+    public class StandardHandlerUsingAes128 : StandardHandlerUsingStandard128 {
         private static readonly byte[] salt = new byte[] { (byte)0x73, (byte)0x41, (byte)0x6c, (byte)0x54 };
 
         public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)
             : base(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, 
-                documentId)
-        {
+                documentId) {
         }
 
         public StandardHandlerUsingAes128(PdfDictionary encryptionDictionary, byte[] password, byte[] documentId, 
             bool encryptMetadata)
-            : base(encryptionDictionary, password, documentId, encryptMetadata)
-        {
+            : base(encryptionDictionary, password, documentId, encryptMetadata) {
         }
 
-        public override OutputStreamEncryption GetEncryptionStream(Stream os)
-        {
+        public override OutputStreamEncryption GetEncryptionStream(Stream os) {
             return new OutputStreamAesEncryption(os, nextObjectKey, 0, nextObjectKeySize);
         }
 
-        public override IDecryptor GetDecryptor()
-        {
+        public override IDecryptor GetDecryptor() {
             return new AesDecryptor(nextObjectKey, 0, nextObjectKeySize);
         }
 
-        public override void SetHashKeyForNextObject(int objNumber, int objGeneration)
-        {
+        public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
             md5.Reset();
             // added by ujihara
             extra[0] = (byte)objNumber;
@@ -88,32 +81,27 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             md5.Update(salt);
             nextObjectKey = md5.Digest();
             nextObjectKeySize = mkey.Length + 5;
-            if (nextObjectKeySize > 16)
-            {
+            if (nextObjectKeySize > 16) {
                 nextObjectKeySize = 16;
             }
         }
 
         protected internal override void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool encryptMetadata
-            , bool embeddedFilesOnly)
-        {
-            if (!encryptMetadata)
-            {
+            , bool embeddedFilesOnly) {
+            if (!encryptMetadata) {
                 encryptionDictionary.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
             }
             encryptionDictionary.Put(PdfName.R, new PdfNumber(4));
             encryptionDictionary.Put(PdfName.V, new PdfNumber(4));
             PdfDictionary stdcf = new PdfDictionary();
             stdcf.Put(PdfName.Length, new PdfNumber(16));
-            if (embeddedFilesOnly)
-            {
+            if (embeddedFilesOnly) {
                 stdcf.Put(PdfName.AuthEvent, PdfName.EFOpen);
                 encryptionDictionary.Put(PdfName.EFF, PdfName.StdCF);
                 encryptionDictionary.Put(PdfName.StrF, PdfName.Identity);
                 encryptionDictionary.Put(PdfName.StmF, PdfName.Identity);
             }
-            else
-            {
+            else {
                 stdcf.Put(PdfName.AuthEvent, PdfName.DocOpen);
                 encryptionDictionary.Put(PdfName.StrF, PdfName.StdCF);
                 encryptionDictionary.Put(PdfName.StmF, PdfName.StdCF);

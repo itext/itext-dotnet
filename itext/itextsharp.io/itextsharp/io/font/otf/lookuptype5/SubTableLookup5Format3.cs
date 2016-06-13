@@ -45,54 +45,44 @@ using System.Collections.Generic;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf.Lookuptype5
-{
+namespace iTextSharp.IO.Font.Otf.Lookuptype5 {
     /// <summary>Contextual Substitution Subtable: Coverage-based context glyph substitution</summary>
-    public class SubTableLookup5Format3 : ContextualSubTable
-    {
+    public class SubTableLookup5Format3 : ContextualSubTable {
         internal ContextualSubstRule substitutionRule;
 
         public SubTableLookup5Format3(OpenTypeFontTableReader openReader, int lookupFlag, SubTableLookup5Format3.SubstRuleFormat3
              rule)
-            : base(openReader, lookupFlag)
-        {
+            : base(openReader, lookupFlag) {
             this.substitutionRule = rule;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId)
-        {
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId) {
             SubTableLookup5Format3.SubstRuleFormat3 ruleFormat3 = (SubTableLookup5Format3.SubstRuleFormat3)this.substitutionRule;
-            if (ruleFormat3.coverages[0].Contains(startId) && !openReader.IsSkip(startId, lookupFlag))
-            {
+            if (ruleFormat3.coverages[0].Contains(startId) && !openReader.IsSkip(startId, lookupFlag)) {
                 return JavaCollectionsUtil.SingletonList(this.substitutionRule);
             }
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
-        public class SubstRuleFormat3 : ContextualSubstRule
-        {
+        public class SubstRuleFormat3 : ContextualSubstRule {
             internal IList<ICollection<int>> coverages;
 
             internal SubstLookupRecord[] substLookupRecords;
 
-            public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords)
-            {
+            public SubstRuleFormat3(IList<ICollection<int>> coverages, SubstLookupRecord[] substLookupRecords) {
                 this.coverages = coverages;
                 this.substLookupRecords = substLookupRecords;
             }
 
-            public override int GetContextLength()
-            {
+            public override int GetContextLength() {
                 return coverages.Count;
             }
 
-            public override SubstLookupRecord[] GetSubstLookupRecords()
-            {
+            public override SubstLookupRecord[] GetSubstLookupRecords() {
                 return substLookupRecords;
             }
 
-            public override bool IsGlyphMatchesInput(int glyphId, int atIdx)
-            {
+            public override bool IsGlyphMatchesInput(int glyphId, int atIdx) {
                 return coverages[atIdx].Contains(glyphId);
             }
         }

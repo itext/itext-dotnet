@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils
-{
-    public class TagReference
-    {
+namespace iTextSharp.Kernel.Pdf.Tagutils {
+    public class TagReference {
         protected internal TagTreePointer tagPointer;
 
         protected internal int insertIndex;
@@ -58,54 +56,44 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 
         protected internal PdfDictionary properties;
 
-        protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer, int insertIndex)
-        {
+        protected internal TagReference(PdfStructElem referencedTag, TagTreePointer tagPointer, int insertIndex) {
             this.role = referencedTag.GetRole();
             this.referencedTag = referencedTag;
             this.tagPointer = tagPointer;
             this.insertIndex = insertIndex;
         }
 
-        public virtual PdfName GetRole()
-        {
+        public virtual PdfName GetRole() {
             return role;
         }
 
-        public virtual int CreateNextMcid()
-        {
+        public virtual int CreateNextMcid() {
             return tagPointer.CreateNextMcidForStructElem(referencedTag, insertIndex);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name, PdfObject value)
-        {
-            if (properties == null)
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name, PdfObject value) {
+            if (properties == null) {
                 properties = new PdfDictionary();
             }
             properties.Put(name, value);
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName name)
-        {
-            if (properties != null)
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName name) {
+            if (properties != null) {
                 properties.Remove(name);
             }
             return this;
         }
 
-        public virtual PdfObject GetProperty(PdfName name)
-        {
-            if (properties == null)
-            {
+        public virtual PdfObject GetProperty(PdfName name) {
+            if (properties == null) {
                 return null;
             }
             return properties.Get(name);
         }
 
-        public virtual PdfDictionary GetProperties()
-        {
+        public virtual PdfDictionary GetProperties() {
             return properties;
         }
     }

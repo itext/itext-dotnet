@@ -46,10 +46,8 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodePostnet : Barcode1D
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodePostnet : Barcode1D {
         public static int TYPE_POSTNET = 1;
 
         public static int TYPE_PLANET = 2;
@@ -61,8 +59,7 @@ namespace iTextSharp.Barcodes
             0, 0, 1, 0 }, new byte[] { 1, 0, 1, 0, 0 } };
 
         public BarcodePostnet(PdfDocument document)
-            : base(document)
-        {
+            : base(document) {
             n = 72f / 22f;
             // distance between bars
             x = 0.02f * 72f;
@@ -78,11 +75,9 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the bars for Postnet.</summary>
         /// <param name="text">the code to be created without checksum</param>
         /// <returns>the bars</returns>
-        public static byte[] GetBarsPostnet(String text)
-        {
+        public static byte[] GetBarsPostnet(String text) {
             int total = 0;
-            for (int k = text.Length - 1; k >= 0; --k)
-            {
+            for (int k = text.Length - 1; k >= 0; --k) {
                 int n = text[k] - '0';
                 total += n;
             }
@@ -90,22 +85,19 @@ namespace iTextSharp.Barcodes
             byte[] bars = new byte[text.Length * 5 + 2];
             bars[0] = 1;
             bars[bars.Length - 1] = 1;
-            for (int k_1 = 0; k_1 < text.Length; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < text.Length; ++k_1) {
                 int c = text[k_1] - '0';
                 System.Array.Copy(BARS[c], 0, bars, k_1 * 5 + 1, 5);
             }
             return bars;
         }
 
-        public override Rectangle GetBarcodeSize()
-        {
+        public override Rectangle GetBarcodeSize() {
             float width = ((code.Length + 1) * 5 + 1) * n + x;
             return new Rectangle(width, barHeight);
         }
 
-        public override void FitWidth(float width)
-        {
+        public override void FitWidth(float width) {
             byte[] bars = GetBarsPostnet(code);
             float currentWidth = GetBarcodeSize().GetWidth();
             x *= width / currentWidth;
@@ -113,23 +105,19 @@ namespace iTextSharp.Barcodes
         }
 
         public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
-             textColor)
-        {
-            if (barColor != null)
-            {
+             textColor) {
+            if (barColor != null) {
                 canvas.SetFillColor(barColor);
             }
             byte[] bars = GetBarsPostnet(code);
             byte flip = 1;
-            if (codeType == TYPE_PLANET)
-            {
+            if (codeType == TYPE_PLANET) {
                 flip = 0;
                 bars[0] = 0;
                 bars[bars.Length - 1] = 0;
             }
             float startX = 0;
-            for (int k = 0; k < bars.Length; ++k)
-            {
+            for (int k = 0; k < bars.Length; ++k) {
                 canvas.Rectangle(startX, 0, x - inkSpreading, bars[k] == flip ? barHeight : size);
                 startX += n;
             }

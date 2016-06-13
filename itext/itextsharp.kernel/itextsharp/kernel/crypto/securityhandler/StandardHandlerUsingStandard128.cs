@@ -43,46 +43,37 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
-{
-    public class StandardHandlerUsingStandard128 : StandardHandlerUsingStandard40
-    {
+namespace iTextSharp.Kernel.Crypto.Securityhandler {
+    public class StandardHandlerUsingStandard128 : StandardHandlerUsingStandard40 {
         public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)
             : base(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, 
-                documentId)
-        {
+                documentId) {
         }
 
         public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[] password, byte[] documentId
             , bool encryptMetadata)
-            : base(encryptionDictionary, password, documentId, encryptMetadata)
-        {
+            : base(encryptionDictionary, password, documentId, encryptMetadata) {
         }
 
-        protected internal override void CalculatePermissions(int permissions)
-        {
+        protected internal override void CalculatePermissions(int permissions) {
             permissions |= PERMS_MASK_1_FOR_REVISION_3_OR_GREATER;
             permissions &= PERMS_MASK_2;
             this.permissions = permissions;
         }
 
-        protected internal override byte[] ComputeOwnerKey(byte[] userPad, byte[] ownerPad)
-        {
+        protected internal override byte[] ComputeOwnerKey(byte[] userPad, byte[] ownerPad) {
             byte[] ownerKey = new byte[32];
             byte[] digest = md5.Digest(ownerPad);
             byte[] mkey = new byte[keyLength / 8];
             // only use for the input as many bit as the key consists of
-            for (int k = 0; k < 50; ++k)
-            {
+            for (int k = 0; k < 50; ++k) {
                 md5.Update(digest, 0, mkey.Length);
                 System.Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
             }
             System.Array.Copy(userPad, 0, ownerKey, 0, 32);
-            for (int i = 0; i < 20; ++i)
-            {
-                for (int j = 0; j < mkey.Length; ++j)
-                {
+            for (int i = 0; i < 20; ++i) {
+                for (int j = 0; j < mkey.Length; ++j) {
                     mkey[j] = (byte)(digest[j] ^ i);
                 }
                 arcfour.PrepareARCFOURKey(mkey);
@@ -92,8 +83,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         }
 
         protected internal override void ComputeGlobalEncryptionKey(byte[] userPad, byte[] ownerKey, bool encryptMetadata
-            )
-        {
+            ) {
             mkey = new byte[keyLength / 8];
             // fixed by ujihara in order to follow PDF reference
             md5.Reset();
@@ -105,38 +95,31 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             ext[2] = (byte)(permissions >> 16);
             ext[3] = (byte)(permissions >> 24);
             md5.Update(ext, 0, 4);
-            if (documentId != null)
-            {
+            if (documentId != null) {
                 md5.Update(documentId);
             }
-            if (!encryptMetadata)
-            {
+            if (!encryptMetadata) {
                 md5.Update(metadataPad);
             }
             byte[] digest = new byte[mkey.Length];
             System.Array.Copy(md5.Digest(), 0, digest, 0, mkey.Length);
             // only use the really needed bits as input for the hash
-            for (int k = 0; k < 50; ++k)
-            {
+            for (int k = 0; k < 50; ++k) {
                 System.Array.Copy(md5.Digest(digest), 0, digest, 0, mkey.Length);
             }
             System.Array.Copy(digest, 0, mkey, 0, mkey.Length);
         }
 
-        protected internal override byte[] ComputeUserKey()
-        {
+        protected internal override byte[] ComputeUserKey() {
             byte[] userKey = new byte[32];
             md5.Update(pad);
             byte[] digest = md5.Digest(documentId);
             System.Array.Copy(digest, 0, userKey, 0, 16);
-            for (int k = 16; k < 32; ++k)
-            {
+            for (int k = 16; k < 32; ++k) {
                 userKey[k] = 0;
             }
-            for (int i = 0; i < 20; ++i)
-            {
-                for (int j = 0; j < mkey.Length; ++j)
-                {
+            for (int i = 0; i < 20; ++i) {
+                for (int j = 0; j < mkey.Length; ++j) {
                     digest[j] = (byte)(mkey[j] ^ i);
                 }
                 arcfour.PrepareARCFOURKey(digest, 0, mkey.Length);
@@ -146,29 +129,24 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         }
 
         protected internal override void SetSpecificHandlerDicEntries(PdfDictionary encryptionDictionary, bool encryptMetadata
-            , bool embeddedFilesOnly)
-        {
-            if (encryptMetadata)
-            {
+            , bool embeddedFilesOnly) {
+            if (encryptMetadata) {
                 encryptionDictionary.Put(PdfName.R, new PdfNumber(3));
                 encryptionDictionary.Put(PdfName.V, new PdfNumber(2));
             }
-            else
-            {
+            else {
                 encryptionDictionary.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
                 encryptionDictionary.Put(PdfName.R, new PdfNumber(4));
                 encryptionDictionary.Put(PdfName.V, new PdfNumber(4));
                 PdfDictionary stdcf = new PdfDictionary();
                 stdcf.Put(PdfName.Length, new PdfNumber(16));
-                if (embeddedFilesOnly)
-                {
+                if (embeddedFilesOnly) {
                     stdcf.Put(PdfName.AuthEvent, PdfName.EFOpen);
                     encryptionDictionary.Put(PdfName.EFF, PdfName.StdCF);
                     encryptionDictionary.Put(PdfName.StrF, PdfName.Identity);
                     encryptionDictionary.Put(PdfName.StmF, PdfName.Identity);
                 }
-                else
-                {
+                else {
                     stdcf.Put(PdfName.AuthEvent, PdfName.DocOpen);
                     encryptionDictionary.Put(PdfName.StrF, PdfName.StdCF);
                     encryptionDictionary.Put(PdfName.StmF, PdfName.StdCF);
@@ -180,8 +158,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             }
         }
 
-        protected internal override bool IsValidPassword(byte[] uValue, byte[] userKey)
-        {
+        protected internal override bool IsValidPassword(byte[] uValue, byte[] userKey) {
             return !EqualsArray(uValue, userKey, 16);
         }
     }

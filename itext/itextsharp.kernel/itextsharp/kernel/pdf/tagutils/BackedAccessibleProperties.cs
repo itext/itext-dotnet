@@ -47,63 +47,51 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils
-{
-    internal class BackedAccessibleProperties : AccessibilityProperties
-    {
+namespace iTextSharp.Kernel.Pdf.Tagutils {
+    internal class BackedAccessibleProperties : AccessibilityProperties {
         private PdfStructElem backingElem;
 
-        internal BackedAccessibleProperties(PdfStructElem backingElem)
-        {
+        internal BackedAccessibleProperties(PdfStructElem backingElem) {
             this.backingElem = backingElem;
         }
 
-        public override String GetLanguage()
-        {
+        public override String GetLanguage() {
             return backingElem.GetLang().GetValue();
         }
 
-        public override AccessibilityProperties SetLanguage(String language)
-        {
+        public override AccessibilityProperties SetLanguage(String language) {
             backingElem.SetLang(new PdfString(language));
             return this;
         }
 
-        public override String GetActualText()
-        {
+        public override String GetActualText() {
             return backingElem.GetActualText().GetValue();
         }
 
-        public override AccessibilityProperties SetActualText(String actualText)
-        {
+        public override AccessibilityProperties SetActualText(String actualText) {
             backingElem.SetActualText(new PdfString(actualText));
             return this;
         }
 
-        public override String GetAlternateDescription()
-        {
+        public override String GetAlternateDescription() {
             return backingElem.GetAlt().GetValue();
         }
 
-        public override AccessibilityProperties SetAlternateDescription(String alternateDescription)
-        {
+        public override AccessibilityProperties SetAlternateDescription(String alternateDescription) {
             backingElem.SetAlt(new PdfString(alternateDescription));
             return this;
         }
 
-        public override String GetExpansion()
-        {
+        public override String GetExpansion() {
             return backingElem.GetE().GetValue();
         }
 
-        public override AccessibilityProperties SetExpansion(String expansion)
-        {
+        public override AccessibilityProperties SetExpansion(String expansion) {
             backingElem.SetE(new PdfString(expansion));
             return this;
         }
 
-        public override AccessibilityProperties AddAttributes(PdfDictionary attributes)
-        {
+        public override AccessibilityProperties AddAttributes(PdfDictionary attributes) {
             PdfObject attributesObject = backingElem.GetAttributes(false);
             PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil.SingletonList(attributes
                 ), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
@@ -111,31 +99,23 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return this;
         }
 
-        public override AccessibilityProperties ClearAttributes()
-        {
+        public override AccessibilityProperties ClearAttributes() {
             backingElem.GetPdfObject().Remove(PdfName.A);
             return this;
         }
 
-        public override IList<PdfDictionary> GetAttributesList()
-        {
+        public override IList<PdfDictionary> GetAttributesList() {
             List<PdfDictionary> attributesList = new List<PdfDictionary>();
             PdfObject elemAttributesObj = backingElem.GetAttributes(false);
-            if (elemAttributesObj != null)
-            {
-                if (elemAttributesObj.IsDictionary())
-                {
+            if (elemAttributesObj != null) {
+                if (elemAttributesObj.IsDictionary()) {
                     attributesList.Add((PdfDictionary)elemAttributesObj);
                 }
-                else
-                {
-                    if (elemAttributesObj.IsArray())
-                    {
+                else {
+                    if (elemAttributesObj.IsArray()) {
                         PdfArray attributesArray = (PdfArray)elemAttributesObj;
-                        foreach (PdfObject attributeObj in attributesArray)
-                        {
-                            if (attributeObj.IsDictionary())
-                            {
+                        foreach (PdfObject attributeObj in attributesArray) {
+                            if (attributeObj.IsDictionary()) {
                                 attributesList.Add((PdfDictionary)attributeObj);
                             }
                         }
@@ -145,8 +125,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return attributesList;
         }
 
-        internal override void SetToStructElem(PdfStructElem elem)
-        {
+        internal override void SetToStructElem(PdfStructElem elem) {
         }
         // ignore, because all attributes are directly set to the structElem
     }

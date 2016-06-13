@@ -43,11 +43,9 @@
 * use in the design, construction, operation or maintenance of any
 * nuclear facility.
 */
-namespace iTextSharp.IO.Codec
-{
+namespace iTextSharp.IO.Codec {
     /// <summary>Class that can decode TIFF files.</summary>
-    public class TIFFFaxDecoder
-    {
+    public class TIFFFaxDecoder {
         private int bitPointer;
 
         private int bytePointer;
@@ -215,8 +213,7 @@ namespace iTextSharp.IO.Codec
         /// <param name="fillOrder">The fill order of the compressed data bytes.</param>
         /// <param name="w"/>
         /// <param name="h"/>
-        public TIFFFaxDecoder(int fillOrder, int w, int h)
-        {
+        public TIFFFaxDecoder(int fillOrder, int w, int h) {
             // Data structures needed to store changing elements for the previous
             // and the current scanline
             // Element at which to start search in getNextChangingElement
@@ -475,31 +472,26 @@ namespace iTextSharp.IO.Codec
 
         /// <summary>Reverses the bits in the array</summary>
         /// <param name="b">the bits to reverse</param>
-        public static void ReverseBits(byte[] b)
-        {
-            for (int k = 0; k < b.Length; ++k)
-            {
+        public static void ReverseBits(byte[] b) {
+            for (int k = 0; k < b.Length; ++k) {
                 b[k] = flipTable[b[k] & 0xff];
             }
         }
 
         // One-dimensional decoding methods
-        public virtual void Decode1D(byte[] buffer, byte[] compData, int startX, int height)
-        {
+        public virtual void Decode1D(byte[] buffer, byte[] compData, int startX, int height) {
             this.data = compData;
             int lineOffset = 0;
             int scanlineStride = (w + 7) / 8;
             bitPointer = 0;
             bytePointer = 0;
-            for (int i = 0; i < height; i++)
-            {
+            for (int i = 0; i < height; i++) {
                 DecodeNextScanline(buffer, lineOffset, startX);
                 lineOffset += scanlineStride;
             }
         }
 
-        public virtual void DecodeNextScanline(byte[] buffer, int lineOffset, int bitOffset)
-        {
+        public virtual void DecodeNextScanline(byte[] buffer, int lineOffset, int bitOffset) {
             int bits;
             int code;
             int isT;
@@ -510,18 +502,15 @@ namespace iTextSharp.IO.Codec
             // Initialize starting of the changing elements array
             changingElemSize = 0;
             // While scanline not complete
-            while (bitOffset < w)
-            {
-                while (isWhite)
-                {
+            while (bitOffset < w) {
+                while (isWhite) {
                     // White run
                     current = NextNBits(10);
                     entry = white[current];
                     // Get the 3 fields from the entry
                     isT = entry & 0x0001;
                     bits = ((int)(((uint)entry) >> 1)) & 0x0f;
-                    if (bits == 12)
-                    {
+                    if (bits == 12) {
                         // Additional Make up code
                         // Get the next 2 bits
                         twoBits = NextLesserThan8Bits(2);
@@ -536,28 +525,22 @@ namespace iTextSharp.IO.Codec
                         // Skip white run
                         UpdatePointer(4 - bits);
                     }
-                    else
-                    {
-                        if (bits == 0)
-                        {
+                    else {
+                        if (bits == 0) {
                             // ERROR
                             throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncountered);
                         }
-                        else
-                        {
-                            if (bits == 15)
-                            {
+                        else {
+                            if (bits == 15) {
                                 // EOL
                                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInWhiteRun);
                             }
-                            else
-                            {
+                            else {
                                 // 11 bits - 0000 0111 1111 1111 = 0x07ff
                                 code = ((int)(((uint)entry) >> 5)) & 0x07ff;
                                 bitOffset += code;
                                 UpdatePointer(10 - bits);
-                                if (isT == 0)
-                                {
+                                if (isT == 0) {
                                     isWhite = false;
                                     currChangingElems[changingElemSize++] = bitOffset;
                                 }
@@ -567,32 +550,27 @@ namespace iTextSharp.IO.Codec
                 }
                 // Check whether this run completed one width, if so
                 // advance to next byte boundary for compression = 2.
-                if (bitOffset == w)
-                {
-                    if (compression == 2)
-                    {
+                if (bitOffset == w) {
+                    if (compression == 2) {
                         AdvancePointer();
                     }
                     break;
                 }
-                while (!isWhite)
-                {
+                while (!isWhite) {
                     // Black run
                     current = NextLesserThan8Bits(4);
                     entry = initBlack[current];
                     // Get the 3 fields from the entry
                     bits = ((int)(((uint)entry) >> 1)) & 0x000f;
                     code = ((int)(((uint)entry) >> 5)) & 0x07ff;
-                    if (code == 100)
-                    {
+                    if (code == 100) {
                         current = NextNBits(9);
                         entry = black[current];
                         // Get the 3 fields from the entry
                         isT = entry & 0x0001;
                         bits = ((int)(((uint)entry) >> 1)) & 0x000f;
                         code = ((int)(((uint)entry) >> 5)) & 0x07ff;
-                        if (bits == 12)
-                        {
+                        if (bits == 12) {
                             // Additional makeup codes
                             UpdatePointer(5);
                             current = NextLesserThan8Bits(4);
@@ -605,30 +583,24 @@ namespace iTextSharp.IO.Codec
                             bitOffset += code;
                             UpdatePointer(4 - bits);
                         }
-                        else
-                        {
-                            if (bits == 15)
-                            {
+                        else {
+                            if (bits == 15) {
                                 // EOL code
                                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInWhiteRun);
                             }
-                            else
-                            {
+                            else {
                                 SetToBlack(buffer, lineOffset, bitOffset, code);
                                 bitOffset += code;
                                 UpdatePointer(9 - bits);
-                                if (isT == 0)
-                                {
+                                if (isT == 0) {
                                     isWhite = true;
                                     currChangingElems[changingElemSize++] = bitOffset;
                                 }
                             }
                         }
                     }
-                    else
-                    {
-                        if (code == 200)
-                        {
+                    else {
+                        if (code == 200) {
                             // Is a Terminating code
                             current = NextLesserThan8Bits(2);
                             entry = twoBitBlack[current];
@@ -640,8 +612,7 @@ namespace iTextSharp.IO.Codec
                             isWhite = true;
                             currChangingElems[changingElemSize++] = bitOffset;
                         }
-                        else
-                        {
+                        else {
                             // Is a Terminating code
                             SetToBlack(buffer, lineOffset, bitOffset, code);
                             bitOffset += code;
@@ -652,10 +623,8 @@ namespace iTextSharp.IO.Codec
                     }
                 }
                 // Check whether this run completed one width
-                if (bitOffset == w)
-                {
-                    if (compression == 2)
-                    {
+                if (bitOffset == w) {
+                    if (compression == 2) {
                         AdvancePointer();
                     }
                     break;
@@ -665,8 +634,7 @@ namespace iTextSharp.IO.Codec
         }
 
         // Two-dimensional decoding methods
-        public virtual void Decode2D(byte[] buffer, byte[] compData, int startX, int height, long tiffT4Options)
-        {
+        public virtual void Decode2D(byte[] buffer, byte[] compData, int startX, int height, long tiffT4Options) {
             this.data = compData;
             compression = 3;
             bitPointer = 0;
@@ -690,8 +658,7 @@ namespace iTextSharp.IO.Codec
             uncompressedMode = (int)((tiffT4Options & 0x02) >> 1);
             fillBits = (int)((tiffT4Options & 0x04) >> 2);
             // The data must start with an EOL code
-            if (ReadEOL(true) != 1)
-            {
+            if (ReadEOL(true) != 1) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FirstScanlineMustBe1dEncoded);
             }
             int lineOffset = 0;
@@ -700,12 +667,10 @@ namespace iTextSharp.IO.Codec
             // array gets set.
             DecodeNextScanline(buffer, lineOffset, startX);
             lineOffset += scanlineStride;
-            for (int lines = 1; lines < height; lines++)
-            {
+            for (int lines = 1; lines < height; lines++) {
                 // Every line must begin with an EOL followed by a bit which
                 // indicates whether the following scanline is 1D or 2D encoded.
-                if (ReadEOL(false) == 0)
-                {
+                if (ReadEOL(false) == 0) {
                     // 2D encoded scanline follows
                     // Initialize previous scanlines changing elements, and
                     // initialize current scanline's changing elements array
@@ -718,8 +683,7 @@ namespace iTextSharp.IO.Codec
                     isWhite = true;
                     bitOffset = startX;
                     lastChangingElement = 0;
-                    while (bitOffset < w)
-                    {
+                    while (bitOffset < w) {
                         // Get the next changing element
                         GetNextChangingElement(a0, isWhite, b);
                         b1 = b[0];
@@ -731,26 +695,21 @@ namespace iTextSharp.IO.Codec
                         // Get the code and the number of bits used up
                         code = (int)(((uint)(entry & 0x78)) >> 3);
                         bits = entry & 0x07;
-                        if (code == 0)
-                        {
-                            if (!isWhite)
-                            {
+                        if (code == 0) {
+                            if (!isWhite) {
                                 SetToBlack(buffer, lineOffset, bitOffset, b2 - bitOffset);
                             }
                             bitOffset = a0 = b2;
                             // Set pointer to consume the correct number of bits.
                             UpdatePointer(7 - bits);
                         }
-                        else
-                        {
-                            if (code == 1)
-                            {
+                        else {
+                            if (code == 1) {
                                 // Horizontal
                                 UpdatePointer(7 - bits);
                                 // identify the next 2 codes.
                                 int number;
-                                if (isWhite)
-                                {
+                                if (isWhite) {
                                     number = DecodeWhiteCodeWord();
                                     bitOffset += number;
                                     currChangingElems[currIndex++] = bitOffset;
@@ -759,8 +718,7 @@ namespace iTextSharp.IO.Codec
                                     bitOffset += number;
                                     currChangingElems[currIndex++] = bitOffset;
                                 }
-                                else
-                                {
+                                else {
                                     number = DecodeBlackCodeWord();
                                     SetToBlack(buffer, lineOffset, bitOffset, number);
                                     bitOffset += number;
@@ -771,25 +729,21 @@ namespace iTextSharp.IO.Codec
                                 }
                                 a0 = bitOffset;
                             }
-                            else
-                            {
-                                if (code <= 8)
-                                {
+                            else {
+                                if (code <= 8) {
                                     // Vertical
                                     a1 = b1 + (code - 5);
                                     currChangingElems[currIndex++] = a1;
                                     // We write the current color till a1 - 1 pos,
                                     // since a1 is where the next color starts
-                                    if (!isWhite)
-                                    {
+                                    if (!isWhite) {
                                         SetToBlack(buffer, lineOffset, bitOffset, a1 - bitOffset);
                                     }
                                     bitOffset = a0 = a1;
                                     isWhite = !isWhite;
                                     UpdatePointer(7 - bits);
                                 }
-                                else
-                                {
+                                else {
                                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData
                                         );
                                 }
@@ -801,8 +755,7 @@ namespace iTextSharp.IO.Codec
                     currChangingElems[currIndex++] = bitOffset;
                     changingElemSize = currIndex;
                 }
-                else
-                {
+                else {
                     // 1D encoded scanline follows
                     DecodeNextScanline(buffer, lineOffset, startX);
                 }
@@ -810,8 +763,7 @@ namespace iTextSharp.IO.Codec
             }
         }
 
-        public virtual void DecodeT6(byte[] buffer, byte[] compData, int startX, int height, long tiffT6Options)
-        {
+        public virtual void DecodeT6(byte[] buffer, byte[] compData, int startX, int height, long tiffT6Options) {
             this.data = compData;
             compression = 4;
             bitPointer = 0;
@@ -842,8 +794,7 @@ namespace iTextSharp.IO.Codec
             cce[changingElemSize++] = w;
             int lineOffset = 0;
             int bitOffset;
-            for (int lines = 0; lines < height; lines++)
-            {
+            for (int lines = 0; lines < height; lines++) {
                 // a0 has to be set just before the start of the scanline.
                 a0 = -1;
                 isWhite = true;
@@ -859,8 +810,7 @@ namespace iTextSharp.IO.Codec
                 // Reset search start position for getNextChangingElement
                 lastChangingElement = 0;
                 // Till one whole scanline is decoded
-                while (bitOffset < w && bytePointer < data.Length)
-                {
+                while (bitOffset < w && bytePointer < data.Length) {
                     // Get the next changing element
                     GetNextChangingElement(a0, isWhite, b);
                     b1 = b[0];
@@ -872,29 +822,24 @@ namespace iTextSharp.IO.Codec
                     // Get the code and the number of bits used up
                     code = (int)(((uint)(entry & 0x78)) >> 3);
                     bits = entry & 0x07;
-                    if (code == 0)
-                    {
+                    if (code == 0) {
                         // Pass
                         // We always assume WhiteIsZero format for fax.
-                        if (!isWhite)
-                        {
+                        if (!isWhite) {
                             SetToBlack(buffer, lineOffset, bitOffset, b2 - bitOffset);
                         }
                         bitOffset = a0 = b2;
                         // Set pointer to only consume the correct number of bits.
                         UpdatePointer(7 - bits);
                     }
-                    else
-                    {
-                        if (code == 1)
-                        {
+                    else {
+                        if (code == 1) {
                             // Horizontal
                             // Set pointer to only consume the correct number of bits.
                             UpdatePointer(7 - bits);
                             // identify the next 2 alternating color codes.
                             int number;
-                            if (isWhite)
-                            {
+                            if (isWhite) {
                                 // Following are white and black runs
                                 number = DecodeWhiteCodeWord();
                                 bitOffset += number;
@@ -904,8 +849,7 @@ namespace iTextSharp.IO.Codec
                                 bitOffset += number;
                                 cce[currIndex++] = bitOffset;
                             }
-                            else
-                            {
+                            else {
                                 // First a black run and then a white run follows
                                 number = DecodeBlackCodeWord();
                                 SetToBlack(buffer, lineOffset, bitOffset, number);
@@ -917,88 +861,70 @@ namespace iTextSharp.IO.Codec
                             }
                             a0 = bitOffset;
                         }
-                        else
-                        {
-                            if (code <= 8)
-                            {
+                        else {
+                            if (code <= 8) {
                                 // Vertical
                                 a1 = b1 + (code - 5);
                                 cce[currIndex++] = a1;
                                 // We write the current color till a1 - 1 pos,
                                 // since a1 is where the next color starts
-                                if (!isWhite)
-                                {
+                                if (!isWhite) {
                                     SetToBlack(buffer, lineOffset, bitOffset, a1 - bitOffset);
                                 }
                                 bitOffset = a0 = a1;
                                 isWhite = !isWhite;
                                 UpdatePointer(7 - bits);
                             }
-                            else
-                            {
-                                if (code == 11)
-                                {
-                                    if (NextLesserThan8Bits(3) != 7)
-                                    {
+                            else {
+                                if (code == 11) {
+                                    if (NextLesserThan8Bits(3) != 7) {
                                         throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData
                                             );
                                     }
                                     int zeros = 0;
                                     bool exit = false;
-                                    while (!exit)
-                                    {
-                                        while (NextLesserThan8Bits(1) != 1)
-                                        {
+                                    while (!exit) {
+                                        while (NextLesserThan8Bits(1) != 1) {
                                             zeros++;
                                         }
-                                        if (zeros > 5)
-                                        {
+                                        if (zeros > 5) {
                                             // Exit code
                                             // Zeros before exit code
                                             zeros = zeros - 6;
-                                            if (!isWhite && (zeros > 0))
-                                            {
+                                            if (!isWhite && (zeros > 0)) {
                                                 cce[currIndex++] = bitOffset;
                                             }
                                             // Zeros before the exit code
                                             bitOffset += zeros;
-                                            if (zeros > 0)
-                                            {
+                                            if (zeros > 0) {
                                                 // Some zeros have been written
                                                 isWhite = true;
                                             }
                                             // Read in the bit which specifies the color of
                                             // the following run
-                                            if (NextLesserThan8Bits(1) == 0)
-                                            {
-                                                if (!isWhite)
-                                                {
+                                            if (NextLesserThan8Bits(1) == 0) {
+                                                if (!isWhite) {
                                                     cce[currIndex++] = bitOffset;
                                                 }
                                                 isWhite = true;
                                             }
-                                            else
-                                            {
-                                                if (isWhite)
-                                                {
+                                            else {
+                                                if (isWhite) {
                                                     cce[currIndex++] = bitOffset;
                                                 }
                                                 isWhite = false;
                                             }
                                             exit = true;
                                         }
-                                        if (zeros == 5)
-                                        {
-                                            if (!isWhite)
-                                            {
+                                        if (zeros == 5) {
+                                            if (!isWhite) {
                                                 cce[currIndex++] = bitOffset;
                                             }
                                             bitOffset += zeros;
                                             // Last thing written was white
                                             isWhite = true;
                                         }
-                                        else
-                                        {
+                                        else {
                                             bitOffset += zeros;
                                             cce[currIndex++] = bitOffset;
                                             SetToBlack(buffer, lineOffset, bitOffset, 1);
@@ -1008,8 +934,7 @@ namespace iTextSharp.IO.Codec
                                         }
                                     }
                                 }
-                                else
-                                {
+                                else {
                                     //micah_tessler@yahoo.com
                                     //Microsoft TIFF renderers seem to treat unknown codes as line-breaks
                                     //That is, they give up on the current line and move on to the next one
@@ -1027,8 +952,7 @@ escape_break: ;
                 // Add the changing element beyond the current scanline for the
                 // other color too
                 //make sure that the index does not exceed the bounds of the array
-                if (currIndex < cce.Length)
-                {
+                if (currIndex < cce.Length) {
                     cce[currIndex++] = bitOffset;
                 }
                 // Number of changing elements in this scanline.
@@ -1037,19 +961,16 @@ escape_break: ;
             }
         }
 
-        private void SetToBlack(byte[] buffer, int lineOffset, int bitOffset, int numBits)
-        {
+        private void SetToBlack(byte[] buffer, int lineOffset, int bitOffset, int numBits) {
             int bitNum = 8 * lineOffset + bitOffset;
             int lastBit = bitNum + numBits;
             int byteNum = bitNum >> 3;
             // Handle bits in first byte
             int shift = bitNum & 0x7;
-            if (shift > 0)
-            {
+            if (shift > 0) {
                 int maskVal = 1 << (7 - shift);
                 byte val = buffer[byteNum];
-                while (maskVal > 0 && bitNum < lastBit)
-                {
+                while (maskVal > 0 && bitNum < lastBit) {
                     val |= (byte)maskVal;
                     maskVal >>= 1;
                     ++bitNum;
@@ -1058,20 +979,16 @@ escape_break: ;
             }
             // Fill in 8 bits at a time
             byteNum = bitNum >> 3;
-            while (bitNum < lastBit - 7)
-            {
+            while (bitNum < lastBit - 7) {
                 buffer[byteNum++] = (byte)255;
                 bitNum += 8;
             }
             // Fill in remaining bits
-            while (bitNum < lastBit)
-            {
+            while (bitNum < lastBit) {
                 byteNum = bitNum >> 3;
-                if (recoverFromImageError && !(byteNum < buffer.Length))
-                {
+                if (recoverFromImageError && !(byteNum < buffer.Length)) {
                 }
-                else
-                {
+                else {
                     // do nothing
                     buffer[byteNum] |= (byte)(1 << (7 - (bitNum & 0x7)));
                 }
@@ -1080,8 +997,7 @@ escape_break: ;
         }
 
         // Returns run length
-        private int DecodeWhiteCodeWord()
-        {
+        private int DecodeWhiteCodeWord() {
             int current;
             int entry;
             int bits;
@@ -1090,15 +1006,13 @@ escape_break: ;
             int code = -1;
             int runLength = 0;
             bool isWhite = true;
-            while (isWhite)
-            {
+            while (isWhite) {
                 current = NextNBits(10);
                 entry = white[current];
                 // Get the 3 fields from the entry
                 isT = entry & 0x0001;
                 bits = ((int)(((uint)entry) >> 1)) & 0x0f;
-                if (bits == 12)
-                {
+                if (bits == 12) {
                     // Additional Make up code
                     // Get the next 2 bits
                     twoBits = NextLesserThan8Bits(2);
@@ -1112,35 +1026,27 @@ escape_break: ;
                     runLength += code;
                     UpdatePointer(4 - bits);
                 }
-                else
-                {
-                    if (bits == 0)
-                    {
+                else {
+                    if (bits == 0) {
                         // ERROR
                         throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidCodeEncountered);
                     }
-                    else
-                    {
-                        if (bits == 15)
-                        {
+                    else {
+                        if (bits == 15) {
                             // EOL
-                            if (runLength == 0)
-                            {
+                            if (runLength == 0) {
                                 isWhite = false;
                             }
-                            else
-                            {
+                            else {
                                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInWhiteRun);
                             }
                         }
-                        else
-                        {
+                        else {
                             // 11 bits - 0000 0111 1111 1111 = 0x07ff
                             code = ((int)(((uint)entry) >> 5)) & 0x07ff;
                             runLength += code;
                             UpdatePointer(10 - bits);
-                            if (isT == 0)
-                            {
+                            if (isT == 0) {
                                 isWhite = false;
                             }
                         }
@@ -1151,8 +1057,7 @@ escape_break: ;
         }
 
         // Returns run length
-        private int DecodeBlackCodeWord()
-        {
+        private int DecodeBlackCodeWord() {
             int current;
             int entry;
             int bits;
@@ -1160,24 +1065,21 @@ escape_break: ;
             int code = -1;
             int runLength = 0;
             bool isWhite = false;
-            while (!isWhite)
-            {
+            while (!isWhite) {
                 current = NextLesserThan8Bits(4);
                 entry = initBlack[current];
                 // Get the 3 fields from the entry
                 isT = entry & 0x0001;
                 bits = ((int)(((uint)entry) >> 1)) & 0x000f;
                 code = ((int)(((uint)entry) >> 5)) & 0x07ff;
-                if (code == 100)
-                {
+                if (code == 100) {
                     current = NextNBits(9);
                     entry = black[current];
                     // Get the 3 fields from the entry
                     isT = entry & 0x0001;
                     bits = ((int)(((uint)entry) >> 1)) & 0x000f;
                     code = ((int)(((uint)entry) >> 5)) & 0x07ff;
-                    if (bits == 12)
-                    {
+                    if (bits == 12) {
                         // Additional makeup codes
                         UpdatePointer(5);
                         current = NextLesserThan8Bits(4);
@@ -1189,28 +1091,22 @@ escape_break: ;
                         runLength += code;
                         UpdatePointer(4 - bits);
                     }
-                    else
-                    {
-                        if (bits == 15)
-                        {
+                    else {
+                        if (bits == 15) {
                             // EOL code
                             throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.EolCodeWordEncounteredInBlackRun);
                         }
-                        else
-                        {
+                        else {
                             runLength += code;
                             UpdatePointer(9 - bits);
-                            if (isT == 0)
-                            {
+                            if (isT == 0) {
                                 isWhite = true;
                             }
                         }
                     }
                 }
-                else
-                {
-                    if (code == 200)
-                    {
+                else {
+                    if (code == 200) {
                         // Is a Terminating code
                         current = NextLesserThan8Bits(2);
                         entry = twoBitBlack[current];
@@ -1220,8 +1116,7 @@ escape_break: ;
                         UpdatePointer(2 - bits);
                         isWhite = true;
                     }
-                    else
-                    {
+                    else {
                         // Is a Terminating code
                         runLength += code;
                         UpdatePointer(4 - bits);
@@ -1232,49 +1127,39 @@ escape_break: ;
             return runLength;
         }
 
-        private int ReadEOL(bool isFirstEOL)
-        {
-            if (fillBits == 0)
-            {
+        private int ReadEOL(bool isFirstEOL) {
+            if (fillBits == 0) {
                 int next12Bits = NextNBits(12);
-                if (isFirstEOL && next12Bits == 0)
-                {
+                if (isFirstEOL && next12Bits == 0) {
                     // Might have the case of EOL padding being used even
                     // though it was not flagged in the T4Options field.
                     // This was observed to be the case in TIFFs produced
                     // by a well known vendor who shall remain nameless.
-                    if (NextNBits(4) == 1)
-                    {
+                    if (NextNBits(4) == 1) {
                         // EOL must be padded: reset the fillBits flag.
                         fillBits = 1;
                         return 1;
                     }
                 }
-                if (next12Bits != 1)
-                {
+                if (next12Bits != 1) {
                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ScanlineMustBeginWithEolCodeWord);
                 }
             }
-            else
-            {
-                if (fillBits == 1)
-                {
+            else {
+                if (fillBits == 1) {
                     // First EOL code word xxxx 0000 0000 0001 will occur
                     // As many fill bits will be present as required to make
                     // the EOL code of 12 bits end on a byte boundary.
                     int bitsLeft = 8 - bitPointer;
-                    if (NextNBits(bitsLeft) != 0)
-                    {
+                    if (NextNBits(bitsLeft) != 0) {
                         throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0);
                     }
                     // If the number of bitsLeft is less than 8, then to have a 12
                     // bit EOL sequence, two more bytes are certainly going to be
                     // required. The first of them has to be all zeros, so ensure
                     // that.
-                    if (bitsLeft < 4)
-                    {
-                        if (NextNBits(8) != 0)
-                        {
+                    if (bitsLeft < 4) {
+                        if (NextNBits(8) != 0) {
                             throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0);
                         }
                     }
@@ -1282,31 +1167,26 @@ escape_break: ;
                     // loop till the EOL of 0000 0001 is found, as long as all
                     // the bytes preceding it are 0's.
                     int n;
-                    while ((n = NextNBits(8)) != 1)
-                    {
+                    while ((n = NextNBits(8)) != 1) {
                         // If not all zeros
-                        if (n != 0)
-                        {
+                        if (n != 0) {
                             throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.AllFillBitsPrecedingEolCodeMustBe0);
                         }
                     }
                 }
             }
             // If one dimensional encoding mode, then always return 1
-            if (oneD == 0)
-            {
+            if (oneD == 0) {
                 return 1;
             }
-            else
-            {
+            else {
                 // Otherwise for 2D encoding mode,
                 // The next one bit signifies 1D/2D encoding of next line.
                 return NextLesserThan8Bits(1);
             }
         }
 
-        private void GetNextChangingElement(int a0, bool isWhite, int[] ret)
-        {
+        private void GetNextChangingElement(int a0, bool isWhite, int[] ret) {
             // Local copies of instance variables
             int[] pce = this.prevChangingElems;
             int ces = this.changingElemSize;
@@ -1314,96 +1194,77 @@ escape_break: ;
             // have to search the preceeding element.
             // int start = lastChangingElement & ~0x1;
             int start = lastChangingElement > 0 ? lastChangingElement - 1 : 0;
-            if (isWhite)
-            {
+            if (isWhite) {
                 start &= ~0x1;
             }
-            else
-            {
+            else {
                 // Search even numbered elements
                 start |= 0x1;
             }
             // Search odd numbered elements
             int i = start;
-            for (; i < ces; i += 2)
-            {
+            for (; i < ces; i += 2) {
                 int temp = pce[i];
-                if (temp > a0)
-                {
+                if (temp > a0) {
                     lastChangingElement = i;
                     ret[0] = temp;
                     break;
                 }
             }
-            if (i + 1 < ces)
-            {
+            if (i + 1 < ces) {
                 ret[1] = pce[i + 1];
             }
         }
 
-        private int NextNBits(int bitsToGet)
-        {
+        private int NextNBits(int bitsToGet) {
             byte b;
             byte next;
             byte next2next;
             int l = data.Length - 1;
             int bp = this.bytePointer;
-            if (fillOrder == 1)
-            {
+            if (fillOrder == 1) {
                 b = data[bp];
-                if (bp == l)
-                {
+                if (bp == l) {
                     next = 0x00;
                     next2next = 0x00;
                 }
-                else
-                {
-                    if ((bp + 1) == l)
-                    {
+                else {
+                    if ((bp + 1) == l) {
                         next = data[bp + 1];
                         next2next = 0x00;
                     }
-                    else
-                    {
+                    else {
                         next = data[bp + 1];
                         next2next = data[bp + 2];
                     }
                 }
             }
-            else
-            {
-                if (fillOrder == 2)
-                {
+            else {
+                if (fillOrder == 2) {
                     b = flipTable[data[bp] & 0xff];
-                    if (bp == l)
-                    {
+                    if (bp == l) {
                         next = 0x00;
                         next2next = 0x00;
                     }
-                    else
-                    {
-                        if ((bp + 1) == l)
-                        {
+                    else {
+                        if ((bp + 1) == l) {
                             next = flipTable[data[bp + 1] & 0xff];
                             next2next = 0x00;
                         }
-                        else
-                        {
+                        else {
                             next = flipTable[data[bp + 1] & 0xff];
                             next2next = flipTable[data[bp + 2] & 0xff];
                         }
                     }
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffFillOrderTagMustBeEither1Or2);
                 }
             }
             int bitsLeft = 8 - bitPointer;
             int bitsFromNextByte = bitsToGet - bitsLeft;
             int bitsFromNext2NextByte = 0;
-            if (bitsFromNextByte > 8)
-            {
+            if (bitsFromNextByte > 8) {
                 bitsFromNext2NextByte = bitsFromNextByte - 8;
                 bitsFromNextByte = 8;
             }
@@ -1411,70 +1272,55 @@ escape_break: ;
             int i1 = (b & table1[bitsLeft]) << (bitsToGet - bitsLeft);
             int i2 = (int)(((uint)(next & table2[bitsFromNextByte])) >> (8 - bitsFromNextByte));
             int i3;
-            if (bitsFromNext2NextByte != 0)
-            {
+            if (bitsFromNext2NextByte != 0) {
                 i2 <<= bitsFromNext2NextByte;
                 i3 = (int)(((uint)(next2next & table2[bitsFromNext2NextByte])) >> (8 - bitsFromNext2NextByte));
                 i2 |= i3;
                 bytePointer++;
                 bitPointer = bitsFromNext2NextByte;
             }
-            else
-            {
-                if (bitsFromNextByte == 8)
-                {
+            else {
+                if (bitsFromNextByte == 8) {
                     bitPointer = 0;
                     bytePointer++;
                 }
-                else
-                {
+                else {
                     bitPointer = bitsFromNextByte;
                 }
             }
             return i1 | i2;
         }
 
-        private int NextLesserThan8Bits(int bitsToGet)
-        {
+        private int NextLesserThan8Bits(int bitsToGet) {
             byte b = 0;
             byte next = 0;
             int l = data.Length - 1;
             int bp = this.bytePointer;
-            if (fillOrder == 1)
-            {
+            if (fillOrder == 1) {
                 b = data[bp];
-                if (bp == l)
-                {
+                if (bp == l) {
                     next = 0x00;
                 }
-                else
-                {
+                else {
                     next = data[bp + 1];
                 }
             }
-            else
-            {
-                if (fillOrder == 2)
-                {
-                    if (recoverFromImageError && !(bp < data.Length))
-                    {
+            else {
+                if (fillOrder == 2) {
+                    if (recoverFromImageError && !(bp < data.Length)) {
                     }
-                    else
-                    {
+                    else {
                         // do nothing
                         b = flipTable[data[bp] & 0xff];
-                        if (bp == l)
-                        {
+                        if (bp == l) {
                             next = 0x00;
                         }
-                        else
-                        {
+                        else {
                             next = flipTable[data[bp + 1] & 0xff];
                         }
                     }
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffFillOrderTagMustBeEither1Or2);
                 }
             }
@@ -1483,18 +1329,15 @@ escape_break: ;
             int shift = bitsLeft - bitsToGet;
             int i1;
             int i2;
-            if (shift >= 0)
-            {
+            if (shift >= 0) {
                 i1 = (int)(((uint)(b & table1[bitsLeft])) >> shift);
                 bitPointer += bitsToGet;
-                if (bitPointer == 8)
-                {
+                if (bitPointer == 8) {
                     bitPointer = 0;
                     bytePointer++;
                 }
             }
-            else
-            {
+            else {
                 i1 = (b & table1[bitsLeft]) << (-shift);
                 i2 = (int)(((uint)(next & table2[bitsFromNextByte])) >> (8 - bitsFromNextByte));
                 i1 |= i2;
@@ -1505,33 +1348,27 @@ escape_break: ;
         }
 
         // Move pointer backwards by given amount of bits
-        private void UpdatePointer(int bitsToMoveBack)
-        {
+        private void UpdatePointer(int bitsToMoveBack) {
             int i = bitPointer - bitsToMoveBack;
-            if (i < 0)
-            {
+            if (i < 0) {
                 bytePointer--;
                 bitPointer = 8 + i;
             }
-            else
-            {
+            else {
                 bitPointer = i;
             }
         }
 
         // Move to the next byte boundary
-        private bool AdvancePointer()
-        {
-            if (bitPointer != 0)
-            {
+        private bool AdvancePointer() {
+            if (bitPointer != 0) {
                 bytePointer++;
                 bitPointer = 0;
             }
             return true;
         }
 
-        public virtual void SetRecoverFromImageError(bool recoverFromImageError)
-        {
+        public virtual void SetRecoverFromImageError(bool recoverFromImageError) {
             this.recoverFromImageError = recoverFromImageError;
         }
     }

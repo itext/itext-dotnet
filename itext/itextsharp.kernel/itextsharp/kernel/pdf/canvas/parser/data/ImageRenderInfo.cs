@@ -45,11 +45,9 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Represents image data from a PDF</summary>
-    public class ImageRenderInfo : IEventData
-    {
+    public class ImageRenderInfo : IEventData {
         /// <summary>The coordinate transformation matrix that was in effect when the image was rendered</summary>
         private Matrix ctm;
 
@@ -67,8 +65,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <param name="colorSpaceDictionary">the color space dictionary from resources which are associated with the image
         ///     </param>
         /// <param name="isInline">defines if the encountered image was inline</param>
-        public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary, bool isInline)
-        {
+        public ImageRenderInfo(Matrix ctm, PdfStream stream, PdfDictionary colorSpaceDictionary, bool isInline) {
             this.ctm = ctm;
             this.image = new PdfImageXObject(stream);
             this.colorSpaceDictionary = colorSpaceDictionary;
@@ -94,40 +91,34 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// ;</li>
         /// </ul>
         /// </remarks>
-        public virtual PdfImageXObject GetImage()
-        {
+        public virtual PdfImageXObject GetImage() {
             return image;
         }
 
         /// <returns>a vector in User space representing the start point of the image</returns>
-        public virtual Vector GetStartPoint()
-        {
+        public virtual Vector GetStartPoint() {
             return new Vector(0, 0, 1).Cross(ctm);
         }
 
         /// <returns>The coordinate transformation matrix which was active when this image was rendered. Coordinates are in User space.
         ///     </returns>
-        public virtual Matrix GetImageCtm()
-        {
+        public virtual Matrix GetImageCtm() {
             return ctm;
         }
 
         /// <returns>the size of the image, in User space units</returns>
-        public virtual float GetArea()
-        {
+        public virtual float GetArea() {
             // the image space area is 1, so we multiply that by the determinant of the CTM to get the transformed area
             return ctm.GetDeterminant();
         }
 
         /// <returns>true if image was inlined in original stream.</returns>
-        public virtual bool IsInline()
-        {
+        public virtual bool IsInline() {
             return isInline;
         }
 
         /// <returns>the color space dictionary from resources which are associated with the image</returns>
-        public virtual PdfDictionary GetColorSpaceDictionary()
-        {
+        public virtual PdfDictionary GetColorSpaceDictionary() {
             return colorSpaceDictionary;
         }
     }

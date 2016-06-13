@@ -9,34 +9,29 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class TextWritingTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class TextWritingTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TextWritingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/TextWritingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextRiseTest01()
-        {
+        public virtual void TextRiseTest01() {
             // CountryChunks example
             String outFileName = destinationFolder + "textRiseTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textRiseTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
-            for (int i = 0; i < 10; i++)
-            {
+            for (int i = 0; i < 10; i++) {
                 Paragraph p = new Paragraph().Add("country").Add(" ");
                 Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(iTextSharp.Kernel.Color.Color
                     .WHITE).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLACK, 0, 0, 0, 0);
@@ -51,8 +46,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextRenderingModeTest01()
-        {
+        public virtual void TextRenderingModeTest01() {
             String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textRenderingModeTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -75,8 +69,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void LeadingTest01()
-        {
+        public virtual void LeadingTest01() {
             String outFileName = destinationFolder + "leadingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_leadingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -96,8 +89,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FirstLineIndentTest01()
-        {
+        public virtual void FirstLineIndentTest01() {
             String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -133,8 +125,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CharSpacingTest01()
-        {
+        public virtual void CharSpacingTest01() {
             String outFileName = destinationFolder + "charSpacingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_charSpacingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -157,8 +148,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void WordSpacingTest01()
-        {
+        public virtual void WordSpacingTest01() {
             String outFileName = destinationFolder + "wordSpacingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSpacingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -182,8 +172,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FontStyleSimulationTest01()
-        {
+        public virtual void FontStyleSimulationTest01() {
             String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fontStyleSimulationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));

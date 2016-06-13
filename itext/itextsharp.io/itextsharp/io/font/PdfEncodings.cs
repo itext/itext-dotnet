@@ -45,10 +45,8 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class PdfEncodings
-    {
+namespace iTextSharp.IO.Font {
+    public class PdfEncodings {
         /// <summary>The Unicode encoding with horizontal writing.</summary>
         public const String IDENTITY_H = "Identity-H";
 
@@ -174,22 +172,17 @@ namespace iTextSharp.IO.Font
         private static readonly IDictionary<String, IExtraEncoding> extraEncodings = new Dictionary<String, IExtraEncoding
             >();
 
-        static PdfEncodings()
-        {
+        static PdfEncodings() {
             //-Encodings--------------------------------------------------------------------------------------------------------
-            for (int k = 128; k < 161; ++k)
-            {
+            for (int k = 128; k < 161; ++k) {
                 char c = winansiByteToChar[k];
-                if (c != 65533)
-                {
+                if (c != 65533) {
                     winansi.Put((int)c, k);
                 }
             }
-            for (int k_1 = 128; k_1 < 161; ++k_1)
-            {
+            for (int k_1 = 128; k_1 < 161; ++k_1) {
                 char c = pdfEncodingByteToChar[k_1];
-                if (c != 65533)
-                {
+                if (c != 65533) {
                     pdfEncoding.Put((int)c, k_1);
                 }
             }
@@ -219,81 +212,64 @@ namespace iTextSharp.IO.Font
         /// <c>byte</c>
         /// representing the conversion according to the font's encoding
         /// </returns>
-        public static byte[] ConvertToBytes(String text, String encoding)
-        {
-            if (text == null)
-            {
+        public static byte[] ConvertToBytes(String text, String encoding) {
+            if (text == null) {
                 return new byte[0];
             }
-            if (encoding == null || encoding.Length == 0)
-            {
+            if (encoding == null || encoding.Length == 0) {
                 int len = text.Length;
                 byte[] b = new byte[len];
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     b[k] = (byte)text[k];
                 }
                 return b;
             }
             IExtraEncoding extra = extraEncodings.Get(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
                 ));
-            if (extra != null)
-            {
+            if (extra != null) {
                 byte[] b = extra.CharToByte(text, encoding);
-                if (b != null)
-                {
+                if (b != null) {
                     return b;
                 }
             }
             IntHashtable hash = null;
-            if (encoding.Equals(WINANSI))
-            {
+            if (encoding.Equals(WINANSI)) {
                 hash = winansi;
             }
-            else
-            {
-                if (encoding.Equals(PDF_DOC_ENCODING))
-                {
+            else {
+                if (encoding.Equals(PDF_DOC_ENCODING)) {
                     hash = pdfEncoding;
                 }
             }
-            if (hash != null)
-            {
+            if (hash != null) {
                 char[] cc = text.ToCharArray();
                 int len = cc.Length;
                 int ptr = 0;
                 byte[] b = new byte[len];
                 int c;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     char ch = cc[k];
-                    if (ch < 128 || ch > 160 && ch <= 255)
-                    {
+                    if (ch < 128 || ch > 160 && ch <= 255) {
                         c = ch;
                     }
-                    else
-                    {
+                    else {
                         c = hash.Get((int)ch);
                     }
-                    if (c != 0)
-                    {
+                    if (c != 0) {
                         b[ptr++] = (byte)c;
                     }
                 }
-                if (ptr == len)
-                {
+                if (ptr == len) {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
                 System.Array.Copy(b, 0, b2, 0, ptr);
                 return b2;
             }
-            try
-            {
+            try {
                 return EncodingUtil.ConvertToBytes(text.ToCharArray(), encoding);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
             }
         }
@@ -317,50 +293,38 @@ namespace iTextSharp.IO.Font
         /// <c>byte</c>
         /// representing the conversion according to the font's encoding
         /// </returns>
-        public static byte[] ConvertToBytes(char ch, String encoding)
-        {
-            if (encoding == null || encoding.Length == 0)
-            {
+        public static byte[] ConvertToBytes(char ch, String encoding) {
+            if (encoding == null || encoding.Length == 0) {
                 return new byte[] { (byte)ch };
             }
             IntHashtable hash = null;
-            if (encoding.Equals(WINANSI))
-            {
+            if (encoding.Equals(WINANSI)) {
                 hash = winansi;
             }
-            else
-            {
-                if (encoding.Equals(PDF_DOC_ENCODING))
-                {
+            else {
+                if (encoding.Equals(PDF_DOC_ENCODING)) {
                     hash = pdfEncoding;
                 }
             }
-            if (hash != null)
-            {
+            if (hash != null) {
                 int c;
-                if (ch < 128 || ch > 160 && ch <= 255)
-                {
+                if (ch < 128 || ch > 160 && ch <= 255) {
                     c = ch;
                 }
-                else
-                {
+                else {
                     c = hash.Get((int)ch);
                 }
-                if (c != 0)
-                {
+                if (c != 0) {
                     return new byte[] { (byte)c };
                 }
-                else
-                {
+                else {
                     return new byte[0];
                 }
             }
-            try
-            {
+            try {
                 return EncodingUtil.ConvertToBytes(new char[] { ch }, encoding);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
             }
         }
@@ -379,59 +343,46 @@ namespace iTextSharp.IO.Font
         /// the converted
         /// <c>String</c>
         /// </returns>
-        public static String ConvertToString(byte[] bytes, String encoding)
-        {
-            if (bytes == null)
-            {
+        public static String ConvertToString(byte[] bytes, String encoding) {
+            if (bytes == null) {
                 return EMPTY_STRING;
             }
-            if (encoding == null || encoding.Length == 0)
-            {
+            if (encoding == null || encoding.Length == 0) {
                 char[] c = new char[bytes.Length];
-                for (int k = 0; k < bytes.Length; ++k)
-                {
+                for (int k = 0; k < bytes.Length; ++k) {
                     c[k] = (char)(bytes[k] & 0xff);
                 }
                 return new String(c);
             }
             IExtraEncoding extra = extraEncodings.Get(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
                 ));
-            if (extra != null)
-            {
+            if (extra != null) {
                 String text = extra.ByteToChar(bytes, encoding);
-                if (text != null)
-                {
+                if (text != null) {
                     return text;
                 }
             }
             char[] ch = null;
-            if (encoding.Equals(WINANSI))
-            {
+            if (encoding.Equals(WINANSI)) {
                 ch = winansiByteToChar;
             }
-            else
-            {
-                if (encoding.Equals(PDF_DOC_ENCODING))
-                {
+            else {
+                if (encoding.Equals(PDF_DOC_ENCODING)) {
                     ch = pdfEncodingByteToChar;
                 }
             }
-            if (ch != null)
-            {
+            if (ch != null) {
                 int len = bytes.Length;
                 char[] c = new char[len];
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     c[k] = ch[bytes[k] & 0xff];
                 }
                 return new String(c);
             }
-            try
-            {
+            try {
                 return EncodingUtil.ConvertToString(bytes, encoding);
             }
-            catch (ArgumentException e)
-            {
+            catch (ArgumentException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
             }
         }
@@ -451,22 +402,17 @@ namespace iTextSharp.IO.Font
         /// <see langword="true"/>
         /// if only PDF_DOC_ENCODING characters are present
         /// </returns>
-        public static bool IsPdfDocEncoding(String text)
-        {
-            if (text == null)
-            {
+        public static bool IsPdfDocEncoding(String text) {
+            if (text == null) {
                 return true;
             }
             int len = text.Length;
-            for (int k = 0; k < len; k++)
-            {
+            for (int k = 0; k < len; k++) {
                 char ch = text[k];
-                if (ch < 128 || ch > 160 && ch <= 255)
-                {
+                if (ch < 128 || ch > 160 && ch <= 255) {
                     continue;
                 }
-                if (!pdfEncoding.ContainsKey((int)ch))
-                {
+                if (!pdfEncoding.ContainsKey((int)ch)) {
                     return false;
                 }
             }
@@ -476,29 +422,21 @@ namespace iTextSharp.IO.Font
         /// <summary>Adds an extra encoding.</summary>
         /// <param name="name">the name of the encoding. The encoding recognition is case insensitive</param>
         /// <param name="enc">the conversion class</param>
-        public static void AddExtraEncoding(String name, IExtraEncoding enc)
-        {
-            lock (extraEncodings)
-            {
+        public static void AddExtraEncoding(String name, IExtraEncoding enc) {
+            lock (extraEncodings) {
                 extraEncodings[name.ToLower(System.Globalization.CultureInfo.InvariantCulture)] = enc;
             }
         }
 
-        private class WingdingsConversion : IExtraEncoding
-        {
-            public virtual byte[] CharToByte(char char1, String encoding)
-            {
-                if (char1 == ' ')
-                {
+        private class WingdingsConversion : IExtraEncoding {
+            public virtual byte[] CharToByte(char char1, String encoding) {
+                if (char1 == ' ') {
                     return new byte[] { (byte)char1 };
                 }
-                else
-                {
-                    if (char1 >= '\u2701' && char1 <= '\u27BE')
-                    {
+                else {
+                    if (char1 >= '\u2701' && char1 <= '\u27BE') {
                         byte v = table[char1 - 0x2700];
-                        if (v != 0)
-                        {
+                        if (v != 0) {
                             return new byte[] { v };
                         }
                     }
@@ -506,33 +444,26 @@ namespace iTextSharp.IO.Font
                 return new byte[0];
             }
 
-            public virtual byte[] CharToByte(String text, String encoding)
-            {
+            public virtual byte[] CharToByte(String text, String encoding) {
                 char[] cc = text.ToCharArray();
                 byte[] b = new byte[cc.Length];
                 int ptr = 0;
                 int len = cc.Length;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     char c = cc[k];
-                    if (c == ' ')
-                    {
+                    if (c == ' ') {
                         b[ptr++] = (byte)c;
                     }
-                    else
-                    {
-                        if (c >= '\u2701' && c <= '\u27BE')
-                        {
+                    else {
+                        if (c >= '\u2701' && c <= '\u27BE') {
                             byte v = table[c - 0x2700];
-                            if (v != 0)
-                            {
+                            if (v != 0) {
                                 b[ptr++] = v;
                             }
                         }
                     }
                 }
-                if (ptr == len)
-                {
+                if (ptr == len) {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
@@ -540,8 +471,7 @@ namespace iTextSharp.IO.Font
                 return b2;
             }
 
-            public virtual String ByteToChar(byte[] b, String encoding)
-            {
+            public virtual String ByteToChar(byte[] b, String encoding) {
                 return null;
             }
 
@@ -570,34 +500,27 @@ namespace iTextSharp.IO.Font
                 (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 };
         }
 
-        private class Cp437Conversion : IExtraEncoding
-        {
+        private class Cp437Conversion : IExtraEncoding {
             private static IntHashtable c2b = new IntHashtable();
 
-            public virtual byte[] CharToByte(String text, String encoding)
-            {
+            public virtual byte[] CharToByte(String text, String encoding) {
                 char[] cc = text.ToCharArray();
                 byte[] b = new byte[cc.Length];
                 int ptr = 0;
                 int len = cc.Length;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     char c = cc[k];
-                    if (c < 128)
-                    {
+                    if (c < 128) {
                         b[ptr++] = (byte)c;
                     }
-                    else
-                    {
+                    else {
                         byte v = (byte)c2b.Get(c);
-                        if (v != 0)
-                        {
+                        if (v != 0) {
                             b[ptr++] = v;
                         }
                     }
                 }
-                if (ptr == len)
-                {
+                if (ptr == len) {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
@@ -605,44 +528,34 @@ namespace iTextSharp.IO.Font
                 return b2;
             }
 
-            public virtual byte[] CharToByte(char char1, String encoding)
-            {
-                if (char1 < 128)
-                {
+            public virtual byte[] CharToByte(char char1, String encoding) {
+                if (char1 < 128) {
                     return new byte[] { (byte)char1 };
                 }
-                else
-                {
+                else {
                     byte v = (byte)c2b.Get(char1);
-                    if (v != 0)
-                    {
+                    if (v != 0) {
                         return new byte[] { v };
                     }
-                    else
-                    {
+                    else {
                         return new byte[0];
                     }
                 }
             }
 
-            public virtual String ByteToChar(byte[] b, String encoding)
-            {
+            public virtual String ByteToChar(byte[] b, String encoding) {
                 int len = b.Length;
                 char[] cc = new char[len];
                 int ptr = 0;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     int c = b[k] & 0xff;
-                    if (c < ' ')
-                    {
+                    if (c < ' ') {
                         continue;
                     }
-                    if (c < 128)
-                    {
+                    if (c < 128) {
                         cc[ptr++] = (char)c;
                     }
-                    else
-                    {
+                    else {
                         char v = table[c - 128];
                         cc[ptr++] = v;
                     }
@@ -664,17 +577,14 @@ namespace iTextSharp.IO.Font
                 , '\u2229', '\u2261', '\u00B1', '\u2265', '\u2264', '\u2320', '\u2321', '\u00F7', '\u2248', '\u00B0', 
                 '\u2219', '\u00B7', '\u221A', '\u207F', '\u00B2', '\u25A0', '\u00A0' };
 
-            static Cp437Conversion()
-            {
-                for (int k = 0; k < table.Length; ++k)
-                {
+            static Cp437Conversion() {
+                for (int k = 0; k < table.Length; ++k) {
                     c2b.Put(table[k], k + 128);
                 }
             }
         }
 
-        private class SymbolConversion : IExtraEncoding
-        {
+        private class SymbolConversion : IExtraEncoding {
             private static readonly IntHashtable t1 = new IntHashtable();
 
             private static readonly IntHashtable t2 = new IntHashtable();
@@ -683,37 +593,30 @@ namespace iTextSharp.IO.Font
 
             private readonly char[] byteToChar;
 
-            internal SymbolConversion(bool symbol)
-            {
-                if (symbol)
-                {
+            internal SymbolConversion(bool symbol) {
+                if (symbol) {
                     translation = t1;
                     byteToChar = table1;
                 }
-                else
-                {
+                else {
                     translation = t2;
                     byteToChar = table2;
                 }
             }
 
-            public virtual byte[] CharToByte(String text, String encoding)
-            {
+            public virtual byte[] CharToByte(String text, String encoding) {
                 char[] cc = text.ToCharArray();
                 byte[] b = new byte[cc.Length];
                 int ptr = 0;
                 int len = cc.Length;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     char c = cc[k];
                     byte v = (byte)translation.Get(c);
-                    if (v != 0)
-                    {
+                    if (v != 0) {
                         b[ptr++] = v;
                     }
                 }
-                if (ptr == len)
-                {
+                if (ptr == len) {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
@@ -721,26 +624,21 @@ namespace iTextSharp.IO.Font
                 return b2;
             }
 
-            public virtual byte[] CharToByte(char char1, String encoding)
-            {
+            public virtual byte[] CharToByte(char char1, String encoding) {
                 byte v = (byte)translation.Get(char1);
-                if (v != 0)
-                {
+                if (v != 0) {
                     return new byte[] { v };
                 }
-                else
-                {
+                else {
                     return new byte[0];
                 }
             }
 
-            public virtual String ByteToChar(byte[] b, String encoding)
-            {
+            public virtual String ByteToChar(byte[] b, String encoding) {
                 int len = b.Length;
                 char[] cc = new char[len];
                 int ptr = 0;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     int c = b[k] & 0xff;
                     char v = byteToChar[c];
                     cc[ptr++] = v;
@@ -794,57 +692,44 @@ namespace iTextSharp.IO.Font
                 '\u0000', '\u27B1', '\u27B2', '\u27B3', '\u27B4', '\u27B5', '\u27B6', '\u27B7', '\u27B8', '\u27B9', '\u27BA'
                 , '\u27BB', '\u27BC', '\u27BD', '\u27BE', '\u0000' };
 
-            static SymbolConversion()
-            {
-                for (int k = 0; k < 256; ++k)
-                {
+            static SymbolConversion() {
+                for (int k = 0; k < 256; ++k) {
                     int v = table1[k];
-                    if (v != 0)
-                    {
+                    if (v != 0) {
                         t1.Put(v, k);
                     }
                 }
-                for (int k_1 = 0; k_1 < 256; ++k_1)
-                {
+                for (int k_1 = 0; k_1 < 256; ++k_1) {
                     int v = table2[k_1];
-                    if (v != 0)
-                    {
+                    if (v != 0) {
                         t2.Put(v, k_1);
                     }
                 }
             }
         }
 
-        private class SymbolTTConversion : IExtraEncoding
-        {
-            public virtual byte[] CharToByte(char char1, String encoding)
-            {
-                if ((char1 & 0xff00) == 0 || (char1 & 0xff00) == 0xf000)
-                {
+        private class SymbolTTConversion : IExtraEncoding {
+            public virtual byte[] CharToByte(char char1, String encoding) {
+                if ((char1 & 0xff00) == 0 || (char1 & 0xff00) == 0xf000) {
                     return new byte[] { (byte)char1 };
                 }
-                else
-                {
+                else {
                     return new byte[0];
                 }
             }
 
-            public virtual byte[] CharToByte(String text, String encoding)
-            {
+            public virtual byte[] CharToByte(String text, String encoding) {
                 char[] ch = text.ToCharArray();
                 byte[] b = new byte[ch.Length];
                 int ptr = 0;
                 int len = ch.Length;
-                for (int k = 0; k < len; ++k)
-                {
+                for (int k = 0; k < len; ++k) {
                     char c = ch[k];
-                    if ((c & 0xff00) == 0 || (c & 0xff00) == 0xf000)
-                    {
+                    if ((c & 0xff00) == 0 || (c & 0xff00) == 0xf000) {
                         b[ptr++] = (byte)c;
                     }
                 }
-                if (ptr == len)
-                {
+                if (ptr == len) {
                     return b;
                 }
                 byte[] b2 = new byte[ptr];
@@ -852,8 +737,7 @@ namespace iTextSharp.IO.Font
                 return b2;
             }
 
-            public virtual String ByteToChar(byte[] b, String encoding)
-            {
+            public virtual String ByteToChar(byte[] b, String encoding) {
                 return null;
             }
         }

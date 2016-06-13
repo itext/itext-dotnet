@@ -55,11 +55,9 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Util;
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
     /// <summary>Processor for a PDF content stream.</summary>
-    public class PdfCanvasProcessor
-    {
+    public class PdfCanvasProcessor {
         public const String DEFAULT_OPERATOR = "DefaultOperator";
 
         /// <summary>Listener that will be notified of render events</summary>
@@ -123,8 +121,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
         /// that will receive rendering notifications
         /// </param>
-        public PdfCanvasProcessor(IEventListener eventListener)
-        {
+        public PdfCanvasProcessor(IEventListener eventListener) {
             this.eventListener = eventListener;
             this.supportedEvents = eventListener.GetSupportedEvents();
             operators = new Dictionary<String, IContentOperator>();
@@ -148,8 +145,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         ///     </param>
         /// <returns>the existing registered handler, if any</returns>
         public virtual IXObjectDoHandler RegisterXObjectDoHandler(PdfName xobjectSubType, IXObjectDoHandler handler
-            )
-        {
+            ) {
             return xobjectDoHandlers[xobjectSubType] = handler;
         }
 
@@ -164,8 +160,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <param name="operatorString">the operator id, or DEFAULT_OPERATOR for a catch-all operator</param>
         /// <param name="operator">the operator that will receive notification when the operator is encountered</param>
         /// <returns>the existing registered operator, if any</returns>
-        public virtual IContentOperator RegisterContentOperator(String operatorString, IContentOperator @operator)
-        {
+        public virtual IContentOperator RegisterContentOperator(String operatorString, IContentOperator @operator) {
             return operators[operatorString] = @operator;
         }
 
@@ -174,14 +169,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <see cref="System.Collections.ICollection{E}"/>
         /// containing all the registered operators strings
         /// </returns>
-        public virtual ICollection<String> GetRegisteredOperatorStrings()
-        {
+        public virtual ICollection<String> GetRegisteredOperatorStrings() {
             return new List<String>(operators.Keys);
         }
 
         /// <summary>Resets the graphics state stack, matrices and resources.</summary>
-        public virtual void Reset()
-        {
+        public virtual void Reset() {
             gsStack.Clear();
             gsStack.Push(new ParserGraphicsState());
             textMatrix = null;
@@ -192,8 +185,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <returns>the current graphics state</returns>
-        public virtual ParserGraphicsState GetGraphicsState()
-        {
+        public virtual ParserGraphicsState GetGraphicsState() {
             return gsStack.Peek();
         }
 
@@ -207,10 +199,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// </remarks>
         /// <param name="contentBytes">the bytes of a content stream</param>
         /// <param name="resources">the resources of the content stream. Must not be null.</param>
-        public virtual void ProcessContent(byte[] contentBytes, PdfResources resources)
-        {
-            if (resources == null)
-            {
+        public virtual void ProcessContent(byte[] contentBytes, PdfResources resources) {
+            if (resources == null) {
                 throw new PdfException(PdfException.ResourcesCannotBeNull);
             }
             this.resourcesStack.Push(resources);
@@ -218,16 +208,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
                 (contentBytes)));
             PdfCanvasParser ps = new PdfCanvasParser(tokeniser, resources);
             IList<PdfObject> operands = new List<PdfObject>();
-            try
-            {
-                while (ps.Parse(operands).Count > 0)
-                {
+            try {
+                while (ps.Parse(operands).Count > 0) {
                     PdfLiteral @operator = (PdfLiteral)operands[operands.Count - 1];
                     InvokeOperator(@operator, operands);
                 }
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.CannotParseContentStream, e);
             }
             this.resourcesStack.Pop();
@@ -243,8 +230,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <see cref="Reset()"/>
         /// </remarks>
         /// <param name="page">the page to process</param>
-        public virtual void ProcessPageContent(PdfPage page)
-        {
+        public virtual void ProcessPageContent(PdfPage page) {
             InitClippingPath(page);
             ParserGraphicsState gs = GetGraphicsState();
             EventOccurred(new ClippingPathInfo(gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED);
@@ -258,14 +244,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// Necessary for implementing custom ContentOperator implementations.
         /// </summary>
         /// <returns>the renderListener</returns>
-        public virtual IEventListener GetEventListener()
-        {
+        public virtual IEventListener GetEventListener() {
             return eventListener;
         }
 
         /// <summary>Loads all the supported graphics and text state operators in a map.</summary>
-        protected internal virtual void PopulateOperators()
-        {
+        protected internal virtual void PopulateOperators() {
             RegisterContentOperator(DEFAULT_OPERATOR, new PdfCanvasProcessor.IgnoreOperator());
             RegisterContentOperator("q", new PdfCanvasProcessor.PushGraphicsStateOperator());
             RegisterContentOperator("Q", new PdfCanvasProcessor.PopGraphicsStateOperator());
@@ -275,8 +259,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             RegisterContentOperator("BDC", new PdfCanvasProcessor.BeginMarkedContentDictionaryOperator());
             RegisterContentOperator("EMC", new PdfCanvasProcessor.EndMarkedContentOperator());
             if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_TEXT) || supportedEvents.Contains
-                (EventType.RENDER_PATH) || supportedEvents.Contains(EventType.CLIP_PATH_CHANGED))
-            {
+                (EventType.RENDER_PATH) || supportedEvents.Contains(EventType.CLIP_PATH_CHANGED)) {
                 RegisterContentOperator("g", new PdfCanvasProcessor.SetGrayFillOperator());
                 RegisterContentOperator("G", new PdfCanvasProcessor.SetGrayStrokeOperator());
                 RegisterContentOperator("rg", new PdfCanvasProcessor.SetRGBFillOperator());
@@ -291,18 +274,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
                 RegisterContentOperator("SCN", new PdfCanvasProcessor.SetColorStrokeOperator());
                 RegisterContentOperator("gs", new PdfCanvasProcessor.ProcessGraphicsStateResourceOperator());
             }
-            if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_IMAGE))
-            {
+            if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_IMAGE)) {
                 RegisterContentOperator("EI", new PdfCanvasProcessor.EndImageOperator());
             }
             if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_TEXT) || supportedEvents.Contains
-                (EventType.BEGIN_TEXT) || supportedEvents.Contains(EventType.END_TEXT))
-            {
+                (EventType.BEGIN_TEXT) || supportedEvents.Contains(EventType.END_TEXT)) {
                 RegisterContentOperator("BT", new PdfCanvasProcessor.BeginTextOperator());
                 RegisterContentOperator("ET", new PdfCanvasProcessor.EndTextOperator());
             }
-            if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_TEXT))
-            {
+            if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_TEXT)) {
                 PdfCanvasProcessor.SetTextCharacterSpacingOperator tcOperator = new PdfCanvasProcessor.SetTextCharacterSpacingOperator
                     ();
                 RegisterContentOperator("Tc", tcOperator);
@@ -334,8 +314,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
                 RegisterContentOperator("TJ", new PdfCanvasProcessor.ShowTextArrayOperator());
             }
             if (supportedEvents == null || supportedEvents.Contains(EventType.CLIP_PATH_CHANGED) || supportedEvents.Contains
-                (EventType.RENDER_PATH))
-            {
+                (EventType.RENDER_PATH)) {
                 RegisterContentOperator("w", new PdfCanvasProcessor.SetLineWidthOperator());
                 RegisterContentOperator("J", new PdfCanvasProcessor.SetLineCapOperator(this));
                 RegisterContentOperator("j", new PdfCanvasProcessor.SetLineJoinOperator(this));
@@ -389,13 +368,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// In case it isn't applicable pass any <CODE>byte</CODE> value.
         /// </param>
-        protected internal virtual void PaintPath(int operation, int rule)
-        {
+        protected internal virtual void PaintPath(int operation, int rule) {
             PathRenderInfo renderInfo = new PathRenderInfo(currentPath, operation, rule, isClip, clippingRule, GetGraphicsState
                 ());
             EventOccurred(renderInfo, EventType.RENDER_PATH);
-            if (isClip)
-            {
+            if (isClip) {
                 isClip = false;
                 ParserGraphicsState gs = GetGraphicsState();
                 gs.Clip(currentPath, clippingRule);
@@ -407,33 +384,27 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <summary>Invokes an operator.</summary>
         /// <param name="operator">the PDF Syntax of the operator</param>
         /// <param name="operands">a list with operands</param>
-        protected internal virtual void InvokeOperator(PdfLiteral @operator, IList<PdfObject> operands)
-        {
+        protected internal virtual void InvokeOperator(PdfLiteral @operator, IList<PdfObject> operands) {
             IContentOperator op = operators.Get(@operator.ToString());
-            if (op == null)
-            {
+            if (op == null) {
                 op = operators.Get(DEFAULT_OPERATOR);
             }
             op.Invoke(this, @operator, operands);
         }
 
-        protected internal virtual PdfStream GetXObjectStream(PdfName xobjectName)
-        {
+        protected internal virtual PdfStream GetXObjectStream(PdfName xobjectName) {
             PdfDictionary xobjects = GetResources().GetResource(PdfName.XObject);
             return xobjects.GetAsStream(xobjectName);
         }
 
-        protected internal virtual PdfResources GetResources()
-        {
+        protected internal virtual PdfResources GetResources() {
             return resourcesStack.Peek();
         }
 
-        protected internal virtual void PopulateXObjectDoHandlers()
-        {
+        protected internal virtual void PopulateXObjectDoHandlers() {
             RegisterXObjectDoHandler(PdfName.Default, new PdfCanvasProcessor.IgnoreXObjectDoHandler());
             RegisterXObjectDoHandler(PdfName.Form, new PdfCanvasProcessor.FormXObjectDoHandler());
-            if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_IMAGE))
-            {
+            if (supportedEvents == null || supportedEvents.Contains(EventType.RENDER_IMAGE)) {
                 RegisterXObjectDoHandler(PdfName.Image, new PdfCanvasProcessor.ImageXObjectDoHandler());
             }
         }
@@ -442,12 +413,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <remarks>Gets the font pointed to by the indirect reference. The font may have been cached.</remarks>
         /// <param name="fontDict"/>
         /// <returns>the font</returns>
-        protected internal virtual PdfFont GetFont(PdfDictionary fontDict)
-        {
+        protected internal virtual PdfFont GetFont(PdfDictionary fontDict) {
             int n = fontDict.GetIndirectReference().GetObjNumber();
             PdfFont font = cachedFonts.Get(n);
-            if (font == null)
-            {
+            if (font == null) {
                 font = PdfFontFactory.CreateFont(fontDict);
                 cachedFonts[n] = font;
             }
@@ -457,45 +426,38 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <summary>Add to the marked content stack</summary>
         /// <param name="tag">the tag of the marked content</param>
         /// <param name="dict">the PdfDictionary associated with the marked content</param>
-        protected internal virtual void BeginMarkedContent(PdfName tag, PdfDictionary dict)
-        {
+        protected internal virtual void BeginMarkedContent(PdfName tag, PdfDictionary dict) {
             markedContentStack.Push(new CanvasTag(tag).SetProperties(dict));
         }
 
         /// <summary>Remove the latest marked content from the stack.</summary>
         /// <remarks>Remove the latest marked content from the stack.  Keeps track of the BMC, BDC and EMC operators.</remarks>
-        protected internal virtual void EndMarkedContent()
-        {
+        protected internal virtual void EndMarkedContent() {
             markedContentStack.Pop();
         }
 
         /// <summary>Used to trigger beginTextBlock on the renderListener</summary>
-        private void BeginText()
-        {
+        private void BeginText() {
             EventOccurred(null, EventType.BEGIN_TEXT);
         }
 
         /// <summary>Used to trigger endTextBlock on the renderListener</summary>
-        private void EndText()
-        {
+        private void EndText() {
             EventOccurred(null, EventType.END_TEXT);
         }
 
         /// <summary>This is a proxy to pass only those events to the event listener which are supported by it.</summary>
         /// <param name="data">event data</param>
         /// <param name="type">event type</param>
-        private void EventOccurred(IEventData data, EventType type)
-        {
-            if (supportedEvents == null || supportedEvents.Contains(type))
-            {
+        private void EventOccurred(IEventData data, EventType type) {
+            if (supportedEvents == null || supportedEvents.Contains(type)) {
                 eventListener.EventOccurred(data, type);
             }
         }
 
         /// <summary>Displays text.</summary>
         /// <param name="string">the text to display</param>
-        private void DisplayPdfString(PdfString @string)
-        {
+        private void DisplayPdfString(PdfString @string) {
             TextRenderInfo renderInfo = new TextRenderInfo(@string, GetGraphicsState(), textMatrix, markedContentStack
                 );
             EventOccurred(renderInfo, EventType.RENDER_TEXT);
@@ -504,20 +466,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
         /// <summary>Displays an XObject using the registered handler for this XObject's subtype</summary>
         /// <param name="xobjectName">the name of the XObject to retrieve from the resource dictionary</param>
-        private void DisplayXObject(PdfName xobjectName)
-        {
+        private void DisplayXObject(PdfName xobjectName) {
             PdfStream xobjectStream = GetXObjectStream(xobjectName);
             PdfName subType = xobjectStream.GetAsName(PdfName.Subtype);
             IXObjectDoHandler handler = xobjectDoHandlers.Get(subType);
-            if (handler == null)
-            {
+            if (handler == null) {
                 handler = xobjectDoHandlers.Get(PdfName.Default);
             }
             handler.HandleXObject(this, xobjectStream);
         }
 
-        private void DisplayImage(PdfStream imageStream, bool isInline)
-        {
+        private void DisplayImage(PdfStream imageStream, bool isInline) {
             PdfDictionary colorSpaceDic = GetResources().GetResource(PdfName.ColorSpace);
             ImageRenderInfo renderInfo = new ImageRenderInfo(GetGraphicsState().GetCtm(), imageStream, colorSpaceDic, 
                 isInline);
@@ -527,45 +486,36 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <summary>Adjusts the text matrix for the specified adjustment value (see TJ operator in the PDF spec for information)
         ///     </summary>
         /// <param name="tj">the text adjustment</param>
-        private void ApplyTextAdjust(float tj)
-        {
+        private void ApplyTextAdjust(float tj) {
             float adjustBy = -tj / 1000f * GetGraphicsState().GetFontSize() * (GetGraphicsState().GetHorizontalScaling
                 () / 100f);
             textMatrix = new Matrix(adjustBy, 0).Multiply(textMatrix);
         }
 
-        private void InitClippingPath(PdfPage page)
-        {
+        private void InitClippingPath(PdfPage page) {
             Path clippingPath = new Path();
             clippingPath.Rectangle(page.GetCropBox());
             GetGraphicsState().SetClippingPath(clippingPath);
         }
 
         /// <summary>A content operator implementation (unregistered).</summary>
-        private class IgnoreOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class IgnoreOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
             }
             // ignore the operator
         }
 
         /// <summary>A content operator implementation (TJ).</summary>
-        private class ShowTextArrayOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class ShowTextArrayOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfArray array = (PdfArray)operands[0];
                 float tj = 0;
-                foreach (PdfObject entryObj in array)
-                {
-                    if (entryObj is PdfString)
-                    {
+                foreach (PdfObject entryObj in array) {
+                    if (entryObj is PdfString) {
                         processor.DisplayPdfString((PdfString)entryObj);
                         tj = 0;
                     }
-                    else
-                    {
+                    else {
                         tj = ((PdfNumber)entryObj).FloatValue();
                         processor.ApplyTextAdjust(tj);
                     }
@@ -574,8 +524,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (").</summary>
-        private class MoveNextLineAndShowTextWithSpacingOperator : IContentOperator
-        {
+        private class MoveNextLineAndShowTextWithSpacingOperator : IContentOperator {
             private readonly PdfCanvasProcessor.SetTextWordSpacingOperator setTextWordSpacing;
 
             private readonly PdfCanvasProcessor.SetTextCharacterSpacingOperator setTextCharacterSpacing;
@@ -584,15 +533,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
             public MoveNextLineAndShowTextWithSpacingOperator(PdfCanvasProcessor.SetTextWordSpacingOperator setTextWordSpacing
                 , PdfCanvasProcessor.SetTextCharacterSpacingOperator setTextCharacterSpacing, PdfCanvasProcessor.MoveNextLineAndShowTextOperator
-                 moveNextLineAndShowText)
-            {
+                 moveNextLineAndShowText) {
                 this.setTextWordSpacing = setTextWordSpacing;
                 this.setTextCharacterSpacing = setTextCharacterSpacing;
                 this.moveNextLineAndShowText = moveNextLineAndShowText;
             }
 
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber aw = (PdfNumber)operands[0];
                 PdfNumber ac = (PdfNumber)operands[1];
                 PdfString @string = (PdfString)operands[2];
@@ -609,48 +556,40 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (').</summary>
-        private class MoveNextLineAndShowTextOperator : IContentOperator
-        {
+        private class MoveNextLineAndShowTextOperator : IContentOperator {
             private readonly PdfCanvasProcessor.TextMoveNextLineOperator textMoveNextLine;
 
             private readonly PdfCanvasProcessor.ShowTextOperator showText;
 
             public MoveNextLineAndShowTextOperator(PdfCanvasProcessor.TextMoveNextLineOperator textMoveNextLine, PdfCanvasProcessor.ShowTextOperator
-                 showText)
-            {
+                 showText) {
                 this.textMoveNextLine = textMoveNextLine;
                 this.showText = showText;
             }
 
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 textMoveNextLine.Invoke(processor, null, new List<PdfObject>(0));
                 showText.Invoke(processor, null, operands);
             }
         }
 
         /// <summary>A content operator implementation (Tj).</summary>
-        private class ShowTextOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class ShowTextOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfString @string = (PdfString)operands[0];
                 processor.DisplayPdfString(@string);
             }
         }
 
         /// <summary>A content operator implementation (T*).</summary>
-        private class TextMoveNextLineOperator : IContentOperator
-        {
+        private class TextMoveNextLineOperator : IContentOperator {
             private readonly PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine;
 
-            public TextMoveNextLineOperator(PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine)
-            {
+            public TextMoveNextLineOperator(PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine) {
                 this.moveStartNextLine = moveStartNextLine;
             }
 
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 IList<PdfObject> tdoperands = new List<PdfObject>(2);
                 tdoperands.Add(0, new PdfNumber(0));
                 tdoperands.Add(1, new PdfNumber(-processor.GetGraphicsState().GetLeading()));
@@ -659,10 +598,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (Tm).</summary>
-        private class TextSetTextMatrixOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class TextSetTextMatrixOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float a = ((PdfNumber)operands[0]).FloatValue();
                 float b = ((PdfNumber)operands[1]).FloatValue();
                 float c = ((PdfNumber)operands[2]).FloatValue();
@@ -675,21 +612,18 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (TD).</summary>
-        private class TextMoveStartNextLineWithLeadingOperator : IContentOperator
-        {
+        private class TextMoveStartNextLineWithLeadingOperator : IContentOperator {
             private readonly PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine;
 
             private readonly PdfCanvasProcessor.SetTextLeadingOperator setTextLeading;
 
             public TextMoveStartNextLineWithLeadingOperator(PdfCanvasProcessor.TextMoveStartNextLineOperator moveStartNextLine
-                , PdfCanvasProcessor.SetTextLeadingOperator setTextLeading)
-            {
+                , PdfCanvasProcessor.SetTextLeadingOperator setTextLeading) {
                 this.moveStartNextLine = moveStartNextLine;
                 this.setTextLeading = setTextLeading;
             }
 
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float ty = ((PdfNumber)operands[1]).FloatValue();
                 IList<PdfObject> tlOperands = new List<PdfObject>(1);
                 tlOperands.Add(0, new PdfNumber(-ty));
@@ -699,10 +633,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (Td).</summary>
-        private class TextMoveStartNextLineOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class TextMoveStartNextLineOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float tx = ((PdfNumber)operands[0]).FloatValue();
                 float ty = ((PdfNumber)operands[1]).FloatValue();
                 Matrix translationMatrix = new Matrix(tx, ty);
@@ -712,10 +644,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (Tf).</summary>
-        private class SetTextFontOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextFontOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfName fontResourceName = (PdfName)operands[0];
                 float size = ((PdfNumber)operands[1]).FloatValue();
                 PdfDictionary fontsDictionary = processor.GetResources().GetResource(PdfName.Font);
@@ -728,86 +658,69 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (Tr).</summary>
-        private class SetTextRenderModeOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextRenderModeOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber render = (PdfNumber)operands[0];
                 processor.GetGraphicsState().SetTextRenderingMode(render.IntValue());
             }
         }
 
         /// <summary>A content operator implementation (Ts).</summary>
-        private class SetTextRiseOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextRiseOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber rise = (PdfNumber)operands[0];
                 processor.GetGraphicsState().SetTextRise(rise.FloatValue());
             }
         }
 
         /// <summary>A content operator implementation (TL).</summary>
-        private class SetTextLeadingOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextLeadingOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber leading = (PdfNumber)operands[0];
                 processor.GetGraphicsState().SetLeading(leading.FloatValue());
             }
         }
 
         /// <summary>A content operator implementation (Tz).</summary>
-        private class SetTextHorizontalScalingOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextHorizontalScalingOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber scale = (PdfNumber)operands[0];
                 processor.GetGraphicsState().SetHorizontalScaling(scale.FloatValue());
             }
         }
 
         /// <summary>A content operator implementation (Tc).</summary>
-        private class SetTextCharacterSpacingOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextCharacterSpacingOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber charSpace = (PdfNumber)operands[0];
                 processor.GetGraphicsState().SetCharSpacing(charSpace.FloatValue());
             }
         }
 
         /// <summary>A content operator implementation (Tw).</summary>
-        private class SetTextWordSpacingOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetTextWordSpacingOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfNumber wordSpace = (PdfNumber)operands[0];
                 processor.GetGraphicsState().SetWordSpacing(wordSpace.FloatValue());
             }
         }
 
         /// <summary>A content operator implementation (gs).</summary>
-        private class ProcessGraphicsStateResourceOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class ProcessGraphicsStateResourceOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfName dictionaryName = (PdfName)operands[0];
                 PdfDictionary extGState = processor.GetResources().GetResource(PdfName.ExtGState);
-                if (extGState == null)
-                {
+                if (extGState == null) {
                     throw new PdfException(PdfException.ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1).SetMessageParams
                         (@operator);
                 }
                 PdfDictionary gsDic = extGState.GetAsDictionary(dictionaryName);
-                if (gsDic == null)
-                {
+                if (gsDic == null) {
                     throw new PdfException(PdfException._1IsAnUnknownGraphicsStateDictionary).SetMessageParams(dictionaryName);
                 }
                 // at this point, all we care about is the FONT entry in the GS dictionary TODO merge the whole gs dictionary
                 PdfArray fontParameter = gsDic.GetAsArray(PdfName.Font);
-                if (fontParameter != null)
-                {
+                if (fontParameter != null) {
                     PdfFont font = processor.GetFont(fontParameter.GetAsDictionary(0));
                     float size = fontParameter.GetAsNumber(1).FloatValue();
                     processor.GetGraphicsState().SetFont(font);
@@ -817,10 +730,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (q).</summary>
-        private class PushGraphicsStateOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class PushGraphicsStateOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 ParserGraphicsState gs = processor.gsStack.Peek();
                 ParserGraphicsState copy = new ParserGraphicsState(gs);
                 processor.gsStack.Push(copy);
@@ -828,10 +739,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (cm).</summary>
-        private class ModifyCurrentTransformationMatrixOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class ModifyCurrentTransformationMatrixOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float a = ((PdfNumber)operands[0]).FloatValue();
                 float b = ((PdfNumber)operands[1]).FloatValue();
                 float c = ((PdfNumber)operands[2]).FloatValue();
@@ -845,96 +754,69 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
         /// <summary>Gets a color based on a list of operands and Color space.</summary>
         private static iTextSharp.Kernel.Color.Color GetColor(PdfColorSpace pdfColorSpace, IList<PdfObject> operands
-            , PdfResources resources)
-        {
+            , PdfResources resources) {
             PdfObject pdfObject;
-            if (pdfColorSpace.GetPdfObject().IsIndirectReference())
-            {
+            if (pdfColorSpace.GetPdfObject().IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfColorSpace.GetPdfObject()).GetRefersTo();
             }
-            else
-            {
+            else {
                 pdfObject = pdfColorSpace.GetPdfObject();
             }
-            if (pdfObject.IsName())
-            {
-                if (PdfName.DeviceGray.Equals(pdfObject))
-                {
+            if (pdfObject.IsName()) {
+                if (PdfName.DeviceGray.Equals(pdfObject)) {
                     return new DeviceGray(GetColorants(operands)[0]);
                 }
-                else
-                {
-                    if (PdfName.Pattern.Equals(pdfObject))
-                    {
+                else {
+                    if (PdfName.Pattern.Equals(pdfObject)) {
                         PdfDictionary patterns = resources.GetResource(PdfName.Pattern);
-                        if (patterns != null && operands[0] is PdfName)
-                        {
+                        if (patterns != null && operands[0] is PdfName) {
                             PdfObject pattern = patterns.Get((PdfName)operands[0]);
-                            if (pattern is PdfDictionary)
-                            {
+                            if (pattern is PdfDictionary) {
                                 return new PatternColor(PdfPattern.GetPatternInstance((PdfDictionary)pattern));
                             }
                         }
                     }
                 }
-                if (PdfName.DeviceRGB.Equals(pdfObject))
-                {
+                if (PdfName.DeviceRGB.Equals(pdfObject)) {
                     float[] c = GetColorants(operands);
                     return new DeviceRgb(c[0], c[1], c[2]);
                 }
-                else
-                {
-                    if (PdfName.DeviceCMYK.Equals(pdfObject))
-                    {
+                else {
+                    if (PdfName.DeviceCMYK.Equals(pdfObject)) {
                         float[] c = GetColorants(operands);
                         return new DeviceCmyk(c[0], c[1], c[2], c[3]);
                     }
                 }
             }
-            else
-            {
-                if (pdfObject.IsArray())
-                {
+            else {
+                if (pdfObject.IsArray()) {
                     PdfArray array = (PdfArray)pdfObject;
                     PdfName csType = array.GetAsName(0);
-                    if (PdfName.CalGray.Equals(csType))
-                    {
+                    if (PdfName.CalGray.Equals(csType)) {
                         return new CalGray((PdfCieBasedCs.CalGray)pdfColorSpace, GetColorants(operands)[0]);
                     }
-                    else
-                    {
-                        if (PdfName.CalRGB.Equals(csType))
-                        {
+                    else {
+                        if (PdfName.CalRGB.Equals(csType)) {
                             return new CalRgb((PdfCieBasedCs.CalRgb)pdfColorSpace, GetColorants(operands));
                         }
-                        else
-                        {
-                            if (PdfName.Lab.Equals(csType))
-                            {
+                        else {
+                            if (PdfName.Lab.Equals(csType)) {
                                 return new Lab((PdfCieBasedCs.Lab)pdfColorSpace, GetColorants(operands));
                             }
-                            else
-                            {
-                                if (PdfName.ICCBased.Equals(csType))
-                                {
+                            else {
+                                if (PdfName.ICCBased.Equals(csType)) {
                                     return new IccBased((PdfCieBasedCs.IccBased)pdfColorSpace, GetColorants(operands));
                                 }
-                                else
-                                {
-                                    if (PdfName.Indexed.Equals(csType))
-                                    {
+                                else {
+                                    if (PdfName.Indexed.Equals(csType)) {
                                         return new Indexed(pdfColorSpace, (int)GetColorants(operands)[0]);
                                     }
-                                    else
-                                    {
-                                        if (PdfName.Separation.Equals(csType))
-                                        {
+                                    else {
+                                        if (PdfName.Separation.Equals(csType)) {
                                             return new Separation((PdfSpecialCs.Separation)pdfColorSpace, GetColorants(operands)[0]);
                                         }
-                                        else
-                                        {
-                                            if (PdfName.DeviceN.Equals(csType))
-                                            {
+                                        else {
+                                            if (PdfName.DeviceN.Equals(csType)) {
                                                 return new DeviceN((PdfSpecialCs.DeviceN)pdfColorSpace, GetColorants(operands));
                                             }
                                         }
@@ -949,48 +831,38 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>Gets a color based on a list of operands.</summary>
-        private static iTextSharp.Kernel.Color.Color GetColor(int nOperands, IList<PdfObject> operands)
-        {
+        private static iTextSharp.Kernel.Color.Color GetColor(int nOperands, IList<PdfObject> operands) {
             float[] c = new float[nOperands];
-            for (int i = 0; i < nOperands; i++)
-            {
+            for (int i = 0; i < nOperands; i++) {
                 c[i] = ((PdfNumber)operands[i]).FloatValue();
             }
-            switch (nOperands)
-            {
-                case 1:
-                {
+            switch (nOperands) {
+                case 1: {
                     return new DeviceGray(c[0]);
                 }
 
-                case 3:
-                {
+                case 3: {
                     return new DeviceRgb(c[0], c[1], c[2]);
                 }
 
-                case 4:
-                {
+                case 4: {
                     return new DeviceCmyk(c[0], c[1], c[2], c[3]);
                 }
             }
             return null;
         }
 
-        private static float[] GetColorants(IList<PdfObject> operands)
-        {
+        private static float[] GetColorants(IList<PdfObject> operands) {
             float[] c = new float[operands.Count - 1];
-            for (int i = 0; i < operands.Count - 1; i++)
-            {
+            for (int i = 0; i < operands.Count - 1; i++) {
                 c[i] = ((PdfNumber)operands[i]).FloatValue();
             }
             return c;
         }
 
         /// <summary>A content operator implementation (Q).</summary>
-        protected internal class PopGraphicsStateOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        protected internal class PopGraphicsStateOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.gsStack.Pop();
                 ParserGraphicsState gs = processor.GetGraphicsState();
                 processor.EventOccurred(new ClippingPathInfo(gs.GetClippingPath(), gs.GetCtm()), EventType.CLIP_PATH_CHANGED
@@ -999,77 +871,60 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (g).</summary>
-        private class SetGrayFillOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetGrayFillOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetFillColor(GetColor(1, operands));
             }
         }
 
         /// <summary>A content operator implementation (G).</summary>
-        private class SetGrayStrokeOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetGrayStrokeOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetStrokeColor(GetColor(1, operands));
             }
         }
 
         /// <summary>A content operator implementation (rg).</summary>
-        private class SetRGBFillOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetRGBFillOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetFillColor(GetColor(3, operands));
             }
         }
 
         /// <summary>A content operator implementation (RG).</summary>
-        private class SetRGBStrokeOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetRGBStrokeOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetStrokeColor(GetColor(3, operands));
             }
         }
 
         /// <summary>A content operator implementation (k).</summary>
-        private class SetCMYKFillOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetCMYKFillOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetFillColor(GetColor(4, operands));
             }
         }
 
         /// <summary>A content operator implementation (K).</summary>
-        private class SetCMYKStrokeOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetCMYKStrokeOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetStrokeColor(GetColor(4, operands));
             }
         }
 
         /// <summary>A content operator implementation (CS).</summary>
-        private class SetColorSpaceFillOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetColorSpaceFillOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfColorSpace pdfColorSpace = DetermineColorSpace((PdfName)operands[0], processor);
                 processor.GetGraphicsState().SetFillColor(iTextSharp.Kernel.Color.Color.MakeColor(pdfColorSpace));
             }
 
-            internal static PdfColorSpace DetermineColorSpace(PdfName colorSpace, PdfCanvasProcessor processor)
-            {
+            internal static PdfColorSpace DetermineColorSpace(PdfName colorSpace, PdfCanvasProcessor processor) {
                 PdfColorSpace pdfColorSpace = null;
-                if (PdfColorSpace.directColorSpaces.Contains(colorSpace))
-                {
+                if (PdfColorSpace.directColorSpaces.Contains(colorSpace)) {
                     pdfColorSpace = PdfColorSpace.MakeColorSpace(colorSpace);
                 }
-                else
-                {
+                else {
                     PdfResources pdfResources = processor.GetResources();
                     PdfDictionary resourceColorSpace = pdfResources.GetPdfObject().GetAsDictionary(PdfName.ColorSpace);
                     pdfColorSpace = PdfColorSpace.MakeColorSpace(resourceColorSpace.Get(colorSpace));
@@ -1079,10 +934,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (cs).</summary>
-        private class SetColorSpaceStrokeOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetColorSpaceStrokeOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfColorSpace pdfColorSpace = PdfCanvasProcessor.SetColorSpaceFillOperator.DetermineColorSpace((PdfName)operands
                     [0], processor);
                 processor.GetGraphicsState().SetStrokeColor(iTextSharp.Kernel.Color.Color.MakeColor(pdfColorSpace));
@@ -1090,30 +943,24 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (sc / scn).</summary>
-        private class SetColorFillOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetColorFillOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetFillColor(GetColor(processor.GetGraphicsState().GetFillColor().GetColorSpace
                     (), operands, processor.GetResources()));
             }
         }
 
         /// <summary>A content operator implementation (SC / SCN).</summary>
-        private class SetColorStrokeOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class SetColorStrokeOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetStrokeColor(GetColor(processor.GetGraphicsState().GetStrokeColor().GetColorSpace
                     (), operands, processor.GetResources()));
             }
         }
 
         /// <summary>A content operator implementation (BT).</summary>
-        private class BeginTextOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class BeginTextOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.textMatrix = new Matrix();
                 processor.textLineMatrix = processor.textMatrix;
                 processor.BeginText();
@@ -1121,10 +968,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (ET).</summary>
-        private class EndTextOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class EndTextOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.textMatrix = null;
                 processor.textLineMatrix = null;
                 processor.EndText();
@@ -1132,28 +977,22 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (BMC).</summary>
-        private class BeginMarkedContentOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class BeginMarkedContentOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.BeginMarkedContent((PdfName)operands[0], new PdfDictionary());
             }
         }
 
         /// <summary>A content operator implementation (BDC).</summary>
-        private class BeginMarkedContentDictionaryOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class BeginMarkedContentDictionaryOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfObject properties = operands[1];
                 processor.BeginMarkedContent((PdfName)operands[0], GetPropertiesDictionary(properties, processor.GetResources
                     ()));
             }
 
-            internal virtual PdfDictionary GetPropertiesDictionary(PdfObject operand1, PdfResources resources)
-            {
-                if (operand1.IsDictionary())
-                {
+            internal virtual PdfDictionary GetPropertiesDictionary(PdfObject operand1, PdfResources resources) {
+                if (operand1.IsDictionary()) {
                     return (PdfDictionary)operand1;
                 }
                 PdfName dictionaryName = ((PdfName)operand1);
@@ -1162,19 +1001,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (EMC).</summary>
-        private class EndMarkedContentOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class EndMarkedContentOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.EndMarkedContent();
             }
         }
 
         /// <summary>A content operator implementation (Do).</summary>
-        private class DoOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class DoOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfName xobjectName = (PdfName)operands[0];
                 processor.DisplayXObject(xobjectName);
             }
@@ -1186,36 +1021,29 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// This not a usual operator, it will have a single operand, which will be a PdfStream object which
         /// encapsulates inline image dictionary and bytes
         /// </remarks>
-        private class EndImageOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class EndImageOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfStream imageStream = (PdfStream)operands[0];
                 processor.DisplayImage(imageStream, true);
             }
         }
 
         /// <summary>A content operator implementation (w).</summary>
-        private class SetLineWidthOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands)
-            {
+        private class SetLineWidthOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
                 float lineWidth = ((PdfNumber)operands[0]).FloatValue();
                 processor.GetGraphicsState().SetLineWidth(lineWidth);
             }
         }
 
         /// <summary>A content operator implementation (J).</summary>
-        private class SetLineCapOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands)
-            {
+        private class SetLineCapOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
                 int lineCap = ((PdfNumber)operands[0]).IntValue();
                 processor.GetGraphicsState().SetLineCapStyle(lineCap);
             }
 
-            internal SetLineCapOperator(PdfCanvasProcessor _enclosing)
-            {
+            internal SetLineCapOperator(PdfCanvasProcessor _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1223,16 +1051,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (j).</summary>
-        private class SetLineJoinOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands)
-            {
+        private class SetLineJoinOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
                 int lineJoin = ((PdfNumber)operands[0]).IntValue();
                 processor.GetGraphicsState().SetLineJoinStyle(lineJoin);
             }
 
-            internal SetLineJoinOperator(PdfCanvasProcessor _enclosing)
-            {
+            internal SetLineJoinOperator(PdfCanvasProcessor _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1240,16 +1065,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (M).</summary>
-        private class SetMiterLimitOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands)
-            {
+        private class SetMiterLimitOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
                 float miterLimit = ((PdfNumber)operands[0]).FloatValue();
                 processor.GetGraphicsState().SetMiterLimit(miterLimit);
             }
 
-            internal SetMiterLimitOperator(PdfCanvasProcessor _enclosing)
-            {
+            internal SetMiterLimitOperator(PdfCanvasProcessor _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1257,16 +1079,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (d).</summary>
-        private class SetLineDashPatternOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands)
-            {
+        private class SetLineDashPatternOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
                 processor.GetGraphicsState().SetDashPattern(new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList(operands
                     [0], operands[1])));
             }
 
-            internal SetLineDashPatternOperator(PdfCanvasProcessor _enclosing)
-            {
+            internal SetLineDashPatternOperator(PdfCanvasProcessor _enclosing) {
                 this._enclosing = _enclosing;
             }
 
@@ -1274,18 +1093,14 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>An XObject subtype handler for FORM</summary>
-        private class FormXObjectDoHandler : IXObjectDoHandler
-        {
-            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream stream)
-            {
+        private class FormXObjectDoHandler : IXObjectDoHandler {
+            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream stream) {
                 PdfDictionary resourcesDic = stream.GetAsDictionary(PdfName.Resources);
                 PdfResources resources;
-                if (resourcesDic == null)
-                {
+                if (resourcesDic == null) {
                     resources = processor.GetResources();
                 }
-                else
-                {
+                else {
                     resources = new PdfResources(resourcesDic);
                 }
                 // we read the content bytes up here so if it fails we don't leave the graphics state stack corrupted
@@ -1295,8 +1110,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
                 contentBytes = stream.GetBytes();
                 PdfArray matrix = stream.GetAsArray(PdfName.Matrix);
                 new PdfCanvasProcessor.PushGraphicsStateOperator().Invoke(processor, null, null);
-                if (matrix != null)
-                {
+                if (matrix != null) {
                     float a = matrix.GetAsNumber(0).FloatValue();
                     float b = matrix.GetAsNumber(1).FloatValue();
                     float c = matrix.GetAsNumber(2).FloatValue();
@@ -1312,28 +1126,22 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>An XObject subtype handler for IMAGE</summary>
-        private class ImageXObjectDoHandler : IXObjectDoHandler
-        {
-            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream)
-            {
+        private class ImageXObjectDoHandler : IXObjectDoHandler {
+            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream) {
                 processor.DisplayImage(xobjectStream, false);
             }
         }
 
         /// <summary>An XObject subtype handler that does nothing</summary>
-        private class IgnoreXObjectDoHandler : IXObjectDoHandler
-        {
-            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream)
-            {
+        private class IgnoreXObjectDoHandler : IXObjectDoHandler {
+            public virtual void HandleXObject(PdfCanvasProcessor processor, PdfStream xobjectStream) {
             }
             // ignore XObject subtype
         }
 
         /// <summary>A content operator implementation (m).</summary>
-        private class MoveToOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class MoveToOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float x = ((PdfNumber)operands[0]).FloatValue();
                 float y = ((PdfNumber)operands[1]).FloatValue();
                 processor.currentPath.MoveTo(x, y);
@@ -1341,10 +1149,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (l).</summary>
-        private class LineToOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class LineToOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float x = ((PdfNumber)operands[0]).FloatValue();
                 float y = ((PdfNumber)operands[1]).FloatValue();
                 processor.currentPath.LineTo(x, y);
@@ -1352,10 +1158,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (c).</summary>
-        private class CurveOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class CurveOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float x1 = ((PdfNumber)operands[0]).FloatValue();
                 float y1 = ((PdfNumber)operands[1]).FloatValue();
                 float x2 = ((PdfNumber)operands[2]).FloatValue();
@@ -1367,10 +1171,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (v).</summary>
-        private class CurveFirstPointDuplicatedOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class CurveFirstPointDuplicatedOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float x2 = ((PdfNumber)operands[0]).FloatValue();
                 float y2 = ((PdfNumber)operands[1]).FloatValue();
                 float x3 = ((PdfNumber)operands[2]).FloatValue();
@@ -1380,10 +1182,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (y).</summary>
-        private class CurveFourhPointDuplicatedOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class CurveFourhPointDuplicatedOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float x1 = ((PdfNumber)operands[0]).FloatValue();
                 float y1 = ((PdfNumber)operands[1]).FloatValue();
                 float x3 = ((PdfNumber)operands[2]).FloatValue();
@@ -1393,19 +1193,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (h).</summary>
-        private class CloseSubpathOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class CloseSubpathOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.currentPath.CloseSubpath();
             }
         }
 
         /// <summary>A content operator implementation (re).</summary>
-        private class RectangleOperator : IContentOperator
-        {
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+        private class RectangleOperator : IContentOperator {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 float x = ((PdfNumber)operands[0]).FloatValue();
                 float y = ((PdfNumber)operands[1]).FloatValue();
                 float w = ((PdfNumber)operands[2]).FloatValue();
@@ -1415,8 +1211,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (S, s, f, F, f*, B, B*, b, b*).</summary>
-        private class PaintPathOperator : IContentOperator
-        {
+        private class PaintPathOperator : IContentOperator {
             private int operation;
 
             private int rule;
@@ -1440,17 +1235,14 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
             /// In case it isn't applicable pass any value.
             /// </param>
             /// <param name="close">Indicates whether the path should be closed or not.</param>
-            public PaintPathOperator(int operation, int rule, bool close)
-            {
+            public PaintPathOperator(int operation, int rule, bool close) {
                 this.operation = operation;
                 this.rule = rule;
                 this.close = close;
             }
 
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
-                if (close)
-                {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
+                if (close) {
                     processor.currentPath.CloseSubpath();
                 }
                 processor.PaintPath(operation, rule);
@@ -1458,17 +1250,14 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         }
 
         /// <summary>A content operator implementation (W, W*)</summary>
-        private class ClipPathOperator : IContentOperator
-        {
+        private class ClipPathOperator : IContentOperator {
             private int rule;
 
-            public ClipPathOperator(int rule)
-            {
+            public ClipPathOperator(int rule) {
                 this.rule = rule;
             }
 
-            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands)
-            {
+            public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 processor.isClip = true;
                 processor.clippingRule = rule;
             }

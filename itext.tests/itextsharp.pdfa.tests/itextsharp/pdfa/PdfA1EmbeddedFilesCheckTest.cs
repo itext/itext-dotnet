@@ -4,19 +4,15 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Filespec;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA1EmbeddedFilesCheckTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA1EmbeddedFilesCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest01()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void FileSpecCheckTest01() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -42,10 +38,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest02()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void FileSpecCheckTest02() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -66,10 +60,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest03()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void FileSpecCheckTest03() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"

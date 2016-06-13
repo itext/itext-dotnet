@@ -45,10 +45,8 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace iTextSharp.Layout.Hyphenation
-{
-    internal class TernaryTreeIterator : IEnumerator
-    {
+namespace iTextSharp.Layout.Hyphenation {
+    internal class TernaryTreeIterator : IEnumerator {
         /// <summary>current node index</summary>
         internal int cur;
 
@@ -57,8 +55,7 @@ namespace iTextSharp.Layout.Hyphenation
 
         internal TernaryTree tt;
 
-        private class Item
-        {
+        private class Item {
             /// <summary>parent</summary>
             internal char parent;
 
@@ -66,8 +63,7 @@ namespace iTextSharp.Layout.Hyphenation
             internal char child;
 
             /// <summary>default constructor</summary>
-            public Item(TernaryTreeIterator _enclosing)
-            {
+            public Item(TernaryTreeIterator _enclosing) {
                 this._enclosing = _enclosing;
                 this.parent = (char)0;
                 this.child = (char)0;
@@ -76,15 +72,13 @@ namespace iTextSharp.Layout.Hyphenation
             /// <summary>Construct item.</summary>
             /// <param name="p">a char</param>
             /// <param name="c">a char</param>
-            public Item(TernaryTreeIterator _enclosing, char p, char c)
-            {
+            public Item(TernaryTreeIterator _enclosing, char p, char c) {
                 this._enclosing = _enclosing;
                 this.parent = p;
                 this.child = c;
             }
 
-            public Item(TernaryTreeIterator _enclosing, TernaryTreeIterator.Item i)
-            {
+            public Item(TernaryTreeIterator _enclosing, TernaryTreeIterator.Item i) {
                 this._enclosing = _enclosing;
                 this.parent = i.parent;
                 this.child = i.child;
@@ -100,8 +94,7 @@ namespace iTextSharp.Layout.Hyphenation
         internal StringBuilder ks;
 
         /// <summary>default constructor</summary>
-        public TernaryTreeIterator(TernaryTree tt)
-        {
+        public TernaryTreeIterator(TernaryTree tt) {
             this.tt = tt;
             cur = -1;
             ns = new Stack();
@@ -111,13 +104,11 @@ namespace iTextSharp.Layout.Hyphenation
 
         /// <summary>rewind iterator</summary>
         [System.ObsoleteAttribute(@"will be removed in 7.1. Use reset() instead")]
-        public virtual void Rewind()
-        {
+        public virtual void Rewind() {
             Reset();
         }
 
-        public virtual void Reset()
-        {
+        public virtual void Reset() {
             ns.Clear();
             ks.Length = 0;
             cur = tt.root;
@@ -125,10 +116,8 @@ namespace iTextSharp.Layout.Hyphenation
         }
 
         /// <returns>next element</returns>
-        public virtual Object Current
-        {
-            get
-            {
+        public virtual Object Current {
+            get {
                 String res = curkey;
                 cur = Up();
                 Run();
@@ -137,51 +126,40 @@ namespace iTextSharp.Layout.Hyphenation
         }
 
         /// <returns>value</returns>
-        public virtual char GetValue()
-        {
-            if (cur >= 0)
-            {
+        public virtual char GetValue() {
+            if (cur >= 0) {
                 return tt.eq[cur];
             }
             return (char)0;
         }
 
         /// <returns>true if more elements</returns>
-        public virtual bool MoveNext()
-        {
+        public virtual bool MoveNext() {
             return (cur != -1);
         }
 
         /// <summary>traverse upwards</summary>
-        private int Up()
-        {
+        private int Up() {
             TernaryTreeIterator.Item i = new TernaryTreeIterator.Item(this);
             int res = 0;
-            if (ns.Count == 0)
-            {
+            if (ns.Count == 0) {
                 return -1;
             }
-            if (cur != 0 && tt.sc[cur] == 0)
-            {
+            if (cur != 0 && tt.sc[cur] == 0) {
                 return tt.lo[cur];
             }
             bool climb = true;
-            while (climb)
-            {
+            while (climb) {
                 i = (TernaryTreeIterator.Item)ns.Pop();
                 i.child++;
-                switch (i.child)
-                {
-                    case (char)1:
-                    {
-                        if (tt.sc[i.parent] != 0)
-                        {
+                switch (i.child) {
+                    case (char)1: {
+                        if (tt.sc[i.parent] != 0) {
                             res = tt.eq[i.parent];
                             ns.Push(new TernaryTreeIterator.Item(this, i));
                             ks.Append(tt.sc[i.parent]);
                         }
-                        else
-                        {
+                        else {
                             i.child++;
                             ns.Push(new TernaryTreeIterator.Item(this, i));
                             res = tt.hi[i.parent];
@@ -190,12 +168,10 @@ namespace iTextSharp.Layout.Hyphenation
                         break;
                     }
 
-                    case (char)2:
-                    {
+                    case (char)2: {
                         res = tt.hi[i.parent];
                         ns.Push(new TernaryTreeIterator.Item(this, i));
-                        if (ks.Length > 0)
-                        {
+                        if (ks.Length > 0) {
                             ks.Length = ks.Length - 1;
                         }
                         // pop
@@ -203,10 +179,8 @@ namespace iTextSharp.Layout.Hyphenation
                         break;
                     }
 
-                    default:
-                    {
-                        if (ns.Count == 0)
-                        {
+                    default: {
+                        if (ns.Count == 0) {
                             return -1;
                         }
                         climb = true;
@@ -218,50 +192,40 @@ namespace iTextSharp.Layout.Hyphenation
         }
 
         /// <summary>traverse the tree to find next key</summary>
-        private int Run()
-        {
-            if (cur == -1)
-            {
+        private int Run() {
+            if (cur == -1) {
                 return -1;
             }
             bool leaf = false;
-            while (true)
-            {
+            while (true) {
                 // first go down on low branch until leaf or compressed branch
-                while (cur != 0)
-                {
-                    if (tt.sc[cur] == 0xFFFF)
-                    {
+                while (cur != 0) {
+                    if (tt.sc[cur] == 0xFFFF) {
                         leaf = true;
                         break;
                     }
                     ns.Push(new TernaryTreeIterator.Item(this, (char)cur, '\u0000'));
-                    if (tt.sc[cur] == 0)
-                    {
+                    if (tt.sc[cur] == 0) {
                         leaf = true;
                         break;
                     }
                     cur = tt.lo[cur];
                 }
-                if (leaf)
-                {
+                if (leaf) {
                     break;
                 }
                 // nothing found, go up one node and try again
                 cur = Up();
-                if (cur == -1)
-                {
+                if (cur == -1) {
                     return -1;
                 }
             }
             // The current node should be a data node and
             // the key should be in the key stack (at least partially)
             StringBuilder buf = new StringBuilder(ks.ToString());
-            if (tt.sc[cur] == 0xFFFF)
-            {
+            if (tt.sc[cur] == 0xFFFF) {
                 int p = tt.lo[cur];
-                while (tt.kv.Get(p) != 0)
-                {
+                while (tt.kv.Get(p) != 0) {
                     buf.Append(tt.kv.Get(p++));
                 }
             }

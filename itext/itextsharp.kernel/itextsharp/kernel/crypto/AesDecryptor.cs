@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Crypto
-{
-    public class AesDecryptor : IDecryptor
-    {
+namespace iTextSharp.Kernel.Crypto {
+    public class AesDecryptor : IDecryptor {
         private AESCipher cipher;
 
         private byte[] key;
@@ -58,31 +56,25 @@ namespace iTextSharp.Kernel.Crypto
         private int ivptr;
 
         /// <summary>Creates a new instance of AesDecryption</summary>
-        public AesDecryptor(byte[] key, int off, int len)
-        {
+        public AesDecryptor(byte[] key, int off, int len) {
             this.key = new byte[len];
             System.Array.Copy(key, off, this.key, 0, len);
         }
 
-        public virtual byte[] Update(byte[] b, int off, int len)
-        {
-            if (initiated)
-            {
+        public virtual byte[] Update(byte[] b, int off, int len) {
+            if (initiated) {
                 return cipher.Update(b, off, len);
             }
-            else
-            {
+            else {
                 int left = Math.Min(iv.Length - ivptr, len);
                 System.Array.Copy(b, off, iv, ivptr, left);
                 off += left;
                 len -= left;
                 ivptr += left;
-                if (ivptr == iv.Length)
-                {
+                if (ivptr == iv.Length) {
                     cipher = new AESCipher(false, key, iv);
                     initiated = true;
-                    if (len > 0)
-                    {
+                    if (len > 0) {
                         return cipher.Update(b, off, len);
                     }
                 }
@@ -90,14 +82,11 @@ namespace iTextSharp.Kernel.Crypto
             }
         }
 
-        public virtual byte[] Finish()
-        {
-            if (cipher != null)
-            {
+        public virtual byte[] Finish() {
+            if (cipher != null) {
                 return cipher.DoFinal();
             }
-            else
-            {
+            else {
                 return null;
             }
         }

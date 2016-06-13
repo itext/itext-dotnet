@@ -5,19 +5,15 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Action;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA1ActionCheckTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA1ActionCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck01()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck01() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -35,10 +31,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck02()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck02() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -56,10 +50,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck03()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck03() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -77,10 +69,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck04()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck04() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -98,10 +88,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck05()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck05() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -119,10 +107,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck06()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck06() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -140,10 +126,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck07()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck07() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -161,10 +145,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck08()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck08() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -183,10 +165,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck09()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck09() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -202,10 +182,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck10()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck10() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -223,10 +201,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ActionCheck11()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ActionCheck11() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""

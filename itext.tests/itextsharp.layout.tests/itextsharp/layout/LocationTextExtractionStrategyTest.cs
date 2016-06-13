@@ -11,21 +11,17 @@ using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 
-namespace iTextSharp.Layout
-{
-    public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest
-    {
+namespace iTextSharp.Layout {
+    public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest {
         private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
 
-        public override ITextExtractionStrategy CreateRenderListenerForTest()
-        {
+        public override ITextExtractionStrategy CreateRenderListenerForTest() {
             return new LocationTextExtractionStrategy();
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestYPosition()
-        {
+        public virtual void TestYPosition() {
             PdfDocument doc = CreatePdfWithOverlappingTextVertical(new String[] { "A", "B", "C", "D" }, new String[] { 
                 "AA", "BB", "CC", "DD" });
             String text = PdfTextExtractor.GetTextFromPage(doc.GetPage(1), CreateRenderListenerForTest());
@@ -34,8 +30,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestXPosition()
-        {
+        public virtual void TestXPosition() {
             byte[] content = CreatePdfWithOverlappingTextHorizontal(new String[] { "A", "B", "C", "D" }, new String[] 
                 { "AA", "BB", "CC", "DD" });
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
@@ -47,8 +42,7 @@ namespace iTextSharp.Layout
         //        Assert.assertEquals("A\tAA\tB\tBB\tC\tCC\tD\tDD", text);
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestRotatedPage()
-        {
+        public virtual void TestRotatedPage() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
@@ -57,8 +51,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestRotatedPage2()
-        {
+        public virtual void TestRotatedPage2() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
@@ -68,8 +61,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestRotatedPage3()
-        {
+        public virtual void TestRotatedPage3() {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
@@ -79,8 +71,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestExtractXObjectTextWithRotation()
-        {
+        public virtual void TestExtractXObjectTextWithRotation() {
             //LocationAwareTextExtractingPdfContentRenderListener.DUMP_STATE = true;
             String text1 = "X";
             byte[] content = CreatePdfWithRotatedXObject(text1);
@@ -92,8 +83,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNegativeCharacterSpacing()
-        {
+        public virtual void TestNegativeCharacterSpacing() {
             byte[] content = CreatePdfWithNegativeCharSpacing("W", 200, "A");
             //TestResourceUtils.openBytesAsPdf(content);
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
@@ -102,8 +92,7 @@ namespace iTextSharp.Layout
         }
 
         [NUnit.Framework.Test]
-        public virtual void TestSanityCheckOnVectorMath()
-        {
+        public virtual void TestSanityCheckOnVectorMath() {
             Vector start = new Vector(0, 0, 1);
             Vector end = new Vector(1, 0, 1);
             Vector antiparallelStart = new Vector(0.9f, 0, 1);
@@ -116,8 +105,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestSuperscript()
-        {
+        public virtual void TestSuperscript() {
             byte[] content = CreatePdfWithSupescript("Hel", "lo");
             //TestResourceUtils.openBytesAsPdf(content);
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(content)));
@@ -127,8 +115,7 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Test01()
-        {
+        public virtual void Test01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test01.pdf"));
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new LocationTextExtractionStrategy(
                 ));
@@ -140,8 +127,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private byte[] CreatePdfWithNegativeCharSpacing(String str1, float charSpacing, String str2)
-        {
+        private byte[] CreatePdfWithNegativeCharSpacing(String str1, float charSpacing, String str2) {
             MemoryStream baos = new MemoryStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.AddNewPage());
@@ -159,8 +145,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private byte[] CreatePdfWithRotatedXObject(String xobjectText)
-        {
+        private byte[] CreatePdfWithRotatedXObject(String xobjectText) {
             MemoryStream baos = new MemoryStream();
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0));
             Document document = new Document(pdfDocument);
@@ -181,12 +166,10 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private byte[] CreateSimplePdf(Rectangle pageSize, params String[] text)
-        {
+        private byte[] CreateSimplePdf(Rectangle pageSize, params String[] text) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)), new PageSize(pageSize));
-            foreach (String @string in text)
-            {
+            foreach (String @string in text) {
                 document.Add(new Paragraph(@string));
                 document.Add(new AreaBreak());
             }
@@ -195,23 +178,20 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        protected internal virtual byte[] CreatePdfWithOverlappingTextHorizontal(String[] text1, String[] text2)
-        {
+        protected internal virtual byte[] CreatePdfWithOverlappingTextHorizontal(String[] text1, String[] text2) {
             MemoryStream baos = new MemoryStream();
             Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
             float ystart = 500;
             float xstart = 50;
             float x = xstart;
             float y = ystart;
-            foreach (String text in text1)
-            {
+            foreach (String text in text1) {
                 doc.ShowTextAligned(text, x, y, TextAlignment.LEFT);
                 x += 70.0f;
             }
             x = xstart + 12;
             y = ystart;
-            foreach (String text_1 in text2)
-            {
+            foreach (String text_1 in text2) {
                 doc.ShowTextAligned(text_1, x, y, TextAlignment.LEFT);
                 x += 70.0f;
             }
@@ -220,21 +200,18 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private PdfDocument CreatePdfWithOverlappingTextVertical(String[] text1, String[] text2)
-        {
+        private PdfDocument CreatePdfWithOverlappingTextVertical(String[] text1, String[] text2) {
             MemoryStream baos = new MemoryStream();
             Document doc = new Document(new PdfDocument(new PdfWriter(baos).SetCompressionLevel(0)));
             float ystart = 500;
             float x = 50;
             float y = ystart;
-            foreach (String text in text1)
-            {
+            foreach (String text in text1) {
                 doc.ShowTextAligned(text, x, y, TextAlignment.LEFT);
                 y -= 25.0f;
             }
             y = ystart - 13;
-            foreach (String text_1 in text2)
-            {
+            foreach (String text_1 in text2) {
                 doc.ShowTextAligned(text_1, x, y, TextAlignment.LEFT);
                 y -= 25.0f;
             }
@@ -243,8 +220,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.Exception"/>
-        private byte[] CreatePdfWithSupescript(String regularText, String superscriptText)
-        {
+        private byte[] CreatePdfWithSupescript(String regularText, String superscriptText) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));
             document.Add(new Paragraph(regularText).Add(new Text(superscriptText).SetTextRise(7)));

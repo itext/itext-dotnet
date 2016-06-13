@@ -45,14 +45,11 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfWidgetAnnotation : PdfAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfWidgetAnnotation : PdfAnnotation {
         public PdfWidgetAnnotation(Rectangle rect)
-            : base(rect)
-        {
-            {
+            : base(rect) {
+ {
                 widgetEntries.Add(PdfName.Subtype);
                 widgetEntries.Add(PdfName.Type);
                 widgetEntries.Add(PdfName.Rect);
@@ -76,9 +73,8 @@ namespace iTextSharp.Kernel.Pdf.Annot
         }
 
         public PdfWidgetAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
-            {
+            : base(pdfObject) {
+ {
                 widgetEntries.Add(PdfName.Subtype);
                 widgetEntries.Add(PdfName.Type);
                 widgetEntries.Add(PdfName.Rect);
@@ -103,13 +99,11 @@ namespace iTextSharp.Kernel.Pdf.Annot
 
         private HashSet<PdfName> widgetEntries = new HashSet<PdfName>();
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Widget;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject parent)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetParent(PdfObject parent) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.Parent, parent);
         }
 
@@ -136,34 +130,28 @@ namespace iTextSharp.Kernel.Pdf.Annot
         /// </remarks>
         /// <param name="mode">The new value for the annotation's highlighting mode.</param>
         /// <returns>The widget annotation which this method was called on.</returns>
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName mode)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation SetHighlightMode(PdfName mode) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation)Put(PdfName.H, mode);
         }
 
         /// <summary>Getter for the annotation's highlighting mode.</summary>
         /// <returns>Current value of the annotation's highlighting mode.</returns>
-        public virtual PdfName GetHighlightMode()
-        {
+        public virtual PdfName GetHighlightMode() {
             return GetPdfObject().GetAsName(PdfName.H);
         }
 
         /// <summary>This method removes all widget annotation entries from the form field  the given annotation merged with.
         ///     </summary>
-        public virtual void ReleaseFormFieldFromWidgetAnnotation()
-        {
+        public virtual void ReleaseFormFieldFromWidgetAnnotation() {
             PdfDictionary annotDict = GetPdfObject();
-            foreach (PdfName entry in widgetEntries)
-            {
+            foreach (PdfName entry in widgetEntries) {
                 annotDict.Remove(entry);
             }
             PdfDictionary parent = annotDict.GetAsDictionary(PdfName.Parent);
-            if (parent != null && annotDict.Size() == 1)
-            {
+            if (parent != null && annotDict.Size() == 1) {
                 PdfArray kids = parent.GetAsArray(PdfName.Kids);
                 kids.Remove(annotDict.GetIndirectReference());
-                if (kids.Size() == 0)
-                {
+                if (kids.Size() == 0) {
                     parent.Remove(PdfName.Kids);
                 }
             }

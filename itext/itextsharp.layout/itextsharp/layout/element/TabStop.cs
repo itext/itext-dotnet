@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Pdf.Canvas.Draw;
 using iTextSharp.Layout.Property;
 
-namespace iTextSharp.Layout.Element
-{
-    public class TabStop
-    {
+namespace iTextSharp.Layout.Element {
+    public class TabStop {
         private float tabPosition;
 
         private TabAlignment tabAlignment;
@@ -57,55 +55,45 @@ namespace iTextSharp.Layout.Element
         private ILineDrawer tabLeader;
 
         public TabStop(float tabPosition)
-            : this(tabPosition, TabAlignment.LEFT)
-        {
+            : this(tabPosition, TabAlignment.LEFT) {
         }
 
         public TabStop(float tabPosition, TabAlignment tabAlignment)
-            : this(tabPosition, tabAlignment, null)
-        {
+            : this(tabPosition, tabAlignment, null) {
         }
 
-        public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader)
-        {
+        public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader) {
             this.tabPosition = tabPosition;
             this.tabAlignment = tabAlignment;
             this.tabLeader = tabLeader;
             this.tabAnchor = '.';
         }
 
-        public virtual float GetTabPosition()
-        {
+        public virtual float GetTabPosition() {
             return tabPosition;
         }
 
-        public virtual TabAlignment GetTabAlignment()
-        {
+        public virtual TabAlignment GetTabAlignment() {
             return tabAlignment;
         }
 
-        public virtual void SetTabAlignment(TabAlignment tabAlignment)
-        {
+        public virtual void SetTabAlignment(TabAlignment tabAlignment) {
             this.tabAlignment = tabAlignment;
         }
 
-        public virtual char? GetTabAnchor()
-        {
+        public virtual char? GetTabAnchor() {
             return tabAnchor;
         }
 
-        public virtual void SetTabAnchor(char? tabAnchor)
-        {
+        public virtual void SetTabAnchor(char? tabAnchor) {
             this.tabAnchor = tabAnchor;
         }
 
-        public virtual ILineDrawer GetTabLeader()
-        {
+        public virtual ILineDrawer GetTabLeader() {
             return tabLeader;
         }
 
-        public virtual void SetTabLeader(ILineDrawer tabLeader)
-        {
+        public virtual void SetTabLeader(ILineDrawer tabLeader) {
             this.tabLeader = tabLeader;
         }
     }

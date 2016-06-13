@@ -41,12 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary>
-    {
-        public enum PdfViewerPreferencesConstants
-        {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary> {
+        public enum PdfViewerPreferencesConstants {
             USE_NONE,
             USE_OUTLINES,
             USE_THUMBS,
@@ -70,60 +67,52 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         public PdfViewerPreferences()
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
         }
 
         public PdfViewerPreferences(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         /// <summary>This method sets HideToolBar flag to true or false</summary>
         /// <param name="hideToolbar"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideToolbar(bool hideToolbar)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideToolbar(bool hideToolbar) {
             return Put(PdfName.HideToolbar, new PdfBoolean(hideToolbar));
         }
 
         /// <summary>This method sets HideMenuBar flag to true or false</summary>
         /// <param name="hideMenubar"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideMenubar(bool hideMenubar)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideMenubar(bool hideMenubar) {
             return Put(PdfName.HideMenubar, new PdfBoolean(hideMenubar));
         }
 
         /// <summary>This method sets HideWindowUI flag to true or false</summary>
         /// <param name="hideWindowUI"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideWindowUI(bool hideWindowUI)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideWindowUI(bool hideWindowUI) {
             return Put(PdfName.HideWindowUI, new PdfBoolean(hideWindowUI));
         }
 
         /// <summary>This method sets FitWindow flag to true or false</summary>
         /// <param name="fitWindow"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetFitWindow(bool fitWindow)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetFitWindow(bool fitWindow) {
             return Put(PdfName.FitWindow, new PdfBoolean(fitWindow));
         }
 
         /// <summary>This method sets CenterWindow flag to true or false</summary>
         /// <param name="centerWindow"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetCenterWindow(bool centerWindow)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetCenterWindow(bool centerWindow) {
             return Put(PdfName.CenterWindow, new PdfBoolean(centerWindow));
         }
 
         /// <summary>This method sets DisplayDocTitle flag to true or false</summary>
         /// <param name="displayDocTitle"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDisplayDocTitle(bool displayDocTitle)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDisplayDocTitle(bool displayDocTitle) {
             return Put(PdfName.DisplayDocTitle, new PdfBoolean(displayDocTitle));
         }
 
@@ -135,36 +124,29 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="nonFullScreenPageMode"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetNonFullScreenPageMode(PdfViewerPreferences.PdfViewerPreferencesConstants
-             nonFullScreenPageMode)
-        {
-            switch (nonFullScreenPageMode)
-            {
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_NONE:
-                {
+             nonFullScreenPageMode) {
+            switch (nonFullScreenPageMode) {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_NONE: {
                     Put(PdfName.NonFullScreenPageMode, PdfName.UseNone);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_OUTLINES:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_OUTLINES: {
                     Put(PdfName.NonFullScreenPageMode, PdfName.UseOutlines);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_THUMBS:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_THUMBS: {
                     Put(PdfName.NonFullScreenPageMode, PdfName.UseThumbs);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_OC:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_OC: {
                     Put(PdfName.NonFullScreenPageMode, PdfName.UseOC);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -175,24 +157,19 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="direction"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDirection(PdfViewerPreferences.PdfViewerPreferencesConstants
-             direction)
-        {
-            switch (direction)
-            {
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.LEFT_TO_RIGHT:
-                {
+             direction) {
+            switch (direction) {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.LEFT_TO_RIGHT: {
                     Put(PdfName.Direction, PdfName.L2R);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.RIGHT_TO_LEFT:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.RIGHT_TO_LEFT: {
                     Put(PdfName.Direction, PdfName.R2L);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -206,8 +183,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="pageBoundary"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetViewArea(PdfViewerPreferences.PdfViewerPreferencesConstants
-             pageBoundary)
-        {
+             pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_AREA, pageBoundary);
         }
 
@@ -218,8 +194,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="pageBoundary"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetViewClip(PdfViewerPreferences.PdfViewerPreferencesConstants
-             pageBoundary)
-        {
+             pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP, pageBoundary);
         }
 
@@ -230,8 +205,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="pageBoundary"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintArea(PdfViewerPreferences.PdfViewerPreferencesConstants
-             pageBoundary)
-        {
+             pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA, pageBoundary);
         }
 
@@ -242,8 +216,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="pageBoundary"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintClip(PdfViewerPreferences.PdfViewerPreferencesConstants
-             pageBoundary)
-        {
+             pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP, pageBoundary);
         }
 
@@ -258,24 +231,19 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="printScaling"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintScaling(PdfViewerPreferences.PdfViewerPreferencesConstants
-             printScaling)
-        {
-            switch (printScaling)
-            {
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.NONE:
-                {
+             printScaling) {
+            switch (printScaling) {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.NONE: {
                     Put(PdfName.PrintScaling, PdfName.None);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.APP_DEFAULT:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.APP_DEFAULT: {
                     Put(PdfName.PrintScaling, PdfName.AppDefault);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -291,30 +259,24 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="duplex"/>
         /// <returns/>
         public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDuplex(PdfViewerPreferences.PdfViewerPreferencesConstants
-             duplex)
-        {
-            switch (duplex)
-            {
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.SIMPLEX:
-                {
+             duplex) {
+            switch (duplex) {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.SIMPLEX: {
                     Put(PdfName.Duplex, PdfName.Simplex);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.DUPLEX_FLIP_SHORT_EDGE:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.DUPLEX_FLIP_SHORT_EDGE: {
                     Put(PdfName.Duplex, PdfName.DuplexFlipShortEdge);
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.DUPLEX_FLIP_LONG_EDGE:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.DUPLEX_FLIP_LONG_EDGE: {
                     Put(PdfName.Duplex, PdfName.DuplexFlipLongEdge);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -324,8 +286,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>This method sets PickTrayByPDFSize flag to true or false.</summary>
         /// <param name="pickTrayByPdfSize"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPickTrayByPDFSize(bool pickTrayByPdfSize)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPickTrayByPDFSize(bool pickTrayByPdfSize) {
             return Put(PdfName.PickTrayByPDFSize, new PdfBoolean(pickTrayByPdfSize));
         }
 
@@ -333,8 +294,7 @@ namespace iTextSharp.Kernel.Pdf
         ///     </summary>
         /// <param name="printPageRange"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintPageRange(int[] printPageRange)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintPageRange(int[] printPageRange) {
             return Put(PdfName.PrintPageRange, new PdfArray(printPageRange));
         }
 
@@ -342,93 +302,75 @@ namespace iTextSharp.Kernel.Pdf
         ///     </summary>
         /// <param name="numCopies"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetNumCopies(int numCopies)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetNumCopies(int numCopies) {
             return Put(PdfName.NumCopies, new PdfNumber(numCopies));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences Put(PdfName key, PdfObject value)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
 
         private iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants
-             viewerPreferenceType, PdfViewerPreferences.PdfViewerPreferencesConstants pageBoundary)
-        {
+             viewerPreferenceType, PdfViewerPreferences.PdfViewerPreferencesConstants pageBoundary) {
             PdfName type = null;
-            switch (viewerPreferenceType)
-            {
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_AREA:
-                {
+            switch (viewerPreferenceType) {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_AREA: {
                     type = PdfName.ViewArea;
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP: {
                     type = PdfName.ViewArea;
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA: {
                     type = PdfName.ViewArea;
                     break;
                 }
 
-                case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP:
-                {
+                case PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP: {
                     type = PdfName.ViewArea;
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
-            if (type != null)
-            {
-                switch (pageBoundary)
-                {
-                    case PdfViewerPreferences.PdfViewerPreferencesConstants.MEDIA_BOX:
-                    {
+            if (type != null) {
+                switch (pageBoundary) {
+                    case PdfViewerPreferences.PdfViewerPreferencesConstants.MEDIA_BOX: {
                         Put(type, PdfName.MediaBox);
                         break;
                     }
 
-                    case PdfViewerPreferences.PdfViewerPreferencesConstants.CROP_BOX:
-                    {
+                    case PdfViewerPreferences.PdfViewerPreferencesConstants.CROP_BOX: {
                         Put(type, PdfName.CropBox);
                         break;
                     }
 
-                    case PdfViewerPreferences.PdfViewerPreferencesConstants.BLEED_BOX:
-                    {
+                    case PdfViewerPreferences.PdfViewerPreferencesConstants.BLEED_BOX: {
                         Put(type, PdfName.BleedBox);
                         break;
                     }
 
-                    case PdfViewerPreferences.PdfViewerPreferencesConstants.TRIM_BOX:
-                    {
+                    case PdfViewerPreferences.PdfViewerPreferencesConstants.TRIM_BOX: {
                         Put(type, PdfName.TrimBox);
                         break;
                     }
 
-                    case PdfViewerPreferences.PdfViewerPreferencesConstants.ART_BOX:
-                    {
+                    case PdfViewerPreferences.PdfViewerPreferencesConstants.ART_BOX: {
                         Put(type, PdfName.ArtBox);
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         break;
                     }
                 }

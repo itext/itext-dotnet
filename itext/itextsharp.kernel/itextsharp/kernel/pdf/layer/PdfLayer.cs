@@ -46,8 +46,7 @@ using System.Collections.Generic;
 using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Layer
-{
+namespace iTextSharp.Kernel.Pdf.Layer {
     /// <summary>
     /// An optional content group is a dictionary representing a collection of graphics
     /// that can be made visible or invisible dynamically by users of viewer applications.
@@ -63,8 +62,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
     /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </remarks>
-    public class PdfLayer : PdfObjectWrapper<PdfDictionary>, IPdfOCG
-    {
+    public class PdfLayer : PdfObjectWrapper<PdfDictionary>, IPdfOCG {
         /// <summary>Used for titling group of objects but not actually grouping them.</summary>
         protected internal String title;
 
@@ -82,8 +80,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public PdfLayer(PdfDictionary layerDictionary)
-            : base(layerDictionary)
-        {
+            : base(layerDictionary) {
             EnsureObjectIsAddedToDocument(layerDictionary);
         }
 
@@ -92,15 +89,13 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="document">the PdfDocument which the layer belongs to</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public PdfLayer(String name, PdfDocument document)
-            : this(document)
-        {
+            : this(document) {
             SetName(name);
             document.GetCatalog().GetOCProperties(true).RegisterLayer(this);
         }
 
         private PdfLayer(PdfDocument document)
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
             MakeIndirect(document);
             GetPdfObject().Put(PdfName.Type, PdfName.OCG);
         }
@@ -113,8 +108,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="title">the title text</param>
         /// <param name="document">the <CODE>PdfDocument</CODE></param>
         /// <returns>the title layer</returns>
-        public static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document)
-        {
+        public static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document) {
             iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = CreateTitleSilent(title, document);
             document.GetCatalog().GetOCProperties(true).RegisterLayer(layer);
             return layer;
@@ -134,23 +128,19 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <param name="document">the <CODE>PdfDocument</CODE></param>
         /// <param name="group">the radio group</param>
         public static void AddOCGRadioGroup(PdfDocument document, IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> group
-            )
-        {
+            ) {
             document.GetCatalog().GetOCProperties(true).AddOCGRadioGroup(group);
         }
 
         /// <summary>Adds a child layer.</summary>
         /// <remarks>Adds a child layer. Nested layers can only have one parent.</remarks>
         /// <param name="childLayer">the child layer</param>
-        public virtual void AddChild(iTextSharp.Kernel.Pdf.Layer.PdfLayer childLayer)
-        {
-            if (childLayer.parent != null)
-            {
+        public virtual void AddChild(iTextSharp.Kernel.Pdf.Layer.PdfLayer childLayer) {
+            if (childLayer.parent != null) {
                 throw new ArgumentException("Illegal argument: childLayer");
             }
             childLayer.parent = this;
-            if (children == null)
-            {
+            if (children == null) {
                 children = new List<iTextSharp.Kernel.Pdf.Layer.PdfLayer>();
             }
             children.Add(childLayer);
@@ -158,32 +148,27 @@ namespace iTextSharp.Kernel.Pdf.Layer
 
         /// <summary>Gets the parent of this layer, be it a title layer, or a usual one.</summary>
         /// <returns>the parent of the layer, or null if it has no parent</returns>
-        public virtual iTextSharp.Kernel.Pdf.Layer.PdfLayer GetParent()
-        {
+        public virtual iTextSharp.Kernel.Pdf.Layer.PdfLayer GetParent() {
             return parent;
         }
 
         /// <summary>Sets the name of the layer to be displayed in the Layers panel.</summary>
         /// <param name="name">the name of the layer.</param>
-        public virtual void SetName(String name)
-        {
+        public virtual void SetName(String name) {
             GetPdfObject().Put(PdfName.Name, new PdfString(name, PdfEncodings.UNICODE_BIG));
             GetPdfObject().SetModified();
         }
 
         /// <summary>Gets the initial visibility of the layer when the document is opened.</summary>
         /// <returns>the initial visibility of the layer</returns>
-        public virtual bool IsOn()
-        {
+        public virtual bool IsOn() {
             return on;
         }
 
         /// <summary>Sets the initial visibility of the layer when the document is opened.</summary>
         /// <param name="on">the initial visibility of the layer</param>
-        public virtual void SetOn(bool on)
-        {
-            if (this.on != on)
-            {
+        public virtual void SetOn(bool on) {
+            if (this.on != on) {
                 FetchOCProperties().SetModified();
             }
             this.on = on;
@@ -195,8 +180,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// it will not be possible to change its state (on/off) in a viewer.
         /// </remarks>
         /// <returns>true of the layer is currently locked, false otherwise.</returns>
-        public virtual bool IsLocked()
-        {
+        public virtual bool IsLocked() {
             return locked;
         }
 
@@ -207,10 +191,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// of a viewer application. Producers can use this entry to prevent the visibility
         /// of content that depends on these groups from being changed by users.
         /// </remarks>
-        public virtual void SetLocked(bool locked)
-        {
-            if (this.IsLocked() != locked)
-            {
+        public virtual void SetLocked(bool locked) {
+            if (this.IsLocked() != locked) {
                 FetchOCProperties().SetModified();
             }
             this.locked = locked;
@@ -218,8 +200,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
 
         /// <summary>Gets the layer visibility in Acrobat's layer panel</summary>
         /// <returns>the layer visibility in Acrobat's layer panel</returns>
-        public virtual bool IsOnPanel()
-        {
+        public virtual bool IsOnPanel() {
             return onPanel;
         }
 
@@ -230,10 +211,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// also be absent from the panel.
         /// </remarks>
         /// <param name="onPanel">the visibility of the layer in Acrobat's layer panel</param>
-        public virtual void SetOnPanel(bool onPanel)
-        {
-            if (this.on != onPanel)
-            {
+        public virtual void SetOnPanel(bool onPanel) {
+            if (this.on != onPanel) {
                 FetchOCProperties().SetModified();
             }
             this.onPanel = onPanel;
@@ -247,17 +226,13 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// </remarks>
         /// <returns>the collection of intents.</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual ICollection<PdfName> GetIntents()
-        {
+        public virtual ICollection<PdfName> GetIntents() {
             PdfObject intent = GetPdfObject().Get(PdfName.Intent);
-            if (intent is PdfName)
-            {
+            if (intent is PdfName) {
                 return iTextSharp.IO.Util.JavaUtil.ArraysAsList((PdfName)intent);
             }
-            else
-            {
-                if (intent is PdfArray)
-                {
+            else {
+                if (intent is PdfArray) {
                     return (ICollection<PdfName>)intent;
                 }
             }
@@ -266,25 +241,18 @@ namespace iTextSharp.Kernel.Pdf.Layer
 
         /// <summary>Sets the intents of the layer.</summary>
         /// <param name="intents">the list of intents.</param>
-        public virtual void SetIntents(IList<PdfName> intents)
-        {
-            if (intents == null || intents.Count == 0)
-            {
+        public virtual void SetIntents(IList<PdfName> intents) {
+            if (intents == null || intents.Count == 0) {
                 GetPdfObject().Remove(PdfName.Intent);
             }
-            else
-            {
-                if (intents.Count == 1)
-                {
+            else {
+                if (intents.Count == 1) {
                     GetPdfObject().Put(PdfName.Intent, intents[0]);
                 }
-                else
-                {
-                    if (intents.Count > 1)
-                    {
+                else {
+                    if (intents.Count > 1) {
                         PdfArray array = new PdfArray();
-                        foreach (PdfName intent in intents)
-                        {
+                        foreach (PdfName intent in intents) {
                             array.Add(intent);
                         }
                         GetPdfObject().Put(PdfName.Intent, array);
@@ -305,8 +273,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// applications, and <B>Technical</B>, for technical designs such as building plans or
         /// schematics
         /// </param>
-        public virtual void SetCreatorInfo(String creator, String subtype)
-        {
+        public virtual void SetCreatorInfo(String creator, String subtype) {
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.Creator, new PdfString(creator, PdfEncodings.UNICODE_BIG));
@@ -327,13 +294,11 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// used by viewer applications when there is a partial match but no exact
         /// match between the system language and the language strings in all usage dictionaries
         /// </param>
-        public virtual void SetLanguage(String lang, bool preferred)
-        {
+        public virtual void SetLanguage(String lang, bool preferred) {
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.Lang, new PdfString(lang, PdfEncodings.UNICODE_BIG));
-            if (preferred)
-            {
+            if (preferred) {
                 dic.Put(PdfName.Preferred, PdfName.ON);
             }
             usage.Put(PdfName.Language, dic);
@@ -347,8 +312,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// PDF or a raster image format).
         /// </summary>
         /// <param name="export">the export state</param>
-        public virtual void SetExport(bool export)
-        {
+        public virtual void SetExport(bool export) {
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.ExportState, export ? PdfName.ON : PdfName.OFF);
@@ -369,20 +333,16 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// should be ON. A negative value will set the largest possible magnification supported by the
         /// viewer application
         /// </param>
-        public virtual void SetZoom(float min, float max)
-        {
-            if (min <= 0 && max < 0)
-            {
+        public virtual void SetZoom(float min, float max) {
+            if (min <= 0 && max < 0) {
                 return;
             }
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
-            if (min > 0)
-            {
+            if (min > 0) {
                 dic.Put(PdfName.min, new PdfNumber(min));
             }
-            if (max >= 0)
-            {
+            if (max >= 0) {
                 dic.Put(PdfName.max, new PdfNumber(max));
             }
             usage.Put(PdfName.Zoom, dic);
@@ -401,8 +361,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// indicates that the group should be
         /// set to that state when the document is printed from a viewer application
         /// </param>
-        public virtual void SetPrint(String subtype, bool printState)
-        {
+        public virtual void SetPrint(String subtype, bool printState) {
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.Subtype, new PdfName(subtype));
@@ -416,8 +375,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// document is opened in a viewer application.
         /// </summary>
         /// <param name="view">the view state</param>
-        public virtual void SetView(bool view)
-        {
+        public virtual void SetView(bool view) {
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.ViewState, view ? PdfName.ON : PdfName.OFF);
@@ -434,28 +392,22 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// one or more text strings representing
         /// the name(s) of the individual, position or organization
         /// </param>
-        public virtual void SetUser(String type, params String[] names)
-        {
-            if (type == null || !type.Equals("Ind") && !type.Equals("Ttl") && !type.Equals("Org"))
-            {
+        public virtual void SetUser(String type, params String[] names) {
+            if (type == null || !type.Equals("Ind") && !type.Equals("Ttl") && !type.Equals("Org")) {
                 throw new ArgumentException("Illegal type argument");
             }
-            if (names == null || names.Length == 0)
-            {
+            if (names == null || names.Length == 0) {
                 throw new ArgumentException("Illegal names argument");
             }
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.Type, new PdfName(type));
-            if (names.Length == 1)
-            {
+            if (names.Length == 1) {
                 dic.Put(PdfName.Name, new PdfString(names[0], PdfEncodings.UNICODE_BIG));
             }
-            else
-            {
+            else {
                 PdfArray namesArray = new PdfArray();
-                foreach (String name in names)
-                {
+                foreach (String name in names) {
                     namesArray.Add(new PdfString(name, PdfEncodings.UNICODE_BIG));
                 }
                 dic.Put(PdfName.Name, namesArray);
@@ -469,8 +421,7 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// one of the following names: "HF" (Header Footer),
         /// "FG" (Foreground), "BG" (Background), or "L" (Logo).
         /// </param>
-        public virtual void SetPageElement(String pe)
-        {
+        public virtual void SetPageElement(String pe) {
             PdfDictionary usage = GetUsage();
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.Subtype, new PdfName(pe));
@@ -484,15 +435,13 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// </summary>
         /// <returns>the indirect reference to the object representing the layer</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual PdfIndirectReference GetIndirectReference()
-        {
+        public virtual PdfIndirectReference GetIndirectReference() {
             GetPdfObject().MakeIndirect(GetDocument());
             return GetPdfObject().GetIndirectReference();
         }
 
         /// <summary>Gets the title of the layer if it is a title layer, or null if it is a usual layer.</summary>
-        public virtual String GetTitle()
-        {
+        public virtual String GetTitle() {
             return title;
         }
 
@@ -503,18 +452,15 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// use #addChild method instead.
         /// </remarks>
         /// <returns>the list of the current child layers, null if the layer has no children.</returns>
-        public virtual IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> GetChildren()
-        {
+        public virtual IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> GetChildren() {
             return children == null ? null : new List<iTextSharp.Kernel.Pdf.Layer.PdfLayer>(children);
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
-        protected internal virtual PdfDocument GetDocument()
-        {
+        protected internal virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
@@ -524,10 +470,8 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <returns>the created layer</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         protected internal static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument
-             document)
-        {
-            if (title == null)
-            {
+             document) {
+            if (title == null) {
                 throw new ArgumentException("Invalid title argument");
             }
             iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = new iTextSharp.Kernel.Pdf.Layer.PdfLayer(document);
@@ -538,19 +482,16 @@ namespace iTextSharp.Kernel.Pdf.Layer
         /// <summary>Gets the /Usage dictionary, creating a new one if necessary.</summary>
         /// <returns>the /Usage dictionary</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal virtual PdfDictionary GetUsage()
-        {
+        protected internal virtual PdfDictionary GetUsage() {
             PdfDictionary usage = GetPdfObject().GetAsDictionary(PdfName.Usage);
-            if (usage == null)
-            {
+            if (usage == null) {
                 usage = new PdfDictionary();
                 GetPdfObject().Put(PdfName.Usage, usage);
             }
             return usage;
         }
 
-        private PdfOCProperties FetchOCProperties()
-        {
+        private PdfOCProperties FetchOCProperties() {
             return GetDocument().GetCatalog().GetOCProperties(true);
         }
     }

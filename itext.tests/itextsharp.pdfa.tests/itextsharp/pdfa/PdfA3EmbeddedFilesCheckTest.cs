@@ -6,10 +6,8 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA3EmbeddedFilesCheckTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA3EmbeddedFilesCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA3EmbeddedFilesCheckTest/";
@@ -18,8 +16,7 @@ namespace iTextSharp.Pdfa
              + "/test/itextsharp/pdfa/PdfA3EmbeddedFilesCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -27,8 +24,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest01()
-        {
+        public virtual void FileSpecCheckTest01() {
             String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest01.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -55,8 +51,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest02()
-        {
+        public virtual void FileSpecCheckTest02() {
             String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest02.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -82,8 +77,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest03()
-        {
+        public virtual void FileSpecCheckTest03() {
             String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest03.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -107,8 +101,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FileSpecCheckTest04()
-        {
+        public virtual void FileSpecCheckTest04() {
             String outPdf = destinationFolder + "pdfA3b_fileSpecCheckTest04.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA3b_fileSpecCheckTest04.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -132,11 +125,9 @@ namespace iTextSharp.Pdfa
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareResult(String outPdf, String cmpPdf)
-        {
+        private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (result != null)
-            {
+            if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
         }

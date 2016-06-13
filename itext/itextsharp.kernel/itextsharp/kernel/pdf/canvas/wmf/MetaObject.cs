@@ -41,11 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A meta object.</summary>
-    public class MetaObject
-    {
+    public class MetaObject {
         public const int META_NOT_SUPPORTED = 0;
 
         public const int META_PEN = 1;
@@ -58,22 +56,19 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
 
         /// <summary>Creates a new MetaObject.</summary>
         /// <remarks>Creates a new MetaObject. This constructor doesn't set the type.</remarks>
-        public MetaObject()
-        {
+        public MetaObject() {
         }
 
         /// <summary>Creates a MetaObject with a type.</summary>
         /// <param name="type">the type of meta object</param>
-        public MetaObject(int type)
-        {
+        public MetaObject(int type) {
             // Empty body
             this.type = type;
         }
 
         /// <summary>Get the type of this MetaObject.</summary>
         /// <returns>type of MetaObject</returns>
-        public virtual int GetObjectType()
-        {
+        public virtual int GetObjectType() {
             return type;
         }
     }

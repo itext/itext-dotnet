@@ -1,18 +1,15 @@
 using System;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Utils
-{
-    public class CompareToolTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Utils {
+    public class CompareToolTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/CompareToolTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/utils/CompareToolTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void SetUp()
-        {
+        public static void SetUp() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -21,8 +18,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void CompareToolErrorReportTest01()
-        {
+        public virtual void CompareToolErrorReportTest01() {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);
@@ -41,8 +37,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void CompareToolErrorReportTest02()
-        {
+        public virtual void CompareToolErrorReportTest02() {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);
@@ -61,8 +56,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void CompareToolErrorReportTest03()
-        {
+        public virtual void CompareToolErrorReportTest03() {
             CompareTool compareTool = new CompareTool();
             compareTool.SetCompareByContentErrorsLimit(10);
             compareTool.SetGenerateCompareByContentXmlReport(true);

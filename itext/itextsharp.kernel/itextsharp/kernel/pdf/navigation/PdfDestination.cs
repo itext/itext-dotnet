@@ -45,13 +45,10 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Navigation
-{
-    public abstract class PdfDestination : PdfObjectWrapper<PdfObject>
-    {
+namespace iTextSharp.Kernel.Pdf.Navigation {
+    public abstract class PdfDestination : PdfObjectWrapper<PdfObject> {
         protected internal PdfDestination(PdfObject pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names);
@@ -59,26 +56,19 @@ namespace iTextSharp.Kernel.Pdf.Navigation
         public abstract iTextSharp.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination(IDictionary<Object
             , PdfObject> names);
 
-        public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject)
-        {
-            if (pdfObject.GetObjectType() == PdfObject.STRING)
-            {
+        public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject) {
+            if (pdfObject.GetObjectType() == PdfObject.STRING) {
                 return new PdfStringDestination((PdfString)pdfObject);
             }
-            else
-            {
-                if (pdfObject.GetObjectType() == PdfObject.NAME)
-                {
+            else {
+                if (pdfObject.GetObjectType() == PdfObject.NAME) {
                     return new PdfNamedDestination((PdfName)pdfObject);
                 }
-                else
-                {
-                    if (pdfObject.GetObjectType() == PdfObject.ARRAY)
-                    {
+                else {
+                    if (pdfObject.GetObjectType() == PdfObject.ARRAY) {
                         return new PdfExplicitDestination((PdfArray)pdfObject);
                     }
-                    else
-                    {
+                    else {
                         throw new NotSupportedException();
                     }
                 }

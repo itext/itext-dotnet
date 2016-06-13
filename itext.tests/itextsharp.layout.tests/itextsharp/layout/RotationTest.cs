@@ -11,10 +11,8 @@ using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Layout
-{
-    public class RotationTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class RotationTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/RotationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -37,16 +35,14 @@ namespace iTextSharp.Layout
              + " Little Italy of the Lower East Side. They were often in conflict with the Jewish Eastmans of the same area.";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FixedTextRotationTest01()
-        {
+        public virtual void FixedTextRotationTest01() {
             String outFileName = destinationFolder + "fixedTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -73,8 +69,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FixedTextRotationTest02()
-        {
+        public virtual void FixedTextRotationTest02() {
             String outFileName = destinationFolder + "fixedTextRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -91,8 +86,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FixedTextRotationTest03()
-        {
+        public virtual void FixedTextRotationTest03() {
             String outFileName = destinationFolder + "fixedTextRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -113,8 +107,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FixedTextRotationTest04()
-        {
+        public virtual void FixedTextRotationTest04() {
             String outFileName = destinationFolder + "fixedTextRotationTest04.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -135,15 +128,13 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void StaticTextRotationTest01()
-        {
+        public virtual void StaticTextRotationTest01() {
             String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph();
-            for (int i = 0; i < 7; ++i)
-            {
+            for (int i = 0; i < 7; ++i) {
                 p.Add(para2Text);
             }
             document.Add(p.SetRotationAngle((68 * Math.PI / 180)).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLUE
@@ -158,8 +149,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void StaticTextRotationTest02()
-        {
+        public virtual void StaticTextRotationTest02() {
             String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -177,8 +167,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void StaticTextRotationTest03()
-        {
+        public virtual void StaticTextRotationTest03() {
             String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -196,8 +185,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void StaticTextRotationTest04()
-        {
+        public virtual void StaticTextRotationTest04() {
             String outFileName = destinationFolder + "staticTextRotationTest04.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -214,8 +202,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SplitTextRotationTest01()
-        {
+        public virtual void SplitTextRotationTest01() {
             String outFileName = destinationFolder + "splitTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -233,8 +220,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SplitTextRotationTest02()
-        {
+        public virtual void SplitTextRotationTest02() {
             String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -243,8 +229,7 @@ namespace iTextSharp.Layout
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph(para1Text));
             String extremelyLongText = "";
-            for (int i = 0; i < 300; ++i)
-            {
+            for (int i = 0; i < 300; ++i) {
                 extremelyLongText += para2Text;
             }
             document.Add(new Paragraph(extremelyLongText).SetRotationAngle(Math.PI / 2));
@@ -257,8 +242,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RotationInfiniteLoopTest01()
-        {
+        public virtual void RotationInfiniteLoopTest01() {
             String fileName = "rotationInfiniteLoopTest01.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + cmpPrefix + fileName;
@@ -275,8 +259,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
-        public virtual void RotationInfiniteLoopTest02()
-        {
+        public virtual void RotationInfiniteLoopTest02() {
             String fileName = "rotationInfiniteLoopTest02.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + cmpPrefix + fileName;
@@ -292,8 +275,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TableRotationTest02()
-        {
+        public virtual void TableRotationTest02() {
             String outFileName = destinationFolder + "tableRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest02.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -313,8 +295,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void DivRotationTest01()
-        {
+        public virtual void DivRotationTest01() {
             String outFileName = destinationFolder + "divRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -337,8 +318,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
-        public virtual void DivRotationTest02()
-        {
+        public virtual void DivRotationTest02() {
             String outFileName = destinationFolder + "divRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest02.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -349,8 +329,7 @@ namespace iTextSharp.Layout
             doc.Add(new Paragraph(para1Text));
             doc.Add(new Paragraph(para1Text));
             String extremelyLongText = "";
-            for (int i = 0; i < 300; ++i)
-            {
+            for (int i = 0; i < 300; ++i) {
                 extremelyLongText += para2Text;
             }
             doc.Add(new Div().Add(new Paragraph(extremelyLongText)).SetRotationAngle(Math.PI / 2));
@@ -363,8 +342,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListRotationTest01()
-        {
+        public virtual void ListRotationTest01() {
             String outFileName = destinationFolder + "listRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -387,8 +365,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListRotationTest02()
-        {
+        public virtual void ListRotationTest02() {
             String outFileName = destinationFolder + "listRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest02.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -401,8 +378,7 @@ namespace iTextSharp.Layout
             List list = new List().SetRotationAngle(Math.PI / 2).SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN
                 );
             String itemText = "list item text long item txt list item text long item txt list item text long item txt list item text long item txt list item text long item txt END";
-            for (int i = 0; i < 10; ++i)
-            {
+            for (int i = 0; i < 10; ++i) {
                 list.Add(itemText);
             }
             doc.Add(list);
@@ -415,8 +391,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AlignedTextRotationTest01()
-        {
+        public virtual void AlignedTextRotationTest01() {
             String outFileName = destinationFolder + "alignedTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "alignedTextRotationTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -438,8 +413,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void InnerRotationTest01()
-        {
+        public virtual void InnerRotationTest01() {
             String outFileName = destinationFolder + "innerRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -457,8 +431,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void InnerRotationTest02()
-        {
+        public virtual void InnerRotationTest02() {
             String outFileName = destinationFolder + "innerRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest02.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -477,14 +450,12 @@ namespace iTextSharp.Layout
                 , "diff"));
         }
 
-        private void DrawCross(PdfCanvas canvas, float x, float y)
-        {
+        private void DrawCross(PdfCanvas canvas, float x, float y) {
             DrawLine(canvas, x - 50, y, x + 50, y);
             DrawLine(canvas, x, y - 50, x, y + 50);
         }
 
-        private void DrawLine(PdfCanvas canvas, float x1, float y1, float x2, float y2)
-        {
+        private void DrawLine(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             canvas.SaveState().SetLineWidth(0.5f).SetLineDash(3).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
     }

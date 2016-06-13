@@ -43,12 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>See ISO 18004:2006 Annex D</summary>
     /// <author>Sean Owen</author>
-    internal sealed class Version
-    {
+    internal sealed class Version {
         /// <summary>See ISO 18004:2006 Annex D.</summary>
         /// <remarks>
         /// See ISO 18004:2006 Annex D.
@@ -70,44 +68,37 @@ namespace iTextSharp.Barcodes.Qrcode
         private readonly int totalCodewords;
 
         private Version(int versionNumber, int[] alignmentPatternCenters, Version.ECBlocks ecBlocks1, Version.ECBlocks
-             ecBlocks2, Version.ECBlocks ecBlocks3, Version.ECBlocks ecBlocks4)
-        {
+             ecBlocks2, Version.ECBlocks ecBlocks3, Version.ECBlocks ecBlocks4) {
             this.versionNumber = versionNumber;
             this.alignmentPatternCenters = alignmentPatternCenters;
             this.ecBlocks = new Version.ECBlocks[] { ecBlocks1, ecBlocks2, ecBlocks3, ecBlocks4 };
             int total = 0;
             int ecCodewords = ecBlocks1.GetECCodewordsPerBlock();
             Version.ECB[] ecbArray = ecBlocks1.GetECBlocks();
-            for (int i = 0; i < ecbArray.Length; i++)
-            {
+            for (int i = 0; i < ecbArray.Length; i++) {
                 Version.ECB ecBlock = ecbArray[i];
                 total += ecBlock.GetCount() * (ecBlock.GetDataCodewords() + ecCodewords);
             }
             this.totalCodewords = total;
         }
 
-        public int GetVersionNumber()
-        {
+        public int GetVersionNumber() {
             return versionNumber;
         }
 
-        public int[] GetAlignmentPatternCenters()
-        {
+        public int[] GetAlignmentPatternCenters() {
             return alignmentPatternCenters;
         }
 
-        public int GetTotalCodewords()
-        {
+        public int GetTotalCodewords() {
             return totalCodewords;
         }
 
-        public int GetDimensionForVersion()
-        {
+        public int GetDimensionForVersion() {
             return 17 + 4 * versionNumber;
         }
 
-        public Version.ECBlocks GetECBlocksForLevel(ErrorCorrectionLevel ecLevel)
-        {
+        public Version.ECBlocks GetECBlocksForLevel(ErrorCorrectionLevel ecLevel) {
             return ecBlocks[ecLevel.Ordinal()];
         }
 
@@ -118,56 +109,45 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <see cref="Version"/>
         /// for a QR Code of that dimension
         /// </returns>
-        public static iTextSharp.Barcodes.Qrcode.Version GetProvisionalVersionForDimension(int dimension)
-        {
-            if (dimension % 4 != 1)
-            {
+        public static iTextSharp.Barcodes.Qrcode.Version GetProvisionalVersionForDimension(int dimension) {
+            if (dimension % 4 != 1) {
                 throw new ArgumentException();
             }
-            try
-            {
+            try {
                 return GetVersionForNumber((dimension - 17) >> 2);
             }
-            catch (ArgumentException iae)
-            {
+            catch (ArgumentException iae) {
                 throw;
             }
         }
 
-        public static iTextSharp.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber)
-        {
-            if (versionNumber < 1 || versionNumber > 40)
-            {
+        public static iTextSharp.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber) {
+            if (versionNumber < 1 || versionNumber > 40) {
                 throw new ArgumentException();
             }
             return VERSIONS[versionNumber - 1];
         }
 
-        internal static iTextSharp.Barcodes.Qrcode.Version DecodeVersionInformation(int versionBits)
-        {
+        internal static iTextSharp.Barcodes.Qrcode.Version DecodeVersionInformation(int versionBits) {
             int bestDifference = int.MaxValue;
             int bestVersion = 0;
-            for (int i = 0; i < VERSION_DECODE_INFO.Length; i++)
-            {
+            for (int i = 0; i < VERSION_DECODE_INFO.Length; i++) {
                 int targetVersion = VERSION_DECODE_INFO[i];
                 // Do the version info bits match exactly? done.
-                if (targetVersion == versionBits)
-                {
+                if (targetVersion == versionBits) {
                     return GetVersionForNumber(i + 7);
                 }
                 // Otherwise see if this is the closest to a real version info bit string
                 // we have seen so far
                 int bitsDifference = FormatInformation.NumBitsDiffering(versionBits, targetVersion);
-                if (bitsDifference < bestDifference)
-                {
+                if (bitsDifference < bestDifference) {
                     bestVersion = i + 7;
                     bestDifference = bitsDifference;
                 }
             }
             // We can tolerate up to 3 bits of error since no two version info codewords will
             // differ in less than 4 bits.
-            if (bestDifference <= 3)
-            {
+            if (bestDifference <= 3) {
                 return GetVersionForNumber(bestVersion);
             }
             // If we didn't find a close enough match, fail
@@ -175,8 +155,7 @@ namespace iTextSharp.Barcodes.Qrcode
         }
 
         /// <summary>See ISO 18004:2006 Annex E</summary>
-        internal BitMatrix BuildFunctionPattern()
-        {
+        internal BitMatrix BuildFunctionPattern() {
             int dimension = GetDimensionForVersion();
             BitMatrix bitMatrix = new BitMatrix(dimension);
             // Top left finder pattern + separator + format
@@ -187,13 +166,10 @@ namespace iTextSharp.Barcodes.Qrcode
             bitMatrix.SetRegion(0, dimension - 8, 9, 8);
             // Alignment patterns
             int max = alignmentPatternCenters.Length;
-            for (int x = 0; x < max; x++)
-            {
+            for (int x = 0; x < max; x++) {
                 int i = alignmentPatternCenters[x] - 2;
-                for (int y = 0; y < max; y++)
-                {
-                    if ((x == 0 && (y == 0 || y == max - 1)) || (x == max - 1 && y == 0))
-                    {
+                for (int y = 0; y < max; y++) {
+                    if ((x == 0 && (y == 0 || y == max - 1)) || (x == max - 1 && y == 0)) {
                         // No alignment patterns near the three finder paterns
                         continue;
                     }
@@ -204,8 +180,7 @@ namespace iTextSharp.Barcodes.Qrcode
             bitMatrix.SetRegion(6, 9, 1, dimension - 17);
             // Horizontal timing pattern
             bitMatrix.SetRegion(9, 6, dimension - 17, 1);
-            if (versionNumber > 6)
-            {
+            if (versionNumber > 6) {
                 // Version info, top right
                 bitMatrix.SetRegion(dimension - 11, 0, 3, 6);
                 // Version info, bottom left
@@ -221,46 +196,38 @@ namespace iTextSharp.Barcodes.Qrcode
         /// each set of blocks. It also holds the number of error-correction codewords per block since it
         /// will be the same across all blocks within one version.</p>
         /// </remarks>
-        public sealed class ECBlocks
-        {
+        public sealed class ECBlocks {
             private readonly int ecCodewordsPerBlock;
 
             private readonly Version.ECB[] ecBlocks;
 
-            internal ECBlocks(int ecCodewordsPerBlock, Version.ECB ecBlocks)
-            {
+            internal ECBlocks(int ecCodewordsPerBlock, Version.ECB ecBlocks) {
                 this.ecCodewordsPerBlock = ecCodewordsPerBlock;
                 this.ecBlocks = new Version.ECB[] { ecBlocks };
             }
 
-            internal ECBlocks(int ecCodewordsPerBlock, Version.ECB ecBlocks1, Version.ECB ecBlocks2)
-            {
+            internal ECBlocks(int ecCodewordsPerBlock, Version.ECB ecBlocks1, Version.ECB ecBlocks2) {
                 this.ecCodewordsPerBlock = ecCodewordsPerBlock;
                 this.ecBlocks = new Version.ECB[] { ecBlocks1, ecBlocks2 };
             }
 
-            public int GetECCodewordsPerBlock()
-            {
+            public int GetECCodewordsPerBlock() {
                 return ecCodewordsPerBlock;
             }
 
-            public int GetNumBlocks()
-            {
+            public int GetNumBlocks() {
                 int total = 0;
-                for (int i = 0; i < ecBlocks.Length; i++)
-                {
+                for (int i = 0; i < ecBlocks.Length; i++) {
                     total += ecBlocks[i].GetCount();
                 }
                 return total;
             }
 
-            public int GetTotalECCodewords()
-            {
+            public int GetTotalECCodewords() {
                 return ecCodewordsPerBlock * GetNumBlocks();
             }
 
-            public Version.ECB[] GetECBlocks()
-            {
+            public Version.ECB[] GetECBlocks() {
                 return ecBlocks;
             }
         }
@@ -271,37 +238,31 @@ namespace iTextSharp.Barcodes.Qrcode
         /// This includes the number of data codewords, and the number of times a block with these
         /// parameters is used consecutively in the QR code version's format.</p>
         /// </remarks>
-        public sealed class ECB
-        {
+        public sealed class ECB {
             private readonly int count;
 
             private readonly int dataCodewords;
 
-            internal ECB(int count, int dataCodewords)
-            {
+            internal ECB(int count, int dataCodewords) {
                 this.count = count;
                 this.dataCodewords = dataCodewords;
             }
 
-            public int GetCount()
-            {
+            public int GetCount() {
                 return count;
             }
 
-            public int GetDataCodewords()
-            {
+            public int GetDataCodewords() {
                 return dataCodewords;
             }
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return iTextSharp.IO.Util.JavaUtil.IntegerToString(versionNumber);
         }
 
         /// <summary>See ISO 18004:2006 6.5.1 Table 9</summary>
-        private static Version[] BuildVersions()
-        {
+        private static Version[] BuildVersions() {
             return new Version[] { new Version(1, new int[] {  }, new Version.ECBlocks(7, new Version.ECB(1, 19)), new 
                 Version.ECBlocks(10, new Version.ECB(1, 16)), new Version.ECBlocks(13, new Version.ECB(1, 13)), new Version.ECBlocks
                 (17, new Version.ECB(1, 9))), new Version(2, new int[] { 6, 18 }, new Version.ECBlocks(10, new Version.ECB

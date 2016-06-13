@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Font.Otf
-{
-    public class TagAndLocation
-    {
+namespace iTextSharp.IO.Font.Otf {
+    public class TagAndLocation {
         public String tag;
 
         public int location;

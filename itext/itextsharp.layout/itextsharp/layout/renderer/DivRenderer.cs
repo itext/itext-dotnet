@@ -43,17 +43,13 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Layout.Element;
 
-namespace iTextSharp.Layout.Renderer
-{
-    public class DivRenderer : BlockRenderer
-    {
+namespace iTextSharp.Layout.Renderer {
+    public class DivRenderer : BlockRenderer {
         public DivRenderer(Div modelElement)
-            : base(modelElement)
-        {
+            : base(modelElement) {
         }
 
-        public override IRenderer GetNextRenderer()
-        {
+        public override IRenderer GetNextRenderer() {
             return new iTextSharp.Layout.Renderer.DivRenderer((Div)modelElement);
         }
     }

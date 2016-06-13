@@ -49,10 +49,8 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Barcodes
-{
-    public abstract class Barcode1D
-    {
+namespace iTextSharp.Barcodes {
+    public abstract class Barcode1D {
         public const int ALIGN_LEFT = 1;
 
         public const int ALIGN_RIGHT = 2;
@@ -123,63 +121,54 @@ namespace iTextSharp.Barcodes
         /// <summary>The alternate text to be used, if present.</summary>
         protected internal String altText;
 
-        protected internal Barcode1D(PdfDocument document)
-        {
+        protected internal Barcode1D(PdfDocument document) {
             this.document = document;
         }
 
         /// <summary>Gets the minimum bar width.</summary>
         /// <returns>the minimum bar width</returns>
-        public virtual float GetX()
-        {
+        public virtual float GetX() {
             return x;
         }
 
         /// <summary>Sets the minimum bar width.</summary>
         /// <param name="x">the minimum bar width</param>
-        public virtual void SetX(float x)
-        {
+        public virtual void SetX(float x) {
             this.x = x;
         }
 
         /// <summary>Gets the bar multiplier for wide bars.</summary>
         /// <returns>the bar multiplier for wide bars</returns>
-        public virtual float GetN()
-        {
+        public virtual float GetN() {
             return n;
         }
 
         /// <summary>Sets the bar multiplier for wide bars.</summary>
         /// <param name="n">the bar multiplier for wide bars</param>
-        public virtual void SetN(float n)
-        {
+        public virtual void SetN(float n) {
             this.n = n;
         }
 
         /// <summary>Gets the text font.</summary>
         /// <remarks>Gets the text font. <CODE>null</CODE> if no text.</remarks>
         /// <returns>the text font. <CODE>null</CODE> if no text</returns>
-        public virtual PdfFont GetFont()
-        {
+        public virtual PdfFont GetFont() {
             return font;
         }
 
         /// <summary>Sets the text font.</summary>
         /// <param name="font">the text font. Set to <CODE>null</CODE> to suppress any text</param>
-        public virtual void SetFont(PdfFont font)
-        {
+        public virtual void SetFont(PdfFont font) {
             this.font = font;
         }
 
-        public virtual float GetSize()
-        {
+        public virtual float GetSize() {
             return size;
         }
 
         /// <summary>Sets the size of the text.</summary>
         /// <param name="size">the size of the text</param>
-        public virtual void SetSize(float size)
-        {
+        public virtual void SetSize(float size) {
             this.size = size;
         }
 
@@ -190,8 +179,7 @@ namespace iTextSharp.Barcodes
         /// the text distance above the bars.
         /// </remarks>
         /// <returns>the baseline.</returns>
-        public virtual float GetBaseline()
-        {
+        public virtual float GetBaseline() {
             return baseline;
         }
 
@@ -202,64 +190,55 @@ namespace iTextSharp.Barcodes
         /// the text distance above the bars.
         /// </remarks>
         /// <param name="baseline">the baseline.</param>
-        public virtual void SetBaseline(float baseline)
-        {
+        public virtual void SetBaseline(float baseline) {
             this.baseline = baseline;
         }
 
         /// <summary>Gets the height of the bars.</summary>
         /// <returns>the height of the bars</returns>
-        public virtual float GetBarHeight()
-        {
+        public virtual float GetBarHeight() {
             return barHeight;
         }
 
         /// <summary>Sets the height of the bars.</summary>
         /// <param name="barHeight">the height of the bars</param>
-        public virtual void SetBarHeight(float barHeight)
-        {
+        public virtual void SetBarHeight(float barHeight) {
             this.barHeight = barHeight;
         }
 
         /// <summary>Gets the text alignment.</summary>
         /// <returns>the text alignment</returns>
-        public virtual int GetTextAlignment()
-        {
+        public virtual int GetTextAlignment() {
             return textAlignment;
         }
 
         /// <summary>Sets the text alignment.</summary>
         /// <param name="textAlignment">the text alignment</param>
-        public virtual void SetTextAlignment(int textAlignment)
-        {
+        public virtual void SetTextAlignment(int textAlignment) {
             this.textAlignment = textAlignment;
         }
 
         /// <summary>Gets the optional checksum generation.</summary>
         /// <returns>the optional checksum generation</returns>
-        public virtual bool IsGenerateChecksum()
-        {
+        public virtual bool IsGenerateChecksum() {
             return generateChecksum;
         }
 
         /// <summary>Setter for property generateChecksum.</summary>
         /// <param name="generateChecksum">New value of property generateChecksum.</param>
-        public virtual void SetGenerateChecksum(bool generateChecksum)
-        {
+        public virtual void SetGenerateChecksum(bool generateChecksum) {
             this.generateChecksum = generateChecksum;
         }
 
         /// <summary>Gets the property to show the generated checksum in the the text.</summary>
         /// <returns>value of property checksumText</returns>
-        public virtual bool IsChecksumText()
-        {
+        public virtual bool IsChecksumText() {
             return checksumText;
         }
 
         /// <summary>Sets the property to show the generated checksum in the the text.</summary>
         /// <param name="checksumText">new value of property checksumText</param>
-        public virtual void SetChecksumText(bool checksumText)
-        {
+        public virtual void SetChecksumText(bool checksumText) {
             this.checksumText = checksumText;
         }
 
@@ -268,8 +247,7 @@ namespace iTextSharp.Barcodes
         /// the barcode 39.
         /// </summary>
         /// <returns>value of property startStopText</returns>
-        public virtual bool IsStartStopText()
-        {
+        public virtual bool IsStartStopText() {
             return startStopText;
         }
 
@@ -278,64 +256,55 @@ namespace iTextSharp.Barcodes
         /// the barcode 39.
         /// </summary>
         /// <param name="startStopText">new value of property startStopText</param>
-        public virtual void SetStartStopText(bool startStopText)
-        {
+        public virtual void SetStartStopText(bool startStopText) {
             this.startStopText = startStopText;
         }
 
         /// <summary>Gets the property to generate extended barcode 39.</summary>
         /// <returns>value of property extended.</returns>
-        public virtual bool IsExtended()
-        {
+        public virtual bool IsExtended() {
             return extended;
         }
 
         /// <summary>Sets the property to generate extended barcode 39.</summary>
         /// <param name="extended">new value of property extended</param>
-        public virtual void SetExtended(bool extended)
-        {
+        public virtual void SetExtended(bool extended) {
             this.extended = extended;
         }
 
         /// <summary>Gets the code to generate.</summary>
         /// <returns>the code to generate</returns>
-        public virtual String GetCode()
-        {
+        public virtual String GetCode() {
             return code;
         }
 
         /// <summary>Sets the code to generate.</summary>
         /// <param name="code">the code to generate</param>
-        public virtual void SetCode(String code)
-        {
+        public virtual void SetCode(String code) {
             this.code = code;
         }
 
         /// <summary>Gets the property to show the guard bars for barcode EAN.</summary>
         /// <returns>value of property guardBars</returns>
-        public virtual bool IsGuardBars()
-        {
+        public virtual bool IsGuardBars() {
             return guardBars;
         }
 
         /// <summary>Sets the property to show the guard bars for barcode EAN.</summary>
         /// <param name="guardBars">new value of property guardBars</param>
-        public virtual void SetGuardBars(bool guardBars)
-        {
+        public virtual void SetGuardBars(bool guardBars) {
             this.guardBars = guardBars;
         }
 
         /// <summary>Gets the code type.</summary>
         /// <returns>the code type</returns>
-        public virtual int GetCodeType()
-        {
+        public virtual int GetCodeType() {
             return codeType;
         }
 
         /// <summary>Sets the code type.</summary>
         /// <param name="codeType">the code type</param>
-        public virtual void SetCodeType(int codeType)
-        {
+        public virtual void SetCodeType(int codeType) {
             this.codeType = codeType;
         }
 
@@ -393,8 +362,7 @@ namespace iTextSharp.Barcodes
 
         /// <summary>Gets the amount of ink spreading.</summary>
         /// <returns>the ink spreading</returns>
-        public virtual float GetInkSpreading()
-        {
+        public virtual float GetInkSpreading() {
             return this.inkSpreading;
         }
 
@@ -405,15 +373,13 @@ namespace iTextSharp.Barcodes
         /// and the printing medium.
         /// </remarks>
         /// <param name="inkSpreading">the ink spreading</param>
-        public virtual void SetInkSpreading(float inkSpreading)
-        {
+        public virtual void SetInkSpreading(float inkSpreading) {
             this.inkSpreading = inkSpreading;
         }
 
         /// <summary>Gets the alternate text.</summary>
         /// <returns>the alternate text</returns>
-        public virtual String GetAltText()
-        {
+        public virtual String GetAltText() {
             return this.altText;
         }
 
@@ -423,8 +389,7 @@ namespace iTextSharp.Barcodes
         /// text derived from the supplied code.
         /// </remarks>
         /// <param name="altText">the alternate text</param>
-        public virtual void SetAltText(String altText)
-        {
+        public virtual void SetAltText(String altText) {
             this.altText = altText;
         }
 
@@ -433,8 +398,7 @@ namespace iTextSharp.Barcodes
         /// <returns>the XObject</returns>
         /// <seealso cref="CreateFormXObject(iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Pdf.PdfDocument)
         ///     "/>
-        public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
-        {
+        public virtual PdfFormXObject CreateFormXObject(PdfDocument document) {
             return CreateFormXObject(null, null, document);
         }
 
@@ -445,8 +409,7 @@ namespace iTextSharp.Barcodes
         /// <seealso cref="PlaceBarcode(iTextSharp.Kernel.Pdf.Canvas.PdfCanvas, iTextSharp.Kernel.Color.Color, iTextSharp.Kernel.Color.Color)
         ///     "/>
         public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
-             textColor, PdfDocument document)
-        {
+             textColor, PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor);
             xObject.SetBBox(new PdfArray(rect));
@@ -458,13 +421,11 @@ namespace iTextSharp.Barcodes
         /// Make the barcode occupy the specified width.
         /// Usually this is achieved by adjusting bar widths.
         /// </remarks>
-        public virtual void FitWidth(float width)
-        {
+        public virtual void FitWidth(float width) {
             SetX(x * width / GetBarcodeSize().GetWidth());
         }
 
-        protected internal virtual float GetDescender()
-        {
+        protected internal virtual float GetDescender() {
             float sizeCoef = size / FontProgram.UNITS_NORMALIZATION;
             return font.GetFontProgram().GetFontMetrics().GetTypoDescender() * sizeCoef;
         }

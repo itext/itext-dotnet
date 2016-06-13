@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property
-{
-    public enum FontKerning
-    {
+namespace iTextSharp.Layout.Property {
+    public enum FontKerning {
         YES,
         NO
     }

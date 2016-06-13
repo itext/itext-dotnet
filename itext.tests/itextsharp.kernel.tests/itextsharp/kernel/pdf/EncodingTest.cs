@@ -6,25 +6,21 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class EncodingTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class EncodingTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/EncodingTest/";
 
         public static readonly String outputFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itextsharp/kernel/pdf/EncodingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(outputFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SurrogatePairTest()
-        {
+        public virtual void SurrogatePairTest() {
             String fileName = "surrogatePairTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
@@ -41,8 +37,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CustomSimpleEncodingTimesRomanTest()
-        {
+        public virtual void CustomSimpleEncodingTimesRomanTest() {
             String fileName = "customSimpleEncodingTimesRomanTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
@@ -60,8 +55,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CustomFullEncodingTimesRomanTest()
-        {
+        public virtual void CustomFullEncodingTimesRomanTest() {
             String fileName = "customFullEncodingTimesRomanTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
@@ -78,8 +72,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NotdefInStandardFontTest()
-        {
+        public virtual void NotdefInStandardFontTest() {
             String fileName = "notdefInStandardFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
@@ -99,8 +92,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NotdefInTrueTypeFontTest()
-        {
+        public virtual void NotdefInTrueTypeFontTest() {
             String fileName = "notdefInTrueTypeFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
@@ -120,8 +112,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NotdefInType0Test()
-        {
+        public virtual void NotdefInType0Test() {
             String fileName = "notdefInType0Test.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
@@ -138,28 +129,24 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("Should we update built-in font's descriptor in case not standard font encoding?")]
-        public virtual void SymbolDefaultFontTest()
-        {
+        public virtual void SymbolDefaultFontTest() {
             String fileName = "symbolDefaultFontTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.SYMBOL, PdfEncodings.WINANSI);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String str = "";
-            for (int i = 32; i <= 100; i++)
-            {
+            for (int i = 32; i <= 100; i++) {
                 str += (char)i;
             }
             canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText(str).EndText();
             str = "";
-            for (int i_1 = 101; i_1 <= 190; i_1++)
-            {
+            for (int i_1 = 101; i_1 <= 190; i_1++) {
                 str += (char)i_1;
             }
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 12).ShowText(str).EndText();
             str = "";
-            for (int i_2 = 191; i_2 <= 254; i_2++)
-            {
+            for (int i_2 = 191; i_2 <= 254; i_2++) {
                 str += (char)i_2;
             }
             canvas.BeginText().MoveText(36, 766).ShowText(str).EndText().RestoreState();
@@ -171,28 +158,24 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SymbolTrueTypeFontWinAnsiTest()
-        {
+        public virtual void SymbolTrueTypeFontWinAnsiTest() {
             String fileName = "symbolTrueTypeFontWinAnsiTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", true);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             String str = "";
-            for (int i = 32; i <= 65; i++)
-            {
+            for (int i = 32; i <= 65; i++) {
                 str += (char)i;
             }
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText(str).EndText();
             str = "";
-            for (int i_1 = 65; i_1 <= 190; i_1++)
-            {
+            for (int i_1 = 65; i_1 <= 190; i_1++) {
                 str += (char)i_1;
             }
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText(str).EndText();
             str = "";
-            for (int i_2 = 191; i_2 <= 254; i_2++)
-            {
+            for (int i_2 = 191; i_2 <= 254; i_2++) {
                 str += (char)i_2;
             }
             canvas.BeginText().MoveText(36, 726).SetFontAndSize(font, 36).ShowText(str).EndText().RestoreState();
@@ -204,29 +187,25 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SymbolTrueTypeFontIdentityTest()
-        {
+        public virtual void SymbolTrueTypeFontIdentityTest() {
             String fileName = "symbolTrueTypeFontIdentityTest.pdf";
             PdfWriter writer = new PdfWriter(outputFolder + fileName);
             PdfDocument doc = new PdfDocument(writer);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "Symbols1.ttf", PdfEncodings.IDENTITY_H);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
             StringBuilder builder = new StringBuilder();
-            for (int i = 32; i <= 100; i++)
-            {
+            for (int i = 32; i <= 100; i++) {
                 builder.Append((char)i);
             }
             String str = builder.ToString();
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText(str).EndText();
             str = "";
-            for (int i_1 = 101; i_1 <= 190; i_1++)
-            {
+            for (int i_1 = 101; i_1 <= 190; i_1++) {
                 str += (char)i_1;
             }
             canvas.SaveState().BeginText().MoveText(36, 746).SetFontAndSize(font, 36).ShowText(str).EndText();
             str = "";
-            for (int i_2 = 191; i_2 <= 254; i_2++)
-            {
+            for (int i_2 = 191; i_2 <= 254; i_2++) {
                 str += (char)i_2;
             }
             canvas.BeginText().MoveText(36, 766).ShowText(str).EndText().RestoreState();

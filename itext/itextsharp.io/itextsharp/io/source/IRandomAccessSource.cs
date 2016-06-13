@@ -41,16 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Source
-{
+namespace iTextSharp.IO.Source {
     /// <summary>Represents an abstract source that bytes can be read from.</summary>
     /// <remarks>
     /// Represents an abstract source that bytes can be read from.  This class forms the foundation for all byte input in iText.
     /// Implementations do not keep track of a current 'position', but rather provide absolute get methods.  Tracking position
     /// should be handled in classes that use RandomAccessSource internally (via composition).
     /// </remarks>
-    public interface IRandomAccessSource
-    {
+    public interface IRandomAccessSource {
         /// <summary>Gets a byte at the specified position</summary>
         /// <param name="position">byte position</param>
         /// <returns>the byte, or -1 if EOF is reached</returns>

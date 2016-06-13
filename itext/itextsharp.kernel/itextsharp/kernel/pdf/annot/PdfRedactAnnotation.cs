@@ -44,53 +44,42 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfRedactAnnotation : PdfMarkupAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfRedactAnnotation : PdfMarkupAnnotation {
         public PdfRedactAnnotation(Rectangle rect)
-            : base(rect)
-        {
+            : base(rect) {
         }
 
         public PdfRedactAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Redact;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, text);
         }
 
-        public virtual PdfString GetOverlayText()
-        {
+        public virtual PdfString GetOverlayText() {
             return GetPdfObject().GetAsString(PdfName.OverlayText);
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance(PdfStream stream
-            )
-        {
+            ) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
         }
 
-        public virtual PdfStream GetRedactRolloverAppearance()
-        {
+        public virtual PdfStream GetRedactRolloverAppearance() {
             return GetPdfObject().GetAsStream(PdfName.RO);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean repeat)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean repeat) {
             return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat);
         }
 
-        public virtual PdfBoolean GetRepeat()
-        {
+        public virtual PdfBoolean GetRepeat() {
             return GetPdfObject().GetAsBoolean(PdfName.Repeat);
         }
     }

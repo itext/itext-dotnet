@@ -48,10 +48,8 @@ using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class TrueTypeFont : FontProgram
-    {
+namespace iTextSharp.IO.Font {
+    public class TrueTypeFont : FontProgram {
         private OpenTypeParser fontParser;
 
         protected internal int[][] bBoxes;
@@ -76,42 +74,36 @@ namespace iTextSharp.IO.Font
 
         private byte[] fontStreamBytes;
 
-        protected internal TrueTypeFont()
-        {
+        protected internal TrueTypeFont() {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public TrueTypeFont(String path)
-        {
+        public TrueTypeFont(String path) {
             CheckFilePath(path);
             fontParser = new OpenTypeParser(path);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public TrueTypeFont(byte[] ttf)
-        {
+        public TrueTypeFont(byte[] ttf) {
             fontParser = new OpenTypeParser(ttf);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal TrueTypeFont(String ttcPath, int ttcIndex)
-        {
+        internal TrueTypeFont(String ttcPath, int ttcIndex) {
             CheckFilePath(ttcPath);
             fontParser = new OpenTypeParser(ttcPath, ttcIndex);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal TrueTypeFont(byte[] ttc, int ttcIndex)
-        {
+        internal TrueTypeFont(byte[] ttc, int ttcIndex) {
             fontParser = new OpenTypeParser(ttc, ttcIndex);
             InitializeFontProperties();
         }
 
-        public override bool HasKernPairs()
-        {
+        public override bool HasKernPairs() {
             return kerning.Size() > 0;
         }
 
@@ -119,47 +111,35 @@ namespace iTextSharp.IO.Font
         /// <param name="first">the first glyph</param>
         /// <param name="second">the second glyph</param>
         /// <returns>the kerning to be applied</returns>
-        public override int GetKerning(Glyph first, Glyph second)
-        {
-            if (first == null || second == null)
-            {
+        public override int GetKerning(Glyph first, Glyph second) {
+            if (first == null || second == null) {
                 return 0;
             }
             return kerning.Get((first.GetCode() << 16) + second.GetCode());
         }
 
-        public virtual bool IsCff()
-        {
+        public virtual bool IsCff() {
             return fontParser.IsCff();
         }
 
-        public virtual IDictionary<int, int[]> GetActiveCmap()
-        {
+        public virtual IDictionary<int, int[]> GetActiveCmap() {
             OpenTypeParser.CmapTable cmaps = fontParser.GetCmapTable();
-            if (cmaps.cmapExt != null)
-            {
+            if (cmaps.cmapExt != null) {
                 return cmaps.cmapExt;
             }
-            else
-            {
-                if (!cmaps.fontSpecific && cmaps.cmap31 != null)
-                {
+            else {
+                if (!cmaps.fontSpecific && cmaps.cmap31 != null) {
                     return cmaps.cmap31;
                 }
-                else
-                {
-                    if (cmaps.fontSpecific && cmaps.cmap10 != null)
-                    {
+                else {
+                    if (cmaps.fontSpecific && cmaps.cmap10 != null) {
                         return cmaps.cmap10;
                     }
-                    else
-                    {
-                        if (cmaps.cmap31 != null)
-                        {
+                    else {
+                        if (cmaps.cmap31 != null) {
                             return cmaps.cmap31;
                         }
-                        else
-                        {
+                        else {
                             return cmaps.cmap10;
                         }
                     }
@@ -167,45 +147,35 @@ namespace iTextSharp.IO.Font
             }
         }
 
-        public virtual byte[] GetFontStreamBytes()
-        {
-            if (fontStreamBytes != null)
-            {
+        public virtual byte[] GetFontStreamBytes() {
+            if (fontStreamBytes != null) {
                 return fontStreamBytes;
             }
-            try
-            {
-                if (fontParser.IsCff())
-                {
+            try {
+                if (fontParser.IsCff()) {
                     fontStreamBytes = fontParser.ReadCffFont();
                 }
-                else
-                {
+                else {
                     fontStreamBytes = fontParser.GetFullFont();
                 }
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 fontStreamBytes = null;
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
             return fontStreamBytes;
         }
 
-        public override int GetPdfFontFlags()
-        {
+        public override int GetPdfFontFlags() {
             int flags = 0;
-            if (fontMetrics.IsFixedPitch())
-            {
+            if (fontMetrics.IsFixedPitch()) {
                 flags |= 1;
             }
             flags |= IsFontSpecific() ? 4 : 32;
-            if (fontNames.IsItalic())
-            {
+            if (fontNames.IsItalic()) {
                 flags |= 64;
             }
-            if (fontNames.IsBold() || fontNames.GetFontWeight() > 500)
-            {
+            if (fontNames.IsBold() || fontNames.GetFontWeight() > 500) {
                 flags |= 262144;
             }
             return flags;
@@ -216,72 +186,58 @@ namespace iTextSharp.IO.Font
         /// The offset from the start of the file to the table directory.
         /// It is 0 for TTF and may vary for TTC depending on the chosen font.
         /// </remarks>
-        public virtual int GetDirectoryOffset()
-        {
+        public virtual int GetDirectoryOffset() {
             return fontParser.directoryOffset;
         }
 
-        public virtual GlyphSubstitutionTableReader GetGsubTable()
-        {
+        public virtual GlyphSubstitutionTableReader GetGsubTable() {
             return gsubTable;
         }
 
-        public virtual GlyphPositioningTableReader GetGposTable()
-        {
+        public virtual GlyphPositioningTableReader GetGposTable() {
             return gposTable;
         }
 
-        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset)
-        {
-            try
-            {
+        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
+            try {
                 return fontParser.GetSubset(glyphs, subset);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadGdefTable()
-        {
+        protected internal virtual void ReadGdefTable() {
             int[] gdef = fontParser.tables.Get("GDEF");
-            if (gdef != null)
-            {
+            if (gdef != null) {
                 gdefTable = new OpenTypeGdefTableReader(fontParser.raf, gdef[0]);
             }
-            else
-            {
+            else {
                 gdefTable = new OpenTypeGdefTableReader(fontParser.raf, 0);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadGsubTable()
-        {
+        protected internal virtual void ReadGsubTable() {
             int[] gsub = fontParser.tables.Get("GSUB");
-            if (gsub != null)
-            {
+            if (gsub != null) {
                 gsubTable = new GlyphSubstitutionTableReader(fontParser.raf, gsub[0], gdefTable, codeToGlyph, fontMetrics.
                     GetUnitsPerEm());
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadGposTable()
-        {
+        protected internal virtual void ReadGposTable() {
             int[] gpos = fontParser.tables.Get("GPOS");
-            if (gpos != null)
-            {
+            if (gpos != null) {
                 gposTable = new GlyphPositioningTableReader(fontParser.raf, gpos[0], gdefTable, codeToGlyph, fontMetrics.GetUnitsPerEm
                     ());
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void InitializeFontProperties()
-        {
+        private void InitializeFontProperties() {
             // initialize sfnt tables
             OpenTypeParser.HeaderTable head = fontParser.GetHeadTable();
             OpenTypeParser.HorizontalHeader hhea = fontParser.GetHheaTable();
@@ -295,31 +251,25 @@ namespace iTextSharp.IO.Font
             fontNames.SetFontName(fontParser.GetPsFontName());
             fontNames.SetFullName(fontNames.GetNames(4));
             String[][] otfFamilyName = fontNames.GetNames(16);
-            if (otfFamilyName != null)
-            {
+            if (otfFamilyName != null) {
                 fontNames.SetFamilyName(otfFamilyName);
             }
-            else
-            {
+            else {
                 fontNames.SetFamilyName(fontNames.GetNames(1));
             }
             String[][] subfamily = fontNames.GetNames(2);
-            if (subfamily != null)
-            {
+            if (subfamily != null) {
                 fontNames.SetStyle(subfamily[0][3]);
             }
             String[][] otfSubFamily = fontNames.GetNames(17);
-            if (otfFamilyName != null)
-            {
+            if (otfFamilyName != null) {
                 fontNames.SetSubfamily(otfSubFamily);
             }
-            else
-            {
+            else {
                 fontNames.SetSubfamily(subfamily);
             }
             String[][] cidName = fontNames.GetNames(20);
-            if (cidName != null)
-            {
+            if (cidName != null) {
                 fontNames.SetCidFontName(cidName[0][3]);
             }
             fontNames.SetWeight(os_2.usWeightClass);
@@ -353,13 +303,11 @@ namespace iTextSharp.IO.Font
             fontMetrics.SetIsFixedPitch(post.isFixedPitch);
             // font identification group
             String[][] ttfVersion = fontNames.GetNames(5);
-            if (ttfVersion != null)
-            {
+            if (ttfVersion != null) {
                 fontIdentification.SetTtfVersion(ttfVersion[0][3]);
             }
             String[][] ttfUniqueId = fontNames.GetNames(3);
-            if (ttfUniqueId != null)
-            {
+            if (ttfUniqueId != null) {
                 fontIdentification.SetTtfVersion(ttfUniqueId[0][3]);
             }
             fontIdentification.SetPanose(os_2.panose);
@@ -368,11 +316,9 @@ namespace iTextSharp.IO.Font
             unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
             codeToGlyph = new LinkedDictionary<int, Glyph>(glyphWidths.Length);
             avgWidth = 0;
-            foreach (int charCode in cmap.Keys)
-            {
+            foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
-                if (index >= glyphWidths.Length)
-                {
+                if (index >= glyphWidths.Length) {
                     ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));
                     LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName(), index));
                     continue;
@@ -383,18 +329,15 @@ namespace iTextSharp.IO.Font
                 avgWidth += glyph.GetWidth();
             }
             FixSpaceIssue();
-            for (int index_1 = 0; index_1 < glyphWidths.Length; index_1++)
-            {
-                if (codeToGlyph.ContainsKey(index_1))
-                {
+            for (int index_1 = 0; index_1 < glyphWidths.Length; index_1++) {
+                if (codeToGlyph.ContainsKey(index_1)) {
                     continue;
                 }
                 Glyph glyph = new Glyph(index_1, glyphWidths[index_1], -1);
                 codeToGlyph[index_1] = glyph;
                 avgWidth += glyph.GetWidth();
             }
-            if (codeToGlyph.Count != 0)
-            {
+            if (codeToGlyph.Count != 0) {
                 avgWidth /= codeToGlyph.Count;
             }
             ReadGdefTable();
@@ -405,16 +348,13 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Gets the code pages supported by the font.</summary>
         /// <returns>the code pages supported by the font</returns>
-        public virtual String[] GetCodePagesSupported()
-        {
+        public virtual String[] GetCodePagesSupported() {
             long cp = ((long)fontParser.GetOs_2Table().ulCodePageRange2 << 32) + (fontParser.GetOs_2Table().ulCodePageRange1
                  & unchecked((long)(0xffffffffL)));
             int count = 0;
             long bit = 1;
-            for (int k = 0; k < 64; ++k)
-            {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null)
-                {
+            for (int k = 0; k < 64; ++k) {
+                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
                     ++count;
                 }
                 bit <<= 1;
@@ -422,10 +362,8 @@ namespace iTextSharp.IO.Font
             String[] ret = new String[count];
             count = 0;
             bit = 1;
-            for (int k_1 = 0; k_1 < 64; ++k_1)
-            {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k_1] != null)
-                {
+            for (int k_1 = 0; k_1 < 64; ++k_1) {
+                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k_1] != null) {
                     ret[count++] = FontConstants.CODE_PAGES[k_1];
                 }
                 bit <<= 1;

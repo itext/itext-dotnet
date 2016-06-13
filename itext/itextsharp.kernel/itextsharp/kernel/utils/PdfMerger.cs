@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Utils
-{
-    public class PdfMerger
-    {
+namespace iTextSharp.Kernel.Utils {
+    public class PdfMerger {
         private PdfDocument pdfDocument;
 
         private bool closeSrcDocuments;
@@ -63,8 +61,7 @@ namespace iTextSharp.Kernel.Utils
         /// </remarks>
         /// <param name="pdfDocument">the document into which source documents will be merged.</param>
         public PdfMerger(PdfDocument pdfDocument)
-            : this(pdfDocument, true, true)
-        {
+            : this(pdfDocument, true, true) {
         }
 
         /// <summary>This class is used to merge a number of existing documents into one.</summary>
@@ -83,8 +80,7 @@ namespace iTextSharp.Kernel.Utils
         /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.InitializeOutlines()"/>
         /// .
         /// </param>
-        public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines)
-        {
+        public PdfMerger(PdfDocument pdfDocument, bool mergeTags, bool mergeOutlines) {
             this.pdfDocument = pdfDocument;
             this.mergeTags = mergeTags;
             this.mergeOutlines = mergeOutlines;
@@ -103,8 +99,7 @@ namespace iTextSharp.Kernel.Utils
         /// <c>PdfMerger</c>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments)
-        {
+        public virtual iTextSharp.Kernel.Utils.PdfMerger SetCloseSourceDocuments(bool closeSourceDocuments) {
             this.closeSrcDocuments = closeSourceDocuments;
             return this;
         }
@@ -128,11 +123,9 @@ namespace iTextSharp.Kernel.Utils
         /// <c>PdfMerger</c>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage, int toPage)
-        {
+        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, int fromPage, int toPage) {
             IList<int> pages = new List<int>(toPage - fromPage);
-            for (int pageNum = fromPage; pageNum <= toPage; pageNum++)
-            {
+            for (int pageNum = fromPage; pageNum <= toPage; pageNum++) {
                 pages.Add(pageNum);
             }
             return Merge(from, pages);
@@ -156,19 +149,15 @@ namespace iTextSharp.Kernel.Utils
         /// <c>PdfMerger</c>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int> pages)
-        {
-            if (mergeTags && from.IsTagged())
-            {
+        public virtual iTextSharp.Kernel.Utils.PdfMerger Merge(PdfDocument from, IList<int> pages) {
+            if (mergeTags && from.IsTagged()) {
                 pdfDocument.SetTagged();
             }
-            if (mergeOutlines && from.HasOutlines())
-            {
+            if (mergeOutlines && from.HasOutlines()) {
                 pdfDocument.InitializeOutlines();
             }
             from.CopyPagesTo(pages, pdfDocument);
-            if (closeSrcDocuments)
-            {
+            if (closeSrcDocuments) {
                 from.Close();
             }
             return this;
@@ -182,8 +171,7 @@ namespace iTextSharp.Kernel.Utils
         /// passed to the constructor of this PdfMerger instance. This means that it is enough to call <i>close</i> either on
         /// passed PdfDocument or on this PdfMerger instance, but there is no need to call them both.
         /// </remarks>
-        public virtual void Close()
-        {
+        public virtual void Close() {
             pdfDocument.Close();
         }
     }

@@ -31,12 +31,10 @@ using System;
 using System.Text;
 using iTextSharp.Kernel.XMP;
 
-namespace iTextSharp.Kernel.XMP.Impl
-{
+namespace iTextSharp.Kernel.XMP.Impl {
     /// <summary>Utility functions for the XMPToolkit implementation.</summary>
     /// <since>06.06.2006</since>
-    public class Utils : XMPConst
-    {
+    public class Utils : XMPConst {
         /// <summary>segments of a UUID</summary>
         public const int UUID_SEGMENT_COUNT = 4;
 
@@ -49,14 +47,12 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <summary>table of XML name chars (&lt;= 0xFF)</summary>
         private static bool[] xmlNameChars;
 
-        static Utils()
-        {
+        static Utils() {
             InitCharTables();
         }
 
         /// <summary>Private constructor</summary>
-        private Utils()
-        {
+        private Utils() {
         }
 
         // EMPTY
@@ -77,43 +73,34 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </remarks>
         /// <param name="value">raw value</param>
         /// <returns>Returns the normalized value.</returns>
-        public static String NormalizeLangValue(String value)
-        {
+        public static String NormalizeLangValue(String value) {
             // don't normalize x-default
-            if (XMPConst.X_DEFAULT.Equals(value))
-            {
+            if (XMPConst.X_DEFAULT.Equals(value)) {
                 return value;
             }
             int subTag = 1;
             StringBuilder buffer = new StringBuilder();
-            for (int i = 0; i < value.Length; i++)
-            {
-                switch (value[i])
-                {
+            for (int i = 0; i < value.Length; i++) {
+                switch (value[i]) {
                     case '-':
-                    case '_':
-                    {
+                    case '_': {
                         // move to next subtag and convert underscore to hyphen
                         buffer.Append('-');
                         subTag++;
                         break;
                     }
 
-                    case ' ':
-                    {
+                    case ' ': {
                         // remove spaces
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         // convert second subtag to uppercase, all other to lowercase
-                        if (subTag != 2)
-                        {
+                        if (subTag != 2) {
                             buffer.Append(char.ToLower(value[i]));
                         }
-                        else
-                        {
+                        else {
                             buffer.Append(char.ToUpper(value[i]));
                         }
                         break;
@@ -147,13 +134,11 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// Returns an array where the first entry contains the name and the
         /// second the value.
         /// </returns>
-        internal static String[] SplitNameAndValue(String selector)
-        {
+        internal static String[] SplitNameAndValue(String selector) {
             // get the name
             int eq = selector.IndexOf('=');
             int pos = 1;
-            if (selector[pos] == '?')
-            {
+            if (selector[pos] == '?') {
                 pos++;
             }
             String name = selector.JSubstring(pos, eq);
@@ -164,12 +149,10 @@ namespace iTextSharp.Kernel.XMP.Impl
             int end = selector.Length - 2;
             // quote and ]
             StringBuilder value = new StringBuilder(end - eq);
-            while (pos < end)
-            {
+            while (pos < end) {
                 value.Append(selector[pos]);
                 pos++;
-                if (selector[pos] == quote)
-                {
+                if (selector[pos] == quote) {
                     // skip one quote in value
                     pos++;
                 }
@@ -183,120 +166,83 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// Returns true if the property is defined as &quot;Internal
         /// Property&quot;, see XMP Specification.
         /// </returns>
-        internal static bool IsInternalProperty(String schema, String prop)
-        {
+        internal static bool IsInternalProperty(String schema, String prop) {
             bool isInternal = false;
-            if (NS_DC.Equals(schema))
-            {
-                if ("dc:format".Equals(prop) || "dc:language".Equals(prop))
-                {
+            if (NS_DC.Equals(schema)) {
+                if ("dc:format".Equals(prop) || "dc:language".Equals(prop)) {
                     isInternal = true;
                 }
             }
-            else
-            {
-                if (NS_XMP.Equals(schema))
-                {
+            else {
+                if (NS_XMP.Equals(schema)) {
                     if ("xmp:BaseURL".Equals(prop) || "xmp:CreatorTool".Equals(prop) || "xmp:Format".Equals(prop) || "xmp:Locale"
-                        .Equals(prop) || "xmp:MetadataDate".Equals(prop) || "xmp:ModifyDate".Equals(prop))
-                    {
+                        .Equals(prop) || "xmp:MetadataDate".Equals(prop) || "xmp:ModifyDate".Equals(prop)) {
                         isInternal = true;
                     }
                 }
-                else
-                {
-                    if (NS_PDF.Equals(schema))
-                    {
+                else {
+                    if (NS_PDF.Equals(schema)) {
                         if ("pdf:BaseURL".Equals(prop) || "pdf:Creator".Equals(prop) || "pdf:ModDate".Equals(prop) || "pdf:PDFVersion"
-                            .Equals(prop) || "pdf:Producer".Equals(prop))
-                        {
+                            .Equals(prop) || "pdf:Producer".Equals(prop)) {
                             isInternal = true;
                         }
                     }
-                    else
-                    {
-                        if (NS_TIFF.Equals(schema))
-                        {
+                    else {
+                        if (NS_TIFF.Equals(schema)) {
                             isInternal = true;
-                            if ("tiff:ImageDescription".Equals(prop) || "tiff:Artist".Equals(prop) || "tiff:Copyright".Equals(prop))
-                            {
+                            if ("tiff:ImageDescription".Equals(prop) || "tiff:Artist".Equals(prop) || "tiff:Copyright".Equals(prop)) {
                                 isInternal = false;
                             }
                         }
-                        else
-                        {
-                            if (NS_EXIF.Equals(schema))
-                            {
+                        else {
+                            if (NS_EXIF.Equals(schema)) {
                                 isInternal = true;
-                                if ("exif:UserComment".Equals(prop))
-                                {
+                                if ("exif:UserComment".Equals(prop)) {
                                     isInternal = false;
                                 }
                             }
-                            else
-                            {
-                                if (NS_EXIF_AUX.Equals(schema))
-                                {
+                            else {
+                                if (NS_EXIF_AUX.Equals(schema)) {
                                     isInternal = true;
                                 }
-                                else
-                                {
-                                    if (NS_PHOTOSHOP.Equals(schema))
-                                    {
-                                        if ("photoshop:ICCProfile".Equals(prop))
-                                        {
+                                else {
+                                    if (NS_PHOTOSHOP.Equals(schema)) {
+                                        if ("photoshop:ICCProfile".Equals(prop)) {
                                             isInternal = true;
                                         }
                                     }
-                                    else
-                                    {
-                                        if (NS_CAMERARAW.Equals(schema))
-                                        {
-                                            if ("crs:Version".Equals(prop) || "crs:RawFileName".Equals(prop) || "crs:ToneCurveName".Equals(prop))
-                                            {
+                                    else {
+                                        if (NS_CAMERARAW.Equals(schema)) {
+                                            if ("crs:Version".Equals(prop) || "crs:RawFileName".Equals(prop) || "crs:ToneCurveName".Equals(prop)) {
                                                 isInternal = true;
                                             }
                                         }
-                                        else
-                                        {
-                                            if (NS_ADOBESTOCKPHOTO.Equals(schema))
-                                            {
+                                        else {
+                                            if (NS_ADOBESTOCKPHOTO.Equals(schema)) {
                                                 isInternal = true;
                                             }
-                                            else
-                                            {
-                                                if (NS_XMP_MM.Equals(schema))
-                                                {
+                                            else {
+                                                if (NS_XMP_MM.Equals(schema)) {
                                                     isInternal = true;
                                                 }
-                                                else
-                                                {
-                                                    if (TYPE_TEXT.Equals(schema))
-                                                    {
+                                                else {
+                                                    if (TYPE_TEXT.Equals(schema)) {
                                                         isInternal = true;
                                                     }
-                                                    else
-                                                    {
-                                                        if (TYPE_PAGEDFILE.Equals(schema))
-                                                        {
+                                                    else {
+                                                        if (TYPE_PAGEDFILE.Equals(schema)) {
                                                             isInternal = true;
                                                         }
-                                                        else
-                                                        {
-                                                            if (TYPE_GRAPHICS.Equals(schema))
-                                                            {
+                                                        else {
+                                                            if (TYPE_GRAPHICS.Equals(schema)) {
                                                                 isInternal = true;
                                                             }
-                                                            else
-                                                            {
-                                                                if (TYPE_IMAGE.Equals(schema))
-                                                                {
+                                                            else {
+                                                                if (TYPE_IMAGE.Equals(schema)) {
                                                                     isInternal = true;
                                                                 }
-                                                                else
-                                                                {
-                                                                    if (TYPE_FONT.Equals(schema))
-                                                                    {
+                                                                else {
+                                                                    if (TYPE_FONT.Equals(schema)) {
                                                                         isInternal = true;
                                                                     }
                                                                 }
@@ -326,19 +272,15 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </summary>
         /// <param name="uuid">uuid to test</param>
         /// <returns>true - this is a well formed UUID, false - UUID has not the expected format</returns>
-        internal static bool CheckUUIDFormat(String uuid)
-        {
+        internal static bool CheckUUIDFormat(String uuid) {
             bool result = true;
             int delimCnt = 0;
             int delimPos = 0;
-            if (uuid == null)
-            {
+            if (uuid == null) {
                 return false;
             }
-            for (delimPos = 0; delimPos < uuid.Length; delimPos++)
-            {
-                if (uuid[delimPos] == '-')
-                {
+            for (delimPos = 0; delimPos < uuid.Length; delimPos++) {
+                if (uuid[delimPos] == '-') {
                     delimCnt++;
                     result = result && (delimPos == 8 || delimPos == 13 || delimPos == 18 || delimPos == 23);
                 }
@@ -355,16 +297,12 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </remarks>
         /// <param name="name">an XML Name</param>
         /// <returns>Return <code>true</code> if the name is correct.</returns>
-        public static bool IsXMLName(String name)
-        {
-            if (name.Length > 0 && !IsNameStartChar(name[0]))
-            {
+        public static bool IsXMLName(String name) {
+            if (name.Length > 0 && !IsNameStartChar(name[0])) {
                 return false;
             }
-            for (int i = 1; i < name.Length; i++)
-            {
-                if (!IsNameChar(name[i]))
-                {
+            for (int i = 1; i < name.Length; i++) {
+                if (!IsNameChar(name[i])) {
                     return false;
                 }
             }
@@ -382,16 +320,12 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </remarks>
         /// <param name="name">the value to check</param>
         /// <returns>Returns true if the name is a valid "unqualified" XML name.</returns>
-        public static bool IsXMLNameNS(String name)
-        {
-            if (name.Length > 0 && (!IsNameStartChar(name[0]) || name[0] == ':'))
-            {
+        public static bool IsXMLNameNS(String name) {
+            if (name.Length > 0 && (!IsNameStartChar(name[0]) || name[0] == ':')) {
                 return false;
             }
-            for (int i = 1; i < name.Length; i++)
-            {
-                if (!IsNameChar(name[i]) || name[i] == ':')
-                {
+            for (int i = 1; i < name.Length; i++) {
+                if (!IsNameChar(name[i]) || name[i] == ':') {
                     return false;
                 }
             }
@@ -400,8 +334,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
         /// <param name="c">a char</param>
         /// <returns>Returns true if the char is an ASCII control char.</returns>
-        internal static bool IsControlChar(char c)
-        {
+        internal static bool IsControlChar(char c) {
             return (c <= 0x1F || c == 0x7F) && c != 0x09 && c != 0x0A && c != 0x0D;
         }
 
@@ -418,72 +351,58 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <param name="forAttribute">flag if string is attribute value (need to additional escape quotes)</param>
         /// <param name="escapeWhitespaces">Decides if LF, CR and TAB are escaped.</param>
         /// <returns>Returns the value ready for XML output.</returns>
-        public static String EscapeXML(String value, bool forAttribute, bool escapeWhitespaces)
-        {
+        public static String EscapeXML(String value, bool forAttribute, bool escapeWhitespaces) {
             // quick check if character are contained that need special treatment
             bool needsEscaping = false;
-            for (int i = 0; i < value.Length; i++)
-            {
+            for (int i = 0; i < value.Length; i++) {
                 char c = value[i];
                 if (c == '<' || c == '>' || c == '&' || (escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r')) || (forAttribute
-                     && c == '"'))
-                {
+                     && c == '"')) {
                     // XML chars
                     needsEscaping = true;
                     break;
                 }
             }
-            if (!needsEscaping)
-            {
+            if (!needsEscaping) {
                 // fast path
                 return value;
             }
-            else
-            {
+            else {
                 // slow path with escaping
                 StringBuilder buffer = new StringBuilder(value.Length * 4 / 3);
-                for (int i_1 = 0; i_1 < value.Length; i_1++)
-                {
+                for (int i_1 = 0; i_1 < value.Length; i_1++) {
                     char c = value[i_1];
-                    if (!(escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r')))
-                    {
-                        switch (c)
-                        {
-                            case '<':
-                            {
+                    if (!(escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r'))) {
+                        switch (c) {
+                            case '<': {
                                 // we do what "Canonical XML" expects
                                 // AUDIT: &apos; not serialized as only outer qoutes are used
                                 buffer.Append("&lt;");
                                 continue;
                             }
 
-                            case '>':
-                            {
+                            case '>': {
                                 buffer.Append("&gt;");
                                 continue;
                             }
 
-                            case '&':
-                            {
+                            case '&': {
                                 buffer.Append("&amp;");
                                 continue;
                             }
 
-                            case '"':
-                            {
+                            case '"': {
                                 buffer.Append(forAttribute ? "&quot;" : "\"");
                                 continue;
                             }
 
-                            default:
-                            {
+                            default: {
                                 buffer.Append(c);
                                 continue;
                             }
                         }
                     }
-                    else
-                    {
+                    else {
                         // write control chars escaped,
                         // if there are others than tab, LF and CR the xml will become invalid.
                         buffer.Append("&#x");
@@ -499,13 +418,10 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <summary>Replaces the ASCII control chars with a space.</summary>
         /// <param name="value">a node value</param>
         /// <returns>Returns the cleaned up value</returns>
-        internal static String RemoveControlChars(String value)
-        {
+        internal static String RemoveControlChars(String value) {
             StringBuilder buffer = new StringBuilder(value);
-            for (int i = 0; i < buffer.Length; i++)
-            {
-                if (IsControlChar(buffer[i]))
-                {
+            for (int i = 0; i < buffer.Length; i++) {
+                if (IsControlChar(buffer[i])) {
                     buffer.SetCharAt(i, ' ');
                 }
             }
@@ -520,8 +436,7 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </remarks>
         /// <param name="ch">a character</param>
         /// <returns>Returns true if the character is a valid first char of an XML name.</returns>
-        private static bool IsNameStartChar(char ch)
-        {
+        private static bool IsNameStartChar(char ch) {
             return (ch <= 0xFF && xmlNameStartChars[ch]) || (ch >= 0x100 && ch <= 0x2FF) || (ch >= 0x370 && ch <= 0x37D
                 ) || (ch >= 0x37F && ch <= 0x1FFF) || (ch >= 0x200C && ch <= 0x200D) || (ch >= 0x2070 && ch <= 0x218F)
                  || (ch >= 0x2C00 && ch <= 0x2FEF) || (ch >= 0x3001 && ch <= 0xD7FF) || (ch >= 0xF900 && ch <= 0xFDCF)
@@ -535,8 +450,7 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// </summary>
         /// <param name="ch">a character</param>
         /// <returns>Returns true if the character is a valid char of an XML name.</returns>
-        private static bool IsNameChar(char ch)
-        {
+        private static bool IsNameChar(char ch) {
             return (ch <= 0xFF && xmlNameChars[ch]) || IsNameStartChar(ch) || (ch >= 0x300 && ch <= 0x36F) || (ch >= 0x203F
                  && ch <= 0x2040);
         }
@@ -546,12 +460,10 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// according to the XML 1.1 specification
         /// http://www.w3.org/TR/xml11
         /// </summary>
-        private static void InitCharTables()
-        {
+        private static void InitCharTables() {
             xmlNameChars = new bool[0x0100];
             xmlNameStartChars = new bool[0x0100];
-            for (int i = 0; i < xmlNameChars.Length; i++)
-            {
+            for (int i = 0; i < xmlNameChars.Length; i++) {
                 char ch = (char)i;
                 xmlNameStartChars[ch] = ch == ':' || ('A' <= ch && ch <= 'Z') || ch == '_' || ('a' <= ch && ch <= 'z') || 
                     (0xC0 <= ch && ch <= 0xD6) || (0xD8 <= ch && ch <= 0xF6) || (0xF8 <= ch && ch <= 0xFF);

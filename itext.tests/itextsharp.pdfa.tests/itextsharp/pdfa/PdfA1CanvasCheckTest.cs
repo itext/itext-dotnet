@@ -5,10 +5,8 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA1CanvasCheckTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA1CanvasCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1CanvasCheckTest/";
@@ -17,18 +15,15 @@ namespace iTextSharp.Pdfa
              + "/test/itextsharp/pdfa/PdfA1CanvasCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void CanvasCheckTest1()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void CanvasCheckTest1() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -36,12 +31,10 @@ namespace iTextSharp.Pdfa
                 PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
                 pdfDocument.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
-                for (int i = 0; i < 29; i++)
-                {
+                for (int i = 0; i < 29; i++) {
                     canvas.SaveState();
                 }
-                for (int i_1 = 0; i_1 < 28; i_1++)
-                {
+                for (int i_1 = 0; i_1 < 28; i_1++) {
                     canvas.RestoreState();
                 }
                 pdfDocument.Close();
@@ -54,8 +47,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CanvasCheckTest2()
-        {
+        public virtual void CanvasCheckTest2() {
             String outPdf = destinationFolder + "pdfA1b_canvasCheckTest2.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_canvasCheckTest2.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -65,18 +57,15 @@ namespace iTextSharp.Pdfa
             PdfADocument pdfDocument = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, outputIntent);
             pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 canvas.SaveState();
             }
-            for (int i_1 = 0; i_1 < 28; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 28; i_1++) {
                 canvas.RestoreState();
             }
             pdfDocument.Close();
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (result != null)
-            {
+            if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
         }
@@ -84,10 +73,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void CanvasCheckTest3()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void CanvasCheckTest3() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"

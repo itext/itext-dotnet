@@ -49,8 +49,7 @@ using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Pdf.Navigation;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A clickable piece of
     /// <see cref="Text"/>
@@ -59,8 +58,7 @@ namespace iTextSharp.Layout.Element
     /// . The concept is largely similar to that of the
     /// HTML anchor tag.
     /// </summary>
-    public class Link : Text
-    {
+    public class Link : Text {
         protected internal PdfLinkAnnotation linkAnnotation;
 
         /// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
@@ -70,8 +68,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
         /// </param>
         public Link(String text, PdfLinkAnnotation linkAnnotation)
-            : base(text)
-        {
+            : base(text) {
             this.linkAnnotation = linkAnnotation;
             SetRole(PdfName.Link);
         }
@@ -83,8 +80,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="iTextSharp.Kernel.Pdf.Action.PdfAction"/>
         /// </param>
         public Link(String text, PdfAction action)
-            : this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(action)))
-        {
+            : this(text, ((PdfLinkAnnotation)new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetAction(action))) {
         }
 
         /// <summary>Creates a Link to another location in the document.</summary>
@@ -94,8 +90,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="iTextSharp.Kernel.Pdf.Navigation.PdfDestination"/>
         /// </param>
         public Link(String text, PdfDestination destination)
-            : this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination))
-        {
+            : this(text, new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0)).SetDestination(destination)) {
         }
 
         /// <summary>Gets the link annotation dictionary associated with this link.</summary>
@@ -103,13 +98,11 @@ namespace iTextSharp.Layout.Element
         /// a
         /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
         /// </returns>
-        public virtual PdfLinkAnnotation GetLinkAnnotation()
-        {
+        public virtual PdfLinkAnnotation GetLinkAnnotation() {
             return linkAnnotation;
         }
 
-        protected internal override IRenderer MakeNewRenderer()
-        {
+        protected internal override IRenderer MakeNewRenderer() {
             return new LinkRenderer(this, text);
         }
     }

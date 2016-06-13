@@ -2,26 +2,22 @@ using System;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfStringTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfStringTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStringTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfStringTest/";
 
         [NUnit.Framework.SetUp]
-        public virtual void Before()
-        {
+        public virtual void Before() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestPdfDocumentInfoStringEncoding01()
-        {
+        public virtual void TestPdfDocumentInfoStringEncoding01() {
             String fileName = "testPdfDocumentInfoStringEncoding01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties
                 ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));

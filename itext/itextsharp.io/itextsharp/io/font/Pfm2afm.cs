@@ -47,19 +47,16 @@ using System.Text;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
+namespace iTextSharp.IO.Font {
     /// <summary>Converts a PFM file into an AFM file.</summary>
-    public sealed class Pfm2afm
-    {
+    public sealed class Pfm2afm {
         private RandomAccessFileOrArray input;
 
         private StreamWriter output;
 
         /// <summary>Creates a new instance of Pfm2afm</summary>
         /// <exception cref="System.IO.IOException"/>
-        private Pfm2afm(RandomAccessFileOrArray input, Stream output)
-        {
+        private Pfm2afm(RandomAccessFileOrArray input, Stream output) {
             this.input = input;
             this.output = FileUtil.CreatePrintWriter(output, "ISO-8859-1");
         }
@@ -68,8 +65,7 @@ namespace iTextSharp.IO.Font
         /// <param name="input">the PFM file</param>
         /// <param name="output">the AFM file</param>
         /// <exception cref="System.IO.IOException">on error</exception>
-        public static void Convert(RandomAccessFileOrArray input, Stream output)
-        {
+        public static void Convert(RandomAccessFileOrArray input, Stream output) {
             iTextSharp.IO.Font.Pfm2afm p = new iTextSharp.IO.Font.Pfm2afm(input, output);
             p.Openpfm();
             p.Putheader();
@@ -80,15 +76,12 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private String ReadString(int n)
-        {
+        private String ReadString(int n) {
             byte[] b = new byte[n];
             input.ReadFully(b);
             int k;
-            for (k = 0; k < b.Length; ++k)
-            {
-                if (b[k] == 0)
-                {
+            for (k = 0; k < b.Length; ++k) {
+                if (b[k] == 0) {
                     break;
                 }
             }
@@ -96,14 +89,11 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private String ReadString()
-        {
+        private String ReadString() {
             StringBuilder buf = new StringBuilder();
-            while (true)
-            {
+            while (true) {
                 int c = input.Read();
-                if (c <= 0)
-                {
+                if (c <= 0) {
                     break;
                 }
                 buf.Append((char)c);
@@ -111,8 +101,7 @@ namespace iTextSharp.IO.Font
             return buf.ToString();
         }
 
-        private void Outval(int n)
-        {
+        private void Outval(int n) {
             output.Write(' ');
             output.Write(n);
         }
@@ -120,14 +109,12 @@ namespace iTextSharp.IO.Font
         /*
         *  Output a character entry
         */
-        private void Outchar(int code, int width, String name)
-        {
+        private void Outchar(int code, int width, String name) {
             output.Write("C ");
             Outval(code);
             output.Write(" ; WX ");
             Outval(width);
-            if (name != null)
-            {
+            if (name != null) {
                 output.Write(" ; N ");
                 output.Write(name);
             }
@@ -135,8 +122,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void Openpfm()
-        {
+        private void Openpfm() {
             input.Seek(0);
             vers = input.ReadShortLE();
             h_len = input.ReadIntLE();
@@ -174,8 +160,7 @@ namespace iTextSharp.IO.Font
             kernpairs = input.ReadIntLE();
             res2 = input.ReadIntLE();
             fontname = input.ReadIntLE();
-            if (h_len != input.Length() || extlen != 30 || fontname < 75 || fontname > 512)
-            {
+            if (h_len != input.Length() || extlen != 30 || fontname < 75 || fontname > 512) {
                 throw new System.IO.IOException("not.a.valid.pfm.file");
             }
             input.Seek(psext + 14);
@@ -186,11 +171,9 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void Putheader()
-        {
+        private void Putheader() {
             output.Write("StartFontMetrics 2.0\n");
-            if (copyright.Length > 0)
-            {
+            if (copyright.Length > 0) {
                 output.Write("Comment " + copyright + '\n');
             }
             output.Write("FontName ");
@@ -198,12 +181,10 @@ namespace iTextSharp.IO.Font
             String fname = ReadString();
             output.Write(fname);
             output.Write("\nEncodingScheme ");
-            if (charset != 0)
-            {
+            if (charset != 0) {
                 output.Write("FontSpecific\n");
             }
-            else
-            {
+            else {
                 output.Write("AdobeStandardEncoding\n");
             }
             /*
@@ -212,42 +193,33 @@ namespace iTextSharp.IO.Font
             * of cases.
             */
             output.Write("FullName " + fname.Replace('-', ' '));
-            if (face != 0)
-            {
+            if (face != 0) {
                 input.Seek(face);
                 output.Write("\nFamilyName " + ReadString());
             }
             output.Write("\nWeight ");
-            if (weight > 475 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("bold"))
-            {
+            if (weight > 475 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("bold")) {
                 output.Write("Bold");
             }
-            else
-            {
+            else {
                 if ((weight < 325 && weight != 0) || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains
-                    ("light"))
-                {
+                    ("light")) {
                     output.Write("Light");
                 }
-                else
-                {
-                    if (fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("black"))
-                    {
+                else {
+                    if (fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("black")) {
                         output.Write("Black");
                     }
-                    else
-                    {
+                    else {
                         output.Write("Medium");
                     }
                 }
             }
             output.Write("\nItalicAngle ");
-            if (italic != 0 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("italic"))
-            {
+            if (italic != 0 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("italic")) {
                 output.Write("-12.00");
             }
-            else
-            {
+            else {
                 /* this is a typical value; something else may work better for a
                 specific font */
                 output.Write("0");
@@ -257,15 +229,13 @@ namespace iTextSharp.IO.Font
             *  table of font widths, not if they are all the same.
             */
             output.Write("\nIsFixedPitch ");
-            if ((kind & 1) == 0 || avgwidth == maxwidth)
-            {
+            if ((kind & 1) == 0 || avgwidth == maxwidth) {
                 /* Flag for mono */
                 /* Avg width = max width */
                 output.Write("true");
                 isMono = true;
             }
-            else
-            {
+            else {
                 output.Write("false");
                 isMono = false;
             }
@@ -275,12 +245,10 @@ namespace iTextSharp.IO.Font
             * the .afm, but is not used by the PM font installer.
             */
             output.Write("\nFontBBox");
-            if (isMono)
-            {
+            if (isMono) {
                 Outval(-20);
             }
-            else
-            {
+            else {
                 /* Just guess at left bounds */
                 Outval(-100);
             }
@@ -303,22 +271,17 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void Putchartab()
-        {
+        private void Putchartab() {
             int count = lastchar - firstchar + 1;
             int[] ctabs = new int[count];
             input.Seek(chartab);
-            for (int k = 0; k < count; ++k)
-            {
+            for (int k = 0; k < count; ++k) {
                 ctabs[k] = input.ReadUnsignedShortLE();
             }
             int[] back = new int[256];
-            if (charset == 0)
-            {
-                for (int i = firstchar; i <= lastchar; ++i)
-                {
-                    if (Win2PSStd[i] != 0)
-                    {
+            if (charset == 0) {
+                for (int i = firstchar; i <= lastchar; ++i) {
+                    if (Win2PSStd[i] != 0) {
                         back[Win2PSStd[i]] = i;
                     }
                 }
@@ -328,36 +291,28 @@ namespace iTextSharp.IO.Font
             Outval(count);
             output.Write('\n');
             /* Put out all encoded chars */
-            if (charset != 0)
-            {
+            if (charset != 0) {
                 /*
                 * If the charset is not the Windows standard, just put out
                 * unnamed entries.
                 */
-                for (int i = firstchar; i <= lastchar; i++)
-                {
-                    if (ctabs[i - firstchar] != 0)
-                    {
+                for (int i = firstchar; i <= lastchar; i++) {
+                    if (ctabs[i - firstchar] != 0) {
                         Outchar(i, ctabs[i - firstchar], null);
                     }
                 }
             }
-            else
-            {
-                for (int i = 0; i < 256; i++)
-                {
+            else {
+                for (int i = 0; i < 256; i++) {
                     int j = back[i];
-                    if (j != 0)
-                    {
+                    if (j != 0) {
                         Outchar(i, ctabs[j - firstchar], WinChars[j]);
                         ctabs[j - firstchar] = 0;
                     }
                 }
                 /* Put out all non-encoded chars */
-                for (int i_1 = firstchar; i_1 <= lastchar; i_1++)
-                {
-                    if (ctabs[i_1 - firstchar] != 0)
-                    {
+                for (int i_1 = firstchar; i_1 <= lastchar; i_1++) {
+                    if (ctabs[i_1 - firstchar] != 0) {
                         Outchar(-1, ctabs[i_1 - firstchar], WinChars[i_1]);
                     }
                 }
@@ -367,36 +322,29 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void Putkerntab()
-        {
-            if (kernpairs == 0)
-            {
+        private void Putkerntab() {
+            if (kernpairs == 0) {
                 return;
             }
             input.Seek(kernpairs);
             int count = input.ReadUnsignedShortLE();
             int nzero = 0;
             int[] kerns = new int[count * 3];
-            for (int k = 0; k < kerns.Length; )
-            {
+            for (int k = 0; k < kerns.Length; ) {
                 kerns[k++] = input.Read();
                 kerns[k++] = input.Read();
-                if ((kerns[k++] = input.ReadShortLE()) != 0)
-                {
+                if ((kerns[k++] = input.ReadShortLE()) != 0) {
                     ++nzero;
                 }
             }
-            if (nzero == 0)
-            {
+            if (nzero == 0) {
                 return;
             }
             output.Write("StartKernData\nStartKernPairs");
             Outval(nzero);
             output.Write('\n');
-            for (int k_1 = 0; k_1 < kerns.Length; k_1 += 3)
-            {
-                if (kerns[k_1 + 2] != 0)
-                {
+            for (int k_1 = 0; k_1 < kerns.Length; k_1 += 3) {
+                if (kerns[k_1 + 2] != 0) {
                     output.Write("KPX ");
                     output.Write(WinChars[kerns[k_1]]);
                     output.Write(' ');
@@ -409,8 +357,7 @@ namespace iTextSharp.IO.Font
             output.Write("EndKernPairs\nEndKernData\n");
         }
 
-        private void Puttrailer()
-        {
+        private void Puttrailer() {
             output.Write("EndFontMetrics\n");
         }
 

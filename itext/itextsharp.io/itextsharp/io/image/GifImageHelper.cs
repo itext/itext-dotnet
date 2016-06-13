@@ -48,16 +48,12 @@ using System.Text;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Image
-{
-    public sealed class GifImageHelper
-    {
+namespace iTextSharp.IO.Image {
+    public sealed class GifImageHelper {
         internal const int MAX_STACK_SIZE = 4096;
 
-        private class GifParameters
-        {
-            public GifParameters(GifImageData image)
-            {
+        private class GifParameters {
+            public GifParameters(GifImageData image) {
                 // max decoder pixel stack size
                 this.image = image;
             }
@@ -147,41 +143,34 @@ namespace iTextSharp.IO.Image
 
         /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)</summary>
         /// <param name="image">GifImage</param>
-        public static void ProcessImage(GifImageData image)
-        {
+        public static void ProcessImage(GifImageData image) {
             ProcessImage(image, -1);
         }
 
         /// <summary>Reads image source and fills GifImage object with parameters (frames, width, height)</summary>
         /// <param name="image">GifImage</param>
         /// <param name="lastFrameNumber">the last frame of the gif image should be read</param>
-        public static void ProcessImage(GifImageData image, int lastFrameNumber)
-        {
+        public static void ProcessImage(GifImageData image, int lastFrameNumber) {
             GifImageHelper.GifParameters gif = new GifImageHelper.GifParameters(image);
             Stream gifStream;
-            try
-            {
-                if (image.GetData() == null)
-                {
+            try {
+                if (image.GetData() == null) {
                     image.LoadData();
                 }
                 gifStream = new MemoryStream(image.GetData());
                 Process(gifStream, gif, lastFrameNumber);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, e);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void Process(Stream stream, GifImageHelper.GifParameters gif, int lastFrameNumber)
-        {
+        private static void Process(Stream stream, GifImageHelper.GifParameters gif, int lastFrameNumber) {
             gif.input = stream;
             ReadHeader(gif);
             ReadContents(gif, lastFrameNumber);
-            if (gif.currentFrame <= lastFrameNumber)
-            {
+            if (gif.currentFrame <= lastFrameNumber) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotFind1Frame).SetMessageParams(lastFrameNumber
                     );
             }
@@ -189,28 +178,23 @@ namespace iTextSharp.IO.Image
 
         /// <summary>Reads GIF file header information.</summary>
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadHeader(GifImageHelper.GifParameters gif)
-        {
+        private static void ReadHeader(GifImageHelper.GifParameters gif) {
             StringBuilder id = new StringBuilder("");
-            for (int i = 0; i < 6; i++)
-            {
+            for (int i = 0; i < 6; i++) {
                 id.Append((char)gif.input.Read());
             }
-            if (!id.ToString().StartsWith("GIF8"))
-            {
+            if (!id.ToString().StartsWith("GIF8")) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifSignatureNotFound);
             }
             ReadLSD(gif);
-            if (gif.gctFlag)
-            {
+            if (gif.gctFlag) {
                 gif.m_global_table = ReadColorTable(gif.m_gbpc, gif);
             }
         }
 
         /// <summary>Reads Logical Screen Descriptor</summary>
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadLSD(GifImageHelper.GifParameters gif)
-        {
+        private static void ReadLSD(GifImageHelper.GifParameters gif) {
             // logical screen size
             gif.image.SetLogicalWidth(ReadShort(gif));
             gif.image.SetLogicalHeight(ReadShort(gif));
@@ -227,8 +211,7 @@ namespace iTextSharp.IO.Image
         // pixel aspect ratio
         /// <summary>Reads next 16-bit value, LSB first</summary>
         /// <exception cref="System.IO.IOException"/>
-        private static int ReadShort(GifImageHelper.GifParameters gif)
-        {
+        private static int ReadShort(GifImageHelper.GifParameters gif) {
             // read 16-bit value, LSB first
             return gif.input.Read() | gif.input.Read() << 8;
         }
@@ -236,11 +219,9 @@ namespace iTextSharp.IO.Image
         /// <summary>Reads next variable length block from input.</summary>
         /// <returns>number of bytes stored in "buffer"</returns>
         /// <exception cref="System.IO.IOException"/>
-        private static int ReadBlock(GifImageHelper.GifParameters gif)
-        {
+        private static int ReadBlock(GifImageHelper.GifParameters gif) {
             gif.blockSize = gif.input.Read();
-            if (gif.blockSize <= 0)
-            {
+            if (gif.blockSize <= 0) {
                 return gif.blockSize = 0;
             }
             gif.blockSize = gif.input.JRead(gif.block, 0, gif.blockSize);
@@ -248,8 +229,7 @@ namespace iTextSharp.IO.Image
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static byte[] ReadColorTable(int bpc, GifImageHelper.GifParameters gif)
-        {
+        private static byte[] ReadColorTable(int bpc, GifImageHelper.GifParameters gif) {
             int ncolors = 1 << bpc;
             int nbytes = 3 * ncolors;
             bpc = NewBpc(bpc);
@@ -258,24 +238,19 @@ namespace iTextSharp.IO.Image
             return table;
         }
 
-        private static int NewBpc(int bpc)
-        {
-            switch (bpc)
-            {
+        private static int NewBpc(int bpc) {
+            switch (bpc) {
                 case 1:
                 case 2:
-                case 4:
-                {
+                case 4: {
                     break;
                 }
 
-                case 3:
-                {
+                case 3: {
                     return 4;
                 }
 
-                default:
-                {
+                default: {
                     return 8;
                 }
             }
@@ -283,43 +258,34 @@ namespace iTextSharp.IO.Image
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadContents(GifImageHelper.GifParameters gif, int lastFrameNumber)
-        {
+        private static void ReadContents(GifImageHelper.GifParameters gif, int lastFrameNumber) {
             // read GIF file content blocks
             bool done = false;
             gif.currentFrame = 0;
-            while (!done)
-            {
+            while (!done) {
                 int code = gif.input.Read();
-                switch (code)
-                {
-                    case 0x2C:
-                    {
+                switch (code) {
+                    case 0x2C: {
                         // image separator
                         ReadFrame(gif);
-                        if (gif.currentFrame == lastFrameNumber)
-                        {
+                        if (gif.currentFrame == lastFrameNumber) {
                             done = true;
                         }
                         gif.currentFrame++;
                         break;
                     }
 
-                    case 0x21:
-                    {
+                    case 0x21: {
                         // extension
                         code = gif.input.Read();
-                        switch (code)
-                        {
-                            case 0xf9:
-                            {
+                        switch (code) {
+                            case 0xf9: {
                                 // graphics control extension
                                 ReadGraphicControlExt(gif);
                                 break;
                             }
 
-                            case 0xff:
-                            {
+                            case 0xff: {
                                 // application extension
                                 ReadBlock(gif);
                                 Skip(gif);
@@ -327,8 +293,7 @@ namespace iTextSharp.IO.Image
                                 break;
                             }
 
-                            default:
-                            {
+                            default: {
                                 // uninteresting extension
                                 Skip(gif);
                                 break;
@@ -337,8 +302,7 @@ namespace iTextSharp.IO.Image
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         done = true;
                         break;
                     }
@@ -348,8 +312,7 @@ namespace iTextSharp.IO.Image
 
         /// <summary>Reads next frame image</summary>
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadFrame(GifImageHelper.GifParameters gif)
-        {
+        private static void ReadFrame(GifImageHelper.GifParameters gif) {
             gif.ix = ReadShort(gif);
             // (sub)image position & size
             gif.iy = ReadShort(gif);
@@ -365,22 +328,18 @@ namespace iTextSharp.IO.Image
             gif.lctSize = 2 << (packed & 7);
             // 6-8 - local color table size
             gif.m_bpc = NewBpc(gif.m_gbpc);
-            if (gif.lctFlag)
-            {
+            if (gif.lctFlag) {
                 gif.m_curr_table = ReadColorTable((packed & 7) + 1, gif);
                 // read table
                 gif.m_bpc = NewBpc((packed & 7) + 1);
             }
-            else
-            {
+            else {
                 gif.m_curr_table = gif.m_global_table;
             }
-            if (gif.transparency && gif.transIndex >= gif.m_curr_table.Length / 3)
-            {
+            if (gif.transparency && gif.transIndex >= gif.m_curr_table.Length / 3) {
                 gif.transparency = false;
             }
-            if (gif.transparency && gif.m_bpc == 1)
-            {
+            if (gif.transparency && gif.m_bpc == 1) {
                 // Acrobat 5.05 doesn't like this combination
                 byte[] tp = new byte[12];
                 System.Array.Copy(gif.m_curr_table, 0, tp, 0, 6);
@@ -389,12 +348,10 @@ namespace iTextSharp.IO.Image
             }
             bool skipZero = DecodeImageData(gif);
             // decode pixel data
-            if (!skipZero)
-            {
+            if (!skipZero) {
                 Skip(gif);
             }
-            try
-            {
+            try {
                 Object[] colorspace = new Object[4];
                 colorspace[0] = "/Indexed";
                 colorspace[1] = "/DeviceRGB";
@@ -407,20 +364,17 @@ namespace iTextSharp.IO.Image
                 RawImageHelper.UpdateRawImageParameters(img, gif.iw, gif.ih, 1, gif.m_bpc, gif.m_out);
                 RawImageHelper.UpdateImageAttributes(img, ad);
                 gif.image.AddFrame(img);
-                if (gif.transparency)
-                {
+                if (gif.transparency) {
                     img.SetTransparency(new int[] { gif.transIndex, gif.transIndex });
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.GifImageException, e);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static bool DecodeImageData(GifImageHelper.GifParameters gif)
-        {
+        private static bool DecodeImageData(GifImageHelper.GifParameters gif) {
             int NullCode = -1;
             int npix = gif.iw * gif.ih;
             int available;
@@ -440,16 +394,13 @@ namespace iTextSharp.IO.Image
             int top;
             int bi;
             bool skipZero = false;
-            if (gif.prefix == null)
-            {
+            if (gif.prefix == null) {
                 gif.prefix = new short[MAX_STACK_SIZE];
             }
-            if (gif.suffix == null)
-            {
+            if (gif.suffix == null) {
                 gif.suffix = new byte[MAX_STACK_SIZE];
             }
-            if (gif.pixelStack == null)
-            {
+            if (gif.pixelStack == null) {
                 gif.pixelStack = new byte[MAX_STACK_SIZE + 1];
             }
             gif.m_line_stride = (gif.iw * gif.m_bpc + 7) / 8;
@@ -466,26 +417,20 @@ namespace iTextSharp.IO.Image
             old_code = NullCode;
             code_size = data_size + 1;
             code_mask = (1 << code_size) - 1;
-            for (code = 0; code < clear; code++)
-            {
+            for (code = 0; code < clear; code++) {
                 gif.prefix[code] = 0;
                 gif.suffix[code] = (byte)code;
             }
             //  Decode GIF pixel stream.
             datum = bits = count = first = top = bi = 0;
-            for (i = 0; i < npix; )
-            {
-                if (top == 0)
-                {
-                    if (bits < code_size)
-                    {
+            for (i = 0; i < npix; ) {
+                if (top == 0) {
+                    if (bits < code_size) {
                         //  Load bytes until there are enough bits for a code.
-                        if (count == 0)
-                        {
+                        if (count == 0) {
                             // Read a new data block.
                             count = ReadBlock(gif);
-                            if (count <= 0)
-                            {
+                            if (count <= 0) {
                                 skipZero = true;
                                 break;
                             }
@@ -502,12 +447,10 @@ namespace iTextSharp.IO.Image
                     datum >>= code_size;
                     bits -= code_size;
                     //  Interpret the code
-                    if (code > available || code == end_of_information)
-                    {
+                    if (code > available || code == end_of_information) {
                         break;
                     }
-                    if (code == clear)
-                    {
+                    if (code == clear) {
                         //  Reset decoder.
                         code_size = data_size + 1;
                         code_mask = (1 << code_size) - 1;
@@ -515,36 +458,31 @@ namespace iTextSharp.IO.Image
                         old_code = NullCode;
                         continue;
                     }
-                    if (old_code == NullCode)
-                    {
+                    if (old_code == NullCode) {
                         gif.pixelStack[top++] = gif.suffix[code];
                         old_code = code;
                         first = code;
                         continue;
                     }
                     in_code = code;
-                    if (code == available)
-                    {
+                    if (code == available) {
                         gif.pixelStack[top++] = (byte)first;
                         code = old_code;
                     }
-                    while (code > clear)
-                    {
+                    while (code > clear) {
                         gif.pixelStack[top++] = gif.suffix[code];
                         code = gif.prefix[code];
                     }
                     first = gif.suffix[code] & 0xff;
                     //  Add a new string to the string table,
-                    if (available >= MAX_STACK_SIZE)
-                    {
+                    if (available >= MAX_STACK_SIZE) {
                         break;
                     }
                     gif.pixelStack[top++] = (byte)first;
                     gif.prefix[available] = (short)old_code;
                     gif.suffix[available] = (byte)first;
                     available++;
-                    if ((available & code_mask) == 0 && available < MAX_STACK_SIZE)
-                    {
+                    if ((available & code_mask) == 0 && available < MAX_STACK_SIZE) {
                         code_size++;
                         code_mask += available;
                     }
@@ -555,41 +493,32 @@ namespace iTextSharp.IO.Image
                 i++;
                 SetPixel(xpos, line, gif.pixelStack[top], gif);
                 ++xpos;
-                if (xpos >= gif.iw)
-                {
+                if (xpos >= gif.iw) {
                     xpos = 0;
                     line += inc;
-                    if (line >= gif.ih)
-                    {
-                        if (gif.interlace)
-                        {
-                            do
-                            {
+                    if (line >= gif.ih) {
+                        if (gif.interlace) {
+                            do {
                                 pass++;
-                                switch (pass)
-                                {
-                                    case 2:
-                                    {
+                                switch (pass) {
+                                    case 2: {
                                         line = 4;
                                         break;
                                     }
 
-                                    case 3:
-                                    {
+                                    case 3: {
                                         line = 2;
                                         inc = 4;
                                         break;
                                     }
 
-                                    case 4:
-                                    {
+                                    case 4: {
                                         line = 1;
                                         inc = 2;
                                         break;
                                     }
 
-                                    default:
-                                    {
+                                    default: {
                                         // this shouldn't happen
                                         line = gif.ih - 1;
                                         inc = 0;
@@ -599,8 +528,7 @@ namespace iTextSharp.IO.Image
                             }
                             while (line >= gif.ih);
                         }
-                        else
-                        {
+                        else {
                             line = gif.ih - 1;
                             // this shouldn't happen
                             inc = 0;
@@ -611,15 +539,12 @@ namespace iTextSharp.IO.Image
             return skipZero;
         }
 
-        private static void SetPixel(int x, int y, int v, GifImageHelper.GifParameters gif)
-        {
-            if (gif.m_bpc == 8)
-            {
+        private static void SetPixel(int x, int y, int v, GifImageHelper.GifParameters gif) {
+            if (gif.m_bpc == 8) {
                 int pos = x + gif.iw * y;
                 gif.m_out[pos] = (byte)v;
             }
-            else
-            {
+            else {
                 int pos = gif.m_line_stride * y + x / (8 / gif.m_bpc);
                 int vout = v << 8 - gif.m_bpc * (x % (8 / gif.m_bpc)) - gif.m_bpc;
                 gif.m_out[pos] |= (byte)vout;
@@ -628,16 +553,14 @@ namespace iTextSharp.IO.Image
 
         /// <summary>Reads Graphics Control Extension values</summary>
         /// <exception cref="System.IO.IOException"/>
-        private static void ReadGraphicControlExt(GifImageHelper.GifParameters gif)
-        {
+        private static void ReadGraphicControlExt(GifImageHelper.GifParameters gif) {
             gif.input.Read();
             // block size
             int packed = gif.input.Read();
             // packed fields
             gif.dispose = (packed & 0x1c) >> 2;
             // disposal method
-            if (gif.dispose == 0)
-            {
+            if (gif.dispose == 0) {
                 gif.dispose = 1;
             }
             // elect to keep old image if discretionary
@@ -655,10 +578,8 @@ namespace iTextSharp.IO.Image
         /// next zero length block.
         /// </summary>
         /// <exception cref="System.IO.IOException"/>
-        private static void Skip(GifImageHelper.GifParameters gif)
-        {
-            do
-            {
+        private static void Skip(GifImageHelper.GifParameters gif) {
+            do {
                 ReadBlock(gif);
             }
             while (gif.blockSize > 0);

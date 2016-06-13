@@ -44,36 +44,28 @@ address: sales@itextpdf.com
 using System.IO;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters
-{
+namespace iTextSharp.Kernel.Pdf.Filters {
     /// <summary>Handles RunLengthDecode filter.</summary>
-    public class RunLengthDecodeFilter : IFilterHandler
-    {
+    public class RunLengthDecodeFilter : IFilterHandler {
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            )
-        {
+            ) {
             MemoryStream baos = new MemoryStream();
             byte dupCount;
-            for (int i = 0; i < b.Length; i++)
-            {
+            for (int i = 0; i < b.Length; i++) {
                 dupCount = b[i];
-                if (dupCount == (byte)0x80)
-                {
+                if (dupCount == (byte)0x80) {
                     // this is implicit end of data
                     break;
                 }
-                if (dupCount >= 0)
-                {
+                if (dupCount >= 0) {
                     int bytesToCopy = dupCount + 1;
                     baos.Write(b, i, bytesToCopy);
                     i += bytesToCopy;
                 }
-                else
-                {
+                else {
                     // make dupcount copies of the next byte
                     i++;
-                    for (int j = 0; j < 1 - (int)(dupCount); j++)
-                    {
+                    for (int j = 0; j < 1 - (int)(dupCount); j++) {
                         baos.Write(b[i]);
                     }
                 }

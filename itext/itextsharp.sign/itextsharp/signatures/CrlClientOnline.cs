@@ -48,15 +48,13 @@ using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Log;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// An implementation of the CrlClient that fetches the CRL bytes
     /// from an URL.
     /// </summary>
     /// <author>Paulo Soares</author>
-    public class CrlClientOnline : ICrlClient
-    {
+    public class CrlClientOnline : ICrlClient {
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.CrlClientOnline
             ));
@@ -68,41 +66,32 @@ namespace iTextSharp.Signatures
         /// Creates a CrlClientOnline instance that will try to find
         /// a single CRL by walking through the certificate chain.
         /// </summary>
-        public CrlClientOnline()
-        {
+        public CrlClientOnline() {
         }
 
         /// <summary>Creates a CrlClientOnline instance using one or more URLs.</summary>
-        public CrlClientOnline(params String[] crls)
-        {
-            foreach (String url in crls)
-            {
+        public CrlClientOnline(params String[] crls) {
+            foreach (String url in crls) {
                 AddUrl(url);
             }
         }
 
         /// <summary>Creates a CrlClientOnline instance using one or more URLs.</summary>
-        public CrlClientOnline(params Uri[] crls)
-        {
-            foreach (Uri url in urls)
-            {
+        public CrlClientOnline(params Uri[] crls) {
+            foreach (Uri url in urls) {
                 AddUrl(url);
             }
         }
 
         /// <summary>Creates a CrlClientOnline instance using a certificate chain.</summary>
-        public CrlClientOnline(X509Certificate[] chain)
-        {
-            for (int i = 0; i < chain.Length; i++)
-            {
+        public CrlClientOnline(X509Certificate[] chain) {
+            for (int i = 0; i < chain.Length; i++) {
                 X509Certificate cert = (X509Certificate)chain[i];
                 LOGGER.Info("Checking certificate: " + cert.SubjectDN);
-                try
-                {
+                try {
                     AddUrl(CertificateUtil.GetCRLURL(cert));
                 }
-                catch (CertificateParsingException)
-                {
+                catch (CertificateParsingException) {
                     LOGGER.Info("Skipped CRL url (certificate could not be parsed)");
                 }
             }
@@ -110,24 +99,19 @@ namespace iTextSharp.Signatures
 
         /// <summary>Adds an URL to the list of CRL URLs</summary>
         /// <param name="url">an URL in the form of a String</param>
-        protected internal virtual void AddUrl(String url)
-        {
-            try
-            {
+        protected internal virtual void AddUrl(String url) {
+            try {
                 AddUrl(new Uri(url));
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 LOGGER.Info("Skipped CRL url (malformed): " + url);
             }
         }
 
         /// <summary>Adds an URL to the list of CRL URLs</summary>
         /// <param name="url">an URL object</param>
-        protected internal virtual void AddUrl(Uri url)
-        {
-            if (urls.Contains(url))
-            {
+        protected internal virtual void AddUrl(Uri url) {
+            if (urls.Contains(url)) {
                 LOGGER.Info("Skipped CRL url (duplicate): " + url);
                 return;
             }
@@ -144,48 +128,37 @@ namespace iTextSharp.Signatures
         /// the CrlClientOffline class.
         /// </remarks>
         /// <seealso cref="ICrlClient.GetEncoded(Org.BouncyCastle.X509.X509Certificate, System.String)"/>
-        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url)
-        {
-            if (checkCert == null)
-            {
+        public virtual ICollection<byte[]> GetEncoded(X509Certificate checkCert, String url) {
+            if (checkCert == null) {
                 return null;
             }
             IList<Uri> urllist = new List<Uri>(urls);
-            if (urllist.Count == 0)
-            {
+            if (urllist.Count == 0) {
                 LOGGER.Info("Looking for CRL for certificate " + checkCert.SubjectDN);
-                try
-                {
-                    if (url == null)
-                    {
+                try {
+                    if (url == null) {
                         url = CertificateUtil.GetCRLURL(checkCert);
                     }
-                    if (url == null)
-                    {
+                    if (url == null) {
                         throw new ArgumentNullException();
                     }
                     urllist.Add(new Uri(url));
                     LOGGER.Info("Found CRL url: " + url);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     LOGGER.Info("Skipped CRL url: " + e.Message);
                 }
             }
             IList<byte[]> ar = new List<byte[]>();
-            foreach (Uri urlt in urllist)
-            {
-                try
-                {
+            foreach (Uri urlt in urllist) {
+                try {
                     LOGGER.Info("Checking CRL: " + urlt);
                     Stream inp = SignUtils.GetHttpResponse(urlt);
                     byte[] buf = new byte[1024];
                     MemoryStream bout = new MemoryStream();
-                    while (true)
-                    {
+                    while (true) {
                         int n = inp.JRead(buf, 0, buf.Length);
-                        if (n <= 0)
-                        {
+                        if (n <= 0) {
                             break;
                         }
                         bout.Write(buf, 0, n);
@@ -194,8 +167,7 @@ namespace iTextSharp.Signatures
                     ar.Add(bout.ToArray());
                     LOGGER.Info("Added CRL found at: " + urlt);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     LOGGER.Info("Skipped CRL: " + e.Message + " for " + urlt);
                 }
             }

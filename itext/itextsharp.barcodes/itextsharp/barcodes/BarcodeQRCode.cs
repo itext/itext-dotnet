@@ -49,11 +49,9 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Barcodes
-{
+namespace iTextSharp.Barcodes {
     /// <summary>A QRCode implementation based on the zxing code.</summary>
-    public class BarcodeQRCode : Barcode2D
-    {
+    public class BarcodeQRCode : Barcode2D {
         internal ByteMatrix bm;
 
         /// <summary>modifiers to change the way the barcode is create.</summary>
@@ -64,8 +62,7 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the QR barcode.</summary>
         /// <param name="code">the text to be encoded</param>
         /// <param name="hints">barcode hints. See #setHints for description.</param>
-        public BarcodeQRCode(String code, IDictionary<EncodeHintType, Object> hints)
-        {
+        public BarcodeQRCode(String code, IDictionary<EncodeHintType, Object> hints) {
             this.code = code;
             this.hints = hints;
             Regenerate();
@@ -77,32 +74,27 @@ namespace iTextSharp.Barcodes
         /// </summary>
         /// <param name="content">the text to be encoded</param>
         public BarcodeQRCode(String content)
-            : this(content, null)
-        {
+            : this(content, null) {
         }
 
-        public BarcodeQRCode()
-        {
+        public BarcodeQRCode() {
         }
 
         /// <summary>Gets the current data.</summary>
-        public virtual String GetCode()
-        {
+        public virtual String GetCode() {
             return code;
         }
 
         /// <summary>Sets the data to be encoded by the barcode.</summary>
         /// <remarks>Sets the data to be encoded by the barcode. If not specified in hints otherwise, the character set should be ISO-8859-1.
         ///     </remarks>
-        public virtual void SetCode(String code)
-        {
+        public virtual void SetCode(String code) {
             this.code = code;
             Regenerate();
         }
 
         /// <returns>modifiers to change the way the barcode is created.</returns>
-        public virtual IDictionary<EncodeHintType, Object> GetHints()
-        {
+        public virtual IDictionary<EncodeHintType, Object> GetHints() {
             return hints;
         }
 
@@ -113,43 +105,35 @@ namespace iTextSharp.Barcodes
         /// You can also use UTF-8, but correct behaviour is not guaranteed as Unicode is not supported in QRCodes.
         /// The default value is ISO-8859-1.
         /// </param>
-        public virtual void SetHints(IDictionary<EncodeHintType, Object> hints)
-        {
+        public virtual void SetHints(IDictionary<EncodeHintType, Object> hints) {
             this.hints = hints;
             Regenerate();
         }
 
         /// <summary>Regenerates barcode after changes in hints or code.</summary>
-        public virtual void Regenerate()
-        {
-            if (code != null)
-            {
-                try
-                {
+        public virtual void Regenerate() {
+            if (code != null) {
+                try {
                     QRCodeWriter qc = new QRCodeWriter();
                     bm = qc.Encode(code, 1, 1, hints);
                 }
-                catch (WriterException ex)
-                {
+                catch (WriterException ex) {
                     throw new ArgumentException(ex.Message, ex.InnerException);
                 }
             }
         }
 
         /// <summary>Gets the size of the barcode grid</summary>
-        public override Rectangle GetBarcodeSize()
-        {
+        public override Rectangle GetBarcodeSize() {
             return new Rectangle(0, 0, bm.GetWidth(), bm.GetHeight());
         }
 
         /// <summary>Gets the barcode size</summary>
-        public virtual Rectangle GetBarcodeSize(float moduleSize)
-        {
+        public virtual Rectangle GetBarcodeSize(float moduleSize) {
             return new Rectangle(0, 0, bm.GetWidth() * moduleSize, bm.GetHeight() * moduleSize);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground)
-        {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
         }
 
@@ -164,22 +148,17 @@ namespace iTextSharp.Barcodes
         /// <param name="moduleSide">the size of the square grid cell</param>
         /// <returns>the dimensions the barcode occupies</returns>
         public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground, float moduleSide
-            )
-        {
+            ) {
             int width = bm.GetWidth();
             int height = bm.GetHeight();
             byte[][] mt = bm.GetArray();
-            if (foreground != null)
-            {
+            if (foreground != null) {
                 canvas.SetFillColor(foreground);
             }
-            for (int y = 0; y < height; ++y)
-            {
+            for (int y = 0; y < height; ++y) {
                 byte[] line = mt[y];
-                for (int x = 0; x < width; ++x)
-                {
-                    if (line[x] == 0)
-                    {
+                for (int x = 0; x < width; ++x) {
+                    if (line[x] == 0) {
                         canvas.Rectangle(x * moduleSide, (height - y - 1) * moduleSide, moduleSide, moduleSide);
                     }
                 }
@@ -192,8 +171,7 @@ namespace iTextSharp.Barcodes
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <returns>the XObject.</returns>
         public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, PdfDocument document
-            )
-        {
+            ) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
         }
 
@@ -202,28 +180,23 @@ namespace iTextSharp.Barcodes
         /// <param name="moduleSize">the size of the pixels.</param>
         /// <returns>the XObject.</returns>
         public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, float moduleSize
-            , PdfDocument document)
-        {
+            , PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSize);
             xObject.SetBBox(new PdfArray(rect));
             return xObject;
         }
 
-        private byte[] GetBitMatrix()
-        {
+        private byte[] GetBitMatrix() {
             int width = bm.GetWidth();
             int height = bm.GetHeight();
             int stride = (width + 7) / 8;
             byte[] b = new byte[stride * height];
             byte[][] mt = bm.GetArray();
-            for (int y = 0; y < height; ++y)
-            {
+            for (int y = 0; y < height; ++y) {
                 byte[] line = mt[y];
-                for (int x = 0; x < width; ++x)
-                {
-                    if (line[x] != 0)
-                    {
+                for (int x = 0; x < width; ++x) {
+                    if (line[x] != 0) {
                         int offset = stride * y + x / 8;
                         b[offset] |= (byte)(0x80 >> (x % 8));
                     }

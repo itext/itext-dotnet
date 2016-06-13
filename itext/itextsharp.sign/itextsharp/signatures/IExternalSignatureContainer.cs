@@ -44,14 +44,12 @@ address: sales@itextpdf.com
 using System.IO;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Interface to sign a document.</summary>
     /// <remarks>Interface to sign a document. The signing is fully done externally, including the container composition.
     ///     </remarks>
     /// <author>Paulo Soares</author>
-    public interface IExternalSignatureContainer
-    {
+    public interface IExternalSignatureContainer {
         /// <summary>Produces the container with the signature.</summary>
         /// <param name="data">the data to sign</param>
         /// <returns>a container with the signature and other objects, like CRL and OCSP. The container will generally be a PKCS7 one.

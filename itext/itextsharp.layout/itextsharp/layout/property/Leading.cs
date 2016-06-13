@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Property
-{
+namespace iTextSharp.Layout.Property {
     /// <summary>
     /// A specialized class that specifies the leading, "the vertical distance between
     /// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
@@ -60,8 +59,7 @@ namespace iTextSharp.Layout.Property
     /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
     /// .
     /// </remarks>
-    public class Leading
-    {
+    public class Leading {
         /// <summary>A leading type independent of font size.</summary>
         public const int FIXED = 1;
 
@@ -81,8 +79,7 @@ namespace iTextSharp.Layout.Property
         /// <see cref="MULTIPLIED"/>
         /// </param>
         /// <param name="value">to be used as a basis for the leading calculation.</param>
-        public Leading(int type, float value)
-        {
+        public Leading(int type, float value) {
             this.type = type;
             this.value = value;
         }
@@ -94,20 +91,17 @@ namespace iTextSharp.Layout.Property
         /// or
         /// <see cref="MULTIPLIED"/>
         /// </returns>
-        public virtual int GetLeadingType()
-        {
+        public virtual int GetLeadingType() {
             return type;
         }
 
         /// <summary>Gets the value to be used as the basis for the leading calculation.</summary>
         /// <returns>a calculation value</returns>
-        public virtual float GetValue()
-        {
+        public virtual float GetValue() {
             return value;
         }
 
-        public override bool Equals(Object obj)
-        {
+        public override bool Equals(Object obj) {
             return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading)obj).type
                  && value == ((iTextSharp.Layout.Property.Leading)obj).value;
         }

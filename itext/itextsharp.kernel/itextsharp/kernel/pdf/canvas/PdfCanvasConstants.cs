@@ -41,11 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf.Canvas
-{
+namespace iTextSharp.Kernel.Pdf.Canvas {
     /// <summary>A container for constants defined in the PDF specification (ISO 32000-1).</summary>
-    public class PdfCanvasConstants
-    {
+    public class PdfCanvasConstants {
         /// <summary>
         /// The text rendering mode determines whether showing text causes glyph
         /// outlines to be stroked, filled, used as a clipping boundary, or some
@@ -63,10 +61,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// All documentation for this class is taken from ISO 32000-1, section 9.3.6
         /// "Text Rendering Mode".
         /// </remarks>
-        public sealed class TextRenderingMode
-        {
-            private TextRenderingMode()
-            {
+        public sealed class TextRenderingMode {
+            private TextRenderingMode() {
             }
 
             /// <summary>Fill text</summary>
@@ -105,8 +101,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// All documentation for this class is taken from ISO 32000-1, section
         /// 8.4.3.3 "Line Cap Style".
         /// </remarks>
-        public class LineCapStyle
-        {
+        public class LineCapStyle {
             /// <summary>The stroke is squared of at the endpoint of the path.</summary>
             /// <remarks>
             /// The stroke is squared of at the endpoint of the path. There is no
@@ -139,8 +134,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         /// All documentation for this class is taken from ISO 32000-1, section
         /// 8.4.3.4 "Line Join Style".
         /// </remarks>
-        public class LineJoinStyle
-        {
+        public class LineJoinStyle {
             /// <summary>
             /// The outer edges of the strokes for the two segments are extended
             /// until they meet at an angle, as in a picture frame.
@@ -173,8 +167,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas
             public const int BEVEL = 2;
         }
 
-        public class FillingRule
-        {
+        public class FillingRule {
             public const int NONZERO_WINDING = 1;
 
             public const int EVEN_ODD = 2;

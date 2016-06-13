@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <summary>
     /// <p>
     /// Parses an OpenTypeFont file and reads the Glyph Substitution Table.
@@ -60,24 +59,19 @@ namespace iTextSharp.IO.Font.Otf
     /// </p>
     /// </remarks>
     /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
-    public class GlyphSubstitutionTableReader : OpenTypeFontTableReader
-    {
+    public class GlyphSubstitutionTableReader : OpenTypeFontTableReader {
         /// <exception cref="System.IO.IOException"/>
         public GlyphSubstitutionTableReader(RandomAccessFileOrArray rf, int gsubTableLocation, OpenTypeGdefTableReader
              gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
-            : base(rf, gsubTableLocation, gdef, indexGlyphMap, unitsPerEm)
-        {
+            : base(rf, gsubTableLocation, gdef, indexGlyphMap, unitsPerEm) {
             StartReadingTable();
         }
 
         /// <exception cref="System.IO.IOException"/>
         protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
-            )
-        {
-            if (lookupType == 7)
-            {
-                for (int k = 0; k < subTableLocations.Length; ++k)
-                {
+            ) {
+            if (lookupType == 7) {
+                for (int k = 0; k < subTableLocations.Length; ++k) {
                     int location = subTableLocations[k];
                     rf.Seek(location);
                     rf.ReadUnsignedShort();
@@ -86,40 +80,32 @@ namespace iTextSharp.IO.Font.Otf
                     subTableLocations[k] = location;
                 }
             }
-            switch (lookupType)
-            {
-                case 1:
-                {
+            switch (lookupType) {
+                case 1: {
                     return new GsubLookupType1(this, lookupFlag, subTableLocations);
                 }
 
-                case 2:
-                {
+                case 2: {
                     return new GsubLookupType2(this, lookupFlag, subTableLocations);
                 }
 
-                case 3:
-                {
+                case 3: {
                     return new GsubLookupType3(this, lookupFlag, subTableLocations);
                 }
 
-                case 4:
-                {
+                case 4: {
                     return new GsubLookupType4(this, lookupFlag, subTableLocations);
                 }
 
-                case 5:
-                {
+                case 5: {
                     return new GsubLookupType5(this, lookupFlag, subTableLocations);
                 }
 
-                case 6:
-                {
+                case 6: {
                     return new GsubLookupType6(this, lookupFlag, subTableLocations);
                 }
 
-                default:
-                {
+                default: {
                     return null;
                 }
             }

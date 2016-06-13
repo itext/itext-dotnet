@@ -47,10 +47,8 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Action;
 using iTextSharp.Kernel.Pdf.Layer;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public abstract class PdfAnnotation : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public abstract class PdfAnnotation : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Annotation flags.</summary>
         public const int INVISIBLE = 1;
 
@@ -117,140 +115,96 @@ namespace iTextSharp.Kernel.Pdf.Annot
         protected internal PdfPage page;
 
         public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject, iTextSharp.Kernel.Pdf.Annot.PdfAnnotation
-             parent)
-        {
+             parent) {
             iTextSharp.Kernel.Pdf.Annot.PdfAnnotation annotation = null;
-            if (pdfObject.IsIndirectReference())
-            {
+            if (pdfObject.IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
             }
-            if (pdfObject.IsDictionary())
-            {
+            if (pdfObject.IsDictionary()) {
                 PdfDictionary dictionary = (PdfDictionary)pdfObject;
                 PdfName subtype = dictionary.GetAsName(PdfName.Subtype);
-                if (PdfName.Link.Equals(subtype))
-                {
+                if (PdfName.Link.Equals(subtype)) {
                     annotation = new PdfLinkAnnotation((PdfDictionary)pdfObject);
                 }
-                else
-                {
-                    if (PdfName.Popup.Equals(subtype))
-                    {
+                else {
+                    if (PdfName.Popup.Equals(subtype)) {
                         annotation = new PdfPopupAnnotation((PdfDictionary)pdfObject);
                     }
-                    else
-                    {
-                        if (PdfName.Widget.Equals(subtype))
-                        {
+                    else {
+                        if (PdfName.Widget.Equals(subtype)) {
                             annotation = new PdfWidgetAnnotation((PdfDictionary)pdfObject);
                         }
-                        else
-                        {
-                            if (PdfName.Screen.Equals(subtype))
-                            {
+                        else {
+                            if (PdfName.Screen.Equals(subtype)) {
                                 annotation = new PdfScreenAnnotation((PdfDictionary)pdfObject);
                             }
-                            else
-                            {
-                                if (PdfName._3D.Equals(subtype))
-                                {
+                            else {
+                                if (PdfName._3D.Equals(subtype)) {
                                     throw new NotSupportedException();
                                 }
-                                else
-                                {
+                                else {
                                     if (PdfName.Highlight.Equals(subtype) || PdfName.Underline.Equals(subtype) || PdfName.Squiggly.Equals(subtype
-                                        ) || PdfName.StrikeOut.Equals(subtype))
-                                    {
+                                        ) || PdfName.StrikeOut.Equals(subtype)) {
                                         annotation = new PdfTextMarkupAnnotation((PdfDictionary)pdfObject);
                                     }
-                                    else
-                                    {
-                                        if (PdfName.Caret.Equals(subtype))
-                                        {
+                                    else {
+                                        if (PdfName.Caret.Equals(subtype)) {
                                             annotation = new PdfCaretAnnotation((PdfDictionary)pdfObject);
                                         }
-                                        else
-                                        {
-                                            if (PdfName.Text.Equals(subtype))
-                                            {
+                                        else {
+                                            if (PdfName.Text.Equals(subtype)) {
                                                 annotation = new PdfTextAnnotation((PdfDictionary)pdfObject);
                                             }
-                                            else
-                                            {
-                                                if (PdfName.Sound.Equals(subtype))
-                                                {
+                                            else {
+                                                if (PdfName.Sound.Equals(subtype)) {
                                                     annotation = new PdfSoundAnnotation((PdfDictionary)pdfObject);
                                                 }
-                                                else
-                                                {
-                                                    if (PdfName.Stamp.Equals(subtype))
-                                                    {
+                                                else {
+                                                    if (PdfName.Stamp.Equals(subtype)) {
                                                         annotation = new PdfStampAnnotation((PdfDictionary)pdfObject);
                                                     }
-                                                    else
-                                                    {
-                                                        if (PdfName.FileAttachment.Equals(subtype))
-                                                        {
+                                                    else {
+                                                        if (PdfName.FileAttachment.Equals(subtype)) {
                                                             annotation = new PdfFileAttachmentAnnotation((PdfDictionary)pdfObject);
                                                         }
-                                                        else
-                                                        {
-                                                            if (PdfName.Ink.Equals(subtype))
-                                                            {
+                                                        else {
+                                                            if (PdfName.Ink.Equals(subtype)) {
                                                                 annotation = new PdfInkAnnotation((PdfDictionary)pdfObject);
                                                             }
-                                                            else
-                                                            {
-                                                                if (PdfName.PrinterMark.Equals(subtype))
-                                                                {
+                                                            else {
+                                                                if (PdfName.PrinterMark.Equals(subtype)) {
                                                                     annotation = new PdfPrinterMarkAnnotation((PdfDictionary)pdfObject);
                                                                 }
-                                                                else
-                                                                {
-                                                                    if (PdfName.TrapNet.Equals(subtype))
-                                                                    {
+                                                                else {
+                                                                    if (PdfName.TrapNet.Equals(subtype)) {
                                                                         annotation = new PdfTrapNetworkAnnotation((PdfDictionary)pdfObject);
                                                                     }
-                                                                    else
-                                                                    {
-                                                                        if (PdfName.FreeText.Equals(subtype))
-                                                                        {
+                                                                    else {
+                                                                        if (PdfName.FreeText.Equals(subtype)) {
                                                                             annotation = new PdfFreeTextAnnotation((PdfDictionary)pdfObject);
                                                                         }
-                                                                        else
-                                                                        {
-                                                                            if (PdfName.Square.Equals(subtype))
-                                                                            {
+                                                                        else {
+                                                                            if (PdfName.Square.Equals(subtype)) {
                                                                                 annotation = new PdfSquareAnnotation((PdfDictionary)pdfObject);
                                                                             }
-                                                                            else
-                                                                            {
-                                                                                if (PdfName.Circle.Equals(subtype))
-                                                                                {
+                                                                            else {
+                                                                                if (PdfName.Circle.Equals(subtype)) {
                                                                                     annotation = new PdfCircleAnnotation((PdfDictionary)pdfObject);
                                                                                 }
-                                                                                else
-                                                                                {
-                                                                                    if (PdfName.Line.Equals(subtype))
-                                                                                    {
+                                                                                else {
+                                                                                    if (PdfName.Line.Equals(subtype)) {
                                                                                         annotation = new PdfLineAnnotation((PdfDictionary)pdfObject);
                                                                                     }
-                                                                                    else
-                                                                                    {
-                                                                                        if (PdfName.Polygon.Equals(subtype) || PdfName.PolyLine.Equals(subtype))
-                                                                                        {
+                                                                                    else {
+                                                                                        if (PdfName.Polygon.Equals(subtype) || PdfName.PolyLine.Equals(subtype)) {
                                                                                             annotation = new PdfPolyGeomAnnotation((PdfDictionary)pdfObject);
                                                                                         }
-                                                                                        else
-                                                                                        {
-                                                                                            if (PdfName.Redact.Equals(subtype))
-                                                                                            {
+                                                                                        else {
+                                                                                            if (PdfName.Redact.Equals(subtype)) {
                                                                                                 annotation = new PdfRedactAnnotation((PdfDictionary)pdfObject);
                                                                                             }
-                                                                                            else
-                                                                                            {
-                                                                                                if (PdfName.Watermark.Equals(subtype))
-                                                                                                {
+                                                                                            else {
+                                                                                                if (PdfName.Watermark.Equals(subtype)) {
                                                                                                     annotation = new PdfWatermarkAnnotation((PdfDictionary)pdfObject);
                                                                                                 }
                                                                                             }
@@ -274,25 +228,20 @@ namespace iTextSharp.Kernel.Pdf.Annot
                     }
                 }
             }
-            if (annotation is PdfMarkupAnnotation)
-            {
+            if (annotation is PdfMarkupAnnotation) {
                 PdfMarkupAnnotation markup = (PdfMarkupAnnotation)annotation;
                 PdfDictionary inReplyTo = markup.GetInReplyToObject();
-                if (inReplyTo != null)
-                {
+                if (inReplyTo != null) {
                     markup.SetInReplyTo(MakeAnnotation(inReplyTo));
                 }
                 PdfDictionary popup = markup.GetPopupObject();
-                if (popup != null)
-                {
+                if (popup != null) {
                     markup.SetPopup((PdfPopupAnnotation)MakeAnnotation(popup, markup));
                 }
             }
-            if (annotation is PdfPopupAnnotation)
-            {
+            if (annotation is PdfPopupAnnotation) {
                 PdfPopupAnnotation popup = (PdfPopupAnnotation)annotation;
-                if (parent != null)
-                {
+                if (parent != null) {
                     popup.SetParent(parent);
                 }
             }
@@ -300,15 +249,13 @@ namespace iTextSharp.Kernel.Pdf.Annot
         }
 
         protected internal PdfAnnotation(Rectangle rect)
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
             Put(PdfName.Rect, new PdfArray(rect));
             Put(PdfName.Subtype, GetSubtype());
         }
 
         protected internal PdfAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
             MarkObjectAsIndirect(GetPdfObject());
         }
 
@@ -316,148 +263,120 @@ namespace iTextSharp.Kernel.Pdf.Annot
 
         /// <summary>Sets the layer this annotation belongs to.</summary>
         /// <param name="layer">the layer this annotation belongs to</param>
-        public virtual void SetLayer(IPdfOCG layer)
-        {
+        public virtual void SetLayer(IPdfOCG layer) {
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAction(PdfAction action) {
             return Put(PdfName.A, action.GetPdfObject());
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAdditionalAction(PdfName key, PdfAction action
-            )
-        {
+            ) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
 
-        public virtual PdfString GetContents()
-        {
+        public virtual PdfString GetContents() {
             return GetPdfObject().GetAsString(PdfName.Contents);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(PdfString contents)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(PdfString contents) {
             return Put(PdfName.Contents, contents);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(String contents)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetContents(String contents) {
             return SetContents(new PdfString(contents));
         }
 
-        public virtual PdfDictionary GetPageObject()
-        {
+        public virtual PdfDictionary GetPageObject() {
             return GetPdfObject().GetAsDictionary(PdfName.P);
         }
 
-        public virtual PdfPage GetPage()
-        {
+        public virtual PdfPage GetPage() {
             return page;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetPage(PdfPage page)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetPage(PdfPage page) {
             this.page = page;
             return Put(PdfName.P, page.GetPdfObject());
         }
 
-        public virtual PdfString GetName()
-        {
+        public virtual PdfString GetName() {
             return GetPdfObject().GetAsString(PdfName.NM);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetName(PdfString name)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetName(PdfString name) {
             return Put(PdfName.NM, name);
         }
 
-        public virtual PdfString GetDate()
-        {
+        public virtual PdfString GetDate() {
             return GetPdfObject().GetAsString(PdfName.M);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDate(PdfString date)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDate(PdfString date) {
             return Put(PdfName.M, date);
         }
 
-        public virtual int GetFlags()
-        {
+        public virtual int GetFlags() {
             PdfNumber f = GetPdfObject().GetAsNumber(PdfName.F);
-            if (f != null)
-            {
+            if (f != null) {
                 return f.IntValue();
             }
-            else
-            {
+            else {
                 return 0;
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetFlags(int flags)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetFlags(int flags) {
             return Put(PdfName.F, new PdfNumber(flags));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetFlag(int flag)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetFlag(int flag) {
             int flags = GetFlags();
             flags = flags | flag;
             return SetFlags(flags);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation ResetFlag(int flag)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation ResetFlag(int flag) {
             int flags = GetFlags();
             flags = flags & (~flag & 0xff);
             return SetFlags(flags);
         }
 
-        public virtual bool HasFlag(int flag)
-        {
+        public virtual bool HasFlag(int flag) {
             int flags = GetFlags();
             return (flags & flag) != 0;
         }
 
-        public virtual PdfDictionary GetAppearanceDictionary()
-        {
+        public virtual PdfDictionary GetAppearanceDictionary() {
             return GetPdfObject().GetAsDictionary(PdfName.AP);
         }
 
-        public virtual PdfDictionary GetAppearanceObject(PdfName appearanceType)
-        {
+        public virtual PdfDictionary GetAppearanceObject(PdfName appearanceType) {
             PdfDictionary ap = GetAppearanceDictionary();
-            if (ap != null)
-            {
+            if (ap != null) {
                 return ap.GetAsDictionary(appearanceType);
             }
             return null;
         }
 
-        public virtual PdfDictionary GetNormalAppearanceObject()
-        {
+        public virtual PdfDictionary GetNormalAppearanceObject() {
             return GetAppearanceObject(PdfName.N);
         }
 
-        public virtual PdfDictionary GetRolloverAppearanceObject()
-        {
+        public virtual PdfDictionary GetRolloverAppearanceObject() {
             return GetAppearanceObject(PdfName.R);
         }
 
-        public virtual PdfDictionary GetDownAppearanceObject()
-        {
+        public virtual PdfDictionary GetDownAppearanceObject() {
             return GetAppearanceObject(PdfName.D);
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearance(PdfName appearanceType, PdfDictionary
-             appearance)
-        {
+             appearance) {
             PdfDictionary ap = GetAppearanceDictionary();
-            if (ap == null)
-            {
+            if (ap == null) {
                 ap = new PdfDictionary();
                 GetPdfObject().Put(PdfName.AP, ap);
             }
@@ -465,126 +384,102 @@ namespace iTextSharp.Kernel.Pdf.Annot
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfDictionary appearance)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfDictionary appearance) {
             return SetAppearance(PdfName.N, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfDictionary appearance)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfDictionary appearance) {
             return SetAppearance(PdfName.R, appearance);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfDictionary appearance)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfDictionary appearance) {
             return SetAppearance(PdfName.D, appearance);
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearance(PdfName appearanceType, PdfAnnotationAppearance
-             appearance)
-        {
+             appearance) {
             return SetAppearance(appearanceType, appearance.GetPdfObject());
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetNormalAppearance(PdfAnnotationAppearance appearance
-            )
-        {
+            ) {
             return SetAppearance(PdfName.N, appearance);
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRolloverAppearance(PdfAnnotationAppearance appearance
-            )
-        {
+            ) {
             return SetAppearance(PdfName.R, appearance);
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDownAppearance(PdfAnnotationAppearance appearance
-            )
-        {
+            ) {
             return SetAppearance(PdfName.D, appearance);
         }
 
-        public virtual PdfName GetAppearanceState()
-        {
+        public virtual PdfName GetAppearanceState() {
             return GetPdfObject().GetAsName(PdfName.AS);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceState(PdfName @as)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceState(PdfName @as) {
             return Put(PdfName.AS, @as);
         }
 
-        public virtual PdfArray GetBorder()
-        {
+        public virtual PdfArray GetBorder() {
             return GetPdfObject().GetAsArray(PdfName.Border);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorder(PdfArray border)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorder(PdfArray border) {
             return Put(PdfName.Border, border);
         }
 
-        public virtual PdfArray GetColorObject()
-        {
+        public virtual PdfArray GetColorObject() {
             return GetPdfObject().GetAsArray(PdfName.C);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(PdfArray color)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(PdfArray color) {
             return Put(PdfName.C, color);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(float[] color)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(float[] color) {
             return SetColor(new PdfArray(color));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(iTextSharp.Kernel.Color.Color color)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetColor(iTextSharp.Kernel.Color.Color color) {
             return SetColor(new PdfArray(color.GetColorValue()));
         }
 
-        public virtual int GetStructParentIndex()
-        {
+        public virtual int GetStructParentIndex() {
             PdfNumber n = GetPdfObject().GetAsNumber(PdfName.StructParent);
-            if (n == null)
-            {
+            if (n == null) {
                 return -1;
             }
-            else
-            {
+            else {
                 return n.IntValue();
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetStructParentIndex(int structParentIndex)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetStructParentIndex(int structParentIndex) {
             return Put(PdfName.StructParent, new PdfNumber(structParentIndex));
         }
 
-        public virtual PdfArray GetQuadPoints()
-        {
+        public virtual PdfArray GetQuadPoints() {
             return GetPdfObject().GetAsArray(PdfName.QuadPoints);
         }
 
-        public virtual bool GetOpen()
-        {
+        public virtual bool GetOpen() {
             PdfBoolean open = GetPdfObject().GetAsBoolean(PdfName.Open);
             return open != null && open.GetValue();
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
             return Put(PdfName.Open, new PdfBoolean(open));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetQuadPoints(PdfArray quadPoints) {
             return Put(PdfName.QuadPoints, quadPoints);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfDictionary borderStyle) {
             return Put(PdfName.BS, borderStyle);
         }
 
@@ -611,93 +506,76 @@ namespace iTextSharp.Kernel.Pdf.Annot
         /// </remarks>
         /// <param name="style">The new value for the annotation's border style.</param>
         /// <returns>The annotation which this method was called on.</returns>
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetBorderStyle(PdfName style) {
             PdfDictionary styleDict = GetBorderStyle();
-            if (null == styleDict)
-            {
+            if (null == styleDict) {
                 styleDict = new PdfDictionary();
             }
             styleDict.Put(PdfName.S, style);
             return SetBorderStyle(styleDict);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetDashPattern(PdfArray dashPattern) {
             PdfDictionary styleDict = GetBorderStyle();
-            if (null == styleDict)
-            {
+            if (null == styleDict) {
                 styleDict = new PdfDictionary();
             }
             styleDict.Put(PdfName.D, dashPattern);
             return SetBorderStyle(styleDict);
         }
 
-        public virtual PdfDictionary GetBorderStyle()
-        {
+        public virtual PdfDictionary GetBorderStyle() {
             return GetPdfObject().GetAsDictionary(PdfName.BS);
         }
 
-        public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject)
-        {
+        public static iTextSharp.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject) {
             return MakeAnnotation(pdfObject, null);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetTitle(PdfString title)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetTitle(PdfString title) {
             return Put(PdfName.T, title);
         }
 
-        public virtual PdfString GetTitle()
-        {
+        public virtual PdfString GetTitle() {
             return GetPdfObject().GetAsString(PdfName.T);
         }
 
         public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetAppearanceCharacteristics(PdfDictionary characteristics
-            )
-        {
+            ) {
             return Put(PdfName.MK, characteristics);
         }
 
-        public virtual PdfDictionary GetAppearanceCharacteristics()
-        {
+        public virtual PdfDictionary GetAppearanceCharacteristics() {
             return GetPdfObject().GetAsDictionary(PdfName.MK);
         }
 
-        public virtual PdfDictionary GetAction()
-        {
+        public virtual PdfDictionary GetAction() {
             return GetPdfObject().GetAsDictionary(PdfName.A);
         }
 
-        public virtual PdfDictionary GetAdditionalAction()
-        {
+        public virtual PdfDictionary GetAdditionalAction() {
             return GetPdfObject().GetAsDictionary(PdfName.AA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRectangle(PdfArray array)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation SetRectangle(PdfArray array) {
             return Put(PdfName.Rect, array);
         }
 
-        public virtual PdfArray GetRectangle()
-        {
+        public virtual PdfArray GetRectangle() {
             return GetPdfObject().GetAsArray(PdfName.Rect);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation Put(PdfName key, PdfObject value)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation Remove(PdfName key)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfAnnotation Remove(PdfName key) {
             GetPdfObject().Remove(key);
             return this;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
     }

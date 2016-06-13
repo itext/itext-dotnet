@@ -43,26 +43,22 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>
     /// A base class which covers the range of exceptions which may occur when encoding a barcode using
     /// the Writer framework.
     /// </summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    public sealed class WriterException : Exception
-    {
+    public sealed class WriterException : Exception {
         /// <summary>Creates a WriterException.</summary>
         public WriterException()
-            : base()
-        {
+            : base() {
         }
 
         /// <summary>Creates a WriterException with a message.</summary>
         /// <param name="message">message of the exception</param>
         public WriterException(String message)
-            : base(message)
-        {
+            : base(message) {
         }
     }
 }

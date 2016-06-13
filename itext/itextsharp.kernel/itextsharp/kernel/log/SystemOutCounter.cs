@@ -43,49 +43,41 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log
-{
+namespace iTextSharp.Kernel.Log {
     /// <summary>
     /// A
     /// <see cref="Counter"/>
     /// implementation that outputs information about read and written documents to
     /// <see cref="System.Console.Out"/>
     /// </summary>
-    public class SystemOutCounter : Counter
-    {
+    public class SystemOutCounter : Counter {
         /// <summary>
         /// The name of the class for which the Counter was created
         /// (or iText if no name is available)
         /// </summary>
         protected internal String name;
 
-        public SystemOutCounter(String name)
-        {
+        public SystemOutCounter(String name) {
             this.name = name;
         }
 
         public SystemOutCounter()
-            : this("iText")
-        {
+            : this("iText") {
         }
 
         public SystemOutCounter(Type cls)
-            : this(cls.FullName)
-        {
+            : this(cls.FullName) {
         }
 
-        public virtual Counter GetCounter(Type cls)
-        {
+        public virtual Counter GetCounter(Type cls) {
             return new iTextSharp.Kernel.Log.SystemOutCounter(cls);
         }
 
-        public virtual void OnDocumentRead(long size)
-        {
+        public virtual void OnDocumentRead(long size) {
             System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes read", name, size));
         }
 
-        public virtual void OnDocumentWritten(long size)
-        {
+        public virtual void OnDocumentWritten(long size) {
             System.Console.Out.WriteLine(String.Format("[{0}] {1} bytes written", name, size));
         }
     }

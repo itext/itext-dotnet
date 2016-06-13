@@ -47,8 +47,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils
-{
+namespace iTextSharp.Kernel.Pdf.Tagutils {
     /// <summary>
     /// <c>TagTreePointer</c>
     /// class is used to modify the document's tag tree. At any given moment, instance of this class
@@ -63,8 +62,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
     /// <see cref="MoveToRoot()"/>
     /// method.
     /// </summary>
-    public class TagTreePointer
-    {
+    public class TagTreePointer {
         private TagStructureContext tagStructureContext;
 
         private PdfStructElem currentStructElem;
@@ -83,8 +81,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// points at the root tag.
         /// </summary>
         /// <param name="document">the document, at which tag structure this instance will point.</param>
-        public TagTreePointer(PdfDocument document)
-        {
+        public TagTreePointer(PdfDocument document) {
             // '-1' value of this field means that next new kid will be the last element in the kids array
             tagStructureContext = document.GetTagStructureContext();
             SetCurrentStructElem(tagStructureContext.GetRootTag());
@@ -96,8 +93,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <c>TagTreePointer</c>
         /// from which current position and page are copied.
         /// </param>
-        public TagTreePointer(iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer tagPointer)
-        {
+        public TagTreePointer(iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer tagPointer) {
             this.tagStructureContext = tagPointer.tagStructureContext;
             SetCurrentStructElem(tagPointer.GetCurrentStructElem());
             this.currentPage = tagPointer.currentPage;
@@ -139,10 +135,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetPageForTagging(PdfPage page)
-        {
-            if (page.IsFlushed())
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetPageForTagging(PdfPage page) {
+            if (page.IsFlushed()) {
                 throw new PdfException(PdfException.PageWasAlreadyFlushed);
             }
             this.currentPage = page;
@@ -154,8 +148,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <c>TagTreePointer</c>
         /// .
         /// </returns>
-        public virtual PdfPage GetCurrentPage()
-        {
+        public virtual PdfPage GetCurrentPage() {
             return currentPage;
         }
 
@@ -181,8 +174,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// if content stream tagging is finished.
         /// </param>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetContentStreamForTagging(PdfStream contentStream
-            )
-        {
+            ) {
             this.contentStream = contentStream;
             return this;
         }
@@ -192,14 +184,12 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <c>TagTreePointer</c>
         /// .
         /// </returns>
-        public virtual PdfStream GetCurrentContentStream()
-        {
+        public virtual PdfStream GetCurrentContentStream() {
             return contentStream;
         }
 
         /// <returns>the document, at which tag structure this instance points.</returns>
-        public virtual PdfDocument GetDocument()
-        {
+        public virtual PdfDocument GetDocument() {
             return tagStructureContext.GetDocument();
         }
 
@@ -216,8 +206,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(PdfName role)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(PdfName role) {
             AddTag(-1, role);
             return this;
         }
@@ -242,8 +231,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, PdfName role)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, PdfName role) {
             AddTag(index, new DummyAccessibleElement(role, null));
             return this;
         }
@@ -263,8 +251,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement element)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement element) {
             AddTag(element, false);
             return this;
         }
@@ -298,8 +285,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance.
         /// </returns>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(IAccessibleElement element, bool keepConnectedToTag
-            )
-        {
+            ) {
             AddTag(-1, element, keepConnectedToTag);
             return this;
         }
@@ -325,8 +311,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element) {
             AddTag(index, element, false);
             return this;
         }
@@ -369,24 +354,19 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance.
         /// </returns>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element, 
-            bool keepConnectedToTag)
-        {
+            bool keepConnectedToTag) {
             tagStructureContext.ThrowExceptionIfRoleIsInvalid(element.GetRole());
-            if (!tagStructureContext.IsElementConnectedToTag(element))
-            {
+            if (!tagStructureContext.IsElementConnectedToTag(element)) {
                 SetNextNewKidIndex(index);
                 SetCurrentStructElem(AddNewKid(element, keepConnectedToTag));
             }
-            else
-            {
+            else {
                 PdfStructElem connectedStruct = tagStructureContext.GetStructConnectedToModel(element);
                 if (connectedStruct.GetParent() != null && GetCurrentStructElem().GetPdfObject() == ((PdfStructElem)connectedStruct
-                    .GetParent()).GetPdfObject())
-                {
+                    .GetParent()).GetPdfObject()) {
                     SetCurrentStructElem(connectedStruct);
                 }
-                else
-                {
+                else {
                     tagStructureContext.RemoveElementConnectionToTag(element);
                     SetNextNewKidIndex(index);
                     SetCurrentStructElem(AddNewKid(element, keepConnectedToTag));
@@ -418,12 +398,10 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddAnnotationTag(PdfAnnotation annotation)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer AddAnnotationTag(PdfAnnotation annotation) {
             ThrowExceptionIfCurrentPageIsNotInited();
             PdfObjRef kid = new PdfObjRef(annotation, GetCurrentStructElem());
-            if (!EnsureElementPageEqualsKidPage(GetCurrentStructElem(), currentPage.GetPdfObject()))
-            {
+            if (!EnsureElementPageEqualsKidPage(GetCurrentStructElem(), currentPage.GetPdfObject())) {
                 ((PdfDictionary)kid.GetPdfObject()).Put(PdfName.Pg, currentPage.GetPdfObject());
             }
             AddNewKid(kid);
@@ -456,10 +434,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagTreePointer"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetNextNewKidIndex(int nextNewKidIndex)
-        {
-            if (nextNewKidIndex > -1)
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetNextNewKidIndex(int nextNewKidIndex) {
+            if (nextNewKidIndex > -1) {
                 this.nextNewKidIndex = nextNewKidIndex;
             }
             return this;
@@ -475,8 +451,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// </summary>
         /// <param name="element">element to check if it has a connected tag.</param>
         /// <returns>true, if there is a tag which retains the connection to the given accessible element.</returns>
-        public virtual bool IsElementConnectedToTag(IAccessibleElement element)
-        {
+        public virtual bool IsElementConnectedToTag(IAccessibleElement element) {
             return tagStructureContext.IsElementConnectedToTag(element);
         }
 
@@ -498,8 +473,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual TagStructureContext RemoveElementConnectionToTag(IAccessibleElement element)
-        {
+        public virtual TagStructureContext RemoveElementConnectionToTag(IAccessibleElement element) {
             return tagStructureContext.RemoveElementConnectionToTag(element);
         }
 
@@ -518,29 +492,23 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer RemoveTag()
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer RemoveTag() {
             IPdfStructElem parentElem = GetCurrentStructElem().GetParent();
-            if (parentElem is PdfStructTreeRoot)
-            {
+            if (parentElem is PdfStructTreeRoot) {
                 throw new PdfException(PdfException.CannotRemoveDocumentRootTag);
             }
             IList<IPdfStructElem> kids = GetCurrentStructElem().GetKids();
             PdfStructElem parent = (PdfStructElem)parentElem;
-            if (parent.IsFlushed())
-            {
+            if (parent.IsFlushed()) {
                 throw new PdfException(PdfException.CannotRemoveTagBecauseItsParentIsFlushed);
             }
             int removedKidIndex = parent.RemoveKid(GetCurrentStructElem());
             GetCurrentStructElem().GetPdfObject().GetIndirectReference().SetFree();
-            foreach (IPdfStructElem kid in kids)
-            {
-                if (kid is PdfStructElem)
-                {
+            foreach (IPdfStructElem kid in kids) {
+                if (kid is PdfStructElem) {
                     parent.AddKid(removedKidIndex++, (PdfStructElem)kid);
                 }
-                else
-                {
+                else {
                     PdfMcr mcr = PrepareMcrForMovingToNewParent((PdfMcr)kid, parent);
                     parent.AddKid(removedKidIndex++, mcr);
                 }
@@ -567,21 +535,16 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance.
         /// </returns>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer RelocateKid(int kidIndex, iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer
-             pointerToNewParent)
-        {
-            if (GetDocument() != pointerToNewParent.GetDocument())
-            {
+             pointerToNewParent) {
+            if (GetDocument() != pointerToNewParent.GetDocument()) {
                 throw new PdfException(PdfException.TagCannotBeMovedToTheAnotherDocumentsTagStructure);
             }
             IPdfStructElem removedKid = GetCurrentStructElem().RemoveKid(kidIndex);
-            if (removedKid is PdfStructElem)
-            {
+            if (removedKid is PdfStructElem) {
                 pointerToNewParent.AddNewKid((PdfStructElem)removedKid);
             }
-            else
-            {
-                if (removedKid is PdfMcr)
-                {
+            else {
+                if (removedKid is PdfMcr) {
                     PdfMcr mcrKid = PrepareMcrForMovingToNewParent((PdfMcr)removedKid, pointerToNewParent.GetCurrentStructElem
                         ());
                     pointerToNewParent.AddNewKid(mcrKid);
@@ -601,8 +564,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// .
         /// </remarks>
         /// <returns>the reference to the current tag.</returns>
-        public virtual TagReference GetTagReference()
-        {
+        public virtual TagReference GetTagReference() {
             return GetTagReference(-1);
         }
 
@@ -619,8 +581,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <param name="index">zero-based index in kids array of tag. These indexes define the logical order of the content on the page.
         ///     </param>
         /// <returns>the reference to the current tag.</returns>
-        public virtual TagReference GetTagReference(int index)
-        {
+        public virtual TagReference GetTagReference(int index) {
             return new TagReference(GetCurrentStructElem(), this, index);
         }
 
@@ -634,8 +595,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToRoot()
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToRoot() {
             SetCurrentStructElem(tagStructureContext.GetRootTag());
             return this;
         }
@@ -650,20 +610,16 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToParent()
-        {
-            if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject())
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToParent() {
+            if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject()) {
                 throw new PdfException(PdfException.CannotMoveToParentCurrentElementIsRoot);
             }
             IPdfStructElem parent = GetCurrentStructElem().GetParent();
-            if (parent == null)
-            {
+            if (parent == null) {
                 //TODO log that parent is flushed
                 MoveToRoot();
             }
-            else
-            {
+            else {
                 SetCurrentStructElem((PdfStructElem)parent);
             }
             return this;
@@ -680,21 +636,16 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int kidIndex)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int kidIndex) {
             IPdfStructElem kid = GetCurrentStructElem().GetKids()[kidIndex];
-            if (kid is PdfStructElem)
-            {
+            if (kid is PdfStructElem) {
                 SetCurrentStructElem((PdfStructElem)kid);
             }
-            else
-            {
-                if (kid is PdfMcr)
-                {
+            else {
+                if (kid is PdfMcr) {
                     throw new PdfException(PdfException.CannotMoveToMarkedContentReference);
                 }
-                else
-                {
+                else {
                     throw new PdfException(PdfException.CannotMoveToFlushedKid);
                 }
             }
@@ -715,8 +666,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(PdfName role)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(PdfName role) {
             MoveToKid(0, role);
             return this;
         }
@@ -736,22 +686,17 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, PdfName role)
-        {
-            if (PdfName.MCR.Equals(role))
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToKid(int n, PdfName role) {
+            if (PdfName.MCR.Equals(role)) {
                 throw new PdfException(PdfException.CannotMoveToMarkedContentReference);
             }
             IList<IPdfStructElem> kids = GetCurrentStructElem().GetKids();
             int k = 0;
-            for (int i = 0; i < kids.Count; ++i)
-            {
-                if (kids[i] == null)
-                {
+            for (int i = 0; i < kids.Count; ++i) {
+                if (kids[i] == null) {
                     continue;
                 }
-                if (kids[i].GetRole().Equals(role) && !(kids[i] is PdfMcr) && k++ == n)
-                {
+                if (kids[i].GetRole().Equals(role) && !(kids[i] is PdfMcr) && k++ == n) {
                     MoveToKid(i);
                     return this;
                 }
@@ -781,8 +726,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToTag(IAccessibleElement element)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer MoveToTag(IAccessibleElement element) {
             tagStructureContext.MoveTagPointerToTag(element, this);
             return this;
         }
@@ -796,24 +740,18 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// If kid is content item, at its position there will be "MCR" (Marked Content Reference).
         /// </remarks>
         /// <returns>current element kids roles</returns>
-        public virtual IList<PdfName> GetKidsRoles()
-        {
+        public virtual IList<PdfName> GetKidsRoles() {
             IList<PdfName> roles = new List<PdfName>();
             IList<IPdfStructElem> kids = GetCurrentStructElem().GetKids();
-            foreach (IPdfStructElem kid in kids)
-            {
-                if (kid == null)
-                {
+            foreach (IPdfStructElem kid in kids) {
+                if (kid == null) {
                     roles.Add(null);
                 }
-                else
-                {
-                    if (kid is PdfStructElem)
-                    {
+                else {
+                    if (kid is PdfStructElem) {
                         roles.Add(kid.GetRole());
                     }
-                    else
-                    {
+                    else {
                         roles.Add(PdfName.MCR);
                     }
                 }
@@ -837,20 +775,16 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer FlushTag()
-        {
-            if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject())
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer FlushTag() {
+            if (GetCurrentStructElem().GetPdfObject() == tagStructureContext.GetRootTag().GetPdfObject()) {
                 throw new PdfException(PdfException.CannotFlushDocumentRootTagBeforeDocumentIsClosed);
             }
             IPdfStructElem parent = tagStructureContext.FlushTag(GetCurrentStructElem());
-            if (parent != null)
-            {
+            if (parent != null) {
                 // parent is not flushed
                 SetCurrentStructElem((PdfStructElem)parent);
             }
-            else
-            {
+            else {
                 SetCurrentStructElem(tagStructureContext.GetRootTag());
             }
             return this;
@@ -874,12 +808,10 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <c>IAccessibleElement</c>
         /// if there is one (or if it is created), otherwise null.
         /// </returns>
-        public virtual IAccessibleElement GetConnectedElement(bool createIfNotExist)
-        {
+        public virtual IAccessibleElement GetConnectedElement(bool createIfNotExist) {
             IAccessibleElement element;
             element = tagStructureContext.GetModelConnectedToStruct(GetCurrentStructElem());
-            if (element == null && createIfNotExist)
-            {
+            if (element == null && createIfNotExist) {
                 element = new DummyAccessibleElement(GetRole(), GetProperties());
                 tagStructureContext.SaveConnectionBetweenStructAndModel(element, GetCurrentStructElem());
             }
@@ -888,31 +820,25 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 
         /// <summary>Gets accessibility properties of the current tag.</summary>
         /// <returns>accessibility properties of the current tag.</returns>
-        public virtual AccessibilityProperties GetProperties()
-        {
+        public virtual AccessibilityProperties GetProperties() {
             PdfStructElem currElem = GetCurrentStructElem();
             IAccessibleElement model = tagStructureContext.GetModelConnectedToStruct(currElem);
-            if (model != null)
-            {
+            if (model != null) {
                 return model.GetAccessibilityProperties();
             }
-            else
-            {
+            else {
                 return new BackedAccessibleProperties(currElem);
             }
         }
 
         /// <summary>Gets current tag role.</summary>
         /// <returns>current tag role.</returns>
-        public virtual PdfName GetRole()
-        {
+        public virtual PdfName GetRole() {
             IAccessibleElement model = tagStructureContext.GetModelConnectedToStruct(GetCurrentStructElem());
-            if (model != null)
-            {
+            if (model != null) {
                 return model.GetRole();
             }
-            else
-            {
+            else {
                 return GetCurrentStructElem().GetRole();
             }
         }
@@ -924,34 +850,27 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetRole(PdfName role)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetRole(PdfName role) {
             IAccessibleElement connectedElement = tagStructureContext.GetModelConnectedToStruct(GetCurrentStructElem()
                 );
-            if (connectedElement != null)
-            {
+            if (connectedElement != null) {
                 connectedElement.SetRole(role);
             }
-            else
-            {
+            else {
                 GetCurrentStructElem().SetRole(role);
             }
             return this;
         }
 
-        internal virtual int CreateNextMcidForStructElem(PdfStructElem elem, int index)
-        {
+        internal virtual int CreateNextMcidForStructElem(PdfStructElem elem, int index) {
             ThrowExceptionIfCurrentPageIsNotInited();
             PdfMcr mcr;
-            if (!MarkedContentNotInPageStream() && EnsureElementPageEqualsKidPage(elem, currentPage.GetPdfObject()))
-            {
+            if (!MarkedContentNotInPageStream() && EnsureElementPageEqualsKidPage(elem, currentPage.GetPdfObject())) {
                 mcr = new PdfMcrNumber(currentPage, elem);
             }
-            else
-            {
+            else {
                 mcr = new PdfMcrDictionary(currentPage, elem);
-                if (MarkedContentNotInPageStream())
-                {
+                if (MarkedContentNotInPageStream()) {
                     ((PdfDictionary)mcr.GetPdfObject()).Put(PdfName.Stm, contentStream);
                 }
             }
@@ -960,72 +879,57 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         }
 
         internal virtual iTextSharp.Kernel.Pdf.Tagutils.TagTreePointer SetCurrentStructElem(PdfStructElem structElem
-            )
-        {
+            ) {
             currentStructElem = structElem;
             return this;
         }
 
-        internal virtual PdfStructElem GetCurrentStructElem()
-        {
-            if (currentStructElem.IsFlushed())
-            {
+        internal virtual PdfStructElem GetCurrentStructElem() {
+            if (currentStructElem.IsFlushed()) {
                 throw new PdfException(PdfException.TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot);
             }
-            if (currentStructElem.GetPdfObject().GetIndirectReference() == null)
-            {
+            if (currentStructElem.GetPdfObject().GetIndirectReference() == null) {
                 // is removed
                 throw new PdfException(PdfException.TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot);
             }
             return currentStructElem;
         }
 
-        private int GetNextNewKidPosition()
-        {
+        private int GetNextNewKidPosition() {
             int nextPos = nextNewKidIndex;
             nextNewKidIndex = -1;
             return nextPos;
         }
 
-        private PdfStructElem AddNewKid(IAccessibleElement element, bool keepConnectedToTag)
-        {
+        private PdfStructElem AddNewKid(IAccessibleElement element, bool keepConnectedToTag) {
             PdfStructElem kid = new PdfStructElem(GetDocument(), element.GetRole());
-            if (keepConnectedToTag)
-            {
+            if (keepConnectedToTag) {
                 tagStructureContext.SaveConnectionBetweenStructAndModel(element, kid);
             }
-            if (!keepConnectedToTag && element.GetAccessibilityProperties() != null)
-            {
+            if (!keepConnectedToTag && element.GetAccessibilityProperties() != null) {
                 element.GetAccessibilityProperties().SetToStructElem(kid);
             }
             return AddNewKid(kid);
         }
 
-        private PdfStructElem AddNewKid(PdfStructElem kid)
-        {
+        private PdfStructElem AddNewKid(PdfStructElem kid) {
             return GetCurrentStructElem().AddKid(GetNextNewKidPosition(), kid);
         }
 
-        private PdfMcr AddNewKid(PdfMcr kid)
-        {
+        private PdfMcr AddNewKid(PdfMcr kid) {
             return GetCurrentStructElem().AddKid(GetNextNewKidPosition(), kid);
         }
 
-        private PdfMcr PrepareMcrForMovingToNewParent(PdfMcr mcrKid, PdfStructElem newParent)
-        {
+        private PdfMcr PrepareMcrForMovingToNewParent(PdfMcr mcrKid, PdfStructElem newParent) {
             PdfObject mcrObject = mcrKid.GetPdfObject();
             PdfDictionary mcrPage = mcrKid.GetPageObject();
             PdfDictionary mcrDict = null;
-            if (!mcrObject.IsNumber())
-            {
+            if (!mcrObject.IsNumber()) {
                 mcrDict = (PdfDictionary)mcrObject;
             }
-            if (mcrDict == null || !mcrDict.ContainsKey(PdfName.Pg))
-            {
-                if (!EnsureElementPageEqualsKidPage(newParent, mcrPage))
-                {
-                    if (mcrDict == null)
-                    {
+            if (mcrDict == null || !mcrDict.ContainsKey(PdfName.Pg)) {
+                if (!EnsureElementPageEqualsKidPage(newParent, mcrPage)) {
+                    if (mcrDict == null) {
                         mcrDict = new PdfDictionary();
                         mcrDict.Put(PdfName.Type, PdfName.MCR);
                         mcrDict.Put(PdfName.MCID, mcrKid.GetPdfObject());
@@ -1033,47 +937,37 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
                     mcrDict.Put(PdfName.Pg, mcrPage);
                 }
             }
-            if (mcrDict != null)
-            {
-                if (PdfName.MCR.Equals(mcrDict.Get(PdfName.Type)))
-                {
+            if (mcrDict != null) {
+                if (PdfName.MCR.Equals(mcrDict.Get(PdfName.Type))) {
                     mcrKid = new PdfMcrDictionary(mcrDict, newParent);
                 }
-                else
-                {
-                    if (PdfName.OBJR.Equals(mcrDict.Get(PdfName.Type)))
-                    {
+                else {
+                    if (PdfName.OBJR.Equals(mcrDict.Get(PdfName.Type))) {
                         mcrKid = new PdfObjRef(mcrDict, newParent);
                     }
                 }
             }
-            else
-            {
+            else {
                 mcrKid = new PdfMcrNumber((PdfNumber)mcrObject, newParent);
             }
             return mcrKid;
         }
 
-        private bool EnsureElementPageEqualsKidPage(PdfStructElem elem, PdfDictionary kidPage)
-        {
+        private bool EnsureElementPageEqualsKidPage(PdfStructElem elem, PdfDictionary kidPage) {
             PdfObject pageObject = elem.GetPdfObject().Get(PdfName.Pg);
-            if (pageObject == null)
-            {
+            if (pageObject == null) {
                 pageObject = kidPage;
                 elem.GetPdfObject().Put(PdfName.Pg, kidPage);
             }
             return kidPage.Equals(pageObject);
         }
 
-        private bool MarkedContentNotInPageStream()
-        {
+        private bool MarkedContentNotInPageStream() {
             return contentStream != null;
         }
 
-        private void ThrowExceptionIfCurrentPageIsNotInited()
-        {
-            if (currentPage == null)
-            {
+        private void ThrowExceptionIfCurrentPageIsNotInited() {
+            if (currentPage == null) {
                 throw new PdfException(PdfException.PageIsNotSetForThePdfTagStructure);
             }
         }

@@ -43,25 +43,21 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Events
-{
+namespace iTextSharp.Kernel.Events {
     /// <summary>Describes abstract event.</summary>
-    public class Event
-    {
+    public class Event {
         /// <summary>A type of event.</summary>
         protected internal String type;
 
         /// <summary>Creates an event of the specified type.</summary>
         /// <param name="type">type of event</param>
-        public Event(String type)
-        {
+        public Event(String type) {
             this.type = type;
         }
 
         /// <summary>Returns the type of this event.</summary>
         /// <returns>type of this event</returns>
-        public virtual String GetEventType()
-        {
+        public virtual String GetEventType() {
             return type;
         }
     }

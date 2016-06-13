@@ -49,8 +49,7 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>
     /// Provides information and calculations needed by render listeners
     /// to display/evaluate text render operations.
@@ -66,8 +65,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
     /// objects as text rendering operations are
     /// discovered
     /// </remarks>
-    public class TextRenderInfo : IEventData
-    {
+    public class TextRenderInfo : IEventData {
         private readonly PdfString @string;
 
         private String text = null;
@@ -90,8 +88,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <param name="textMatrix">the text matrix at the time of the render operation</param>
         /// <param name="canvasTagHierarchy">the marked content tags sequence, if available</param>
         public TextRenderInfo(PdfString str, CanvasGraphicsState gs, Matrix textMatrix, Stack<CanvasTag> canvasTagHierarchy
-            )
-        {
+            ) {
             this.@string = str;
             this.textToUserSpaceTransformMatrix = textMatrix.Multiply(gs.GetCtm());
             this.gs = gs;
@@ -106,8 +103,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <param name="horizontalOffset">the unscaled horizontal offset of the character that this TextRenderInfo represents
         ///     </param>
         private TextRenderInfo(iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo parent, PdfString @string, 
-            float horizontalOffset)
-        {
+            float horizontalOffset) {
             this.@string = @string;
             this.textToUserSpaceTransformMatrix = new Matrix(horizontalOffset, 0).Multiply(parent.textToUserSpaceTransformMatrix
                 );
@@ -117,18 +113,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         }
 
         /// <returns>the text to render</returns>
-        public virtual String GetText()
-        {
-            if (text == null)
-            {
+        public virtual String GetText() {
+            if (text == null) {
                 text = gs.GetFont().Decode(@string);
             }
             return text;
         }
 
         /// <returns>original PDF string</returns>
-        public virtual PdfString GetPdfString()
-        {
+        public virtual PdfString GetPdfString() {
             return @string;
         }
 
@@ -138,8 +131,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// </summary>
         /// <param name="mcid">a marked content id</param>
         /// <returns>true if the text is marked with this id</returns>
-        public virtual bool HasMcid(int mcid)
-        {
+        public virtual bool HasMcid(int mcid) {
             return HasMcid(mcid, false);
         }
 
@@ -151,24 +143,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <param name="checkTheTopmostLevelOnly">indicates whether to check the topmost level of marked content stack only
         ///     </param>
         /// <returns>true if the text is marked with this id</returns>
-        public virtual bool HasMcid(int mcid, bool checkTheTopmostLevelOnly)
-        {
-            if (checkTheTopmostLevelOnly)
-            {
-                if (canvasTagHierarchy != null)
-                {
+        public virtual bool HasMcid(int mcid, bool checkTheTopmostLevelOnly) {
+            if (checkTheTopmostLevelOnly) {
+                if (canvasTagHierarchy != null) {
                     int infoMcid = GetMcid();
                     return infoMcid != -1 && infoMcid == mcid;
                 }
             }
-            else
-            {
-                foreach (CanvasTag tag in canvasTagHierarchy)
-                {
-                    if (tag.HasMcid())
-                    {
-                        if (tag.GetMcid() == mcid)
-                        {
+            else {
+                foreach (CanvasTag tag in canvasTagHierarchy) {
+                    if (tag.HasMcid()) {
+                        if (tag.GetMcid() == mcid) {
                             return true;
                         }
                     }
@@ -178,12 +163,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         }
 
         /// <returns>the marked content associated with the TextRenderInfo instance.</returns>
-        public virtual int GetMcid()
-        {
-            foreach (CanvasTag tag in canvasTagHierarchy)
-            {
-                if (tag.HasMcid())
-                {
+        public virtual int GetMcid() {
+            foreach (CanvasTag tag in canvasTagHierarchy) {
+                if (tag.HasMcid()) {
                     return tag.GetMcid();
                 }
             }
@@ -198,13 +180,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// for the amount added by Rise
         /// </remarks>
         /// <returns>the baseline line segment</returns>
-        public virtual LineSegment GetBaseline()
-        {
+        public virtual LineSegment GetBaseline() {
             return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix);
         }
 
-        public virtual LineSegment GetUnscaledBaseline()
-        {
+        public virtual LineSegment GetUnscaledBaseline() {
             return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise());
         }
 
@@ -216,8 +196,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// for the amount added by Rise
         /// </remarks>
         /// <returns>the ascentline line segment</returns>
-        public virtual LineSegment GetAscentLine()
-        {
+        public virtual LineSegment GetAscentLine() {
             float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender() * gs.GetFontSize() / 1000f;
             return GetUnscaledBaselineWithOffset(ascent + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
                 );
@@ -231,8 +210,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// for the amount added by Rise
         /// </remarks>
         /// <returns>the descentline line segment</returns>
-        public virtual LineSegment GetDescentLine()
-        {
+        public virtual LineSegment GetDescentLine() {
             // per getFontDescription() API, descent is returned as a negative number, so we apply that as a normal vertical offset
             float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender() * gs.GetFontSize() / 1000f;
             return GetUnscaledBaselineWithOffset(descent + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
@@ -241,8 +219,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 
         /// <summary>Getter for the font</summary>
         /// <returns>the font</returns>
-        public virtual PdfFont GetFont()
-        {
+        public virtual PdfFont GetFont() {
             return gs.GetFont();
         }
 
@@ -258,10 +235,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// This method is exposed to allow listeners to determine if an explicit rise was involved in the computation of the baseline (this might be useful, for example, for identifying superscript rendering)
         /// </remarks>
         /// <returns>The Rise for the text draw operation, in user space units (Ts value, scaled to user space)</returns>
-        public virtual float GetRise()
-        {
-            if (gs.GetTextRise() == 0)
-            {
+        public virtual float GetRise() {
+            if (gs.GetTextRise() == 0) {
                 return 0;
             }
             // optimize the common case
@@ -275,14 +250,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <see cref="TextRenderInfo"/>
         /// objects that represent each glyph used in the draw operation. The next effect is if there was a separate Tj opertion for each character in the rendered string
         /// </returns>
-        public virtual IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> GetCharacterRenderInfos()
-        {
+        public virtual IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> GetCharacterRenderInfos() {
             IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> rslt = new List<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
                 >(@string.GetValue().Length);
             PdfString[] strings = SplitString(@string);
             float totalWidth = 0;
-            foreach (PdfString str in strings)
-            {
+            foreach (PdfString str in strings) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(str);
                 iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo subInfo = new iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
                     (this, str, totalWidth);
@@ -290,16 +263,14 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
                 totalWidth += (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) *
                      (gs.GetHorizontalScaling() / 100f);
             }
-            foreach (iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo tri in rslt)
-            {
+            foreach (iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo tri in rslt) {
                 tri.GetUnscaledWidth();
             }
             return rslt;
         }
 
         /// <returns>The width, in user space units, of a single space character in the current font</returns>
-        public virtual float GetSingleSpaceWidth()
-        {
+        public virtual float GetSingleSpaceWidth() {
             return ConvertWidthFromTextSpaceToUserSpace(GetUnscaledFontSpaceWidth());
         }
 
@@ -317,58 +288,47 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <li>7 = Add text to padd for clipping</li>
         /// </ul>
         /// </returns>
-        public virtual int GetTextRenderMode()
-        {
+        public virtual int GetTextRenderMode() {
             return gs.GetTextRenderingMode();
         }
 
         /// <returns>the current fill color.</returns>
-        public virtual iTextSharp.Kernel.Color.Color GetFillColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetFillColor() {
             return gs.GetFillColor();
         }
 
         /// <returns>the current stroke color.</returns>
-        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor() {
             return gs.GetStrokeColor();
         }
 
-        public virtual float GetFontSize()
-        {
+        public virtual float GetFontSize() {
             return gs.GetFontSize();
         }
 
-        public virtual float GetHorizontalScaling()
-        {
+        public virtual float GetHorizontalScaling() {
             return gs.GetHorizontalScaling();
         }
 
-        public virtual float GetCharSpacing()
-        {
+        public virtual float GetCharSpacing() {
             return gs.GetCharSpacing();
         }
 
-        public virtual float GetWordSpacing()
-        {
+        public virtual float GetWordSpacing() {
             return gs.GetWordSpacing();
         }
 
-        public virtual float GetLeading()
-        {
+        public virtual float GetLeading() {
             return gs.GetLeading();
         }
 
         /// <summary>Gets /ActualText tag entry value if this text chunk is marked content.</summary>
         /// <returns>/ActualText value</returns>
-        public virtual String GetActualText()
-        {
+        public virtual String GetActualText() {
             String lastActualText = null;
-            foreach (CanvasTag tag in canvasTagHierarchy)
-            {
+            foreach (CanvasTag tag in canvasTagHierarchy) {
                 lastActualText = tag.GetActualText();
-                if (lastActualText != null)
-                {
+                if (lastActualText != null) {
                     break;
                 }
             }
@@ -377,23 +337,19 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 
         /// <summary>Gets hierarchy of the canvas tags that wraps given text.</summary>
         /// <returns>list of the wrapping canvas tags. The first tag is the innermost (nearest to the text).</returns>
-        public virtual IList<CanvasTag> GetCanvasTagHierarchy()
-        {
+        public virtual IList<CanvasTag> GetCanvasTagHierarchy() {
             return canvasTagHierarchy;
         }
 
         /// <returns>the unscaled (i.e. in Text space) width of the text</returns>
-        public virtual float GetUnscaledWidth()
-        {
-            if (float.IsNaN(unscaledWidth))
-            {
+        public virtual float GetUnscaledWidth() {
+            if (float.IsNaN(unscaledWidth)) {
                 unscaledWidth = GetPdfStringWidth(@string, false);
             }
             return unscaledWidth;
         }
 
-        private LineSegment GetUnscaledBaselineWithOffset(float yOffset)
-        {
+        private LineSegment GetUnscaledBaselineWithOffset(float yOffset) {
             // we need to correct the width so we don't have an extra character and word spaces at the end.  The extra character and word spaces
             // are important for tracking relative text coordinate systems, but should not be part of the baseline
             String unicodeStr = @string.ToUnicodeString();
@@ -404,8 +360,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 
         /// <param name="width">the width, in text space</param>
         /// <returns>the width in user space</returns>
-        private float ConvertWidthFromTextSpaceToUserSpace(float width)
-        {
+        private float ConvertWidthFromTextSpaceToUserSpace(float width) {
             LineSegment textSpace = new LineSegment(new Vector(0, 0, 1), new Vector(width, 0, 1));
             LineSegment userSpace = textSpace.TransformBy(textToUserSpaceTransformMatrix);
             return userSpace.GetLength();
@@ -413,8 +368,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
 
         /// <param name="height">the height, in text space</param>
         /// <returns>the height in user space</returns>
-        private float ConvertHeightFromTextSpaceToUserSpace(float height)
-        {
+        private float ConvertHeightFromTextSpaceToUserSpace(float height) {
             LineSegment textSpace = new LineSegment(new Vector(0, 0, 1), new Vector(0, height, 1));
             LineSegment userSpace = textSpace.TransformBy(textToUserSpaceTransformMatrix);
             return userSpace.GetLength();
@@ -427,15 +381,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// the width of \u00A0 (a non-breaking space in many fonts)
         /// </remarks>
         /// <returns>the width of a single space character in text space units</returns>
-        private float GetUnscaledFontSpaceWidth()
-        {
+        private float GetUnscaledFontSpaceWidth() {
             char charToUse = ' ';
-            if (gs.GetFont().GetWidth(charToUse) == 0)
-            {
+            if (gs.GetFont().GetWidth(charToUse) == 0) {
                 return gs.GetFont().GetFontProgram().GetAvgWidth() / 1000f;
             }
-            else
-            {
+            else {
                 return GetStringWidth(charToUse.ToString());
             }
         }
@@ -443,11 +394,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <summary>Gets the width of a String in text space units</summary>
         /// <param name="string">the string that needs measuring</param>
         /// <returns>the width of a String in text space units</returns>
-        private float GetStringWidth(String @string)
-        {
+        private float GetStringWidth(String @string) {
             float totalWidth = 0;
-            for (int i = 0; i < @string.Length; i++)
-            {
+            for (int i = 0; i < @string.Length; i++) {
                 char c = @string[i];
                 float w = (float)(gs.GetFont().GetWidth(c) * fontMatrix[0]);
                 float wordSpacing = c == 32 ? gs.GetWordSpacing() : 0f;
@@ -459,19 +408,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <summary>Gets the width of a PDF string in text space units</summary>
         /// <param name="string">the string that needs measuring</param>
         /// <returns>the width of a String in text space units</returns>
-        private float GetPdfStringWidth(PdfString @string, bool singleCharString)
-        {
-            if (singleCharString)
-            {
+        private float GetPdfStringWidth(PdfString @string, bool singleCharString) {
+            if (singleCharString) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(@string);
                 return (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) * gs.GetHorizontalScaling
                     () / 100f;
             }
-            else
-            {
+            else {
                 float totalWidth = 0;
-                foreach (PdfString str in SplitString(@string))
-                {
+                foreach (PdfString str in SplitString(@string)) {
                     totalWidth += GetPdfStringWidth(str, true);
                 }
                 return totalWidth;
@@ -485,8 +430,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// </remarks>
         /// <param name="string">a character to calculate width.</param>
         /// <returns>array of 2 items: first item is a character width, second item is a calculated word spacing.</returns>
-        private float[] GetWidthAndWordSpacing(PdfString @string)
-        {
+        private float[] GetWidthAndWordSpacing(PdfString @string) {
             float[] result = new float[2];
             result[0] = (float)((gs.GetFont().GetContentWidth(@string) * fontMatrix[0]));
             result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
@@ -496,25 +440,20 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <summary>Converts a single character string to char code.</summary>
         /// <param name="string">single character string to convert to.</param>
         /// <returns>char code.</returns>
-        private int GetCharCode(String @string)
-        {
-            try
-            {
+        private int GetCharCode(String @string) {
+            try {
                 byte[] b = @string.GetBytes("UTF-16BE");
                 int value = 0;
-                for (int i = 0; i < b.Length - 1; i++)
-                {
+                for (int i = 0; i < b.Length - 1; i++) {
                     value += b[i] & 0xff;
                     value <<= 8;
                 }
-                if (b.Length > 0)
-                {
+                if (b.Length > 0) {
                     value += b[b.Length - 1] & 0xff;
                 }
                 return value;
             }
-            catch (ArgumentException)
-            {
+            catch (ArgumentException) {
             }
             return 0;
         }
@@ -522,16 +461,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <summary>Split PDF string into array of single character PDF strings.</summary>
         /// <param name="string">PDF string to be splitted.</param>
         /// <returns>splitted PDF string.</returns>
-        private PdfString[] SplitString(PdfString @string)
-        {
+        private PdfString[] SplitString(PdfString @string) {
             IList<PdfString> strings = new List<PdfString>();
             String stringValue = @string.GetValue();
-            for (int i = 0; i < stringValue.Length; i++)
-            {
+            for (int i = 0; i < stringValue.Length; i++) {
                 PdfString newString = new PdfString(stringValue.JSubstring(i, i + 1), @string.GetEncoding());
                 String text = gs.GetFont().Decode(newString);
-                if (text.Length == 0 && i < stringValue.Length - 1)
-                {
+                if (text.Length == 0 && i < stringValue.Length - 1) {
                     newString = new PdfString(stringValue.JSubstring(i, i + 2), @string.GetEncoding());
                     i++;
                 }

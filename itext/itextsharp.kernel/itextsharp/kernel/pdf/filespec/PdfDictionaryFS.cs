@@ -43,13 +43,10 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filespec
-{
-    public class PdfDictionaryFS : PdfFileSpec
-    {
+namespace iTextSharp.Kernel.Pdf.Filespec {
+    public class PdfDictionaryFS : PdfFileSpec {
         public PdfDictionaryFS(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
     }
 }

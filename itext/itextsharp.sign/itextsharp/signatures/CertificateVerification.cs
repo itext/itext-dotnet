@@ -48,11 +48,9 @@ using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
-    public class CertificateVerification
-    {
+    public class CertificateVerification {
         /// <summary>Verifies a single certificate for the current date.</summary>
         /// <param name="cert">the certificate to verify</param>
         /// <param name="crls">the certificate revocation list or <CODE>null</CODE></param>
@@ -60,8 +58,7 @@ namespace iTextSharp.Signatures
         /// a <CODE>String</CODE> with the error description or <CODE>null</CODE>
         /// if no error
         /// </returns>
-        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls)
-        {
+        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls) {
             return VerifyCertificate(cert, crls, DateTimeUtil.GetCurrentTime());
         }
 
@@ -73,26 +70,19 @@ namespace iTextSharp.Signatures
         /// a <CODE>String</CODE> with the error description or <CODE>null</CODE>
         /// if no error
         /// </returns>
-        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls, DateTime calendar)
-        {
-            if (SignUtils.HasUnsupportedCriticalExtension(cert))
-            {
+        public static String VerifyCertificate(X509Certificate cert, ICollection<X509Crl> crls, DateTime calendar) {
+            if (SignUtils.HasUnsupportedCriticalExtension(cert)) {
                 return "Has unsupported critical extension";
             }
-            try
-            {
+            try {
                 cert.CheckValidity(calendar.ToUniversalTime());
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 return e.Message;
             }
-            if (crls != null)
-            {
-                foreach (X509Crl crl in crls)
-                {
-                    if (crl.IsRevoked(cert))
-                    {
+            if (crls != null) {
+                foreach (X509Crl crl in crls) {
+                    if (crl.IsRevoked(cert)) {
                         return "Certificate revoked";
                     }
                 }
@@ -110,8 +100,7 @@ namespace iTextSharp.Signatures
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
-             keystore, ICollection<X509Crl> crls)
-        {
+             keystore, ICollection<X509Crl> crls) {
             return VerifyCertificates(certs, keystore, crls, DateTimeUtil.GetCurrentTime());
         }
 
@@ -126,70 +115,53 @@ namespace iTextSharp.Signatures
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
-             keystore, ICollection<X509Crl> crls, DateTime calendar)
-        {
+             keystore, ICollection<X509Crl> crls, DateTime calendar) {
             IList<VerificationException> result = new List<VerificationException>();
-            for (int k = 0; k < certs.Length; ++k)
-            {
+            for (int k = 0; k < certs.Length; ++k) {
                 X509Certificate cert = (X509Certificate)certs[k];
                 String err = VerifyCertificate(cert, crls, calendar);
-                if (err != null)
-                {
+                if (err != null) {
                     result.Add(new VerificationException(cert, err));
                 }
-                try
-                {
-                    foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore))
-                    {
-                        try
-                        {
-                            if (VerifyCertificate(certStoreX509, crls, calendar) != null)
-                            {
+                try {
+                    foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
+                        try {
+                            if (VerifyCertificate(certStoreX509, crls, calendar) != null) {
                                 continue;
                             }
-                            try
-                            {
+                            try {
                                 cert.Verify(certStoreX509.GetPublicKey());
                                 return result;
                             }
-                            catch (Exception)
-                            {
+                            catch (Exception) {
                                 continue;
                             }
                         }
-                        catch (Exception)
-                        {
+                        catch (Exception) {
                         }
                     }
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
                 int j;
-                for (j = 0; j < certs.Length; ++j)
-                {
-                    if (j == k)
-                    {
+                for (j = 0; j < certs.Length; ++j) {
+                    if (j == k) {
                         continue;
                     }
                     X509Certificate certNext = (X509Certificate)certs[j];
-                    try
-                    {
+                    try {
                         cert.Verify(certNext.GetPublicKey());
                         break;
                     }
-                    catch (Exception)
-                    {
+                    catch (Exception) {
                     }
                 }
-                if (j == certs.Length)
-                {
+                if (j == certs.Length) {
                     result.Add(new VerificationException(cert, "Cannot be verified against the KeyStore or the certificate chain"
                         ));
                 }
             }
-            if (result.Count == 0)
-            {
+            if (result.Count == 0) {
                 result.Add(new VerificationException((X509Certificate)null, "Invalid state. Possible circular certificate chain"
                     ));
             }
@@ -205,8 +177,7 @@ namespace iTextSharp.Signatures
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
-             keystore)
-        {
+             keystore) {
             return VerifyCertificates(certs, keystore, DateTimeUtil.GetCurrentTime());
         }
 
@@ -220,8 +191,7 @@ namespace iTextSharp.Signatures
         /// failed certificate and <CODE>error</CODE> is the error message
         /// </returns>
         public static IList<VerificationException> VerifyCertificates(X509Certificate[] certs, List<X509Certificate>
-             keystore, DateTime calendar)
-        {
+             keystore, DateTime calendar) {
             return VerifyCertificates(certs, keystore, null, calendar);
         }
 
@@ -230,23 +200,17 @@ namespace iTextSharp.Signatures
         /// <param name="keystore">the <CODE>KeyStore</CODE></param>
         /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
-        public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore)
-        {
-            try
-            {
-                foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore))
-                {
-                    try
-                    {
+        public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore) {
+            try {
+                foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
+                    try {
                         return SignUtils.IsSignatureValid(ocsp, certStoreX509);
                     }
-                    catch (Exception)
-                    {
+                    catch (Exception) {
                     }
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
             return false;
         }
@@ -256,24 +220,18 @@ namespace iTextSharp.Signatures
         /// <param name="keystore">the <CODE>KeyStore</CODE></param>
         /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
-        public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore)
-        {
-            try
-            {
-                foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore))
-                {
-                    try
-                    {
+        public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore) {
+            try {
+                foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
+                    try {
                         SignUtils.IsSignatureValid(ts, certStoreX509);
                         return true;
                     }
-                    catch (Exception)
-                    {
+                    catch (Exception) {
                     }
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
             return false;
         }

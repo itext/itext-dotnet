@@ -11,33 +11,28 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class AlignmentTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class AlignmentTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/AlignmentTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/AlignmentTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void JustifyAlignmentTest01()
-        {
+        public virtual void JustifyAlignmentTest01() {
             String outFileName = destinationFolder + "justifyAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
-            for (int i = 0; i < 21; i++)
-            {
+            for (int i = 0; i < 21; i++) {
                 paragraph.Add(new Text("Hello World! Hello People! " + "Hello Sky! Hello Sun! Hello Moon! Hello Stars!").SetBackgroundColor
                     (DeviceRgb.RED));
             }
@@ -50,8 +45,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void JustifyAlignmentTest02()
-        {
+        public virtual void JustifyAlignmentTest02() {
             String outFileName = destinationFolder + "justifyAlignmentTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -67,15 +61,13 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void JustifyAlignmentTest03()
-        {
+        public virtual void JustifyAlignmentTest03() {
             String outFileName = destinationFolder + "justifyAlignmentTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
-            for (int i = 0; i < 21; i++)
-            {
+            for (int i = 0; i < 21; i++) {
                 paragraph.Add(new Text("Hello World! Hello People! " + "Hello Sky! Hello Sun! Hello Moon! Hello Stars!").SetBorder
                     (new SolidBorder(iTextSharp.Kernel.Color.Color.GREEN, 0.1f))).SetMultipliedLeading(1);
             }
@@ -88,15 +80,13 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void JustifyAlignmentTest04()
-        {
+        public virtual void JustifyAlignmentTest04() {
             String outFileName = destinationFolder + "justifyAlignmentTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
-            for (int i = 0; i < 21; i++)
-            {
+            for (int i = 0; i < 21; i++) {
                 paragraph.Add(new Text("Hello World! Hello People! " + "Hello Sky! Hello Sun! Hello Moon! Hello Stars!")).
                     SetFixedLeading(24);
             }
@@ -109,8 +99,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void JustifyAlignmentForcedNewlinesTest01()
-        {
+        public virtual void JustifyAlignmentForcedNewlinesTest01() {
             String outFileName = destinationFolder + "justifyAlignmentForcedNewlinesTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentForcedNewlinesTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -131,8 +120,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void JustifyAllTest01()
-        {
+        public virtual void JustifyAllTest01() {
             String outFileName = destinationFolder + "justifyAllTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAllTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -153,15 +141,13 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BlockAlignmentTest01()
-        {
+        public virtual void BlockAlignmentTest01() {
             String outFileName = destinationFolder + "blockAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_blockAlignmentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
-            for (int i = 0; i < 10; i++)
-            {
+            for (int i = 0; i < 10; i++) {
                 list.Add("Item # " + (i + 1));
             }
             list.SetWidth(250);
@@ -180,8 +166,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BlockAlignmentTest02()
-        {
+        public virtual void BlockAlignmentTest02() {
             String outFileName = destinationFolder + "blockAlignmentTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_blockAlignmentTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -205,8 +190,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageAlignmentTest01()
-        {
+        public virtual void ImageAlignmentTest01() {
             String outFileName = destinationFolder + "imageAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageAlignmentTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);

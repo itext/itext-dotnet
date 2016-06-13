@@ -45,15 +45,13 @@ using System;
 using System.Text;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Class that informs you that the verification of a Certificate
     /// succeeded using a specific CertificateVerifier and for a specific
     /// reason.
     /// </summary>
-    public class VerificationOK
-    {
+    public class VerificationOK {
         /// <summary>The certificate that was verified successfully.</summary>
         protected internal X509Certificate certificate;
 
@@ -67,8 +65,7 @@ namespace iTextSharp.Signatures
         /// <param name="certificate">the certificate that was successfully verified</param>
         /// <param name="verifierClass">the class that was used for verification</param>
         /// <param name="message">the reason why the certificate could be verified</param>
-        public VerificationOK(X509Certificate certificate, Type verifierClass, String message)
-        {
+        public VerificationOK(X509Certificate certificate, Type verifierClass, String message) {
             this.certificate = certificate;
             this.verifierClass = verifierClass;
             this.message = message;
@@ -76,11 +73,9 @@ namespace iTextSharp.Signatures
 
         /// <summary>A single String explaining which certificate was verified, how and why.</summary>
         /// <seealso cref="System.Object.ToString()"/>
-        public override String ToString()
-        {
+        public override String ToString() {
             StringBuilder sb = new StringBuilder();
-            if (certificate != null)
-            {
+            if (certificate != null) {
                 sb.Append(certificate.SubjectDN.ToString());
                 sb.Append(" verified with ");
             }

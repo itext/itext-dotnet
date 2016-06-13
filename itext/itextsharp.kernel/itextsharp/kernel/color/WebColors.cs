@@ -46,8 +46,7 @@ using System.Collections.Generic;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Color
-{
+namespace iTextSharp.Kernel.Color {
     /// <summary>
     /// This class is a HashMap that contains the names of colors as a key and the
     /// corresponding BaseColor as value.
@@ -57,13 +56,11 @@ namespace iTextSharp.Kernel.Color
     /// corresponding BaseColor as value. (Source: Wikipedia
     /// http://en.wikipedia.org/wiki/Web_colors )
     /// </remarks>
-    public class WebColors : Dictionary<String, int[]>
-    {
+    public class WebColors : Dictionary<String, int[]> {
         /// <summary>HashMap containing all the names and corresponding color values.</summary>
         public static readonly WebColors NAMES = new WebColors();
 
-        static WebColors()
-        {
+        static WebColors() {
             NAMES["aliceblue"] = new int[] { 0xf0, 0xf8, 0xff, 0xff };
             NAMES["antiquewhite"] = new int[] { 0xfa, 0xeb, 0xd7, 0xff };
             NAMES["aqua"] = new int[] { 0x00, 0xff, 0xff, 0xff };
@@ -221,11 +218,9 @@ namespace iTextSharp.Kernel.Color
         /// in hex.
         /// </param>
         /// <returns>Is this a web color hex string without the leading #?</returns>
-        private static bool MissingHashColorFormat(String colStr)
-        {
+        private static bool MissingHashColorFormat(String colStr) {
             int len = colStr.Length;
-            if (len == 3 || len == 6)
-            {
+            if (len == 3 || len == 6) {
                 // and it just contains hex chars 0-9, a-f, A-F
                 String match = "[0-9a-f]{" + len + "}";
                 return colStr.Matches(match);
@@ -240,20 +235,16 @@ namespace iTextSharp.Kernel.Color
         /// </param>
         /// <returns>the corresponding BaseColor object. Never returns null.</returns>
         /// <exception cref="System.ArgumentException">if the String isn't a know representation of a color.</exception>
-        public static DeviceRgb GetRGBColor(String name)
-        {
+        public static DeviceRgb GetRGBColor(String name) {
             int[] color = new int[] { 0, 0, 0, 255 };
             String colorName = name.ToLower(System.Globalization.CultureInfo.InvariantCulture);
             bool colorStrWithoutHash = MissingHashColorFormat(colorName);
-            if (colorName.StartsWith("#") || colorStrWithoutHash)
-            {
-                if (!colorStrWithoutHash)
-                {
+            if (colorName.StartsWith("#") || colorStrWithoutHash) {
+                if (!colorStrWithoutHash) {
                     // lop off the # to unify hex parsing.
                     colorName = colorName.Substring(1);
                 }
-                if (colorName.Length == 3)
-                {
+                if (colorName.Length == 3) {
                     String red = colorName.JSubstring(0, 1);
                     color[0] = System.Convert.ToInt32(red + red, 16);
                     String green = colorName.JSubstring(1, 2);
@@ -262,8 +253,7 @@ namespace iTextSharp.Kernel.Color
                     color[2] = System.Convert.ToInt32(blue + blue, 16);
                     return new DeviceRgb(color[0], color[1], color[2]);
                 }
-                if (colorName.Length == 6)
-                {
+                if (colorName.Length == 6) {
                     color[0] = System.Convert.ToInt32(colorName.JSubstring(0, 2), 16);
                     color[1] = System.Convert.ToInt32(colorName.JSubstring(2, 4), 16);
                     color[2] = System.Convert.ToInt32(colorName.Substring(4), 16);
@@ -271,14 +261,11 @@ namespace iTextSharp.Kernel.Color
                 }
                 throw new PdfException(PdfException.UnknownColorFormatMustBeRGBorRRGGBB);
             }
-            if (colorName.StartsWith("rgb("))
-            {
+            if (colorName.StartsWith("rgb(")) {
                 String delim = "rgb(), \t\r\n\f";
                 StringTokenizer tok = new StringTokenizer(colorName, delim);
-                for (int k = 0; k < 3; ++k)
-                {
-                    if (tok.HasMoreTokens())
-                    {
+                for (int k = 0; k < 3; ++k) {
+                    if (tok.HasMoreTokens()) {
                         color[k] = GetRGBChannelValue(tok.NextToken());
                         color[k] = Math.Max(0, color[k]);
                         color[k] = Math.Min(255, color[k]);
@@ -286,14 +273,11 @@ namespace iTextSharp.Kernel.Color
                 }
                 return new DeviceRgb(color[0], color[1], color[2]);
             }
-            if (colorName.StartsWith("rgba("))
-            {
+            if (colorName.StartsWith("rgba(")) {
                 String delim = "rgba(), \t\r\n\f";
                 StringTokenizer tok = new StringTokenizer(colorName, delim);
-                for (int k = 0; k < 3; ++k)
-                {
-                    if (tok.HasMoreTokens())
-                    {
+                for (int k = 0; k < 3; ++k) {
+                    if (tok.HasMoreTokens()) {
                         color[k] = GetRGBChannelValue(tok.NextToken());
                         color[k] = Math.Max(0, color[k]);
                         color[k] = Math.Min(255, color[k]);
@@ -301,22 +285,18 @@ namespace iTextSharp.Kernel.Color
                 }
                 return new DeviceRgb(color[0], color[1], color[2]);
             }
-            if (!NAMES.Contains(colorName))
-            {
+            if (!NAMES.Contains(colorName)) {
                 throw new PdfException(PdfException.ColorNotFound).SetMessageParams(colorName);
             }
             color = NAMES.Get(colorName);
             return new DeviceRgb(color[0], color[1], color[2]);
         }
 
-        private static int GetRGBChannelValue(String rgbChannel)
-        {
-            if (rgbChannel.EndsWith("%"))
-            {
+        private static int GetRGBChannelValue(String rgbChannel) {
+            if (rgbChannel.EndsWith("%")) {
                 return System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) * 255 / 100;
             }
-            else
-            {
+            else {
                 return System.Convert.ToInt32(rgbChannel);
             }
         }

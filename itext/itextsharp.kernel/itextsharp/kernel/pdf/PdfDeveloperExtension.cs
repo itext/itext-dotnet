@@ -41,8 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     /// <summary>
     /// Beginning with BaseVersion 1.7, the extensions dictionary lets developers
     /// designate that a given document contains extensions to PDF.
@@ -60,8 +59,7 @@ namespace iTextSharp.Kernel.Pdf
     /// specifications (such as this one) that PDF-consuming applications use to
     /// interpret the extensions.
     /// </remarks>
-    public class PdfDeveloperExtension
-    {
+    public class PdfDeveloperExtension {
         /// <summary>An instance of this class for Adobe 1.7 Extension level 3.</summary>
         public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ADOBE_1_7_EXTENSIONLEVEL3 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
             (PdfName.ADBE, PdfName.Pdf_Version_1_7, 3);
@@ -87,8 +85,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="prefix">the prefix referring to the developer</param>
         /// <param name="baseVersion">the number of the base version</param>
         /// <param name="extensionLevel">the extension level within the baseverion.</param>
-        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel)
-        {
+        public PdfDeveloperExtension(PdfName prefix, PdfName baseVersion, int extensionLevel) {
             /* TODO: There is one more entry in PDF 2.0 (URL entry), so probably this class
             * should be refactored to be more flexible in the future */
             this.prefix = prefix;
@@ -98,22 +95,19 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Gets the prefix name.</summary>
         /// <returns>a PdfName</returns>
-        public virtual PdfName GetPrefix()
-        {
+        public virtual PdfName GetPrefix() {
             return prefix;
         }
 
         /// <summary>Gets the baseVersion name.</summary>
         /// <returns>a PdfName</returns>
-        public virtual PdfName GetBaseVersion()
-        {
+        public virtual PdfName GetBaseVersion() {
             return baseVersion;
         }
 
         /// <summary>Gets the extension level within the baseVersion.</summary>
         /// <returns>an integer</returns>
-        public virtual int GetExtensionLevel()
-        {
+        public virtual int GetExtensionLevel() {
             return extensionLevel;
         }
 
@@ -122,8 +116,7 @@ namespace iTextSharp.Kernel.Pdf
         /// with the prefix.
         /// </summary>
         /// <returns>a PdfDictionary</returns>
-        public virtual PdfDictionary GetDeveloperExtensions()
-        {
+        public virtual PdfDictionary GetDeveloperExtensions() {
             PdfDictionary developerextensions = new PdfDictionary();
             developerextensions.Put(PdfName.BaseVersion, baseVersion);
             developerextensions.Put(PdfName.ExtensionLevel, new PdfNumber(extensionLevel));

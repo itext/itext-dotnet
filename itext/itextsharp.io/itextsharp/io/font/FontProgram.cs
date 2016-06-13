@@ -46,10 +46,8 @@ using System.Collections.Generic;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public abstract class FontProgram
-    {
+namespace iTextSharp.IO.Font {
+    public abstract class FontProgram {
         public const int DEFAULT_WIDTH = 1000;
 
         public const int UNITS_NORMALIZATION = 1000;
@@ -79,74 +77,62 @@ namespace iTextSharp.IO.Font
 
         // In case Type1: char code to glyph.
         // In case TrueType: glyph index to glyph.
-        public virtual int CountOfGlyphs()
-        {
+        public virtual int CountOfGlyphs() {
             return Math.Max(codeToGlyph.Count, unicodeToGlyph.Count);
         }
 
-        public virtual FontNames GetFontNames()
-        {
+        public virtual FontNames GetFontNames() {
             return fontNames;
         }
 
-        public virtual FontMetrics GetFontMetrics()
-        {
+        public virtual FontMetrics GetFontMetrics() {
             return fontMetrics;
         }
 
-        public virtual FontIdentification GetFontIdentification()
-        {
+        public virtual FontIdentification GetFontIdentification() {
             return fontIdentification;
         }
 
-        public virtual String GetRegistry()
-        {
+        public virtual String GetRegistry() {
             return registry;
         }
 
         public abstract int GetPdfFontFlags();
 
-        public virtual bool IsFontSpecific()
-        {
+        public virtual bool IsFontSpecific() {
             return isFontSpecific;
         }
 
         /// <summary>Get glyph's width.</summary>
         /// <param name="unicode">a unicode symbol or FontSpecif code.</param>
         /// <returns>Gets width in normalized 1000 units.</returns>
-        public virtual int GetWidth(int unicode)
-        {
+        public virtual int GetWidth(int unicode) {
             Glyph glyph = GetGlyph(unicode);
             return glyph != null ? glyph.GetWidth() : 0;
         }
 
-        public virtual int GetAvgWidth()
-        {
+        public virtual int GetAvgWidth() {
             return avgWidth;
         }
 
         /// <summary>Get glyph's bbox.</summary>
         /// <param name="unicode">a unicode symbol or FontSpecif code.</param>
         /// <returns>Gets bbox in normalized 1000 units.</returns>
-        public virtual int[] GetCharBBox(int unicode)
-        {
+        public virtual int[] GetCharBBox(int unicode) {
             Glyph glyph = GetGlyph(unicode);
             return glyph != null ? glyph.GetBbox() : null;
         }
 
-        public virtual Glyph GetGlyph(int unicode)
-        {
+        public virtual Glyph GetGlyph(int unicode) {
             return unicodeToGlyph.Get(unicode);
         }
 
         // char code in case Type1 or index in case OpenType
-        public virtual Glyph GetGlyphByCode(int charCode)
-        {
+        public virtual Glyph GetGlyphByCode(int charCode) {
             return codeToGlyph.Get(charCode);
         }
 
-        public virtual bool HasKernPairs()
-        {
+        public virtual bool HasKernPairs() {
             return false;
         }
 
@@ -154,8 +140,7 @@ namespace iTextSharp.IO.Font
         /// <param name="first">the first unicode value</param>
         /// <param name="second">the second unicode value</param>
         /// <returns>the kerning to be applied</returns>
-        public virtual int GetKerning(int first, int second)
-        {
+        public virtual int GetKerning(int first, int second) {
             return GetKerning(unicodeToGlyph.Get(first), unicodeToGlyph.Get(second));
         }
 
@@ -165,140 +150,112 @@ namespace iTextSharp.IO.Font
         /// <returns>the kerning to be applied</returns>
         public abstract int GetKerning(Glyph first, Glyph second);
 
-        protected internal virtual void SetRegistry(String registry)
-        {
+        protected internal virtual void SetRegistry(String registry) {
             this.registry = registry;
         }
 
         /// <summary>Gets the name without the modifiers Bold, Italic or BoldItalic.</summary>
         /// <param name="name">the full name of the font</param>
         /// <returns>the name without the modifiers Bold, Italic or BoldItalic</returns>
-        protected internal static String GetBaseName(String name)
-        {
-            if (name == null)
-            {
+        protected internal static String GetBaseName(String name) {
+            if (name == null) {
                 return null;
             }
-            if (name.EndsWith(",Bold"))
-            {
+            if (name.EndsWith(",Bold")) {
                 return name.JSubstring(0, name.Length - 5);
             }
-            else
-            {
-                if (name.EndsWith(",Italic"))
-                {
+            else {
+                if (name.EndsWith(",Italic")) {
                     return name.JSubstring(0, name.Length - 7);
                 }
-                else
-                {
-                    if (name.EndsWith(",BoldItalic"))
-                    {
+                else {
+                    if (name.EndsWith(",BoldItalic")) {
                         return name.JSubstring(0, name.Length - 11);
                     }
-                    else
-                    {
+                    else {
                         return name;
                     }
                 }
             }
         }
 
-        protected internal virtual void SetTypoAscender(int ascender)
-        {
+        protected internal virtual void SetTypoAscender(int ascender) {
             fontMetrics.SetTypoAscender(ascender);
         }
 
-        protected internal virtual void SetTypoDescender(int descender)
-        {
+        protected internal virtual void SetTypoDescender(int descender) {
             fontMetrics.SetTypoDescender(descender);
         }
 
-        protected internal virtual void SetCapHeight(int capHeight)
-        {
+        protected internal virtual void SetCapHeight(int capHeight) {
             fontMetrics.SetCapHeight(capHeight);
         }
 
-        protected internal virtual void SetXHeight(int xHeight)
-        {
+        protected internal virtual void SetXHeight(int xHeight) {
             fontMetrics.SetXHeight(xHeight);
         }
 
-        protected internal virtual void SetItalicAngle(int italicAngle)
-        {
+        protected internal virtual void SetItalicAngle(int italicAngle) {
             fontMetrics.SetItalicAngle(italicAngle);
         }
 
-        protected internal virtual void SetStemV(int stemV)
-        {
+        protected internal virtual void SetStemV(int stemV) {
             fontMetrics.SetStemV(stemV);
         }
 
-        protected internal virtual void SetStemH(int stemH)
-        {
+        protected internal virtual void SetStemH(int stemH) {
             fontMetrics.SetStemH(stemH);
         }
 
-        protected internal virtual void SetFontWeight(int fontWeight)
-        {
+        protected internal virtual void SetFontWeight(int fontWeight) {
             fontNames.SetFontWeight(fontWeight);
         }
 
-        protected internal virtual void SetFontWidth(String fontWidth)
-        {
+        protected internal virtual void SetFontWidth(String fontWidth) {
             fontWidth = fontWidth.ToLower(System.Globalization.CultureInfo.InvariantCulture);
             int fontWidthValue = FontNames.FWIDTH_NORMAL;
-            switch (fontWidth)
-            {
-                case "ultracondensed":
-                {
+            switch (fontWidth) {
+                case "ultracondensed": {
                     fontWidthValue = FontNames.FWIDTH_ULTRA_CONDENSED;
                     break;
                 }
 
-                case "extracondensed":
-                {
+                case "extracondensed": {
                     fontWidthValue = FontNames.FWIDTH_EXTRA_CONDENSED;
                     break;
                 }
 
-                case "condensed":
-                {
+                case "condensed": {
                     fontWidthValue = FontNames.FWIDTH_CONDENSED;
                     break;
                 }
 
-                case "semicondensed":
-                {
+                case "semicondensed": {
                     fontWidthValue = FontNames.FWIDTH_SEMI_CONDENSED;
                     break;
                 }
 
-                case "normal":
-                {
+                case "normal": {
                     fontWidthValue = FontNames.FWIDTH_NORMAL;
                     break;
                 }
 
-                case "semiexpanded":
-                {
+                case "semiexpanded": {
                     fontWidthValue = FontNames.FWIDTH_SEMI_EXPANDED;
                     break;
                 }
 
-                case "expanded":
-                {
+                case "expanded": {
                     fontWidthValue = FontNames.FWIDTH_EXPANDED;
                     break;
                 }
 
-                case "extraexpanded":
-                {
+                case "extraexpanded": {
                     fontWidthValue = FontNames.FWIDTH_EXTRA_EXPANDED;
                     break;
                 }
 
-                case "ultraexpanded":
-                {
+                case "ultraexpanded": {
                     fontWidthValue = FontNames.FWIDTH_ULTRA_EXPANDED;
                     break;
                 }
@@ -306,51 +263,40 @@ namespace iTextSharp.IO.Font
             fontNames.SetFontWidth(fontWidthValue);
         }
 
-        protected internal virtual void SetFixedPitch(bool isFixedPitch)
-        {
+        protected internal virtual void SetFixedPitch(bool isFixedPitch) {
             fontMetrics.SetIsFixedPitch(isFixedPitch);
         }
 
-        protected internal virtual void SetBold(bool isBold)
-        {
-            if (isBold)
-            {
+        protected internal virtual void SetBold(bool isBold) {
+            if (isBold) {
                 fontNames.SetMacStyle(fontNames.GetMacStyle() | FontNames.BOLD_FLAG);
             }
-            else
-            {
+            else {
                 fontNames.SetMacStyle(fontNames.GetMacStyle() & (~FontNames.BOLD_FLAG));
             }
         }
 
-        protected internal virtual void SetBbox(int[] bbox)
-        {
+        protected internal virtual void SetBbox(int[] bbox) {
             fontMetrics.SetBbox(bbox[0], bbox[1], bbox[2], bbox[3]);
         }
 
-        protected internal virtual void SetFontFamily(String fontFamily)
-        {
+        protected internal virtual void SetFontFamily(String fontFamily) {
             fontNames.SetFamilyName(fontFamily);
         }
 
-        protected internal virtual void SetFontName(String psFontName)
-        {
+        protected internal virtual void SetFontName(String psFontName) {
             fontNames.SetFontName(psFontName);
         }
 
-        protected internal virtual void CheckFilePath(String path)
-        {
-            if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path))
-            {
+        protected internal virtual void CheckFilePath(String path) {
+            if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path)) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).SetMessageParams(path);
             }
         }
 
-        protected internal virtual void FixSpaceIssue()
-        {
+        protected internal virtual void FixSpaceIssue() {
             Glyph space = unicodeToGlyph.Get(32);
-            if (space != null)
-            {
+            if (space != null) {
                 codeToGlyph[space.GetCode()] = space;
             }
         }

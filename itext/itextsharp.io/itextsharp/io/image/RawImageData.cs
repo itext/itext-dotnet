@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Image
-{
-    public class RawImageData : ImageData
-    {
+namespace iTextSharp.IO.Image {
+    public class RawImageData : ImageData {
         /// <summary>Pure two-dimensional encoding (Group 4)</summary>
         public const int CCITTG4 = 0x100;
 
@@ -88,28 +86,23 @@ namespace iTextSharp.IO.Image
         protected internal int typeCcitt;
 
         protected internal RawImageData(Uri url, ImageType type)
-            : base(url, type)
-        {
+            : base(url, type) {
         }
 
         protected internal RawImageData(byte[] bytes, ImageType type)
-            : base(bytes, type)
-        {
+            : base(bytes, type) {
         }
 
         //NOTE in itext5 instead of typeCcitt bpc property was using for both bpc and type CCITT.
-        public override bool IsRawImage()
-        {
+        public override bool IsRawImage() {
             return true;
         }
 
-        public virtual int GetTypeCcitt()
-        {
+        public virtual int GetTypeCcitt() {
             return typeCcitt;
         }
 
-        public virtual void SetTypeCcitt(int typeCcitt)
-        {
+        public virtual void SetTypeCcitt(int typeCcitt) {
             this.typeCcitt = typeCcitt;
         }
     }

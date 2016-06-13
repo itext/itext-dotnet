@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Crypto
-{
-    public class ARCFOUREncryption
-    {
+namespace iTextSharp.Kernel.Crypto {
+    public class ARCFOUREncryption {
         private byte[] state = new byte[256];
 
         private int x;
@@ -52,28 +50,23 @@ namespace iTextSharp.Kernel.Crypto
         private int y;
 
         /// <summary>Creates a new instance of ARCFOUREncryption</summary>
-        public ARCFOUREncryption()
-        {
+        public ARCFOUREncryption() {
         }
 
-        public virtual void PrepareARCFOURKey(byte[] key)
-        {
+        public virtual void PrepareARCFOURKey(byte[] key) {
             PrepareARCFOURKey(key, 0, key.Length);
         }
 
-        public virtual void PrepareARCFOURKey(byte[] key, int off, int len)
-        {
+        public virtual void PrepareARCFOURKey(byte[] key, int off, int len) {
             int index1 = 0;
             int index2 = 0;
-            for (int k = 0; k < 256; ++k)
-            {
+            for (int k = 0; k < 256; ++k) {
                 state[k] = (byte)k;
             }
             x = 0;
             y = 0;
             byte tmp;
-            for (int k_1 = 0; k_1 < 256; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < 256; ++k_1) {
                 index2 = (key[index1 + off] + state[k_1] + index2) & 255;
                 tmp = state[k_1];
                 state[k_1] = state[index2];
@@ -82,12 +75,10 @@ namespace iTextSharp.Kernel.Crypto
             }
         }
 
-        public virtual void EncryptARCFOUR(byte[] dataIn, int off, int len, byte[] dataOut, int offOut)
-        {
+        public virtual void EncryptARCFOUR(byte[] dataIn, int off, int len, byte[] dataOut, int offOut) {
             int length = len + off;
             byte tmp;
-            for (int k = off; k < length; ++k)
-            {
+            for (int k = off; k < length; ++k) {
                 x = (x + 1) & 255;
                 y = (state[x] + y) & 255;
                 tmp = state[x];
@@ -97,18 +88,15 @@ namespace iTextSharp.Kernel.Crypto
             }
         }
 
-        public virtual void EncryptARCFOUR(byte[] data, int off, int len)
-        {
+        public virtual void EncryptARCFOUR(byte[] data, int off, int len) {
             EncryptARCFOUR(data, off, len, data, off);
         }
 
-        public virtual void EncryptARCFOUR(byte[] dataIn, byte[] dataOut)
-        {
+        public virtual void EncryptARCFOUR(byte[] dataIn, byte[] dataOut) {
             EncryptARCFOUR(dataIn, 0, dataIn.Length, dataOut, 0);
         }
 
-        public virtual void EncryptARCFOUR(byte[] data)
-        {
+        public virtual void EncryptARCFOUR(byte[] data) {
             EncryptARCFOUR(data, 0, data.Length, data, 0);
         }
     }

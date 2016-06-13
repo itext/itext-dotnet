@@ -51,54 +51,43 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Layout;
 using iTextSharp.Layout.Property;
 
-namespace iTextSharp.Layout.Renderer
-{
-    public class ListRenderer : BlockRenderer
-    {
+namespace iTextSharp.Layout.Renderer {
+    public class ListRenderer : BlockRenderer {
         public ListRenderer(List modelElement)
-            : base(modelElement)
-        {
+            : base(modelElement) {
         }
 
         // TODO underlying should not be applied
         // https://jira.itextsupport.com/browse/SUP-952
-        public override LayoutResult Layout(LayoutContext layoutContext)
-        {
-            if (!HasOwnProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED))
-            {
+        public override LayoutResult Layout(LayoutContext layoutContext) {
+            if (!HasOwnProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED)) {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
                 int listItemNum = (int)this.GetProperty<int?>(iTextSharp.Layout.Property.Property.LIST_START, 1);
-                for (int i = 0; i < childRenderers.Count; i++)
-                {
-                    if (childRenderers[i].GetModelElement() is ListItem)
-                    {
+                for (int i = 0; i < childRenderers.Count; i++) {
+                    if (childRenderers[i].GetModelElement() is ListItem) {
                         childRenderers[i].SetParent(this);
                         IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers[i]);
                         childRenderers[i].SetParent(null);
                         symbolRenderers.Add(currentSymbolRenderer);
                         LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout(layoutContext);
                         currentSymbolRenderer.SetParent(null);
-                        if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL)
-                        {
+                        if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
                             return new LayoutResult(LayoutResult.NOTHING, null, null, this);
                         }
                     }
                 }
                 float maxSymbolWidth = 0;
-                foreach (IRenderer symbolRenderer in symbolRenderers)
-                {
+                foreach (IRenderer symbolRenderer in symbolRenderers) {
                     maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
                 }
                 float? symbolIndent = modelElement.GetProperty<float?>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT
                     );
                 listItemNum = 0;
-                foreach (IRenderer childRenderer in childRenderers)
-                {
+                foreach (IRenderer childRenderer in childRenderers) {
                     childRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
                     childRenderer.SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, childRenderer.GetProperty(iTextSharp.Layout.Property.Property
                         .MARGIN_LEFT, (float?)0f) + maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f));
-                    if (childRenderer.GetModelElement() is ListItem)
-                    {
+                    if (childRenderer.GetModelElement() is ListItem) {
                         IRenderer symbolRenderer_1 = symbolRenderers[listItemNum++];
                         ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer_1, maxSymbolWidth);
                     }
@@ -107,114 +96,92 @@ namespace iTextSharp.Layout.Renderer
             return base.Layout(layoutContext);
         }
 
-        public override IRenderer GetNextRenderer()
-        {
+        public override IRenderer GetNextRenderer() {
             return new iTextSharp.Layout.Renderer.ListRenderer((List)modelElement);
         }
 
-        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult)
-        {
+        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
             splitRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED, true);
             return splitRenderer;
         }
 
-        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult)
-        {
+        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
             overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED, true);
             return overflowRenderer;
         }
 
-        protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer)
-        {
+        protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
             Object defaultListSymbol = renderer.GetProperty<Object>(iTextSharp.Layout.Property.Property.LIST_SYMBOL);
-            if (defaultListSymbol is Text)
-            {
+            if (defaultListSymbol is Text) {
                 return new TextRenderer((Text)defaultListSymbol);
             }
-            else
-            {
-                if (defaultListSymbol is Image)
-                {
+            else {
+                if (defaultListSymbol is Image) {
                     return new ImageRenderer((Image)defaultListSymbol);
                 }
-                else
-                {
-                    if (defaultListSymbol is ListNumberingType)
-                    {
+                else {
+                    if (defaultListSymbol is ListNumberingType) {
                         ListNumberingType numberingType = (ListNumberingType)defaultListSymbol;
                         String numberText;
-                        switch (numberingType)
-                        {
-                            case ListNumberingType.DECIMAL:
-                            {
+                        switch (numberingType) {
+                            case ListNumberingType.DECIMAL: {
                                 numberText = index.ToString();
                                 break;
                             }
 
-                            case ListNumberingType.ROMAN_LOWER:
-                            {
+                            case ListNumberingType.ROMAN_LOWER: {
                                 numberText = RomanNumbering.ToRomanLowerCase(index);
                                 break;
                             }
 
-                            case ListNumberingType.ROMAN_UPPER:
-                            {
+                            case ListNumberingType.ROMAN_UPPER: {
                                 numberText = RomanNumbering.ToRomanUpperCase(index);
                                 break;
                             }
 
-                            case ListNumberingType.ENGLISH_LOWER:
-                            {
+                            case ListNumberingType.ENGLISH_LOWER: {
                                 numberText = EnglishAlphabetNumbering.ToLatinAlphabetNumberLowerCase(index);
                                 break;
                             }
 
-                            case ListNumberingType.ENGLISH_UPPER:
-                            {
+                            case ListNumberingType.ENGLISH_UPPER: {
                                 numberText = EnglishAlphabetNumbering.ToLatinAlphabetNumberUpperCase(index);
                                 break;
                             }
 
-                            case ListNumberingType.GREEK_LOWER:
-                            {
+                            case ListNumberingType.GREEK_LOWER: {
                                 numberText = GreekAlphabetNumbering.ToGreekAlphabetNumberLowerCase(index);
                                 break;
                             }
 
-                            case ListNumberingType.GREEK_UPPER:
-                            {
+                            case ListNumberingType.GREEK_UPPER: {
                                 numberText = GreekAlphabetNumbering.ToGreekAlphabetNumberUpperCase(index);
                                 break;
                             }
 
-                            case ListNumberingType.ZAPF_DINGBATS_1:
-                            {
+                            case ListNumberingType.ZAPF_DINGBATS_1: {
                                 numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 171));
                                 break;
                             }
 
-                            case ListNumberingType.ZAPF_DINGBATS_2:
-                            {
+                            case ListNumberingType.ZAPF_DINGBATS_2: {
                                 numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 181));
                                 break;
                             }
 
-                            case ListNumberingType.ZAPF_DINGBATS_3:
-                            {
+                            case ListNumberingType.ZAPF_DINGBATS_3: {
                                 numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 191));
                                 break;
                             }
 
-                            case ListNumberingType.ZAPF_DINGBATS_4:
-                            {
+                            case ListNumberingType.ZAPF_DINGBATS_4: {
                                 numberText = iTextSharp.IO.Util.JavaUtil.CharToString((char)(index + 201));
                                 break;
                             }
 
-                            default:
-                            {
+                            default: {
                                 throw new InvalidOperationException();
                             }
                         }
@@ -227,50 +194,40 @@ namespace iTextSharp.Layout.Renderer
                         // Then on draw we set the correct font with actual document in order for the font objects to be created.
                         if (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType.GREEK_UPPER || numberingType
                              == ListNumberingType.ZAPF_DINGBATS_1 || numberingType == ListNumberingType.ZAPF_DINGBATS_2 || numberingType
-                             == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4)
-                        {
+                             == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
                             textRenderer = new _TextRenderer_187(constantFont, textElement);
-                            try
-                            {
+                            try {
                                 textRenderer.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(constantFont)
                                     );
                             }
-                            catch (System.IO.IOException)
-                            {
+                            catch (System.IO.IOException) {
                             }
                         }
-                        else
-                        {
+                        else {
                             textRenderer = new TextRenderer(textElement);
                         }
                         return textRenderer;
                     }
-                    else
-                    {
+                    else {
                         throw new InvalidOperationException();
                     }
                 }
             }
         }
 
-        private sealed class _TextRenderer_187 : TextRenderer
-        {
+        private sealed class _TextRenderer_187 : TextRenderer {
             public _TextRenderer_187(String constantFont, Text baseArg1)
-                : base(baseArg1)
-            {
+                : base(baseArg1) {
                 this.constantFont = constantFont;
             }
 
-            public override void Draw(DrawContext drawContext)
-            {
-                try
-                {
+            public override void Draw(DrawContext drawContext) {
+                try {
                     this.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(constantFont));
                 }
-                catch (System.IO.IOException)
-                {
+                catch (System.IO.IOException) {
                 }
                 base.Draw(drawContext);
             }

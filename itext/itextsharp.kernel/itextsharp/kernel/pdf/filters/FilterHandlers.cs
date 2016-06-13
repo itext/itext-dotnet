@@ -45,8 +45,7 @@ using System.Collections.Generic;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters
-{
+namespace iTextSharp.Kernel.Pdf.Filters {
     /// <summary>Encapsulates filter behavior for PDF streams.</summary>
     /// <remarks>
     /// Encapsulates filter behavior for PDF streams.  Classes generally interace with this
@@ -54,8 +53,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
     /// <see cref="IFilterHandler"/>
     /// via a lookup.
     /// </remarks>
-    public sealed class FilterHandlers
-    {
+    public sealed class FilterHandlers {
         /// <summary>
         /// The default
         /// <see cref="IFilterHandler"/>
@@ -63,8 +61,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// </summary>
         private static readonly IDictionary<PdfName, IFilterHandler> defaults;
 
-        static FilterHandlers()
-        {
+        static FilterHandlers() {
             // Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
             // it may also be better to split the sub-classes out into a separate package
             IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler>();
@@ -86,8 +83,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// <see cref="IFilterHandler"/>
         /// s used by iText
         /// </returns>
-        public static IDictionary<PdfName, IFilterHandler> GetDefaultFilterHandlers()
-        {
+        public static IDictionary<PdfName, IFilterHandler> GetDefaultFilterHandlers() {
             return defaults;
         }
     }

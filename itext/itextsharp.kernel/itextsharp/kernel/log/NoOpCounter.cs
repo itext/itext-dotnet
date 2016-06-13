@@ -43,22 +43,17 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log
-{
+namespace iTextSharp.Kernel.Log {
     /// <summary>Implementation of the Counter interface that doesn't do anything.</summary>
-    public class NoOpCounter : Counter
-    {
-        public virtual Counter GetCounter(Type cls)
-        {
+    public class NoOpCounter : Counter {
+        public virtual Counter GetCounter(Type cls) {
             return this;
         }
 
-        public virtual void OnDocumentRead(long size)
-        {
+        public virtual void OnDocumentRead(long size) {
         }
 
-        public virtual void OnDocumentWritten(long size)
-        {
+        public virtual void OnDocumentWritten(long size) {
         }
     }
 }

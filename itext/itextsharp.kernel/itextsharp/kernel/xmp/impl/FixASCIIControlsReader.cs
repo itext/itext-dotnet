@@ -30,11 +30,9 @@
 using System.IO;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Kernel.XMP.Impl
-{
+namespace iTextSharp.Kernel.XMP.Impl {
     /// <since>22.08.2006</since>
-    public class FixASCIIControlsReader : PushbackReader
-    {
+    public class FixASCIIControlsReader : PushbackReader {
         private const int STATE_START = 0;
 
         private const int STATE_AMP = 1;
@@ -62,53 +60,42 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
         /// <param name="input">a Reader</param>
         public FixASCIIControlsReader(TextReader input)
-            : base(input, BUFFER_SIZE)
-        {
+            : base(input, BUFFER_SIZE) {
         }
 
         /// <seealso cref="System.IO.TextReader.Read(char[], int, int)"/>
         /// <exception cref="System.IO.IOException"/>
-        public override int Read(char[] cbuf, int off, int len)
-        {
+        public override int Read(char[] cbuf, int off, int len) {
             int readAhead = 0;
             int read = 0;
             int pos = off;
             char[] readAheadBuffer = new char[BUFFER_SIZE];
             bool available = true;
-            while (available && read < len)
-            {
+            while (available && read < len) {
                 available = base.Read(readAheadBuffer, readAhead, 1) == 1;
-                if (available)
-                {
+                if (available) {
                     char c = ProcessChar(readAheadBuffer[readAhead]);
-                    if (state == STATE_START)
-                    {
+                    if (state == STATE_START) {
                         // replace control chars with space
-                        if (Utils.IsControlChar(c))
-                        {
+                        if (Utils.IsControlChar(c)) {
                             c = ' ';
                         }
                         cbuf[pos++] = c;
                         readAhead = 0;
                         read++;
                     }
-                    else
-                    {
-                        if (state == STATE_ERROR)
-                        {
+                    else {
+                        if (state == STATE_ERROR) {
                             Unread(readAheadBuffer, 0, readAhead + 1);
                             readAhead = 0;
                         }
-                        else
-                        {
+                        else {
                             readAhead++;
                         }
                     }
                 }
-                else
-                {
-                    if (readAhead > 0)
-                    {
+                else {
+                    if (readAhead > 0) {
                         // handles case when file ends within excaped sequence
                         Unread(readAheadBuffer, 0, readAhead);
                         state = STATE_ERROR;
@@ -123,126 +110,98 @@ namespace iTextSharp.Kernel.XMP.Impl
         /// <summary>Processes numeric escaped chars to find out if they are a control character.</summary>
         /// <param name="ch">a char</param>
         /// <returns>Returns the char directly or as replacement for the escaped sequence.</returns>
-        private char ProcessChar(char ch)
-        {
-            switch (state)
-            {
-                case STATE_START:
-                {
-                    if (ch == '&')
-                    {
+        private char ProcessChar(char ch) {
+            switch (state) {
+                case STATE_START: {
+                    if (ch == '&') {
                         state = STATE_AMP;
                     }
                     return ch;
                 }
 
-                case STATE_AMP:
-                {
-                    if (ch == '#')
-                    {
+                case STATE_AMP: {
+                    if (ch == '#') {
                         state = STATE_HASH;
                     }
-                    else
-                    {
+                    else {
                         state = STATE_ERROR;
                     }
                     return ch;
                 }
 
-                case STATE_HASH:
-                {
-                    if (ch == 'x')
-                    {
+                case STATE_HASH: {
+                    if (ch == 'x') {
                         control = 0;
                         digits = 0;
                         state = STATE_HEX;
                     }
-                    else
-                    {
-                        if ('0' <= ch && ch <= '9')
-                        {
+                    else {
+                        if ('0' <= ch && ch <= '9') {
                             control = iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
                             digits = 1;
                             state = STATE_DIG1;
                         }
-                        else
-                        {
+                        else {
                             state = STATE_ERROR;
                         }
                     }
                     return ch;
                 }
 
-                case STATE_DIG1:
-                {
-                    if ('0' <= ch && ch <= '9')
-                    {
+                case STATE_DIG1: {
+                    if ('0' <= ch && ch <= '9') {
                         control = control * 10 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
                         digits++;
-                        if (digits <= 5)
-                        {
+                        if (digits <= 5) {
                             state = STATE_DIG1;
                         }
-                        else
-                        {
+                        else {
                             state = STATE_ERROR;
                         }
                     }
-                    else
-                    {
+                    else {
                         // sequence too long
-                        if (ch == ';' && Utils.IsControlChar((char)control))
-                        {
+                        if (ch == ';' && Utils.IsControlChar((char)control)) {
                             state = STATE_START;
                             return (char)control;
                         }
-                        else
-                        {
+                        else {
                             state = STATE_ERROR;
                         }
                     }
                     return ch;
                 }
 
-                case STATE_HEX:
-                {
-                    if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F'))
-                    {
+                case STATE_HEX: {
+                    if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F')) {
                         control = control * 16 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 16);
                         digits++;
-                        if (digits <= 4)
-                        {
+                        if (digits <= 4) {
                             state = STATE_HEX;
                         }
-                        else
-                        {
+                        else {
                             state = STATE_ERROR;
                         }
                     }
-                    else
-                    {
+                    else {
                         // sequence too long
-                        if (ch == ';' && Utils.IsControlChar((char)control))
-                        {
+                        if (ch == ';' && Utils.IsControlChar((char)control)) {
                             state = STATE_START;
                             return (char)control;
                         }
-                        else
-                        {
+                        else {
                             state = STATE_ERROR;
                         }
                     }
                     return ch;
                 }
 
-                case STATE_ERROR:
-                {
+                case STATE_ERROR: {
                     state = STATE_START;
                     return ch;
                 }
 
-                default:
-                {
+                default: {
                     // not reachable
                     return ch;
                 }

@@ -10,10 +10,8 @@ using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA2AnnotationCheckTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA2AnnotationCheckTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2AnnotationCheckTest/";
@@ -22,18 +20,15 @@ namespace iTextSharp.Pdfa
              + "/test/itextsharp/pdfa/PdfA2AnnotationCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest01()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest01() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -52,8 +47,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest02()
-        {
+        public virtual void AnnotationCheckTest02() {
             String outPdf = destinationFolder + "pdfA2b_annotationCheckTest02.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -72,8 +66,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest03()
-        {
+        public virtual void AnnotationCheckTest03() {
             String outPdf = destinationFolder + "pdfA2b_annotationCheckTest03.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -93,10 +86,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest04()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest04() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -116,10 +107,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest05()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest05() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -138,10 +127,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest06()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest06() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -160,10 +147,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest07()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest07() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -186,10 +171,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest08()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest08() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -212,10 +195,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest09()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest09() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, new PdfOutputIntent("Custom", ""
@@ -237,8 +218,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest10()
-        {
+        public virtual void AnnotationCheckTest10() {
             String outPdf = destinationFolder + "pdfA2b_annotationCheckTest10.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest10.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -261,8 +241,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest11()
-        {
+        public virtual void AnnotationCheckTest11() {
             String outPdf = destinationFolder + "pdfA2b_annotationCheckTest11.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2b_annotationCheckTest11.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -284,10 +263,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest12()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest12() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent("Custom", ""
@@ -308,10 +285,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.FileNotFoundException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest13()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void AnnotationCheckTest13() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2A, new PdfOutputIntent("Custom", ""
@@ -334,8 +309,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnnotationCheckTest14()
-        {
+        public virtual void AnnotationCheckTest14() {
             String outPdf = destinationFolder + "pdfA2a_annotationCheckTest14.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA2a_annotationCheckTest14.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -357,8 +331,7 @@ namespace iTextSharp.Pdfa
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private PdfStream CreateAppearance(PdfADocument doc, Rectangle formRect)
-        {
+        private PdfStream CreateAppearance(PdfADocument doc, Rectangle formRect) {
             PdfFormXObject form = new PdfFormXObject(formRect);
             PdfCanvas canvas = new PdfCanvas(form, doc);
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", "WinAnsi", true);
@@ -369,11 +342,9 @@ namespace iTextSharp.Pdfa
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareResult(String outPdf, String cmpPdf)
-        {
+        private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (result != null)
-            {
+            if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
         }

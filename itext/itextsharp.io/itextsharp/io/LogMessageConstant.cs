@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO
-{
+namespace iTextSharp.IO {
     /// <summary>Class containing constants to be used in logging.</summary>
-    public sealed class LogMessageConstant
-    {
+    public sealed class LogMessageConstant {
         /// <summary>Log message.</summary>
         public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
 

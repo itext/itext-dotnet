@@ -45,10 +45,8 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace iTextSharp.IO.Source
-{
-    public class RandomAccessFileOrArray
-    {
+namespace iTextSharp.IO.Source {
+    public class RandomAccessFileOrArray {
         /// <summary>When true the file access is not done through a memory mapped file.</summary>
         /// <remarks>
         /// When true the file access is not done through a memory mapped file. Use it if the file
@@ -74,13 +72,11 @@ namespace iTextSharp.IO.Source
         /// Closing this object will have adverse effect on the view.
         /// </remarks>
         /// <returns>the new view</returns>
-        public virtual iTextSharp.IO.Source.RandomAccessFileOrArray CreateView()
-        {
+        public virtual iTextSharp.IO.Source.RandomAccessFileOrArray CreateView() {
             return new iTextSharp.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource(byteSource));
         }
 
-        public virtual IRandomAccessSource CreateSourceView()
-        {
+        public virtual IRandomAccessSource CreateSourceView() {
             return new IndependentRandomAccessSource(byteSource);
         }
 
@@ -90,8 +86,7 @@ namespace iTextSharp.IO.Source
         /// this RandomAccessFileOrArray is closed.
         /// </remarks>
         /// <param name="byteSource">the byte source to wrap</param>
-        public RandomAccessFileOrArray(IRandomAccessSource byteSource)
-        {
+        public RandomAccessFileOrArray(IRandomAccessSource byteSource) {
             this.byteSource = byteSource;
         }
 
@@ -99,8 +94,7 @@ namespace iTextSharp.IO.Source
         /// <remarks>Pushes a byte back.  The next get() will return this byte instead of the value from the underlying data source
         ///     </remarks>
         /// <param name="b">the byte to push</param>
-        public virtual void PushBack(byte b)
-        {
+        public virtual void PushBack(byte b) {
             back = b;
             isBack = true;
         }
@@ -108,10 +102,8 @@ namespace iTextSharp.IO.Source
         /// <summary>Reads a single byte</summary>
         /// <returns>the byte, or -1 if EOF is reached</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Read()
-        {
-            if (isBack)
-            {
+        public virtual int Read() {
+            if (isBack) {
                 isBack = false;
                 return back & 0xff;
             }
@@ -119,57 +111,46 @@ namespace iTextSharp.IO.Source
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Read(byte[] b, int off, int len)
-        {
-            if (len == 0)
-            {
+        public virtual int Read(byte[] b, int off, int len) {
+            if (len == 0) {
                 return 0;
             }
             int count = 0;
-            if (isBack && len > 0)
-            {
+            if (isBack && len > 0) {
                 isBack = false;
                 b[off++] = back;
                 --len;
                 count++;
             }
-            if (len > 0)
-            {
+            if (len > 0) {
                 int byteSourceCount = byteSource.Get(byteSourcePosition, b, off, len);
-                if (byteSourceCount > 0)
-                {
+                if (byteSourceCount > 0) {
                     count += byteSourceCount;
                     byteSourcePosition += byteSourceCount;
                 }
             }
-            if (count == 0)
-            {
+            if (count == 0) {
                 return -1;
             }
             return count;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Read(byte[] b)
-        {
+        public virtual int Read(byte[] b) {
             return Read(b, 0, b.Length);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void ReadFully(byte[] b)
-        {
+        public virtual void ReadFully(byte[] b) {
             ReadFully(b, 0, b.Length);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void ReadFully(byte[] b, int off, int len)
-        {
+        public virtual void ReadFully(byte[] b, int off, int len) {
             int n = 0;
-            do
-            {
+            do {
                 int count = Read(b, off + n, len - n);
-                if (count < 0)
-                {
+                if (count < 0) {
                     throw new EndOfStreamException();
                 }
                 n += count;
@@ -178,22 +159,17 @@ namespace iTextSharp.IO.Source
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long Skip(long n)
-        {
-            if (n <= 0)
-            {
+        public virtual long Skip(long n) {
+            if (n <= 0) {
                 return 0;
             }
             int adj = 0;
-            if (isBack)
-            {
+            if (isBack) {
                 isBack = false;
-                if (n == 1)
-                {
+                if (n == 1) {
                     return 1;
                 }
-                else
-                {
+                else {
                     --n;
                     adj = 1;
                 }
@@ -204,8 +180,7 @@ namespace iTextSharp.IO.Source
             pos = GetPosition();
             len = Length();
             newpos = pos + n;
-            if (newpos > len)
-            {
+            if (newpos > len) {
                 newpos = len;
             }
             Seek(newpos);
@@ -214,77 +189,64 @@ namespace iTextSharp.IO.Source
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int SkipBytes(int n)
-        {
+        public virtual int SkipBytes(int n) {
             return (int)Skip(n);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Close()
-        {
+        public virtual void Close() {
             isBack = false;
             byteSource.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long Length()
-        {
+        public virtual long Length() {
             return byteSource.Length();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Seek(long pos)
-        {
+        public virtual void Seek(long pos) {
             byteSourcePosition = pos;
             isBack = false;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long GetPosition()
-        {
+        public virtual long GetPosition() {
             return byteSourcePosition - (isBack ? 1 : 0);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool ReadBoolean()
-        {
+        public virtual bool ReadBoolean() {
             int ch = this.Read();
-            if (ch < 0)
-            {
+            if (ch < 0) {
                 throw new EndOfStreamException();
             }
             return (ch != 0);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual byte ReadByte()
-        {
+        public virtual byte ReadByte() {
             int ch = this.Read();
-            if (ch < 0)
-            {
+            if (ch < 0) {
                 throw new EndOfStreamException();
             }
             return (byte)(ch);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadUnsignedByte()
-        {
+        public virtual int ReadUnsignedByte() {
             int ch = this.Read();
-            if (ch < 0)
-            {
+            if (ch < 0) {
                 throw new EndOfStreamException();
             }
             return ch;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual short ReadShort()
-        {
+        public virtual short ReadShort() {
             int ch1 = this.Read();
             int ch2 = this.Read();
-            if ((ch1 | ch2) < 0)
-            {
+            if ((ch1 | ch2) < 0) {
                 throw new EndOfStreamException();
             }
             return (short)((ch1 << 8) + ch2);
@@ -327,24 +289,20 @@ namespace iTextSharp.IO.Source
         /// if an I/O error occurs.
         /// </exception>
         /// <exception cref="System.IO.IOException"/>
-        public short ReadShortLE()
-        {
+        public short ReadShortLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
-            if ((ch1 | ch2) < 0)
-            {
+            if ((ch1 | ch2) < 0) {
                 throw new EndOfStreamException();
             }
             return (short)((ch2 << 8) + ch1);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadUnsignedShort()
-        {
+        public virtual int ReadUnsignedShort() {
             int ch1 = this.Read();
             int ch2 = this.Read();
-            if ((ch1 | ch2) < 0)
-            {
+            if ((ch1 | ch2) < 0) {
                 throw new EndOfStreamException();
             }
             return (ch1 << 8) + ch2;
@@ -384,24 +342,20 @@ namespace iTextSharp.IO.Source
         /// if an I/O error occurs.
         /// </exception>
         /// <exception cref="System.IO.IOException"/>
-        public int ReadUnsignedShortLE()
-        {
+        public int ReadUnsignedShortLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
-            if ((ch1 | ch2) < 0)
-            {
+            if ((ch1 | ch2) < 0) {
                 throw new EndOfStreamException();
             }
             return (ch2 << 8) + ch1;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual char ReadChar()
-        {
+        public virtual char ReadChar() {
             int ch1 = this.Read();
             int ch2 = this.Read();
-            if ((ch1 | ch2) < 0)
-            {
+            if ((ch1 | ch2) < 0) {
                 throw new EndOfStreamException();
             }
             return (char)((ch1 << 8) + ch2);
@@ -438,26 +392,22 @@ namespace iTextSharp.IO.Source
         /// if an I/O error occurs.
         /// </exception>
         /// <exception cref="System.IO.IOException"/>
-        public char ReadCharLE()
-        {
+        public char ReadCharLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
-            if ((ch1 | ch2) < 0)
-            {
+            if ((ch1 | ch2) < 0) {
                 throw new EndOfStreamException();
             }
             return (char)((ch2 << 8) + ch2);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadInt()
-        {
+        public virtual int ReadInt() {
             int ch1 = this.Read();
             int ch2 = this.Read();
             int ch3 = this.Read();
             int ch4 = this.Read();
-            if ((ch1 | ch2 | ch3 | ch4) < 0)
-            {
+            if ((ch1 | ch2 | ch3 | ch4) < 0) {
                 throw new EndOfStreamException();
             }
             return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + ch4);
@@ -502,14 +452,12 @@ namespace iTextSharp.IO.Source
         /// if an I/O error occurs.
         /// </exception>
         /// <exception cref="System.IO.IOException"/>
-        public int ReadIntLE()
-        {
+        public int ReadIntLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
             int ch3 = this.Read();
             int ch4 = this.Read();
-            if ((ch1 | ch2 | ch3 | ch4) < 0)
-            {
+            if ((ch1 | ch2 | ch3 | ch4) < 0) {
                 throw new EndOfStreamException();
             }
             return ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + ch1);
@@ -553,108 +501,90 @@ namespace iTextSharp.IO.Source
         /// if an I/O error occurs.
         /// </exception>
         /// <exception cref="System.IO.IOException"/>
-        public long ReadUnsignedInt()
-        {
+        public long ReadUnsignedInt() {
             long ch1 = this.Read();
             long ch2 = this.Read();
             long ch3 = this.Read();
             long ch4 = this.Read();
-            if ((ch1 | ch2 | ch3 | ch4) < 0)
-            {
+            if ((ch1 | ch2 | ch3 | ch4) < 0) {
                 throw new EndOfStreamException();
             }
             return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + ch4);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public long ReadUnsignedIntLE()
-        {
+        public long ReadUnsignedIntLE() {
             long ch1 = this.Read();
             long ch2 = this.Read();
             long ch3 = this.Read();
             long ch4 = this.Read();
-            if ((ch1 | ch2 | ch3 | ch4) < 0)
-            {
+            if ((ch1 | ch2 | ch3 | ch4) < 0) {
                 throw new EndOfStreamException();
             }
             return ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + ch1);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long ReadLong()
-        {
+        public virtual long ReadLong() {
             return ((long)(ReadInt()) << 32) + (ReadInt() & 0xFFFFFFFFL);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public long ReadLongLE()
-        {
+        public long ReadLongLE() {
             int i1 = ReadIntLE();
             int i2 = ReadIntLE();
             return ((long)i2 << 32) + (i1 & 0xFFFFFFFFL);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual float ReadFloat()
-        {
+        public virtual float ReadFloat() {
             return iTextSharp.IO.Util.JavaUtil.IntBitsToFloat(ReadInt());
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public float ReadFloatLE()
-        {
+        public float ReadFloatLE() {
             return iTextSharp.IO.Util.JavaUtil.IntBitsToFloat(ReadIntLE());
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual double ReadDouble()
-        {
+        public virtual double ReadDouble() {
             return iTextSharp.IO.Util.JavaUtil.LongBitsToDouble(ReadLong());
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public double ReadDoubleLE()
-        {
+        public double ReadDoubleLE() {
             return iTextSharp.IO.Util.JavaUtil.LongBitsToDouble(ReadLongLE());
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual String ReadLine()
-        {
+        public virtual String ReadLine() {
             StringBuilder input = new StringBuilder();
             int c = -1;
             bool eol = false;
-            while (!eol)
-            {
-                switch (c = Read())
-                {
+            while (!eol) {
+                switch (c = Read()) {
                     case -1:
-                    case '\n':
-                    {
+                    case '\n': {
                         eol = true;
                         break;
                     }
 
-                    case '\r':
-                    {
+                    case '\r': {
                         eol = true;
                         long cur = GetPosition();
-                        if ((Read()) != '\n')
-                        {
+                        if ((Read()) != '\n') {
                             Seek(cur);
                         }
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         input.Append((char)c);
                         break;
                     }
                 }
             }
-            if ((c == -1) && (input.Length == 0))
-            {
+            if ((c == -1) && (input.Length == 0)) {
                 return null;
             }
             return input.ToString();
@@ -674,8 +604,7 @@ namespace iTextSharp.IO.Source
         /// read
         /// </returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        public virtual String ReadString(int length, String encoding)
-        {
+        public virtual String ReadString(int length, String encoding) {
             byte[] buf = new byte[length];
             ReadFully(buf);
             return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, encoding);

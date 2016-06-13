@@ -29,12 +29,10 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>Common constants for the XMP Toolkit.</summary>
     /// <since>20.01.2006</since>
-    public abstract class XMPConst
-    {
+    public abstract class XMPConst {
         /// <summary>The XML namespace for XML.</summary>
         public const String NS_XML = "http://www.w3.org/XML/1998/namespace";
 
@@ -237,7 +235,6 @@ namespace iTextSharp.Kernel.XMP
         // Basic types and constants
     }
 
-    public static class XMPConstConstants
-    {
+    public static class XMPConstConstants {
     }
 }

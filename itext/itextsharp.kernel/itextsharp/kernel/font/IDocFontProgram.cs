@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font
-{
-    internal interface IDocFontProgram
-    {
+namespace iTextSharp.Kernel.Font {
+    internal interface IDocFontProgram {
         PdfStream GetFontFile();
 
         PdfName GetFontFileName();

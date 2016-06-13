@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class DeviceCmyk : iTextSharp.Kernel.Color.Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class DeviceCmyk : iTextSharp.Kernel.Color.Color {
         public static readonly iTextSharp.Kernel.Color.DeviceCmyk CYAN = new iTextSharp.Kernel.Color.DeviceCmyk(100
             , 0, 0, 0);
 
@@ -60,29 +58,24 @@ namespace iTextSharp.Kernel.Color
             , 0, 0, 100);
 
         public DeviceCmyk()
-            : this(0f, 0f, 0f, 1f)
-        {
+            : this(0f, 0f, 0f, 1f) {
         }
 
         public DeviceCmyk(int c, int m, int y, int k)
-            : this(c / 100f, m / 100f, y / 100f, k / 100f)
-        {
+            : this(c / 100f, m / 100f, y / 100f, k / 100f) {
         }
 
         public DeviceCmyk(float c, float m, float y, float k)
-            : base(new PdfDeviceCs.Cmyk(), new float[] { c, m, y, k })
-        {
+            : base(new PdfDeviceCs.Cmyk(), new float[] { c, m, y, k }) {
         }
 
-        public static iTextSharp.Kernel.Color.DeviceCmyk MakeLighter(iTextSharp.Kernel.Color.DeviceCmyk cmykColor)
-        {
+        public static iTextSharp.Kernel.Color.DeviceCmyk MakeLighter(iTextSharp.Kernel.Color.DeviceCmyk cmykColor) {
             DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
             DeviceRgb lighterRgb = DeviceRgb.MakeLighter((rgbEquivalent));
             return ConvertRgbToCmyk(lighterRgb);
         }
 
-        public static iTextSharp.Kernel.Color.DeviceCmyk MakeDarker(iTextSharp.Kernel.Color.DeviceCmyk cmykColor)
-        {
+        public static iTextSharp.Kernel.Color.DeviceCmyk MakeDarker(iTextSharp.Kernel.Color.DeviceCmyk cmykColor) {
             DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
             DeviceRgb darkerRgb = DeviceRgb.MakeDarker(rgbEquivalent);
             return ConvertRgbToCmyk(darkerRgb);

@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.IO.Font.Cmap
-{
-    public class CMapObject
-    {
+namespace iTextSharp.IO.Font.Cmap {
+    public class CMapObject {
         protected internal const int STRING = 1;
 
         protected internal const int HEX_STRING = 2;
@@ -68,64 +66,52 @@ namespace iTextSharp.IO.Font.Cmap
 
         private Object value;
 
-        public CMapObject(int objectType, Object value)
-        {
+        public CMapObject(int objectType, Object value) {
             this.type = objectType;
             this.value = value;
         }
 
-        public virtual Object GetValue()
-        {
+        public virtual Object GetValue() {
             return value;
         }
 
-        public virtual int GetObjectType()
-        {
+        public virtual int GetObjectType() {
             return type;
         }
 
-        public virtual void SetValue(Object value)
-        {
+        public virtual void SetValue(Object value) {
             this.value = value;
         }
 
-        public virtual bool IsString()
-        {
+        public virtual bool IsString() {
             return type == STRING || type == HEX_STRING;
         }
 
-        public virtual bool IsHexString()
-        {
+        public virtual bool IsHexString() {
             return type == HEX_STRING;
         }
 
-        public virtual bool IsName()
-        {
+        public virtual bool IsName() {
             return type == NAME;
         }
 
-        public virtual bool IsNumber()
-        {
+        public virtual bool IsNumber() {
             return type == NUMBER;
         }
 
-        public virtual bool IsLiteral()
-        {
+        public virtual bool IsLiteral() {
             return type == LITERAL;
         }
 
-        public virtual bool IsArray()
-        {
+        public virtual bool IsArray() {
             return type == ARRAY;
         }
 
-        public virtual bool IsDictionary()
-        {
+        public virtual bool IsDictionary() {
             return type == DICTIONARY;
         }
 
-        public virtual bool IsToken()
-        {
+        public virtual bool IsToken() {
             return type == TOKEN;
         }
 
@@ -134,14 +120,11 @@ namespace iTextSharp.IO.Font.Cmap
         /// <c>value</c>
         /// field.
         /// </summary>
-        public override String ToString()
-        {
-            if (type == STRING || type == HEX_STRING)
-            {
+        public override String ToString() {
+            if (type == STRING || type == HEX_STRING) {
                 byte[] content = (byte[])value;
                 StringBuilder str = new StringBuilder(content.Length);
-                foreach (byte b in content)
-                {
+                foreach (byte b in content) {
                     str.Append((char)(b & 0xff));
                 }
                 return str.ToString();

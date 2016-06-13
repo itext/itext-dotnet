@@ -46,10 +46,8 @@ using System.Collections.Generic;
 using System.Text;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfName : PdfPrimitiveObject, IComparable<iTextSharp.Kernel.Pdf.PdfName>
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfName : PdfPrimitiveObject, IComparable<iTextSharp.Kernel.Pdf.PdfName> {
         private static readonly byte[] space = ByteUtils.GetIsoBytes("#20");
 
         private static readonly byte[] percent = ByteUtils.GetIsoBytes("#25");
@@ -1621,8 +1619,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>map strings to all known static names</summary>
         public static IDictionary<String, iTextSharp.Kernel.Pdf.PdfName> staticNames;
 
-        static PdfName()
-        {
+        static PdfName() {
             //  ' '
             //  '%'
             //  '('
@@ -1638,62 +1635,49 @@ namespace iTextSharp.Kernel.Pdf
             staticNames = PdfNameLoader.LoadNames();
         }
 
-        private static iTextSharp.Kernel.Pdf.PdfName CreateDirectName(String name)
-        {
+        private static iTextSharp.Kernel.Pdf.PdfName CreateDirectName(String name) {
             return new iTextSharp.Kernel.Pdf.PdfName(name, true);
         }
 
         public PdfName(String value)
-            : base()
-        {
+            : base() {
             System.Diagnostics.Debug.Assert(value != null);
             this.value = value;
         }
 
         private PdfName(String value, bool directOnly)
-            : base(directOnly)
-        {
+            : base(directOnly) {
             this.value = value;
         }
 
         public PdfName(byte[] content)
-            : base(content)
-        {
+            : base(content) {
         }
 
         private PdfName()
-            : base()
-        {
+            : base() {
         }
 
-        public override byte GetObjectType()
-        {
+        public override byte GetObjectType() {
             return PdfObject.NAME;
         }
 
-        public virtual String GetValue()
-        {
-            if (value == null)
-            {
+        public virtual String GetValue() {
+            if (value == null) {
                 GenerateValue();
             }
             return value;
         }
 
-        public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfName o)
-        {
-            if (value != null && o.value != null)
-            {
+        public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfName o) {
+            if (value != null && o.value != null) {
                 return string.CompareOrdinal(value, o.value);
             }
-            else
-            {
-                if (content != null && o.content != null)
-                {
+            else {
+                if (content != null && o.content != null) {
                     return CompareContent(o);
                 }
-                else
-                {
+                else {
                     return string.CompareOrdinal(GetValue(), o.GetValue());
                 }
             }
@@ -1702,16 +1686,14 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfName)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
             return (iTextSharp.Kernel.Pdf.PdfName)base.MakeIndirect(document, reference);
         }
 
@@ -1722,8 +1704,7 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document)
-        {
+        public override PdfObject CopyTo(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfName)base.CopyTo(document, true);
         }
 
@@ -1739,40 +1720,31 @@ namespace iTextSharp.Kernel.Pdf
         /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-        {
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             return (iTextSharp.Kernel.Pdf.PdfName)base.CopyTo(document, allowDuplicating);
         }
 
-        public override bool Equals(Object o)
-        {
-            if (this == o)
-            {
+        public override bool Equals(Object o) {
+            if (this == o) {
                 return true;
             }
-            if (o == null || GetType() != o.GetType())
-            {
+            if (o == null || GetType() != o.GetType()) {
                 return false;
             }
             iTextSharp.Kernel.Pdf.PdfName pdfName = (iTextSharp.Kernel.Pdf.PdfName)o;
             return this.CompareTo(pdfName) == 0;
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return GetValue().GetHashCode();
         }
 
-        protected internal virtual void GenerateValue()
-        {
+        protected internal virtual void GenerateValue() {
             StringBuilder buf = new StringBuilder();
-            try
-            {
-                for (int k = 0; k < content.Length; ++k)
-                {
+            try {
+                for (int k = 0; k < content.Length; ++k) {
                     char c = (char)content[k];
-                    if (c == '#')
-                    {
+                    if (c == '#') {
                         byte c1 = content[k + 1];
                         byte c2 = content[k + 2];
                         c = (char)((ByteBuffer.GetHex(c1) << 4) + ByteBuffer.GetHex(c2));
@@ -1781,108 +1753,88 @@ namespace iTextSharp.Kernel.Pdf
                     buf.Append(c);
                 }
             }
-            catch (IndexOutOfRangeException)
-            {
+            catch (IndexOutOfRangeException) {
             }
             // empty on purpose
             value = buf.ToString();
         }
 
-        protected internal override void GenerateContent()
-        {
+        protected internal override void GenerateContent() {
             int length = value.Length;
             ByteBuffer buf = new ByteBuffer(length + 20);
             char c;
             char[] chars = value.ToCharArray();
-            for (int k = 0; k < length; k++)
-            {
+            for (int k = 0; k < length; k++) {
                 c = (char)(chars[k] & 0xff);
-                switch (c)
-                {
-                    case ' ':
-                    {
+                switch (c) {
+                    case ' ': {
                         // Escape special characters
                         buf.Append(space);
                         break;
                     }
 
-                    case '%':
-                    {
+                    case '%': {
                         buf.Append(percent);
                         break;
                     }
 
-                    case '(':
-                    {
+                    case '(': {
                         buf.Append(leftParenthesis);
                         break;
                     }
 
-                    case ')':
-                    {
+                    case ')': {
                         buf.Append(rightParenthesis);
                         break;
                     }
 
-                    case '<':
-                    {
+                    case '<': {
                         buf.Append(lessThan);
                         break;
                     }
 
-                    case '>':
-                    {
+                    case '>': {
                         buf.Append(greaterThan);
                         break;
                     }
 
-                    case '[':
-                    {
+                    case '[': {
                         buf.Append(leftSquare);
                         break;
                     }
 
-                    case ']':
-                    {
+                    case ']': {
                         buf.Append(rightSquare);
                         break;
                     }
 
-                    case '{':
-                    {
+                    case '{': {
                         buf.Append(leftCurlyBracket);
                         break;
                     }
 
-                    case '}':
-                    {
+                    case '}': {
                         buf.Append(rightCurlyBracket);
                         break;
                     }
 
-                    case '/':
-                    {
+                    case '/': {
                         buf.Append(solidus);
                         break;
                     }
 
-                    case '#':
-                    {
+                    case '#': {
                         buf.Append(numberSign);
                         break;
                     }
 
-                    default:
-                    {
-                        if (c >= 32 && c <= 126)
-                        {
+                    default: {
+                        if (c >= 32 && c <= 126) {
                             buf.Append(c);
                         }
-                        else
-                        {
+                        else {
                             buf.Append('#');
-                            if (c < 16)
-                            {
+                            if (c < 16) {
                                 buf.Append('0');
                             }
                             buf.Append(iTextSharp.IO.Util.JavaUtil.IntegerToHexString(c));
@@ -1894,25 +1846,20 @@ namespace iTextSharp.Kernel.Pdf
             content = buf.ToByteArray();
         }
 
-        public override String ToString()
-        {
-            if (content != null)
-            {
+        public override String ToString() {
+            if (content != null) {
                 return "/" + iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
             }
-            else
-            {
+            else {
                 return "/" + GetValue();
             }
         }
 
-        protected internal override PdfObject NewInstance()
-        {
+        protected internal override PdfObject NewInstance() {
             return new iTextSharp.Kernel.Pdf.PdfName();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document)
-        {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfName name = (iTextSharp.Kernel.Pdf.PdfName)from;
             value = name.value;

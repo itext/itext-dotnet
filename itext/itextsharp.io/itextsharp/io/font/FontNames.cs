@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font
-{
-    public class FontNames
-    {
+namespace iTextSharp.IO.Font {
+    public class FontNames {
         protected internal const int BOLD_FLAG = 1;
 
         protected internal const int ITALIC_FLAG = 2;
@@ -165,253 +163,204 @@ namespace iTextSharp.IO.Font
         /// <see langword="null"/>
         /// .
         /// </returns>
-        public virtual String[][] GetNames(int id)
-        {
+        public virtual String[][] GetNames(int id) {
             IList<String[]> names = allNames.Get(id);
             return names != null && names.Count > 0 ? ListToArray(names) : null;
         }
 
-        public virtual String[][] GetFullName()
-        {
+        public virtual String[][] GetFullName() {
             return fullName;
         }
 
-        public virtual String GetFontName()
-        {
+        public virtual String GetFontName() {
             return fontName;
         }
 
-        public virtual String GetCidFontName()
-        {
+        public virtual String GetCidFontName() {
             return cidFontName;
         }
 
-        public virtual String[][] GetFamilyName()
-        {
+        public virtual String[][] GetFamilyName() {
             return familyName;
         }
 
-        public virtual String GetStyle()
-        {
+        public virtual String GetStyle() {
             return style;
         }
 
-        public virtual String GetSubfamily()
-        {
+        public virtual String GetSubfamily() {
             return subfamily != null ? subfamily[0][3] : "";
         }
 
-        public virtual int GetFontWeight()
-        {
+        public virtual int GetFontWeight() {
             return weight;
         }
 
-        public virtual void SetFontWeight(int weight)
-        {
+        public virtual void SetFontWeight(int weight) {
             this.weight = weight;
         }
 
-        public virtual int GetFontWidth()
-        {
+        public virtual int GetFontWidth() {
             return width;
         }
 
-        public virtual void SetFontWidth(int width)
-        {
+        public virtual void SetFontWidth(int width) {
             this.width = width;
         }
 
-        public virtual bool AllowEmbedding()
-        {
+        public virtual bool AllowEmbedding() {
             return allowEmbedding;
         }
 
-        public virtual bool IsBold()
-        {
+        public virtual bool IsBold() {
             return (macStyle & BOLD_FLAG) != 0;
         }
 
-        public virtual bool IsItalic()
-        {
+        public virtual bool IsItalic() {
             return (macStyle & ITALIC_FLAG) != 0;
         }
 
-        public virtual bool IsUnderline()
-        {
+        public virtual bool IsUnderline() {
             return (macStyle & UNDERLINE_FLAG) != 0;
         }
 
-        public virtual bool IsOutline()
-        {
+        public virtual bool IsOutline() {
             return (macStyle & OUTLINE_FLAG) != 0;
         }
 
-        public virtual bool IsShadow()
-        {
+        public virtual bool IsShadow() {
             return (macStyle & SHADOW_FLAG) != 0;
         }
 
-        public virtual bool IsCondensed()
-        {
+        public virtual bool IsCondensed() {
             return (macStyle & CONDENSED_FLAG) != 0;
         }
 
-        public virtual bool IsExtended()
-        {
+        public virtual bool IsExtended() {
             return (macStyle & EXTENDED_FLAG) != 0;
         }
 
-        protected internal virtual void SetAllNames(IDictionary<int, IList<String[]>> allNames)
-        {
+        protected internal virtual void SetAllNames(IDictionary<int, IList<String[]>> allNames) {
             this.allNames = allNames;
         }
 
-        protected internal virtual void SetFullName(String[][] fullName)
-        {
+        protected internal virtual void SetFullName(String[][] fullName) {
             this.fullName = fullName;
         }
 
-        protected internal virtual void SetFullName(String fullName)
-        {
+        protected internal virtual void SetFullName(String fullName) {
             this.fullName = new String[][] { new String[] { "", "", "", fullName } };
         }
 
-        protected internal virtual void SetFontName(String psFontName)
-        {
+        protected internal virtual void SetFontName(String psFontName) {
             this.fontName = psFontName;
         }
 
-        protected internal virtual void SetCidFontName(String cidFontName)
-        {
+        protected internal virtual void SetCidFontName(String cidFontName) {
             this.cidFontName = cidFontName;
         }
 
-        protected internal virtual void SetFamilyName(String[][] familyName)
-        {
+        protected internal virtual void SetFamilyName(String[][] familyName) {
             this.familyName = familyName;
         }
 
-        protected internal virtual void SetFamilyName(String familyName)
-        {
+        protected internal virtual void SetFamilyName(String familyName) {
             this.familyName = new String[][] { new String[] { "", "", "", familyName } };
         }
 
-        protected internal virtual void SetStyle(String style)
-        {
+        protected internal virtual void SetStyle(String style) {
             this.style = style;
         }
 
-        protected internal virtual void SetSubfamily(String subfamily)
-        {
+        protected internal virtual void SetSubfamily(String subfamily) {
             this.subfamily = new String[][] { new String[] { "", "", "", subfamily } };
         }
 
-        protected internal virtual void SetSubfamily(String[][] subfamily)
-        {
+        protected internal virtual void SetSubfamily(String[][] subfamily) {
             this.subfamily = subfamily;
         }
 
-        protected internal virtual void SetWeight(int weight)
-        {
+        protected internal virtual void SetWeight(int weight) {
             this.weight = weight;
         }
 
-        protected internal virtual void SetWidth(int width)
-        {
+        protected internal virtual void SetWidth(int width) {
             this.width = width;
         }
 
-        protected internal virtual void SetMacStyle(int macStyle)
-        {
+        protected internal virtual void SetMacStyle(int macStyle) {
             this.macStyle = macStyle;
         }
 
-        protected internal virtual int GetMacStyle()
-        {
+        protected internal virtual int GetMacStyle() {
             return macStyle;
         }
 
-        protected internal virtual void SetAllowEmbedding(bool allowEmbedding)
-        {
+        protected internal virtual void SetAllowEmbedding(bool allowEmbedding) {
             this.allowEmbedding = allowEmbedding;
         }
 
-        protected internal static int ConvertFontWeight(String weight)
-        {
+        protected internal static int ConvertFontWeight(String weight) {
             String fontWeight = weight.ToLower(System.Globalization.CultureInfo.InvariantCulture);
-            switch (fontWeight)
-            {
-                case "ultralight":
-                {
+            switch (fontWeight) {
+                case "ultralight": {
                     return 100;
                 }
 
                 case "thin":
-                case "extralight":
-                {
+                case "extralight": {
                     return 200;
                 }
 
-                case "light":
-                {
+                case "light": {
                     return 300;
                 }
 
                 case "book":
                 case "regular":
-                case "normal":
-                {
+                case "normal": {
                     return 400;
                 }
 
-                case "medium":
-                {
+                case "medium": {
                     return 500;
                 }
 
                 case "demibold":
-                case "semibold":
-                {
+                case "semibold": {
                     return 600;
                 }
 
-                case "bold":
-                {
+                case "bold": {
                     return 700;
                 }
 
                 case "extrabold":
-                case "ultrabold":
-                {
+                case "ultrabold": {
                     return 800;
                 }
 
                 case "heavy":
                 case "black":
                 case "ultra":
-                case "ultrablack":
-                {
+                case "ultrablack": {
                     return 900;
                 }
 
                 case "fat":
-                case "extrablack":
-                {
+                case "extrablack": {
                     return 1000;
                 }
 
-                default:
-                {
+                default: {
                     return 400;
                 }
             }
         }
 
-        private String[][] ListToArray(IList<String[]> list)
-        {
+        private String[][] ListToArray(IList<String[]> list) {
             String[][] array = new String[list.Count][];
-            for (int i = 0; i < list.Count; i++)
-            {
+            for (int i = 0; i < list.Count; i++) {
                 array[i] = list[i];
             }
             return array;

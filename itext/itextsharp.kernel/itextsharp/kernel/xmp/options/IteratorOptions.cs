@@ -29,12 +29,10 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Options
-{
+namespace iTextSharp.Kernel.XMP.Options {
     /// <summary>Options for <code>XMPIterator</code> construction.</summary>
     /// <since>24.01.2006</since>
-    public sealed class IteratorOptions : iTextSharp.Kernel.XMP.Options.Options
-    {
+    public sealed class IteratorOptions : iTextSharp.Kernel.XMP.Options.Options {
         /// <summary>Just do the immediate children of the root, default is subtree.</summary>
         public const int JUST_CHILDREN = 0x0100;
 
@@ -56,34 +54,29 @@ namespace iTextSharp.Kernel.XMP.Options
         //	 *  @deprecated it is commonly preferred to work with the base properties */
         //	public static final int INCLUDE_ALIASES = 0x0800;
         /// <returns>Returns whether the option is set.</returns>
-        public bool IsJustChildren()
-        {
+        public bool IsJustChildren() {
             return GetOption(JUST_CHILDREN);
         }
 
         /// <returns>Returns whether the option is set.</returns>
-        public bool IsJustLeafname()
-        {
+        public bool IsJustLeafname() {
             return GetOption(JUST_LEAFNAME);
         }
 
         /// <returns>Returns whether the option is set.</returns>
-        public bool IsJustLeafnodes()
-        {
+        public bool IsJustLeafnodes() {
             return GetOption(JUST_LEAFNODES);
         }
 
         /// <returns>Returns whether the option is set.</returns>
-        public bool IsOmitQualifiers()
-        {
+        public bool IsOmitQualifiers() {
             return GetOption(OMIT_QUALIFIERS);
         }
 
         /// <summary>Sets the option and returns the instance.</summary>
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public IteratorOptions SetJustChildren(bool value)
-        {
+        public IteratorOptions SetJustChildren(bool value) {
             SetOption(JUST_CHILDREN, value);
             return this;
         }
@@ -91,8 +84,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <summary>Sets the option and returns the instance.</summary>
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public IteratorOptions SetJustLeafname(bool value)
-        {
+        public IteratorOptions SetJustLeafname(bool value) {
             SetOption(JUST_LEAFNAME, value);
             return this;
         }
@@ -100,8 +92,7 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <summary>Sets the option and returns the instance.</summary>
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public IteratorOptions SetJustLeafnodes(bool value)
-        {
+        public IteratorOptions SetJustLeafnodes(bool value) {
             SetOption(JUST_LEAFNODES, value);
             return this;
         }
@@ -109,47 +100,38 @@ namespace iTextSharp.Kernel.XMP.Options
         /// <summary>Sets the option and returns the instance.</summary>
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public IteratorOptions SetOmitQualifiers(bool value)
-        {
+        public IteratorOptions SetOmitQualifiers(bool value) {
             SetOption(OMIT_QUALIFIERS, value);
             return this;
         }
 
         /// <seealso cref="Options.DefineOptionName(int)"/>
-        protected internal override String DefineOptionName(int option)
-        {
-            switch (option)
-            {
-                case JUST_CHILDREN:
-                {
+        protected internal override String DefineOptionName(int option) {
+            switch (option) {
+                case JUST_CHILDREN: {
                     return "JUST_CHILDREN";
                 }
 
-                case JUST_LEAFNODES:
-                {
+                case JUST_LEAFNODES: {
                     return "JUST_LEAFNODES";
                 }
 
-                case JUST_LEAFNAME:
-                {
+                case JUST_LEAFNAME: {
                     return "JUST_LEAFNAME";
                 }
 
-                case OMIT_QUALIFIERS:
-                {
+                case OMIT_QUALIFIERS: {
                     return "OMIT_QUALIFIERS";
                 }
 
-                default:
-                {
+                default: {
                     return null;
                 }
             }
         }
 
         /// <seealso cref="Options.GetValidOptions()"/>
-        protected internal override int GetValidOptions()
-        {
+        protected internal override int GetValidOptions() {
             return JUST_CHILDREN | JUST_LEAFNODES | JUST_LEAFNAME | OMIT_QUALIFIERS;
         }
     }

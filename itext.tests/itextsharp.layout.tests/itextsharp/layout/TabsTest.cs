@@ -10,10 +10,8 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class TabsTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class TabsTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TabTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -39,16 +37,14 @@ namespace iTextSharp.Layout
              + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void DefaultTabsTest()
-        {
+        public virtual void DefaultTabsTest() {
             String outFileName = destinationFolder + "defaultTabTest.pdf";
             String cmpFileName = sourceFolder + "cmp_defaultTabTest.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -72,8 +68,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTabStopsTest()
-        {
+        public virtual void SimpleTabStopsTest() {
             String fileName = "simpleTabStopsTest.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
@@ -121,8 +116,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AnchorTabStopsTest()
-        {
+        public virtual void AnchorTabStopsTest() {
             String fileName = "anchorTabStopsTest.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
@@ -148,8 +142,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SeveralTabsInRowTest()
-        {
+        public virtual void SeveralTabsInRowTest() {
             String fileName = "severalTabsInRowTest.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + "cmp_" + fileName;
@@ -163,8 +156,7 @@ namespace iTextSharp.Layout
             Paragraph p = new Paragraph();
             p.SetFontSize(8);
             IList<TabStop> tabStops = new List<TabStop>();
-            for (int i = 0; i < positions.Length; ++i)
-            {
+            for (int i = 0; i < positions.Length; ++i) {
                 TabStop tabStop = new TabStop(positions[i], alignments[i], leaders[i]);
                 tabStops.Add(tabStop);
             }
@@ -185,8 +177,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void OutOfPageBoundsTest()
-        {
+        public virtual void OutOfPageBoundsTest() {
             String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_outOfPageBoundsTest.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -238,8 +229,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        private Document InitDocument(String outFileName)
-        {
+        private Document InitDocument(String outFileName) {
             FileStream file = new FileStream(outFileName, FileMode.Create);
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -247,8 +237,7 @@ namespace iTextSharp.Layout
             return new Document(pdfDoc);
         }
 
-        private void DrawTabStopsPositions(float[] positions, Document doc, int pageNum, int yStart, int dy)
-        {
+        private void DrawTabStopsPositions(float[] positions, Document doc, int pageNum, int yStart, int dy) {
             PdfCanvas canvas = new PdfCanvas(doc.GetPdfDocument().GetPage(pageNum));
             float left = doc.GetLeftMargin();
             float h = doc.GetPdfDocument().GetPage(pageNum).GetCropBox().GetHeight() - yStart;
@@ -256,8 +245,7 @@ namespace iTextSharp.Layout
             canvas.SetLineDash(4, 2);
             canvas.SetLineWidth(0.5f);
             canvas.SetLineDash(4, 2);
-            foreach (float f in positions)
-            {
+            foreach (float f in positions) {
                 canvas.MoveTo(left + f, h);
                 canvas.LineTo(left + f, h - dy);
             }
@@ -267,20 +255,16 @@ namespace iTextSharp.Layout
         }
 
         private void AddTabbedTextToParagraph(Paragraph p, String text, float[] positions, TabAlignment[] alignments
-            , ILineDrawer[] tabLeadings, char?[] tabAnchorCharacters)
-        {
+            , ILineDrawer[] tabLeadings, char?[] tabAnchorCharacters) {
             IList<TabStop> tabStops = new List<TabStop>();
-            for (int i = 0; i < positions.Length; ++i)
-            {
+            for (int i = 0; i < positions.Length; ++i) {
                 TabStop tabStop = new TabStop(positions[i], alignments[i], tabLeadings[i]);
                 tabStop.SetTabAnchor(tabAnchorCharacters[i]);
                 tabStops.Add(tabStop);
             }
             p.AddTabStops(tabStops);
-            foreach (String line in text.Split("\n"))
-            {
-                foreach (String chunk in line.Split("\t"))
-                {
+            foreach (String line in text.Split("\n")) {
+                foreach (String chunk in line.Split("\t")) {
                     p.Add(chunk).Add(new Tab());
                 }
                 p.Add("\n");

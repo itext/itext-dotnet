@@ -52,16 +52,14 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A class to process WMF files.</summary>
     /// <remarks>
     /// A class to process WMF files. Used internally by
     /// <see cref="WmfImageHelper"/>
     /// .
     /// </remarks>
-    public class MetaDo
-    {
+    public class MetaDo {
         public const int META_SETBKCOLOR = 0x0201;
 
         public const int META_SETBKMODE = 0x0102;
@@ -219,18 +217,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <summary>Creates a MetaDo instance.</summary>
         /// <param name="in">inputstream containing the data</param>
         /// <param name="cb">PdfCanvas</param>
-        public MetaDo(Stream @in, PdfCanvas cb)
-        {
+        public MetaDo(Stream @in, PdfCanvas cb) {
             this.cb = cb;
             this.@in = new InputMeta(@in);
         }
 
         /// <summary>Reads and processes all the data of the InputMeta.</summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void ReadAll()
-        {
-            if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7)))
-            {
+        public virtual void ReadAll() {
+            if (@in.ReadInt() != unchecked((int)(0x9AC6CDD7))) {
                 throw new PdfException(PdfException.NotAPlaceableWindowsMetafile);
             }
             @in.ReadWord();
@@ -252,105 +247,89 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             int function;
             cb.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
             cb.SetLineJoinStyle(PdfCanvasConstants.LineJoinStyle.ROUND);
-            for (; ; )
-            {
+            for (; ; ) {
                 int lenMarker = @in.GetLength();
                 tsize = @in.ReadInt();
-                if (tsize < 3)
-                {
+                if (tsize < 3) {
                     break;
                 }
                 function = @in.ReadWord();
-                switch (function)
-                {
-                    case 0:
-                    {
+                switch (function) {
+                    case 0: {
                         break;
                     }
 
                     case META_CREATEPALETTE:
                     case META_CREATEREGION:
-                    case META_DIBCREATEPATTERNBRUSH:
-                    {
+                    case META_DIBCREATEPATTERNBRUSH: {
                         state.AddMetaObject(new MetaObject());
                         break;
                     }
 
-                    case META_CREATEPENINDIRECT:
-                    {
+                    case META_CREATEPENINDIRECT: {
                         MetaPen pen = new MetaPen();
                         pen.Init(@in);
                         state.AddMetaObject(pen);
                         break;
                     }
 
-                    case META_CREATEBRUSHINDIRECT:
-                    {
+                    case META_CREATEBRUSHINDIRECT: {
                         MetaBrush brush = new MetaBrush();
                         brush.Init(@in);
                         state.AddMetaObject(brush);
                         break;
                     }
 
-                    case META_CREATEFONTINDIRECT:
-                    {
+                    case META_CREATEFONTINDIRECT: {
                         MetaFont font = new MetaFont();
                         font.Init(@in);
                         state.AddMetaObject(font);
                         break;
                     }
 
-                    case META_SELECTOBJECT:
-                    {
+                    case META_SELECTOBJECT: {
                         int idx = @in.ReadWord();
                         state.SelectMetaObject(idx, cb);
                         break;
                     }
 
-                    case META_DELETEOBJECT:
-                    {
+                    case META_DELETEOBJECT: {
                         int idx = @in.ReadWord();
                         state.DeleteMetaObject(idx);
                         break;
                     }
 
-                    case META_SAVEDC:
-                    {
+                    case META_SAVEDC: {
                         state.SaveState(cb);
                         break;
                     }
 
-                    case META_RESTOREDC:
-                    {
+                    case META_RESTOREDC: {
                         int idx = @in.ReadShort();
                         state.RestoreState(idx, cb);
                         break;
                     }
 
-                    case META_SETWINDOWORG:
-                    {
+                    case META_SETWINDOWORG: {
                         state.SetOffsetWy(@in.ReadShort());
                         state.SetOffsetWx(@in.ReadShort());
                         break;
                     }
 
-                    case META_SETWINDOWEXT:
-                    {
+                    case META_SETWINDOWEXT: {
                         state.SetExtentWy(@in.ReadShort());
                         state.SetExtentWx(@in.ReadShort());
                         break;
                     }
 
-                    case META_MOVETO:
-                    {
+                    case META_MOVETO: {
                         int y = @in.ReadShort();
                         Point p = new Point(@in.ReadShort(), y);
                         state.SetCurrentPoint(p);
                         break;
                     }
 
-                    case META_LINETO:
-                    {
+                    case META_LINETO: {
                         int y = @in.ReadShort();
                         int x = @in.ReadShort();
                         Point p = state.GetCurrentPoint();
@@ -361,15 +340,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_POLYLINE:
-                    {
+                    case META_POLYLINE: {
                         state.SetLineJoinPolygon(cb);
                         int len = @in.ReadWord();
                         int x = @in.ReadShort();
                         int y = @in.ReadShort();
                         cb.MoveTo(state.TransformX(x), state.TransformY(y));
-                        for (int k = 1; k < len; ++k)
-                        {
+                        for (int k = 1; k < len; ++k) {
                             x = @in.ReadShort();
                             y = @in.ReadShort();
                             cb.LineTo(state.TransformX(x), state.TransformY(y));
@@ -378,18 +355,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_POLYGON:
-                    {
-                        if (IsNullStrokeFill(false))
-                        {
+                    case META_POLYGON: {
+                        if (IsNullStrokeFill(false)) {
                             break;
                         }
                         int len = @in.ReadWord();
                         int sx = @in.ReadShort();
                         int sy = @in.ReadShort();
                         cb.MoveTo(state.TransformX(sx), state.TransformY(sy));
-                        for (int k = 1; k < len; ++k)
-                        {
+                        for (int k = 1; k < len; ++k) {
                             int x = @in.ReadShort();
                             int y = @in.ReadShort();
                             cb.LineTo(state.TransformX(x), state.TransformY(y));
@@ -399,26 +373,21 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_POLYPOLYGON:
-                    {
-                        if (IsNullStrokeFill(false))
-                        {
+                    case META_POLYPOLYGON: {
+                        if (IsNullStrokeFill(false)) {
                             break;
                         }
                         int numPoly = @in.ReadWord();
                         int[] lens = new int[numPoly];
-                        for (int k = 0; k < lens.Length; ++k)
-                        {
+                        for (int k = 0; k < lens.Length; ++k) {
                             lens[k] = @in.ReadWord();
                         }
-                        for (int j = 0; j < lens.Length; ++j)
-                        {
+                        for (int j = 0; j < lens.Length; ++j) {
                             int len = lens[j];
                             int sx = @in.ReadShort();
                             int sy = @in.ReadShort();
                             cb.MoveTo(state.TransformX(sx), state.TransformY(sy));
-                            for (int k_1 = 1; k_1 < len; ++k_1)
-                            {
+                            for (int k_1 = 1; k_1 < len; ++k_1) {
                                 int x = @in.ReadShort();
                                 int y = @in.ReadShort();
                                 cb.LineTo(state.TransformX(x), state.TransformY(y));
@@ -429,10 +398,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_ELLIPSE:
-                    {
-                        if (IsNullStrokeFill(state.GetLineNeutral()))
-                        {
+                    case META_ELLIPSE: {
+                        if (IsNullStrokeFill(state.GetLineNeutral())) {
                             break;
                         }
                         int b = @in.ReadShort();
@@ -444,10 +411,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_ARC:
-                    {
-                        if (IsNullStrokeFill(state.GetLineNeutral()))
-                        {
+                    case META_ARC: {
+                        if (IsNullStrokeFill(state.GetLineNeutral())) {
                             break;
                         }
                         float yend = state.TransformY(@in.ReadShort());
@@ -463,8 +428,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         float arc1 = GetArc(cx, cy, xstart, ystart);
                         float arc2 = GetArc(cx, cy, xend, yend);
                         arc2 -= arc1;
-                        if (arc2 <= 0)
-                        {
+                        if (arc2 <= 0) {
                             arc2 += 360;
                         }
                         cb.Arc(l, b, r, t, arc1, arc2);
@@ -472,10 +436,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_PIE:
-                    {
-                        if (IsNullStrokeFill(state.GetLineNeutral()))
-                        {
+                    case META_PIE: {
+                        if (IsNullStrokeFill(state.GetLineNeutral())) {
                             break;
                         }
                         float yend = state.TransformY(@in.ReadShort());
@@ -491,20 +453,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         float arc1 = GetArc(cx, cy, xstart, ystart);
                         float arc2 = GetArc(cx, cy, xend, yend);
                         arc2 -= arc1;
-                        if (arc2 <= 0)
-                        {
+                        if (arc2 <= 0) {
                             arc2 += 360;
                         }
                         IList<double[]> ar = PdfCanvas.BezierArc(l, b, r, t, arc1, arc2);
-                        if (ar.Count == 0)
-                        {
+                        if (ar.Count == 0) {
                             break;
                         }
                         double[] pt = ar[0];
                         cb.MoveTo(cx, cy);
                         cb.LineTo(pt[0], pt[1]);
-                        for (int k = 0; k < ar.Count; ++k)
-                        {
+                        for (int k = 0; k < ar.Count; ++k) {
                             pt = ar[k];
                             cb.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
                         }
@@ -513,10 +472,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_CHORD:
-                    {
-                        if (IsNullStrokeFill(state.GetLineNeutral()))
-                        {
+                    case META_CHORD: {
+                        if (IsNullStrokeFill(state.GetLineNeutral())) {
                             break;
                         }
                         float yend = state.TransformY(@in.ReadShort());
@@ -532,21 +489,18 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         float arc1 = GetArc(cx, cy, xstart, ystart);
                         float arc2 = GetArc(cx, cy, xend, yend);
                         arc2 -= arc1;
-                        if (arc2 <= 0)
-                        {
+                        if (arc2 <= 0) {
                             arc2 += 360;
                         }
                         IList<double[]> ar = PdfCanvas.BezierArc(l, b, r, t, arc1, arc2);
-                        if (ar.Count == 0)
-                        {
+                        if (ar.Count == 0) {
                             break;
                         }
                         double[] pt = ar[0];
                         cx = (float)pt[0];
                         cy = (float)pt[1];
                         cb.MoveTo(cx, cy);
-                        for (int k = 0; k < ar.Count; ++k)
-                        {
+                        for (int k = 0; k < ar.Count; ++k) {
                             pt = ar[k];
                             cb.CurveTo(pt[2], pt[3], pt[4], pt[5], pt[6], pt[7]);
                         }
@@ -555,10 +509,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_RECTANGLE:
-                    {
-                        if (IsNullStrokeFill(true))
-                        {
+                    case META_RECTANGLE: {
+                        if (IsNullStrokeFill(true)) {
                             break;
                         }
                         float b = state.TransformY(@in.ReadShort());
@@ -570,10 +522,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_ROUNDRECT:
-                    {
-                        if (IsNullStrokeFill(true))
-                        {
+                    case META_ROUNDRECT: {
+                        if (IsNullStrokeFill(true)) {
                             break;
                         }
                         float h = state.TransformY(0) - state.TransformY(@in.ReadShort());
@@ -587,8 +537,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_INTERSECTCLIPRECT:
-                    {
+                    case META_INTERSECTCLIPRECT: {
                         float b = state.TransformY(@in.ReadShort());
                         float r = state.TransformX(@in.ReadShort());
                         float t = state.TransformY(@in.ReadShort());
@@ -599,8 +548,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_EXTTEXTOUT:
-                    {
+                    case META_EXTTEXTOUT: {
                         int y = @in.ReadShort();
                         int x = @in.ReadShort();
                         int count = @in.ReadWord();
@@ -609,8 +557,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         int y1 = 0;
                         int x2 = 0;
                         int y2 = 0;
-                        if ((flag & (MetaFont.ETO_CLIPPED | MetaFont.ETO_OPAQUE)) != 0)
-                        {
+                        if ((flag & (MetaFont.ETO_CLIPPED | MetaFont.ETO_OPAQUE)) != 0) {
                             x1 = @in.ReadShort();
                             y1 = @in.ReadShort();
                             x2 = @in.ReadShort();
@@ -618,49 +565,40 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         }
                         byte[] text = new byte[count];
                         int k;
-                        for (k = 0; k < count; ++k)
-                        {
+                        for (k = 0; k < count; ++k) {
                             byte c = (byte)@in.ReadByte();
-                            if (c == 0)
-                            {
+                            if (c == 0) {
                                 break;
                             }
                             text[k] = c;
                         }
                         String s;
-                        try
-                        {
+                        try {
                             s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
-                        catch (ArgumentException)
-                        {
+                        catch (ArgumentException) {
                             s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         OutputText(x, y, flag, x1, y1, x2, y2, s);
                         break;
                     }
 
-                    case META_TEXTOUT:
-                    {
+                    case META_TEXTOUT: {
                         int count = @in.ReadWord();
                         byte[] text = new byte[count];
                         int k;
-                        for (k = 0; k < count; ++k)
-                        {
+                        for (k = 0; k < count; ++k) {
                             byte c = (byte)@in.ReadByte();
-                            if (c == 0)
-                            {
+                            if (c == 0) {
                                 break;
                             }
                             text[k] = c;
                         }
                         String s;
-                        try
-                        {
+                        try {
                             s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
-                        catch (ArgumentException)
-                        {
+                        catch (ArgumentException) {
                             s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         count = count + 1 & 0xfffe;
@@ -671,38 +609,32 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         break;
                     }
 
-                    case META_SETBKCOLOR:
-                    {
+                    case META_SETBKCOLOR: {
                         state.SetCurrentBackgroundColor(@in.ReadColor());
                         break;
                     }
 
-                    case META_SETTEXTCOLOR:
-                    {
+                    case META_SETTEXTCOLOR: {
                         state.SetCurrentTextColor(@in.ReadColor());
                         break;
                     }
 
-                    case META_SETTEXTALIGN:
-                    {
+                    case META_SETTEXTALIGN: {
                         state.SetTextAlign(@in.ReadWord());
                         break;
                     }
 
-                    case META_SETBKMODE:
-                    {
+                    case META_SETBKMODE: {
                         state.SetBackgroundMode(@in.ReadWord());
                         break;
                     }
 
-                    case META_SETPOLYFILLMODE:
-                    {
+                    case META_SETPOLYFILLMODE: {
                         state.SetPolyFillMode(@in.ReadWord());
                         break;
                     }
 
-                    case META_SETPIXEL:
-                    {
+                    case META_SETPIXEL: {
                         iTextSharp.Kernel.Color.Color color = @in.ReadColor();
                         int y = @in.ReadShort();
                         int x = @in.ReadShort();
@@ -715,11 +647,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                     }
 
                     case META_DIBSTRETCHBLT:
-                    case META_STRETCHDIB:
-                    {
+                    case META_STRETCHDIB: {
                         int rop = @in.ReadInt();
-                        if (function == META_STRETCHDIB)
-                        {
+                        if (function == META_STRETCHDIB) {
                             /*int usage = */
                             @in.ReadWord();
                         }
@@ -732,12 +662,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                         float yDest = state.TransformY(@in.ReadShort());
                         float xDest = state.TransformX(@in.ReadShort());
                         byte[] b = new byte[tsize * 2 - (@in.GetLength() - lenMarker)];
-                        for (int k = 0; k < b.Length; ++k)
-                        {
+                        for (int k = 0; k < b.Length; ++k) {
                             b[k] = (byte)@in.ReadByte();
                         }
-                        try
-                        {
+                        try {
                             cb.SaveState();
                             cb.Rectangle(xDest, yDest, destWidth, destHeight);
                             cb.Clip();
@@ -751,8 +679,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
                             cb.AddXObject(imageXObject, new Rectangle(x, y, width, height));
                             cb.RestoreState();
                         }
-                        catch (Exception)
-                        {
+                        catch (Exception) {
                         }
                         // empty on purpose
                         break;
@@ -774,8 +701,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <param name="y2">y1-coordinate of the rectangle if clipped or opaque</param>
         /// <param name="text">text to output</param>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void OutputText(int x, int y, int flag, int x1, int y1, int x2, int y2, String text)
-        {
+        public virtual void OutputText(int x, int y, int flag, int x1, int y1, int x2, int y2, String text) {
             MetaFont font = state.GetCurrentFont();
             float refX = state.TransformX(x);
             float refY = state.TransformY(y);
@@ -788,8 +714,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             // NOTE, MetaFont always creates with CP1252 encoding.
             int normalizedWidth = 0;
             byte[] bytes = font.encoding.ConvertToBytes(text);
-            foreach (byte b in bytes)
-            {
+            foreach (byte b in bytes) {
                 normalizedWidth += fp.GetWidth(0xff & b);
             }
             float textWidth = fontSize / FontProgram.UNITS_NORMALIZATION * normalizedWidth;
@@ -799,35 +724,27 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             float ury = fp.GetFontMetrics().GetBbox()[3];
             cb.SaveState();
             cb.ConcatMatrix(cos, sin, -sin, cos, refX, refY);
-            if ((align & MetaState.TA_CENTER) == MetaState.TA_CENTER)
-            {
+            if ((align & MetaState.TA_CENTER) == MetaState.TA_CENTER) {
                 tx = -textWidth / 2;
             }
-            else
-            {
-                if ((align & MetaState.TA_RIGHT) == MetaState.TA_RIGHT)
-                {
+            else {
+                if ((align & MetaState.TA_RIGHT) == MetaState.TA_RIGHT) {
                     tx = -textWidth;
                 }
             }
-            if ((align & MetaState.TA_BASELINE) == MetaState.TA_BASELINE)
-            {
+            if ((align & MetaState.TA_BASELINE) == MetaState.TA_BASELINE) {
                 ty = 0;
             }
-            else
-            {
-                if ((align & MetaState.TA_BOTTOM) == MetaState.TA_BOTTOM)
-                {
+            else {
+                if ((align & MetaState.TA_BOTTOM) == MetaState.TA_BOTTOM) {
                     ty = -descender;
                 }
-                else
-                {
+                else {
                     ty = -ury;
                 }
             }
             iTextSharp.Kernel.Color.Color textColor;
-            if (state.GetBackgroundMode() == MetaState.OPAQUE)
-            {
+            if (state.GetBackgroundMode() == MetaState.OPAQUE) {
                 textColor = state.GetCurrentBackgroundColor();
                 cb.SetFillColor(textColor);
                 cb.Rectangle(tx, ty + descender, textWidth, ury - descender);
@@ -841,13 +758,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             cb.SetTextMatrix(tx, ty);
             cb.ShowText(text);
             cb.EndText();
-            if (font.IsUnderline())
-            {
+            if (font.IsUnderline()) {
                 cb.Rectangle(tx, ty - fontSize / 4, textWidth, fontSize / 15);
                 cb.Fill();
             }
-            if (font.IsStrikeout())
-            {
+            if (font.IsStrikeout()) {
                 cb.Rectangle(tx, ty + fontSize / 3, textWidth, fontSize / 15);
                 cb.Fill();
             }
@@ -860,8 +775,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// if false state.setLineJoinPolygon(cb) is called.
         /// </param>
         /// <returns>true if the pen style is null and if it isn't a brush</returns>
-        public virtual bool IsNullStrokeFill(bool isRectangle)
-        {
+        public virtual bool IsNullStrokeFill(bool isRectangle) {
             MetaPen pen = state.GetCurrentPen();
             MetaBrush brush = state.GetCurrentBrush();
             bool noPen = pen.GetStyle() == MetaPen.PS_NULL;
@@ -869,14 +783,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             bool isBrush = style == MetaBrush.BS_SOLID || style == MetaBrush.BS_HATCHED && state.GetBackgroundMode() ==
                  MetaState.OPAQUE;
             bool result = noPen && !isBrush;
-            if (!noPen)
-            {
-                if (isRectangle)
-                {
+            if (!noPen) {
+                if (isRectangle) {
                     state.SetLineJoinRectangle(cb);
                 }
-                else
-                {
+                else {
                     state.SetLineJoinPolygon(cb);
                 }
             }
@@ -884,51 +795,40 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         }
 
         /// <summary>Stroke and fill the MetaPen and MetaBrush paths.</summary>
-        public virtual void StrokeAndFill()
-        {
+        public virtual void StrokeAndFill() {
             MetaPen pen = state.GetCurrentPen();
             MetaBrush brush = state.GetCurrentBrush();
             int penStyle = pen.GetStyle();
             int brushStyle = brush.GetStyle();
-            if (penStyle == MetaPen.PS_NULL)
-            {
+            if (penStyle == MetaPen.PS_NULL) {
                 cb.ClosePath();
-                if (state.GetPolyFillMode() == MetaState.ALTERNATE)
-                {
+                if (state.GetPolyFillMode() == MetaState.ALTERNATE) {
                     cb.EoFill();
                 }
-                else
-                {
+                else {
                     cb.Fill();
                 }
             }
-            else
-            {
+            else {
                 bool isBrush = brushStyle == MetaBrush.BS_SOLID || brushStyle == MetaBrush.BS_HATCHED && state.GetBackgroundMode
                     () == MetaState.OPAQUE;
-                if (isBrush)
-                {
-                    if (state.GetPolyFillMode() == MetaState.ALTERNATE)
-                    {
+                if (isBrush) {
+                    if (state.GetPolyFillMode() == MetaState.ALTERNATE) {
                         cb.ClosePathEoFillStroke();
                     }
-                    else
-                    {
+                    else {
                         cb.ClosePathFillStroke();
                     }
                 }
-                else
-                {
+                else {
                     cb.ClosePathStroke();
                 }
             }
         }
 
-        internal static float GetArc(float xCenter, float yCenter, float xDot, float yDot)
-        {
+        internal static float GetArc(float xCenter, float yCenter, float xDot, float yDot) {
             double s = Math.Atan2(yDot - yCenter, xDot - xCenter);
-            if (s < 0)
-            {
+            if (s < 0) {
                 s += Math.PI * 2;
             }
             return (float)(s / Math.PI * 180);
@@ -938,28 +838,23 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <param name="image">the BMP image to be wrapped</param>
         /// <returns>the wrapped BMP</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static byte[] WrapBMP(ImageData image)
-        {
-            if (image.GetOriginalType() != ImageType.BMP)
-            {
+        public static byte[] WrapBMP(ImageData image) {
+            if (image.GetOriginalType() != ImageType.BMP) {
                 throw new PdfException(PdfException.OnlyBmpCanBeWrappedInWmf);
             }
             Stream imgIn;
             byte[] data;
-            if (image.GetData() == null)
-            {
+            if (image.GetData() == null) {
                 imgIn = iTextSharp.IO.Util.UrlUtil.OpenStream(image.GetUrl());
                 MemoryStream @out = new MemoryStream();
                 int b = 0;
-                while ((b = imgIn.Read()) != -1)
-                {
+                while ((b = imgIn.Read()) != -1) {
                     @out.Write(b);
                 }
                 imgIn.Close();
                 data = @out.ToArray();
             }
-            else
-            {
+            else {
                 data = image.GetData();
             }
             int sizeBmpWords = (int)(((uint)data.Length - 14 + 1) >> 1);
@@ -998,8 +893,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
             WriteWord(os, 0);
             WriteWord(os, 0);
             os.Write(data, 14, data.Length - 14);
-            if ((data.Length & 1) == 1)
-            {
+            if ((data.Length & 1) == 1) {
                 os.Write(0);
             }
             WriteDWord(os, 3);
@@ -1012,8 +906,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <param name="os">outputstream to write the word to</param>
         /// <param name="v">value to be written</param>
         /// <exception cref="System.IO.IOException"/>
-        public static void WriteWord(Stream os, int v)
-        {
+        public static void WriteWord(Stream os, int v) {
             os.Write(v & 0xff);
             os.Write((int)(((uint)v) >> 8) & 0xff);
         }
@@ -1022,8 +915,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <param name="os">outputstream to write the dword to</param>
         /// <param name="v">value to be written</param>
         /// <exception cref="System.IO.IOException"/>
-        public static void WriteDWord(Stream os, int v)
-        {
+        public static void WriteDWord(Stream os, int v) {
             WriteWord(os, v & 0xffff);
             WriteWord(os, (int)(((uint)v) >> 16) & 0xffff);
         }

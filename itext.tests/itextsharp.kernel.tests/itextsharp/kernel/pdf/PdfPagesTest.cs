@@ -6,10 +6,8 @@ using iTextSharp.Kernel;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfPagesTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfPagesTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfPagesTest/";
 
@@ -20,22 +18,19 @@ namespace iTextSharp.Kernel.Pdf
         internal static readonly PdfName PageNum5 = new PdfName("PageNum");
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void Setup()
-        {
+        public static void Setup() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void SimplePagesTest()
-        {
+        public virtual void SimplePagesTest() {
             String filename = "simplePagesTest.pdf";
             int pageCount = 111;
             FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
                 page.Flush();
@@ -68,15 +63,13 @@ namespace iTextSharp.Kernel.Pdf
         //    }
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void ReversePagesTest()
-        {
+        public virtual void ReversePagesTest() {
             String filename = "reversePagesTest.pdf";
             int pageCount = 111;
             FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            for (int i = pageCount; i > 0; i--)
-            {
+            for (int i = pageCount; i > 0; i--) {
                 PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
                 pdfDoc.AddPage(1, page);
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i));
@@ -88,18 +81,15 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void RandomObjectPagesTest()
-        {
+        public virtual void RandomObjectPagesTest() {
             String filename = "randomObjectPagesTest.pdf";
             int pageCount = 10000;
             int[] indexes = new int[pageCount];
-            for (int i = 0; i < indexes.Length; i++)
-            {
+            for (int i = 0; i < indexes.Length; i++) {
                 indexes[i] = i + 1;
             }
             Random rnd = new Random();
-            for (int i_1 = indexes.Length - 1; i_1 > 0; i_1--)
-            {
+            for (int i_1 = indexes.Length - 1; i_1 > 0; i_1--) {
                 int index = rnd.Next(i_1 + 1);
                 int a = indexes[index];
                 indexes[index] = indexes[i_1];
@@ -109,8 +99,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
             PdfPage[] pages = new PdfPage[pageCount];
-            for (int i_2 = 0; i_2 < indexes.Length; i_2++)
-            {
+            for (int i_2 = 0; i_2 < indexes.Length; i_2++) {
                 PdfPage page = document.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(indexes[i_2]));
                 //page.flush();
@@ -121,8 +110,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference() == null);
             document.AddPage(1000, testPage);
             NUnit.Framework.Assert.IsTrue(testPage.GetPdfObject().GetIndirectReference().GetObjNumber() < xrefSize);
-            for (int i_3 = 0; i_3 < pages.Length; i_3++)
-            {
+            for (int i_3 = 0; i_3 < pages.Length; i_3++) {
                 NUnit.Framework.Assert.AreEqual(true, document.RemovePage(pages[i_3]), "Remove page");
                 document.AddPage(i_3 + 1, pages[i_3]);
             }
@@ -132,18 +120,15 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void RandomNumberPagesTest()
-        {
+        public virtual void RandomNumberPagesTest() {
             String filename = "randomNumberPagesTest.pdf";
             int pageCount = 3000;
             int[] indexes = new int[pageCount];
-            for (int i = 0; i < indexes.Length; i++)
-            {
+            for (int i = 0; i < indexes.Length; i++) {
                 indexes[i] = i + 1;
             }
             Random rnd = new Random();
-            for (int i_1 = indexes.Length - 1; i_1 > 0; i_1--)
-            {
+            for (int i_1 = indexes.Length - 1; i_1 > 0; i_1--) {
                 int index = rnd.Next(i_1 + 1);
                 int a = indexes[index];
                 indexes[index] = indexes[i_1];
@@ -152,19 +137,15 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            for (int i_2 = 0; i_2 < indexes.Length; i_2++)
-            {
+            for (int i_2 = 0; i_2 < indexes.Length; i_2++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(indexes[i_2]));
             }
-            for (int i_3 = 1; i_3 < pageCount; i_3++)
-            {
-                for (int j = i_3 + 1; j <= pageCount; j++)
-                {
+            for (int i_3 = 1; i_3 < pageCount; i_3++) {
+                for (int j = i_3 + 1; j <= pageCount; j++) {
                     int j_page = pdfDoc.GetPage(j).GetPdfObject().GetAsNumber(PageNum).IntValue();
                     int i_page = pdfDoc.GetPage(i_3).GetPdfObject().GetAsNumber(PageNum).IntValue();
-                    if (j_page < i_page)
-                    {
+                    if (j_page < i_page) {
                         PdfPage page = pdfDoc.RemovePage(j);
                         pdfDoc.AddPage(i_3 + 1, page);
                         page = pdfDoc.RemovePage(i_3);
@@ -180,23 +161,19 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
-        public virtual void InsertFlushedPageTest()
-        {
+        public virtual void InsertFlushedPageTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfPage page = pdfDoc.AddNewPage();
             bool error = false;
-            try
-            {
+            try {
                 page.Flush();
                 pdfDoc.RemovePage(page);
                 pdfDoc.AddPage(1, page);
                 pdfDoc.Close();
             }
-            catch (PdfException e)
-            {
-                if (PdfException.FlushedPageCannotBeAddedOrInserted.Equals(e.Message))
-                {
+            catch (PdfException e) {
+                if (PdfException.FlushedPageCannotBeAddedOrInserted.Equals(e.Message)) {
                     error = true;
                 }
             }
@@ -206,23 +183,19 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
-        public virtual void AddFlushedPageTest()
-        {
+        public virtual void AddFlushedPageTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(writer);
             PdfPage page = pdfDoc.AddNewPage();
             bool error = false;
-            try
-            {
+            try {
                 page.Flush();
                 pdfDoc.RemovePage(page);
                 pdfDoc.AddPage(page);
                 pdfDoc.Close();
             }
-            catch (PdfException e)
-            {
-                if (PdfException.FlushedPageCannotBeAddedOrInserted.Equals(e.Message))
-                {
+            catch (PdfException e) {
+                if (PdfException.FlushedPageCannotBeAddedOrInserted.Equals(e.Message)) {
                     error = true;
                 }
             }
@@ -232,8 +205,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
-        public virtual void RemoveFlushedPage()
-        {
+        public virtual void RemoveFlushedPage() {
             String filename = "removeFlushedPage.pdf";
             int pageCount = 10;
             FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
@@ -243,8 +215,7 @@ namespace iTextSharp.Kernel.Pdf
             int removedPageObjectNumber = removedPage.GetPdfObject().GetIndirectReference().GetObjNumber();
             removedPage.Flush();
             pdfDoc.RemovePage(removedPage);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
                 page.Flush();
@@ -257,13 +228,11 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        internal virtual void VerifyPagesOrder(String filename, int numOfPages)
-        {
+        internal virtual void VerifyPagesOrder(String filename, int numOfPages) {
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++)
-            {
+            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.IsNotNull(page);
                 PdfNumber number = page.GetAsNumber(PageNum5);
@@ -273,14 +242,11 @@ namespace iTextSharp.Kernel.Pdf
             reader.Close();
         }
 
-        internal virtual int VerifyIntegrity(PdfPagesTree pagesTree)
-        {
+        internal virtual int VerifyIntegrity(PdfPagesTree pagesTree) {
             IList<PdfPages> parents = pagesTree.GetParents();
             int from = 0;
-            for (int i = 0; i < parents.Count; i++)
-            {
-                if (parents[i].GetFrom() != from)
-                {
+            for (int i = 0; i < parents.Count; i++) {
+                if (parents[i].GetFrom() != from) {
                     return i;
                 }
                 from = parents[i].GetFrom() + parents[i].GetCount();
@@ -328,15 +294,13 @@ namespace iTextSharp.Kernel.Pdf
         //    }
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void GetPageByDictionary()
-        {
+        public virtual void GetPageByDictionary() {
             String filename = sourceFolder + "1000PagesDocument.pdf";
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfObject[] pageDictionaries = new PdfObject[] { pdfDoc.GetPdfObject(4), pdfDoc.GetPdfObject(255), pdfDoc.
                 GetPdfObject(512), pdfDoc.GetPdfObject(1023), pdfDoc.GetPdfObject(2049), pdfDoc.GetPdfObject(3100) };
-            foreach (PdfObject pageObject in pageDictionaries)
-            {
+            foreach (PdfObject pageObject in pageDictionaries) {
                 PdfDictionary pageDictionary = (PdfDictionary)pageObject;
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, pageDictionary.Get(PdfName.Type));
                 PdfPage page = pdfDoc.GetPage(pageDictionary);
@@ -347,8 +311,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void RemovePageWithFormFieldsTest()
-        {
+        public virtual void RemovePageWithFormFieldsTest() {
             String filename = sourceFolder + "docWithFields.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
             pdfDoc.RemovePage(1);

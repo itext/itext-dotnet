@@ -45,14 +45,12 @@ using System.Collections.Generic;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Utils
-{
+namespace iTextSharp.Kernel.Utils {
     /// <summary>
     /// This class can be used to count the number of bytes needed when copying
     /// pages from an existing PDF into a newly created PDF.
     /// </summary>
-    public class PdfResourceCounter
-    {
+    public class PdfResourceCounter {
         /// <summary>A map of the resources that are already taken into account</summary>
         private IDictionary<int, PdfObject> resources;
 
@@ -62,8 +60,7 @@ namespace iTextSharp.Kernel.Utils
         /// trailer (root and info dictionary) of a PDF file.
         /// </summary>
         /// <param name="obj">the object we want to examine</param>
-        public PdfResourceCounter(PdfObject obj)
-        {
+        public PdfResourceCounter(PdfObject obj) {
             resources = new Dictionary<int, PdfObject>();
             Process(obj);
         }
@@ -74,17 +71,13 @@ namespace iTextSharp.Kernel.Utils
         /// list of resources. If not, it is just processed.
         /// </remarks>
         /// <param name="obj">the object to process</param>
-        protected internal void Process(PdfObject obj)
-        {
+        protected internal void Process(PdfObject obj) {
             PdfIndirectReference @ref = obj.GetIndirectReference();
-            if (@ref == null)
-            {
+            if (@ref == null) {
                 LoopOver(obj);
             }
-            else
-            {
-                if (!resources.ContainsKey(@ref.GetObjNumber()))
-                {
+            else {
+                if (!resources.ContainsKey(@ref.GetObjNumber())) {
                     resources[@ref.GetObjNumber()] = obj;
                     LoopOver(obj);
                 }
@@ -96,30 +89,23 @@ namespace iTextSharp.Kernel.Utils
         /// we need to loop over the entries and process them one by one.
         /// </summary>
         /// <param name="obj">the object to examine</param>
-        protected internal void LoopOver(PdfObject obj)
-        {
-            switch (obj.GetObjectType())
-            {
-                case PdfObject.ARRAY:
-                {
+        protected internal void LoopOver(PdfObject obj) {
+            switch (obj.GetObjectType()) {
+                case PdfObject.ARRAY: {
                     PdfArray array = (PdfArray)obj;
-                    for (int i = 0; i < array.Size(); i++)
-                    {
+                    for (int i = 0; i < array.Size(); i++) {
                         Process(array.Get(i));
                     }
                     break;
                 }
 
                 case PdfObject.DICTIONARY:
-                case PdfObject.STREAM:
-                {
+                case PdfObject.STREAM: {
                     PdfDictionary dict = (PdfDictionary)obj;
-                    if (PdfName.Pages.Equals(dict.Get(PdfName.Type)))
-                    {
+                    if (PdfName.Pages.Equals(dict.Get(PdfName.Type))) {
                         break;
                     }
-                    foreach (PdfName name in dict.KeySet())
-                    {
+                    foreach (PdfName name in dict.KeySet()) {
                         Process(dict.Get(name));
                     }
                     break;
@@ -129,8 +115,7 @@ namespace iTextSharp.Kernel.Utils
 
         /// <summary>Returns a map with the resources.</summary>
         /// <returns>the resources</returns>
-        public virtual IDictionary<int, PdfObject> GetResources()
-        {
+        public virtual IDictionary<int, PdfObject> GetResources() {
             return resources;
         }
 
@@ -147,13 +132,10 @@ namespace iTextSharp.Kernel.Utils
         /// <param name="res">The resources that can be excluded when counting the bytes.</param>
         /// <returns>The number of bytes needed for an object.</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual long GetLength(IDictionary<int, PdfObject> res)
-        {
+        public virtual long GetLength(IDictionary<int, PdfObject> res) {
             long length = 0;
-            foreach (int @ref in resources.Keys)
-            {
-                if (res != null && res.ContainsKey(@ref))
-                {
+            foreach (int @ref in resources.Keys) {
+                if (res != null && res.ContainsKey(@ref)) {
                     continue;
                 }
                 PdfOutputStream os = new PdfOutputStream(new IdelOutputStream());

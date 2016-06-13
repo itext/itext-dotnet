@@ -13,10 +13,8 @@ using iTextSharp.Layout.Renderer;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Layout
-{
-    public class TableTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class TableTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TableTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -31,16 +29,14 @@ namespace iTextSharp.Layout
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest01()
-        {
+        public virtual void SimpleTableTest01() {
             String testName = "tableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -59,8 +55,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest02()
-        {
+        public virtual void SimpleTableTest02() {
             String testName = "tableTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -81,8 +76,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest03()
-        {
+        public virtual void SimpleTableTest03() {
             String testName = "tableTest03.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -107,8 +101,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest04()
-        {
+        public virtual void SimpleTableTest04() {
             String testName = "tableTest04.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -133,8 +126,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest05()
-        {
+        public virtual void SimpleTableTest05() {
             String testName = "tableTest05.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -157,8 +149,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest06()
-        {
+        public virtual void SimpleTableTest06() {
             String testName = "tableTest06.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -181,8 +172,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest07()
-        {
+        public virtual void SimpleTableTest07() {
             String testName = "tableTest07.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -205,8 +195,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest08()
-        {
+        public virtual void SimpleTableTest08() {
             String testName = "tableTest08.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -234,8 +223,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest09()
-        {
+        public virtual void SimpleTableTest09() {
             String testName = "tableTest09.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -265,8 +253,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest10()
-        {
+        public virtual void SimpleTableTest10() {
             String testName = "tableTest10.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -300,8 +287,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest11()
-        {
+        public virtual void SimpleTableTest11() {
             String testName = "tableTest11.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -333,8 +319,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest12()
-        {
+        public virtual void SimpleTableTest12() {
             String testName = "tableTest12.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -371,8 +356,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest13()
-        {
+        public virtual void SimpleTableTest13() {
             String testName = "tableTest13.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -402,8 +386,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest14()
-        {
+        public virtual void SimpleTableTest14() {
             String testName = "tableTest14.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -435,8 +418,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest15()
-        {
+        public virtual void SimpleTableTest15() {
             String testName = "tableTest15.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -470,8 +452,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleTableTest16()
-        {
+        public virtual void SimpleTableTest16() {
             String testName = "tableTest16.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -499,8 +480,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-        public virtual void SimpleTableTest17()
-        {
+        public virtual void SimpleTableTest17() {
             String testName = "tableTest17.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -511,8 +491,7 @@ namespace iTextSharp.Layout
             Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3")));
             String longText = "Long text, very long text. ";
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 longText += longText;
             }
             table.AddCell(new Cell().Add(new Paragraph("cell 2.1\n" + longText).SetKeepTogether(true)));
@@ -528,8 +507,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-        public virtual void SimpleTableTest18()
-        {
+        public virtual void SimpleTableTest18() {
             String testName = "tableTest18.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -541,8 +519,7 @@ namespace iTextSharp.Layout
             Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3")));
             String longText = "Long text, very long text. ";
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 longText += longText;
             }
             table.AddCell(new Cell().Add(new Paragraph("cell 2.1\n" + longText).SetKeepTogether(true)));
@@ -558,8 +535,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-        public virtual void SimpleTableTest19()
-        {
+        public virtual void SimpleTableTest19() {
             String testName = "tableTest19.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -587,8 +563,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-        public virtual void SimpleTableTest20()
-        {
+        public virtual void SimpleTableTest20() {
             String testName = "tableTest20.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -614,8 +589,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
-        public virtual void SimpleTableTest21()
-        {
+        public virtual void SimpleTableTest21() {
             String testName = "tableTest21.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -646,8 +620,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BigRowspanTest01()
-        {
+        public virtual void BigRowspanTest01() {
             String testName = "bigRowspanTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -675,8 +648,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BigRowspanTest02()
-        {
+        public virtual void BigRowspanTest02() {
             String testName = "bigRowspanTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -704,8 +676,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BigRowspanTest03()
-        {
+        public virtual void BigRowspanTest03() {
             String testName = "bigRowspanTest03.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -731,8 +702,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BigRowspanTest04()
-        {
+        public virtual void BigRowspanTest04() {
             String testName = "bigRowspanTest04.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -760,8 +730,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void DifferentPageOrientationTest01()
-        {
+        public virtual void DifferentPageOrientationTest01() {
             String testName = "differentPageOrientationTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -773,8 +742,7 @@ namespace iTextSharp.Layout
             String textContent2 = "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries.";
             String textContent3 = "Themes and styles also help keep your document coordinated. When you click Design and choose a new Theme, the pictures, charts, and SmartArt graphics change to match your new theme. When you apply styles, your headings change to match the new theme.";
             Table table = new Table(3);
-            for (int i = 0; i < 20; i++)
-            {
+            for (int i = 0; i < 20; i++) {
                 table.AddCell(new Cell().Add(new Paragraph(textContent1))).AddCell(new Cell().Add(new Paragraph(textContent3
                     ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent3
                     ))).AddCell(new Cell().Add(new Paragraph(textContent2))).AddCell(new Cell().Add(new Paragraph(textContent1
@@ -788,18 +756,15 @@ namespace iTextSharp.Layout
                 , testName + "_diff"));
         }
 
-        private class RotatedDocumentRenderer : DocumentRenderer
-        {
+        private class RotatedDocumentRenderer : DocumentRenderer {
             private readonly PdfDocument pdfDoc;
 
             public RotatedDocumentRenderer(Document doc, PdfDocument pdfDoc)
-                : base(doc)
-            {
+                : base(doc) {
                 this.pdfDoc = pdfDoc;
             }
 
-            protected internal override PageSize AddNewPage(PageSize customPageSize)
-            {
+            protected internal override PageSize AddNewPage(PageSize customPageSize) {
                 PageSize pageSize = currentPageNumber % 2 == 1 ? PageSize.A4 : PageSize.A4.Rotate();
                 pdfDoc.AddNewPage(pageSize);
                 return pageSize;
@@ -810,8 +775,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
-        public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01()
-        {
+        public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01() {
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -821,8 +785,7 @@ namespace iTextSharp.Layout
             Cell cell = new Cell();
             String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
             String result = "";
-            for (int i = 0; i < 53; i++)
-            {
+            for (int i = 0; i < 53; i++) {
                 result += str;
             }
             Paragraph p = new Paragraph(new Text(result));
@@ -839,8 +802,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
-        public virtual void ToLargeElementInTableTest01()
-        {
+        public virtual void ToLargeElementInTableTest01() {
             String testName = "toLargeElementInTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -861,8 +823,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NestedTableSkipHeaderFooterTest()
-        {
+        public virtual void NestedTableSkipHeaderFooterTest() {
             String testName = "nestedTableSkipHeaderFooter.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
@@ -875,8 +836,7 @@ namespace iTextSharp.Layout
             table.AddFooterCell(new Cell(1, 5).Add(new Paragraph("Continue on next page")));
             table.SetSkipFirstHeader(true);
             table.SetSkipLastFooter(true);
-            for (int i = 0; i < 350; i++)
-            {
+            for (int i = 0; i < 350; i++) {
                 table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
             }
             Table t = new Table(1);
@@ -892,8 +852,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
-        public virtual void SplitTableOnLowPage()
-        {
+        public virtual void SplitTableOnLowPage() {
             String testName = "splitTableOnLowPage.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;

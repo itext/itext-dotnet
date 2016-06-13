@@ -46,50 +46,40 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Layout.Element;
 
-namespace iTextSharp.Layout.Renderer
-{
-    public class LinkRenderer : TextRenderer
-    {
+namespace iTextSharp.Layout.Renderer {
+    public class LinkRenderer : TextRenderer {
         public LinkRenderer(Link link)
-            : this(link, link.GetText())
-        {
+            : this(link, link.GetText()) {
         }
 
         public LinkRenderer(Link linkElement, String text)
-            : base(linkElement, text)
-        {
+            : base(linkElement, text) {
         }
 
-        public override void Draw(DrawContext drawContext)
-        {
+        public override void Draw(DrawContext drawContext) {
             base.Draw(drawContext);
             bool isRelativePosition = IsRelativePosition();
-            if (isRelativePosition)
-            {
+            if (isRelativePosition) {
                 ApplyAbsolutePositioningTranslation(false);
             }
             PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
             linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
             iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border>(iTextSharp.Layout.Property.Property
                 .BORDER);
-            if (border != null)
-            {
+            if (border != null) {
                 linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
             }
-            else
-            {
+            else {
                 linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
             }
-            if (isRelativePosition)
-            {
+            if (isRelativePosition) {
                 ApplyAbsolutePositioningTranslation(true);
             }
             PdfPage page = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber());
             page.AddAnnotation(linkAnnotation);
         }
 
-        public override IRenderer GetNextRenderer()
-        {
+        public override IRenderer GetNextRenderer() {
             return new iTextSharp.Layout.Renderer.LinkRenderer((Link)modelElement, null);
         }
     }

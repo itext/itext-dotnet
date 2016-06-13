@@ -45,8 +45,7 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf.Canvas.Parser;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>
     /// A callback interface that receives notifications from the
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"/>
@@ -54,8 +53,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.EventType"/>
     /// ).
     /// </summary>
-    public interface IEventListener
-    {
+    public interface IEventListener {
         /// <summary>Called when some event occurs during parsing a content stream.</summary>
         /// <param name="data">Combines the data required for processing corresponding event type.</param>
         /// <param name="type">Event type.</param>

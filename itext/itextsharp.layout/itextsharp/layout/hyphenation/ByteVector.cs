@@ -14,15 +14,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary>
     /// <p>This class implements a simple byte vector with access to the
     /// underlying array.</p>
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
     /// </summary>
-    public class ByteVector
-    {
+    public class ByteVector {
         /// <summary>Capacity increment size</summary>
         private const int DEFAULT_BLOCK_SIZE = 2048;
 
@@ -36,20 +34,16 @@ namespace iTextSharp.Layout.Hyphenation
 
         /// <summary>Construct byte vector instance with default block size.</summary>
         public ByteVector()
-            : this(DEFAULT_BLOCK_SIZE)
-        {
+            : this(DEFAULT_BLOCK_SIZE) {
         }
 
         /// <summary>Construct byte vector instance.</summary>
         /// <param name="capacity">initial block size</param>
-        public ByteVector(int capacity)
-        {
-            if (capacity > 0)
-            {
+        public ByteVector(int capacity) {
+            if (capacity > 0) {
                 blockSize = capacity;
             }
-            else
-            {
+            else {
                 blockSize = DEFAULT_BLOCK_SIZE;
             }
             array = new byte[blockSize];
@@ -62,8 +56,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// TODO should n should be initialized to a.length to be consistent with
         /// CharVector behavior? [GA]
         /// </param>
-        public ByteVector(byte[] a)
-        {
+        public ByteVector(byte[] a) {
             blockSize = DEFAULT_BLOCK_SIZE;
             array = a;
             n = 0;
@@ -76,14 +69,11 @@ namespace iTextSharp.Layout.Hyphenation
         /// TODO should n should be initialized to a.length to be consistent with
         /// CharVector behavior? [GA]
         /// </param>
-        public ByteVector(byte[] a, int capacity)
-        {
-            if (capacity > 0)
-            {
+        public ByteVector(byte[] a, int capacity) {
+            if (capacity > 0) {
                 blockSize = capacity;
             }
-            else
-            {
+            else {
                 blockSize = DEFAULT_BLOCK_SIZE;
             }
             array = a;
@@ -92,38 +82,33 @@ namespace iTextSharp.Layout.Hyphenation
 
         /// <summary>Obtain byte vector array.</summary>
         /// <returns>byte array</returns>
-        public virtual byte[] GetArray()
-        {
+        public virtual byte[] GetArray() {
             return array;
         }
 
         /// <summary>Obtain number of items in array.</summary>
         /// <returns>number of items</returns>
-        public virtual int Length()
-        {
+        public virtual int Length() {
             return n;
         }
 
         /// <summary>Obtain capacity of array.</summary>
         /// <returns>current capacity of array</returns>
-        public virtual int Capacity()
-        {
+        public virtual int Capacity() {
             return array.Length;
         }
 
         /// <summary>Pet byte at index.</summary>
         /// <param name="index">the index</param>
         /// <param name="val">a byte</param>
-        public virtual void Put(int index, byte val)
-        {
+        public virtual void Put(int index, byte val) {
             array[index] = val;
         }
 
         /// <summary>Get byte at index.</summary>
         /// <param name="index">the index</param>
         /// <returns>a byte</returns>
-        public virtual byte Get(int index)
-        {
+        public virtual byte Get(int index) {
             return array[index];
         }
 
@@ -131,12 +116,10 @@ namespace iTextSharp.Layout.Hyphenation
         /// <remarks>This is to implement memory allocation in the array. Like malloc().</remarks>
         /// <param name="size">to allocate</param>
         /// <returns>previous length</returns>
-        public virtual int Alloc(int size)
-        {
+        public virtual int Alloc(int size) {
             int index = n;
             int len = array.Length;
-            if (n + size >= len)
-            {
+            if (n + size >= len) {
                 byte[] aux = new byte[len + blockSize];
                 System.Array.Copy(array, 0, aux, 0, len);
                 array = aux;
@@ -146,10 +129,8 @@ namespace iTextSharp.Layout.Hyphenation
         }
 
         /// <summary>Trim byte vector to current length.</summary>
-        public virtual void TrimToSize()
-        {
-            if (n < array.Length)
-            {
+        public virtual void TrimToSize() {
+            if (n < array.Length) {
                 byte[] aux = new byte[n];
                 System.Array.Copy(array, 0, aux, 0, n);
                 array = aux;

@@ -41,16 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Events
-{
+namespace iTextSharp.Kernel.Events {
     /// <summary>Interface for handling events.</summary>
     /// <remarks>
     /// Interface for handling events. EventHandlers are added to the
     /// <see cref="EventDispatcher"/>
     /// .
     /// </remarks>
-    public interface IEventHandler
-    {
+    public interface IEventHandler {
         /// <summary>Hook for handling events.</summary>
         /// <remarks>
         /// Hook for handling events. Implementations can access the PdfDocument instance

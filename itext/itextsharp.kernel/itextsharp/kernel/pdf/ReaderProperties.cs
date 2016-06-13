@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class ReaderProperties
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class ReaderProperties {
         protected internal byte[] password;
 
         protected internal ICipherParameters certificateKey;
@@ -64,8 +62,7 @@ namespace iTextSharp.Kernel.Pdf
         /// This could be either user or owner password.
         /// </remarks>
         /// <param name="password">the password to use in order to open the document.</param>
-        public virtual ReaderProperties SetPassword(byte[] password)
-        {
+        public virtual ReaderProperties SetPassword(byte[] password) {
             ClearEncryptionParams();
             this.password = password;
             return this;
@@ -74,8 +71,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
         ///     </summary>
         public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate, ICipherParameters 
-            certificateKey)
-        {
+            certificateKey) {
             ClearEncryptionParams();
             this.certificate = certificate;
             this.certificateKey = certificateKey;
@@ -84,15 +80,13 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Defines the certificate which will be used if the document is encrypted with public key encryption.
         ///     </summary>
-        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate)
-        {
+        public virtual ReaderProperties SetPublicKeySecurityParams(X509Certificate certificate) {
             ClearEncryptionParams();
             this.certificate = certificate;
             return this;
         }
 
-        private void ClearEncryptionParams()
-        {
+        private void ClearEncryptionParams() {
             this.password = null;
             this.certificate = null;
             this.certificateKey = null;

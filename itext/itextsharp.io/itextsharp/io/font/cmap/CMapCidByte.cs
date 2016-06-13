@@ -45,46 +45,36 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap
-{
+namespace iTextSharp.IO.Font.Cmap {
     /// <author>psoares</author>
-    public class CMapCidByte : AbstractCMap
-    {
+    public class CMapCidByte : AbstractCMap {
         private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();
 
         private readonly byte[] EMPTY = new byte[] {  };
 
-        internal override void AddChar(String mark, CMapObject code)
-        {
-            if (code.IsNumber())
-            {
+        internal override void AddChar(String mark, CMapObject code) {
+            if (code.IsNumber()) {
                 byte[] ser = DecodeStringToByte(mark);
                 map[(int)code.GetValue()] = ser;
             }
         }
 
-        public virtual byte[] Lookup(int cid)
-        {
+        public virtual byte[] Lookup(int cid) {
             byte[] ser = map.Get(cid);
-            if (ser == null)
-            {
+            if (ser == null) {
                 return EMPTY;
             }
-            else
-            {
+            else {
                 return ser;
             }
         }
 
-        public virtual IntHashtable GetReversMap()
-        {
+        public virtual IntHashtable GetReversMap() {
             IntHashtable code2cid = new IntHashtable(map.Count);
-            foreach (int cid in map.Keys)
-            {
+            foreach (int cid in map.Keys) {
                 byte[] bytes = map.Get(cid);
                 int byteCode = 0;
-                foreach (byte b in bytes)
-                {
+                foreach (byte b in bytes) {
                     byteCode <<= 8;
                     byteCode += b & 0xff;
                 }

@@ -3,33 +3,25 @@ using System.Collections.Generic;
 using System.Reflection;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout.Property
-{
-    public class PropertyTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout.Property {
+    public class PropertyTest : ExtendedITextTest {
         /// <exception cref="System.MemberAccessException"/>
         [NUnit.Framework.Test]
-        public virtual void PropertyUniquenessTest()
-        {
+        public virtual void PropertyUniquenessTest() {
             ICollection<int> fieldValues = new HashSet<int>();
             int maxFieldValue = 1;
-            foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields())
-            {
-                if (field.FieldType == typeof(int))
-                {
+            foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields()) {
+                if (field.FieldType == typeof(int)) {
                     int value = (int)field.GetValue(null);
                     maxFieldValue = Math.Max(maxFieldValue, value);
-                    if (fieldValues.Contains(value))
-                    {
+                    if (fieldValues.Contains(value)) {
                         NUnit.Framework.Assert.Fail("Multiple fields with same value");
                     }
                     fieldValues.Add(value);
                 }
             }
-            for (int i = 1; i <= maxFieldValue; i++)
-            {
-                if (!fieldValues.Contains(i))
-                {
+            for (int i = 1; i <= maxFieldValue; i++) {
+                if (!fieldValues.Contains(i)) {
                     NUnit.Framework.Assert.Fail(String.Format("Missing value: {0}", i));
                 }
             }

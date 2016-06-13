@@ -7,25 +7,21 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Forms
-{
-    public class PdfFormFieldTest : ExtendedITextTest
-    {
+namespace iTextSharp.Forms {
+    public class PdfFormFieldTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/PdfFormFieldTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/forms/PdfFormFieldTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTest01()
-        {
+        public virtual void FormFieldTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
@@ -39,8 +35,7 @@ namespace iTextSharp.Forms
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTest02()
-        {
+        public virtual void FormFieldTest02() {
             String filename = destinationFolder + "formFieldTest02.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -52,8 +47,7 @@ namespace iTextSharp.Forms
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFieldTest02.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -61,8 +55,7 @@ namespace iTextSharp.Forms
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTest03()
-        {
+        public virtual void FormFieldTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
             String filename = destinationFolder + "formFieldTest03.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
@@ -76,8 +69,7 @@ namespace iTextSharp.Forms
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFieldTest03.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -85,8 +77,7 @@ namespace iTextSharp.Forms
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ChoiceFieldTest01()
-        {
+        public virtual void ChoiceFieldTest01() {
             String filename = destinationFolder + "choiceFieldTest01.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -103,8 +94,7 @@ namespace iTextSharp.Forms
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_choiceFieldTest01.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -112,8 +102,7 @@ namespace iTextSharp.Forms
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ButtonFieldTest01()
-        {
+        public virtual void ButtonFieldTest01() {
             String filename = destinationFolder + "buttonFieldTest01.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -134,8 +123,7 @@ namespace iTextSharp.Forms
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_buttonFieldTest01.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -143,8 +131,7 @@ namespace iTextSharp.Forms
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ButtonFieldTest02()
-        {
+        public virtual void ButtonFieldTest02() {
             String filename = destinationFolder + "buttonFieldTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "buttonFieldTest02_input.pdf"), new PdfWriter
                 (new FileStream(filename, FileMode.Create)));
@@ -154,8 +141,7 @@ namespace iTextSharp.Forms
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_buttonFieldTest02.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }

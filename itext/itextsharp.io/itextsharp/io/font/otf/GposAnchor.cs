@@ -41,20 +41,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font.Otf
-{
-    public class GposAnchor
-    {
+namespace iTextSharp.IO.Font.Otf {
+    public class GposAnchor {
         public int XCoordinate;
 
         public int YCoordinate;
 
-        public GposAnchor()
-        {
+        public GposAnchor() {
         }
 
-        public GposAnchor(iTextSharp.IO.Font.Otf.GposAnchor other)
-        {
+        public GposAnchor(iTextSharp.IO.Font.Otf.GposAnchor other) {
             this.XCoordinate = other.XCoordinate;
             this.YCoordinate = other.YCoordinate;
         }

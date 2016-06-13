@@ -43,20 +43,17 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>
     /// <p>Thrown when an exception occurs during Reed-Solomon decoding, such as when
     /// there are too many errors to correct.</p>
     /// </summary>
     /// <author>Sean Owen</author>
-    internal sealed class ReedSolomonException : Exception
-    {
+    internal sealed class ReedSolomonException : Exception {
         /// <summary>Creates a ReedSolomonException with a message.</summary>
         /// <param name="message">the message of the exception</param>
         public ReedSolomonException(String message)
-            : base(message)
-        {
+            : base(message) {
         }
     }
 }

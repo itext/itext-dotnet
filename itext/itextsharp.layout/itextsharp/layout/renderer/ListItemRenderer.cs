@@ -48,29 +48,24 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Layout;
 using iTextSharp.Layout.Property;
 
-namespace iTextSharp.Layout.Renderer
-{
-    public class ListItemRenderer : DivRenderer
-    {
+namespace iTextSharp.Layout.Renderer {
+    public class ListItemRenderer : DivRenderer {
         protected internal IRenderer symbolRenderer;
 
         protected internal float symbolAreaWidth;
 
         public ListItemRenderer(ListItem modelElement)
-            : base(modelElement)
-        {
+            : base(modelElement) {
         }
 
-        public virtual void AddSymbolRenderer(IRenderer symbolRenderer, float symbolAreaWidth)
-        {
+        public virtual void AddSymbolRenderer(IRenderer symbolRenderer, float symbolAreaWidth) {
             this.symbolRenderer = symbolRenderer;
             this.symbolAreaWidth = symbolAreaWidth;
         }
 
-        public override LayoutResult Layout(LayoutContext layoutContext)
-        {
-            if (symbolRenderer != null && this.GetProperty<Object>(iTextSharp.Layout.Property.Property.HEIGHT) == null)
-            {
+        public override LayoutResult Layout(LayoutContext layoutContext) {
+            if (symbolRenderer != null && this.GetProperty<Object>(iTextSharp.Layout.Property.Property.HEIGHT) == null
+                ) {
                 // TODO this is actually MinHeight.
                 SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight
                     ());
@@ -78,101 +73,81 @@ namespace iTextSharp.Layout.Renderer
             return base.Layout(layoutContext);
         }
 
-        public override void Draw(DrawContext drawContext)
-        {
+        public override void Draw(DrawContext drawContext) {
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             TagTreePointer tagPointer = null;
-            if (isTagged)
-            {
+            if (isTagged) {
                 tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                 IAccessibleElement modelElement = (IAccessibleElement)GetModelElement();
                 PdfName role = modelElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role))
-                {
+                if (role != null && !PdfName.Artifact.Equals(role)) {
                     bool lBodyTagIsCreated = tagPointer.IsElementConnectedToTag(modelElement);
-                    if (!lBodyTagIsCreated)
-                    {
+                    if (!lBodyTagIsCreated) {
                         tagPointer.AddTag(PdfName.LI);
                     }
-                    else
-                    {
+                    else {
                         tagPointer.MoveToTag(modelElement).MoveToParent();
                     }
                 }
-                else
-                {
+                else {
                     isTagged = false;
                 }
             }
             base.Draw(drawContext);
             // It will be null in case of overflow (only the "split" part will contain symbol renderer.
-            if (symbolRenderer != null)
-            {
+            if (symbolRenderer != null) {
                 symbolRenderer.SetParent(parent);
                 float x = occupiedArea.GetBBox().GetX();
-                if (childRenderers.Count > 0)
-                {
+                if (childRenderers.Count > 0) {
                     float? yLine = ((AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
-                    if (yLine != null)
-                    {
-                        if (symbolRenderer is TextRenderer)
-                        {
+                    if (yLine != null) {
+                        if (symbolRenderer is TextRenderer) {
                             ((TextRenderer)symbolRenderer).MoveYLineTo((float)yLine);
                         }
-                        else
-                        {
+                        else {
                             symbolRenderer.Move(0, (float)yLine - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
                         }
                     }
-                    else
-                    {
+                    else {
                         symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - (symbolRenderer
                             .GetOccupiedArea().GetBBox().GetY() + symbolRenderer.GetOccupiedArea().GetBBox().GetHeight()));
                     }
                 }
-                else
-                {
+                else {
                     symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - symbolRenderer
                         .GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
                 }
                 ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty<ListSymbolAlignment?>(iTextSharp.Layout.Property.Property
                     .LIST_SYMBOL_ALIGNMENT, ListSymbolAlignment.RIGHT);
                 float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
-                if (listSymbolAlignment == ListSymbolAlignment.RIGHT)
-                {
+                if (listSymbolAlignment == ListSymbolAlignment.RIGHT) {
                     xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth();
                 }
                 symbolRenderer.Move(xPosition, 0);
-                if (isTagged)
-                {
+                if (isTagged) {
                     tagPointer.AddTag(0, PdfName.Lbl);
                 }
                 symbolRenderer.Draw(drawContext);
-                if (isTagged)
-                {
+                if (isTagged) {
                     tagPointer.MoveToParent();
                 }
             }
-            if (isTagged)
-            {
+            if (isTagged) {
                 tagPointer.MoveToParent();
             }
         }
 
-        public override IRenderer GetNextRenderer()
-        {
+        public override IRenderer GetNextRenderer() {
             return new iTextSharp.Layout.Renderer.ListItemRenderer((ListItem)modelElement);
         }
 
-        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult)
-        {
+        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             iTextSharp.Layout.Renderer.ListItemRenderer splitRenderer = (iTextSharp.Layout.Renderer.ListItemRenderer)GetNextRenderer
                 ();
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
-            if (layoutResult == LayoutResult.PARTIAL)
-            {
+            if (layoutResult == LayoutResult.PARTIAL) {
                 splitRenderer.symbolRenderer = symbolRenderer;
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;
             }
@@ -182,14 +157,12 @@ namespace iTextSharp.Layout.Renderer
             return splitRenderer;
         }
 
-        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult)
-        {
+        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             iTextSharp.Layout.Renderer.ListItemRenderer overflowRenderer = (iTextSharp.Layout.Renderer.ListItemRenderer
                 )GetNextRenderer();
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
-            if (layoutResult == LayoutResult.NOTHING)
-            {
+            if (layoutResult == LayoutResult.NOTHING) {
                 overflowRenderer.symbolRenderer = symbolRenderer;
                 overflowRenderer.symbolAreaWidth = symbolAreaWidth;
             }

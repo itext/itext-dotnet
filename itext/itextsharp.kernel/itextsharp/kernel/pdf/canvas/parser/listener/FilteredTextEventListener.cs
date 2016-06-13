@@ -45,8 +45,7 @@ using System;
 using System.Text;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>A text event listener which filters events on the fly before passing them on to the delegate.</summary>
     /// <remarks>
     /// A text event listener which filters events on the fly before passing them on to the delegate.
@@ -57,8 +56,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
     /// and can therefore used as a strategy on its own, apart from the inherited
     /// function of filtering event appropriately to its delegates.
     /// </remarks>
-    public class FilteredTextEventListener : FilteredEventListener, ITextExtractionStrategy
-    {
+    public class FilteredTextEventListener : FilteredEventListener, ITextExtractionStrategy {
         /// <summary>
         /// Constructs a
         /// <see cref="FilteredTextEventListener"/>
@@ -71,8 +69,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         /// <param name="filterSet">filters attached to the delegate that will be tested before passing an event on to the delegate
         ///     </param>
         public FilteredTextEventListener(ITextExtractionStrategy delegate_, params IEventFilter[] filterSet)
-            : base(delegate_, filterSet)
-        {
+            : base(delegate_, filterSet) {
         }
 
         /// <summary>
@@ -81,13 +78,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         /// .
         /// </summary>
         /// <returns>the resulting concatenation of the text extracted from the delegates</returns>
-        public virtual String GetResultantText()
-        {
+        public virtual String GetResultantText() {
             StringBuilder sb = new StringBuilder();
-            foreach (IEventListener delegate_ in delegates)
-            {
-                if (delegate_ is ITextExtractionStrategy)
-                {
+            foreach (IEventListener delegate_ in delegates) {
+                if (delegate_ is ITextExtractionStrategy) {
                     sb.Append(((ITextExtractionStrategy)delegate_).GetResultantText());
                 }
             }

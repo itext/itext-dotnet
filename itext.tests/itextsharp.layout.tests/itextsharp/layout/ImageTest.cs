@@ -10,26 +10,22 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Layout
-{
-    public class ImageTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class ImageTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/ImageTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/ImageTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest01()
-        {
+        public virtual void ImageTest01() {
             String outFileName = destinationFolder + "imageTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -51,8 +47,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest02()
-        {
+        public virtual void ImageTest02() {
             String outFileName = destinationFolder + "imageTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest02.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -75,8 +70,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest03()
-        {
+        public virtual void ImageTest03() {
             String outFileName = destinationFolder + "imageTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest03.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -99,8 +93,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest04()
-        {
+        public virtual void ImageTest04() {
             String outFileName = destinationFolder + "imageTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest04.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -123,8 +116,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest05()
-        {
+        public virtual void ImageTest05() {
             String outFileName = destinationFolder + "imageTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest05.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -147,8 +139,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest06()
-        {
+        public virtual void ImageTest06() {
             String outFileName = destinationFolder + "imageTest06.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest06.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -172,8 +163,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        public virtual void ImageTest07()
-        {
+        public virtual void ImageTest07() {
             String outFileName = destinationFolder + "imageTest07.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest07.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -194,8 +184,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        public virtual void ImageTest08()
-        {
+        public virtual void ImageTest08() {
             String outFileName = destinationFolder + "imageTest08.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest08.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -217,8 +206,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushOnDrawTest()
-        {
+        public virtual void FlushOnDrawTest() {
             String outFileName = destinationFolder + "flushOnDrawTest.pdf";
             String cmpFileName = sourceFolder + "cmp_flushOnDrawTest.pdf";
             int rowCount = 60;
@@ -230,10 +218,8 @@ namespace iTextSharp.Layout
                  + "Desert.jpg"));
             Table table = new Table(8);
             table.SetWidthPercent(100);
-            for (int k = 0; k < rowCount; k++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
+            for (int k = 0; k < rowCount; k++) {
+                for (int j = 0; j < 7; j++) {
                     table.AddCell("Hello");
                 }
                 Cell c = new Cell().Add(img.SetWidthPercent(50));
@@ -259,8 +245,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushOnDrawCheckCircularReferencesTest()
-        {
+        public virtual void FlushOnDrawCheckCircularReferencesTest() {
             String outFileName = destinationFolder + "flushOnDrawCheckCircularReferencesTest.pdf";
             String cmpFileName = sourceFolder + "cmp_flushOnDrawCheckCircularReferencesTest.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
@@ -271,8 +256,7 @@ namespace iTextSharp.Layout
             img.SetAutoScale(true);
             Table table = new Table(4);
             table.SetWidthPercent(100);
-            for (int k = 0; k < 5; k++)
-            {
+            for (int k = 0; k < 5; k++) {
                 table.AddCell("Hello World from iText7");
                 List list = new List().SetListSymbol("-> ");
                 list.Add("list item").Add("list item").Add("list item").Add("list item").Add("list item");
@@ -282,8 +266,7 @@ namespace iTextSharp.Layout
                 table.AddCell(c);
                 Table innerTable = new Table(3);
                 int j = 0;
-                while (j < 9)
-                {
+                while (j < 9) {
                     innerTable.AddCell("Hi");
                     j++;
                 }

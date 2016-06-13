@@ -8,33 +8,28 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class OverflowTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class OverflowTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/OverflowTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/OverflowTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextOverflowTest01()
-        {
+        public virtual void TextOverflowTest01() {
             String outFileName = destinationFolder + "textOverflowTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             StringBuilder text = new StringBuilder();
-            for (int i = 0; i < 1000; i++)
-            {
+            for (int i = 0; i < 1000; i++) {
                 text.Append("This is a waaaaay tooo long text...");
             }
             Paragraph p = new Paragraph(text.ToString()).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA));
@@ -47,8 +42,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextOverflowTest02()
-        {
+        public virtual void TextOverflowTest02() {
             String outFileName = destinationFolder + "textOverflowTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -66,8 +60,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextOverflowTest03()
-        {
+        public virtual void TextOverflowTest03() {
             String outFileName = destinationFolder + "textOverflowTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -85,8 +78,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TextOverflowTest04()
-        {
+        public virtual void TextOverflowTest04() {
             String outFileName = destinationFolder + "textOverflowTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_textOverflowTest04.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));

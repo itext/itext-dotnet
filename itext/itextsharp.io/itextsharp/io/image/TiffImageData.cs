@@ -45,10 +45,8 @@ using System;
 using iTextSharp.IO.Codec;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Image
-{
-    public class TiffImageData : RawImageData
-    {
+namespace iTextSharp.IO.Image {
+    public class TiffImageData : RawImageData {
         private bool recoverFromImageError;
 
         private int page;
@@ -56,28 +54,24 @@ namespace iTextSharp.IO.Image
         private bool direct;
 
         protected internal TiffImageData(Uri url, bool recoverFromImageError, int page, bool direct)
-            : base(url, ImageType.TIFF)
-        {
+            : base(url, ImageType.TIFF) {
             this.recoverFromImageError = recoverFromImageError;
             this.page = page;
             this.direct = direct;
         }
 
         protected internal TiffImageData(byte[] bytes, bool recoverFromImageError, int page, bool direct)
-            : base(bytes, ImageType.TIFF)
-        {
+            : base(bytes, ImageType.TIFF) {
             this.recoverFromImageError = recoverFromImageError;
             this.page = page;
             this.direct = direct;
         }
 
-        private static ImageData GetImage(Uri url, bool recoverFromImageError, int page, bool direct)
-        {
+        private static ImageData GetImage(Uri url, bool recoverFromImageError, int page, bool direct) {
             return new iTextSharp.IO.Image.TiffImageData(url, recoverFromImageError, page, direct);
         }
 
-        private static ImageData GetImage(byte[] bytes, bool recoverFromImageError, int page, bool direct)
-        {
+        private static ImageData GetImage(byte[] bytes, bool recoverFromImageError, int page, bool direct) {
             return new iTextSharp.IO.Image.TiffImageData(bytes, recoverFromImageError, page, direct);
         }
 
@@ -88,14 +82,11 @@ namespace iTextSharp.IO.Image
         /// containing a TIFF image.
         /// </param>
         /// <returns>the number of pages.</returns>
-        public static int GetNumberOfPages(RandomAccessFileOrArray raf)
-        {
-            try
-            {
+        public static int GetNumberOfPages(RandomAccessFileOrArray raf) {
+            try {
                 return TIFFDirectory.GetNumDirectories(raf);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TiffImageException, e);
             }
         }
@@ -103,29 +94,24 @@ namespace iTextSharp.IO.Image
         /// <summary>Gets the number of pages the TIFF document has.</summary>
         /// <param name="bytes">a byte array containing a TIFF image.</param>
         /// <returns>the number of pages.</returns>
-        public static int GetNumberOfPages(byte[] bytes)
-        {
+        public static int GetNumberOfPages(byte[] bytes) {
             IRandomAccessSource ras = new RandomAccessSourceFactory().CreateSource(bytes);
             return GetNumberOfPages(new RandomAccessFileOrArray(ras));
         }
 
-        public virtual bool IsRecoverFromImageError()
-        {
+        public virtual bool IsRecoverFromImageError() {
             return recoverFromImageError;
         }
 
-        public virtual int GetPage()
-        {
+        public virtual int GetPage() {
             return page;
         }
 
-        public virtual bool IsDirect()
-        {
+        public virtual bool IsDirect() {
             return direct;
         }
 
-        public virtual void SetOriginalType(ImageType originalType)
-        {
+        public virtual void SetOriginalType(ImageType originalType) {
             this.originalType = originalType;
         }
     }

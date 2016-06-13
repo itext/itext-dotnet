@@ -49,8 +49,7 @@ using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout.Border;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="Cell"/>
@@ -69,8 +68,7 @@ namespace iTextSharp.Layout.Element
     /// <see cref="BlockElement{T}"/>
     /// .
     /// </summary>
-    public class Cell : BlockElement<iTextSharp.Layout.Element.Cell>
-    {
+    public class Cell : BlockElement<iTextSharp.Layout.Element.Cell> {
         private static readonly iTextSharp.Layout.Border.Border DEFAULT_BORDER = new SolidBorder(0.5f);
 
         private int row;
@@ -90,16 +88,14 @@ namespace iTextSharp.Layout.Element
         ///     </param>
         /// <param name="colspan">the number of columns this cell must occupy. Negative numbers will make the argument default to 1.
         ///     </param>
-        public Cell(int rowspan, int colspan)
-        {
+        public Cell(int rowspan, int colspan) {
             this.rowspan = Math.Max(rowspan, 1);
             this.colspan = Math.Max(colspan, 1);
         }
 
         /// <summary>Creates a cell.</summary>
         public Cell()
-            : this(1, 1)
-        {
+            : this(1, 1) {
         }
 
         /// <summary>Gets a cell renderer for this element.</summary>
@@ -110,19 +106,15 @@ namespace iTextSharp.Layout.Element
         /// method call.
         /// </remarks>
         /// <returns>a cell renderer for this element</returns>
-        public override IRenderer GetRenderer()
-        {
+        public override IRenderer GetRenderer() {
             CellRenderer cellRenderer = null;
-            if (nextRenderer != null)
-            {
-                if (nextRenderer is CellRenderer)
-                {
+            if (nextRenderer != null) {
+                if (nextRenderer is CellRenderer) {
                     IRenderer renderer = nextRenderer;
                     nextRenderer = nextRenderer.GetNextRenderer();
                     cellRenderer = (CellRenderer)renderer;
                 }
-                else
-                {
+                else {
                     ILogger logger = LoggerFactory.GetLogger(typeof(Table));
                     logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
                 }
@@ -131,23 +123,19 @@ namespace iTextSharp.Layout.Element
             return cellRenderer == null ? MakeNewRenderer() : cellRenderer;
         }
 
-        public virtual int GetRow()
-        {
+        public virtual int GetRow() {
             return row;
         }
 
-        public virtual int GetCol()
-        {
+        public virtual int GetCol() {
             return col;
         }
 
-        public virtual int GetRowspan()
-        {
+        public virtual int GetRowspan() {
             return rowspan;
         }
 
-        public virtual int GetColspan()
-        {
+        public virtual int GetColspan() {
             return colspan;
         }
 
@@ -158,8 +146,7 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Element</returns>
         public virtual iTextSharp.Layout.Element.Cell Add<T>(BlockElement<T> element)
-            where T : IElement
-        {
+            where T : IElement {
             childElements.Add(element);
             return this;
         }
@@ -170,8 +157,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="Image"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual iTextSharp.Layout.Element.Cell Add(Image element)
-        {
+        public virtual iTextSharp.Layout.Element.Cell Add(Image element) {
             childElements.Add(element);
             return this;
         }
@@ -182,8 +168,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="Table"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual iTextSharp.Layout.Element.Cell Add(Table element)
-        {
+        public virtual iTextSharp.Layout.Element.Cell Add(Table element) {
             childElements.Add(element);
             return this;
         }
@@ -198,87 +183,71 @@ namespace iTextSharp.Layout.Element
         /// <see cref="System.String"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual iTextSharp.Layout.Element.Cell Add(String content)
-        {
+        public virtual iTextSharp.Layout.Element.Cell Add(String content) {
             return Add(new Paragraph(content));
         }
 
         /// <summary>Clones a cell with its position, properties, and optionally its contents.</summary>
         /// <param name="includeContent">whether or not to also include the contents of the cell.</param>
         /// <returns>a clone of this Element</returns>
-        public virtual iTextSharp.Layout.Element.Cell Clone(bool includeContent)
-        {
+        public virtual iTextSharp.Layout.Element.Cell Clone(bool includeContent) {
             iTextSharp.Layout.Element.Cell newCell = new iTextSharp.Layout.Element.Cell(rowspan, colspan);
             newCell.row = row;
             newCell.col = col;
             newCell.properties = new Dictionary<int, Object>(properties);
-            if (includeContent)
-            {
+            if (includeContent) {
                 newCell.childElements = new List<IElement>(childElements);
             }
             return newCell;
         }
 
-        public override T1 GetDefaultProperty<T1>(int property)
-        {
-            switch (property)
-            {
-                case iTextSharp.Layout.Property.Property.BORDER:
-                {
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case iTextSharp.Layout.Property.Property.BORDER: {
                     return (T1)(Object)DEFAULT_BORDER;
                 }
 
                 case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
                 case iTextSharp.Layout.Property.Property.PADDING_LEFT:
                 case iTextSharp.Layout.Property.Property.PADDING_RIGHT:
-                case iTextSharp.Layout.Property.Property.PADDING_TOP:
-                {
+                case iTextSharp.Layout.Property.Property.PADDING_TOP: {
                     return (T1)(Object)2f;
                 }
 
-                default:
-                {
+                default: {
                     return base.GetDefaultProperty<T1>(property);
                 }
             }
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return String.Format("Cell{row={0}, col={1}, rowspan={2}, colspan={3}}", row, col, rowspan, colspan);
         }
 
-        public override PdfName GetRole()
-        {
+        public override PdfName GetRole() {
             return role;
         }
 
-        public override void SetRole(PdfName role)
-        {
+        public override void SetRole(PdfName role) {
             this.role = role;
-            if (PdfName.Artifact.Equals(role))
-            {
+            if (PdfName.Artifact.Equals(role)) {
                 PropagateArtifactRoleToChildElements();
             }
         }
 
-        public override AccessibilityProperties GetAccessibilityProperties()
-        {
-            if (tagProperties == null)
-            {
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;
         }
 
-        protected internal override IRenderer MakeNewRenderer()
-        {
+        protected internal override IRenderer MakeNewRenderer() {
             return new CellRenderer(this);
         }
 
         protected internal virtual iTextSharp.Layout.Element.Cell UpdateCellIndexes(int row, int col, int numberOfColumns
-            )
-        {
+            ) {
             this.row = row;
             this.col = col;
             colspan = Math.Min(colspan, numberOfColumns - this.col);

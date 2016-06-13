@@ -48,13 +48,10 @@ using System.Text;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    internal class OpenTypeParser
-    {
+namespace iTextSharp.IO.Font {
+    internal class OpenTypeParser {
         /// <summary>The components of table 'head'.</summary>
-        protected internal class HeaderTable
-        {
+        protected internal class HeaderTable {
             internal int flags;
 
             internal int unitsPerEm;
@@ -71,8 +68,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>The components of table 'hhea'.</summary>
-        protected internal class HorizontalHeader
-        {
+        protected internal class HorizontalHeader {
             internal short Ascender;
 
             internal short Descender;
@@ -95,8 +91,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>The components of table 'OS/2'.</summary>
-        protected internal class WindowsMetrics
-        {
+        protected internal class WindowsMetrics {
             internal short xAvgCharWidth;
 
             internal int usWeightClass;
@@ -156,8 +151,7 @@ namespace iTextSharp.IO.Font
             internal int sCapHeight;
         }
 
-        protected internal class PostTable
-        {
+        protected internal class PostTable {
             /// <summary>The italic angle.</summary>
             /// <remarks>
             /// The italic angle. It is usually extracted from the 'post' table or in it's
@@ -176,8 +170,7 @@ namespace iTextSharp.IO.Font
             internal bool isFixedPitch;
         }
 
-        protected internal class CmapTable
-        {
+        protected internal class CmapTable {
             /// <summary>The map containing the code information for the table 'cmap', encoding 1.0.</summary>
             /// <remarks>
             /// The map containing the code information for the table 'cmap', encoding 1.0.
@@ -266,36 +259,31 @@ namespace iTextSharp.IO.Font
         protected internal IDictionary<String, int[]> tables;
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeParser(byte[] ttf)
-        {
+        public OpenTypeParser(byte[] ttf) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttf));
             Process();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeParser(byte[] ttc, int ttcIndex)
-        {
+        public OpenTypeParser(byte[] ttc, int ttcIndex) {
             this.ttcIndex = ttcIndex;
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
             Process();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeParser(String ttcPath, int ttcIndex)
-        {
+        public OpenTypeParser(String ttcPath, int ttcIndex) {
             this.ttcIndex = ttcIndex;
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
             Process();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public OpenTypeParser(String name)
-        {
+        public OpenTypeParser(String name) {
             String nameBase = FontProgram.GetBaseName(name);
             String ttcName = GetTTCName(nameBase);
             this.fileName = ttcName;
-            if (ttcName.Length < nameBase.Length)
-            {
+            if (ttcName.Length < nameBase.Length) {
                 ttcIndex = System.Convert.ToInt32(nameBase.Substring(ttcName.Length + 1));
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
@@ -303,85 +291,67 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>Gets the Postscript font name.</summary>
-        public virtual String GetPsFontName()
-        {
-            if (fontName == null)
-            {
+        public virtual String GetPsFontName() {
+            if (fontName == null) {
                 IList<String[]> names = allNameEntries.Get(6);
-                if (names != null && names.Count > 0)
-                {
+                if (names != null && names.Count > 0) {
                     fontName = names[0][3];
                 }
-                else
-                {
+                else {
                     fontName = new FileInfo(fileName).Name.Replace(' ', '-');
                 }
             }
             return fontName;
         }
 
-        public virtual IDictionary<int, IList<String[]>> GetAllNameEntries()
-        {
+        public virtual IDictionary<int, IList<String[]>> GetAllNameEntries() {
             return allNameEntries;
         }
 
-        public virtual OpenTypeParser.PostTable GetPostTable()
-        {
+        public virtual OpenTypeParser.PostTable GetPostTable() {
             return post;
         }
 
-        public virtual OpenTypeParser.WindowsMetrics GetOs_2Table()
-        {
+        public virtual OpenTypeParser.WindowsMetrics GetOs_2Table() {
             return os_2;
         }
 
-        public virtual OpenTypeParser.HorizontalHeader GetHheaTable()
-        {
+        public virtual OpenTypeParser.HorizontalHeader GetHheaTable() {
             return hhea;
         }
 
-        public virtual OpenTypeParser.HeaderTable GetHeadTable()
-        {
+        public virtual OpenTypeParser.HeaderTable GetHeadTable() {
             return head;
         }
 
-        public virtual OpenTypeParser.CmapTable GetCmapTable()
-        {
+        public virtual OpenTypeParser.CmapTable GetCmapTable() {
             return cmaps;
         }
 
-        public virtual int[] GetGlyphWidthsByIndex()
-        {
+        public virtual int[] GetGlyphWidthsByIndex() {
             return glyphWidthsByIndex;
         }
 
-        public virtual bool IsCff()
-        {
+        public virtual bool IsCff() {
             return cff;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual byte[] GetFullFont()
-        {
+        public virtual byte[] GetFullFont() {
             RandomAccessFileOrArray rf2 = null;
-            try
-            {
+            try {
                 rf2 = raf.CreateView();
                 byte[] b = new byte[(int)rf2.Length()];
                 rf2.ReadFully(b);
                 return b;
             }
-            finally
-            {
-                try
-                {
-                    if (rf2 != null)
-                    {
+            finally {
+                try {
+                    if (rf2 != null) {
                         rf2.Close();
                     }
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
             }
         }
@@ -397,39 +367,31 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <returns>a byte array</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual byte[] ReadCffFont()
-        {
-            if (!IsCff())
-            {
+        public virtual byte[] ReadCffFont() {
+            if (!IsCff()) {
                 return null;
             }
             RandomAccessFileOrArray rf2 = null;
-            try
-            {
+            try {
                 rf2 = raf.CreateView();
                 rf2.Seek(cffOffset);
                 byte[] cff = new byte[cffLength];
                 rf2.ReadFully(cff);
                 return cff;
             }
-            finally
-            {
-                try
-                {
-                    if (rf2 != null)
-                    {
+            finally {
+                try {
+                    if (rf2 != null) {
                         rf2.Close();
                     }
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset)
-        {
+        public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
             TrueTypeFontSubset sb = new TrueTypeFontSubset(fileName, raf.CreateView(), glyphs, directoryOffset, true, 
                 !subset);
             return sb.Process();
@@ -437,46 +399,35 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Reads the font data.</summary>
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void Process()
-        {
+        protected internal virtual void Process() {
             tables = new LinkedDictionary<String, int[]>();
-            if (ttcIndex >= 0)
-            {
+            if (ttcIndex >= 0) {
                 int dirIdx = ttcIndex;
-                if (dirIdx < 0)
-                {
-                    if (fileName != null)
-                    {
+                if (dirIdx < 0) {
+                    if (fileName != null) {
                         throw new iTextSharp.IO.IOException("the.font.index.for.1.must.be.positive").SetMessageParams(fileName);
                     }
-                    else
-                    {
+                    else {
                         throw new iTextSharp.IO.IOException("the.font.index.must.be.positive");
                     }
                 }
                 String mainTag = ReadStandardString(4);
-                if (!mainTag.Equals("ttcf"))
-                {
-                    if (fileName != null)
-                    {
+                if (!mainTag.Equals("ttcf")) {
+                    if (fileName != null) {
                         throw new iTextSharp.IO.IOException("1.is.not.a.valid.ttc.file").SetMessageParams(fileName);
                     }
-                    else
-                    {
+                    else {
                         throw new iTextSharp.IO.IOException("not.a.valid.ttc.file");
                     }
                 }
                 raf.SkipBytes(4);
                 int dirCount = raf.ReadInt();
-                if (dirIdx >= dirCount)
-                {
-                    if (fileName != null)
-                    {
+                if (dirIdx >= dirCount) {
+                    if (fileName != null) {
                         throw new iTextSharp.IO.IOException("the.font.index.for.1.must.be.between.0.and.2.it.was.3").SetMessageParams
                             (fileName, dirCount - 1, dirIdx);
                     }
-                    else
-                    {
+                    else {
                         throw new iTextSharp.IO.IOException("the.font.index.must.be.between.0.and.1.it.was.2").SetMessageParams(dirCount
                              - 1, dirIdx);
                     }
@@ -486,21 +437,17 @@ namespace iTextSharp.IO.Font
             }
             raf.Seek(directoryOffset);
             int ttId = raf.ReadInt();
-            if (ttId != 0x00010000 && ttId != 0x4F54544F)
-            {
-                if (fileName != null)
-                {
+            if (ttId != 0x00010000 && ttId != 0x4F54544F) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("1.is.not.a.valid.ttf.or.otf.file").SetMessageParams(fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("not.a.valid.ttf.or.otf.file");
                 }
             }
             int num_tables = raf.ReadUnsignedShort();
             raf.SkipBytes(6);
-            for (int k = 0; k < num_tables; ++k)
-            {
+            for (int k = 0; k < num_tables; ++k) {
                 String tag = ReadStandardString(4);
                 raf.SkipBytes(4);
                 int[] table_location = new int[2];
@@ -526,29 +473,23 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <param name="name">the full name</param>
         /// <returns>the simple file name</returns>
-        protected internal static String GetTTCName(String name)
-        {
-            if (name == null)
-            {
+        protected internal static String GetTTCName(String name) {
+            if (name == null) {
                 return null;
             }
             int idx = name.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,");
-            if (idx < 0)
-            {
+            if (idx < 0) {
                 return name;
             }
-            else
-            {
+            else {
                 return name.JSubstring(0, idx + 4);
             }
         }
 
-        protected internal virtual void CheckCff()
-        {
+        protected internal virtual void CheckCff() {
             int[] table_location;
             table_location = tables.Get("CFF ");
-            if (table_location != null)
-            {
+            if (table_location != null) {
                 cff = true;
                 cffOffset = table_location[0];
                 cffLength = table_location[1];
@@ -570,27 +511,22 @@ namespace iTextSharp.IO.Font
         /// .
         /// </remarks>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
-        protected internal virtual void ReadGlyphWidths()
-        {
+        protected internal virtual void ReadGlyphWidths() {
             int numberOfHMetrics = hhea.numberOfHMetrics;
             int unitsPerEm = head.unitsPerEm;
             int[] table_location;
             table_location = tables.Get("hmtx");
-            if (table_location == null)
-            {
-                if (fileName != null)
-                {
+            if (table_location == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("hmtx", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("hmtx");
                 }
             }
             raf.Seek(table_location[0]);
             glyphWidthsByIndex = new int[numberOfHMetrics];
-            for (int k = 0; k < numberOfHMetrics; ++k)
-            {
+            for (int k = 0; k < numberOfHMetrics; ++k) {
                 glyphWidthsByIndex[k] = raf.ReadUnsignedShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
                 int leftSideBearing = raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
             }
@@ -605,32 +541,27 @@ namespace iTextSharp.IO.Font
         /// .
         /// </param>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        protected internal virtual IntHashtable ReadKerning(int unitsPerEm)
-        {
+        protected internal virtual IntHashtable ReadKerning(int unitsPerEm) {
             int[] table_location;
             table_location = tables.Get("kern");
             IntHashtable kerning = new IntHashtable();
-            if (table_location == null)
-            {
+            if (table_location == null) {
                 return kerning;
             }
             raf.Seek(table_location[0] + 2);
             int nTables = raf.ReadUnsignedShort();
             int checkpoint = table_location[0] + 4;
             int length = 0;
-            for (int k = 0; k < nTables; k++)
-            {
+            for (int k = 0; k < nTables; k++) {
                 checkpoint += length;
                 raf.Seek(checkpoint);
                 raf.SkipBytes(2);
                 length = raf.ReadUnsignedShort();
                 int coverage = raf.ReadUnsignedShort();
-                if ((coverage & 0xfff7) == 0x0001)
-                {
+                if ((coverage & 0xfff7) == 0x0001) {
                     int nPairs = raf.ReadUnsignedShort();
                     raf.SkipBytes(6);
-                    for (int j = 0; j < nPairs; ++j)
-                    {
+                    for (int j = 0; j < nPairs; ++j) {
                         int pair = raf.ReadInt();
                         int value = raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
                         kerning.Put(pair, value);
@@ -650,67 +581,53 @@ namespace iTextSharp.IO.Font
         /// </param>
         /// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
-        protected internal virtual int[][] ReadBbox(int unitsPerEm)
-        {
+        protected internal virtual int[][] ReadBbox(int unitsPerEm) {
             int[] tableLocation;
             tableLocation = tables.Get("head");
-            if (tableLocation == null)
-            {
-                if (fileName != null)
-                {
+            if (tableLocation == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("head", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("head");
                 }
             }
             raf.Seek(tableLocation[0] + FontConstants.HEAD_LOCA_FORMAT_OFFSET);
             bool locaShortTable = raf.ReadUnsignedShort() == 0;
             tableLocation = tables.Get("loca");
-            if (tableLocation == null)
-            {
+            if (tableLocation == null) {
                 return null;
             }
             raf.Seek(tableLocation[0]);
             int[] locaTable;
-            if (locaShortTable)
-            {
+            if (locaShortTable) {
                 int entries = tableLocation[1] / 2;
                 locaTable = new int[entries];
-                for (int k = 0; k < entries; ++k)
-                {
+                for (int k = 0; k < entries; ++k) {
                     locaTable[k] = raf.ReadUnsignedShort() * 2;
                 }
             }
-            else
-            {
+            else {
                 int entries = tableLocation[1] / 4;
                 locaTable = new int[entries];
-                for (int k = 0; k < entries; ++k)
-                {
+                for (int k = 0; k < entries; ++k) {
                     locaTable[k] = raf.ReadInt();
                 }
             }
             tableLocation = tables.Get("glyf");
-            if (tableLocation == null)
-            {
-                if (fileName != null)
-                {
+            if (tableLocation == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("glyf");
                 }
             }
             int tableGlyphOffset = tableLocation[0];
             int[][] bboxes = new int[locaTable.Length - 1][];
-            for (int glyph = 0; glyph < locaTable.Length - 1; ++glyph)
-            {
+            for (int glyph = 0; glyph < locaTable.Length - 1; ++glyph) {
                 int start = locaTable[glyph];
-                if (start != locaTable[glyph + 1])
-                {
+                if (start != locaTable[glyph + 1]) {
                     raf.Seek(tableGlyphOffset + start + 2);
                     bboxes[glyph] = new int[] { raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm, raf.ReadShort
                         () * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm, raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION
@@ -721,15 +638,12 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual int ReadMaxGlyphId()
-        {
+        protected internal virtual int ReadMaxGlyphId() {
             int[] table_location = tables.Get("maxp");
-            if (table_location == null)
-            {
+            if (table_location == null) {
                 return 65536;
             }
-            else
-            {
+            else {
                 raf.Seek(table_location[0] + 4);
                 return raf.ReadUnsignedShort();
             }
@@ -738,18 +652,14 @@ namespace iTextSharp.IO.Font
         /// <summary>Extracts the names of the font in all the languages available.</summary>
         /// <exception cref="iTextSharp.IO.IOException">on error</exception>
         /// <exception cref="System.IO.IOException">on error</exception>
-        private void ReadNameTable()
-        {
+        private void ReadNameTable() {
             int[] table_location;
             table_location = tables.Get("name");
-            if (table_location == null)
-            {
-                if (fileName != null)
-                {
+            if (table_location == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("name", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("name");
                 }
             }
@@ -757,8 +667,7 @@ namespace iTextSharp.IO.Font
             raf.Seek(table_location[0] + 2);
             int numRecords = raf.ReadUnsignedShort();
             int startOfStorage = raf.ReadUnsignedShort();
-            for (int k = 0; k < numRecords; ++k)
-            {
+            for (int k = 0; k < numRecords; ++k) {
                 int platformID = raf.ReadUnsignedShort();
                 int platformEncodingID = raf.ReadUnsignedShort();
                 int languageID = raf.ReadUnsignedShort();
@@ -766,23 +675,19 @@ namespace iTextSharp.IO.Font
                 int length = raf.ReadUnsignedShort();
                 int offset = raf.ReadUnsignedShort();
                 IList<String[]> names;
-                if (allNameEntries.ContainsKey(nameID))
-                {
+                if (allNameEntries.ContainsKey(nameID)) {
                     names = allNameEntries.Get(nameID);
                 }
-                else
-                {
+                else {
                     allNameEntries[nameID] = names = new List<String[]>();
                 }
                 int pos = (int)raf.GetPosition();
                 raf.Seek(table_location[0] + startOfStorage + offset);
                 String name;
-                if (platformID == 0 || platformID == 3 || platformID == 2 && platformEncodingID == 1)
-                {
+                if (platformID == 0 || platformID == 3 || platformID == 2 && platformEncodingID == 1) {
                     name = ReadUnicodeString(length);
                 }
-                else
-                {
+                else {
                     name = ReadStandardString(length);
                 }
                 names.Add(new String[] { iTextSharp.IO.Util.JavaUtil.IntegerToString(platformID), iTextSharp.IO.Util.JavaUtil.IntegerToString
@@ -794,18 +699,14 @@ namespace iTextSharp.IO.Font
         /// <summary>Read horizontal header, table 'hhea'.</summary>
         /// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
-        private void ReadHheaTable()
-        {
+        private void ReadHheaTable() {
             int[] table_location;
             table_location = tables.Get("hhea");
-            if (table_location == null)
-            {
-                if (fileName != null)
-                {
+            if (table_location == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("hhea", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("hhea");
                 }
             }
@@ -827,18 +728,14 @@ namespace iTextSharp.IO.Font
         /// <summary>Read font header, table 'head'.</summary>
         /// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
-        private void ReadHeadTable()
-        {
+        private void ReadHeadTable() {
             int[] table_location;
             table_location = tables.Get("head");
-            if (table_location == null)
-            {
-                if (fileName != null)
-                {
+            if (table_location == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("head", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("head");
                 }
             }
@@ -865,18 +762,14 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <exception cref="iTextSharp.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
-        private void ReadOs_2Table()
-        {
+        private void ReadOs_2Table() {
             int[] table_location;
             table_location = tables.Get("OS/2");
-            if (table_location == null)
-            {
-                if (fileName != null)
-                {
+            if (table_location == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("os/2", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("os/2");
                 }
             }
@@ -906,42 +799,35 @@ namespace iTextSharp.IO.Font
             os_2.usLastCharIndex = raf.ReadUnsignedShort();
             os_2.sTypoAscender = raf.ReadShort();
             os_2.sTypoDescender = raf.ReadShort();
-            if (os_2.sTypoDescender > 0)
-            {
+            if (os_2.sTypoDescender > 0) {
                 os_2.sTypoDescender = (short)-os_2.sTypoDescender;
             }
             os_2.sTypoLineGap = raf.ReadShort();
             os_2.usWinAscent = raf.ReadUnsignedShort();
             os_2.usWinDescent = raf.ReadUnsignedShort();
-            if (os_2.usWinDescent > 0)
-            {
+            if (os_2.usWinDescent > 0) {
                 os_2.usWinDescent = (short)-os_2.usWinDescent;
             }
             os_2.ulCodePageRange1 = 0;
             os_2.ulCodePageRange2 = 0;
-            if (version > 0)
-            {
+            if (version > 0) {
                 os_2.ulCodePageRange1 = raf.ReadInt();
                 os_2.ulCodePageRange2 = raf.ReadInt();
             }
-            if (version > 1)
-            {
+            if (version > 1) {
                 // todo os_2.sxHeight = raf.readShort();
                 raf.SkipBytes(2);
                 os_2.sCapHeight = raf.ReadShort();
             }
-            else
-            {
+            else {
                 os_2.sCapHeight = (int)(0.7 * head.unitsPerEm);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void ReadPostTable()
-        {
+        private void ReadPostTable() {
             int[] table_location = tables.Get("post");
-            if (table_location != null)
-            {
+            if (table_location != null) {
                 raf.Seek(table_location[0] + 4);
                 short mantissa = raf.ReadShort();
                 int fraction = raf.ReadUnsignedShort();
@@ -951,8 +837,7 @@ namespace iTextSharp.IO.Font
                 post.underlineThickness = raf.ReadShort();
                 post.isFixedPitch = raf.ReadInt() != 0;
             }
-            else
-            {
+            else {
                 post = new OpenTypeParser.PostTable();
                 post.italicAngle = (float)(-Math.Atan2(hhea.caretSlopeRun, hhea.caretSlopeRise) * 180 / Math.PI);
             }
@@ -967,18 +852,14 @@ namespace iTextSharp.IO.Font
         /// .
         /// </remarks>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        private void ReadCmapTable()
-        {
+        private void ReadCmapTable() {
             int[] table_location;
             table_location = tables.Get("cmap");
-            if (table_location == null)
-            {
-                if (fileName != null)
-                {
+            if (table_location == null) {
+                if (fileName != null) {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("cmap", fileName);
                 }
-                else
-                {
+                else {
                     throw new iTextSharp.IO.IOException("table.1.does.not.exist").SetMessageParams("cmap");
                 }
             }
@@ -990,111 +871,87 @@ namespace iTextSharp.IO.Font
             int map30 = 0;
             int mapExt = 0;
             cmaps = new OpenTypeParser.CmapTable();
-            for (int k = 0; k < num_tables; ++k)
-            {
+            for (int k = 0; k < num_tables; ++k) {
                 int platId = raf.ReadUnsignedShort();
                 int platSpecId = raf.ReadUnsignedShort();
                 int offset = raf.ReadInt();
-                if (platId == 3 && platSpecId == 0)
-                {
+                if (platId == 3 && platSpecId == 0) {
                     cmaps.fontSpecific = true;
                     map30 = offset;
                 }
-                else
-                {
-                    if (platId == 3 && platSpecId == 1)
-                    {
+                else {
+                    if (platId == 3 && platSpecId == 1) {
                         map31 = offset;
                     }
-                    else
-                    {
-                        if (platId == 3 && platSpecId == 10)
-                        {
+                    else {
+                        if (platId == 3 && platSpecId == 10) {
                             mapExt = offset;
                         }
-                        else
-                        {
-                            if (platId == 1 && platSpecId == 0)
-                            {
+                        else {
+                            if (platId == 1 && platSpecId == 0) {
                                 map10 = offset;
                             }
                         }
                     }
                 }
             }
-            if (map10 > 0)
-            {
+            if (map10 > 0) {
                 raf.Seek(table_location[0] + map10);
                 int format = raf.ReadUnsignedShort();
-                switch (format)
-                {
-                    case 0:
-                    {
+                switch (format) {
+                    case 0: {
                         cmaps.cmap10 = ReadFormat0();
                         break;
                     }
 
-                    case 4:
-                    {
+                    case 4: {
                         cmaps.cmap10 = ReadFormat4(false);
                         break;
                     }
 
-                    case 6:
-                    {
+                    case 6: {
                         cmaps.cmap10 = ReadFormat6();
                         break;
                     }
                 }
             }
-            if (map31 > 0)
-            {
+            if (map31 > 0) {
                 raf.Seek(table_location[0] + map31);
                 int format = raf.ReadUnsignedShort();
-                if (format == 4)
-                {
+                if (format == 4) {
                     cmaps.cmap31 = ReadFormat4(false);
                 }
             }
-            if (map30 > 0)
-            {
+            if (map30 > 0) {
                 raf.Seek(table_location[0] + map30);
                 int format = raf.ReadUnsignedShort();
-                if (format == 4)
-                {
+                if (format == 4) {
                     cmaps.cmap10 = ReadFormat4(cmaps.fontSpecific);
                 }
-                else
-                {
+                else {
                     cmaps.fontSpecific = false;
                 }
             }
-            if (mapExt > 0)
-            {
+            if (mapExt > 0) {
                 raf.Seek(table_location[0] + mapExt);
                 int format = raf.ReadUnsignedShort();
-                switch (format)
-                {
-                    case 0:
-                    {
+                switch (format) {
+                    case 0: {
                         cmaps.cmapExt = ReadFormat0();
                         break;
                     }
 
-                    case 4:
-                    {
+                    case 4: {
                         cmaps.cmapExt = ReadFormat4(false);
                         break;
                     }
 
-                    case 6:
-                    {
+                    case 6: {
                         cmaps.cmapExt = ReadFormat6();
                         break;
                     }
 
-                    case 12:
-                    {
+                    case 12: {
                         cmaps.cmapExt = ReadFormat12();
                         break;
                     }
@@ -1109,8 +966,7 @@ namespace iTextSharp.IO.Font
         /// <param name="length">the length of bytes to read</param>
         /// <returns>the <CODE>String</CODE> read</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        private String ReadStandardString(int length)
-        {
+        private String ReadStandardString(int length) {
             return raf.ReadString(length, PdfEncodings.WINANSI);
         }
 
@@ -1121,12 +977,10 @@ namespace iTextSharp.IO.Font
         ///     </param>
         /// <returns>the <CODE>String</CODE> read.</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
-        private String ReadUnicodeString(int length)
-        {
+        private String ReadUnicodeString(int length) {
             StringBuilder buf = new StringBuilder();
             length /= 2;
-            for (int k = 0; k < length; ++k)
-            {
+            for (int k = 0; k < length; ++k) {
                 buf.Append(raf.ReadChar());
             }
             return buf.ToString();
@@ -1135,10 +989,8 @@ namespace iTextSharp.IO.Font
         /// <summary>Gets a glyph width.</summary>
         /// <param name="glyph">the glyph to get the width of</param>
         /// <returns>the width of the glyph in normalized 1000 units (TrueTypeFont.UNITS_NORMALIZATION)</returns>
-        protected internal virtual int GetGlyphWidth(int glyph)
-        {
-            if (glyph >= glyphWidthsByIndex.Length)
-            {
+        protected internal virtual int GetGlyphWidth(int glyph) {
+            if (glyph >= glyphWidthsByIndex.Length) {
                 glyph = glyphWidthsByIndex.Length - 1;
             }
             return glyphWidthsByIndex[glyph];
@@ -1151,12 +1003,10 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <returns>a <CODE>HashMap</CODE> representing this map</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        private IDictionary<int, int[]> ReadFormat0()
-        {
+        private IDictionary<int, int[]> ReadFormat0() {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
             raf.SkipBytes(4);
-            for (int k = 0; k < 256; ++k)
-            {
+            for (int k = 0; k < 256; ++k) {
                 int[] r = new int[2];
                 r[0] = raf.ReadUnsignedByte();
                 r[1] = GetGlyphWidth(r[0]);
@@ -1172,53 +1022,42 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <returns>a <CODE>HashMap</CODE> representing this map</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        private IDictionary<int, int[]> ReadFormat4(bool fontSpecific)
-        {
+        private IDictionary<int, int[]> ReadFormat4(bool fontSpecific) {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
             int table_lenght = raf.ReadUnsignedShort();
             raf.SkipBytes(2);
             int segCount = raf.ReadUnsignedShort() / 2;
             raf.SkipBytes(6);
             int[] endCount = new int[segCount];
-            for (int k = 0; k < segCount; ++k)
-            {
+            for (int k = 0; k < segCount; ++k) {
                 endCount[k] = raf.ReadUnsignedShort();
             }
             raf.SkipBytes(2);
             int[] startCount = new int[segCount];
-            for (int k_1 = 0; k_1 < segCount; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < segCount; ++k_1) {
                 startCount[k_1] = raf.ReadUnsignedShort();
             }
             int[] idDelta = new int[segCount];
-            for (int k_2 = 0; k_2 < segCount; ++k_2)
-            {
+            for (int k_2 = 0; k_2 < segCount; ++k_2) {
                 idDelta[k_2] = raf.ReadUnsignedShort();
             }
             int[] idRO = new int[segCount];
-            for (int k_3 = 0; k_3 < segCount; ++k_3)
-            {
+            for (int k_3 = 0; k_3 < segCount; ++k_3) {
                 idRO[k_3] = raf.ReadUnsignedShort();
             }
             int[] glyphId = new int[table_lenght / 2 - 8 - segCount * 4];
-            for (int k_4 = 0; k_4 < glyphId.Length; ++k_4)
-            {
+            for (int k_4 = 0; k_4 < glyphId.Length; ++k_4) {
                 glyphId[k_4] = raf.ReadUnsignedShort();
             }
-            for (int k_5 = 0; k_5 < segCount; ++k_5)
-            {
+            for (int k_5 = 0; k_5 < segCount; ++k_5) {
                 int glyph;
-                for (int j = startCount[k_5]; j <= endCount[k_5] && j != 0xFFFF; ++j)
-                {
-                    if (idRO[k_5] == 0)
-                    {
+                for (int j = startCount[k_5]; j <= endCount[k_5] && j != 0xFFFF; ++j) {
+                    if (idRO[k_5] == 0) {
                         glyph = j + idDelta[k_5] & 0xFFFF;
                     }
-                    else
-                    {
+                    else {
                         int idx = k_5 + idRO[k_5] / 2 - segCount + j - startCount[k_5];
-                        if (idx >= glyphId.Length)
-                        {
+                        if (idx >= glyphId.Length) {
                             continue;
                         }
                         glyph = glyphId[idx] + idDelta[k_5] & 0xFFFF;
@@ -1229,8 +1068,7 @@ namespace iTextSharp.IO.Font
                     // (j & 0xff00) == 0xf000) means, that it is private area of unicode
                     // So, in case symbol font (cmap 3/0) we add both char codes:
                     // j & 0xff and j. It will simplify unicode conversion in TrueTypeFont
-                    if (fontSpecific && ((j & 0xff00) == 0xf000))
-                    {
+                    if (fontSpecific && ((j & 0xff00) == 0xf000)) {
                         h[j & 0xff] = r;
                     }
                     h[j] = r;
@@ -1247,14 +1085,12 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <returns>a <CODE>HashMap</CODE> representing this map</returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        private IDictionary<int, int[]> ReadFormat6()
-        {
+        private IDictionary<int, int[]> ReadFormat6() {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
             raf.SkipBytes(4);
             int start_code = raf.ReadUnsignedShort();
             int code_count = raf.ReadUnsignedShort();
-            for (int k = 0; k < code_count; ++k)
-            {
+            for (int k = 0; k < code_count; ++k) {
                 int[] r = new int[2];
                 r[0] = raf.ReadUnsignedShort();
                 r[1] = GetGlyphWidth(r[0]);
@@ -1264,20 +1100,17 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private IDictionary<int, int[]> ReadFormat12()
-        {
+        private IDictionary<int, int[]> ReadFormat12() {
             IDictionary<int, int[]> h = new LinkedDictionary<int, int[]>();
             raf.SkipBytes(2);
             int table_length = raf.ReadInt();
             raf.SkipBytes(4);
             int nGroups = raf.ReadInt();
-            for (int k = 0; k < nGroups; k++)
-            {
+            for (int k = 0; k < nGroups; k++) {
                 int startCharCode = raf.ReadInt();
                 int endCharCode = raf.ReadInt();
                 int startGlyphID = raf.ReadInt();
-                for (int i = startCharCode; i <= endCharCode; i++)
-                {
+                for (int i = startCharCode; i <= endCharCode; i++) {
                     int[] r = new int[2];
                     r[0] = startGlyphID;
                     r[1] = GetGlyphWidth(r[0]);

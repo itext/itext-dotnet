@@ -47,15 +47,13 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Extgstate;
 
-namespace iTextSharp.Kernel.Pdf.Canvas
-{
+namespace iTextSharp.Kernel.Pdf.Canvas {
     /// <summary>This class is designed for internal usage.</summary>
     /// <remarks>
     /// This class is designed for internal usage. <br />
     /// Use <code>PdfExtGState</code> class and <code>PdfCanvas#setExtGState()</code> method for setting extended graphics properties.
     /// </remarks>
-    public class CanvasGraphicsState
-    {
+    public class CanvasGraphicsState {
         /// <summary>The current transformation matrix, which maps positions from user coordinates to device coordinates.
         ///     </summary>
         /// <remarks>
@@ -147,14 +145,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas
         private PdfObject htp;
 
         /// <summary>Internal empty & default constructor.</summary>
-        protected internal CanvasGraphicsState()
-        {
+        protected internal CanvasGraphicsState() {
         }
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
-        protected internal CanvasGraphicsState(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState source)
-        {
+        protected internal CanvasGraphicsState(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
             // color
             // text state
             // horizontal scaling
@@ -165,447 +161,359 @@ namespace iTextSharp.Kernel.Pdf.Canvas
 
         /// <summary>Updates this object with the values from a dictionary.</summary>
         /// <param name="extGState">the dictionary containing source parameters</param>
-        public virtual void UpdateFromExtGState(PdfDictionary extGState)
-        {
+        public virtual void UpdateFromExtGState(PdfDictionary extGState) {
             UpdateFromExtGState(new PdfExtGState(extGState));
         }
 
         /// <returns>current transformation matrix.</returns>
-        public virtual Matrix GetCtm()
-        {
+        public virtual Matrix GetCtm() {
             return ctm;
         }
 
         /// <summary>Updates current transformation matrix.</summary>
-        public virtual void UpdateCtm(float a, float b, float c, float d, float e, float f)
-        {
+        public virtual void UpdateCtm(float a, float b, float c, float d, float e, float f) {
             UpdateCtm(new Matrix(a, b, c, d, e, f));
         }
 
         /// <summary>Updates current transformation matrix.</summary>
         /// <param name="newCtm">new current transformation matrix.</param>
-        public virtual void UpdateCtm(Matrix newCtm)
-        {
+        public virtual void UpdateCtm(Matrix newCtm) {
             ctm = newCtm.Multiply(ctm);
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetFillColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetFillColor() {
             return fillColor;
         }
 
-        public virtual void SetFillColor(iTextSharp.Kernel.Color.Color fillColor)
-        {
+        public virtual void SetFillColor(iTextSharp.Kernel.Color.Color fillColor) {
             this.fillColor = fillColor;
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor() {
             return strokeColor;
         }
 
-        public virtual void SetStrokeColor(iTextSharp.Kernel.Color.Color strokeColor)
-        {
+        public virtual void SetStrokeColor(iTextSharp.Kernel.Color.Color strokeColor) {
             this.strokeColor = strokeColor;
         }
 
-        public virtual float GetLineWidth()
-        {
+        public virtual float GetLineWidth() {
             return lineWidth;
         }
 
-        public virtual void SetLineWidth(float lineWidth)
-        {
+        public virtual void SetLineWidth(float lineWidth) {
             this.lineWidth = lineWidth;
         }
 
-        public virtual int GetLineCapStyle()
-        {
+        public virtual int GetLineCapStyle() {
             return lineCapStyle;
         }
 
-        public virtual void SetLineCapStyle(int lineCapStyle)
-        {
+        public virtual void SetLineCapStyle(int lineCapStyle) {
             this.lineCapStyle = lineCapStyle;
         }
 
-        public virtual int GetLineJoinStyle()
-        {
+        public virtual int GetLineJoinStyle() {
             return lineJoinStyle;
         }
 
-        public virtual void SetLineJoinStyle(int lineJoinStyle)
-        {
+        public virtual void SetLineJoinStyle(int lineJoinStyle) {
             this.lineJoinStyle = lineJoinStyle;
         }
 
-        public virtual float GetMiterLimit()
-        {
+        public virtual float GetMiterLimit() {
             return miterLimit;
         }
 
-        public virtual void SetMiterLimit(float miterLimit)
-        {
+        public virtual void SetMiterLimit(float miterLimit) {
             this.miterLimit = miterLimit;
         }
 
-        public virtual PdfArray GetDashPattern()
-        {
+        public virtual PdfArray GetDashPattern() {
             return dashPattern;
         }
 
-        public virtual void SetDashPattern(PdfArray dashPattern)
-        {
+        public virtual void SetDashPattern(PdfArray dashPattern) {
             this.dashPattern = dashPattern;
         }
 
-        public virtual PdfName GetRenderingIntent()
-        {
+        public virtual PdfName GetRenderingIntent() {
             return renderingIntent;
         }
 
-        public virtual void SetRenderingIntent(PdfName renderingIntent)
-        {
+        public virtual void SetRenderingIntent(PdfName renderingIntent) {
             this.renderingIntent = renderingIntent;
         }
 
-        public virtual float GetFontSize()
-        {
+        public virtual float GetFontSize() {
             return fontSize;
         }
 
-        public virtual void SetFontSize(float fontSize)
-        {
+        public virtual void SetFontSize(float fontSize) {
             this.fontSize = fontSize;
         }
 
-        public virtual PdfFont GetFont()
-        {
+        public virtual PdfFont GetFont() {
             return font;
         }
 
-        public virtual void SetFont(PdfFont font)
-        {
+        public virtual void SetFont(PdfFont font) {
             this.font = font;
         }
 
-        public virtual int GetTextRenderingMode()
-        {
+        public virtual int GetTextRenderingMode() {
             return textRenderingMode;
         }
 
-        public virtual void SetTextRenderingMode(int textRenderingMode)
-        {
+        public virtual void SetTextRenderingMode(int textRenderingMode) {
             this.textRenderingMode = textRenderingMode;
         }
 
-        public virtual float GetTextRise()
-        {
+        public virtual float GetTextRise() {
             return textRise;
         }
 
-        public virtual void SetTextRise(float textRise)
-        {
+        public virtual void SetTextRise(float textRise) {
             this.textRise = textRise;
         }
 
-        public virtual float GetFlatnessTolerance()
-        {
+        public virtual float GetFlatnessTolerance() {
             return flatnessTolerance;
         }
 
-        public virtual void SetFlatnessTolerance(float flatnessTolerance)
-        {
+        public virtual void SetFlatnessTolerance(float flatnessTolerance) {
             this.flatnessTolerance = flatnessTolerance;
         }
 
-        public virtual void SetWordSpacing(float wordSpacing)
-        {
+        public virtual void SetWordSpacing(float wordSpacing) {
             this.wordSpacing = wordSpacing;
         }
 
-        public virtual float GetWordSpacing()
-        {
+        public virtual float GetWordSpacing() {
             return wordSpacing;
         }
 
-        public virtual void SetCharSpacing(float characterSpacing)
-        {
+        public virtual void SetCharSpacing(float characterSpacing) {
             this.charSpacing = characterSpacing;
         }
 
-        public virtual float GetCharSpacing()
-        {
+        public virtual float GetCharSpacing() {
             return charSpacing;
         }
 
-        public virtual float GetLeading()
-        {
+        public virtual float GetLeading() {
             return leading;
         }
 
-        public virtual void SetLeading(float leading)
-        {
+        public virtual void SetLeading(float leading) {
             this.leading = leading;
         }
 
-        public virtual float GetHorizontalScaling()
-        {
+        public virtual float GetHorizontalScaling() {
             return scale;
         }
 
-        public virtual void SetHorizontalScaling(float scale)
-        {
+        public virtual void SetHorizontalScaling(float scale) {
             this.scale = scale;
         }
 
-        public virtual bool GetStrokeOverprint()
-        {
+        public virtual bool GetStrokeOverprint() {
             return strokeOverprint;
         }
 
-        public virtual bool GetFillOverprint()
-        {
+        public virtual bool GetFillOverprint() {
             return fillOverprint;
         }
 
-        public virtual int GetOverprintMode()
-        {
+        public virtual int GetOverprintMode() {
             return overprintMode;
         }
 
-        public virtual PdfObject GetBlackGenerationFunction()
-        {
+        public virtual PdfObject GetBlackGenerationFunction() {
             return blackGenerationFunction;
         }
 
-        public virtual PdfObject GetBlackGenerationFunction2()
-        {
+        public virtual PdfObject GetBlackGenerationFunction2() {
             return blackGenerationFunction2;
         }
 
-        public virtual PdfObject GetUnderColorRemovalFunction()
-        {
+        public virtual PdfObject GetUnderColorRemovalFunction() {
             return underColorRemovalFunction;
         }
 
-        public virtual PdfObject GetUnderColorRemovalFunction2()
-        {
+        public virtual PdfObject GetUnderColorRemovalFunction2() {
             return underColorRemovalFunction2;
         }
 
-        public virtual PdfObject GetTransferFunction()
-        {
+        public virtual PdfObject GetTransferFunction() {
             return transferFunction;
         }
 
-        public virtual PdfObject GetTransferFunction2()
-        {
+        public virtual PdfObject GetTransferFunction2() {
             return transferFunction2;
         }
 
-        public virtual PdfObject GetHalftone()
-        {
+        public virtual PdfObject GetHalftone() {
             return halftone;
         }
 
-        public virtual float? GetSmoothnessTolerance()
-        {
+        public virtual float? GetSmoothnessTolerance() {
             return smoothnessTolerance;
         }
 
-        public virtual bool GetAutomaticStrokeAdjustment()
-        {
+        public virtual bool GetAutomaticStrokeAdjustment() {
             return automaticStrokeAdjustment;
         }
 
-        public virtual PdfObject GetBlendMode()
-        {
+        public virtual PdfObject GetBlendMode() {
             return blendMode;
         }
 
-        public virtual PdfObject GetSoftMask()
-        {
+        public virtual PdfObject GetSoftMask() {
             return softMask;
         }
 
-        public virtual float GetStrokeOpacity()
-        {
+        public virtual float GetStrokeOpacity() {
             return strokeAlpha;
         }
 
-        public virtual float GetFillOpacity()
-        {
+        public virtual float GetFillOpacity() {
             return fillAlpha;
         }
 
-        public virtual bool GetAlphaIsShape()
-        {
+        public virtual bool GetAlphaIsShape() {
             return alphaIsShape;
         }
 
-        public virtual bool GetTextKnockout()
-        {
+        public virtual bool GetTextKnockout() {
             return textKnockout;
         }
 
-        public virtual PdfObject GetHTP()
-        {
+        public virtual PdfObject GetHTP() {
             return htp;
         }
 
         /// <summary>Updates current graphic state with values from extended graphic state dictionary.</summary>
         /// <param name="extGState">the wrapper around the extended graphic state dictionary</param>
-        public virtual void UpdateFromExtGState(PdfExtGState extGState)
-        {
+        public virtual void UpdateFromExtGState(PdfExtGState extGState) {
             float? lw = extGState.GetLineWidth();
-            if (lw != null)
-            {
+            if (lw != null) {
                 lineWidth = (float)lw;
             }
             int? lc = extGState.GetLineCapStyle();
-            if (lc != null)
-            {
+            if (lc != null) {
                 lineCapStyle = (int)lc;
             }
             int? lj = extGState.GetLineJoinStyle();
-            if (lj != null)
-            {
+            if (lj != null) {
                 lineJoinStyle = (int)lj;
             }
             float? ml = extGState.GetMiterLimit();
-            if (ml != null)
-            {
+            if (ml != null) {
                 miterLimit = (float)ml;
             }
             PdfArray d = extGState.GetDashPattern();
-            if (d != null)
-            {
+            if (d != null) {
                 dashPattern = d;
             }
             PdfName ri = extGState.GetRenderingIntent();
-            if (ri != null)
-            {
+            if (ri != null) {
                 renderingIntent = ri;
             }
             bool? op = extGState.GetStrokeOverprintFlag();
-            if (op != null)
-            {
+            if (op != null) {
                 strokeOverprint = (bool)op;
             }
             op = extGState.GetFillOverprintFlag();
-            if (op != null)
-            {
+            if (op != null) {
                 fillOverprint = (bool)op;
             }
             int? opm = extGState.GetOverprintMode();
-            if (opm != null)
-            {
+            if (opm != null) {
                 overprintMode = (int)opm;
             }
             PdfArray fnt = extGState.GetFont();
-            if (fnt != null)
-            {
+            if (fnt != null) {
                 PdfDictionary fontDictionary = fnt.GetAsDictionary(0);
-                if (this.font == null || this.font.GetPdfObject() != fontDictionary)
-                {
+                if (this.font == null || this.font.GetPdfObject() != fontDictionary) {
                     this.font = PdfFontFactory.CreateFont(fontDictionary);
                 }
                 PdfNumber fntSz = fnt.GetAsNumber(1);
-                if (fntSz != null)
-                {
+                if (fntSz != null) {
                     this.fontSize = fntSz.FloatValue();
                 }
             }
             PdfObject bg = extGState.GetBlackGenerationFunction();
-            if (bg != null)
-            {
+            if (bg != null) {
                 blackGenerationFunction = bg;
             }
             PdfObject bg2 = extGState.GetBlackGenerationFunction2();
-            if (bg2 != null)
-            {
+            if (bg2 != null) {
                 blackGenerationFunction2 = bg2;
             }
             PdfObject ucr = extGState.GetUndercolorRemovalFunction();
-            if (ucr != null)
-            {
+            if (ucr != null) {
                 underColorRemovalFunction = ucr;
             }
             PdfObject ucr2 = extGState.GetUndercolorRemovalFunction2();
-            if (ucr2 != null)
-            {
+            if (ucr2 != null) {
                 underColorRemovalFunction2 = ucr2;
             }
             PdfObject tr = extGState.GetTransferFunction();
-            if (tr != null)
-            {
+            if (tr != null) {
                 transferFunction = tr;
             }
             PdfObject tr2 = extGState.GetTransferFunction2();
-            if (tr2 != null)
-            {
+            if (tr2 != null) {
                 transferFunction2 = tr2;
             }
             PdfObject ht = extGState.GetHalftone();
-            if (ht != null)
-            {
+            if (ht != null) {
                 halftone = ht;
             }
             PdfObject local_htp = extGState.GetHTP();
-            if (local_htp != null)
-            {
+            if (local_htp != null) {
                 this.htp = local_htp;
             }
             float? fl = extGState.GetFlatnessTolerance();
-            if (fl != null)
-            {
+            if (fl != null) {
                 flatnessTolerance = (float)fl;
             }
             float? sm = extGState.GetSmothnessTolerance();
-            if (sm != null)
-            {
+            if (sm != null) {
                 smoothnessTolerance = sm;
             }
             bool? sa = extGState.GetAutomaticStrokeAdjustmentFlag();
-            if (sa != null)
-            {
+            if (sa != null) {
                 automaticStrokeAdjustment = (bool)sa;
             }
             PdfObject bm = extGState.GetBlendMode();
-            if (bm != null)
-            {
+            if (bm != null) {
                 blendMode = bm;
             }
             PdfObject sMask = extGState.GetSoftMask();
-            if (sMask != null)
-            {
+            if (sMask != null) {
                 softMask = sMask;
             }
             float? ca = extGState.GetStrokeOpacity();
-            if (ca != null)
-            {
+            if (ca != null) {
                 strokeAlpha = (float)ca;
             }
             ca = extGState.GetFillOpacity();
-            if (ca != null)
-            {
+            if (ca != null) {
                 fillAlpha = (float)ca;
             }
             bool? ais = extGState.GetAlphaSourceFlag();
-            if (ais != null)
-            {
+            if (ais != null) {
                 alphaIsShape = (bool)ais;
             }
             bool? tk = extGState.GetTextKnockoutFlag();
-            if (tk != null)
-            {
+            if (tk != null) {
                 textKnockout = (bool)tk;
             }
         }
 
-        private void CopyFrom(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState source)
-        {
+        private void CopyFrom(iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
             this.ctm = source.ctm;
             this.strokeColor = source.strokeColor;
             this.fillColor = source.fillColor;

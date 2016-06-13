@@ -47,10 +47,8 @@ using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Pdf.Action;
 using iTextSharp.Kernel.Pdf.Navigation;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfOutline
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfOutline {
         public static int FLAG_ITALIC = 1;
 
         public static int FLAG_BOLD = 2;
@@ -67,15 +65,13 @@ namespace iTextSharp.Kernel.Pdf
 
         private PdfDocument pdfDoc;
 
-        public PdfOutline(String title, PdfDictionary content, PdfDocument pdfDocument)
-        {
+        public PdfOutline(String title, PdfDictionary content, PdfDocument pdfDocument) {
             this.title = title;
             this.content = content;
             this.pdfDoc = pdfDocument;
         }
 
-        public PdfOutline(String title, PdfDictionary content, iTextSharp.Kernel.Pdf.PdfOutline parent)
-        {
+        public PdfOutline(String title, PdfDictionary content, iTextSharp.Kernel.Pdf.PdfOutline parent) {
             this.title = title;
             this.content = content;
             this.parent = parent;
@@ -86,8 +82,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>This constructor creates root outline in the document.</summary>
         /// <param name="doc"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal PdfOutline(PdfDocument doc)
-        {
+        protected internal PdfOutline(PdfDocument doc) {
             content = new PdfDictionary();
             content.Put(PdfName.Type, PdfName.Outlines);
             this.pdfDoc = doc;
@@ -95,58 +90,47 @@ namespace iTextSharp.Kernel.Pdf
             doc.GetCatalog().AddRootOutline(this);
         }
 
-        public virtual String GetTitle()
-        {
+        public virtual String GetTitle() {
             return title;
         }
 
-        public virtual void SetTitle(String title)
-        {
+        public virtual void SetTitle(String title) {
             this.title = title;
             this.content.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
         }
 
-        public virtual void SetColor(iTextSharp.Kernel.Color.Color color)
-        {
+        public virtual void SetColor(iTextSharp.Kernel.Color.Color color) {
             content.Put(PdfName.C, new PdfArray(color.GetColorValue()));
         }
 
-        public virtual void SetStyle(int style)
-        {
-            if (style == FLAG_BOLD || style == FLAG_ITALIC)
-            {
+        public virtual void SetStyle(int style) {
+            if (style == FLAG_BOLD || style == FLAG_ITALIC) {
                 content.Put(PdfName.F, new PdfNumber(style));
             }
         }
 
-        public virtual PdfDictionary GetContent()
-        {
+        public virtual PdfDictionary GetContent() {
             return content;
         }
 
-        public virtual IList<iTextSharp.Kernel.Pdf.PdfOutline> GetAllChildren()
-        {
+        public virtual IList<iTextSharp.Kernel.Pdf.PdfOutline> GetAllChildren() {
             return children;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfOutline GetParent()
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfOutline GetParent() {
             return parent;
         }
 
-        public virtual PdfDestination GetDestination()
-        {
+        public virtual PdfDestination GetDestination() {
             return destination;
         }
 
-        public virtual void AddDestination(PdfDestination destination)
-        {
+        public virtual void AddDestination(PdfDestination destination) {
             SetDestination(destination);
             content.Put(PdfName.Dest, destination.GetPdfObject());
         }
 
-        public virtual void AddAction(PdfAction action)
-        {
+        public virtual void AddAction(PdfAction action) {
             content.Put(PdfName.A, action.GetPdfObject());
         }
 
@@ -157,8 +141,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="title">an outline title</param>
         /// <returns>a created outline</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title) {
             return AddOutline(title, -1);
         }
 
@@ -175,76 +158,61 @@ namespace iTextSharp.Kernel.Pdf
         /// </param>
         /// <returns>created outline</returns>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title, int position)
-        {
-            if (position == -1)
-            {
+        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(String title, int position) {
+            if (position == -1) {
                 position = children.Count;
             }
             PdfDictionary dictionary = new PdfDictionary();
             iTextSharp.Kernel.Pdf.PdfOutline outline = new iTextSharp.Kernel.Pdf.PdfOutline(title, dictionary, this);
             dictionary.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
             dictionary.Put(PdfName.Parent, content);
-            if (children.Count > 0)
-            {
-                if (position != 0)
-                {
+            if (children.Count > 0) {
+                if (position != 0) {
                     PdfDictionary prevContent = children[position - 1].GetContent();
                     dictionary.Put(PdfName.Prev, prevContent);
                     prevContent.Put(PdfName.Next, dictionary);
                 }
-                if (position != children.Count)
-                {
+                if (position != children.Count) {
                     PdfDictionary nextContent = children[position].GetContent();
                     dictionary.Put(PdfName.Next, nextContent);
                     nextContent.Put(PdfName.Prev, dictionary);
                 }
             }
-            if (position == 0)
-            {
+            if (position == 0) {
                 content.Put(PdfName.First, dictionary);
             }
-            if (position == children.Count)
-            {
+            if (position == children.Count) {
                 content.Put(PdfName.Last, dictionary);
             }
-            if (children.Count > 0)
-            {
+            if (children.Count > 0) {
                 int count = (int)this.content.GetAsInt(PdfName.Count);
-                if (count > 0)
-                {
+                if (count > 0) {
                     content.Put(PdfName.Count, new PdfNumber(count++));
                 }
-                else
-                {
+                else {
                     content.Put(PdfName.Count, new PdfNumber(count--));
                 }
             }
-            else
-            {
+            else {
                 this.content.Put(PdfName.Count, new PdfNumber(-1));
             }
             children.Add(position, outline);
             return outline;
         }
 
-        internal virtual void Clear()
-        {
+        internal virtual void Clear() {
             children.Clear();
         }
 
-        internal virtual void SetDestination(PdfDestination destination)
-        {
+        internal virtual void SetDestination(PdfDestination destination) {
             this.destination = destination;
         }
 
         /// <summary>remove this outline from the document.</summary>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        internal virtual void RemoveOutline()
-        {
+        internal virtual void RemoveOutline() {
             PdfName type = content.GetAsName(PdfName.Type);
-            if (type != null && type.Equals(PdfName.Outlines))
-            {
+            if (type != null && type.Equals(PdfName.Outlines)) {
                 pdfDoc.GetCatalog().Remove(PdfName.Outlines);
                 return;
             }
@@ -252,46 +220,37 @@ namespace iTextSharp.Kernel.Pdf
             IList<iTextSharp.Kernel.Pdf.PdfOutline> children = parent.children;
             children.Remove(this);
             PdfDictionary parentContent = parent.content;
-            if (children.Count > 0)
-            {
+            if (children.Count > 0) {
                 parentContent.Put(PdfName.First, children[0].content);
                 parentContent.Put(PdfName.Last, children[children.Count - 1].content);
             }
-            else
-            {
+            else {
                 parent.RemoveOutline();
                 return;
             }
             PdfDictionary next = content.GetAsDictionary(PdfName.Next);
             PdfDictionary prev = content.GetAsDictionary(PdfName.Prev);
-            if (prev != null)
-            {
-                if (next != null)
-                {
+            if (prev != null) {
+                if (next != null) {
                     prev.Put(PdfName.Next, next);
                     next.Put(PdfName.Prev, prev);
                 }
-                else
-                {
+                else {
                     prev.Remove(PdfName.Next);
                 }
             }
-            else
-            {
-                if (next != null)
-                {
+            else {
+                if (next != null) {
                     next.Remove(PdfName.Prev);
                 }
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(iTextSharp.Kernel.Pdf.PdfOutline outline)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfOutline AddOutline(iTextSharp.Kernel.Pdf.PdfOutline outline) {
             iTextSharp.Kernel.Pdf.PdfOutline newOutline = AddOutline(outline.GetTitle());
             newOutline.AddDestination(outline.GetDestination());
             IList<iTextSharp.Kernel.Pdf.PdfOutline> children = outline.GetAllChildren();
-            foreach (iTextSharp.Kernel.Pdf.PdfOutline child in children)
-            {
+            foreach (iTextSharp.Kernel.Pdf.PdfOutline child in children) {
                 newOutline.AddOutline(child);
             }
             return newOutline;

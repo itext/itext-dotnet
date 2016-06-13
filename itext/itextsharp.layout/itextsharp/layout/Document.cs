@@ -48,8 +48,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout
-{
+namespace iTextSharp.Layout {
     /// <summary>Document is the default root element when creating a self-sufficient PDF.</summary>
     /// <remarks>
     /// Document is the default root element when creating a self-sufficient PDF. It
@@ -64,8 +63,7 @@ namespace iTextSharp.Layout
     /// <see cref="SetRenderer(iTextSharp.Layout.Renderer.DocumentRenderer)"></see>
     /// .
     /// </remarks>
-    public class Document : RootElement<iTextSharp.Layout.Document>
-    {
+    public class Document : RootElement<iTextSharp.Layout.Document> {
         protected internal float leftMargin = 36;
 
         protected internal float rightMargin = 36;
@@ -86,8 +84,7 @@ namespace iTextSharp.Layout
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         public Document(PdfDocument pdfDoc)
-            : this(pdfDoc, pdfDoc.GetDefaultPageSize())
-        {
+            : this(pdfDoc, pdfDoc.GetDefaultPageSize()) {
         }
 
         /// <summary>
@@ -100,8 +97,7 @@ namespace iTextSharp.Layout
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
         /// <param name="pageSize">the page size</param>
         public Document(PdfDocument pdfDoc, PageSize pageSize)
-            : this(pdfDoc, pageSize, true)
-        {
+            : this(pdfDoc, pageSize, true) {
         }
 
         /// <summary>
@@ -120,18 +116,15 @@ namespace iTextSharp.Layout
         /// as soon as possible.
         /// </param>
         public Document(PdfDocument pdfDoc, PageSize pageSize, bool immediateFlush)
-            : base()
-        {
+            : base() {
             this.pdfDocument = pdfDoc;
             this.pdfDocument.SetDefaultPageSize(pageSize);
             this.immediateFlush = immediateFlush;
         }
 
         /// <summary>Closes the document and associated PdfDocument.</summary>
-        public virtual void Close()
-        {
-            if (rootRenderer != null && !immediateFlush)
-            {
+        public virtual void Close() {
+            if (rootRenderer != null && !immediateFlush) {
                 rootRenderer.Flush();
             }
             pdfDocument.Close();
@@ -148,19 +141,16 @@ namespace iTextSharp.Layout
         /// , optionally with a specified size
         /// </param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Document Add(AreaBreak areaBreak)
-        {
+        public virtual iTextSharp.Layout.Document Add(AreaBreak areaBreak) {
             childElements.Add(areaBreak);
             EnsureRootRendererNotNull().AddChild(areaBreak.CreateRendererSubTree());
             return this;
         }
 
-        public override iTextSharp.Layout.Document Add<T>(BlockElement<T> element)
-        {
+        public override iTextSharp.Layout.Document Add<T>(BlockElement<T> element) {
             CheckClosingStatus();
             base.Add(element);
-            if (element is ILargeElement)
-            {
+            if (element is ILargeElement) {
                 ((ILargeElement)element).SetDocument(this);
                 ((ILargeElement)element).FlushContent();
             }
@@ -169,8 +159,7 @@ namespace iTextSharp.Layout
 
         /// <summary>Gets PDF document.</summary>
         /// <returns>the in-memory representation of the PDF document</returns>
-        public virtual PdfDocument GetPdfDocument()
-        {
+        public virtual PdfDocument GetPdfDocument() {
             return pdfDocument;
         }
 
@@ -183,8 +172,7 @@ namespace iTextSharp.Layout
         /// behavior.
         /// </summary>
         /// <param name="documentRenderer"/>
-        public virtual void SetRenderer(DocumentRenderer documentRenderer)
-        {
+        public virtual void SetRenderer(DocumentRenderer documentRenderer) {
             this.rootRenderer = documentRenderer;
         }
 
@@ -192,8 +180,7 @@ namespace iTextSharp.Layout
         /// Forces all registered renderers (including child element renderers) to
         /// flush their contents to the content stream.
         /// </summary>
-        public virtual void Flush()
-        {
+        public virtual void Flush() {
             rootRenderer.Flush();
         }
 
@@ -209,69 +196,55 @@ namespace iTextSharp.Layout
         /// <see cref="RootElement{T}.immediateFlush"/>
         /// to <code>true</code>.
         /// </remarks>
-        public virtual void Relayout()
-        {
-            if (immediateFlush)
-            {
+        public virtual void Relayout() {
+            if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");
             }
-            while (pdfDocument.GetNumberOfPages() > 0)
-            {
+            while (pdfDocument.GetNumberOfPages() > 0) {
                 pdfDocument.RemovePage(pdfDocument.GetNumberOfPages());
             }
             rootRenderer = new DocumentRenderer(this, immediateFlush);
-            foreach (IElement element in childElements)
-            {
+            foreach (IElement element in childElements) {
                 rootRenderer.AddChild(element.CreateRendererSubTree());
             }
         }
 
-        protected internal override RootRenderer EnsureRootRendererNotNull()
-        {
-            if (rootRenderer == null)
-            {
+        protected internal override RootRenderer EnsureRootRendererNotNull() {
+            if (rootRenderer == null) {
                 rootRenderer = new DocumentRenderer(this, immediateFlush);
             }
             return rootRenderer;
         }
 
-        public virtual float GetLeftMargin()
-        {
+        public virtual float GetLeftMargin() {
             return leftMargin;
         }
 
-        public virtual void SetLeftMargin(float leftMargin)
-        {
+        public virtual void SetLeftMargin(float leftMargin) {
             this.leftMargin = leftMargin;
         }
 
-        public virtual float GetRightMargin()
-        {
+        public virtual float GetRightMargin() {
             return rightMargin;
         }
 
-        public virtual void SetRightMargin(float rightMargin)
-        {
+        public virtual void SetRightMargin(float rightMargin) {
             this.rightMargin = rightMargin;
         }
 
-        public virtual float GetTopMargin()
-        {
+        public virtual float GetTopMargin() {
             return topMargin;
         }
 
-        public virtual void SetTopMargin(float topMargin)
-        {
+        public virtual void SetTopMargin(float topMargin) {
             this.topMargin = topMargin;
         }
 
-        public virtual float GetBottomMargin()
-        {
+        public virtual float GetBottomMargin() {
             return bottomMargin;
         }
 
-        public virtual void SetBottomMargin(float bottomMargin)
-        {
+        public virtual void SetBottomMargin(float bottomMargin) {
             this.bottomMargin = bottomMargin;
         }
 
@@ -280,8 +253,7 @@ namespace iTextSharp.Layout
         /// <param name="rightMargin">the right margin</param>
         /// <param name="leftMargin">the left margin</param>
         /// <param name="bottomMargin">the lower margin</param>
-        public virtual void SetMargins(float topMargin, float rightMargin, float bottomMargin, float leftMargin)
-        {
+        public virtual void SetMargins(float topMargin, float rightMargin, float bottomMargin, float leftMargin) {
             SetTopMargin(topMargin);
             SetRightMargin(rightMargin);
             SetBottomMargin(bottomMargin);
@@ -302,18 +274,15 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Kernel.Geom.Rectangle"/>
         /// with the required dimensions and origin point
         /// </returns>
-        public virtual Rectangle GetPageEffectiveArea(PageSize pageSize)
-        {
+        public virtual Rectangle GetPageEffectiveArea(PageSize pageSize) {
             return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin, pageSize.GetWidth
                 () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
         }
 
         /// <summary>checks whether a method is invoked at the closed document</summary>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal virtual void CheckClosingStatus()
-        {
-            if (GetPdfDocument().IsClosed())
-            {
+        protected internal virtual void CheckClosingStatus() {
+            if (GetPdfDocument().IsClosed()) {
                 throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);
             }
         }

@@ -44,24 +44,21 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Forms
-{
+namespace iTextSharp.Forms {
     /// <summary>A signature field lock dictionary.</summary>
     /// <remarks>
     /// A signature field lock dictionary. Specifies a set of form
     /// fields that shall be locked when this signature field is
     /// signed.
     /// </remarks>
-    public class PdfSigFieldLockDictionary : PdfObjectWrapper<PdfDictionary>
-    {
+    public class PdfSigFieldLockDictionary : PdfObjectWrapper<PdfDictionary> {
         /// <summary>
         /// Creates an instance of
         /// <see cref="PdfSigFieldLockDictionary"/>
         /// .
         /// </summary>
         public PdfSigFieldLockDictionary()
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
         }
 
         /// <summary>
@@ -74,8 +71,7 @@ namespace iTextSharp.Forms
         /// the signature field lock dictionary.
         /// </param>
         public PdfSigFieldLockDictionary(PdfDictionary dict)
-            : base(dict)
-        {
+            : base(dict) {
             GetPdfObject().Put(PdfName.Type, PdfName.SigFieldLock);
         }
 
@@ -96,8 +92,7 @@ namespace iTextSharp.Forms
         /// object.
         /// </returns>
         public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(PdfSigFieldLockDictionary.LockPermissions
-             permissions)
-        {
+             permissions) {
             GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
             return this;
         }
@@ -114,11 +109,9 @@ namespace iTextSharp.Forms
         /// object.
         /// </returns>
         public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction
-             action, params String[] fields)
-        {
+             action, params String[] fields) {
             PdfArray fieldsArray = new PdfArray();
-            foreach (String field in fields)
-            {
+            foreach (String field in fields) {
                 fieldsArray.Add(new PdfString(field));
             }
             GetPdfObject().Put(PdfName.Action, GetLockActionValue(action));
@@ -126,53 +119,41 @@ namespace iTextSharp.Forms
             return this;
         }
 
-        public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action)
-        {
-            switch (action)
-            {
-                case PdfSigFieldLockDictionary.LockAction.ALL:
-                {
+        public static PdfName GetLockActionValue(PdfSigFieldLockDictionary.LockAction action) {
+            switch (action) {
+                case PdfSigFieldLockDictionary.LockAction.ALL: {
                     return PdfName.All;
                 }
 
-                case PdfSigFieldLockDictionary.LockAction.INCLUDE:
-                {
+                case PdfSigFieldLockDictionary.LockAction.INCLUDE: {
                     return PdfName.Include;
                 }
 
-                case PdfSigFieldLockDictionary.LockAction.EXCLUDE:
-                {
+                case PdfSigFieldLockDictionary.LockAction.EXCLUDE: {
                     return PdfName.Exclude;
                 }
 
-                default:
-                {
+                default: {
                     return PdfName.All;
                 }
             }
         }
 
-        public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions permissions)
-        {
-            switch (permissions)
-            {
-                case PdfSigFieldLockDictionary.LockPermissions.NO_CHANGES_ALLOWED:
-                {
+        public static PdfNumber GetLockPermission(PdfSigFieldLockDictionary.LockPermissions permissions) {
+            switch (permissions) {
+                case PdfSigFieldLockDictionary.LockPermissions.NO_CHANGES_ALLOWED: {
                     return new PdfNumber(1);
                 }
 
-                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING:
-                {
+                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING: {
                     return new PdfNumber(2);
                 }
 
-                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING_AND_ANNOTATION:
-                {
+                case PdfSigFieldLockDictionary.LockPermissions.FORM_FILLING_AND_ANNOTATION: {
                     return new PdfNumber(3);
                 }
 
-                default:
-                {
+                default: {
                     return new PdfNumber(0);
                 }
             }
@@ -189,8 +170,7 @@ namespace iTextSharp.Forms
         /// <li>all the fields except those specified in the /Fields array.</li>
         /// </ul>
         /// </remarks>
-        public enum LockAction
-        {
+        public enum LockAction {
             ALL,
             INCLUDE,
             EXCLUDE
@@ -216,15 +196,13 @@ namespace iTextSharp.Forms
         /// and modification; other changes invalidate the signature.</li>
         /// </ul>
         /// </summary>
-        public enum LockPermissions
-        {
+        public enum LockPermissions {
             NO_CHANGES_ALLOWED,
             FORM_FILLING,
             FORM_FILLING_AND_ANNOTATION
         }
 
-        protected override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
     }

@@ -47,10 +47,8 @@ using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    internal class PdfXrefTable
-    {
+namespace iTextSharp.Kernel.Pdf {
+    internal class PdfXrefTable {
         private const int INITIAL_CAPACITY = 32;
 
         private const int MAX_GENERATION = 65535;
@@ -70,14 +68,11 @@ namespace iTextSharp.Kernel.Pdf
         private readonly SortedSet<int> freeReferences;
 
         public PdfXrefTable()
-            : this(INITIAL_CAPACITY)
-        {
+            : this(INITIAL_CAPACITY) {
         }
 
-        public PdfXrefTable(int capacity)
-        {
-            if (capacity < 1)
-            {
+        public PdfXrefTable(int capacity) {
+            if (capacity < 1) {
                 capacity = INITIAL_CAPACITY;
             }
             xref = new PdfIndirectReference[capacity];
@@ -87,10 +82,8 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Adds indirect reference to list of indirect objects.</summary>
         /// <param name="reference">indirect reference to add.</param>
-        public virtual PdfIndirectReference Add(PdfIndirectReference reference)
-        {
-            if (reference == null)
-            {
+        public virtual PdfIndirectReference Add(PdfIndirectReference reference) {
+            if (reference == null) {
                 return null;
             }
             int objNr = reference.GetObjNumber();
@@ -100,15 +93,12 @@ namespace iTextSharp.Kernel.Pdf
             return reference;
         }
 
-        public virtual int Size()
-        {
+        public virtual int Size() {
             return count + 1;
         }
 
-        public virtual PdfIndirectReference Get(int index)
-        {
-            if (index > count)
-            {
+        public virtual PdfIndirectReference Get(int index) {
+            if (index > count) {
                 return null;
             }
             return xref[index];
@@ -116,52 +106,42 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Creates next available indirect reference.</summary>
         /// <returns>created indirect reference.</returns>
-        protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document)
-        {
+        protected internal virtual PdfIndirectReference CreateNextIndirectReference(PdfDocument document) {
             PdfIndirectReference reference;
-            if (freeReferences.Count > 0)
-            {
+            if (freeReferences.Count > 0) {
                 int num = (int)freeReferences.PollFirst();
                 reference = xref[num];
-                if (reference == null)
-                {
+                if (reference == null) {
                     reference = new PdfIndirectReference(document, num);
                     xref[num] = reference;
                 }
                 reference.SetOffset(0);
                 reference.ClearState(PdfObject.FREE);
             }
-            else
-            {
+            else {
                 reference = new PdfIndirectReference(document, ++count);
                 Add(reference);
             }
             return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
-        protected internal virtual void FreeReference(PdfIndirectReference reference)
-        {
+        protected internal virtual void FreeReference(PdfIndirectReference reference) {
             reference.SetOffset(0);
             reference.SetState(PdfObject.FREE);
-            if (!reference.CheckState(PdfObject.FLUSHED))
-            {
-                if (reference.refersTo != null)
-                {
+            if (!reference.CheckState(PdfObject.FLUSHED)) {
+                if (reference.refersTo != null) {
                     reference.refersTo.SetIndirectReference(null).SetState(PdfObject.MUST_BE_INDIRECT);
                     reference.refersTo = null;
                 }
-                if (reference.GetGenNumber() < MAX_GENERATION)
-                {
+                if (reference.GetGenNumber() < MAX_GENERATION) {
                     freeReferences.Add(reference.GetObjNumber());
                     xref[reference.GetObjNumber()] = null;
                 }
             }
         }
 
-        protected internal virtual void SetCapacity(int capacity)
-        {
-            if (capacity > xref.Length)
-            {
+        protected internal virtual void SetCapacity(int capacity) {
+            if (capacity > xref.Length) {
                 ExtendXref(capacity);
             }
         }
@@ -170,99 +150,78 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
-             crypto)
-        {
+             crypto) {
             PdfWriter writer = document.GetWriter();
-            if (document.IsAppendMode())
-            {
+            if (document.IsAppendMode()) {
                 // Increment generation number for all freed references.
-                foreach (int? objNr in freeReferences)
-                {
+                foreach (int? objNr in freeReferences) {
                     xref[(int)objNr].genNr++;
                 }
             }
-            else
-            {
-                foreach (int? objNr in freeReferences)
-                {
+            else {
+                foreach (int? objNr in freeReferences) {
                     xref[(int)objNr] = null;
                 }
             }
             freeReferences.Clear();
-            for (int i = count; i > 0; --i)
-            {
+            for (int i = count; i > 0; --i) {
                 PdfIndirectReference lastRef = xref[i];
                 if (lastRef == null || (lastRef.IsFree() && lastRef.GetGenNumber() == 0) || (!lastRef.CheckState(PdfObject
-                    .FLUSHED) && !(document.properties.appendMode && !lastRef.CheckState(PdfObject.MODIFIED))))
-                {
+                    .FLUSHED) && !(document.properties.appendMode && !lastRef.CheckState(PdfObject.MODIFIED)))) {
                     --count;
                 }
-                else
-                {
+                else {
                     break;
                 }
             }
             IList<int> sections = new List<int>();
             int first = 0;
             int len = 1;
-            if (document.IsAppendMode())
-            {
+            if (document.IsAppendMode()) {
                 first = 1;
                 len = 0;
             }
-            for (int i_1 = 1; i_1 < Size(); i_1++)
-            {
+            for (int i_1 = 1; i_1 < Size(); i_1++) {
                 PdfIndirectReference reference = xref[i_1];
-                if (reference != null)
-                {
+                if (reference != null) {
                     if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference.IsFree() &&
-                         reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED)))
-                    {
+                         reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED))) {
                         reference = null;
                     }
                 }
-                if (reference == null)
-                {
-                    if (len > 0)
-                    {
+                if (reference == null) {
+                    if (len > 0) {
                         sections.Add(first);
                         sections.Add(len);
                     }
                     len = 0;
                 }
-                else
-                {
-                    if (len > 0)
-                    {
+                else {
+                    if (len > 0) {
                         len++;
                     }
-                    else
-                    {
+                    else {
                         first = i_1;
                         len = 1;
                     }
                 }
             }
-            if (len > 0)
-            {
+            if (len > 0) {
                 sections.Add(first);
                 sections.Add(len);
             }
-            if (document.properties.appendMode && sections.Count == 0)
-            {
+            if (document.properties.appendMode && sections.Count == 0) {
                 // no modifications.
                 xref = null;
                 return;
             }
             long startxref = writer.GetCurrentPos();
-            if (writer.IsFullCompression())
-            {
+            if (writer.IsFullCompression()) {
                 PdfStream xrefStream = ((PdfStream)new PdfStream().MakeIndirect(document));
                 xrefStream.MakeIndirect(document);
                 xrefStream.Put(PdfName.Type, PdfName.XRef);
                 xrefStream.Put(PdfName.ID, fileId);
-                if (crypto != null)
-                {
+                if (crypto != null) {
                     xrefStream.Put(PdfName.Encrypt, crypto);
                 }
                 xrefStream.Put(PdfName.Size, new PdfNumber(this.Size()));
@@ -274,46 +233,37 @@ namespace iTextSharp.Kernel.Pdf
                 xrefStream.Put(PdfName.Info, document.GetDocumentInfo().GetPdfObject());
                 xrefStream.Put(PdfName.Root, document.GetCatalog().GetPdfObject());
                 PdfArray index = new PdfArray();
-                foreach (int? section in sections)
-                {
+                foreach (int? section in sections) {
                     index.Add(new PdfNumber((int)section));
                 }
-                if (document.properties.appendMode)
-                {
+                if (document.properties.appendMode) {
                     PdfNumber lastXref = new PdfNumber(document.reader.GetLastXref());
                     xrefStream.Put(PdfName.Prev, lastXref);
                 }
                 xrefStream.Put(PdfName.Index, index);
                 iTextSharp.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
-                for (int k = 0; k < sections.Count; k += 2)
-                {
+                for (int k = 0; k < sections.Count; k += 2) {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
-                    for (int i_2 = first; i_2 < first + len; i_2++)
-                    {
+                    for (int i_2 = first; i_2 < first + len; i_2++) {
                         PdfIndirectReference reference = xrefTable.Get(i_2);
-                        if (reference == null)
-                        {
+                        if (reference == null) {
                             continue;
                         }
-                        if (reference.IsFree())
-                        {
+                        if (reference.IsFree()) {
                             xrefStream.GetOutputStream().Write(0);
                             //NOTE The object number of the next free object should be at this position due to spec.
                             xrefStream.GetOutputStream().Write(IntToBytes(0));
                             xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
                         }
-                        else
-                        {
-                            if (reference.GetObjStreamNumber() == 0)
-                            {
+                        else {
+                            if (reference.GetObjStreamNumber() == 0) {
                                 xrefStream.GetOutputStream().Write(1);
                                 System.Diagnostics.Debug.Assert(reference.GetOffset() < int.MaxValue);
                                 xrefStream.GetOutputStream().Write(IntToBytes((int)reference.GetOffset()));
                                 xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetGenNumber()));
                             }
-                            else
-                            {
+                            else {
                                 xrefStream.GetOutputStream().Write(2);
                                 xrefStream.GetOutputStream().Write(IntToBytes(reference.GetObjStreamNumber()));
                                 xrefStream.GetOutputStream().Write(ShortToBytes(reference.GetIndex()));
@@ -323,27 +273,22 @@ namespace iTextSharp.Kernel.Pdf
                 }
                 xrefStream.Flush();
             }
-            else
-            {
+            else {
                 writer.WriteString("xref\n");
                 iTextSharp.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
-                for (int k = 0; k < sections.Count; k += 2)
-                {
+                for (int k = 0; k < sections.Count; k += 2) {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
-                    for (int i_2 = first; i_2 < first + len; i_2++)
-                    {
+                    for (int i_2 = first; i_2 < first + len; i_2++) {
                         PdfIndirectReference reference = xrefTable.Get(i_2);
                         writer.WriteString(DecimalFormatUtil.FormatNumber(reference.GetOffset(), objectOffsetFormatter)).WriteSpace
                             ().WriteString(DecimalFormatUtil.FormatNumber(reference.GetGenNumber(), objectGenerationFormatter)).WriteSpace
                             ();
-                        if (reference.IsFree())
-                        {
+                        if (reference.IsFree()) {
                             writer.WriteBytes(freeXRefEntry);
                         }
-                        else
-                        {
+                        else {
                             writer.WriteBytes(inUseXRefEntry);
                         }
                     }
@@ -356,13 +301,11 @@ namespace iTextSharp.Kernel.Pdf
                 trailer.Remove(PdfName.Length);
                 trailer.Put(PdfName.Size, new PdfNumber(this.Size()));
                 trailer.Put(PdfName.ID, fileId);
-                if (crypto != null)
-                {
+                if (crypto != null) {
                     trailer.Put(PdfName.Encrypt, crypto);
                 }
                 writer.WriteString("trailer\n");
-                if (document.properties.appendMode)
-                {
+                if (document.properties.appendMode) {
                     PdfNumber lastXref = new PdfNumber(document.reader.GetLastXref());
                     trailer.Put(PdfName.Prev, lastXref);
                 }
@@ -374,12 +317,9 @@ namespace iTextSharp.Kernel.Pdf
             xref = null;
         }
 
-        internal virtual void Clear()
-        {
-            for (int i = 1; i <= count; i++)
-            {
-                if (xref[i] != null && xref[i].IsFree())
-                {
+        internal virtual void Clear() {
+            for (int i = 1; i <= count; i++) {
+                if (xref[i] != null && xref[i].IsFree()) {
                     continue;
                 }
                 xref[i] = null;
@@ -388,39 +328,32 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal static void WriteKeyInfo(PdfWriter writer)
-        {
+        protected internal static void WriteKeyInfo(PdfWriter writer) {
             Version version = Version.GetInstance();
             String k = version.GetKey();
-            if (k == null)
-            {
+            if (k == null) {
                 k = "iText";
             }
             writer.WriteString(String.Format("%%%s-%s\n", k, version.GetRelease()));
         }
 
-        private void EnsureCount(int count)
-        {
-            if (count >= xref.Length)
-            {
+        private void EnsureCount(int count) {
+            if (count >= xref.Length) {
                 ExtendXref(count << 1);
             }
         }
 
-        private void ExtendXref(int capacity)
-        {
+        private void ExtendXref(int capacity) {
             PdfIndirectReference[] newXref = new PdfIndirectReference[capacity];
             System.Array.Copy(xref, 0, newXref, 0, xref.Length);
             xref = newXref;
         }
 
-        private static byte[] ShortToBytes(int n)
-        {
+        private static byte[] ShortToBytes(int n) {
             return new byte[] { (byte)((n >> 8) & 0xFF), (byte)(n & 0xFF) };
         }
 
-        private static byte[] IntToBytes(int n)
-        {
+        private static byte[] IntToBytes(int n) {
             return new byte[] { (byte)((n >> 24) & 0xFF), (byte)((n >> 16) & 0xFF), (byte)((n >> 8) & 0xFF), (byte)(n 
                 & 0xFF) };
         }

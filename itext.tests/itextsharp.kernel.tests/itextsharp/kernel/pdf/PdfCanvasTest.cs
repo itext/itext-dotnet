@@ -18,10 +18,8 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfCanvasTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfCanvasTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfCanvasTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -32,15 +30,13 @@ namespace iTextSharp.Kernel.Pdf
              };
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateSimpleCanvas()
-        {
+        public virtual void CreateSimpleCanvas() {
             String author = "Alexander Chingarev";
             String creator = "iText 6";
             String title = "Empty iText 6 Document";
@@ -68,8 +64,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateSimpleCanvasWithDrawing()
-        {
+        public virtual void CreateSimpleCanvasWithDrawing() {
             String fileName = "simpleCanvasWithDrawing.pdf";
             String author = "Alexander Chingarev";
             String creator = "iText 6";
@@ -105,8 +100,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateSimpleCanvasWithText()
-        {
+        public virtual void CreateSimpleCanvasWithText() {
             String fileName = "simpleCanvasWithText.pdf";
             String author = "Alexander Chingarev";
             String creator = "iText 6";
@@ -147,8 +141,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateSimpleCanvasWithPageFlush()
-        {
+        public virtual void CreateSimpleCanvasWithPageFlush() {
             String author = "Alexander Chingarev";
             String creator = "iText 6";
             String title = "Empty iText 6 Document";
@@ -177,8 +170,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateSimpleCanvasWithFullCompression()
-        {
+        public virtual void CreateSimpleCanvasWithFullCompression() {
             String author = "Alexander Chingarev";
             String creator = "iText 6";
             String title = "Empty iText 6 Document";
@@ -207,8 +199,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateSimpleCanvasWithPageFlushAndFullCompression()
-        {
+        public virtual void CreateSimpleCanvasWithPageFlushAndFullCompression() {
             String author = "Alexander Chingarev";
             String creator = "iText 6";
             String title = "Empty iText 6 Document";
@@ -238,8 +229,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create1000PagesDocument()
-        {
+        public virtual void Create1000PagesDocument() {
             int pageCount = 1000;
             String filename = destinationFolder + pageCount + "PagesDocument.pdf";
             String author = "Alexander Chingarev";
@@ -249,8 +239,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -268,8 +257,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -278,8 +266,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create100PagesDocument()
-        {
+        public virtual void Create100PagesDocument() {
             int pageCount = 100;
             String filename = destinationFolder + pageCount + "PagesDocument.pdf";
             String author = "Alexander Chingarev";
@@ -289,8 +276,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -308,8 +294,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -318,8 +303,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create10PagesDocument()
-        {
+        public virtual void Create10PagesDocument() {
             int pageCount = 10;
             String filename = destinationFolder + pageCount + "PagesDocument.pdf";
             String author = "Alexander Chingarev";
@@ -329,8 +313,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -348,8 +331,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -358,8 +340,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create1000PagesDocumentWithText()
-        {
+        public virtual void Create1000PagesDocumentWithText() {
             int pageCount = 1000;
             String filename = destinationFolder + "1000PagesDocumentWithText.pdf";
             String author = "Alexander Chingarev";
@@ -369,8 +350,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 650).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER
@@ -388,8 +368,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -398,8 +377,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create1000PagesDocumentWithFullCompression()
-        {
+        public virtual void Create1000PagesDocumentWithFullCompression() {
             int pageCount = 1000;
             String filename = destinationFolder + "1000PagesDocumentWithFullCompression.pdf";
             String author = "Alexander Chingarev";
@@ -409,8 +387,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -428,8 +405,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -438,8 +414,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create100PagesDocumentWithFullCompression()
-        {
+        public virtual void Create100PagesDocumentWithFullCompression() {
             int pageCount = 100;
             String filename = destinationFolder + pageCount + "PagesDocumentWithFullCompression.pdf";
             String author = "Alexander Chingarev";
@@ -449,8 +424,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -468,8 +442,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -478,8 +451,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create197PagesDocumentWithFullCompression()
-        {
+        public virtual void Create197PagesDocumentWithFullCompression() {
             int pageCount = 197;
             String filename = destinationFolder + pageCount + "PagesDocumentWithFullCompression.pdf";
             String author = "Alexander Chingarev";
@@ -489,8 +461,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -508,8 +479,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -518,8 +488,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Create10PagesDocumentWithFullCompression()
-        {
+        public virtual void Create10PagesDocumentWithFullCompression() {
             int pageCount = 10;
             String filename = destinationFolder + pageCount + "PagesDocumentWithFullCompression.pdf";
             String author = "Alexander Chingarev";
@@ -529,8 +498,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer = new PdfWriter(fos, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < pageCount; i++)
-            {
+            for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -548,8 +516,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
                 PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -559,8 +526,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CopyPagesTest1()
-        {
+        public virtual void CopyPagesTest1() {
             String file1 = destinationFolder + "copyPages1_1.pdf";
             String file2 = destinationFolder + "copyPages1_2.pdf";
             PdfWriter writer1 = new PdfWriter(new FileStream(file1, FileMode.Create));
@@ -589,8 +555,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader = new PdfReader(file2);
             PdfDocument pdfDocument = new PdfDocument(reader);
-            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++)
-            {
+            for (int i = 1; i <= pdfDocument.GetNumberOfPages(); i++) {
                 PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
@@ -606,14 +571,12 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CopyPagesTest2()
-        {
+        public virtual void CopyPagesTest2() {
             String file1 = destinationFolder + "copyPages2_1.pdf";
             String file2 = destinationFolder + "copyPages2_2.pdf";
             PdfWriter writer1 = new PdfWriter(new FileStream(file1, FileMode.Create));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 0; i < 10; i++)
-            {
+            for (int i = 0; i < 10; i++) {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
                 canvas.Rectangle(100, 600, 100, 100);
@@ -630,8 +593,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess.Read)));
             PdfWriter writer2 = new PdfWriter(new FileStream(file2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(writer2);
-            for (int i_1 = 9; i_1 >= 0; i_1--)
-            {
+            for (int i_1 = 9; i_1 >= 0; i_1--) {
                 PdfPage page2 = pdfDoc1.GetPage(i_1 + 1).CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
             }
@@ -646,8 +608,7 @@ namespace iTextSharp.Kernel.Pdf
             CompareTool cmpTool = new CompareTool();
             PdfDocument doc1 = new PdfDocument(new PdfReader(file1));
             PdfDocument doc2 = new PdfDocument(new PdfReader(file2));
-            for (int i_2 = 0; i_2 < 10; i_2++)
-            {
+            for (int i_2 = 0; i_2 < 10; i_2++) {
                 PdfDictionary page1 = doc1.GetPage(i_2 + 1).GetPdfObject();
                 PdfDictionary page2 = doc2.GetPage(10 - i_2).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page2));
@@ -659,8 +620,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CopyPagesTest3()
-        {
+        public virtual void CopyPagesTest3() {
             String file1 = destinationFolder + "copyPages3_1.pdf";
             String file2 = destinationFolder + "copyPages3_2.pdf";
             PdfWriter writer1 = new PdfWriter(new FileStream(file1, FileMode.Create));
@@ -681,12 +641,10 @@ namespace iTextSharp.Kernel.Pdf
             page1 = pdfDoc1.GetPage(1);
             PdfWriter writer2 = new PdfWriter(new FileStream(file2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(writer2);
-            for (int i = 0; i < 10; i++)
-            {
+            for (int i = 0; i < 10; i++) {
                 PdfPage page2 = page1.CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
-                if (i % 2 == 0)
-                {
+                if (i % 2 == 0) {
                     page2.Flush();
                 }
             }
@@ -700,8 +658,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader2 = new PdfReader(file2);
             PdfDocument doc2 = new PdfDocument(reader2);
             NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
-            for (int i_1 = 0; i_1 < 10; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 10; i_1++) {
                 PdfDictionary p2 = doc2.GetPage(i_1 + 1).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(p1, p2));
             }
@@ -712,14 +669,12 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CopyPagesTest4()
-        {
+        public virtual void CopyPagesTest4() {
             String file1 = destinationFolder + "copyPages4_1.pdf";
             FileStream fos1 = new FileStream(file1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 0; i < 5; i++)
-            {
+            for (int i = 0; i < 5; i++) {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page1);
                 canvas.Rectangle(100, 600, 100, 100);
@@ -733,8 +688,7 @@ namespace iTextSharp.Kernel.Pdf
             }
             pdfDoc1.Close();
             pdfDoc1 = new PdfDocument(new PdfReader(new FileStream(file1, FileMode.Open, FileAccess.Read)));
-            for (int i_1 = 0; i_1 < 5; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 5; i_1++) {
                 FileStream fos2 = new FileStream(destinationFolder + String.Format("copyPages4_{0}.pdf", i_1 + 2), FileMode.Create
                     );
                 PdfWriter writer2 = new PdfWriter(fos2);
@@ -748,8 +702,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader1 = new PdfReader(file1);
             PdfDocument doc1 = new PdfDocument(reader1);
             NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 0; i_2 < 5; i_2++)
-            {
+            for (int i_2 = 0; i_2 < 5; i_2++) {
                 PdfDictionary page1 = doc1.GetPage(i_2 + 1).GetPdfObject();
                 PdfDocument doc2 = new PdfDocument(new PdfReader(destinationFolder + String.Format("copyPages4_{0}.pdf", i_2
                      + 2)));
@@ -763,11 +716,9 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CopyPagesTest5()
-        {
+        public virtual void CopyPagesTest5() {
             int documentCount = 3;
-            for (int i = 0; i < documentCount; i++)
-            {
+            for (int i = 0; i < documentCount; i++) {
                 FileStream fos1 = new FileStream(destinationFolder + String.Format("copyPages5_{0}.pdf", i + 1), FileMode.Create
                     );
                 PdfWriter writer1 = new PdfWriter(fos1);
@@ -785,8 +736,7 @@ namespace iTextSharp.Kernel.Pdf
                 pdfDoc1.Close();
             }
             IList<PdfDocument> docs = new List<PdfDocument>();
-            for (int i_1 = 0; i_1 < documentCount; i_1++)
-            {
+            for (int i_1 = 0; i_1 < documentCount; i_1++) {
                 FileStream fos1 = new FileStream(destinationFolder + String.Format("copyPages5_{0}.pdf", i_1 + 1), FileMode.Open
                     , FileAccess.Read);
                 PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(fos1));
@@ -795,18 +745,15 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(destinationFolder + "copyPages5_4.pdf", FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(writer2);
-            for (int i_2 = 0; i_2 < 3; i_2++)
-            {
+            for (int i_2 = 0; i_2 < 3; i_2++) {
                 pdfDoc2.AddPage(docs[i_2].GetPage(1).CopyTo(pdfDoc2));
             }
             pdfDoc2.Close();
-            foreach (PdfDocument doc in docs)
-            {
+            foreach (PdfDocument doc in docs) {
                 doc.Close();
             }
             CompareTool cmpTool = new CompareTool();
-            for (int i_3 = 0; i_3 < 3; i_3++)
-            {
+            for (int i_3 = 0; i_3 < 3; i_3++) {
                 PdfReader reader1 = new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf", i_3 + 1));
                 PdfDocument doc1 = new PdfDocument(reader1);
                 NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
@@ -824,8 +771,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CopyPagesTest6()
-        {
+        public virtual void CopyPagesTest6() {
             String file1 = destinationFolder + "copyPages6_1.pdf";
             String file2 = destinationFolder + "copyPages6_2.pdf";
             String file3 = destinationFolder + "copyPages6_3.pdf";
@@ -865,8 +811,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             pdfDoc3.Close();
             CompareTool cmpTool = new CompareTool();
-            for (int i = 0; i < 3; i++)
-            {
+            for (int i = 0; i < 3; i++) {
                 PdfReader reader1 = new PdfReader(file1);
                 PdfDocument doc1 = new PdfDocument(reader1);
                 NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
@@ -894,8 +839,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MarkedContentTest1()
-        {
+        public virtual void MarkedContentTest1() {
             String message = "";
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(baos);
@@ -904,12 +848,10 @@ namespace iTextSharp.Kernel.Pdf
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginMarkedContent(new PdfName("Tag1"));
             canvas.EndMarkedContent();
-            try
-            {
+            try {
                 canvas.EndMarkedContent();
             }
-            catch (PdfException e)
-            {
+            catch (PdfException e) {
                 message = e.Message;
             }
             canvas.Release();
@@ -919,8 +861,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MarkedContentTest2()
-        {
+        public virtual void MarkedContentTest2() {
             FileStream fos = new FileStream(destinationFolder + "markedContentTest2.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -943,8 +884,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void GraphicsStateTest1()
-        {
+        public virtual void GraphicsStateTest1() {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -966,8 +906,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest01()
-        {
+        public virtual void ColorTest01() {
             FileStream fos = new FileStream(destinationFolder + "colorTest01.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -989,8 +928,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest02()
-        {
+        public virtual void ColorTest02() {
             FileStream fos = new FileStream(destinationFolder + "colorTest02.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -1027,8 +965,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest03()
-        {
+        public virtual void ColorTest03() {
             FileStream fos = new FileStream(destinationFolder + "colorTest03.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -1056,8 +993,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest04()
-        {
+        public virtual void ColorTest04() {
             //Create document with 3 colored rectangles in memory.
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(baos);
@@ -1093,8 +1029,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest05()
-        {
+        public virtual void ColorTest05() {
             FileStream fos = new FileStream(destinationFolder + "colorTest05.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1121,12 +1056,10 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest06()
-        {
+        public virtual void ColorTest06() {
             byte[] bytes = new byte[256 * 3];
             int k = 0;
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 bytes[k++] = (byte)i;
                 bytes[k++] = (byte)i;
                 bytes[k++] = (byte)i;
@@ -1150,8 +1083,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest07()
-        {
+        public virtual void ColorTest07() {
             FileStream fos = new FileStream(destinationFolder + "colorTest07.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -1172,8 +1104,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorTest08()
-        {
+        public virtual void ColorTest08() {
             FileStream fos = new FileStream(destinationFolder + "colorTest08.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -1198,8 +1129,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void WmfImageTest01()
-        {
+        public virtual void WmfImageTest01() {
             FileStream fos = new FileStream(destinationFolder + "wmfImageTest01.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1215,8 +1145,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void WmfImageTest02()
-        {
+        public virtual void WmfImageTest02() {
             FileStream fos = new FileStream(destinationFolder + "wmfImageTest02.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1232,8 +1161,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void WmfImageTest03()
-        {
+        public virtual void WmfImageTest03() {
             FileStream fos = new FileStream(destinationFolder + "wmfImageTest03.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1249,8 +1177,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void WmfImageTest04()
-        {
+        public virtual void WmfImageTest04() {
             FileStream fos = new FileStream(destinationFolder + "wmfImageTest04.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1266,8 +1193,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void GifImageTest01()
-        {
+        public virtual void GifImageTest01() {
             FileStream fos = new FileStream(destinationFolder + "gifImageTest01.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1283,8 +1209,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void GifImageTest02()
-        {
+        public virtual void GifImageTest02() {
             FileStream fos = new FileStream(destinationFolder + "gifImageTest02.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1292,8 +1217,7 @@ namespace iTextSharp.Kernel.Pdf
             Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int reads = @is.Read();
-            while (reads != -1)
-            {
+            while (reads != -1) {
                 baos.Write(reads);
                 reads = @is.Read();
             }
@@ -1308,8 +1232,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void GifImageTest03()
-        {
+        public virtual void GifImageTest03() {
             FileStream fos = new FileStream(destinationFolder + "gifImageTest03.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1317,8 +1240,7 @@ namespace iTextSharp.Kernel.Pdf
             Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int reads = @is.Read();
-            while (reads != -1)
-            {
+            while (reads != -1) {
                 baos.Write(reads);
                 reads = @is.Read();
             }
@@ -1333,8 +1255,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void GifImageTest04()
-        {
+        public virtual void GifImageTest04() {
             FileStream fos = new FileStream(destinationFolder + "gifImageTest04.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1342,27 +1263,23 @@ namespace iTextSharp.Kernel.Pdf
             Stream @is = new FileStream(sourceFolder + "2-frames.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int reads = @is.Read();
-            while (reads != -1)
-            {
+            while (reads != -1) {
                 baos.Write(reads);
                 reads = @is.Read();
             }
             PdfCanvas canvas = new PdfCanvas(page);
-            try
-            {
+            try {
                 ImageDataFactory.CreateGifFrame(baos.ToArray(), 3);
                 NUnit.Framework.Assert.Fail("IOException expected");
             }
-            catch (iTextSharp.IO.IOException)
-            {
+            catch (iTextSharp.IO.IOException) {
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void GifImageTest05()
-        {
+        public virtual void GifImageTest05() {
             FileStream fos = new FileStream(destinationFolder + "gifImageTest05.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
@@ -1370,16 +1287,14 @@ namespace iTextSharp.Kernel.Pdf
             Stream @is = new FileStream(sourceFolder + "animated_fox_dog.gif", FileMode.Open, FileAccess.Read);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             int reads = @is.Read();
-            while (reads != -1)
-            {
+            while (reads != -1) {
                 baos.Write(reads);
                 reads = @is.Read();
             }
             PdfCanvas canvas = new PdfCanvas(page);
             IList<ImageData> frames = ImageDataFactory.CreateGifFrames(baos.ToArray(), new int[] { 1, 2, 5 });
             float y = 600;
-            foreach (ImageData img in frames)
-            {
+            foreach (ImageData img in frames) {
                 canvas.AddImage(img, 100, y, 200, false);
                 y -= 200;
             }
@@ -1439,8 +1354,7 @@ namespace iTextSharp.Kernel.Pdf
         [LogMessage(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
         [LogMessage(LogMessageConstant.IMAGE_HAS_MASK)]
         [LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
-        public virtual void InlineImagesTest01()
-        {
+        public virtual void InlineImagesTest01() {
             String filename = "inlineImages01.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
             PdfDocument document = new PdfDocument(writer);
@@ -1465,8 +1379,7 @@ namespace iTextSharp.Kernel.Pdf
         [LogMessage(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
         [LogMessage(LogMessageConstant.IMAGE_HAS_MASK)]
         [LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
-        public virtual void InlineImagesTest02()
-        {
+        public virtual void InlineImagesTest02() {
             String filename = "inlineImages02.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
             PdfDocument document = new PdfDocument(writer);

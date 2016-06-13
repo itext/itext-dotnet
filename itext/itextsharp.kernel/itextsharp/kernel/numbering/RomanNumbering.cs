@@ -44,16 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Kernel.Numbering
-{
+namespace iTextSharp.Kernel.Numbering {
     /// <summary>This class can produce String combinations representing a roman number.</summary>
     /// <remarks>
     /// This class can produce String combinations representing a roman number.
     /// The first roman numbers are: I, II, III, IV, V, VI, VII, VIII, IX, X
     /// See http://en.wikipedia.org/wiki/Roman_numerals
     /// </remarks>
-    public class RomanNumbering
-    {
+    public class RomanNumbering {
         /// <summary>Array with Roman digits.</summary>
         private static readonly RomanNumbering.RomanDigit[] ROMAN_DIGITS = new RomanNumbering.RomanDigit[] { new RomanNumbering.RomanDigit
             ('m', 1000, false), new RomanNumbering.RomanDigit('d', 500, false), new RomanNumbering.RomanDigit('c', 
@@ -62,15 +60,13 @@ namespace iTextSharp.Kernel.Numbering
 
         /// <summary>Returns a lower case roman representation of an integer.</summary>
         /// <param name="number">a number to be converted to roman notation.</param>
-        public static String ToRomanLowerCase(int number)
-        {
+        public static String ToRomanLowerCase(int number) {
             return Convert(number);
         }
 
         /// <summary>Returns an upper case roman representation of an integer.</summary>
         /// <param name="number">a number to be converted to roman notation.</param>
-        public static String ToRomanUpperCase(int number)
-        {
+        public static String ToRomanUpperCase(int number) {
             return Convert(number).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
         }
 
@@ -80,26 +76,22 @@ namespace iTextSharp.Kernel.Numbering
         /// <code>true</code> for upper case representation,
         /// <code>false</code> for lower case one.
         /// </param>
-        public static String ToRoman(int number, bool upperCase)
-        {
+        public static String ToRoman(int number, bool upperCase) {
             return upperCase ? ToRomanUpperCase(number) : ToRomanLowerCase(number);
         }
 
         /// <summary>Returns a roman representation of an integer.</summary>
         /// <param name="index">the original number</param>
         /// <returns>the roman number representation (lower case)</returns>
-        protected internal static String Convert(int index)
-        {
+        protected internal static String Convert(int index) {
             StringBuilder buf = new StringBuilder();
             // lower than 0 ? Add minus
-            if (index < 0)
-            {
+            if (index < 0) {
                 buf.Append('-');
                 index = -index;
             }
             // greater than 3000
-            if (index > 3000)
-            {
+            if (index > 3000) {
                 buf.Append('|');
                 buf.Append(Convert(index / 1000));
                 buf.Append('|');
@@ -108,29 +100,24 @@ namespace iTextSharp.Kernel.Numbering
             }
             // number between 1 and 3000
             int pos = 0;
-            while (true)
-            {
+            while (true) {
                 // loop over the array with values for m-d-c-l-x-v-i
                 RomanNumbering.RomanDigit dig = ROMAN_DIGITS[pos];
                 // adding as many digits as we can
-                while (index >= dig.value)
-                {
+                while (index >= dig.value) {
                     buf.Append(dig.digit);
                     index -= dig.value;
                 }
                 // we have the complete number
-                if (index <= 0)
-                {
+                if (index <= 0) {
                     break;
                 }
                 // look for the next digit that can be used in a special way
                 int j = pos;
-                while (!ROMAN_DIGITS[++j].pre)
-                {
+                while (!ROMAN_DIGITS[++j].pre) {
                 }
                 // does the special notation apply?
-                if (index + ROMAN_DIGITS[j].value >= dig.value)
-                {
+                if (index + ROMAN_DIGITS[j].value >= dig.value) {
                     buf.Append(ROMAN_DIGITS[j].digit).Append(dig.digit);
                     index -= dig.value - ROMAN_DIGITS[j].value;
                 }
@@ -140,8 +127,7 @@ namespace iTextSharp.Kernel.Numbering
         }
 
         /// <summary>Helper class for Roman Digits</summary>
-        private class RomanDigit
-        {
+        private class RomanDigit {
             /// <summary>part of a roman number</summary>
             public char digit;
 
@@ -155,8 +141,7 @@ namespace iTextSharp.Kernel.Numbering
             /// <param name="digit">the roman digit</param>
             /// <param name="value">the value</param>
             /// <param name="pre">can it be used as a prefix</param>
-            internal RomanDigit(char digit, int value, bool pre)
-            {
+            internal RomanDigit(char digit, int value, bool pre) {
                 this.digit = digit;
                 this.value = value;
                 this.pre = pre;

@@ -49,10 +49,8 @@ using iTextSharp.Kernel.Pdf.Collection;
 using iTextSharp.Kernel.Pdf.Layer;
 using iTextSharp.Kernel.Pdf.Navigation;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfCatalog : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
         private readonly PdfPagesTree pageTree;
 
         protected internal IDictionary<PdfName, PdfNameTree> nameTrees = new Dictionary<PdfName, PdfNameTree>();
@@ -71,12 +69,10 @@ namespace iTextSharp.Kernel.Pdf
         private bool outlineMode;
 
         protected internal PdfCatalog(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
             //This HashMap contents all pages of the document and outlines associated to them
             //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
-            if (pdfObject == null)
-            {
+            if (pdfObject == null) {
                 throw new PdfException(PdfException.DocumentHasNoCatalogObject);
             }
             EnsureObjectIsAddedToDocument(pdfObject);
@@ -86,8 +82,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         protected internal PdfCatalog(PdfDocument pdfDocument)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument)))
-        {
+            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDocument))) {
         }
 
         /// <summary>Use this method to get the <B>Optional Content Properties Dictionary</B>.</summary>
@@ -111,27 +106,20 @@ namespace iTextSharp.Kernel.Pdf
         /// false to return null if /OCProperties entry in catalog is not present.
         /// </param>
         /// <returns>the Optional Content Properties Dictionary</returns>
-        public virtual PdfOCProperties GetOCProperties(bool createIfNotExists)
-        {
-            if (ocProperties != null)
-            {
+        public virtual PdfOCProperties GetOCProperties(bool createIfNotExists) {
+            if (ocProperties != null) {
                 return ocProperties;
             }
-            else
-            {
+            else {
                 PdfDictionary ocPropertiesDict = GetPdfObject().GetAsDictionary(PdfName.OCProperties);
-                if (ocPropertiesDict != null)
-                {
-                    if (GetDocument().GetWriter() != null)
-                    {
+                if (ocPropertiesDict != null) {
+                    if (GetDocument().GetWriter() != null) {
                         ocPropertiesDict.MakeIndirect(GetDocument());
                     }
                     ocProperties = new PdfOCProperties(ocPropertiesDict);
                 }
-                else
-                {
-                    if (createIfNotExists)
-                    {
+                else {
+                    if (createIfNotExists) {
                         ocProperties = new PdfOCProperties(GetDocument());
                     }
                 }
@@ -139,30 +127,25 @@ namespace iTextSharp.Kernel.Pdf
             return ocProperties;
         }
 
-        public virtual PdfDocument GetDocument()
-        {
+        public virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
-        public override void Flush()
-        {
+        public override void Flush() {
             throw new PdfException(PdfException.YouCannotFlushPdfCatalogManually);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination) {
             return Put(PdfName.OpenAction, destination.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetOpenAction(PdfAction action)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetOpenAction(PdfAction action) {
             return Put(PdfName.OpenAction, action.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetAdditionalAction(PdfName key, PdfAction action)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
@@ -187,38 +170,32 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="pageMode">page mode.</param>
         /// <returns>current instance of PdfCatalog</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetPageMode(PdfName pageMode)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetPageMode(PdfName pageMode) {
             if (pageMode.Equals(PdfName.UseNone) || pageMode.Equals(PdfName.UseOutlines) || pageMode.Equals(PdfName.UseThumbs
                 ) || pageMode.Equals(PdfName.FullScreen) || pageMode.Equals(PdfName.UseOC) || pageMode.Equals(PdfName.
-                UseAttachments))
-            {
+                UseAttachments)) {
                 return Put(PdfName.PageMode, pageMode);
             }
             return this;
         }
 
-        public virtual PdfName GetPageMode()
-        {
+        public virtual PdfName GetPageMode() {
             return GetPdfObject().GetAsName(PdfName.PageMode);
         }
 
         /// <summary>This method sets a page layout of the document</summary>
         /// <param name="pageLayout"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
             if (pageLayout.Equals(PdfName.SinglePage) || pageLayout.Equals(PdfName.OneColumn) || pageLayout.Equals(PdfName
                 .TwoColumnLeft) || pageLayout.Equals(PdfName.TwoColumnRight) || pageLayout.Equals(PdfName.TwoPageLeft)
-                 || pageLayout.Equals(PdfName.TwoPageRight))
-            {
+                 || pageLayout.Equals(PdfName.TwoPageRight)) {
                 return Put(PdfName.PageLayout, pageLayout);
             }
             return this;
         }
 
-        public virtual PdfName GetPageLayout()
-        {
+        public virtual PdfName GetPageLayout() {
             return GetPdfObject().GetAsName(PdfName.PageLayout);
         }
 
@@ -228,20 +205,16 @@ namespace iTextSharp.Kernel.Pdf
         /// </summary>
         /// <param name="preferences"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
         }
 
-        public virtual PdfViewerPreferences GetViewerPreferences()
-        {
+        public virtual PdfViewerPreferences GetViewerPreferences() {
             PdfDictionary viewerPreferences = GetPdfObject().GetAsDictionary(PdfName.ViewerPreferences);
-            if (viewerPreferences != null)
-            {
+            if (viewerPreferences != null) {
                 return new PdfViewerPreferences(viewerPreferences);
             }
-            else
-            {
+            else {
                 return null;
             }
         }
@@ -252,11 +225,9 @@ namespace iTextSharp.Kernel.Pdf
         /// returns
         /// <see cref="PdfNameTree"/>
         /// </returns>
-        public virtual PdfNameTree GetNameTree(PdfName treeType)
-        {
+        public virtual PdfNameTree GetNameTree(PdfName treeType) {
             PdfNameTree tree = nameTrees.Get(treeType);
-            if (tree == null)
-            {
+            if (tree == null) {
                 tree = new PdfNameTree(this, treeType);
                 nameTrees[treeType] = tree;
             }
@@ -268,10 +239,8 @@ namespace iTextSharp.Kernel.Pdf
         /// returns
         /// <see cref="PdfNumTree"/>
         /// </returns>
-        public virtual PdfNumTree GetPageLabelsTree(bool createIfNotExists)
-        {
-            if (pageLabels == null && (GetPdfObject().ContainsKey(PdfName.PageLabels) || createIfNotExists))
-            {
+        public virtual PdfNumTree GetPageLabelsTree(bool createIfNotExists) {
+            if (pageLabels == null && (GetPdfObject().ContainsKey(PdfName.PageLabels) || createIfNotExists)) {
                 pageLabels = new PdfNumTree(this, PdfName.PageLabels);
             }
             return pageLabels;
@@ -283,36 +252,29 @@ namespace iTextSharp.Kernel.Pdf
         /// to specify the Language attribute on a Tagged Pdf element.
         /// For the content usage dictionary, use PdfName.Language
         /// </remarks>
-        public virtual void SetLang(PdfString lang)
-        {
+        public virtual void SetLang(PdfString lang) {
             GetPdfObject().Put(PdfName.Lang, lang);
         }
 
-        public virtual PdfString GetLang(PdfName lang)
-        {
+        public virtual PdfString GetLang(PdfName lang) {
             return GetPdfObject().GetAsString(PdfName.Lang);
         }
 
-        public virtual void AddDeveloperExtension(PdfDeveloperExtension extension)
-        {
+        public virtual void AddDeveloperExtension(PdfDeveloperExtension extension) {
             PdfDictionary extensions = GetPdfObject().GetAsDictionary(PdfName.Extensions);
-            if (extensions == null)
-            {
+            if (extensions == null) {
                 extensions = new PdfDictionary();
                 Put(PdfName.Extensions, extensions);
             }
-            else
-            {
+            else {
                 PdfDictionary existingExtensionDict = extensions.GetAsDictionary(extension.GetPrefix());
                 int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
-                if (diff < 0)
-                {
+                if (diff < 0) {
                     return;
                 }
                 diff = extension.GetExtensionLevel() - existingExtensionDict.GetAsNumber(PdfName.ExtensionLevel).IntValue(
                     );
-                if (diff <= 0)
-                {
+                if (diff <= 0) {
                     return;
                 }
             }
@@ -325,26 +287,22 @@ namespace iTextSharp.Kernel.Pdf
         /// </summary>
         /// <param name="collection"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
             GetPdfObject().Put(PdfName.Collection, collection.GetPdfObject());
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog Remove(PdfName key)
-        {
+        public virtual iTextSharp.Kernel.Pdf.PdfCatalog Remove(PdfName key) {
             GetPdfObject().Remove(key);
             return this;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
@@ -352,20 +310,17 @@ namespace iTextSharp.Kernel.Pdf
         /// True indicates that getOCProperties() was called, may have been modified,
         /// and thus its dictionary needs to be reconstructed.
         /// </summary>
-        protected internal virtual bool IsOCPropertiesMayHaveChanged()
-        {
+        protected internal virtual bool IsOCPropertiesMayHaveChanged() {
             return ocProperties != null;
         }
 
-        internal virtual PdfPagesTree GetPageTree()
-        {
+        internal virtual PdfPagesTree GetPageTree() {
             return pageTree;
         }
 
         /// <summary>this method return map containing all pages of the document with associated outlines.</summary>
         /// <returns/>
-        internal virtual IDictionary<PdfObject, IList<PdfOutline>> GetPagesWithOutlines()
-        {
+        internal virtual IDictionary<PdfObject, IList<PdfOutline>> GetPagesWithOutlines() {
             return pagesWithOutlines;
         }
 
@@ -378,8 +333,7 @@ namespace iTextSharp.Kernel.Pdf
         /// See PdfSpec 12.3.2.3 for more info.
         /// </param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        internal virtual void AddNamedDestination(String key, PdfObject value)
-        {
+        internal virtual void AddNamedDestination(String key, PdfObject value) {
             AddNameToNameTree(key, value, PdfName.Dests);
         }
 
@@ -389,8 +343,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <param name="key">key in the name tree</param>
         /// <param name="value">value in the name tree</param>
         /// <param name="treeType">type of the tree (Dests, AP, EmbeddedFiles etc).</param>
-        internal virtual void AddNameToNameTree(String key, PdfObject value, PdfName treeType)
-        {
+        internal virtual void AddNameToNameTree(String key, PdfObject value, PdfName treeType) {
             GetNameTree(treeType).AddEntry(key, value);
         }
 
@@ -401,30 +354,24 @@ namespace iTextSharp.Kernel.Pdf
         /// </param>
         /// <returns/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        internal virtual PdfOutline GetOutlines(bool updateOutlines)
-        {
-            if (outlines != null && !updateOutlines)
-            {
+        internal virtual PdfOutline GetOutlines(bool updateOutlines) {
+            if (outlines != null && !updateOutlines) {
                 return outlines;
             }
-            if (outlines != null)
-            {
+            if (outlines != null) {
                 outlines.Clear();
                 pagesWithOutlines.Clear();
             }
             outlineMode = true;
             PdfNameTree destsTree = GetNameTree(PdfName.Dests);
             PdfDictionary outlineRoot = GetPdfObject().GetAsDictionary(PdfName.Outlines);
-            if (outlineRoot == null)
-            {
-                if (null == GetDocument().GetWriter())
-                {
+            if (outlineRoot == null) {
+                if (null == GetDocument().GetWriter()) {
                     return null;
                 }
                 outlines = new PdfOutline(GetDocument());
             }
-            else
-            {
+            else {
                 outlines = new PdfOutline(OutlineRoot, outlineRoot, GetDocument());
                 GetNextItem(outlineRoot.GetAsDictionary(PdfName.First), outlines, destsTree.GetNames());
             }
@@ -439,8 +386,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <see langword="false"/>
         /// otherwise.
         /// </returns>
-        internal virtual bool HasOutlines()
-        {
+        internal virtual bool HasOutlines() {
             return GetPdfObject().ContainsKey(PdfName.Outlines);
         }
 
@@ -449,27 +395,21 @@ namespace iTextSharp.Kernel.Pdf
         /// <remarks>This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
         ///     </remarks>
         /// <returns>state of outline mode.</returns>
-        internal virtual bool IsOutlineMode()
-        {
+        internal virtual bool IsOutlineMode() {
             return outlineMode;
         }
 
         /// <summary>This method removes all outlines associated with a given page</summary>
         /// <param name="page"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        internal virtual void RemoveOutlines(PdfPage page)
-        {
-            if (GetDocument().GetWriter() == null)
-            {
+        internal virtual void RemoveOutlines(PdfPage page) {
+            if (GetDocument().GetWriter() == null) {
                 return;
             }
-            if (HasOutlines())
-            {
+            if (HasOutlines()) {
                 GetOutlines(false);
-                if (pagesWithOutlines.Count > 0)
-                {
-                    foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject()))
-                    {
+                if (pagesWithOutlines.Count > 0) {
+                    foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject())) {
                         outline.RemoveOutline();
                     }
                 }
@@ -479,50 +419,38 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>This method sets the root outline element in the catalog.</summary>
         /// <param name="outline"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        internal virtual void AddRootOutline(PdfOutline outline)
-        {
-            if (!outlineMode)
-            {
+        internal virtual void AddRootOutline(PdfOutline outline) {
+            if (!outlineMode) {
                 return;
             }
-            if (pagesWithOutlines.Count == 0)
-            {
+            if (pagesWithOutlines.Count == 0) {
                 Put(PdfName.Outlines, outline.GetContent());
             }
         }
 
         internal virtual PdfDestination CopyDestination(PdfObject dest, IDictionary<PdfPage, PdfPage> page2page, PdfDocument
-             toDocument)
-        {
+             toDocument) {
             PdfDestination d = null;
-            if (dest.IsArray())
-            {
+            if (dest.IsArray()) {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
-                foreach (PdfPage oldPage in page2page.Keys)
-                {
-                    if (oldPage.GetPdfObject() == pageObject)
-                    {
+                foreach (PdfPage oldPage in page2page.Keys) {
+                    if (oldPage.GetPdfObject() == pageObject) {
                         PdfArray array = new PdfArray((PdfArray)dest);
                         array.Set(0, page2page.Get(oldPage).GetPdfObject());
                         d = new PdfExplicitDestination(array);
                     }
                 }
             }
-            else
-            {
-                if (dest.IsString())
-                {
+            else {
+                if (dest.IsString()) {
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
                     IDictionary<String, PdfObject> dests = destsTree.GetNames();
                     String name = ((PdfString)dest).ToUnicodeString();
                     PdfArray array = (PdfArray)dests.Get(name);
-                    if (array != null)
-                    {
+                    if (array != null) {
                         PdfObject pageObject = array.Get(0);
-                        foreach (PdfPage oldPage in page2page.Keys)
-                        {
-                            if (oldPage.GetPdfObject() == pageObject)
-                            {
+                        foreach (PdfPage oldPage in page2page.Keys) {
+                            if (oldPage.GetPdfObject() == pageObject) {
                                 array.Set(0, page2page.Get(oldPage).GetPdfObject());
                                 d = new PdfStringDestination(name);
                                 toDocument.AddNamedDestination(name, array);
@@ -534,14 +462,11 @@ namespace iTextSharp.Kernel.Pdf
             return d;
         }
 
-        private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names)
-        {
+        private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {
             PdfObject pageObj = outline.GetDestination().GetDestinationPage(names);
-            if (pageObj != null)
-            {
+            if (pageObj != null) {
                 IList<PdfOutline> outs = pagesWithOutlines.Get(pageObj);
-                if (outs == null)
-                {
+                if (outs == null) {
                     outs = new List<PdfOutline>();
                     pagesWithOutlines[pageObj] = outs;
                 }
@@ -549,29 +474,24 @@ namespace iTextSharp.Kernel.Pdf
             }
         }
 
-        private void GetNextItem(PdfDictionary item, PdfOutline parent, IDictionary<String, PdfObject> names)
-        {
-            if (null == item)
-            {
+        private void GetNextItem(PdfDictionary item, PdfOutline parent, IDictionary<String, PdfObject> names) {
+            if (null == item) {
                 return;
             }
             PdfOutline outline = new PdfOutline(item.GetAsString(PdfName.Title).ToUnicodeString(), item, parent);
             PdfObject dest = item.Get(PdfName.Dest);
-            if (dest != null)
-            {
+            if (dest != null) {
                 PdfDestination destination = PdfDestination.MakeDestination(dest);
                 outline.SetDestination(destination);
                 AddOutlineToPage(outline, names);
             }
             parent.GetAllChildren().Add(outline);
             PdfDictionary processItem = item.GetAsDictionary(PdfName.First);
-            if (processItem != null)
-            {
+            if (processItem != null) {
                 GetNextItem(processItem, outline, names);
             }
             processItem = item.GetAsDictionary(PdfName.Next);
-            if (processItem != null)
-            {
+            if (processItem != null) {
                 GetNextItem(processItem, parent, names);
             }
         }

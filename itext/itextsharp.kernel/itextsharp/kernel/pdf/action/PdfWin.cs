@@ -43,32 +43,26 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Action
-{
-    public class PdfWin : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Action {
+    public class PdfWin : PdfObjectWrapper<PdfDictionary> {
         public PdfWin(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         public PdfWin(PdfString f)
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.F, f);
         }
 
         public PdfWin(PdfString f, PdfString d, PdfString o, PdfString p)
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.F, f);
             GetPdfObject().Put(PdfName.D, d);
             GetPdfObject().Put(PdfName.O, o);
             GetPdfObject().Put(PdfName.P, p);
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

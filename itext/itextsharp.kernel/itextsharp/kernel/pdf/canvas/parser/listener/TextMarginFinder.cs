@@ -48,37 +48,29 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas.Parser;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>This class allows you to find the rectangle which contains all the text in the given content stream.
     ///     </summary>
-    public class TextMarginFinder : IEventListener
-    {
+    public class TextMarginFinder : IEventListener {
         private Rectangle textRectangle = null;
 
-        public virtual void EventOccurred(IEventData data, EventType type)
-        {
-            if (type == EventType.RENDER_TEXT)
-            {
+        public virtual void EventOccurred(IEventData data, EventType type) {
+            if (type == EventType.RENDER_TEXT) {
                 TextRenderInfo info = (TextRenderInfo)data;
-                if (textRectangle == null)
-                {
+                if (textRectangle == null) {
                     textRectangle = info.GetDescentLine().GetBoundingRectange();
                 }
-                else
-                {
+                else {
                     textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine().GetBoundingRectange());
                 }
                 textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().GetBoundingRectange());
             }
-            else
-            {
+            else {
                 throw new InvalidOperationException(String.Format("Event type not supported: {0}", type));
             }
         }
 
-        public virtual ICollection<EventType> GetSupportedEvents()
-        {
+        public virtual ICollection<EventType> GetSupportedEvents() {
             return new LinkedHashSet<EventType>(JavaCollectionsUtil.SingletonList(EventType.RENDER_TEXT));
         }
 
@@ -89,8 +81,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         /// text has been found yet.
         /// </summary>
         /// <returns>common text rectangle</returns>
-        public virtual Rectangle GetTextRectangle()
-        {
+        public virtual Rectangle GetTextRectangle() {
             return textRectangle;
         }
     }

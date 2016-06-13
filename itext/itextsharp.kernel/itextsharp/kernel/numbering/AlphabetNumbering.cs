@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Numbering
-{
+namespace iTextSharp.Kernel.Numbering {
     /// <summary>This is a general class for alphabet numbering.</summary>
     /// <remarks>
     /// This is a general class for alphabet numbering.
@@ -54,8 +53,7 @@ namespace iTextSharp.Kernel.Numbering
     /// 1 is represented as "a", ..., 26 is represented as "z",
     /// 27 is represented as "aa" and so on.
     /// </remarks>
-    public class AlphabetNumbering
-    {
+    public class AlphabetNumbering {
         /// <summary>
         /// Translates a positive integer (not equal to zero)
         /// into an alphabet number using the letters from the specified alphabet.
@@ -63,10 +61,8 @@ namespace iTextSharp.Kernel.Numbering
         /// <param name="number">the number</param>
         /// <param name="alphabet">the array containing all possible letters from the alphabet</param>
         /// <returns>a translated number representation</returns>
-        public static String ToAlphabetNumber(int number, char[] alphabet)
-        {
-            if (number < 1)
-            {
+        public static String ToAlphabetNumber(int number, char[] alphabet) {
+            if (number < 1) {
                 throw new ArgumentException("The parameter must be a positive integer");
             }
             int cardinality = alphabet.Length;
@@ -74,16 +70,14 @@ namespace iTextSharp.Kernel.Numbering
             int bytes = 1;
             int start = 0;
             int symbols = cardinality;
-            while (number >= symbols + start)
-            {
+            while (number >= symbols + start) {
                 bytes++;
                 start += symbols;
                 symbols *= cardinality;
             }
             int c = number - start;
             char[] value = new char[bytes];
-            while (bytes > 0)
-            {
+            while (bytes > 0) {
                 value[--bytes] = alphabet[c % cardinality];
                 c /= cardinality;
             }

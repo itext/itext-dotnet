@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils
-{
+namespace iTextSharp.Kernel.Pdf.Tagutils {
     /// <summary>A layout element which can have a <em>role</em>.</summary>
     /// <remarks>
     /// A layout element which can have a <em>role</em>. The name of the role will be
@@ -53,8 +52,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
     /// <see cref="AccessibilityProperties"/>
     /// , metadata for the tag dictionary.
     /// </remarks>
-    public interface IAccessibleElement
-    {
+    public interface IAccessibleElement {
         /// <summary>Gets the element's role.</summary>
         /// <returns>
         /// a

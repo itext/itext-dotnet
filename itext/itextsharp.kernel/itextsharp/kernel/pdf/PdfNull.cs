@@ -44,44 +44,37 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     /// <summary>Representation of the null object in the PDF specification.</summary>
-    public class PdfNull : PdfPrimitiveObject
-    {
+    public class PdfNull : PdfPrimitiveObject {
         public static readonly iTextSharp.Kernel.Pdf.PdfNull PDF_NULL = new iTextSharp.Kernel.Pdf.PdfNull(true);
 
         private static readonly byte[] NullContent = ByteUtils.GetIsoBytes("null");
 
         /// <summary>Creates a PdfNull instance.</summary>
         public PdfNull()
-            : base()
-        {
+            : base() {
         }
 
         private PdfNull(bool directOnly)
-            : base(directOnly)
-        {
+            : base(directOnly) {
         }
 
-        public override byte GetObjectType()
-        {
+        public override byte GetObjectType() {
             return NULL;
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfNull)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
             return (iTextSharp.Kernel.Pdf.PdfNull)base.MakeIndirect(document, reference);
         }
 
@@ -92,8 +85,7 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document)
-        {
+        public override PdfObject CopyTo(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfNull)base.CopyTo(document, true);
         }
 
@@ -109,29 +101,24 @@ namespace iTextSharp.Kernel.Pdf
         /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-        {
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             return (iTextSharp.Kernel.Pdf.PdfNull)base.CopyTo(document, allowDuplicating);
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return "null";
         }
 
-        protected internal override void GenerateContent()
-        {
+        protected internal override void GenerateContent() {
             content = NullContent;
         }
 
         //Here we create new object, because if we use static object it can cause unpredictable behavior during copy objects
-        protected internal override PdfObject NewInstance()
-        {
+        protected internal override PdfObject NewInstance() {
             return new iTextSharp.Kernel.Pdf.PdfNull();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document)
-        {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
         }
     }
 }

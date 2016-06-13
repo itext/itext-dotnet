@@ -45,20 +45,16 @@ using System;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
-    public sealed class PdfTextExtractor
-    {
-        private PdfTextExtractor()
-        {
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+    public sealed class PdfTextExtractor {
+        private PdfTextExtractor() {
         }
 
         /// <summary>Extract text from a specified page using an extraction strategy.</summary>
         /// <param name="page">the page for the text to be extracted from</param>
         /// <param name="strategy">the strategy to use for extracting text</param>
         /// <returns>the extracted text</returns>
-        public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy)
-        {
+        public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy) {
             PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
             parser.ProcessPageContent(page);
             return strategy.GetResultantText();
@@ -76,8 +72,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
         /// <param name="page">the page for the text to be extracted from</param>
         /// <returns>the extracted text</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static String GetTextFromPage(PdfPage page)
-        {
+        public static String GetTextFromPage(PdfPage page) {
             return GetTextFromPage(page, new LocationTextExtractionStrategy());
         }
     }

@@ -44,47 +44,37 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap
-{
+namespace iTextSharp.IO.Font.Cmap {
     /// <author>psoares</author>
-    public class CMapUniCid : AbstractCMap
-    {
+    public class CMapUniCid : AbstractCMap {
         private IntHashtable map = new IntHashtable(65537);
 
-        internal override void AddChar(String mark, CMapObject code)
-        {
-            if (code.IsNumber())
-            {
+        internal override void AddChar(String mark, CMapObject code) {
+            if (code.IsNumber()) {
                 int codePoint;
                 String s = ToUnicodeString(mark, true);
-                if (TextUtil.IsSurrogatePair(s, 0))
-                {
+                if (TextUtil.IsSurrogatePair(s, 0)) {
                     codePoint = TextUtil.ConvertToUtf32(s, 0);
                 }
-                else
-                {
+                else {
                     codePoint = (int)s[0];
                 }
                 map.Put(codePoint, (int)code.GetValue());
             }
         }
 
-        public virtual int Lookup(int character)
-        {
+        public virtual int Lookup(int character) {
             return map.Get(character);
         }
 
-        public virtual CMapToUnicode ExportToUnicode()
-        {
+        public virtual CMapToUnicode ExportToUnicode() {
             CMapToUnicode uni = new CMapToUnicode();
             int[] keys = map.ToOrderedKeys();
-            foreach (int key in keys)
-            {
+            foreach (int key in keys) {
                 uni.AddChar(map.Get(key), TextUtil.ConvertFromUtf32(key));
             }
             int spaceCid = Lookup(32);
-            if (spaceCid != 0)
-            {
+            if (spaceCid != 0) {
                 uni.AddChar(spaceCid, TextUtil.ConvertFromUtf32(32));
             }
             return uni;

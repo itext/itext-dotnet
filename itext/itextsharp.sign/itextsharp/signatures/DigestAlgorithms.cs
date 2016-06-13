@@ -46,11 +46,9 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Class that contains a map with the different message digest algorithms.</summary>
-    public class DigestAlgorithms
-    {
+    public class DigestAlgorithms {
         /// <summary>Algorithm available for signatures since PDF 1.3.</summary>
         public const String SHA1 = "SHA-1";
 
@@ -75,8 +73,7 @@ namespace iTextSharp.Signatures
         /// <summary>Maps the name of a digest algorithm with its ID.</summary>
         private static readonly IDictionary<String, String> allowedDigests = new Dictionary<String, String>();
 
-        static DigestAlgorithms()
-        {
+        static DigestAlgorithms() {
             digestNames["1.2.840.113549.2.5"] = "MD5";
             digestNames["1.2.840.113549.2.2"] = "MD2";
             digestNames["1.3.14.3.2.26"] = "SHA1";
@@ -137,8 +134,7 @@ namespace iTextSharp.Signatures
         /// <returns>MessageDigest object</returns>
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         /// <exception cref="Java.Security.NoSuchProviderException"/>
-        public static IDigest GetMessageDigestFromOid(String digestOid)
-        {
+        public static IDigest GetMessageDigestFromOid(String digestOid) {
             return GetMessageDigest(GetDigest(digestOid));
         }
 
@@ -148,8 +144,7 @@ namespace iTextSharp.Signatures
         /// <returns>a MessageDigest object</returns>
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         /// <exception cref="Java.Security.NoSuchProviderException"/>
-        public static IDigest GetMessageDigest(String hashAlgorithm)
-        {
+        public static IDigest GetMessageDigest(String hashAlgorithm) {
             return SignUtils.GetMessageDigest(hashAlgorithm);
         }
 
@@ -160,8 +155,7 @@ namespace iTextSharp.Signatures
         /// <returns>the hash</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public static byte[] Digest(Stream data, String hashAlgorithm)
-        {
+        public static byte[] Digest(Stream data, String hashAlgorithm) {
             IDigest messageDigest = GetMessageDigest(hashAlgorithm);
             return Digest(data, messageDigest);
         }
@@ -172,12 +166,10 @@ namespace iTextSharp.Signatures
         /// <returns>digest of the data</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        public static byte[] Digest(Stream data, IDigest messageDigest)
-        {
+        public static byte[] Digest(Stream data, IDigest messageDigest) {
             byte[] buf = new byte[8192];
             int n;
-            while ((n = data.Read(buf)) > 0)
-            {
+            while ((n = data.Read(buf)) > 0) {
                 messageDigest.Update(buf, 0, n);
             }
             return messageDigest.Digest();
@@ -186,15 +178,12 @@ namespace iTextSharp.Signatures
         /// <summary>Gets the digest name for a certain id</summary>
         /// <param name="oid">an id (for instance "1.2.840.113549.2.5")</param>
         /// <returns>a digest name (for instance "MD5")</returns>
-        public static String GetDigest(String oid)
-        {
+        public static String GetDigest(String oid) {
             String ret = digestNames.Get(oid);
-            if (ret == null)
-            {
+            if (ret == null) {
                 return oid;
             }
-            else
-            {
+            else {
                 return ret;
             }
         }
@@ -205,8 +194,7 @@ namespace iTextSharp.Signatures
         /// </summary>
         /// <param name="name">The name of the digest algorithm.</param>
         /// <returns>An oid.</returns>
-        public static String GetAllowedDigest(String name)
-        {
+        public static String GetAllowedDigest(String name) {
             return allowedDigests.Get(name.ToUpper(System.Globalization.CultureInfo.InvariantCulture));
         }
     }

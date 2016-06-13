@@ -29,8 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.Collections;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>Interface for the <code>XMPMeta</code> iteration services.</summary>
     /// <remarks>
     /// Interface for the <code>XMPMeta</code> iteration services.
@@ -84,8 +83,7 @@ namespace iTextSharp.Kernel.XMP
     /// return.
     /// </remarks>
     /// <since>25.01.2006</since>
-    public interface XMPIterator : IEnumerator
-    {
+    public interface XMPIterator : IEnumerator {
         /// <summary>
         /// Skip the subtree below the current node when <code>next()</code> is
         /// called.

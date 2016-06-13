@@ -44,24 +44,19 @@ address: sales@itextpdf.com
 using iTextSharp.Layout;
 using iTextSharp.Layout.Element;
 
-namespace iTextSharp.Layout.Renderer
-{
-    public class CellRenderer : BlockRenderer
-    {
+namespace iTextSharp.Layout.Renderer {
+    public class CellRenderer : BlockRenderer {
         public CellRenderer(Cell modelElement)
-            : base(modelElement)
-        {
+            : base(modelElement) {
             SetProperty(iTextSharp.Layout.Property.Property.ROWSPAN, modelElement.GetRowspan());
             SetProperty(iTextSharp.Layout.Property.Property.COLSPAN, modelElement.GetColspan());
         }
 
-        public override IPropertyContainer GetModelElement()
-        {
+        public override IPropertyContainer GetModelElement() {
             return (Cell)base.GetModelElement();
         }
 
-        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult)
-        {
+        protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             iTextSharp.Layout.Renderer.CellRenderer splitRenderer = (iTextSharp.Layout.Renderer.CellRenderer)GetNextRenderer
                 ();
             splitRenderer.parent = parent;
@@ -72,8 +67,7 @@ namespace iTextSharp.Layout.Renderer
             return splitRenderer;
         }
 
-        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult)
-        {
+        protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             iTextSharp.Layout.Renderer.CellRenderer overflowRenderer = (iTextSharp.Layout.Renderer.CellRenderer)GetNextRenderer
                 ();
             overflowRenderer.parent = parent;
@@ -82,13 +76,11 @@ namespace iTextSharp.Layout.Renderer
             return overflowRenderer;
         }
 
-        public override void DrawBorder(DrawContext drawContext)
-        {
+        public override void DrawBorder(DrawContext drawContext) {
         }
 
         // Do nothing here. Border drawing for tables is done on TableRenderer.
-        public override IRenderer GetNextRenderer()
-        {
+        public override IRenderer GetNextRenderer() {
             return new iTextSharp.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
         }
     }

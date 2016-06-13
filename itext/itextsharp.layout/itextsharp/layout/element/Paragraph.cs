@@ -48,8 +48,7 @@ using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout.Property;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A layout element that represents a self-contained block of textual and
     /// grpahical information.
@@ -63,15 +62,13 @@ namespace iTextSharp.Layout.Element
     /// <see cref="ILeafElement">leaf elements</see>
     /// .
     /// </remarks>
-    public class Paragraph : BlockElement<iTextSharp.Layout.Element.Paragraph>
-    {
+    public class Paragraph : BlockElement<iTextSharp.Layout.Element.Paragraph> {
         protected internal PdfName role = PdfName.P;
 
         protected internal AccessibilityProperties tagProperties;
 
         /// <summary>Creates a Paragraph.</summary>
-        public Paragraph()
-        {
+        public Paragraph() {
         }
 
         /// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
@@ -80,8 +77,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="System.String"/>
         /// </param>
         public Paragraph(String text)
-            : this(new Text(text))
-        {
+            : this(new Text(text)) {
         }
 
         /// <summary>Creates a Paragraph, initialized with a piece of text.</summary>
@@ -89,8 +85,7 @@ namespace iTextSharp.Layout.Element
         /// the initial textual content, as a
         /// <see cref="Text"/>
         /// </param>
-        public Paragraph(Text text)
-        {
+        public Paragraph(Text text) {
             Add(text);
         }
 
@@ -100,8 +95,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="System.String"/>
         /// </param>
         /// <returns>this Paragraph</returns>
-        public virtual iTextSharp.Layout.Element.Paragraph Add(String text)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph Add(String text) {
             return Add(new Text(text));
         }
 
@@ -111,8 +105,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="ILeafElement"/>
         /// </param>
         /// <returns>this Paragraph</returns>
-        public virtual iTextSharp.Layout.Element.Paragraph Add(ILeafElement element)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph Add(ILeafElement element) {
             childElements.Add(element);
             return this;
         }
@@ -128,10 +121,8 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         public virtual iTextSharp.Layout.Element.Paragraph AddAll<T2>(IList<T2> elements)
-            where T2 : ILeafElement
-        {
-            foreach (ILeafElement element in elements)
-            {
+            where T2 : ILeafElement {
+            foreach (ILeafElement element in elements) {
                 Add(element);
             }
             return this;
@@ -145,8 +136,7 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
-        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(params TabStop[] tabStops) {
             AddTabStopsAsProperty(iTextSharp.IO.Util.JavaUtil.ArraysAsList(tabStops));
             return this;
         }
@@ -163,8 +153,7 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
-        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph AddTabStops(IList<TabStop> tabStops) {
             AddTabStopsAsProperty(tabStops);
             return this;
         }
@@ -181,45 +170,36 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
-        public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition) {
             IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(iTextSharp.Layout.Property.Property
                 .TAB_STOPS);
-            if (tabStops != null)
-            {
+            if (tabStops != null) {
                 tabStops.JRemove(tabStopPosition);
             }
             return this;
         }
 
-        public override T1 GetDefaultProperty<T1>(int property)
-        {
-            switch (property)
-            {
-                case iTextSharp.Layout.Property.Property.LEADING:
-                {
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case iTextSharp.Layout.Property.Property.LEADING: {
                     return (T1)(Object)new Leading(Leading.MULTIPLIED, childElements.Count == 1 && childElements[0] is Image ? 
                         1 : 1.35f);
                 }
 
-                case iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT:
-                {
+                case iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT: {
                     return (T1)(Object)0f;
                 }
 
                 case iTextSharp.Layout.Property.Property.MARGIN_TOP:
-                case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM:
-                {
+                case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM: {
                     return (T1)(Object)4f;
                 }
 
-                case iTextSharp.Layout.Property.Property.TAB_DEFAULT:
-                {
+                case iTextSharp.Layout.Property.Property.TAB_DEFAULT: {
                     return (T1)(Object)50f;
                 }
 
-                default:
-                {
+                default: {
                     return base.GetDefaultProperty<T1>(property);
                 }
             }
@@ -235,8 +215,7 @@ namespace iTextSharp.Layout.Element
         /// the Paragraph, as a <code>float</code>
         /// </param>
         /// <returns>this Paragraph</returns>
-        public virtual iTextSharp.Layout.Element.Paragraph SetFirstLineIndent(float indent)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph SetFirstLineIndent(float indent) {
             SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, indent);
             return this;
         }
@@ -249,8 +228,7 @@ namespace iTextSharp.Layout.Element
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="iTextSharp.Layout.Property.Leading"/>
-        public virtual iTextSharp.Layout.Element.Paragraph SetFixedLeading(float leading)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph SetFixedLeading(float leading) {
             SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.FIXED, leading));
             return this;
         }
@@ -263,50 +241,40 @@ namespace iTextSharp.Layout.Element
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
         /// <seealso cref="iTextSharp.Layout.Property.Leading"/>
-        public virtual iTextSharp.Layout.Element.Paragraph SetMultipliedLeading(float leading)
-        {
+        public virtual iTextSharp.Layout.Element.Paragraph SetMultipliedLeading(float leading) {
             SetProperty(iTextSharp.Layout.Property.Property.LEADING, new Leading(Leading.MULTIPLIED, leading));
             return this;
         }
 
-        protected internal override IRenderer MakeNewRenderer()
-        {
+        protected internal override IRenderer MakeNewRenderer() {
             return new ParagraphRenderer(this);
         }
 
-        private void AddTabStopsAsProperty(IList<TabStop> newTabStops)
-        {
+        private void AddTabStopsAsProperty(IList<TabStop> newTabStops) {
             IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(iTextSharp.Layout.Property.Property
                 .TAB_STOPS);
-            if (tabStops == null)
-            {
+            if (tabStops == null) {
                 tabStops = new SortedDictionary<float, TabStop>();
                 SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, tabStops);
             }
-            foreach (TabStop tabStop in newTabStops)
-            {
+            foreach (TabStop tabStop in newTabStops) {
                 tabStops[tabStop.GetTabPosition()] = tabStop;
             }
         }
 
-        public override PdfName GetRole()
-        {
+        public override PdfName GetRole() {
             return role;
         }
 
-        public override void SetRole(PdfName role)
-        {
+        public override void SetRole(PdfName role) {
             this.role = role;
-            if (PdfName.Artifact.Equals(role))
-            {
+            if (PdfName.Artifact.Equals(role)) {
                 PropagateArtifactRoleToChildElements();
             }
         }
 
-        public override AccessibilityProperties GetAccessibilityProperties()
-        {
-            if (tagProperties == null)
-            {
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;

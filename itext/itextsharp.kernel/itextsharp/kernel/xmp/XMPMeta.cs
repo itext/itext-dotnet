@@ -31,8 +31,7 @@ using System;
 using iTextSharp.Kernel.XMP.Options;
 using iTextSharp.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>This class represents the set of XMP metadata as a DOM representation.</summary>
     /// <remarks>
     /// This class represents the set of XMP metadata as a DOM representation. It has methods to read and
@@ -40,8 +39,7 @@ namespace iTextSharp.Kernel.XMP
     /// to a String, byte-array or <code>OutputStream</code>.
     /// </remarks>
     /// <since>20.01.2006</since>
-    public interface XMPMeta : ICloneable
-    {
+    public interface XMPMeta : ICloneable {
         // ---------------------------------------------------------------------------------------------
         // Basic property manipulation functions
         /// <summary>

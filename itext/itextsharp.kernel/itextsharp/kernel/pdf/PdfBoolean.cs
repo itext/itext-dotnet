@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfBoolean : PdfPrimitiveObject
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfBoolean : PdfPrimitiveObject {
         public static readonly iTextSharp.Kernel.Pdf.PdfBoolean TRUE = new iTextSharp.Kernel.Pdf.PdfBoolean(true, 
             true);
 
@@ -61,44 +59,37 @@ namespace iTextSharp.Kernel.Pdf
         private bool value;
 
         public PdfBoolean(bool value)
-            : this(value, false)
-        {
+            : this(value, false) {
         }
 
         private PdfBoolean(bool value, bool directOnly)
-            : base(directOnly)
-        {
+            : base(directOnly) {
             this.value = value;
         }
 
         private PdfBoolean()
-            : base()
-        {
+            : base() {
         }
 
-        public virtual bool GetValue()
-        {
+        public virtual bool GetValue() {
             return value;
         }
 
-        public override byte GetObjectType()
-        {
+        public override byte GetObjectType() {
             return BOOLEAN;
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
             return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document, reference);
         }
 
@@ -109,8 +100,7 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document)
-        {
+        public override PdfObject CopyTo(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, true);
         }
 
@@ -126,28 +116,23 @@ namespace iTextSharp.Kernel.Pdf
         /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-        {
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, allowDuplicating);
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return value ? "true" : "false";
         }
 
-        protected internal override void GenerateContent()
-        {
+        protected internal override void GenerateContent() {
             content = value ? True : False;
         }
 
-        protected internal override PdfObject NewInstance()
-        {
+        protected internal override PdfObject NewInstance() {
             return new iTextSharp.Kernel.Pdf.PdfBoolean();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document)
-        {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfBoolean @bool = (iTextSharp.Kernel.Pdf.PdfBoolean)from;
             value = @bool.value;

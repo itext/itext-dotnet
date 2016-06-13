@@ -12,26 +12,22 @@ using iTextSharp.Layout.Layout;
 using iTextSharp.Layout.Renderer;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class PreLayoutTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class PreLayoutTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PreLayoutTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/PreLayoutTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PreLayoutTest01()
-        {
+        public virtual void PreLayoutTest01() {
             String outFileName = destinationFolder + "preLayoutTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -40,11 +36,9 @@ namespace iTextSharp.Layout
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
             document.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ));
-            for (int i = 0; i < 200; i++)
-            {
+            for (int i = 0; i < 200; i++) {
                 document.Add(new Paragraph("This is just junk text"));
-                if (i % 10 == 0)
-                {
+                if (i % 10 == 0) {
                     Text pageNumberText = new Text("Page #: {pageNumber}");
                     IRenderer renderer = new TextRenderer(pageNumberText);
                     pageNumberText.SetNextRenderer(renderer);
@@ -54,8 +48,7 @@ namespace iTextSharp.Layout
                     document.Add(pageNumberParagraph);
                 }
             }
-            foreach (IRenderer renderer_1 in pageNumberRenderers)
-            {
+            foreach (IRenderer renderer_1 in pageNumberRenderers) {
                 String currentData = renderer_1.ToString().Replace("{pageNumber}", renderer_1.GetOccupiedArea().GetPageNumber
                     ().ToString());
                 ((TextRenderer)renderer_1).SetText(currentData);
@@ -70,16 +63,14 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PreLayoutTest02()
-        {
+        public virtual void PreLayoutTest02() {
             String outFileName = destinationFolder + "preLayoutTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDoc, PageSize.Default, false);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             StringBuilder text = new StringBuilder();
-            for (int i = 0; i < 1200; i++)
-            {
+            for (int i = 0; i < 1200; i++) {
                 text.Append("A very long text is here...");
             }
             Paragraph twoColumnParagraph = new Paragraph();
@@ -90,10 +81,8 @@ namespace iTextSharp.Layout
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             int paragraphLastPageNumber = -1;
             IList<IRenderer> documentChildRenderers = document.GetRenderer().GetChildRenderers();
-            for (int i_1 = documentChildRenderers.Count - 1; i_1 >= 0; i_1--)
-            {
-                if (documentChildRenderers[i_1].GetModelElement() == twoColumnParagraph)
-                {
+            for (int i_1 = documentChildRenderers.Count - 1; i_1 >= 0; i_1--) {
+                if (documentChildRenderers[i_1].GetModelElement() == twoColumnParagraph) {
                     paragraphLastPageNumber = documentChildRenderers[i_1].GetOccupiedArea().GetPageNumber();
                     break;
                 }
@@ -107,26 +96,21 @@ namespace iTextSharp.Layout
                 , "diff"));
         }
 
-        internal class TwoColumnParagraphRenderer : ParagraphRenderer
-        {
+        internal class TwoColumnParagraphRenderer : ParagraphRenderer {
             internal int oneColumnPage = -1;
 
             public TwoColumnParagraphRenderer(Paragraph modelElement)
-                : base(modelElement)
-            {
+                : base(modelElement) {
             }
 
             public TwoColumnParagraphRenderer(Paragraph modelElement, int oneColumnPage)
-                : this(modelElement)
-            {
+                : this(modelElement) {
                 this.oneColumnPage = oneColumnPage;
             }
 
-            public override IList<Rectangle> InitElementAreas(LayoutArea area)
-            {
+            public override IList<Rectangle> InitElementAreas(LayoutArea area) {
                 IList<Rectangle> areas = new List<Rectangle>();
-                if (area.GetPageNumber() != oneColumnPage)
-                {
+                if (area.GetPageNumber() != oneColumnPage) {
                     Rectangle firstArea = area.GetBBox().Clone();
                     Rectangle secondArea = area.GetBBox().Clone();
                     firstArea.SetWidth(firstArea.GetWidth() / 2 - 5);
@@ -135,15 +119,13 @@ namespace iTextSharp.Layout
                     areas.Add(firstArea);
                     areas.Add(secondArea);
                 }
-                else
-                {
+                else {
                     areas.Add(area.GetBBox());
                 }
                 return areas;
             }
 
-            public override IRenderer GetNextRenderer()
-            {
+            public override IRenderer GetNextRenderer() {
                 return new PreLayoutTest.TwoColumnParagraphRenderer((Paragraph)modelElement, oneColumnPage);
             }
         }

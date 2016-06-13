@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <author>psoares</author>
-    public class FeatureRecord
-    {
+    public class FeatureRecord {
         public String tag;
 
         public int[] lookups;

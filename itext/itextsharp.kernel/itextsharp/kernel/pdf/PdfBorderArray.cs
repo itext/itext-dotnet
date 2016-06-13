@@ -41,39 +41,30 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfBorderArray : PdfObjectWrapper<PdfArray>
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfBorderArray : PdfObjectWrapper<PdfArray> {
         public PdfBorderArray(float hRadius, float vRadius, float width)
-            : this(hRadius, vRadius, width, null)
-        {
+            : this(hRadius, vRadius, width, null) {
         }
 
         public PdfBorderArray(float hRadius, float vRadius, float width, PdfDashPattern dash)
-            : base(new PdfArray(new float[] { hRadius, vRadius, width }))
-        {
-            if (dash != null)
-            {
+            : base(new PdfArray(new float[] { hRadius, vRadius, width })) {
+            if (dash != null) {
                 PdfArray dashArray = new PdfArray();
                 GetPdfObject().Add(dashArray);
-                if (dash.GetDash() >= 0)
-                {
+                if (dash.GetDash() >= 0) {
                     dashArray.Add(new PdfNumber(dash.GetDash()));
                 }
-                if (dash.GetGap() >= 0)
-                {
+                if (dash.GetGap() >= 0) {
                     dashArray.Add(new PdfNumber(dash.GetGap()));
                 }
-                if (dash.GetPhase() >= 0)
-                {
+                if (dash.GetPhase() >= 0) {
                     GetPdfObject().Add(new PdfNumber(dash.GetPhase()));
                 }
             }
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

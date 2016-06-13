@@ -43,24 +43,19 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Layout
-{
-    public class LayoutContext
-    {
+namespace iTextSharp.Layout.Layout {
+    public class LayoutContext {
         protected internal LayoutArea area;
 
-        public LayoutContext(LayoutArea area)
-        {
+        public LayoutContext(LayoutArea area) {
             this.area = area;
         }
 
-        public virtual LayoutArea GetArea()
-        {
+        public virtual LayoutArea GetArea() {
             return area;
         }
 
-        public override String ToString()
-        {
+        public override String ToString() {
             return area.ToString();
         }
     }

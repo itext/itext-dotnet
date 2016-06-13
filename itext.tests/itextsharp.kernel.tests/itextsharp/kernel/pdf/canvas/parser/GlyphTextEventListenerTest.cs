@@ -5,16 +5,13 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
-    public class GlyphTextEventListenerTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+    public class GlyphTextEventListenerTest : ExtendedITextTest {
         private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/GlyphTextEventListenerTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Test01()
-        {
+        public virtual void Test01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"));
             float x1;
             float y1;
@@ -32,8 +29,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Test02()
-        {
+        public virtual void Test02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "Sample.pdf"));
             String extractedText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new GlyphTextEventListener
                 (new FilteredTextEventListener(new LocationTextExtractionStrategy(), new TextRegionEventFilter(new Rectangle
@@ -43,8 +39,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void TestWithMultiFilteredRenderListener()
-        {
+        public virtual void TestWithMultiFilteredRenderListener() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "test.pdf"));
             float x1;
             float y1;

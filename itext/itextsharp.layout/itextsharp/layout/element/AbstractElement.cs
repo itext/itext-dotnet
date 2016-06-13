@@ -50,8 +50,7 @@ using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// Defines the most common properties that most
     /// <see cref="IElement"/>
@@ -60,18 +59,15 @@ namespace iTextSharp.Layout.Element
     /// </summary>
     /// 
     public abstract class AbstractElement<T> : ElementPropertyContainer<T>, IElement
-        where T : IElement
-    {
+        where T : IElement {
         protected internal IRenderer nextRenderer;
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
         protected internal ICollection<Style> styles;
 
-        public virtual IRenderer GetRenderer()
-        {
-            if (nextRenderer != null)
-            {
+        public virtual IRenderer GetRenderer() {
+            if (nextRenderer != null) {
                 IRenderer renderer = nextRenderer;
                 nextRenderer = nextRenderer.GetNextRenderer();
                 return renderer;
@@ -79,30 +75,23 @@ namespace iTextSharp.Layout.Element
             return MakeNewRenderer();
         }
 
-        public virtual void SetNextRenderer(IRenderer renderer)
-        {
+        public virtual void SetNextRenderer(IRenderer renderer) {
             this.nextRenderer = renderer;
         }
 
-        public virtual IRenderer CreateRendererSubTree()
-        {
+        public virtual IRenderer CreateRendererSubTree() {
             IRenderer rendererRoot = GetRenderer();
-            foreach (IElement child in childElements)
-            {
+            foreach (IElement child in childElements) {
                 rendererRoot.AddChild(child.CreateRendererSubTree());
             }
             return rendererRoot;
         }
 
-        public override bool HasProperty(int property)
-        {
+        public override bool HasProperty(int property) {
             bool hasProperty = base.HasProperty(property);
-            if (styles != null && styles.Count > 0 && !hasProperty)
-            {
-                foreach (Style style in styles)
-                {
-                    if (style.HasProperty(property))
-                    {
+            if (styles != null && styles.Count > 0 && !hasProperty) {
+                foreach (Style style in styles) {
+                    if (style.HasProperty(property)) {
                         hasProperty = true;
                         break;
                     }
@@ -111,16 +100,12 @@ namespace iTextSharp.Layout.Element
             return hasProperty;
         }
 
-        public override T1 GetProperty<T1>(int property)
-        {
+        public override T1 GetProperty<T1>(int property) {
             Object result = base.GetProperty<T1>(property);
-            if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property))
-            {
-                foreach (Style style in styles)
-                {
+            if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property)) {
+                foreach (Style style in styles) {
                     result = style.GetProperty<T1>(property);
-                    if (result != null || base.HasProperty(property))
-                    {
+                    if (result != null || base.HasProperty(property)) {
                         break;
                     }
                 }
@@ -135,10 +120,8 @@ namespace iTextSharp.Layout.Element
         /// </remarks>
         /// <param name="style">the style to be added</param>
         /// <returns>this element</returns>
-        public virtual T AddStyle(Style style)
-        {
-            if (styles == null)
-            {
+        public virtual T AddStyle(Style style) {
+            if (styles == null) {
                 styles = new LinkedHashSet<Style>();
             }
             styles.Add(style);
@@ -148,30 +131,24 @@ namespace iTextSharp.Layout.Element
         protected internal abstract IRenderer MakeNewRenderer();
 
         /// <summary>Marks all child elements as artifacts recursively.</summary>
-        protected internal virtual void PropagateArtifactRoleToChildElements()
-        {
-            foreach (IElement child in childElements)
-            {
-                if (child is IAccessibleElement)
-                {
+        protected internal virtual void PropagateArtifactRoleToChildElements() {
+            foreach (IElement child in childElements) {
+                if (child is IAccessibleElement) {
                     ((IAccessibleElement)child).SetRole(PdfName.Artifact);
                 }
             }
         }
 
-        public virtual bool IsEmpty()
-        {
+        public virtual bool IsEmpty() {
             return 0 == childElements.Count;
         }
 
-        public virtual T SetAction(PdfAction action)
-        {
+        public virtual T SetAction(PdfAction action) {
             SetProperty(iTextSharp.Layout.Property.Property.ACTION, action);
             return (T)(Object)this;
         }
 
-        public virtual T SetPageNumber(int pageNumber)
-        {
+        public virtual T SetPageNumber(int pageNumber) {
             SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }

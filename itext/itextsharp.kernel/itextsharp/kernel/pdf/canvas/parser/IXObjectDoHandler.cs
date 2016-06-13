@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
     /// <author>Kevin Day</author>
-    public interface IXObjectDoHandler
-    {
+    public interface IXObjectDoHandler {
         void HandleXObject(PdfCanvasProcessor processor, PdfStream stream);
     }
 }

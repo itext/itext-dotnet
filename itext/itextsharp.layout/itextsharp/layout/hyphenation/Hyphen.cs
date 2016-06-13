@@ -17,11 +17,9 @@
 using System;
 using System.Text;
 
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary>Represents a hyphen.</summary>
-    public class Hyphen
-    {
+    public class Hyphen {
         /// <summary>pre break string</summary>
         public String preBreak;
 
@@ -35,8 +33,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="pre">break string</param>
         /// <param name="no">break string</param>
         /// <param name="post">break string</param>
-        internal Hyphen(String pre, String no, String post)
-        {
+        internal Hyphen(String pre, String no, String post) {
             preBreak = pre;
             noBreak = no;
             postBreak = post;
@@ -44,8 +41,7 @@ namespace iTextSharp.Layout.Hyphenation
 
         /// <summary>Construct a hyphen.</summary>
         /// <param name="pre">break string</param>
-        internal Hyphen(String pre)
-        {
+        internal Hyphen(String pre) {
             preBreak = pre;
             noBreak = null;
             postBreak = null;
@@ -55,10 +51,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// <inheritDoc/>
         /// 
         /// </summary>
-        public override String ToString()
-        {
-            if (noBreak == null && postBreak == null && preBreak != null && preBreak.Equals("-"))
-            {
+        public override String ToString() {
+            if (noBreak == null && postBreak == null && preBreak != null && preBreak.Equals("-")) {
                 return "-";
             }
             StringBuilder res = new StringBuilder("{");

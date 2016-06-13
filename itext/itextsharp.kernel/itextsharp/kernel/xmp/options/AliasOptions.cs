@@ -29,12 +29,10 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Options
-{
+namespace iTextSharp.Kernel.XMP.Options {
     /// <summary>Options for XMPSchemaRegistryImpl#registerAlias.</summary>
     /// <since>20.02.2006</since>
-    public sealed class AliasOptions : iTextSharp.Kernel.XMP.Options.Options
-    {
+    public sealed class AliasOptions : iTextSharp.Kernel.XMP.Options.Options {
         /// <summary>This is a direct mapping.</summary>
         /// <remarks>This is a direct mapping. The actual data type does not matter.</remarks>
         public const int PROP_DIRECT = 0;
@@ -52,76 +50,65 @@ namespace iTextSharp.Kernel.XMP.Options
         public const int PROP_ARRAY_ALT_TEXT = PropertyOptions.ARRAY_ALT_TEXT;
 
         /// <seealso cref="Options.Options()"/>
-        public AliasOptions()
-        {
+        public AliasOptions() {
         }
 
         /// <param name="options">the options to init with</param>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If options are not consistant</exception>
         public AliasOptions(int options)
-            : base(options)
-        {
+            : base(options) {
         }
 
         // EMPTY
         /// <returns>Returns if the alias is of the simple form.</returns>
-        public bool IsSimple()
-        {
+        public bool IsSimple() {
             return GetOptions() == PROP_DIRECT;
         }
 
         /// <returns>Returns the option.</returns>
-        public bool IsArray()
-        {
+        public bool IsArray() {
             return GetOption(PROP_ARRAY);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArray(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArray(bool value) {
             SetOption(PROP_ARRAY, value);
             return this;
         }
 
         /// <returns>Returns the option.</returns>
-        public bool IsArrayOrdered()
-        {
+        public bool IsArrayOrdered() {
             return GetOption(PROP_ARRAY_ORDERED);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArrayOrdered(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArrayOrdered(bool value) {
             SetOption(PROP_ARRAY | PROP_ARRAY_ORDERED, value);
             return this;
         }
 
         /// <returns>Returns the option.</returns>
-        public bool IsArrayAlternate()
-        {
+        public bool IsArrayAlternate() {
             return GetOption(PROP_ARRAY_ALTERNATE);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArrayAlternate(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArrayAlternate(bool value) {
             SetOption(PROP_ARRAY | PROP_ARRAY_ORDERED | PROP_ARRAY_ALTERNATE, value);
             return this;
         }
 
         /// <returns>Returns the option.</returns>
-        public bool IsArrayAltText()
-        {
+        public bool IsArrayAltText() {
             return GetOption(PROP_ARRAY_ALT_TEXT);
         }
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArrayAltText(bool value)
-        {
+        public iTextSharp.Kernel.XMP.Options.AliasOptions SetArrayAltText(bool value) {
             SetOption(PROP_ARRAY | PROP_ARRAY_ORDERED | PROP_ARRAY_ALTERNATE | PROP_ARRAY_ALT_TEXT, value);
             return this;
         }
@@ -132,51 +119,41 @@ namespace iTextSharp.Kernel.XMP.Options
         /// s object
         /// </returns>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not consistant.</exception>
-        public PropertyOptions ToPropertyOptions()
-        {
+        public PropertyOptions ToPropertyOptions() {
             return new PropertyOptions(GetOptions());
         }
 
         /// <seealso cref="Options.DefineOptionName(int)"/>
-        protected internal override String DefineOptionName(int option)
-        {
-            switch (option)
-            {
-                case PROP_DIRECT:
-                {
+        protected internal override String DefineOptionName(int option) {
+            switch (option) {
+                case PROP_DIRECT: {
                     return "PROP_DIRECT";
                 }
 
-                case PROP_ARRAY:
-                {
+                case PROP_ARRAY: {
                     return "ARRAY";
                 }
 
-                case PROP_ARRAY_ORDERED:
-                {
+                case PROP_ARRAY_ORDERED: {
                     return "ARRAY_ORDERED";
                 }
 
-                case PROP_ARRAY_ALTERNATE:
-                {
+                case PROP_ARRAY_ALTERNATE: {
                     return "ARRAY_ALTERNATE";
                 }
 
-                case PROP_ARRAY_ALT_TEXT:
-                {
+                case PROP_ARRAY_ALT_TEXT: {
                     return "ARRAY_ALT_TEXT";
                 }
 
-                default:
-                {
+                default: {
                     return null;
                 }
             }
         }
 
         /// <seealso cref="Options.GetValidOptions()"/>
-        protected internal override int GetValidOptions()
-        {
+        protected internal override int GetValidOptions() {
             return PROP_DIRECT | PROP_ARRAY | PROP_ARRAY_ORDERED | PROP_ARRAY_ALTERNATE | PROP_ARRAY_ALT_TEXT;
         }
     }

@@ -45,95 +45,75 @@ using System;
 using iTextSharp.IO;
 using iTextSharp.IO.Log;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public abstract class PdfPrimitiveObject : PdfObject
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public abstract class PdfPrimitiveObject : PdfObject {
         protected internal byte[] content = null;
 
         protected internal bool directOnly;
 
         protected internal PdfPrimitiveObject()
-            : base()
-        {
+            : base() {
         }
 
         protected internal PdfPrimitiveObject(bool directOnly)
-            : base()
-        {
+            : base() {
             this.directOnly = directOnly;
         }
 
         protected internal PdfPrimitiveObject(byte[] content)
-            : this()
-        {
+            : this() {
             this.content = content;
         }
 
-        protected internal byte[] GetInternalContent()
-        {
-            if (content == null)
-            {
+        protected internal byte[] GetInternalContent() {
+            if (content == null) {
                 GenerateContent();
             }
             return content;
         }
 
-        protected internal virtual bool HasContent()
-        {
+        protected internal virtual bool HasContent() {
             return content != null;
         }
 
         protected internal abstract void GenerateContent();
 
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
-        {
-            if (!directOnly)
-            {
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
+            if (!directOnly) {
                 return base.MakeIndirect(document, reference);
             }
-            else
-            {
+            else {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
                 logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }
 
-        protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference)
-        {
-            if (!directOnly)
-            {
+        protected internal override PdfObject SetIndirectReference(PdfIndirectReference indirectReference) {
+            if (!directOnly) {
                 base.SetIndirectReference(indirectReference);
             }
-            else
-            {
+            else {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
                 logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document)
-        {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject)from;
-            if (@object.content != null)
-            {
+            if (@object.content != null) {
                 content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content.Length);
             }
         }
 
-        protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject o)
-        {
-            for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++)
-            {
-                if (content[i] > o.content[i])
-                {
+        protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject o) {
+            for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++) {
+                if (content[i] > o.content[i]) {
                     return 1;
                 }
-                if (content[i] < o.content[i])
-                {
+                if (content[i] < o.content[i]) {
                     return -1;
                 }
             }

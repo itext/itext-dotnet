@@ -41,14 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Source
-{
+namespace iTextSharp.IO.Source {
     /// <summary>
     /// A RandomAccessSource that is based on a set of underlying sources,
     /// treating the sources as if they were a contiguous block of data.
     /// </summary>
-    internal class GroupedRandomAccessSource : IRandomAccessSource
-    {
+    internal class GroupedRandomAccessSource : IRandomAccessSource {
         /// <summary>The underlying sources (along with some meta data to quickly determine where each source begins and ends)
         ///     </summary>
         private readonly GroupedRandomAccessSource.SourceEntry[] sources;
@@ -66,12 +64,10 @@ namespace iTextSharp.IO.Source
         /// </summary>
         /// <param name="sources">the sources used to build this group</param>
         /// <exception cref="System.IO.IOException"/>
-        public GroupedRandomAccessSource(IRandomAccessSource[] sources)
-        {
+        public GroupedRandomAccessSource(IRandomAccessSource[] sources) {
             this.sources = new GroupedRandomAccessSource.SourceEntry[sources.Length];
             long totalSize = 0;
-            for (int i = 0; i < sources.Length; i++)
-            {
+            for (int i = 0; i < sources.Length; i++) {
                 this.sources[i] = new GroupedRandomAccessSource.SourceEntry(i, sources[i], totalSize);
                 totalSize += sources[i].Length();
             }
@@ -93,10 +89,8 @@ namespace iTextSharp.IO.Source
         /// </remarks>
         /// <param name="offset">the offset</param>
         /// <returns>the index of the input source that contains the specified offset, or 0 if unknown</returns>
-        protected internal virtual int GetStartingSourceIndex(long offset)
-        {
-            if (offset >= currentSourceEntry.firstByte)
-            {
+        protected internal virtual int GetStartingSourceIndex(long offset) {
+            if (offset >= currentSourceEntry.firstByte) {
                 return currentSourceEntry.index;
             }
             return 0;
@@ -111,23 +105,18 @@ namespace iTextSharp.IO.Source
         /// <returns>the SourceEntry that contains the byte at the specified offset</returns>
         /// <exception cref="System.IO.IOException">if there is a problem with IO (usually the result of the sourceReleased() call)
         ///     </exception>
-        private GroupedRandomAccessSource.SourceEntry GetSourceEntryForOffset(long offset)
-        {
-            if (offset >= size)
-            {
+        private GroupedRandomAccessSource.SourceEntry GetSourceEntryForOffset(long offset) {
+            if (offset >= size) {
                 return null;
             }
-            if (offset >= currentSourceEntry.firstByte && offset <= currentSourceEntry.lastByte)
-            {
+            if (offset >= currentSourceEntry.firstByte && offset <= currentSourceEntry.lastByte) {
                 return currentSourceEntry;
             }
             // hook to allow subclasses to release resources if necessary
             SourceReleased(currentSourceEntry.source);
             int startAt = GetStartingSourceIndex(offset);
-            for (int i = startAt; i < sources.Length; i++)
-            {
-                if (offset >= sources[i].firstByte && offset <= sources[i].lastByte)
-                {
+            for (int i = startAt; i < sources.Length; i++) {
+                if (offset >= sources[i].firstByte && offset <= sources[i].lastByte) {
                     currentSourceEntry = sources[i];
                     SourceInUse(currentSourceEntry.source);
                     return currentSourceEntry;
@@ -141,8 +130,7 @@ namespace iTextSharp.IO.Source
         ///     </remarks>
         /// <param name="source">the source that is no longer the active source</param>
         /// <exception cref="System.IO.IOException">if there are any problems</exception>
-        protected internal virtual void SourceReleased(IRandomAccessSource source)
-        {
+        protected internal virtual void SourceReleased(IRandomAccessSource source) {
         }
 
         // by default, do nothing
@@ -151,8 +139,7 @@ namespace iTextSharp.IO.Source
         ///     </remarks>
         /// <param name="source">the source that is about to become the active source</param>
         /// <exception cref="System.IO.IOException">if there are any problems</exception>
-        protected internal virtual void SourceInUse(IRandomAccessSource source)
-        {
+        protected internal virtual void SourceInUse(IRandomAccessSource source) {
         }
 
         // by default, do nothing
@@ -162,11 +149,9 @@ namespace iTextSharp.IO.Source
         /// from that offset in the underlying source is returned.
         /// </summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Get(long position)
-        {
+        public virtual int Get(long position) {
             GroupedRandomAccessSource.SourceEntry entry = GetSourceEntryForOffset(position);
-            if (entry == null)
-            {
+            if (entry == null) {
                 // we have run out of data to read from
                 return -1;
             }
@@ -175,30 +160,24 @@ namespace iTextSharp.IO.Source
 
         /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Get(long position, byte[] bytes, int off, int len)
-        {
+        public virtual int Get(long position, byte[] bytes, int off, int len) {
             GroupedRandomAccessSource.SourceEntry entry = GetSourceEntryForOffset(position);
-            if (entry == null)
-            {
+            if (entry == null) {
                 // we have run out of data to read from
                 return -1;
             }
             long offN = entry.OffsetN(position);
             int remaining = len;
-            while (remaining > 0)
-            {
-                if (entry == null)
-                {
+            while (remaining > 0) {
+                if (entry == null) {
                     // we have run out of data to read from
                     break;
                 }
-                if (offN > entry.source.Length())
-                {
+                if (offN > entry.source.Length()) {
                     break;
                 }
                 int count = entry.source.Get(offN, bytes, off, remaining);
-                if (count == -1)
-                {
+                if (count == -1) {
                     break;
                 }
                 off += count;
@@ -211,8 +190,7 @@ namespace iTextSharp.IO.Source
         }
 
         /// <summary><inheritDoc/></summary>
-        public virtual long Length()
-        {
+        public virtual long Length() {
             return size;
         }
 
@@ -221,17 +199,14 @@ namespace iTextSharp.IO.Source
         /// Closes all of the underlying sources
         /// </summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Close()
-        {
-            foreach (GroupedRandomAccessSource.SourceEntry entry in sources)
-            {
+        public virtual void Close() {
+            foreach (GroupedRandomAccessSource.SourceEntry entry in sources) {
                 entry.source.Close();
             }
         }
 
         /// <summary>Used to track each source, along with useful meta data</summary>
-        private class SourceEntry
-        {
+        private class SourceEntry {
             /// <summary>The underlying source</summary>
             internal readonly IRandomAccessSource source;
 
@@ -248,8 +223,7 @@ namespace iTextSharp.IO.Source
             /// <param name="index">the index</param>
             /// <param name="source">the source</param>
             /// <param name="offset">the offset of the source in the GroupedRandomAccessSource</param>
-            public SourceEntry(int index, IRandomAccessSource source, long offset)
-            {
+            public SourceEntry(int index, IRandomAccessSource source, long offset) {
                 this.index = index;
                 this.source = source;
                 this.firstByte = offset;
@@ -260,8 +234,7 @@ namespace iTextSharp.IO.Source
             ///     </summary>
             /// <param name="absoluteOffset">the offset in the parent GroupedRandomAccessSource</param>
             /// <returns>the effective offset in the underlying source</returns>
-            public virtual long OffsetN(long absoluteOffset)
-            {
+            public virtual long OffsetN(long absoluteOffset) {
                 return absoluteOffset - firstByte;
             }
         }

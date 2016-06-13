@@ -8,26 +8,22 @@ using iTextSharp.Kernel.XMP.Options;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class XMPWriterTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class XMPWriterTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/XMPWriterTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/XMPWriterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void CreatePdfTest()
-        {
+        public virtual void CreatePdfTest() {
             String fileName = "xmp_metadata.pdf";
             // step 1
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "xmp_metadata.pdf"

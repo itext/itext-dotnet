@@ -9,26 +9,22 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class ListTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class ListTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/ListTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/ListTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void NestedListTest01()
-        {
+        public virtual void NestedListTest01() {
             String outFileName = destinationFolder + "nestedListTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_nestedListTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -49,8 +45,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListNumberingTest01()
-        {
+        public virtual void ListNumberingTest01() {
             String outFileName = destinationFolder + "listNumberingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listNumberingTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -63,15 +58,12 @@ namespace iTextSharp.Layout
             lists.Add(new List(ListNumberingType.ENGLISH_UPPER));
             lists.Add(new List(ListNumberingType.GREEK_LOWER));
             lists.Add(new List(ListNumberingType.GREEK_UPPER));
-            for (int i = 1; i <= 30; i++)
-            {
-                foreach (List list in lists)
-                {
+            for (int i = 1; i <= 30; i++) {
+                foreach (List list in lists) {
                     list.Add("Item #" + i);
                 }
             }
-            foreach (List list_1 in lists)
-            {
+            foreach (List list_1 in lists) {
                 document.Add(list_1).Add(new AreaBreak());
             }
             document.Close();
@@ -82,8 +74,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void DivInListItemTest01()
-        {
+        public virtual void DivInListItemTest01() {
             String outFileName = destinationFolder + "divInListItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divInListItemTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -99,8 +90,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListOverflowTest01()
-        {
+        public virtual void ListOverflowTest01() {
             String outFileName = destinationFolder + "listOverflowTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -108,8 +98,7 @@ namespace iTextSharp.Layout
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string").Add("third string"
                 ).Add("fourth string");
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 document.Add(p);
             }
             document.Add(list);
@@ -121,8 +110,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListOverflowTest02()
-        {
+        public virtual void ListOverflowTest02() {
             String outFileName = destinationFolder + "listOverflowTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -131,8 +119,7 @@ namespace iTextSharp.Layout
             List list = new List(ListNumberingType.DECIMAL).Add("first string");
             ListItem item = (ListItem)new ListItem("second string").Add(new Paragraph("third string"));
             list.Add(item).Add("fourth item");
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 document.Add(p);
             }
             document.Add(list);
@@ -144,8 +131,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListOverflowTest03()
-        {
+        public virtual void ListOverflowTest03() {
             String outFileName = destinationFolder + "listOverflowTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest03.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -153,8 +139,7 @@ namespace iTextSharp.Layout
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).SetItemStartIndex(10).Add("first string").Add("second string"
                 ).Add("third string").Add("fourth string");
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 document.Add(p);
             }
             document.Add(list);
@@ -166,8 +151,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListEmptyItemTest01()
-        {
+        public virtual void ListEmptyItemTest01() {
             String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listEmptyItemTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -184,8 +168,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ImageInListTest01()
-        {
+        public virtual void ImageInListTest01() {
             String outFileName = destinationFolder + "imageInListTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInListTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -204,15 +187,13 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListItemAlignmentTest01()
-        {
+        public virtual void ListItemAlignmentTest01() {
             String outFileName = destinationFolder + "listItemAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemAlignmentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.DECIMAL).SetListSymbolAlignment(ListSymbolAlignment.LEFT);
-            for (int i = 1; i <= 30; i++)
-            {
+            for (int i = 1; i <= 30; i++) {
                 list.Add("Item #" + i);
             }
             document.Add(list);
@@ -224,8 +205,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ListItemTest01()
-        {
+        public virtual void ListItemTest01() {
             String outFileName = destinationFolder + "listItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemTest01.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));

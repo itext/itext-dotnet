@@ -12,10 +12,8 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class AutoTaggingTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class AutoTaggingTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/AutoTaggingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -24,8 +22,7 @@ namespace iTextSharp.Layout
         public const String imageName = "Desert.jpg";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -34,16 +31,14 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TextInParagraphTest01()
-        {
+        public virtual void TextInParagraphTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "textInParagraphTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
             document.Add(p);
-            for (int i = 0; i < 26; ++i)
-            {
+            for (int i = 0; i < 26; ++i) {
                 document.Add(CreateParagraph2());
             }
             document.Close();
@@ -55,8 +50,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void ImageTest01()
-        {
+        public virtual void ImageTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "imageTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -72,8 +66,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void DivTest01()
-        {
+        public virtual void DivTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "divTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -97,8 +90,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TableTest01()
-        {
+        public virtual void TableTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -128,15 +120,13 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TableTest02()
-        {
+        public virtual void TableTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest02.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
-            for (int i = 0; i < 5; ++i)
-            {
+            for (int i = 0; i < 5; ++i) {
                 table.AddCell(CreateParagraph2());
             }
             table.AddCell("little text");
@@ -150,23 +140,19 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TableTest03()
-        {
+        public virtual void TableTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest03.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
-            for (int i = 0; i < 3; ++i)
-            {
+            for (int i = 0; i < 3; ++i) {
                 table.AddHeaderCell("header " + i);
             }
-            for (int i_1 = 0; i_1 < 3; ++i_1)
-            {
+            for (int i_1 = 0; i_1 < 3; ++i_1) {
                 table.AddFooterCell("footer " + i_1);
             }
-            for (int i_2 = 0; i_2 < 5; ++i_2)
-            {
+            for (int i_2 = 0; i_2 < 5; ++i_2) {
                 table.AddCell(CreateParagraph2());
             }
             table.AddCell(new Paragraph("little text"));
@@ -180,22 +166,18 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TableTest04()
-        {
+        public virtual void TableTest04() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest04.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
             doc.Add(table);
-            for (int i = 0; i < 20; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 4; j++) {
                     table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
-                if (i % 10 == 0)
-                {
+                if (i % 10 == 0) {
                     table.Flush();
                     // This is a deliberate additional flush.
                     table.Flush();
@@ -211,8 +193,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TableTest05()
-        {
+        public virtual void TableTest05() {
             String outFileName = destinationFolder + "tableTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest05.pdf"
@@ -223,16 +204,14 @@ namespace iTextSharp.Layout
             doc.Add(table);
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
-            for (int i = 0; i < 5; ++i)
-            {
+            for (int i = 0; i < 5; ++i) {
                 table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
             }
             cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
             table.AddFooterCell(cell);
             table.SetSkipFirstHeader(true);
             table.SetSkipLastFooter(true);
-            for (int i_1 = 0; i_1 < 350; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 350; i_1++) {
                 table.AddCell(new Cell().Add(new Paragraph((i_1 + 1).ToString())));
                 table.Flush();
             }
@@ -246,8 +225,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TableTest06()
-        {
+        public virtual void TableTest06() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest06.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -279,8 +257,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void ListTest01()
-        {
+        public virtual void ListTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "listTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -299,8 +276,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void ArtifactTest01()
-        {
+        public virtual void ArtifactTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "artifactTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -323,16 +299,14 @@ namespace iTextSharp.Layout
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void ArtifactTest02()
-        {
+        public virtual void ArtifactTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "artifactTest02.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello world"));
             Table table = new Table(5);
-            for (int i = 0; i < 25; ++i)
-            {
+            for (int i = 0; i < 25; ++i) {
                 table.AddCell(i.ToString());
             }
             table.SetRole(PdfName.Artifact);
@@ -354,8 +328,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushingTest01()
-        {
+        public virtual void FlushingTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest01.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -363,10 +336,8 @@ namespace iTextSharp.Layout
             Paragraph p = CreateParagraph1();
             document.Add(p);
             int pageToFlush = 1;
-            for (int i = 0; i < 26; ++i)
-            {
-                if (i % 6 == 5)
-                {
+            for (int i = 0; i < 26; ++i) {
+                if (i % 6 == 5) {
                     pdfDocument.GetPage(pageToFlush++).Flush();
                 }
                 document.Add(CreateParagraph2());
@@ -388,8 +359,7 @@ namespace iTextSharp.Layout
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushingTest02()
-        {
+        public virtual void FlushingTest02() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest02.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
@@ -399,16 +369,14 @@ namespace iTextSharp.Layout
             //        TODO solve header/footer problems with tagging. Currently, partial flushing when header/footer is used leads to crash.
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
-            for (int i = 0; i < 5; ++i)
-            {
+            for (int i = 0; i < 5; ++i) {
                 table.AddHeaderCell(new Cell().Add("Header " + (i + 1)));
             }
             cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
             table.AddFooterCell(cell);
             table.SetSkipFirstHeader(true);
             table.SetSkipLastFooter(true);
-            for (int i_1 = 0; i_1 < 350; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 350; i_1++) {
                 table.AddCell(new Cell().Add(new Paragraph((i_1 + 1).ToString())));
                 table.Flush();
             }
@@ -430,22 +398,18 @@ namespace iTextSharp.Layout
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushingTest03()
-        {
+        public virtual void FlushingTest03() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest03.pdf"
                 , FileMode.Create)));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
             doc.Add(table);
-            for (int i = 0; i < 20; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 4; j++) {
                     table.AddCell(new Cell().Add(new Paragraph(String.Format("Cell {0}, {1}", i + 1, j + 1))));
                 }
-                if (i % 10 == 0)
-                {
+                if (i % 10 == 0) {
                     table.Flush();
                     pdfDocument.GetTagStructureContext().FlushPageTags(pdfDocument.GetPage(1));
                     // This is a deliberate additional flush.
@@ -458,8 +422,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private Paragraph CreateParagraph1()
-        {
+        private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
             Text id = new Text("text chunk with specific font").SetFont(font).SetFontSize(8).SetTextRise(6);
@@ -467,13 +430,11 @@ namespace iTextSharp.Layout
             return p;
         }
 
-        private Paragraph CreateParagraph2()
-        {
+        private Paragraph CreateParagraph2() {
             Paragraph p;
             String alphabet = "abcdefghijklkmnopqrstuvwxyz";
             StringBuilder longTextBuilder = new StringBuilder();
-            for (int i = 0; i < 26; ++i)
-            {
+            for (int i = 0; i < 26; ++i) {
                 longTextBuilder.Append(alphabet);
             }
             String longText = longTextBuilder.ToString();
@@ -485,8 +446,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
-        private void CompareResult(String outFileName, String cmpFileName)
-        {
+        private void CompareResult(String outFileName, String cmpFileName) {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
@@ -495,8 +455,7 @@ namespace iTextSharp.Layout
             String errorMessage = "";
             errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
             errorMessage += contentDifferences == null ? "" : contentDifferences;
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
+            if (!String.IsNullOrEmpty(errorMessage)) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }

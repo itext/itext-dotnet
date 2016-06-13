@@ -41,12 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>These are a set of hints that you may pass to Writers to specify their behavior.</summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    public sealed class EncodeHintType
-    {
+    public sealed class EncodeHintType {
         /// <summary>Specifies what degree of error correction to use, for example in QR Codes (type Integer).</summary>
         public static readonly iTextSharp.Barcodes.Qrcode.EncodeHintType ERROR_CORRECTION = new iTextSharp.Barcodes.Qrcode.EncodeHintType
             ();
@@ -55,8 +53,7 @@ namespace iTextSharp.Barcodes.Qrcode
         public static readonly iTextSharp.Barcodes.Qrcode.EncodeHintType CHARACTER_SET = new iTextSharp.Barcodes.Qrcode.EncodeHintType
             ();
 
-        private EncodeHintType()
-        {
+        private EncodeHintType() {
         }
     }
 }

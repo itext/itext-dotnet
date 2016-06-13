@@ -7,10 +7,8 @@ using iTextSharp.Kernel.Pdf.Canvas.Parser;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class PdfTextExtractorEncodingsTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class PdfTextExtractorEncodingsTest : ExtendedITextTest {
         private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PdfTextExtractorEncodingsTest/";
 
         /// <summary>Basic Latin characters, with Unicode values less than 128</summary>
@@ -22,8 +20,7 @@ namespace iTextSharp.Layout
         /// <summary>Test parsing a document which uses a standard non-embedded font.</summary>
         /// <exception cref="System.Exception">any exception will cause the test to fail</exception>
         [NUnit.Framework.Test]
-        public virtual void TestStandardFont()
-        {
+        public virtual void TestStandardFont() {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.TIMES_ROMAN);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
@@ -35,8 +32,7 @@ namespace iTextSharp.Layout
         /// </summary>
         /// <exception cref="System.Exception">any exception will cause the test to fail</exception>
         [NUnit.Framework.Test]
-        public virtual void TestEncodedFont()
-        {
+        public virtual void TestEncodedFont() {
             PdfFont font = GetTTFont("ISO-8859-1", true);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
@@ -48,16 +44,14 @@ namespace iTextSharp.Layout
         /// </summary>
         /// <exception cref="System.Exception">any exception will cause the test to fail</exception>
         [NUnit.Framework.Test]
-        public virtual void TestUnicodeFont()
-        {
+        public virtual void TestUnicodeFont() {
             PdfFont font = GetTTFont(PdfEncodings.IDENTITY_H, true);
             byte[] pdfBytes = CreatePdf(font);
             CheckPdf(pdfBytes);
         }
 
         /// <exception cref="System.Exception"/>
-        private void CheckPdf(byte[] pdfBytes)
-        {
+        private void CheckPdf(byte[] pdfBytes) {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(pdfBytes)));
             // Characters from http://unicode.org/charts/PDF/U0000.pdf
             NUnit.Framework.Assert.AreEqual(TEXT1, PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1)));
@@ -66,14 +60,12 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal static PdfFont GetTTFont(String encoding, bool embedded)
-        {
+        protected internal static PdfFont GetTTFont(String encoding, bool embedded) {
             return PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", encoding, embedded);
         }
 
         /// <exception cref="System.Exception"/>
-        private static byte[] CreatePdf(PdfFont font)
-        {
+        private static byte[] CreatePdf(PdfFont font) {
             MemoryStream byteStream = new MemoryStream();
             Document document = new Document(new PdfDocument(new PdfWriter(byteStream)));
             document.Add(new Paragraph(TEXT1).SetFont(font));

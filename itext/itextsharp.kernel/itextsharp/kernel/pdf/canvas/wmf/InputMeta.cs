@@ -45,32 +45,27 @@ using System.IO;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Color;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Helper class to read nt, short, words, etc.</summary>
     /// <remarks>Helper class to read nt, short, words, etc. from an InputStream.</remarks>
-    public class InputMeta
-    {
+    public class InputMeta {
         internal Stream @in;
 
         internal int length;
 
         /// <summary>Creates an InputMeta object.</summary>
         /// <param name="in">InputStream containing the WMF data</param>
-        public InputMeta(Stream @in)
-        {
+        public InputMeta(Stream @in) {
             this.@in = @in;
         }
 
         /// <summary>Read the next word from the InputStream.</summary>
         /// <returns>the next word or 0 if the end of the stream has been reached</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadWord()
-        {
+        public virtual int ReadWord() {
             length += 2;
             int k1 = @in.Read();
-            if (k1 < 0)
-            {
+            if (k1 < 0) {
                 return 0;
             }
             return (k1 + (@in.Read() << 8)) & 0xffff;
@@ -79,11 +74,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <summary>Read the next short from the InputStream.</summary>
         /// <returns>the next short value</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadShort()
-        {
+        public virtual int ReadShort() {
             int k = ReadWord();
-            if (k > 0x7fff)
-            {
+            if (k > 0x7fff) {
                 k -= 0x10000;
             }
             return k;
@@ -92,12 +85,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <summary>Read the next int from the InputStream.</summary>
         /// <returns>the next int</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadInt()
-        {
+        public virtual int ReadInt() {
             length += 4;
             int k1 = @in.Read();
-            if (k1 < 0)
-            {
+            if (k1 < 0) {
                 return 0;
             }
             int k2 = @in.Read() << 8;
@@ -108,8 +99,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <summary>Read the next byte from the InputStream.</summary>
         /// <returns>the next byte</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int ReadByte()
-        {
+        public virtual int ReadByte() {
             ++length;
             return @in.Read() & 0xff;
         }
@@ -118,16 +108,14 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <remarks>Skips "len" amount of bytes from the InputStream. If len is &lt; 0, nothing is skipped.</remarks>
         /// <param name="len">amount of bytes needed to skip</param>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Skip(int len)
-        {
+        public virtual void Skip(int len) {
             length += len;
             StreamUtil.Skip(@in, len);
         }
 
         /// <summary>Get the amount of bytes read and/or skipped from the InputStream.</summary>
         /// <returns>number of bytes read</returns>
-        public virtual int GetLength()
-        {
+        public virtual int GetLength() {
             return length;
         }
 
@@ -138,8 +126,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// </summary>
         /// <returns>the next Color</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual iTextSharp.Kernel.Color.Color ReadColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color ReadColor() {
             int red = ReadByte();
             int green = ReadByte();
             int blue = ReadByte();

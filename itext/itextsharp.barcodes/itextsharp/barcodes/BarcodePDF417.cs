@@ -51,10 +51,8 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodePDF417 : Barcode2D
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodePDF417 : Barcode2D {
         /// <summary>Auto-size is made based on <CODE>aspectRatio</CODE> and <CODE>yHeight</CODE>.</summary>
         public const int PDF417_USE_ASPECT_RATIO = 0;
 
@@ -505,31 +503,27 @@ namespace iTextSharp.Barcodes
         private float yHeight;
 
         /// <summary>Creates a new <CODE>BarcodePDF417</CODE> with the default settings.</summary>
-        public BarcodePDF417()
-        {
+        public BarcodePDF417() {
             SetDefaultParameters();
         }
 
         /// <summary>Sets the segment id for macro PDF417 encoding</summary>
         /// <param name="id">the id (starting at 0)</param>
         /// <seealso cref="SetMacroSegmentCount(int)"/>
-        public virtual void SetMacroSegmentId(int id)
-        {
+        public virtual void SetMacroSegmentId(int id) {
             this.macroSegmentId = id;
         }
 
         /// <summary>Sets the segment count for macro PDF417 encoding</summary>
         /// <param name="cnt">the number of macro segments</param>
         /// <seealso cref="SetMacroSegmentId(int)"/>
-        public virtual void SetMacroSegmentCount(int cnt)
-        {
+        public virtual void SetMacroSegmentCount(int cnt) {
             this.macroSegmentCount = cnt;
         }
 
         /// <summary>Sets the File ID for macro PDF417 encoding</summary>
         /// <param name="id">the file id</param>
-        public virtual void SetMacroFileId(String id)
-        {
+        public virtual void SetMacroFileId(String id) {
             this.macroFileId = id;
         }
 
@@ -537,8 +531,7 @@ namespace iTextSharp.Barcodes
         /// Set the default settings that correspond to <CODE>PDF417_USE_ASPECT_RATIO</CODE>
         /// and <CODE>PDF417_AUTO_ERROR_LEVEL</CODE>.
         /// </summary>
-        public virtual void SetDefaultParameters()
-        {
+        public virtual void SetDefaultParameters() {
             options = 0;
             outBits = null;
             code = new byte[0];
@@ -546,35 +539,28 @@ namespace iTextSharp.Barcodes
             aspectRatio = 0.5f;
         }
 
-        public override Rectangle GetBarcodeSize()
-        {
+        public override Rectangle GetBarcodeSize() {
             PaintCode();
             return new Rectangle(0, 0, bitColumns, codeRows);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground)
-        {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE);
         }
 
         public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground, float moduleWidth
-            , float moduleHeight)
-        {
+            , float moduleHeight) {
             PaintCode();
             int stride = (bitColumns + 7) / 8;
-            if (foreground != null)
-            {
+            if (foreground != null) {
                 canvas.SetFillColor(foreground);
             }
-            for (int k = 0; k < codeRows; ++k)
-            {
+            for (int k = 0; k < codeRows; ++k) {
                 int p = k * stride;
-                for (int j = 0; j < bitColumns; ++j)
-                {
+                for (int j = 0; j < bitColumns; ++j) {
                     int b = outBits[p + j / 8] & 0xff;
                     b <<= j % 8;
-                    if ((b & 0x80) != 0)
-                    {
+                    if ((b & 0x80) != 0) {
                         canvas.Rectangle(j * moduleWidth, (codeRows - k - 1) * moduleHeight, moduleWidth, moduleHeight);
                     }
                 }
@@ -585,27 +571,21 @@ namespace iTextSharp.Barcodes
 
         /// <summary>Paints the barcode.</summary>
         /// <remarks>Paints the barcode. If no exception was thrown a valid barcode is available.</remarks>
-        public virtual void PaintCode()
-        {
+        public virtual void PaintCode() {
             int maxErr;
             int lenErr;
             int tot;
             int pad;
-            if ((options & PDF417_USE_RAW_CODEWORDS) != 0)
-            {
-                if (lenCodewords > MAX_DATA_CODEWORDS || lenCodewords < 1 || lenCodewords != codewords[0])
-                {
+            if ((options & PDF417_USE_RAW_CODEWORDS) != 0) {
+                if (lenCodewords > MAX_DATA_CODEWORDS || lenCodewords < 1 || lenCodewords != codewords[0]) {
                     throw new PdfException(PdfException.InvalidCodewordSize);
                 }
             }
-            else
-            {
-                if (code == null)
-                {
+            else {
+                if (code == null) {
                     throw new PdfException(PdfException.TextCannotBeNull);
                 }
-                if (code.Length > ABSOLUTE_MAX_TEXT_SIZE)
-                {
+                if (code.Length > ABSOLUTE_MAX_TEXT_SIZE) {
                     throw new PdfException(PdfException.TextIsTooBig);
                 }
                 segmentList = new BarcodePDF417.SegmentList();
@@ -616,61 +596,45 @@ namespace iTextSharp.Barcodes
                 codewords[0] = lenCodewords = cwPtr;
             }
             maxErr = MaxPossibleErrorLevel(MAX_DATA_CODEWORDS + 2 - lenCodewords);
-            if ((options & PDF417_USE_ERROR_LEVEL) == 0)
-            {
-                if (lenCodewords < 41)
-                {
+            if ((options & PDF417_USE_ERROR_LEVEL) == 0) {
+                if (lenCodewords < 41) {
                     errorLevel = 2;
                 }
-                else
-                {
-                    if (lenCodewords < 161)
-                    {
+                else {
+                    if (lenCodewords < 161) {
                         errorLevel = 3;
                     }
-                    else
-                    {
-                        if (lenCodewords < 321)
-                        {
+                    else {
+                        if (lenCodewords < 321) {
                             errorLevel = 4;
                         }
-                        else
-                        {
+                        else {
                             errorLevel = 5;
                         }
                     }
                 }
             }
-            if (errorLevel < 0)
-            {
+            if (errorLevel < 0) {
                 errorLevel = 0;
             }
-            else
-            {
-                if (errorLevel > maxErr)
-                {
+            else {
+                if (errorLevel > maxErr) {
                     errorLevel = maxErr;
                 }
             }
-            if (codeColumns < 1)
-            {
+            if (codeColumns < 1) {
                 codeColumns = 1;
             }
-            else
-            {
-                if (codeColumns > 30)
-                {
+            else {
+                if (codeColumns > 30) {
                     codeColumns = 30;
                 }
             }
-            if (codeRows < 3)
-            {
+            if (codeRows < 3) {
                 codeRows = 3;
             }
-            else
-            {
-                if (codeRows > 90)
-                {
+            else {
+                if (codeRows > 90) {
                     codeRows = 90;
                 }
             }
@@ -678,37 +642,28 @@ namespace iTextSharp.Barcodes
             bool fixedColumn = (options & PDF417_FIXED_ROWS) == 0;
             bool skipRowColAdjust = false;
             tot = lenCodewords + lenErr;
-            if ((options & PDF417_FIXED_RECTANGLE) != 0)
-            {
+            if ((options & PDF417_FIXED_RECTANGLE) != 0) {
                 tot = codeColumns * codeRows;
-                if (tot > MAX_DATA_CODEWORDS + 2)
-                {
+                if (tot > MAX_DATA_CODEWORDS + 2) {
                     tot = GetMaxSquare();
                 }
-                if (tot < lenCodewords + lenErr)
-                {
+                if (tot < lenCodewords + lenErr) {
                     tot = lenCodewords + lenErr;
                 }
-                else
-                {
+                else {
                     skipRowColAdjust = true;
                 }
             }
-            else
-            {
-                if ((options & (PDF417_FIXED_COLUMNS | PDF417_FIXED_ROWS)) == 0)
-                {
+            else {
+                if ((options & (PDF417_FIXED_COLUMNS | PDF417_FIXED_ROWS)) == 0) {
                     double c;
                     double b;
                     fixedColumn = true;
-                    if (aspectRatio < 0.001)
-                    {
+                    if (aspectRatio < 0.001) {
                         aspectRatio = 0.001f;
                     }
-                    else
-                    {
-                        if (aspectRatio > 1000)
-                        {
+                    else {
+                        if (aspectRatio > 1000) {
                             aspectRatio = 1000;
                         }
                     }
@@ -716,70 +671,55 @@ namespace iTextSharp.Barcodes
                     c = (-b + Math.Sqrt(b * b + 4 * 17 * aspectRatio * (lenCodewords + lenErr) * yHeight)) / (2 * 17 * aspectRatio
                         );
                     codeColumns = (int)(c + 0.5);
-                    if (codeColumns < 1)
-                    {
+                    if (codeColumns < 1) {
                         codeColumns = 1;
                     }
-                    else
-                    {
-                        if (codeColumns > 30)
-                        {
+                    else {
+                        if (codeColumns > 30) {
                             codeColumns = 30;
                         }
                     }
                 }
             }
-            if (!skipRowColAdjust)
-            {
-                if (fixedColumn)
-                {
+            if (!skipRowColAdjust) {
+                if (fixedColumn) {
                     codeRows = (tot - 1) / codeColumns + 1;
-                    if (codeRows < 3)
-                    {
+                    if (codeRows < 3) {
                         codeRows = 3;
                     }
-                    else
-                    {
-                        if (codeRows > 90)
-                        {
+                    else {
+                        if (codeRows > 90) {
                             codeRows = 90;
                             codeColumns = (tot - 1) / 90 + 1;
                         }
                     }
                 }
-                else
-                {
+                else {
                     codeColumns = (tot - 1) / codeRows + 1;
-                    if (codeColumns > 30)
-                    {
+                    if (codeColumns > 30) {
                         codeColumns = 30;
                         codeRows = (tot - 1) / 30 + 1;
                     }
                 }
                 tot = codeRows * codeColumns;
             }
-            if (tot > MAX_DATA_CODEWORDS + 2)
-            {
+            if (tot > MAX_DATA_CODEWORDS + 2) {
                 tot = GetMaxSquare();
             }
             errorLevel = MaxPossibleErrorLevel(tot - lenCodewords);
             lenErr = 2 << errorLevel;
             pad = tot - lenErr - lenCodewords;
-            if ((options & PDF417_USE_MACRO) != 0)
-            {
+            if ((options & PDF417_USE_MACRO) != 0) {
                 // the padding comes before the control block
                 System.Array.Copy(codewords, macroIndex, codewords, macroIndex + pad, pad);
                 cwPtr = lenCodewords + pad;
-                while (pad-- != 0)
-                {
+                while (pad-- != 0) {
                     codewords[macroIndex++] = TEXT_MODE;
                 }
             }
-            else
-            {
+            else {
                 cwPtr = lenCodewords;
-                while (pad-- != 0)
-                {
+                while (pad-- != 0) {
                     codewords[cwPtr++] = TEXT_MODE;
                 }
             }
@@ -793,8 +733,7 @@ namespace iTextSharp.Barcodes
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <returns>the XObject.</returns>
         public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, PdfDocument document
-            )
-        {
+            ) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE, document);
         }
 
@@ -804,8 +743,7 @@ namespace iTextSharp.Barcodes
         /// <param name="moduleHeight">the height of the pixels.</param>
         /// <returns>the XObject.</returns>
         public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, float moduleWidth
-            , float moduleHeight, PdfDocument document)
-        {
+            , float moduleHeight, PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleWidth, moduleHeight);
             xObject.SetBBox(new PdfArray(rect));
@@ -818,15 +756,13 @@ namespace iTextSharp.Barcodes
         /// be scaled in the Y direction by <CODE>yHeight</CODE>.
         /// </remarks>
         /// <returns>The raw barcode image</returns>
-        public virtual byte[] GetOutBits()
-        {
+        public virtual byte[] GetOutBits() {
             return this.outBits;
         }
 
         /// <summary>Gets the number of X pixels of <CODE>outBits</CODE>.</summary>
         /// <returns>the number of X pixels of <CODE>outBits</CODE></returns>
-        public virtual int GetBitColumns()
-        {
+        public virtual int GetBitColumns() {
             return this.bitColumns;
         }
 
@@ -836,8 +772,7 @@ namespace iTextSharp.Barcodes
         /// It is also the number of rows in the barcode.
         /// </remarks>
         /// <returns>the number of Y pixels of <CODE>outBits</CODE></returns>
-        public virtual int GetCodeRows()
-        {
+        public virtual int GetCodeRows() {
             return this.codeRows;
         }
 
@@ -847,15 +782,13 @@ namespace iTextSharp.Barcodes
         /// to keep the barcode valid.
         /// </remarks>
         /// <param name="codeRows">the number of barcode rows</param>
-        public virtual void SetCodeRows(int codeRows)
-        {
+        public virtual void SetCodeRows(int codeRows) {
             this.codeRows = codeRows;
         }
 
         /// <summary>Gets the number of barcode data columns.</summary>
         /// <returns>he number of barcode data columns</returns>
-        public virtual int GetCodeColumns()
-        {
+        public virtual int GetCodeColumns() {
             return this.codeColumns;
         }
 
@@ -865,8 +798,7 @@ namespace iTextSharp.Barcodes
         /// This number may be changed to keep the barcode valid.
         /// </remarks>
         /// <param name="codeColumns">the number of barcode data columns</param>
-        public virtual void SetCodeColumns(int codeColumns)
-        {
+        public virtual void SetCodeColumns(int codeColumns) {
             this.codeColumns = codeColumns;
         }
 
@@ -877,22 +809,19 @@ namespace iTextSharp.Barcodes
         /// is set.
         /// </remarks>
         /// <returns>the codeword array</returns>
-        public virtual int[] GetCodewords()
-        {
+        public virtual int[] GetCodewords() {
             return this.codewords;
         }
 
         /// <summary>Gets the length of the codewords.</summary>
         /// <returns>the length of the codewords</returns>
-        public virtual int GetLenCodewords()
-        {
+        public virtual int GetLenCodewords() {
             return this.lenCodewords;
         }
 
         /// <summary>Sets the length of the codewords.</summary>
         /// <param name="lenCodewords">the length of the codewords</param>
-        public virtual void SetLenCodewords(int lenCodewords)
-        {
+        public virtual void SetLenCodewords(int lenCodewords) {
             this.lenCodewords = lenCodewords;
         }
 
@@ -902,15 +831,13 @@ namespace iTextSharp.Barcodes
         /// from the previously set value.
         /// </remarks>
         /// <returns>the error level correction used for the barcode</returns>
-        public virtual int GetErrorLevel()
-        {
+        public virtual int GetErrorLevel() {
             return this.errorLevel;
         }
 
         /// <summary>Sets the error level correction for the barcode.</summary>
         /// <param name="errorLevel">the error level correction for the barcode</param>
-        public virtual void SetErrorLevel(int errorLevel)
-        {
+        public virtual void SetErrorLevel(int errorLevel) {
             this.errorLevel = errorLevel;
         }
 
@@ -920,8 +847,7 @@ namespace iTextSharp.Barcodes
         /// be interpreted in the codepage Cp437.
         /// </remarks>
         /// <returns>the bytes that form the barcode</returns>
-        public virtual byte[] GetCode()
-        {
+        public virtual byte[] GetCode() {
             return this.code;
         }
 
@@ -931,8 +857,7 @@ namespace iTextSharp.Barcodes
         /// be interpreted in the codepage Cp437.
         /// </remarks>
         /// <param name="code">the bytes that form the barcode</param>
-        public virtual void SetCode(byte[] code)
-        {
+        public virtual void SetCode(byte[] code) {
             this.code = code;
         }
 
@@ -942,15 +867,13 @@ namespace iTextSharp.Barcodes
         /// to bytes using the encoding Cp437.
         /// </remarks>
         /// <param name="text">the text that will form the barcode</param>
-        public virtual void SetCode(String text)
-        {
+        public virtual void SetCode(String text) {
             this.code = PdfEncodings.ConvertToBytes(text, "cp437");
         }
 
         /// <summary>Gets the options to generate the barcode.</summary>
         /// <returns>the options to generate the barcode</returns>
-        public virtual int GetOptions()
-        {
+        public virtual int GetOptions() {
             return this.options;
         }
 
@@ -960,15 +883,13 @@ namespace iTextSharp.Barcodes
         /// the <CODE>PDF417_*</CODE> constants.
         /// </remarks>
         /// <param name="options">the options to generate the barcode</param>
-        public virtual void SetOptions(int options)
-        {
+        public virtual void SetOptions(int options) {
             this.options = options;
         }
 
         /// <summary>Gets the barcode aspect ratio.</summary>
         /// <returns>the barcode aspect ratio</returns>
-        public virtual float GetAspectRatio()
-        {
+        public virtual float GetAspectRatio() {
             return this.aspectRatio;
         }
 
@@ -978,28 +899,24 @@ namespace iTextSharp.Barcodes
         /// barcode width twice as large as the height.
         /// </remarks>
         /// <param name="aspectRatio">the barcode aspect ratio</param>
-        public virtual void SetAspectRatio(float aspectRatio)
-        {
+        public virtual void SetAspectRatio(float aspectRatio) {
             this.aspectRatio = aspectRatio;
         }
 
         /// <summary>Gets the Y pixel height relative to X.</summary>
         /// <returns>the Y pixel height relative to X</returns>
-        public virtual float GetYHeight()
-        {
+        public virtual float GetYHeight() {
             return this.yHeight;
         }
 
         /// <summary>Sets the Y pixel height relative to X.</summary>
         /// <remarks>Sets the Y pixel height relative to X. It is usually 3.</remarks>
         /// <param name="yHeight">the Y pixel height relative to X</param>
-        public virtual void SetYHeight(float yHeight)
-        {
+        public virtual void SetYHeight(float yHeight) {
             this.yHeight = yHeight;
         }
 
-        protected internal virtual void OutCodeword17(int codeword)
-        {
+        protected internal virtual void OutCodeword17(int codeword) {
             int bytePtr = bitPtr / 8;
             int bit = bitPtr - bytePtr * 8;
             outBits[bytePtr++] |= (byte)(codeword >> 9 + bit);
@@ -1009,90 +926,74 @@ namespace iTextSharp.Barcodes
             bitPtr += 17;
         }
 
-        protected internal virtual void OutCodeword18(int codeword)
-        {
+        protected internal virtual void OutCodeword18(int codeword) {
             int bytePtr = bitPtr / 8;
             int bit = bitPtr - bytePtr * 8;
             outBits[bytePtr++] |= (byte)(codeword >> 10 + bit);
             outBits[bytePtr++] |= (byte)(codeword >> 2 + bit);
             codeword <<= 8;
             outBits[bytePtr] |= (byte)(codeword >> 2 + bit);
-            if (bit == 7)
-            {
+            if (bit == 7) {
                 outBits[++bytePtr] |= 0x80;
             }
             bitPtr += 18;
         }
 
-        protected internal virtual void OutCodeword(int codeword)
-        {
+        protected internal virtual void OutCodeword(int codeword) {
             OutCodeword17(codeword);
         }
 
-        protected internal virtual void OutStopPattern()
-        {
+        protected internal virtual void OutStopPattern() {
             OutCodeword18(STOP_PATTERN);
         }
 
-        protected internal virtual void OutStartPattern()
-        {
+        protected internal virtual void OutStartPattern() {
             OutCodeword17(START_PATTERN);
         }
 
-        protected internal virtual void OutPaintCode()
-        {
+        protected internal virtual void OutPaintCode() {
             int codePtr = 0;
             bitColumns = START_CODE_SIZE * (codeColumns + 3) + STOP_SIZE;
             int lenBits = ((bitColumns - 1) / 8 + 1) * codeRows;
             outBits = new byte[lenBits];
-            for (int row = 0; row < codeRows; ++row)
-            {
+            for (int row = 0; row < codeRows; ++row) {
                 bitPtr = ((bitColumns - 1) / 8 + 1) * 8 * row;
                 int rowMod = row % 3;
                 int[] cluster = CLUSTERS[rowMod];
                 OutStartPattern();
                 int edge = 0;
-                switch (rowMod)
-                {
-                    case 0:
-                    {
+                switch (rowMod) {
+                    case 0: {
                         edge = 30 * (row / 3) + (codeRows - 1) / 3;
                         break;
                     }
 
-                    case 1:
-                    {
+                    case 1: {
                         edge = 30 * (row / 3) + errorLevel * 3 + (codeRows - 1) % 3;
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         edge = 30 * (row / 3) + codeColumns - 1;
                         break;
                     }
                 }
                 OutCodeword(cluster[edge]);
-                for (int column = 0; column < codeColumns; ++column)
-                {
+                for (int column = 0; column < codeColumns; ++column) {
                     OutCodeword(cluster[codewords[codePtr++]]);
                 }
-                switch (rowMod)
-                {
-                    case 0:
-                    {
+                switch (rowMod) {
+                    case 0: {
                         edge = 30 * (row / 3) + codeColumns - 1;
                         break;
                     }
 
-                    case 1:
-                    {
+                    case 1: {
                         edge = 30 * (row / 3) + (codeRows - 1) / 3;
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         edge = 30 * (row / 3) + errorLevel * 3 + (codeRows - 1) % 3;
                         break;
                     }
@@ -1100,165 +1001,132 @@ namespace iTextSharp.Barcodes
                 OutCodeword(cluster[edge]);
                 OutStopPattern();
             }
-            if ((options & PDF417_INVERT_BITMAP) != 0)
-            {
-                for (int k = 0; k < outBits.Length; ++k)
-                {
+            if ((options & PDF417_INVERT_BITMAP) != 0) {
+                for (int k = 0; k < outBits.Length; ++k) {
                     outBits[k] ^= 0xff;
                 }
             }
         }
 
-        protected internal virtual void CalculateErrorCorrection(int dest)
-        {
-            if (errorLevel < 0 || errorLevel > 8)
-            {
+        protected internal virtual void CalculateErrorCorrection(int dest) {
+            if (errorLevel < 0 || errorLevel > 8) {
                 errorLevel = 0;
             }
             int[] A = ERROR_LEVEL[errorLevel];
             int Alength = 2 << errorLevel;
-            for (int k = 0; k < Alength; ++k)
-            {
+            for (int k = 0; k < Alength; ++k) {
                 codewords[dest + k] = 0;
             }
             int lastE = Alength - 1;
-            for (int k_1 = 0; k_1 < lenCodewords; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < lenCodewords; ++k_1) {
                 int t1 = codewords[k_1] + codewords[dest];
-                for (int e = 0; e <= lastE; ++e)
-                {
+                for (int e = 0; e <= lastE; ++e) {
                     int t2 = t1 * A[lastE - e] % MOD;
                     int t3 = MOD - t2;
                     codewords[dest + e] = ((e == lastE ? 0 : codewords[dest + e + 1]) + t3) % MOD;
                 }
             }
-            for (int k_2 = 0; k_2 < Alength; ++k_2)
-            {
+            for (int k_2 = 0; k_2 < Alength; ++k_2) {
                 codewords[dest + k_2] = (MOD - codewords[dest + k_2]) % MOD;
             }
         }
 
-        protected internal virtual void TextCompaction(int start, int length)
-        {
+        protected internal virtual void TextCompaction(int start, int length) {
             TextCompaction(code, start, length);
         }
 
-        protected internal virtual void BasicNumberCompaction(int start, int length)
-        {
+        protected internal virtual void BasicNumberCompaction(int start, int length) {
             BasicNumberCompaction(code, start, length);
         }
 
-        protected internal virtual int GetTextTypeAndValue(int maxLength, int idx)
-        {
+        protected internal virtual int GetTextTypeAndValue(int maxLength, int idx) {
             return GetTextTypeAndValue(code, maxLength, idx);
         }
 
-        protected internal virtual bool CheckSegmentType(BarcodePDF417.Segment segment, char type)
-        {
-            if (segment == null)
-            {
+        protected internal virtual bool CheckSegmentType(BarcodePDF417.Segment segment, char type) {
+            if (segment == null) {
                 return false;
             }
             return segment.type == type;
         }
 
-        protected internal virtual int GetSegmentLength(BarcodePDF417.Segment segment)
-        {
-            if (segment == null)
-            {
+        protected internal virtual int GetSegmentLength(BarcodePDF417.Segment segment) {
+            if (segment == null) {
                 return 0;
             }
             return segment.end - segment.start;
         }
 
-        protected internal virtual void NumberCompaction(int start, int length)
-        {
+        protected internal virtual void NumberCompaction(int start, int length) {
             NumberCompaction(code, start, length);
         }
 
-        protected internal virtual void ByteCompaction6(int start)
-        {
+        protected internal virtual void ByteCompaction6(int start) {
             int length = 6;
             int ret = cwPtr;
             int retLast = 4;
             int ni;
             int k;
             cwPtr += retLast + 1;
-            for (k = 0; k <= retLast; ++k)
-            {
+            for (k = 0; k <= retLast; ++k) {
                 codewords[ret + k] = 0;
             }
             length += start;
-            for (ni = start; ni < length; ++ni)
-            {
+            for (ni = start; ni < length; ++ni) {
                 // multiply by 256
-                for (k = retLast; k >= 0; --k)
-                {
+                for (k = retLast; k >= 0; --k) {
                     codewords[ret + k] *= 256;
                 }
                 // add the digit
                 codewords[ret + retLast] += code[ni] & 0xff;
                 // propagate carry
-                for (k = retLast; k > 0; --k)
-                {
+                for (k = retLast; k > 0; --k) {
                     codewords[ret + k - 1] += codewords[ret + k] / 900;
                     codewords[ret + k] %= 900;
                 }
             }
         }
 
-        protected internal virtual void Assemble()
-        {
+        protected internal virtual void Assemble() {
             int k;
-            if (segmentList.Size() == 0)
-            {
+            if (segmentList.Size() == 0) {
                 return;
             }
             cwPtr = 1;
-            for (k = 0; k < segmentList.Size(); ++k)
-            {
+            for (k = 0; k < segmentList.Size(); ++k) {
                 BarcodePDF417.Segment v = segmentList.Get(k);
-                switch (v.type)
-                {
-                    case 'T':
-                    {
-                        if (k != 0)
-                        {
+                switch (v.type) {
+                    case 'T': {
+                        if (k != 0) {
                             codewords[cwPtr++] = TEXT_MODE;
                         }
                         TextCompaction(v.start, GetSegmentLength(v));
                         break;
                     }
 
-                    case 'N':
-                    {
+                    case 'N': {
                         codewords[cwPtr++] = NUMERIC_MODE;
                         NumberCompaction(v.start, GetSegmentLength(v));
                         break;
                     }
 
-                    case 'B':
-                    {
+                    case 'B': {
                         codewords[cwPtr++] = GetSegmentLength(v) % 6 != 0 ? BYTE_MODE : BYTE_MODE_6;
                         ByteCompaction(v.start, GetSegmentLength(v));
                         break;
                     }
                 }
             }
-            if ((options & PDF417_USE_MACRO) != 0)
-            {
+            if ((options & PDF417_USE_MACRO) != 0) {
                 MacroCodes();
             }
         }
 
-        protected internal static int MaxPossibleErrorLevel(int remain)
-        {
+        protected internal static int MaxPossibleErrorLevel(int remain) {
             int level = 8;
             int size = 512;
-            while (level > 0)
-            {
-                if (remain >= size)
-                {
+            while (level > 0) {
+                if (remain >= size) {
                     return level;
                 }
                 --level;
@@ -1267,22 +1135,17 @@ namespace iTextSharp.Barcodes
             return 0;
         }
 
-        protected internal virtual void DumpList()
-        {
-            if (segmentList.Size() == 0)
-            {
+        protected internal virtual void DumpList() {
+            if (segmentList.Size() == 0) {
                 return;
             }
-            for (int k = 0; k < segmentList.Size(); ++k)
-            {
+            for (int k = 0; k < segmentList.Size(); ++k) {
                 BarcodePDF417.Segment v = segmentList.Get(k);
                 int len = GetSegmentLength(v);
                 char[] c = new char[len];
-                for (int j = 0; j < len; ++j)
-                {
+                for (int j = 0; j < len; ++j) {
                     c[j] = (char)(code[v.start + j] & 0xff);
-                    if (c[j] == '\r')
-                    {
+                    if (c[j] == '\r') {
                         c[j] = '\n';
                     }
                 }
@@ -1293,50 +1156,40 @@ namespace iTextSharp.Barcodes
             }
         }
 
-        protected internal virtual int GetMaxSquare()
-        {
-            if (codeColumns > 21)
-            {
+        protected internal virtual int GetMaxSquare() {
+            if (codeColumns > 21) {
                 codeColumns = 29;
                 codeRows = 32;
             }
-            else
-            {
+            else {
                 codeColumns = 16;
                 codeRows = 58;
             }
             return MAX_DATA_CODEWORDS + 2;
         }
 
-        internal virtual void ByteCompaction(int start, int length)
-        {
+        internal virtual void ByteCompaction(int start, int length) {
             int k;
             int j;
             int size = length / 6 * 5 + length % 6;
-            if (size + cwPtr > MAX_DATA_CODEWORDS)
-            {
+            if (size + cwPtr > MAX_DATA_CODEWORDS) {
                 throw new PdfException(PdfException.TextIsTooBig);
             }
             length += start;
-            for (k = start; k < length; k += 6)
-            {
+            for (k = start; k < length; k += 6) {
                 size = length - k < 44 ? length - k : 6;
-                if (size < 6)
-                {
-                    for (j = 0; j < size; ++j)
-                    {
+                if (size < 6) {
+                    for (j = 0; j < size; ++j) {
                         codewords[cwPtr++] = code[k + j] & 0xff;
                     }
                 }
-                else
-                {
+                else {
                     ByteCompaction6(k);
                 }
             }
         }
 
-        internal virtual void BreakString()
-        {
+        internal virtual void BreakString() {
             int textLength = code.Length;
             int lastP = 0;
             int startN = 0;
@@ -1349,35 +1202,27 @@ namespace iTextSharp.Barcodes
             BarcodePDF417.Segment v;
             BarcodePDF417.Segment vp;
             BarcodePDF417.Segment vn;
-            if ((options & PDF417_FORCE_BINARY) != 0)
-            {
+            if ((options & PDF417_FORCE_BINARY) != 0) {
                 segmentList.Add('B', 0, textLength);
                 return;
             }
-            for (k = 0; k < textLength; ++k)
-            {
+            for (k = 0; k < textLength; ++k) {
                 c = (char)(code[k] & 0xff);
-                if (c >= '0' && c <= '9')
-                {
-                    if (nd == 0)
-                    {
+                if (c >= '0' && c <= '9') {
+                    if (nd == 0) {
                         startN = k;
                     }
                     ++nd;
                     continue;
                 }
-                if (nd >= 13)
-                {
-                    if (lastP != startN)
-                    {
+                if (nd >= 13) {
+                    if (lastP != startN) {
                         c = (char)(code[lastP] & 0xff);
                         lastTxt = c >= ' ' && c < 127 || c == '\r' || c == '\n' || c == '\t';
-                        for (j = lastP; j < startN; ++j)
-                        {
+                        for (j = lastP; j < startN; ++j) {
                             c = (char)(code[j] & 0xff);
                             txt = c >= ' ' && c < 127 || c == '\r' || c == '\n' || c == '\t';
-                            if (txt != lastTxt)
-                            {
+                            if (txt != lastTxt) {
                                 segmentList.Add(lastTxt ? 'T' : 'B', lastP, j);
                                 lastP = j;
                                 lastTxt = txt;
@@ -1390,20 +1235,16 @@ namespace iTextSharp.Barcodes
                 }
                 nd = 0;
             }
-            if (nd < 13)
-            {
+            if (nd < 13) {
                 startN = textLength;
             }
-            if (lastP != startN)
-            {
+            if (lastP != startN) {
                 c = (char)(code[lastP] & 0xff);
                 lastTxt = c >= ' ' && c < 127 || c == '\r' || c == '\n' || c == '\t';
-                for (j = lastP; j < startN; ++j)
-                {
+                for (j = lastP; j < startN; ++j) {
                     c = (char)(code[j] & 0xff);
                     txt = c >= ' ' && c < 127 || c == '\r' || c == '\n' || c == '\t';
-                    if (txt != lastTxt)
-                    {
+                    if (txt != lastTxt) {
                         segmentList.Add(lastTxt ? 'T' : 'B', lastP, j);
                         lastP = j;
                         lastTxt = txt;
@@ -1411,22 +1252,18 @@ namespace iTextSharp.Barcodes
                 }
                 segmentList.Add(lastTxt ? 'T' : 'B', lastP, startN);
             }
-            if (nd >= 13)
-            {
+            if (nd >= 13) {
                 segmentList.Add('N', startN, textLength);
             }
             //optimize
             //merge short binary
-            for (k = 0; k < segmentList.Size(); ++k)
-            {
+            for (k = 0; k < segmentList.Size(); ++k) {
                 v = segmentList.Get(k);
                 vp = segmentList.Get(k - 1);
                 vn = segmentList.Get(k + 1);
-                if (CheckSegmentType(v, 'B') && GetSegmentLength(v) == 1)
-                {
+                if (CheckSegmentType(v, 'B') && GetSegmentLength(v) == 1) {
                     if (CheckSegmentType(vp, 'T') && CheckSegmentType(vn, 'T') && GetSegmentLength(vp) + GetSegmentLength(vn) 
-                        >= 3)
-                    {
+                        >= 3) {
                         vp.end = vn.end;
                         segmentList.Remove(k);
                         segmentList.Remove(k);
@@ -1436,220 +1273,178 @@ namespace iTextSharp.Barcodes
                 }
             }
             //merge text sections
-            for (k = 0; k < segmentList.Size(); ++k)
-            {
+            for (k = 0; k < segmentList.Size(); ++k) {
                 v = segmentList.Get(k);
                 vp = segmentList.Get(k - 1);
                 vn = segmentList.Get(k + 1);
-                if (CheckSegmentType(v, 'T') && GetSegmentLength(v) >= 5)
-                {
+                if (CheckSegmentType(v, 'T') && GetSegmentLength(v) >= 5) {
                     bool redo = false;
-                    if (CheckSegmentType(vp, 'B') && GetSegmentLength(vp) == 1 || CheckSegmentType(vp, 'T'))
-                    {
+                    if (CheckSegmentType(vp, 'B') && GetSegmentLength(vp) == 1 || CheckSegmentType(vp, 'T')) {
                         redo = true;
                         v.start = vp.start;
                         segmentList.Remove(k - 1);
                         --k;
                     }
-                    if (CheckSegmentType(vn, 'B') && GetSegmentLength(vn) == 1 || CheckSegmentType(vn, 'T'))
-                    {
+                    if (CheckSegmentType(vn, 'B') && GetSegmentLength(vn) == 1 || CheckSegmentType(vn, 'T')) {
                         redo = true;
                         v.end = vn.end;
                         segmentList.Remove(k + 1);
                     }
-                    if (redo)
-                    {
+                    if (redo) {
                         k = -1;
                         continue;
                     }
                 }
             }
             //merge binary sections
-            for (k = 0; k < segmentList.Size(); ++k)
-            {
+            for (k = 0; k < segmentList.Size(); ++k) {
                 v = segmentList.Get(k);
                 vp = segmentList.Get(k - 1);
                 vn = segmentList.Get(k + 1);
-                if (CheckSegmentType(v, 'B'))
-                {
+                if (CheckSegmentType(v, 'B')) {
                     bool redo = false;
-                    if (CheckSegmentType(vp, 'T') && GetSegmentLength(vp) < 5 || CheckSegmentType(vp, 'B'))
-                    {
+                    if (CheckSegmentType(vp, 'T') && GetSegmentLength(vp) < 5 || CheckSegmentType(vp, 'B')) {
                         redo = true;
                         v.start = vp.start;
                         segmentList.Remove(k - 1);
                         --k;
                     }
-                    if (CheckSegmentType(vn, 'T') && GetSegmentLength(vn) < 5 || CheckSegmentType(vn, 'B'))
-                    {
+                    if (CheckSegmentType(vn, 'T') && GetSegmentLength(vn) < 5 || CheckSegmentType(vn, 'B')) {
                         redo = true;
                         v.end = vn.end;
                         segmentList.Remove(k + 1);
                     }
-                    if (redo)
-                    {
+                    if (redo) {
                         k = -1;
                         continue;
                     }
                 }
             }
             // check if all numbers
-            if (segmentList.Size() == 1 && (v = segmentList.Get(0)).type == 'T' && GetSegmentLength(v) >= 8)
-            {
-                for (k = v.start; k < v.end; ++k)
-                {
+            if (segmentList.Size() == 1 && (v = segmentList.Get(0)).type == 'T' && GetSegmentLength(v) >= 8) {
+                for (k = v.start; k < v.end; ++k) {
                     c = (char)(code[k] & 0xff);
-                    if (c < '0' || c > '9')
-                    {
+                    if (c < '0' || c > '9') {
                         break;
                     }
                 }
-                if (k == v.end)
-                {
+                if (k == v.end) {
                     v.type = 'N';
                 }
             }
         }
 
-        private void BasicNumberCompaction(byte[] input, int start, int length)
-        {
+        private void BasicNumberCompaction(byte[] input, int start, int length) {
             int ret = cwPtr;
             int retLast = length / 3;
             int ni;
             int k;
             cwPtr += retLast + 1;
-            for (k = 0; k <= retLast; ++k)
-            {
+            for (k = 0; k <= retLast; ++k) {
                 codewords[ret + k] = 0;
             }
             codewords[ret + retLast] = 1;
             length += start;
-            for (ni = start; ni < length; ++ni)
-            {
+            for (ni = start; ni < length; ++ni) {
                 // multiply by 10
-                for (k = retLast; k >= 0; --k)
-                {
+                for (k = retLast; k >= 0; --k) {
                     codewords[ret + k] *= 10;
                 }
                 // add the digit
                 codewords[ret + retLast] += input[ni] - '0';
                 // propagate carry
-                for (k = retLast; k > 0; --k)
-                {
+                for (k = retLast; k > 0; --k) {
                     codewords[ret + k - 1] += codewords[ret + k] / 900;
                     codewords[ret + k] %= 900;
                 }
             }
         }
 
-        private void NumberCompaction(byte[] input, int start, int length)
-        {
+        private void NumberCompaction(byte[] input, int start, int length) {
             int full = length / 44 * 15;
             int size = length % 44;
             int k;
-            if (size == 0)
-            {
+            if (size == 0) {
                 size = full;
             }
-            else
-            {
+            else {
                 size = full + size / 3 + 1;
             }
-            if (size + cwPtr > MAX_DATA_CODEWORDS)
-            {
+            if (size + cwPtr > MAX_DATA_CODEWORDS) {
                 throw new PdfException(PdfException.TextIsTooBig);
             }
             length += start;
-            for (k = start; k < length; k += 44)
-            {
+            for (k = start; k < length; k += 44) {
                 size = length - k < 44 ? length - k : 44;
                 BasicNumberCompaction(input, k, size);
             }
         }
 
-        private void MacroCodes()
-        {
-            if (macroSegmentId < 0)
-            {
+        private void MacroCodes() {
+            if (macroSegmentId < 0) {
                 throw new PdfException(PdfException.MacroSegmentIdMustBeGtOrEqZero);
             }
-            if (macroSegmentId >= macroSegmentCount)
-            {
+            if (macroSegmentId >= macroSegmentCount) {
                 throw new PdfException(PdfException.MacroSegmentIdMustBeLtMacroSegmentCount);
             }
-            if (macroSegmentCount < 1)
-            {
+            if (macroSegmentCount < 1) {
                 throw new PdfException(PdfException.MacroSegmentIdMustBeGtZero);
             }
             macroIndex = cwPtr;
             codewords[cwPtr++] = MACRO_SEGMENT_ID;
             Append(macroSegmentId, 5);
-            if (macroFileId != null)
-            {
+            if (macroFileId != null) {
                 Append(macroFileId);
             }
-            if (macroSegmentId >= macroSegmentCount - 1)
-            {
+            if (macroSegmentId >= macroSegmentCount - 1) {
                 codewords[cwPtr++] = MACRO_LAST_SEGMENT;
             }
         }
 
-        private void Append(int @in, int len)
-        {
+        private void Append(int @in, int len) {
             StringBuilder sb = new StringBuilder(len + 1);
             sb.Append(iTextSharp.IO.Util.JavaUtil.IntegerToString(@in));
-            for (int i = sb.Length; i < len; i++)
-            {
+            for (int i = sb.Length; i < len; i++) {
                 sb.Insert(0, "0");
             }
             byte[] bytes = PdfEncodings.ConvertToBytes(sb.ToString(), "cp437");
             NumberCompaction(bytes, 0, bytes.Length);
         }
 
-        private void Append(String s)
-        {
+        private void Append(String s) {
             byte[] bytes = PdfEncodings.ConvertToBytes(s, "cp437");
             TextCompaction(bytes, 0, bytes.Length);
         }
 
-        private static int GetTextTypeAndValue(byte[] input, int maxLength, int idx)
-        {
-            if (idx >= maxLength)
-            {
+        private static int GetTextTypeAndValue(byte[] input, int maxLength, int idx) {
+            if (idx >= maxLength) {
                 return 0;
             }
             char c = (char)(input[idx] & 0xff);
-            if (c >= 'A' && c <= 'Z')
-            {
+            if (c >= 'A' && c <= 'Z') {
                 return ALPHA + c - 'A';
             }
-            if (c >= 'a' && c <= 'z')
-            {
+            if (c >= 'a' && c <= 'z') {
                 return LOWER + c - 'a';
             }
-            if (c == ' ')
-            {
+            if (c == ' ') {
                 return ALPHA + LOWER + MIXED + SPACE;
             }
             int ms = MIXED_SET.IndexOf(c);
             int ps = PUNCTUATION_SET.IndexOf(c);
-            if (ms < 0 && ps < 0)
-            {
+            if (ms < 0 && ps < 0) {
                 return ISBYTE + c;
             }
-            if (ms == ps)
-            {
+            if (ms == ps) {
                 return MIXED + PUNCTUATION + ms;
             }
-            if (ms >= 0)
-            {
+            if (ms >= 0) {
                 return MIXED + ms;
             }
             return PUNCTUATION + ps;
         }
 
-        private void TextCompaction(byte[] input, int start, int length)
-        {
+        private void TextCompaction(byte[] input, int start, int length) {
             int[] dest = new int[ABSOLUTE_MAX_TEXT_SIZE * 2];
             int mode = ALPHA;
             int ptr = 0;
@@ -1658,18 +1453,14 @@ namespace iTextSharp.Barcodes
             int k;
             int size;
             length += start;
-            for (k = start; k < length; ++k)
-            {
+            for (k = start; k < length; ++k) {
                 v = GetTextTypeAndValue(input, length, k);
-                if ((v & mode) != 0)
-                {
+                if ((v & mode) != 0) {
                     dest[ptr++] = v & 0xff;
                     continue;
                 }
-                if ((v & ISBYTE) != 0)
-                {
-                    if ((ptr & 1) != 0)
-                    {
+                if ((v & ISBYTE) != 0) {
+                    if ((ptr & 1) != 0) {
                         //add a padding word
                         dest[ptr++] = PAL;
                         mode = (mode & PUNCTUATION) != 0 ? ALPHA : mode;
@@ -1679,36 +1470,28 @@ namespace iTextSharp.Barcodes
                     fullBytes += 2;
                     continue;
                 }
-                switch (mode)
-                {
-                    case ALPHA:
-                    {
-                        if ((v & LOWER) != 0)
-                        {
+                switch (mode) {
+                    case ALPHA: {
+                        if ((v & LOWER) != 0) {
                             dest[ptr++] = LL;
                             dest[ptr++] = v & 0xff;
                             mode = LOWER;
                         }
-                        else
-                        {
-                            if ((v & MIXED) != 0)
-                            {
+                        else {
+                            if ((v & MIXED) != 0) {
                                 dest[ptr++] = ML;
                                 dest[ptr++] = v & 0xff;
                                 mode = MIXED;
                             }
-                            else
-                            {
+                            else {
                                 if ((GetTextTypeAndValue(input, length, k + 1) & GetTextTypeAndValue(input, length, k + 2) & PUNCTUATION) 
-                                    != 0)
-                                {
+                                    != 0) {
                                     dest[ptr++] = ML;
                                     dest[ptr++] = PL;
                                     dest[ptr++] = v & 0xff;
                                     mode = PUNCTUATION;
                                 }
-                                else
-                                {
+                                else {
                                     dest[ptr++] = PS;
                                     dest[ptr++] = v & 0xff;
                                 }
@@ -1717,42 +1500,33 @@ namespace iTextSharp.Barcodes
                         break;
                     }
 
-                    case LOWER:
-                    {
-                        if ((v & ALPHA) != 0)
-                        {
-                            if ((GetTextTypeAndValue(input, length, k + 1) & GetTextTypeAndValue(input, length, k + 2) & ALPHA) != 0)
-                            {
+                    case LOWER: {
+                        if ((v & ALPHA) != 0) {
+                            if ((GetTextTypeAndValue(input, length, k + 1) & GetTextTypeAndValue(input, length, k + 2) & ALPHA) != 0) {
                                 dest[ptr++] = ML;
                                 dest[ptr++] = AL;
                                 mode = ALPHA;
                             }
-                            else
-                            {
+                            else {
                                 dest[ptr++] = AS;
                             }
                             dest[ptr++] = v & 0xff;
                         }
-                        else
-                        {
-                            if ((v & MIXED) != 0)
-                            {
+                        else {
+                            if ((v & MIXED) != 0) {
                                 dest[ptr++] = ML;
                                 dest[ptr++] = v & 0xff;
                                 mode = MIXED;
                             }
-                            else
-                            {
+                            else {
                                 if ((GetTextTypeAndValue(input, length, k + 1) & GetTextTypeAndValue(input, length, k + 2) & PUNCTUATION) 
-                                    != 0)
-                                {
+                                    != 0) {
                                     dest[ptr++] = ML;
                                     dest[ptr++] = PL;
                                     dest[ptr++] = v & 0xff;
                                     mode = PUNCTUATION;
                                 }
-                                else
-                                {
+                                else {
                                     dest[ptr++] = PS;
                                     dest[ptr++] = v & 0xff;
                                 }
@@ -1761,33 +1535,26 @@ namespace iTextSharp.Barcodes
                         break;
                     }
 
-                    case MIXED:
-                    {
-                        if ((v & LOWER) != 0)
-                        {
+                    case MIXED: {
+                        if ((v & LOWER) != 0) {
                             dest[ptr++] = LL;
                             dest[ptr++] = v & 0xff;
                             mode = LOWER;
                         }
-                        else
-                        {
-                            if ((v & ALPHA) != 0)
-                            {
+                        else {
+                            if ((v & ALPHA) != 0) {
                                 dest[ptr++] = AL;
                                 dest[ptr++] = v & 0xff;
                                 mode = ALPHA;
                             }
-                            else
-                            {
+                            else {
                                 if ((GetTextTypeAndValue(input, length, k + 1) & GetTextTypeAndValue(input, length, k + 2) & PUNCTUATION) 
-                                    != 0)
-                                {
+                                    != 0) {
                                     dest[ptr++] = PL;
                                     dest[ptr++] = v & 0xff;
                                     mode = PUNCTUATION;
                                 }
-                                else
-                                {
+                                else {
                                     dest[ptr++] = PS;
                                     dest[ptr++] = v & 0xff;
                                 }
@@ -1796,8 +1563,7 @@ namespace iTextSharp.Barcodes
                         break;
                     }
 
-                    case PUNCTUATION:
-                    {
+                    case PUNCTUATION: {
                         dest[ptr++] = PAL;
                         mode = ALPHA;
                         --k;
@@ -1805,77 +1571,63 @@ namespace iTextSharp.Barcodes
                     }
                 }
             }
-            if ((ptr & 1) != 0)
-            {
+            if ((ptr & 1) != 0) {
                 dest[ptr++] = PS;
             }
             size = (ptr + fullBytes) / 2;
-            if (size + cwPtr > MAX_DATA_CODEWORDS)
-            {
+            if (size + cwPtr > MAX_DATA_CODEWORDS) {
                 throw new PdfException(PdfException.TextIsTooBig);
             }
             length = ptr;
             ptr = 0;
-            while (ptr < length)
-            {
+            while (ptr < length) {
                 v = dest[ptr++];
-                if (v >= 30)
-                {
+                if (v >= 30) {
                     codewords[cwPtr++] = v;
                     codewords[cwPtr++] = dest[ptr++];
                 }
-                else
-                {
+                else {
                     codewords[cwPtr++] = v * 30 + dest[ptr++];
                 }
             }
         }
 
-        protected internal class Segment
-        {
+        protected internal class Segment {
             public char type;
 
             public int start;
 
             public int end;
 
-            public Segment(char type, int start, int end)
-            {
+            public Segment(char type, int start, int end) {
                 this.type = type;
                 this.start = start;
                 this.end = end;
             }
         }
 
-        protected internal class SegmentList
-        {
+        protected internal class SegmentList {
             protected internal IList<BarcodePDF417.Segment> list = new List<BarcodePDF417.Segment>();
 
-            public virtual void Add(char type, int start, int end)
-            {
+            public virtual void Add(char type, int start, int end) {
                 list.Add(new BarcodePDF417.Segment(type, start, end));
             }
 
-            public virtual BarcodePDF417.Segment Get(int idx)
-            {
-                if (idx < 0 || idx >= list.Count)
-                {
+            public virtual BarcodePDF417.Segment Get(int idx) {
+                if (idx < 0 || idx >= list.Count) {
                     return null;
                 }
                 return list[idx];
             }
 
-            public virtual void Remove(int idx)
-            {
-                if (idx < 0 || idx >= list.Count)
-                {
+            public virtual void Remove(int idx) {
+                if (idx < 0 || idx >= list.Count) {
                     return;
                 }
                 list.JRemoveAt(idx);
             }
 
-            public virtual int Size()
-            {
+            public virtual int Size() {
                 return list.Count;
             }
         }

@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Property
-{
+namespace iTextSharp.Layout.Property {
     /// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
-    public class UnitValue
-    {
+    public class UnitValue {
         public const int POINT = 1;
 
         public const int PERCENT = 2;
@@ -64,8 +62,7 @@ namespace iTextSharp.Layout.Property
         /// <see cref="PERCENT"/>
         /// </param>
         /// <param name="value">the value to be stored.</param>
-        public UnitValue(int unitType, float value)
-        {
+        public UnitValue(int unitType, float value) {
             this.unitType = unitType;
             this.value = value;
         }
@@ -78,8 +75,7 @@ namespace iTextSharp.Layout.Property
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iTextSharp.Layout.Property.UnitValue CreatePointValue(float value)
-        {
+        public static iTextSharp.Layout.Property.UnitValue CreatePointValue(float value) {
             return new iTextSharp.Layout.Property.UnitValue(POINT, value);
         }
 
@@ -91,45 +87,36 @@ namespace iTextSharp.Layout.Property
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value)
-        {
+        public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value) {
             return new iTextSharp.Layout.Property.UnitValue(PERCENT, value);
         }
 
-        public virtual int GetUnitType()
-        {
+        public virtual int GetUnitType() {
             return unitType;
         }
 
-        public virtual void SetUnitType(int unitType)
-        {
+        public virtual void SetUnitType(int unitType) {
             this.unitType = unitType;
         }
 
-        public virtual float GetValue()
-        {
+        public virtual float GetValue() {
             return value;
         }
 
-        public virtual void SetValue(float value)
-        {
+        public virtual void SetValue(float value) {
             this.value = value;
         }
 
-        public virtual bool IsPointValue()
-        {
+        public virtual bool IsPointValue() {
             return unitType == POINT;
         }
 
-        public virtual bool IsPercentValue()
-        {
+        public virtual bool IsPercentValue() {
             return unitType == PERCENT;
         }
 
-        public override bool Equals(Object obj)
-        {
-            if (!(obj is iTextSharp.Layout.Property.UnitValue))
-            {
+        public override bool Equals(Object obj) {
+            if (!(obj is iTextSharp.Layout.Property.UnitValue)) {
                 return false;
             }
             iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue)obj;
@@ -137,8 +124,7 @@ namespace iTextSharp.Layout.Property
                 (value, other.value) == 0;
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             int hash = 7;
             hash = 71 * hash + this.unitType;
             hash = 71 * hash + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(this.value);

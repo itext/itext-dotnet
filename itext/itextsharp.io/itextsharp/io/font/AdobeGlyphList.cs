@@ -46,32 +46,25 @@ using System.Collections.Generic;
 using System.IO;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class AdobeGlyphList
-    {
+namespace iTextSharp.IO.Font {
+    public class AdobeGlyphList {
         private static IDictionary<int, String> unicode2names = new Dictionary<int, String>();
 
         private static IDictionary<String, int?> names2unicode = new Dictionary<String, int?>();
 
-        static AdobeGlyphList()
-        {
+        static AdobeGlyphList() {
             Stream resource = null;
-            try
-            {
+            try {
                 resource = ResourceUtil.GetResourceStream(FontConstants.RESOURCE_PATH + "AdobeGlyphList.txt");
-                if (resource == null)
-                {
+                if (resource == null) {
                     String msg = "AdobeGlyphList.txt not found as resource. (It must exist as resource in the package com.itextpdf.text.pdf.fonts)";
                     throw new Exception(msg);
                 }
                 byte[] buf = new byte[1024];
                 MemoryStream stream = new MemoryStream();
-                while (true)
-                {
+                while (true) {
                     int size = resource.Read(buf);
-                    if (size < 0)
-                    {
+                    if (size < 0) {
                         break;
                     }
                     stream.Write(buf, 0, size);
@@ -80,21 +73,17 @@ namespace iTextSharp.IO.Font
                 resource = null;
                 String s = PdfEncodings.ConvertToString(stream.ToArray(), null);
                 StringTokenizer tk = new StringTokenizer(s, "\r\n");
-                while (tk.HasMoreTokens())
-                {
+                while (tk.HasMoreTokens()) {
                     String line = tk.NextToken();
-                    if (line.StartsWith("#"))
-                    {
+                    if (line.StartsWith("#")) {
                         continue;
                     }
                     StringTokenizer t2 = new StringTokenizer(line, " ;\r\n\t\f");
-                    if (!t2.HasMoreTokens())
-                    {
+                    if (!t2.HasMoreTokens()) {
                         continue;
                     }
                     String name = t2.NextToken();
-                    if (!t2.HasMoreTokens())
-                    {
+                    if (!t2.HasMoreTokens()) {
                         continue;
                     }
                     String hex = t2.NextToken();
@@ -102,8 +91,7 @@ namespace iTextSharp.IO.Font
                     // resh;05E8
                     // reshhatafpatah;05E8 05B2
                     // So in this case we will just skip this nam
-                    if (t2.HasMoreTokens())
-                    {
+                    if (t2.HasMoreTokens()) {
                         continue;
                     }
                     int num = System.Convert.ToInt32(hex, 16);
@@ -111,59 +99,46 @@ namespace iTextSharp.IO.Font
                     names2unicode[name] = num;
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 System.Console.Error.WriteLine("AdobeGlyphList.txt loading error: " + e.Message);
             }
-            finally
-            {
-                if (resource != null)
-                {
-                    try
-                    {
+            finally {
+                if (resource != null) {
+                    try {
                         resource.Close();
                     }
-                    catch (Exception)
-                    {
+                    catch (Exception) {
                     }
                 }
             }
         }
 
         // empty on purpose
-        public static int? NameToUnicode(String name)
-        {
+        public static int? NameToUnicode(String name) {
             int v = -1;
-            if (names2unicode.ContainsKey(name))
-            {
+            if (names2unicode.ContainsKey(name)) {
                 v = (int)names2unicode.Get(name);
             }
             if (v == -1 && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith
-                ("uni"))
-            {
-                try
-                {
+                ("uni")) {
+                try {
                     return System.Convert.ToInt32(name.Substring(3), 16);
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
             }
             return v;
         }
 
-        public static String UnicodeToName(int num)
-        {
+        public static String UnicodeToName(int num) {
             return unicode2names.Get(num);
         }
 
-        public static int GetNameToUnicodeLength()
-        {
+        public static int GetNameToUnicodeLength() {
             return names2unicode.Count;
         }
 
-        public static int GetUnicodeToNameLength()
-        {
+        public static int GetUnicodeToNameLength() {
             return unicode2names.Count;
         }
     }

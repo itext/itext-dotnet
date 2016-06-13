@@ -46,14 +46,11 @@ using iTextSharp.IO.Source;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters
-{
+namespace iTextSharp.Kernel.Pdf.Filters {
     /// <summary>Handles ASCII85Decode filter</summary>
-    public class ASCII85DecodeFilter : IFilterHandler
-    {
+    public class ASCII85DecodeFilter : IFilterHandler {
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            )
-        {
+            ) {
             b = ASCII85Decode(b);
             return b;
         }
@@ -61,42 +58,34 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// <summary>Decodes the input bytes according to ASCII85.</summary>
         /// <param name="in">the byte[] to be decoded</param>
         /// <returns>the decoded byte[]</returns>
-        public static byte[] ASCII85Decode(byte[] @in)
-        {
+        public static byte[] ASCII85Decode(byte[] @in) {
             MemoryStream @out = new MemoryStream();
             int state = 0;
             int[] chn = new int[5];
-            for (int k = 0; k < @in.Length; ++k)
-            {
+            for (int k = 0; k < @in.Length; ++k) {
                 int ch = @in[k] & 0xff;
-                if (ch == '~')
-                {
+                if (ch == '~') {
                     break;
                 }
-                if (PdfTokenizer.IsWhitespace(ch))
-                {
+                if (PdfTokenizer.IsWhitespace(ch)) {
                     continue;
                 }
-                if (ch == 'z' && state == 0)
-                {
+                if (ch == 'z' && state == 0) {
                     @out.Write(0);
                     @out.Write(0);
                     @out.Write(0);
                     @out.Write(0);
                     continue;
                 }
-                if (ch < '!' || ch > 'u')
-                {
+                if (ch < '!' || ch > 'u') {
                     throw new PdfException(PdfException.IllegalCharacterInAscii85decode);
                 }
                 chn[state] = ch - '!';
                 ++state;
-                if (state == 5)
-                {
+                if (state == 5) {
                     state = 0;
                     int r = 0;
-                    for (int j = 0; j < 5; ++j)
-                    {
+                    for (int j = 0; j < 5; ++j) {
                         r = r * 85 + chn[j];
                     }
                     @out.Write((byte)(r >> 24));
@@ -105,23 +94,18 @@ namespace iTextSharp.Kernel.Pdf.Filters
                     @out.Write((byte)r);
                 }
             }
-            if (state == 2)
-            {
+            if (state == 2) {
                 int r = chn[0] * 85 * 85 * 85 * 85 + chn[1] * 85 * 85 * 85 + 85 * 85 * 85 + 85 * 85 + 85;
                 @out.Write((byte)(r >> 24));
             }
-            else
-            {
-                if (state == 3)
-                {
+            else {
+                if (state == 3) {
                     int r = chn[0] * 85 * 85 * 85 * 85 + chn[1] * 85 * 85 * 85 + chn[2] * 85 * 85 + 85 * 85 + 85;
                     @out.Write((byte)(r >> 24));
                     @out.Write((byte)(r >> 16));
                 }
-                else
-                {
-                    if (state == 4)
-                    {
+                else {
+                    if (state == 4) {
                         int r = chn[0] * 85 * 85 * 85 * 85 + chn[1] * 85 * 85 * 85 + chn[2] * 85 * 85 + chn[3] * 85 + 85;
                         @out.Write((byte)(r >> 24));
                         @out.Write((byte)(r >> 16));

@@ -45,13 +45,10 @@ using System.IO;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfSoundAnnotation : PdfMarkupAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfSoundAnnotation : PdfMarkupAnnotation {
         public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
-            : base(rect)
-        {
+            : base(rect) {
             /*
             There is a problem playing *.wav files via internal player in Acrobat.
             The first byte of the audio stream data should be deleted, then wav file will be played correctly.
@@ -61,15 +58,13 @@ namespace iTextSharp.Kernel.Pdf.Annot
         }
 
         public PdfSoundAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         /// <exception cref="System.IO.IOException"/>
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
-            : base(rect)
-        {
+            : base(rect) {
             PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile(soundStream));
             sound.Put(PdfName.R, new PdfNumber(sampleRate));
             sound.Put(PdfName.E, encoding);
@@ -78,13 +73,11 @@ namespace iTextSharp.Kernel.Pdf.Annot
             Put(PdfName.Sound, sound);
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Sound;
         }
 
-        public virtual PdfStream GetSound()
-        {
+        public virtual PdfStream GetSound() {
             return GetPdfObject().GetAsStream(PdfName.Sound);
         }
     }

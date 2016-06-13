@@ -31,12 +31,10 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace iTextSharp.Kernel.XMP.Impl.XPath
-{
+namespace iTextSharp.Kernel.XMP.Impl.XPath {
     /// <summary>Representates an XMP XMPPath with segment accessor methods.</summary>
     /// <since>28.02.2006</since>
-    public class XMPPath
-    {
+    public class XMPPath {
         /// <summary>Marks a struct field step , also for top level nodes (schema "fields").</summary>
         public const int STRUCT_FIELD_STEP = 0x01;
 
@@ -69,38 +67,31 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
         // 
         /// <summary>Append a path segment</summary>
         /// <param name="segment">the segment to add</param>
-        public virtual void Add(XMPPathSegment segment)
-        {
+        public virtual void Add(XMPPathSegment segment) {
             segments.Add(segment);
         }
 
         /// <param name="index">the index of the segment to return</param>
         /// <returns>Returns a path segment.</returns>
-        public virtual XMPPathSegment GetSegment(int index)
-        {
+        public virtual XMPPathSegment GetSegment(int index) {
             return (XMPPathSegment)segments[index];
         }
 
         /// <returns>Returns the size of the xmp path.</returns>
-        public virtual int Size()
-        {
+        public virtual int Size() {
             return segments.Count;
         }
 
         /// <summary>Serializes the normalized XMP-path.</summary>
         /// <seealso cref="System.Object.ToString()"/>
-        public override String ToString()
-        {
+        public override String ToString() {
             StringBuilder result = new StringBuilder();
             int index = 1;
-            while (index < Size())
-            {
+            while (index < Size()) {
                 result.Append(GetSegment(index));
-                if (index < Size() - 1)
-                {
+                if (index < Size() - 1) {
                     int kind = GetSegment(index + 1).GetKind();
-                    if (kind == STRUCT_FIELD_STEP || kind == QUALIFIER_STEP)
-                    {
+                    if (kind == STRUCT_FIELD_STEP || kind == QUALIFIER_STEP) {
                         // all but last and array indices
                         result.Append('/');
                     }

@@ -49,24 +49,19 @@ using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Filters;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Utility methods to help with processing of inline images</summary>
-    public sealed class InlineImageParsingUtils
-    {
-        private InlineImageParsingUtils()
-        {
+    public sealed class InlineImageParsingUtils {
+        private InlineImageParsingUtils() {
         }
 
         /// <summary>
         /// Simple class in case users need to differentiate an exception from processing
         /// inline images vs other exceptions
         /// </summary>
-        public class InlineImageParseException : PdfException
-        {
+        public class InlineImageParseException : PdfException {
             public InlineImageParseException(String message)
-                : base(message)
-            {
+                : base(message) {
             }
         }
 
@@ -82,8 +77,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <summary>Map between value abbreviations allowed in dictionary of inline images for FILTER</summary>
         private static readonly IDictionary<PdfName, PdfName> inlineImageFilterAbbreviationMap;
 
-        static InlineImageParsingUtils()
-        {
+        static InlineImageParsingUtils() {
             // static initializer
             // Map between key abbreviations allowed in dictionary of inline images and their
             // equivalent image dictionary keys
@@ -137,8 +131,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <exception cref="System.IO.IOException">if anything goes wring with the parsing</exception>
         /// <exception cref="InlineImageParseException">if parsing of the inline image failed due to issues specific to inline image processing
         ///     </exception>
-        public static PdfStream Parse(PdfCanvasParser ps, PdfDictionary colorSpaceDic)
-        {
+        public static PdfStream Parse(PdfCanvasParser ps, PdfDictionary colorSpaceDic) {
             PdfDictionary inlineImageDict = ParseDictionary(ps);
             byte[] samples = ParseSamples(inlineImageDict, colorSpaceDic, ps);
             PdfStream inlineImageAsStreamObject = new PdfStream(samples);
@@ -155,23 +148,19 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <returns>the dictionary for the inline image, with any abbreviations converted to regular image dictionary keys and values
         ///     </returns>
         /// <exception cref="System.IO.IOException">if the parse fails</exception>
-        private static PdfDictionary ParseDictionary(PdfCanvasParser ps)
-        {
+        private static PdfDictionary ParseDictionary(PdfCanvasParser ps) {
             // by the time we get to here, we have already parsed the BI operator
             PdfDictionary dict = new PdfDictionary();
-            for (PdfObject key = ps.ReadObject(); key != null && !"ID".Equals(key.ToString()); key = ps.ReadObject())
-            {
+            for (PdfObject key = ps.ReadObject(); key != null && !"ID".Equals(key.ToString()); key = ps.ReadObject()) {
                 PdfObject value = ps.ReadObject();
                 PdfName resolvedKey = inlineImageEntryAbbreviationMap.Get((PdfName)key);
-                if (resolvedKey == null)
-                {
+                if (resolvedKey == null) {
                     resolvedKey = (PdfName)key;
                 }
                 dict.Put(resolvedKey, GetAlternateValue(resolvedKey, value));
             }
             int ch = ps.GetTokeniser().Read();
-            if (!PdfTokenizer.IsWhitespace(ch))
-            {
+            if (!PdfTokenizer.IsWhitespace(ch)) {
                 throw new InlineImageParsingUtils.InlineImageParseException(PdfException.UnexpectedCharacter1FoundAfterIDInInlineImage
                     ).SetMessageParams(ch);
             }
@@ -183,40 +172,30 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <param name="value">the value that might be an abbreviation</param>
         /// <returns>if value is an allowed abbreviation for the key, the expanded value for that abbreviation.  Otherwise, value is returned without modification
         ///     </returns>
-        private static PdfObject GetAlternateValue(PdfName key, PdfObject value)
-        {
-            if (key == PdfName.Filter)
-            {
-                if (value is PdfName)
-                {
+        private static PdfObject GetAlternateValue(PdfName key, PdfObject value) {
+            if (key == PdfName.Filter) {
+                if (value is PdfName) {
                     PdfName altValue = inlineImageFilterAbbreviationMap.Get((PdfName)value);
-                    if (altValue != null)
-                    {
+                    if (altValue != null) {
                         return altValue;
                     }
                 }
-                else
-                {
-                    if (value is PdfArray)
-                    {
+                else {
+                    if (value is PdfArray) {
                         PdfArray array = ((PdfArray)value);
                         PdfArray altArray = new PdfArray();
                         int count = array.Size();
-                        for (int i = 0; i < count; i++)
-                        {
+                        for (int i = 0; i < count; i++) {
                             altArray.Add(GetAlternateValue(key, array.Get(i)));
                         }
                         return altArray;
                     }
                 }
             }
-            else
-            {
-                if (key == PdfName.ColorSpace && value is PdfName)
-                {
+            else {
+                if (key == PdfName.ColorSpace && value is PdfName) {
                     PdfName altValue = inlineImageColorSpaceAbbreviationMap.Get((PdfName)value);
-                    if (altValue != null)
-                    {
+                    if (altValue != null) {
                         return altValue;
                     }
                 }
@@ -227,39 +206,29 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <param name="colorSpaceName">the name of the color space. If null, a bi-tonal (black and white) color space is assumed.
         ///     </param>
         /// <returns>the components per pixel for the specified color space</returns>
-        private static int GetComponentsPerPixel(PdfName colorSpaceName, PdfDictionary colorSpaceDic)
-        {
-            if (colorSpaceName == null)
-            {
+        private static int GetComponentsPerPixel(PdfName colorSpaceName, PdfDictionary colorSpaceDic) {
+            if (colorSpaceName == null) {
                 return 1;
             }
-            if (colorSpaceName.Equals(PdfName.DeviceGray))
-            {
+            if (colorSpaceName.Equals(PdfName.DeviceGray)) {
                 return 1;
             }
-            if (colorSpaceName.Equals(PdfName.DeviceRGB))
-            {
+            if (colorSpaceName.Equals(PdfName.DeviceRGB)) {
                 return 3;
             }
-            if (colorSpaceName.Equals(PdfName.DeviceCMYK))
-            {
+            if (colorSpaceName.Equals(PdfName.DeviceCMYK)) {
                 return 4;
             }
-            if (colorSpaceDic != null)
-            {
+            if (colorSpaceDic != null) {
                 PdfArray colorSpace = colorSpaceDic.GetAsArray(colorSpaceName);
-                if (colorSpace != null)
-                {
-                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0)))
-                    {
+                if (colorSpace != null) {
+                    if (PdfName.Indexed.Equals(colorSpace.GetAsName(0))) {
                         return 1;
                     }
                 }
-                else
-                {
+                else {
                     PdfName tempName = colorSpaceDic.GetAsName(colorSpaceName);
-                    if (tempName != null)
-                    {
+                    if (tempName != null) {
                         return GetComponentsPerPixel(tempName, colorSpaceDic);
                     }
                 }
@@ -276,8 +245,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// </remarks>
         /// <param name="imageDictionary">the dictionary of the inline image</param>
         /// <returns>the number of bytes per row of the image</returns>
-        private static int ComputeBytesPerRow(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic)
-        {
+        private static int ComputeBytesPerRow(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic) {
             PdfNumber wObj = imageDictionary.GetAsNumber(PdfName.Width);
             PdfNumber bpcObj = imageDictionary.GetAsNumber(PdfName.BitsPerComponent);
             int cpp = GetComponentsPerPixel(imageDictionary.GetAsName(PdfName.ColorSpace), colorSpaceDic);
@@ -298,12 +266,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <returns>the samples of the image</returns>
         /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
         private static byte[] ParseUnfilteredSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
-             ps)
-        {
+             ps) {
             // special case:  when no filter is specified, we just read the number of bits
             // per component, multiplied by the width and height.
-            if (imageDictionary.ContainsKey(PdfName.Filter))
-            {
+            if (imageDictionary.ContainsKey(PdfName.Filter)) {
                 throw new ArgumentException("Dictionary contains filters");
             }
             PdfNumber h = imageDictionary.GetAsNumber(PdfName.Height);
@@ -315,30 +281,25 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
             // from the PDF spec:  Unless the image uses ASCIIHexDecode or ASCII85Decode as one of its filters, the ID operator shall be followed by a single white-space character, and the next character shall be interpreted as the first byte of image data.
             // unfortunately, we've seen some PDFs where there is no space following the ID, so we have to capture this case and handle it
             int startIndex = 0;
-            if (!PdfTokenizer.IsWhitespace(shouldBeWhiteSpace) || shouldBeWhiteSpace == 0)
-            {
+            if (!PdfTokenizer.IsWhitespace(shouldBeWhiteSpace) || shouldBeWhiteSpace == 0) {
                 // tokeniser treats 0 as whitespace, but for our purposes, we shouldn't
                 bytes[0] = (byte)shouldBeWhiteSpace;
                 startIndex++;
             }
-            for (int i = startIndex; i < bytesToRead; i++)
-            {
+            for (int i = startIndex; i < bytesToRead; i++) {
                 int ch = tokeniser.Read();
-                if (ch == -1)
-                {
+                if (ch == -1) {
                     throw new InlineImageParsingUtils.InlineImageParseException(PdfException.EndOfContentStreamReachedBeforeEndOfImageData
                         );
                 }
                 bytes[i] = (byte)ch;
             }
             PdfObject ei = ps.ReadObject();
-            if (!ei.ToString().Equals("EI"))
-            {
+            if (!ei.ToString().Equals("EI")) {
                 // Some PDF producers seem to add another non-whitespace character after the image data.
                 // Let's try to handle that case here.
                 PdfObject ei2 = ps.ReadObject();
-                if (!ei2.ToString().Equals("EI"))
-                {
+                if (!ei2.ToString().Equals("EI")) {
                     throw new InlineImageParsingUtils.InlineImageParseException(PdfException.OperatorEINotFoundAfterEndOfImageData
                         );
                 }
@@ -361,11 +322,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// <returns>the samples of the image</returns>
         /// <exception cref="System.IO.IOException">if anything bad happens during parsing</exception>
         private static byte[] ParseSamples(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic, PdfCanvasParser
-             ps)
-        {
+             ps) {
             // by the time we get to here, we have already parsed the ID operator
-            if (!imageDictionary.ContainsKey(PdfName.Filter) && ImageColorSpaceIsKnown(imageDictionary, colorSpaceDic))
-            {
+            if (!imageDictionary.ContainsKey(PdfName.Filter) && ImageColorSpaceIsKnown(imageDictionary, colorSpaceDic)
+                ) {
                 return ParseUnfilteredSamples(imageDictionary, colorSpaceDic, ps);
             }
             // read all content until we reach an EI operator surrounded by whitespace.
@@ -379,24 +339,18 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
             int ch;
             int found = 0;
             PdfTokenizer tokeniser = ps.GetTokeniser();
-            while ((ch = tokeniser.Read()) != -1)
-            {
-                if (found == 0 && PdfTokenizer.IsWhitespace(ch))
-                {
+            while ((ch = tokeniser.Read()) != -1) {
+                if (found == 0 && PdfTokenizer.IsWhitespace(ch)) {
                     found++;
                     accumulated.Write(ch);
                 }
-                else
-                {
-                    if (found == 1 && ch == 'E')
-                    {
+                else {
+                    if (found == 1 && ch == 'E') {
                         found++;
                         accumulated.Write(ch);
                     }
-                    else
-                    {
-                        if (found == 1 && PdfTokenizer.IsWhitespace(ch))
-                        {
+                    else {
+                        if (found == 1 && PdfTokenizer.IsWhitespace(ch)) {
                             // this clause is needed if we have a white space character that is part of the image data
                             // followed by a whitespace character that precedes the EI operator.  In this case, we need
                             // to flush the first whitespace, then treat the current whitespace as the first potential
@@ -405,20 +359,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                             accumulated.JReset();
                             accumulated.Write(ch);
                         }
-                        else
-                        {
-                            if (found == 2 && ch == 'I')
-                            {
+                        else {
+                            if (found == 2 && ch == 'I') {
                                 found++;
                                 accumulated.Write(ch);
                             }
-                            else
-                            {
-                                if (found == 3 && PdfTokenizer.IsWhitespace(ch))
-                                {
+                            else {
+                                if (found == 3 && PdfTokenizer.IsWhitespace(ch)) {
                                     byte[] tmp = baos.ToArray();
-                                    if (InlineImageStreamBytesAreComplete(tmp, imageDictionary))
-                                    {
+                                    if (InlineImageStreamBytesAreComplete(tmp, imageDictionary)) {
                                         return tmp;
                                     }
                                     baos.Write(accumulated.ToArray());
@@ -426,8 +375,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                                     baos.Write(ch);
                                     found = 0;
                                 }
-                                else
-                                {
+                                else {
                                     baos.Write(accumulated.ToArray());
                                     accumulated.JReset();
                                     baos.Write(ch);
@@ -441,12 +389,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
             throw new InlineImageParsingUtils.InlineImageParseException(PdfException.CannotFindImageDataOrEI);
         }
 
-        private static bool ImageColorSpaceIsKnown(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic)
-        {
+        private static bool ImageColorSpaceIsKnown(PdfDictionary imageDictionary, PdfDictionary colorSpaceDic) {
             PdfName cs = imageDictionary.GetAsName(PdfName.ColorSpace);
             if (cs == null || cs.Equals(PdfName.DeviceGray) || cs.Equals(PdfName.DeviceRGB) || cs.Equals(PdfName.DeviceCMYK
-                ))
-            {
+                )) {
                 return true;
             }
             return colorSpaceDic != null && colorSpaceDic.ContainsKey(cs);
@@ -463,10 +409,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
         /// support these filters; what if decoding will succeed eventhough it's not all bytes?; also I'm not sure that all
         /// filters throw an exception in case data is corrupted (For example, FlateDecodeFilter seems not to throw an exception).
         /// </remarks>
-        private static bool InlineImageStreamBytesAreComplete(byte[] samples, PdfDictionary imageDictionary)
-        {
-            try
-            {
+        private static bool InlineImageStreamBytesAreComplete(byte[] samples, PdfDictionary imageDictionary) {
+            try {
                 IDictionary<PdfName, IFilterHandler> filters = new Dictionary<PdfName, IFilterHandler>(FilterHandlers.GetDefaultFilterHandlers
                     ());
                 DoNothingFilter stubfilter = new DoNothingFilter();
@@ -475,8 +419,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util
                 filters[PdfName.JPXDecode] = stubfilter;
                 PdfReader.DecodeBytes(samples, imageDictionary, filters);
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 return false;
             }
             return true;

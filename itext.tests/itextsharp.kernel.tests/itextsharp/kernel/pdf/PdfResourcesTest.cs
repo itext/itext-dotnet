@@ -4,14 +4,11 @@ using System.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel.Pdf.Extgstate;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfResourcesTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfResourcesTest {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ResourcesTest1()
-        {
+        public virtual void ResourcesTest1() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -30,8 +27,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ResourcesTest2()
-        {
+        public virtual void ResourcesTest2() {
             MemoryStream baos = new MemoryStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument document = new PdfDocument(writer);
@@ -50,8 +46,7 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.AreEqual(2, names.Count);
             String[] expectedNames = new String[] { "Gs1", "Gs2" };
             int i = 0;
-            foreach (PdfName name in names)
-            {
+            foreach (PdfName name in names) {
                 NUnit.Framework.Assert.AreEqual(expectedNames[i++], name.GetValue());
             }
             PdfExtGState egs3 = new PdfExtGState();

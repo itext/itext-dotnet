@@ -47,18 +47,14 @@ using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap
-{
+namespace iTextSharp.IO.Font.Cmap {
     /// <author>psoares</author>
-    public class CMapLocationResource : ICMapLocation
-    {
+    public class CMapLocationResource : ICMapLocation {
         /// <exception cref="System.IO.IOException"/>
-        public virtual PdfTokenizer GetLocation(String location)
-        {
+        public virtual PdfTokenizer GetLocation(String location) {
             String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);
-            if (inp == null)
-            {
+            if (inp == null) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TheCmap1WasNotFound).SetMessageParams(fullName
                     );
             }

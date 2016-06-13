@@ -41,16 +41,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
-    public class StampingProperties
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class StampingProperties {
         protected internal bool appendMode;
 
         protected internal bool preserveEncryption;
 
-        public StampingProperties()
-        {
+        public StampingProperties() {
             appendMode = false;
             preserveEncryption = false;
         }
@@ -61,8 +58,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <see cref="StampingProperties"/>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.StampingProperties UseAppendMode()
-        {
+        public virtual iTextSharp.Kernel.Pdf.StampingProperties UseAppendMode() {
             appendMode = true;
             return this;
         }
@@ -77,8 +73,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <see cref="StampingProperties"/>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.StampingProperties PreserveEncryption()
-        {
+        public virtual iTextSharp.Kernel.Pdf.StampingProperties PreserveEncryption() {
             this.preserveEncryption = true;
             return this;
         }

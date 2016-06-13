@@ -43,14 +43,12 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters
-{
+namespace iTextSharp.Kernel.Pdf.Filters {
     /// <summary>
     /// The main interface for creating a new
     /// <c>FilterHandler</c>
     /// </summary>
-    public interface IFilterHandler
-    {
+    public interface IFilterHandler {
         /// <summary>Decode the byte[] using the provided filterName.</summary>
         /// <param name="b">the bytes that need to be decoded</param>
         /// <param name="filterName">PdfName of the filter</param>

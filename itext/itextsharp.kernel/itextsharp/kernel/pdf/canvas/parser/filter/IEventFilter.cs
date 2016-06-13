@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Pdf.Canvas.Parser;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter {
     /// <summary>This is an interface which helps to filter events.</summary>
-    public interface IEventFilter
-    {
+    public interface IEventFilter {
         /// <summary>
         /// This method checks an event and decides whether it should be processed further (corresponds to
         /// <see langword="true"/>

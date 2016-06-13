@@ -31,8 +31,7 @@ using System;
 using iTextSharp.Kernel.XMP.Impl;
 using iTextSharp.Kernel.XMP.Impl.XPath;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>Utility services for the metadata object.</summary>
     /// <remarks>
     /// Utility services for the metadata object. It has only public static functions, you cannot create
@@ -74,11 +73,9 @@ namespace iTextSharp.Kernel.XMP
     /// path or array indices.
     /// </remarks>
     /// <since>25.01.2006</since>
-    public sealed class XMPPathFactory
-    {
+    public sealed class XMPPathFactory {
         /// <summary>Private constructor</summary>
-        private XMPPathFactory()
-        {
+        private XMPPathFactory() {
         }
 
         // EMPTY
@@ -98,20 +95,15 @@ namespace iTextSharp.Kernel.XMP
         /// </returns>
         /// <exception cref="XMPException">Throws exeption if index zero is used.</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static String ComposeArrayItemPath(String arrayName, int itemIndex)
-        {
-            if (itemIndex > 0)
-            {
+        public static String ComposeArrayItemPath(String arrayName, int itemIndex) {
+            if (itemIndex > 0) {
                 return arrayName + '[' + itemIndex + ']';
             }
-            else
-            {
-                if (itemIndex == XMPConst.ARRAY_LAST_ITEM)
-                {
+            else {
+                if (itemIndex == XMPConst.ARRAY_LAST_ITEM) {
                     return arrayName + "[last()]";
                 }
-                else
-                {
+                else {
                     throw new XMPException("Array index must be larger than zero", XMPError.BADINDEX);
                 }
             }
@@ -137,13 +129,11 @@ namespace iTextSharp.Kernel.XMP
         /// </returns>
         /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static String ComposeStructFieldPath(String fieldNS, String fieldName)
-        {
+        public static String ComposeStructFieldPath(String fieldNS, String fieldName) {
             AssertFieldNS(fieldNS);
             AssertFieldName(fieldName);
             XMPPath fieldPath = XMPPathParser.ExpandXPath(fieldNS, fieldName);
-            if (fieldPath.Size() != 2)
-            {
+            if (fieldPath.Size() != 2) {
                 throw new XMPException("The field name must be simple", XMPError.BADXPATH);
             }
             return '/' + fieldPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName();
@@ -165,13 +155,11 @@ namespace iTextSharp.Kernel.XMP
         /// </returns>
         /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        public static String ComposeQualifierPath(String qualNS, String qualName)
-        {
+        public static String ComposeQualifierPath(String qualNS, String qualName) {
             AssertQualNS(qualNS);
             AssertQualName(qualName);
             XMPPath qualPath = XMPPathParser.ExpandXPath(qualNS, qualName);
-            if (qualPath.Size() != 2)
-            {
+            if (qualPath.Size() != 2) {
                 throw new XMPException("The qualifier name must be simple", XMPError.BADXPATH);
             }
             return "/?" + qualPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName();
@@ -201,8 +189,7 @@ namespace iTextSharp.Kernel.XMP
         /// <tt>ns:arrayName[@xml:lang='langName']</tt>, where
         /// &quot;ns&quot; is the prefix for schemaNS.
         /// </returns>
-        public static String ComposeLangSelector(String arrayName, String langName)
-        {
+        public static String ComposeLangSelector(String arrayName, String langName) {
             return arrayName + "[?xml:lang=\"" + iTextSharp.Kernel.XMP.Impl.Utils.NormalizeLangValue(langName) + "\"]";
         }
 
@@ -247,11 +234,9 @@ namespace iTextSharp.Kernel.XMP
         /// <exception cref="XMPException">Thrown if the path to create is not valid.</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         public static String ComposeFieldSelector(String arrayName, String fieldNS, String fieldName, String fieldValue
-            )
-        {
+            ) {
             XMPPath fieldPath = XMPPathParser.ExpandXPath(fieldNS, fieldName);
-            if (fieldPath.Size() != 2)
-            {
+            if (fieldPath.Size() != 2) {
                 throw new XMPException("The fieldName name must be simple", XMPError.BADXPATH);
             }
             return arrayName + '[' + fieldPath.GetSegment(XMPPath.STEP_ROOT_PROP).GetName() + "=\"" + fieldValue + "\"]";
@@ -261,10 +246,8 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="qualNS">a qualifier namespace</param>
         /// <exception cref="XMPException">Qualifier schema is null or empty</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        private static void AssertQualNS(String qualNS)
-        {
-            if (qualNS == null || qualNS.Length == 0)
-            {
+        private static void AssertQualNS(String qualNS) {
+            if (qualNS == null || qualNS.Length == 0) {
                 throw new XMPException("Empty qualifier namespace URI", XMPError.BADSCHEMA);
             }
         }
@@ -273,10 +256,8 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="qualName">a qualifier name or path</param>
         /// <exception cref="XMPException">Qualifier name is null or empty</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        private static void AssertQualName(String qualName)
-        {
-            if (qualName == null || qualName.Length == 0)
-            {
+        private static void AssertQualName(String qualName) {
+            if (qualName == null || qualName.Length == 0) {
                 throw new XMPException("Empty qualifier name", XMPError.BADXPATH);
             }
         }
@@ -285,10 +266,8 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="fieldNS">a struct field namespace</param>
         /// <exception cref="XMPException">Struct field schema is null or empty</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        private static void AssertFieldNS(String fieldNS)
-        {
-            if (fieldNS == null || fieldNS.Length == 0)
-            {
+        private static void AssertFieldNS(String fieldNS) {
+            if (fieldNS == null || fieldNS.Length == 0) {
                 throw new XMPException("Empty field namespace URI", XMPError.BADSCHEMA);
             }
         }
@@ -297,10 +276,8 @@ namespace iTextSharp.Kernel.XMP
         /// <param name="fieldName">a struct field name or path</param>
         /// <exception cref="XMPException">Struct field name is null or empty</exception>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
-        private static void AssertFieldName(String fieldName)
-        {
-            if (fieldName == null || fieldName.Length == 0)
-            {
+        private static void AssertFieldName(String fieldName) {
+            if (fieldName == null || fieldName.Length == 0) {
                 throw new XMPException("Empty f name", XMPError.BADXPATH);
             }
         }

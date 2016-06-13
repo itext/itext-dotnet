@@ -6,26 +6,22 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Kernel.Utils
-{
-    public class PdfMergerTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Utils {
+    public class PdfMergerTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfMergerTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/utils/PdfMergerTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MergeDocumentTest01()
-        {
+        public virtual void MergeDocumentTest01() {
             String filename = sourceFolder + "courierTest.pdf";
             String filename1 = sourceFolder + "helveticaTest.pdf";
             String filename2 = sourceFolder + "timesRomanTest.pdf";
@@ -47,8 +43,7 @@ namespace iTextSharp.Kernel.Utils
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult01.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -56,8 +51,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MergeDocumentTest02()
-        {
+        public virtual void MergeDocumentTest02() {
             String filename = sourceFolder + "doc1.pdf";
             String filename1 = sourceFolder + "doc2.pdf";
             String filename2 = sourceFolder + "doc3.pdf";
@@ -76,8 +70,7 @@ namespace iTextSharp.Kernel.Utils
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(resultFile, sourceFolder + "cmp_mergedResult02.pdf", destinationFolder
                 , "diff_");
-            if (errorMessage != null)
-            {
+            if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -88,8 +81,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
-        public virtual void MergeDocumentTest03()
-        {
+        public virtual void MergeDocumentTest03() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
             String resultFile = destinationFolder + "mergedResult03.pdf";
@@ -112,8 +104,7 @@ namespace iTextSharp.Kernel.Utils
                 );
             errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
+            if (!String.IsNullOrEmpty(errorMessage)) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }
@@ -124,8 +115,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
-        public virtual void MergeDocumentTest04()
-        {
+        public virtual void MergeDocumentTest04() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
             String resultFile = destinationFolder + "mergedResult04.pdf";
@@ -158,8 +148,7 @@ namespace iTextSharp.Kernel.Utils
                 );
             errorMessage += tagStructErrorMessage == null ? "" : tagStructErrorMessage + "\n";
             errorMessage += contentErrorMessage == null ? "" : contentErrorMessage;
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
+            if (!String.IsNullOrEmpty(errorMessage)) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }

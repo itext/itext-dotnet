@@ -46,27 +46,21 @@ using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf.Colorspace;
 using iTextSharp.Kernel.Pdf.Function;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class DeviceN : iTextSharp.Kernel.Color.Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class DeviceN : iTextSharp.Kernel.Color.Color {
         public DeviceN(PdfSpecialCs.DeviceN cs)
-            : this(cs, GetDefaultColorants(cs.GetNumberOfComponents()))
-        {
+            : this(cs, GetDefaultColorants(cs.GetNumberOfComponents())) {
         }
 
         public DeviceN(PdfSpecialCs.DeviceN cs, float[] value)
-            : base(cs, value)
-        {
+            : base(cs, value) {
         }
 
         public DeviceN(IList<String> names, PdfColorSpace alternateCs, PdfFunction tintTransform, float[] value)
-            : this(new PdfSpecialCs.DeviceN(names, alternateCs, tintTransform), value)
-        {
+            : this(new PdfSpecialCs.DeviceN(names, alternateCs, tintTransform), value) {
         }
 
-        private static float[] GetDefaultColorants(int numOfColorants)
-        {
+        private static float[] GetDefaultColorants(int numOfColorants) {
             float[] colorants = new float[numOfColorants];
             iTextSharp.IO.Util.JavaUtil.Fill(colorants, 1f);
             return colorants;

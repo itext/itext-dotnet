@@ -41,15 +41,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Layout
-{
+namespace iTextSharp.Layout.Layout {
     /// <summary>We use a simplified version of CSS positioning.</summary>
     /// <remarks>
     /// We use a simplified version of CSS positioning.
     /// See https://www.webkit.org/blog/117/webcore-rendering-iv-absolutefixed-and-relative-positioning
     /// </remarks>
-    public class LayoutPosition
-    {
+    public class LayoutPosition {
         /// <summary>Default positioning by normal rules of block and line layout.</summary>
         public const int STATIC = 1;
 

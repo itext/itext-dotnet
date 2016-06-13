@@ -45,10 +45,8 @@ using iTextSharp.IO.Font;
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodeEANSUPP : Barcode1D
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodeEANSUPP : Barcode1D {
         /// <summary>The barcode with the EAN/UPC.</summary>
         protected internal Barcode1D ean;
 
@@ -59,8 +57,7 @@ namespace iTextSharp.Barcodes
         /// <param name="ean">the EAN/UPC barcode</param>
         /// <param name="supp">the supplemental barcode</param>
         public BarcodeEANSUPP(Barcode1D ean, Barcode1D supp)
-            : base(ean.document)
-        {
+            : base(ean.document) {
             n = 8;
             // horizontal distance between the two barcodes
             this.ean = ean;
@@ -76,8 +73,7 @@ namespace iTextSharp.Barcodes
         /// any, will occupy. The lower left corner is always (0, 0).
         /// </remarks>
         /// <returns>the size the barcode occupies.</returns>
-        public override Rectangle GetBarcodeSize()
-        {
+        public override Rectangle GetBarcodeSize() {
             Rectangle rect = ean.GetBarcodeSize();
             rect.SetWidth(rect.GetWidth() + supp.GetBarcodeSize().GetWidth() + n);
             return rect;
@@ -122,16 +118,13 @@ namespace iTextSharp.Barcodes
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
-             textColor)
-        {
-            if (supp.GetFont() != null)
-            {
+             textColor) {
+            if (supp.GetFont() != null) {
                 float sizeCoef = supp.GetSize() / FontProgram.UNITS_NORMALIZATION;
                 supp.SetBarHeight(ean.GetBarHeight() + supp.GetBaseline() - supp.GetFont().GetFontProgram().GetFontMetrics
                     ().GetCapHeight() * sizeCoef);
             }
-            else
-            {
+            else {
                 supp.SetBarHeight(ean.GetBarHeight());
             }
             Rectangle eanR = ean.GetBarcodeSize();

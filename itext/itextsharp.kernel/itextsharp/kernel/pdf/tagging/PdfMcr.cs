@@ -44,16 +44,13 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging
-{
+namespace iTextSharp.Kernel.Pdf.Tagging {
     /// <summary>Represents Marked Content Reference (MCR) object wrapper.</summary>
-    public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IPdfStructElem
-    {
+    public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IPdfStructElem {
         protected internal PdfStructElem parent;
 
         protected internal PdfMcr(PdfObject pdfObject, PdfStructElem parent)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
             this.parent = parent;
         }
 
@@ -61,23 +58,19 @@ namespace iTextSharp.Kernel.Pdf.Tagging
 
         public abstract PdfDictionary GetPageObject();
 
-        public virtual PdfName GetRole()
-        {
+        public virtual PdfName GetRole() {
             return parent.GetRole();
         }
 
-        public virtual IPdfStructElem GetParent()
-        {
+        public virtual IPdfStructElem GetParent() {
             return parent;
         }
 
-        public virtual IList<IPdfStructElem> GetKids()
-        {
+        public virtual IList<IPdfStructElem> GetKids() {
             return null;
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

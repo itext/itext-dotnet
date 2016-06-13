@@ -43,22 +43,18 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters
-{
+namespace iTextSharp.Kernel.Pdf.Filters {
     /// <summary>A filter that doesn't modify the stream at all</summary>
-    public class DoNothingFilter : IFilterHandler
-    {
+    public class DoNothingFilter : IFilterHandler {
         private PdfName lastFilterName;
 
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary
-            )
-        {
+            ) {
             lastFilterName = filterName;
             return b;
         }
 
-        public virtual PdfName GetLastFilterName()
-        {
+        public virtual PdfName GetLastFilterName() {
             return lastFilterName;
         }
     }

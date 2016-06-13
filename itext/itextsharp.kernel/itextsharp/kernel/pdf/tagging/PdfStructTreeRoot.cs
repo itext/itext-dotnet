@@ -45,8 +45,7 @@ using System.Collections.Generic;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging
-{
+namespace iTextSharp.Kernel.Pdf.Tagging {
     /// <summary>
     /// To be able to be wrapped with this
     /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -54,39 +53,33 @@ namespace iTextSharp.Kernel.Pdf.Tagging
     /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </summary>
-    public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IPdfStructElem
-    {
+    public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
         private ParentTreeHandler parentTreeHandler;
 
         public PdfStructTreeRoot(PdfDocument document)
-            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document)))
-        {
+            : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document))) {
             GetPdfObject().Put(PdfName.Type, PdfName.StructTreeRoot);
         }
 
         /// <param name="pdfObject">must be an indirect object.</param>
         public PdfStructTreeRoot(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
             EnsureObjectIsAddedToDocument(pdfObject);
             SetForbidRelease();
             parentTreeHandler = new ParentTreeHandler(this);
             GetRoleMap();
         }
 
-        public virtual PdfStructElem AddKid(PdfStructElem structElem)
-        {
+        public virtual PdfStructElem AddKid(PdfStructElem structElem) {
             return AddKid(-1, structElem);
         }
 
-        public virtual PdfStructElem AddKid(int index, PdfStructElem structElem)
-        {
+        public virtual PdfStructElem AddKid(int index, PdfStructElem structElem) {
             AddKidObject(index, structElem.GetPdfObject());
             return structElem;
         }
 
-        public virtual IPdfStructElem GetParent()
-        {
+        public virtual IPdfStructElem GetParent() {
             return null;
         }
 
@@ -98,53 +91,42 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// in the list on it's place.
         /// </remarks>
         /// <returns>list of the direct kids of StructTreeRoot.</returns>
-        public virtual IList<IPdfStructElem> GetKids()
-        {
+        public virtual IList<IPdfStructElem> GetKids() {
             PdfObject k = GetPdfObject().Get(PdfName.K);
             IList<IPdfStructElem> kids = new List<IPdfStructElem>();
-            if (k != null)
-            {
-                if (k.IsArray())
-                {
+            if (k != null) {
+                if (k.IsArray()) {
                     PdfArray a = (PdfArray)k;
-                    for (int i = 0; i < a.Size(); i++)
-                    {
+                    for (int i = 0; i < a.Size(); i++) {
                         IfKidIsStructElementAddToList(a.Get(i), kids);
                     }
                 }
-                else
-                {
+                else {
                     IfKidIsStructElementAddToList(k, kids);
                 }
             }
             return kids;
         }
 
-        public virtual PdfArray GetKidsObject()
-        {
+        public virtual PdfArray GetKidsObject() {
             PdfArray k = null;
             PdfObject kObj = GetPdfObject().Get(PdfName.K);
-            if (kObj != null && kObj.IsArray())
-            {
+            if (kObj != null && kObj.IsArray()) {
                 k = (PdfArray)kObj;
             }
-            if (k == null)
-            {
+            if (k == null) {
                 k = new PdfArray();
                 GetPdfObject().Put(PdfName.K, k);
-                if (kObj != null)
-                {
+                if (kObj != null) {
                     k.Add(kObj);
                 }
             }
             return k;
         }
 
-        public virtual PdfDictionary GetRoleMap()
-        {
+        public virtual PdfDictionary GetRoleMap() {
             PdfDictionary roleMap = GetPdfObject().GetAsDictionary(PdfName.RoleMap);
-            if (roleMap == null)
-            {
+            if (roleMap == null) {
                 roleMap = new PdfDictionary();
                 GetPdfObject().Put(PdfName.RoleMap, roleMap);
             }
@@ -161,8 +143,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// <see cref="iTextSharp.Kernel.Pdf.PdfPage"/>
         /// for which to create parent tree entry. Typically this page is flushed after this call.
         /// </param>
-        public virtual void CreateParentTreeEntryForPage(PdfPage page)
-        {
+        public virtual void CreateParentTreeEntryForPage(PdfPage page) {
             GetParentTreeHandler().CreateParentTreeEntryForPage(page);
         }
 
@@ -174,31 +155,25 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// lead to the ConcurrentModificationException, because returned collection is backed by the internal list of the
         /// actual page tags.
         /// </remarks>
-        public virtual ICollection<PdfMcr> GetPageMarkedContentReferences(PdfPage page)
-        {
+        public virtual ICollection<PdfMcr> GetPageMarkedContentReferences(PdfPage page) {
             IDictionary<int, PdfMcr> pageMcrs = GetParentTreeHandler().GetPageMarkedContentReferences(page);
             return pageMcrs != null ? JavaCollectionsUtil.UnmodifiableCollection(pageMcrs.Values) : null;
         }
 
-        public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid)
-        {
+        public virtual PdfMcr FindMcrByMcid(PdfDictionary pageDict, int mcid) {
             return GetParentTreeHandler().FindMcrByMcid(pageDict, mcid);
         }
 
-        public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex)
-        {
+        public virtual PdfObjRef FindObjRefByStructParentIndex(PdfDictionary pageDict, int structParentIndex) {
             return GetParentTreeHandler().FindObjRefByStructParentIndex(pageDict, structParentIndex);
         }
 
-        public virtual PdfName GetRole()
-        {
+        public virtual PdfName GetRole() {
             return null;
         }
 
-        public override void Flush()
-        {
-            for (int i = 0; i < GetDocument().GetNumberOfPages(); ++i)
-            {
+        public override void Flush() {
+            for (int i = 0; i < GetDocument().GetNumberOfPages(); ++i) {
                 CreateParentTreeEntryForPage(GetDocument().GetPage(i + 1));
             }
             GetPdfObject().Put(PdfName.ParentTree, GetParentTreeHandler().BuildParentTree());
@@ -221,8 +196,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page)
-        {
+        public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page) {
             StructureTreeCopier.CopyTo(destDocument, page2page, GetDocument());
         }
 
@@ -241,75 +215,58 @@ namespace iTextSharp.Kernel.Pdf.Tagging
         /// <param name="page2page">association between original page and copied page.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public virtual void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
-            )
-        {
+            ) {
             StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument());
         }
 
-        public virtual int GetParentTreeNextKey()
-        {
+        public virtual int GetParentTreeNextKey() {
             // /ParentTreeNextKey entry is always inited on ParentTreeHandler initialization
             return GetPdfObject().GetAsNumber(PdfName.ParentTreeNextKey).IntValue();
         }
 
-        public virtual int GetNextMcidForPage(PdfPage page)
-        {
+        public virtual int GetNextMcidForPage(PdfPage page) {
             return GetParentTreeHandler().GetNextMcidForPage(page);
         }
 
-        public virtual PdfDocument GetDocument()
-        {
+        public virtual PdfDocument GetDocument() {
             return GetPdfObject().GetIndirectReference().GetDocument();
         }
 
-        internal virtual ParentTreeHandler GetParentTreeHandler()
-        {
+        internal virtual ParentTreeHandler GetParentTreeHandler() {
             return parentTreeHandler;
         }
 
-        internal virtual void AddKidObject(int index, PdfDictionary structElem)
-        {
-            if (index == -1)
-            {
+        internal virtual void AddKidObject(int index, PdfDictionary structElem) {
+            if (index == -1) {
                 GetKidsObject().Add(structElem);
             }
-            else
-            {
+            else {
                 GetKidsObject().Add(index, structElem);
             }
-            if (PdfStructElem.IsStructElem(structElem))
-            {
+            if (PdfStructElem.IsStructElem(structElem)) {
                 structElem.Put(PdfName.P, GetPdfObject());
             }
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
-        private void FlushAllKids(IPdfStructElem elem)
-        {
-            foreach (IPdfStructElem kid in elem.GetKids())
-            {
-                if (kid is PdfStructElem)
-                {
+        private void FlushAllKids(IPdfStructElem elem) {
+            foreach (IPdfStructElem kid in elem.GetKids()) {
+                if (kid is PdfStructElem) {
                     FlushAllKids(kid);
                     ((PdfStructElem)kid).Flush();
                 }
             }
         }
 
-        private void IfKidIsStructElementAddToList(PdfObject kid, IList<IPdfStructElem> kids)
-        {
-            if (kid.IsFlushed())
-            {
+        private void IfKidIsStructElementAddToList(PdfObject kid, IList<IPdfStructElem> kids) {
+            if (kid.IsFlushed()) {
                 kids.Add(null);
             }
-            else
-            {
-                if (kid.GetObjectType() == PdfObject.DICTIONARY && PdfStructElem.IsStructElem((PdfDictionary)kid))
-                {
+            else {
+                if (kid.GetObjectType() == PdfObject.DICTIONARY && PdfStructElem.IsStructElem((PdfDictionary)kid)) {
                     kids.Add(new PdfStructElem((PdfDictionary)kid));
                 }
             }

@@ -6,18 +6,15 @@ using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Forms
-{
-    public class FormFieldsTaggingTest : ExtendedITextTest
-    {
+namespace iTextSharp.Forms {
+    public class FormFieldsTaggingTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/FormFieldsTaggingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/forms/FormFieldsTaggingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -27,8 +24,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest01()
-        {
+        public virtual void FormFieldTaggingTest01() {
             String outFileName = destinationFolder + "taggedPdfWithForms01.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms01.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
@@ -46,8 +42,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest02()
-        {
+        public virtual void FormFieldTaggingTest02() {
             String outFileName = destinationFolder + "taggedPdfWithForms02.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
@@ -67,8 +62,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest03()
-        {
+        public virtual void FormFieldTaggingTest03() {
             String outFileName = destinationFolder + "taggedPdfWithForms03.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms03.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
@@ -85,8 +79,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest04()
-        {
+        public virtual void FormFieldTaggingTest04() {
             String outFileName = destinationFolder + "taggedPdfWithForms04.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms04.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "cmp_taggedPdfWithForms01.pdf"), new PdfWriter
@@ -104,8 +97,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest05()
-        {
+        public virtual void FormFieldTaggingTest05() {
             String outFileName = destinationFolder + "taggedPdfWithForms05.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms05.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
@@ -123,8 +115,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest06()
-        {
+        public virtual void FormFieldTaggingTest06() {
             String outFileName = destinationFolder + "taggedPdfWithForms06.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms06.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
@@ -143,8 +134,7 @@ namespace iTextSharp.Forms
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void FormFieldTaggingTest07()
-        {
+        public virtual void FormFieldTaggingTest07() {
             String outFileName = destinationFolder + "taggedPdfWithForms07.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms07.pdf";
             PdfWriter writer = new PdfWriter(outFileName);
@@ -162,8 +152,7 @@ namespace iTextSharp.Forms
             CompareOutput(outFileName, cmpFileName);
         }
 
-        private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm)
-        {
+        private void AddFormFieldsToDocument(PdfDocument pdfDoc, PdfAcroForm acroForm) {
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);
             PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "TestGroup", "1");
@@ -182,18 +171,15 @@ namespace iTextSharp.Forms
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
-        private void CompareOutput(String outFileName, String cmpFileName)
-        {
+        private void CompareOutput(String outFileName, String cmpFileName) {
             CompareTool compareTool = new CompareTool();
             String compareResult = compareTool.CompareTagStructures(outFileName, cmpFileName);
-            if (compareResult != null)
-            {
+            if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
             compareResult = compareTool.CompareByContent(outFileName, cmpFileName, destinationFolder, "diff" + outFileName
                 );
-            if (compareResult != null)
-            {
+            if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
         }

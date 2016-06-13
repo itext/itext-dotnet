@@ -44,23 +44,19 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Dictionary that stores signature build properties.</summary>
     /// <author>Kwinten Pisman</author>
-    public class PdfSignatureBuildProperties : PdfObjectWrapper<PdfDictionary>
-    {
+    public class PdfSignatureBuildProperties : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Creates new PdfSignatureBuildProperties.</summary>
         public PdfSignatureBuildProperties()
-            : base(new PdfDictionary())
-        {
+            : base(new PdfDictionary()) {
         }
 
         /// <summary>Creates new PdfSignatureBuildProperties with preset values.</summary>
         /// <param name="dict">PdfDictionary containing preset values</param>
         public PdfSignatureBuildProperties(PdfDictionary dict)
-            : base(dict)
-        {
+            : base(dict) {
         }
 
         /// <summary>
@@ -69,8 +65,7 @@ namespace iTextSharp.Signatures
         /// dictionary.
         /// </summary>
         /// <param name="name"/>
-        public virtual void SetSignatureCreator(String name)
-        {
+        public virtual void SetSignatureCreator(String name) {
             GetPdfSignatureAppProperty().SetSignatureCreator(name);
         }
 
@@ -87,19 +82,16 @@ namespace iTextSharp.Signatures
         /// 
         /// <see cref="PdfSignatureAppDictionary"/>
         /// </returns>
-        private PdfSignatureAppDictionary GetPdfSignatureAppProperty()
-        {
+        private PdfSignatureAppDictionary GetPdfSignatureAppProperty() {
             PdfDictionary appPropDic = GetPdfObject().GetAsDictionary(PdfName.App);
-            if (appPropDic == null)
-            {
+            if (appPropDic == null) {
                 appPropDic = new PdfDictionary();
                 GetPdfObject().Put(PdfName.App, appPropDic);
             }
             return new PdfSignatureAppDictionary(appPropDic);
         }
 
-        protected override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

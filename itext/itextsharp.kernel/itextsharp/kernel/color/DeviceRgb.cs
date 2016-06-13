@@ -44,33 +44,26 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class DeviceRgb : iTextSharp.Kernel.Color.Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class DeviceRgb : iTextSharp.Kernel.Color.Color {
         public DeviceRgb(int r, int g, int b)
-            : this(r / 255f, g / 255f, b / 255f)
-        {
+            : this(r / 255f, g / 255f, b / 255f) {
         }
 
         public DeviceRgb(float r, float g, float b)
-            : base(new PdfDeviceCs.Rgb(), new float[] { r, g, b })
-        {
+            : base(new PdfDeviceCs.Rgb(), new float[] { r, g, b }) {
         }
 
         public DeviceRgb()
-            : this(0f, 0f, 0f)
-        {
+            : this(0f, 0f, 0f) {
         }
 
-        public static iTextSharp.Kernel.Color.DeviceRgb MakeLighter(iTextSharp.Kernel.Color.DeviceRgb rgbColor)
-        {
+        public static iTextSharp.Kernel.Color.DeviceRgb MakeLighter(iTextSharp.Kernel.Color.DeviceRgb rgbColor) {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];
             float b = rgbColor.GetColorValue()[2];
             float v = Math.Max(r, Math.Max(g, b));
-            if (v == 0f)
-            {
+            if (v == 0f) {
                 return new iTextSharp.Kernel.Color.DeviceRgb(0x54, 0x54, 0x54);
             }
             float multiplier = Math.Min(1f, v + 0.33f) / v;
@@ -80,8 +73,7 @@ namespace iTextSharp.Kernel.Color
             return new iTextSharp.Kernel.Color.DeviceRgb(r, g, b);
         }
 
-        public static iTextSharp.Kernel.Color.DeviceRgb MakeDarker(iTextSharp.Kernel.Color.DeviceRgb rgbColor)
-        {
+        public static iTextSharp.Kernel.Color.DeviceRgb MakeDarker(iTextSharp.Kernel.Color.DeviceRgb rgbColor) {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];
             float b = rgbColor.GetColorValue()[2];

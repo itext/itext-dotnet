@@ -47,10 +47,8 @@ using System.IO;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Image
-{
-    public class GifImageData
-    {
+namespace iTextSharp.IO.Image {
+    public class GifImageData {
         private float logicalHeight;
 
         private float logicalWidth;
@@ -61,53 +59,43 @@ namespace iTextSharp.IO.Image
 
         private Uri url;
 
-        protected internal GifImageData(Uri url)
-        {
+        protected internal GifImageData(Uri url) {
             this.url = url;
         }
 
-        protected internal GifImageData(byte[] data)
-        {
+        protected internal GifImageData(byte[] data) {
             this.data = data;
         }
 
-        public virtual float GetLogicalHeight()
-        {
+        public virtual float GetLogicalHeight() {
             return logicalHeight;
         }
 
-        public virtual void SetLogicalHeight(float logicalHeight)
-        {
+        public virtual void SetLogicalHeight(float logicalHeight) {
             this.logicalHeight = logicalHeight;
         }
 
-        public virtual float GetLogicalWidth()
-        {
+        public virtual float GetLogicalWidth() {
             return logicalWidth;
         }
 
-        public virtual void SetLogicalWidth(float logicalWidth)
-        {
+        public virtual void SetLogicalWidth(float logicalWidth) {
             this.logicalWidth = logicalWidth;
         }
 
-        public virtual IList<ImageData> GetFrames()
-        {
+        public virtual IList<ImageData> GetFrames() {
             return frames;
         }
 
-        protected internal virtual byte[] GetData()
-        {
+        protected internal virtual byte[] GetData() {
             return data;
         }
 
-        protected internal virtual Uri GetUrl()
-        {
+        protected internal virtual Uri GetUrl() {
             return url;
         }
 
-        protected internal virtual void AddFrame(ImageData frame)
-        {
+        protected internal virtual void AddFrame(ImageData frame) {
             frames.Add(frame);
         }
 
@@ -117,20 +105,16 @@ namespace iTextSharp.IO.Image
         /// Note, this method doesn't check if data or url is null.
         /// </remarks>
         /// <exception cref="System.IO.IOException"/>
-        internal virtual void LoadData()
-        {
+        internal virtual void LoadData() {
             Stream input = null;
-            try
-            {
+            try {
                 input = UrlUtil.OpenStream(url);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 StreamUtil.TransferBytes(UrlUtil.OpenStream(url), stream);
                 data = stream.ToArray();
             }
-            finally
-            {
-                if (input != null)
-                {
+            finally {
+                if (input != null) {
                     input.Close();
                 }
             }

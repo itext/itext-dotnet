@@ -43,26 +43,22 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Numbering
-{
+namespace iTextSharp.Kernel.Numbering {
     /// <summary>
     /// This class is responsible for converting integer numbers to their
     /// English alphabet letter representations.
     /// </summary>
-    public class EnglishAlphabetNumbering
-    {
+    public class EnglishAlphabetNumbering {
         protected internal static readonly char[] ALPHABET_LOWERCASE;
 
         protected internal static readonly char[] ALPHABET_UPPERCASE;
 
         protected internal const int ALPHABET_LENGTH = 26;
 
-        static EnglishAlphabetNumbering()
-        {
+        static EnglishAlphabetNumbering() {
             ALPHABET_LOWERCASE = new char[ALPHABET_LENGTH];
             ALPHABET_UPPERCASE = new char[ALPHABET_LENGTH];
-            for (int i = 0; i < ALPHABET_LENGTH; i++)
-            {
+            for (int i = 0; i < ALPHABET_LENGTH; i++) {
                 ALPHABET_LOWERCASE[i] = (char)('a' + i);
                 ALPHABET_UPPERCASE[i] = (char)('A' + i);
             }
@@ -74,8 +70,7 @@ namespace iTextSharp.Kernel.Numbering
         /// E.g. 1 will be converted to "a", 2 to "b", ..., 27 to "aa", and so on.
         /// </remarks>
         /// <param name="number">the number to be converted</param>
-        public static String ToLatinAlphabetNumberLowerCase(int number)
-        {
+        public static String ToLatinAlphabetNumberLowerCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_LOWERCASE);
         }
 
@@ -85,8 +80,7 @@ namespace iTextSharp.Kernel.Numbering
         /// E.g. 1 will be converted to "A", 2 to "B", ..., 27 to "AA", and so on.
         /// </remarks>
         /// <param name="number">the number to be converted</param>
-        public static String ToLatinAlphabetNumberUpperCase(int number)
-        {
+        public static String ToLatinAlphabetNumberUpperCase(int number) {
             return AlphabetNumbering.ToAlphabetNumber(number, ALPHABET_UPPERCASE);
         }
 
@@ -98,8 +92,7 @@ namespace iTextSharp.Kernel.Numbering
         /// </remarks>
         /// <param name="number">the number to be converted</param>
         /// <param name="upperCase">whether to use uppercase or lowercase alphabet</param>
-        public static String ToLatinAlphabetNumber(int number, bool upperCase)
-        {
+        public static String ToLatinAlphabetNumber(int number, bool upperCase) {
             return upperCase ? ToLatinAlphabetNumberUpperCase(number) : ToLatinAlphabetNumberLowerCase(number);
         }
     }

@@ -10,10 +10,8 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfXObjectTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfXObjectTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -23,32 +21,27 @@ namespace iTextSharp.Kernel.Pdf
              + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder + "WP_20140410_001.tif" };
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentFromImages1()
-        {
+        public virtual void CreateDocumentFromImages1() {
             String destinationDocument = destinationFolder + "documentFromImages1.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument document = new PdfDocument(writer);
             PdfImageXObject[] images = new PdfImageXObject[4];
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 images[i] = new PdfImageXObject(ImageDataFactory.Create(PdfXObjectTest.images[i]));
                 images[i].SetLayer(new PdfLayer("layer" + i, document));
-                if (i % 2 == 0)
-                {
+                if (i % 2 == 0) {
                     images[i].Flush();
                 }
             }
-            for (int i_1 = 0; i_1 < 4; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 4; i_1++) {
                 PdfPage page = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.AddXObject(images[i_1], PageSize.Default);
@@ -72,8 +65,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
-        public virtual void CreateDocumentFromImages2()
-        {
+        public virtual void CreateDocumentFromImages2() {
             String destinationDocument = destinationFolder + "documentFromImages2.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
@@ -93,8 +85,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithForms()
-        {
+        public virtual void CreateDocumentWithForms() {
             String destinationDocument = destinationFolder + "documentWithForms1.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);

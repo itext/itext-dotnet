@@ -45,8 +45,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="Div"/>
@@ -56,8 +55,7 @@ namespace iTextSharp.Layout.Element
     /// types, it will try to take up as much horizontal space as possible.
     /// The concept is very similar to that of the div tag in HTML.
     /// </summary>
-    public class Div : BlockElement<Div>
-    {
+    public class Div : BlockElement<Div> {
         protected internal PdfName role = PdfName.Div;
 
         protected internal AccessibilityProperties tagProperties;
@@ -69,8 +67,7 @@ namespace iTextSharp.Layout.Element
         /// </param>
         /// <returns>this Element</returns>
         public virtual Div Add<T>(BlockElement<T> element)
-            where T : IElement
-        {
+            where T : IElement {
             childElements.Add(element);
             return this;
         }
@@ -81,37 +78,30 @@ namespace iTextSharp.Layout.Element
         /// <see cref="Image"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual Div Add(Image element)
-        {
+        public virtual Div Add(Image element) {
             childElements.Add(element);
             return this;
         }
 
-        public override PdfName GetRole()
-        {
+        public override PdfName GetRole() {
             return role;
         }
 
-        public override void SetRole(PdfName role)
-        {
+        public override void SetRole(PdfName role) {
             this.role = role;
-            if (PdfName.Artifact.Equals(role))
-            {
+            if (PdfName.Artifact.Equals(role)) {
                 PropagateArtifactRoleToChildElements();
             }
         }
 
-        public override AccessibilityProperties GetAccessibilityProperties()
-        {
-            if (tagProperties == null)
-            {
+        public override AccessibilityProperties GetAccessibilityProperties() {
+            if (tagProperties == null) {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;
         }
 
-        protected internal override IRenderer MakeNewRenderer()
-        {
+        protected internal override IRenderer MakeNewRenderer() {
             return new DivRenderer(this);
         }
     }

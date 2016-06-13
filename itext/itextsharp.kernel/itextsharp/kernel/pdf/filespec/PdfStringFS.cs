@@ -44,22 +44,17 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filespec
-{
-    public class PdfStringFS : PdfFileSpec
-    {
+namespace iTextSharp.Kernel.Pdf.Filespec {
+    public class PdfStringFS : PdfFileSpec {
         public PdfStringFS(String @string)
-            : base(new PdfString(@string))
-        {
+            : base(new PdfString(@string)) {
         }
 
         public PdfStringFS(PdfString pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

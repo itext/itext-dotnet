@@ -43,12 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>This class implements an array of unsigned bytes.</summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    internal sealed class ByteArray
-    {
+    internal sealed class ByteArray {
         private const int INITIAL_SIZE = 32;
 
         private byte[] bytes;
@@ -56,24 +54,21 @@ namespace iTextSharp.Barcodes.Qrcode
         private int size;
 
         /// <summary>Creates a new ByteArray instance with size 0.</summary>
-        public ByteArray()
-        {
+        public ByteArray() {
             bytes = null;
             size = 0;
         }
 
         /// <summary>Creates a new ByteArray instance of the specified size.</summary>
         /// <param name="size">size of the array</param>
-        public ByteArray(int size)
-        {
+        public ByteArray(int size) {
             bytes = new byte[size];
             this.size = size;
         }
 
         /// <summary>Creates a new ByteArray instance based on an existing byte[].</summary>
         /// <param name="byteArray">the byte[]</param>
-        public ByteArray(byte[] byteArray)
-        {
+        public ByteArray(byte[] byteArray) {
             bytes = byteArray;
             size = bytes.Length;
         }
@@ -81,30 +76,24 @@ namespace iTextSharp.Barcodes.Qrcode
         /// <summary>Access an unsigned byte at location index.</summary>
         /// <param name="index">The index in the array to access.</param>
         /// <returns>The unsigned value of the byte as an int.</returns>
-        public int At(int index)
-        {
+        public int At(int index) {
             return bytes[index] & 0xff;
         }
 
-        public void Set(int index, int value)
-        {
+        public void Set(int index, int value) {
             bytes[index] = (byte)value;
         }
 
-        public int Size()
-        {
+        public int Size() {
             return size;
         }
 
-        public bool IsEmpty()
-        {
+        public bool IsEmpty() {
             return size == 0;
         }
 
-        public void AppendByte(int value)
-        {
-            if (size == 0 || size >= bytes.Length)
-            {
+        public void AppendByte(int value) {
+            if (size == 0 || size >= bytes.Length) {
                 int newSize = Math.Max(INITIAL_SIZE, size << 1);
                 Reserve(newSize);
             }
@@ -112,13 +101,10 @@ namespace iTextSharp.Barcodes.Qrcode
             size++;
         }
 
-        public void Reserve(int capacity)
-        {
-            if (bytes == null || bytes.Length < capacity)
-            {
+        public void Reserve(int capacity) {
+            if (bytes == null || bytes.Length < capacity) {
                 byte[] newArray = new byte[capacity];
-                if (bytes != null)
-                {
+                if (bytes != null) {
                     System.Array.Copy(bytes, 0, newArray, 0, bytes.Length);
                 }
                 bytes = newArray;
@@ -126,12 +112,10 @@ namespace iTextSharp.Barcodes.Qrcode
         }
 
         // Copy count bytes from array source starting at offset.
-        public void Set(byte[] source, int offset, int count)
-        {
+        public void Set(byte[] source, int offset, int count) {
             bytes = new byte[count];
             size = count;
-            for (int x = 0; x < count; x++)
-            {
+            for (int x = 0; x < count; x++) {
                 bytes[x] = source[offset + x];
             }
         }

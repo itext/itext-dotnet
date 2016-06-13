@@ -46,12 +46,10 @@ using System.Collections.Generic;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
+namespace iTextSharp.IO.Font {
     /// <summary>Subsets a True Type font by removing the unneeded glyphs from the font.</summary>
     /// <author>Paulo Soares</author>
-    internal class TrueTypeFontSubset
-    {
+    internal class TrueTypeFontSubset {
         internal static readonly String[] tableNamesSimple = new String[] { "cvt ", "fpgm", "glyf", "head", "hhea"
             , "hmtx", "loca", "maxp", "prep" };
 
@@ -137,8 +135,7 @@ namespace iTextSharp.IO.Font
         /// if the table cmap is to be included in the generated font
         /// </param>
         internal TrueTypeFontSubset(String fileName, RandomAccessFileOrArray rf, ICollection<int> glyphsUsed, int 
-            directoryOffset, bool includeCmap, bool includeExtras)
-        {
+            directoryOffset, bool includeCmap, bool includeExtras) {
             this.fileName = fileName;
             this.rf = rf;
             this.glyphsUsed = glyphsUsed;
@@ -152,10 +149,8 @@ namespace iTextSharp.IO.Font
         /// <exception cref="System.IO.IOException">on error</exception>
         /// <on>error</on>
         /// <returns>the subset font</returns>
-        internal virtual byte[] Process()
-        {
-            try
-            {
+        internal virtual byte[] Process() {
+            try {
                 CreateTableDirectory();
                 ReadLoca();
                 FlatGlyphs();
@@ -164,46 +159,36 @@ namespace iTextSharp.IO.Font
                 AssembleFont();
                 return outFont;
             }
-            finally
-            {
-                try
-                {
+            finally {
+                try {
                     rf.Close();
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void AssembleFont()
-        {
+        protected internal virtual void AssembleFont() {
             int[] tableLocation;
             int fullFontSize = 0;
             IList<String> tableNames = new List<String>();
             tableNames.AddAll(tableNamesSimple);
-            if (includeExtras)
-            {
+            if (includeExtras) {
                 tableNames.AddAll(tableNamesExtra);
             }
-            else
-            {
-                if (includeCmap)
-                {
+            else {
+                if (includeCmap) {
                     tableNames.AddAll(tableNamesCmap);
                 }
             }
             int tablesUsed = 2;
-            foreach (String name in tableNames)
-            {
-                if (name.Equals("glyf") || name.Equals("loca"))
-                {
+            foreach (String name in tableNames) {
+                if (name.Equals("glyf") || name.Equals("loca")) {
                     continue;
                 }
                 tableLocation = tableDirectory.Get(name);
-                if (tableLocation == null)
-                {
+                if (tableLocation == null) {
                     continue;
                 }
                 tablesUsed++;
@@ -221,33 +206,27 @@ namespace iTextSharp.IO.Font
             WriteFontShort((1 << selector) * 16);
             WriteFontShort(selector);
             WriteFontShort((tablesUsed - (1 << selector)) * 16);
-            foreach (String name_1 in tableNames)
-            {
+            foreach (String name_1 in tableNames) {
                 int len;
                 tableLocation = tableDirectory.Get(name_1);
-                if (tableLocation == null)
-                {
+                if (tableLocation == null) {
                     continue;
                 }
                 WriteFontString(name_1);
-                switch (name_1)
-                {
-                    case "glyf":
-                    {
+                switch (name_1) {
+                    case "glyf": {
                         WriteFontInt(CalculateChecksum(newGlyfTable));
                         len = glyfTableRealSize;
                         break;
                     }
 
-                    case "loca":
-                    {
+                    case "loca": {
                         WriteFontInt(CalculateChecksum(newLocaTableOut));
                         len = locaTableRealSize;
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         WriteFontInt(tableLocation[TABLE_CHECKSUM]);
                         len = tableLocation[TABLE_LENGTH];
                         break;
@@ -257,33 +236,27 @@ namespace iTextSharp.IO.Font
                 WriteFontInt(len);
                 reference += len + 3 & ~3;
             }
-            foreach (String name_2 in tableNames)
-            {
+            foreach (String name_2 in tableNames) {
                 tableLocation = tableDirectory.Get(name_2);
-                if (tableLocation == null)
-                {
+                if (tableLocation == null) {
                     continue;
                 }
-                switch (name_2)
-                {
-                    case "glyf":
-                    {
+                switch (name_2) {
+                    case "glyf": {
                         System.Array.Copy(newGlyfTable, 0, outFont, fontPtr, newGlyfTable.Length);
                         fontPtr += newGlyfTable.Length;
                         newGlyfTable = null;
                         break;
                     }
 
-                    case "loca":
-                    {
+                    case "loca": {
                         System.Array.Copy(newLocaTableOut, 0, outFont, fontPtr, newLocaTableOut.Length);
                         fontPtr += newLocaTableOut.Length;
                         newLocaTableOut = null;
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         rf.Seek(tableLocation[TABLE_OFFSET]);
                         rf.ReadFully(outFont, fontPtr, tableLocation[TABLE_LENGTH]);
                         fontPtr += tableLocation[TABLE_LENGTH] + 3 & ~3;
@@ -294,19 +267,16 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void CreateTableDirectory()
-        {
+        protected internal virtual void CreateTableDirectory() {
             tableDirectory = new Dictionary<String, int[]>();
             rf.Seek(directoryOffset);
             int id = rf.ReadInt();
-            if (id != 0x00010000)
-            {
+            if (id != 0x00010000) {
                 throw new iTextSharp.IO.IOException("1.is.not.a.true.type.file").SetMessageParams(fileName);
             }
             int num_tables = rf.ReadUnsignedShort();
             rf.SkipBytes(6);
-            for (int k = 0; k < num_tables; ++k)
-            {
+            for (int k = 0; k < num_tables; ++k) {
                 String tag = ReadStandardString(4);
                 int[] tableLocation = new int[3];
                 tableLocation[TABLE_CHECKSUM] = rf.ReadInt();
@@ -317,54 +287,44 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void ReadLoca()
-        {
+        protected internal virtual void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
-            if (tableLocation == null)
-            {
+            if (tableLocation == null) {
                 throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams(fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
             locaShortTable = rf.ReadUnsignedShort() == 0;
             tableLocation = tableDirectory.Get("loca");
-            if (tableLocation == null)
-            {
+            if (tableLocation == null) {
                 throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams(fileName);
             }
             rf.Seek(tableLocation[TABLE_OFFSET]);
-            if (locaShortTable)
-            {
+            if (locaShortTable) {
                 int entries = tableLocation[TABLE_LENGTH] / 2;
                 locaTable = new int[entries];
-                for (int k = 0; k < entries; ++k)
-                {
+                for (int k = 0; k < entries; ++k) {
                     locaTable[k] = rf.ReadUnsignedShort() * 2;
                 }
             }
-            else
-            {
+            else {
                 int entries = tableLocation[TABLE_LENGTH] / 4;
                 locaTable = new int[entries];
-                for (int k = 0; k < entries; ++k)
-                {
+                for (int k = 0; k < entries; ++k) {
                     locaTable[k] = rf.ReadInt();
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void CreateNewGlyphTables()
-        {
+        protected internal virtual void CreateNewGlyphTables() {
             newLocaTable = new int[locaTable.Length];
             int[] activeGlyphs = new int[glyphsInList.Count];
-            for (int k = 0; k < activeGlyphs.Length; ++k)
-            {
+            for (int k = 0; k < activeGlyphs.Length; ++k) {
                 activeGlyphs[k] = (int)glyphsInList[k];
             }
             iTextSharp.IO.Util.JavaUtil.Sort(activeGlyphs);
             int glyfSize = 0;
-            foreach (int glyph in activeGlyphs)
-            {
+            foreach (int glyph in activeGlyphs) {
                 glyfSize += locaTable[glyph + 1] - locaTable[glyph];
             }
             glyfTableRealSize = glyfSize;
@@ -372,17 +332,14 @@ namespace iTextSharp.IO.Font
             newGlyfTable = new byte[glyfSize];
             int glyfPtr = 0;
             int listGlyf = 0;
-            for (int k_1 = 0; k_1 < newLocaTable.Length; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < newLocaTable.Length; ++k_1) {
                 newLocaTable[k_1] = glyfPtr;
-                if (listGlyf < activeGlyphs.Length && activeGlyphs[listGlyf] == k_1)
-                {
+                if (listGlyf < activeGlyphs.Length && activeGlyphs[listGlyf] == k_1) {
                     ++listGlyf;
                     newLocaTable[k_1] = glyfPtr;
                     int start = locaTable[k_1];
                     int len = locaTable[k_1 + 1] - start;
-                    if (len > 0)
-                    {
+                    if (len > 0) {
                         rf.Seek(tableGlyphOffset + start);
                         rf.ReadFully(newGlyfTable, glyfPtr, len);
                         glyfPtr += len;
@@ -391,106 +348,84 @@ namespace iTextSharp.IO.Font
             }
         }
 
-        protected internal virtual void LocaToBytes()
-        {
-            if (locaShortTable)
-            {
+        protected internal virtual void LocaToBytes() {
+            if (locaShortTable) {
                 locaTableRealSize = newLocaTable.Length * 2;
             }
-            else
-            {
+            else {
                 locaTableRealSize = newLocaTable.Length * 4;
             }
             newLocaTableOut = new byte[locaTableRealSize + 3 & ~3];
             outFont = newLocaTableOut;
             fontPtr = 0;
-            for (int k = 0; k < newLocaTable.Length; ++k)
-            {
-                if (locaShortTable)
-                {
+            for (int k = 0; k < newLocaTable.Length; ++k) {
+                if (locaShortTable) {
                     WriteFontShort(newLocaTable[k] / 2);
                 }
-                else
-                {
+                else {
                     WriteFontInt(newLocaTable[k]);
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void FlatGlyphs()
-        {
+        protected internal virtual void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
-            if (tableLocation == null)
-            {
+            if (tableLocation == null) {
                 throw new iTextSharp.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
             }
             int glyph0 = 0;
-            if (!glyphsUsed.Contains(glyph0))
-            {
+            if (!glyphsUsed.Contains(glyph0)) {
                 glyphsUsed.Add(glyph0);
                 glyphsInList.Add(glyph0);
             }
             tableGlyphOffset = tableLocation[TABLE_OFFSET];
             // Do not replace with foreach. ConcurrentModificationException will arise.
-            for (int k = 0; k < glyphsInList.Count; ++k)
-            {
+            for (int k = 0; k < glyphsInList.Count; ++k) {
                 int glyph = (int)glyphsInList[k];
                 CheckGlyphComposite(glyph);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void CheckGlyphComposite(int glyph)
-        {
+        protected internal virtual void CheckGlyphComposite(int glyph) {
             int start = locaTable[glyph];
-            if (start == locaTable[glyph + 1])
-            {
+            if (start == locaTable[glyph + 1]) {
                 // no contour
                 return;
             }
             rf.Seek(tableGlyphOffset + start);
             int numContours = rf.ReadShort();
-            if (numContours >= 0)
-            {
+            if (numContours >= 0) {
                 return;
             }
             rf.SkipBytes(8);
-            for (; ; )
-            {
+            for (; ; ) {
                 int flags = rf.ReadUnsignedShort();
                 int cGlyph = rf.ReadUnsignedShort();
-                if (!glyphsUsed.Contains(cGlyph))
-                {
+                if (!glyphsUsed.Contains(cGlyph)) {
                     glyphsUsed.Add(cGlyph);
                     glyphsInList.Add(cGlyph);
                 }
-                if ((flags & MORE_COMPONENTS) == 0)
-                {
+                if ((flags & MORE_COMPONENTS) == 0) {
                     return;
                 }
                 int skip;
-                if ((flags & ARG_1_AND_2_ARE_WORDS) != 0)
-                {
+                if ((flags & ARG_1_AND_2_ARE_WORDS) != 0) {
                     skip = 4;
                 }
-                else
-                {
+                else {
                     skip = 2;
                 }
-                if ((flags & WE_HAVE_A_SCALE) != 0)
-                {
+                if ((flags & WE_HAVE_A_SCALE) != 0) {
                     skip += 2;
                 }
-                else
-                {
-                    if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0)
-                    {
+                else {
+                    if ((flags & WE_HAVE_AN_X_AND_Y_SCALE) != 0) {
                         skip += 4;
                     }
                 }
-                if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0)
-                {
+                if ((flags & WE_HAVE_A_TWO_BY_TWO) != 0) {
                     skip += 8;
                 }
                 rf.SkipBytes(skip);
@@ -509,51 +444,43 @@ namespace iTextSharp.IO.Font
         /// read
         /// </returns>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
-        protected internal virtual String ReadStandardString(int length)
-        {
+        protected internal virtual String ReadStandardString(int length) {
             byte[] buf = new byte[length];
             rf.ReadFully(buf);
-            try
-            {
+            try {
                 return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, PdfEncodings.WINANSI);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new iTextSharp.IO.IOException("TrueType font", e);
             }
         }
 
-        protected internal virtual void WriteFontShort(int n)
-        {
+        protected internal virtual void WriteFontShort(int n) {
             outFont[fontPtr++] = (byte)(n >> 8);
             outFont[fontPtr++] = (byte)n;
         }
 
-        protected internal virtual void WriteFontInt(int n)
-        {
+        protected internal virtual void WriteFontInt(int n) {
             outFont[fontPtr++] = (byte)(n >> 24);
             outFont[fontPtr++] = (byte)(n >> 16);
             outFont[fontPtr++] = (byte)(n >> 8);
             outFont[fontPtr++] = (byte)n;
         }
 
-        protected internal virtual void WriteFontString(String s)
-        {
+        protected internal virtual void WriteFontString(String s) {
             byte[] b = PdfEncodings.ConvertToBytes(s, PdfEncodings.WINANSI);
             System.Array.Copy(b, 0, outFont, fontPtr, b.Length);
             fontPtr += b.Length;
         }
 
-        protected internal virtual int CalculateChecksum(byte[] b)
-        {
+        protected internal virtual int CalculateChecksum(byte[] b) {
             int len = b.Length / 4;
             int v0 = 0;
             int v1 = 0;
             int v2 = 0;
             int v3 = 0;
             int ptr = 0;
-            for (int k = 0; k < len; ++k)
-            {
+            for (int k = 0; k < len; ++k) {
                 v3 += b[ptr++] & 0xff;
                 v2 += b[ptr++] & 0xff;
                 v1 += b[ptr++] & 0xff;

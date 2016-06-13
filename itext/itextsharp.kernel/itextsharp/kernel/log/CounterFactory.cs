@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log
-{
+namespace iTextSharp.Kernel.Log {
     /// <summary>Factory that creates a counter for every reader or writer class.</summary>
     /// <remarks>
     /// Factory that creates a counter for every reader or writer class.
@@ -55,45 +54,38 @@ namespace iTextSharp.Kernel.Log
     /// <p>
     /// This functionality can be used to create metrics in a SaaS context.
     /// </remarks>
-    public class CounterFactory
-    {
+    public class CounterFactory {
         /// <summary>The singleton instance.</summary>
         private static iTextSharp.Kernel.Log.CounterFactory instance;
 
         /// <summary>The current counter implementation.</summary>
         private Counter counter = new DefaultCounter();
 
-        static CounterFactory()
-        {
+        static CounterFactory() {
             instance = new iTextSharp.Kernel.Log.CounterFactory();
         }
 
         /// <summary>The empty constructor.</summary>
-        private CounterFactory()
-        {
+        private CounterFactory() {
         }
 
         /// <summary>Returns the singleton instance of the factory.</summary>
-        public static iTextSharp.Kernel.Log.CounterFactory GetInstance()
-        {
+        public static iTextSharp.Kernel.Log.CounterFactory GetInstance() {
             return instance;
         }
 
         /// <summary>Returns a counter factory.</summary>
-        public static Counter GetCounter(Type cls)
-        {
+        public static Counter GetCounter(Type cls) {
             return instance.counter.GetCounter(cls);
         }
 
         /// <summary>Getter for the counter.</summary>
-        public virtual Counter GetCounter()
-        {
+        public virtual Counter GetCounter() {
             return counter;
         }
 
         /// <summary>Setter for the counter.</summary>
-        public virtual void SetCounter(Counter counter)
-        {
+        public virtual void SetCounter(Counter counter) {
             this.counter = counter;
         }
     }

@@ -8,18 +8,15 @@ using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfAFlushingTest : ITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfAFlushingTest : ITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/pdfa/PdfAFlushingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -27,8 +24,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushingTest01()
-        {
+        public virtual void FlushingTest01() {
             String outPdf = destinationFolder + "pdfA1b_flushingTest01.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_flushingTest01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -40,8 +36,7 @@ namespace iTextSharp.Pdfa
             imageXObject.MakeIndirect(doc);
             canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
             imageXObject.Flush();
-            if (imageXObject.IsFlushed())
-            {
+            if (imageXObject.IsFlushed()) {
                 NUnit.Framework.Assert.Fail("Flushing of unchecked objects shall be forbidden.");
             }
             doc.Close();
@@ -52,8 +47,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushingTest02()
-        {
+        public virtual void FlushingTest02() {
             String outPdf = destinationFolder + "pdfA2b_flushingTest02.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA2b_flushingTest02.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -66,8 +60,7 @@ namespace iTextSharp.Pdfa
             canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
             lastPage.Flush();
-            if (lastPage.IsFlushed())
-            {
+            if (lastPage.IsFlushed()) {
                 NUnit.Framework.Assert.Fail("Flushing of unchecked objects shall be forbidden.");
             }
             doc.Close();
@@ -78,8 +71,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FlushingTest03()
-        {
+        public virtual void FlushingTest03() {
             String outPdf = destinationFolder + "pdfA3b_flushingTest03.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA3b_flushingTest03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -91,8 +83,7 @@ namespace iTextSharp.Pdfa
             canvas.AddXObject(imageXObject, new Rectangle(30, 300, 300, 300));
             PdfPage lastPage = doc.GetLastPage();
             lastPage.Flush(true);
-            if (!imageXObject.IsFlushed())
-            {
+            if (!imageXObject.IsFlushed()) {
                 NUnit.Framework.Assert.Fail("When flushing the page along with it's resources, page check should be performed also page and all resources should be flushed."
                     );
             }
@@ -104,8 +95,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.Exception"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void AddUnusedStreamObjectsTest()
-        {
+        public virtual void AddUnusedStreamObjectsTest() {
             String outPdf = destinationFolder + "pdfA1b_docWithUnusedObjects_3.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFlushingTest/cmp_pdfA1b_docWithUnusedObjects_3.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -131,11 +121,9 @@ namespace iTextSharp.Pdfa
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareResult(String outFile, String cmpFile)
-        {
+        private void CompareResult(String outFile, String cmpFile) {
             String differences = new CompareTool().CompareByContent(outFile, cmpFile, destinationFolder, "diff_");
-            if (differences != null)
-            {
+            if (differences != null) {
                 NUnit.Framework.Assert.Fail(differences);
             }
         }

@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Layout;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="ILargeElement"/>
@@ -56,8 +55,7 @@ namespace iTextSharp.Layout.Element
     /// can be flushed regularly
     /// by client code, e.g. at page boundaries or after a certain amount of additions.
     /// </summary>
-    public interface ILargeElement : IElement
-    {
+    public interface ILargeElement : IElement {
         /// <summary>Checks whether an element has already been marked as complete.</summary>
         /// <returns>the completion marker boolean</returns>
         bool IsComplete();

@@ -2,19 +2,15 @@ using System;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfTokenizerTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfTokenizerTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfTokeniserTest/";
 
         /// <exception cref="System.Exception"/>
-        private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes)
-        {
+        private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes())));
-            for (int i = 0; i < expectedTypes.Length; i++)
-            {
+            for (int i = 0; i < expectedTypes.Length; i++) {
                 tok.NextValidToken();
                 //System.out.println(tok.getTokenType() + " -> " + tok.getStringValue());
                 NUnit.Framework.Assert.AreEqual(expectedTypes[i], tok.GetTokenType(), "Position " + i);
@@ -23,24 +19,21 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestOneNumber()
-        {
+        public virtual void TestOneNumber() {
             CheckTokenTypes("/Name1 70", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
                 .EndOfFile);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestTwoNumbers()
-        {
+        public virtual void TestTwoNumbers() {
             CheckTokenTypes("/Name1 70/Name 2", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
                 .Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType.EndOfFile);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TokenTypesTest()
-        {
+        public virtual void TokenTypesTest() {
             CheckTokenTypes("<</Size 70/Root 46 0 R/Info 44 0 R/ID[<8C2547D58D4BD2C6F3D32B830BE3259D><8F69587888569A458EB681A4285D5879>]/Prev 116 >>"
                 , PdfTokenizer.TokenType.StartDic, PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
                 .Name, PdfTokenizer.TokenType.Ref, PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Ref, PdfTokenizer.TokenType
@@ -51,8 +44,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void EncodingTest()
-        {
+        public virtual void EncodingTest() {
             RandomAccessSourceFactory factory;
             PdfTokenizer tok;
             PdfString pdfString;
@@ -96,8 +88,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void ReadPdfStringTest()
-        {
+        public virtual void ReadPdfStringTest() {
             String author = "This string9078 contains \u00A5two octal characters\u00C7";
             String creator = "iText\r 6\n";
             String title = "\u00DF\u00E3\u00EB\u00F0";
@@ -117,8 +108,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PrimitivesTest()
-        {
+        public virtual void PrimitivesTest() {
             String data = "<</Size 70." + "/Value#20 .1" + "/Root 46 0 R" + "/Info 44 0 R" + "/ID[<736f6d652068657820737472696e672>(some simple string )<8C2547D58D4BD2C6F3D32B830BE3259D2>-70.1--0.2]"
                  + "/Name1 --15" + "/Prev ---116.23 >>";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
@@ -209,8 +199,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void TokenValueEqualsToTest()
-        {
+        public virtual void TokenValueEqualsToTest() {
             String data = "SomeString";
             RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
             PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes())));

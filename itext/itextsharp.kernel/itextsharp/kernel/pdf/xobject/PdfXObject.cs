@@ -45,51 +45,40 @@ using System;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Layer;
 
-namespace iTextSharp.Kernel.Pdf.Xobject
-{
-    public class PdfXObject : PdfObjectWrapper<PdfStream>
-    {
+namespace iTextSharp.Kernel.Pdf.Xobject {
+    public class PdfXObject : PdfObjectWrapper<PdfStream> {
         public PdfXObject()
-            : this(new PdfStream())
-        {
+            : this(new PdfStream()) {
         }
 
         public PdfXObject(PdfStream pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream)
-        {
-            if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(PdfName.BBox))
-            {
+        public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream) {
+            if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(PdfName.BBox)) {
                 return new PdfFormXObject(stream);
             }
-            else
-            {
+            else {
                 return new PdfImageXObject(stream);
             }
         }
 
         /// <summary>Sets the layer this XObject belongs to.</summary>
         /// <param name="layer">the layer this XObject belongs to</param>
-        public virtual void SetLayer(IPdfOCG layer)
-        {
+        public virtual void SetLayer(IPdfOCG layer) {
             GetPdfObject().Put(PdfName.OC, layer.GetIndirectReference());
         }
 
-        public virtual float GetWidth()
-        {
+        public virtual float GetWidth() {
             throw new NotSupportedException();
         }
 
-        public virtual float GetHeight()
-        {
+        public virtual float GetHeight() {
             throw new NotSupportedException();
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
     }

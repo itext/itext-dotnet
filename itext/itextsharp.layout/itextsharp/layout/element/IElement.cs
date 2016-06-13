@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 using iTextSharp.Layout;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>This class represents a layout element, i.e.</summary>
     /// <remarks>
     /// This class represents a layout element, i.e. a piece of content that will
@@ -54,8 +53,7 @@ namespace iTextSharp.Layout.Element
     /// <see cref="IElement"/>
     /// s on the layout surface.
     /// </remarks>
-    public interface IElement : IPropertyContainer
-    {
+    public interface IElement : IPropertyContainer {
         /// <summary>
         /// Overrides the
         /// <seealso>IRenderer</seealso>

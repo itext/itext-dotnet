@@ -43,18 +43,15 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Geom;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
-{
-    public class ClippingPathInfo : IEventData
-    {
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
+    public class ClippingPathInfo : IEventData {
         private Path path;
 
         private Matrix ctm;
 
         /// <param name="path">The path to be rendered.</param>
         /// <param name="ctm">The path to be rendered.</param>
-        public ClippingPathInfo(Path path, Matrix ctm)
-        {
+        public ClippingPathInfo(Path path, Matrix ctm) {
             this.path = path;
             this.ctm = ctm;
         }
@@ -64,14 +61,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <see cref="iTextSharp.Kernel.Geom.Path"/>
         /// which represents current clipping path.
         /// </returns>
-        public virtual Path GetClippingPath()
-        {
+        public virtual Path GetClippingPath() {
             return path;
         }
 
         /// <returns>Current transformation matrix.</returns>
-        public virtual Matrix GetCtm()
-        {
+        public virtual Matrix GetCtm() {
             return ctm;
         }
     }

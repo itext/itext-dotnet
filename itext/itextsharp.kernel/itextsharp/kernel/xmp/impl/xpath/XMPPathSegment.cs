@@ -29,12 +29,10 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Impl.XPath
-{
+namespace iTextSharp.Kernel.XMP.Impl.XPath {
     /// <summary>A segment of a parsed <code>XMPPath</code>.</summary>
     /// <since>23.06.2006</since>
-    public class XMPPathSegment
-    {
+    public class XMPPathSegment {
         /// <summary>name of the path segment</summary>
         private String name;
 
@@ -49,89 +47,74 @@ namespace iTextSharp.Kernel.XMP.Impl.XPath
 
         /// <summary>Constructor with initial values.</summary>
         /// <param name="name">the name of the segment</param>
-        public XMPPathSegment(String name)
-        {
+        public XMPPathSegment(String name) {
             this.name = name;
         }
 
         /// <summary>Constructor with initial values.</summary>
         /// <param name="name">the name of the segment</param>
         /// <param name="kind">the kind of the segment</param>
-        public XMPPathSegment(String name, int kind)
-        {
+        public XMPPathSegment(String name, int kind) {
             this.name = name;
             this.kind = kind;
         }
 
         /// <returns>Returns the kind.</returns>
-        public virtual int GetKind()
-        {
+        public virtual int GetKind() {
             return kind;
         }
 
         /// <param name="kind">The kind to set.</param>
-        public virtual void SetKind(int kind)
-        {
+        public virtual void SetKind(int kind) {
             this.kind = kind;
         }
 
         /// <returns>Returns the name.</returns>
-        public virtual String GetName()
-        {
+        public virtual String GetName() {
             return name;
         }
 
         /// <param name="name">The name to set.</param>
-        public virtual void SetName(String name)
-        {
+        public virtual void SetName(String name) {
             this.name = name;
         }
 
         /// <param name="alias">the flag to set</param>
-        public virtual void SetAlias(bool alias)
-        {
+        public virtual void SetAlias(bool alias) {
             this.alias = alias;
         }
 
         /// <returns>Returns the alias.</returns>
-        public virtual bool IsAlias()
-        {
+        public virtual bool IsAlias() {
             return alias;
         }
 
         /// <returns>Returns the aliasForm if this segment has been created by an alias.</returns>
-        public virtual int GetAliasForm()
-        {
+        public virtual int GetAliasForm() {
             return aliasForm;
         }
 
         /// <param name="aliasForm">the aliasForm to set</param>
-        public virtual void SetAliasForm(int aliasForm)
-        {
+        public virtual void SetAliasForm(int aliasForm) {
             this.aliasForm = aliasForm;
         }
 
         /// <seealso cref="System.Object.ToString()"/>
-        public override String ToString()
-        {
-            switch (kind)
-            {
+        public override String ToString() {
+            switch (kind) {
                 case XMPPath.STRUCT_FIELD_STEP:
                 case XMPPath.ARRAY_INDEX_STEP:
                 case XMPPath.QUALIFIER_STEP:
-                case XMPPath.ARRAY_LAST_STEP:
-                {
+                case XMPPath.ARRAY_LAST_STEP: {
                     return name;
                 }
 
                 case XMPPath.QUAL_SELECTOR_STEP:
-                case XMPPath.FIELD_SELECTOR_STEP:
-                {
+                case XMPPath.FIELD_SELECTOR_STEP: {
                     return name;
                 }
 
-                default:
-                {
+                default: {
                     // no defined step
                     return name;
                 }

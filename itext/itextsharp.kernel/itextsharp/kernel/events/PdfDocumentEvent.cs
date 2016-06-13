@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Events
-{
+namespace iTextSharp.Kernel.Events {
     /// <summary>Event dispatched by PdfDocument.</summary>
-    public class PdfDocumentEvent : Event
-    {
+    public class PdfDocumentEvent : Event {
         /// <summary>Dispatched after page is created.</summary>
         public const String START_PAGE = "StartPdfPage";
 
@@ -71,8 +69,7 @@ namespace iTextSharp.Kernel.Events
         /// <param name="type">type of the event that fired this event</param>
         /// <param name="document">document that fired this event</param>
         public PdfDocumentEvent(String type, PdfDocument document)
-            : base(type)
-        {
+            : base(type) {
             this.document = document;
         }
 
@@ -80,24 +77,21 @@ namespace iTextSharp.Kernel.Events
         /// <param name="type">type of the event that fired this event</param>
         /// <param name="page">page that fired this event</param>
         public PdfDocumentEvent(String type, PdfPage page)
-            : base(type)
-        {
+            : base(type) {
             this.page = page;
             this.document = page.GetDocument();
         }
 
         /// <summary>Returns the PdfDocument associated with this event.</summary>
         /// <returns>the PdfDocument associated with this event</returns>
-        public virtual PdfDocument GetDocument()
-        {
+        public virtual PdfDocument GetDocument() {
             return document;
         }
 
         /// <summary>Returns the PdfPage associated with this event.</summary>
         /// <remarks>Returns the PdfPage associated with this event. Warning: this can be null.</remarks>
         /// <returns>the PdfPage associated with this event</returns>
-        public virtual PdfPage GetPage()
-        {
+        public virtual PdfPage GetPage() {
             return page;
         }
     }

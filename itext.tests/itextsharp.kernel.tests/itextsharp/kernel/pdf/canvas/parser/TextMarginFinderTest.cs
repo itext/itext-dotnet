@@ -4,16 +4,13 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser
-{
-    public class TextMarginFinderTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+    public class TextMarginFinderTest : ExtendedITextTest {
         private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/TextMarginFinderTest/";
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Test()
-        {
+        public virtual void Test() {
             TextMarginFinder finder = new TextMarginFinder();
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "in.pdf"));
             new PdfCanvasProcessor(finder).ProcessPageContent(pdfDocument.GetPage(1));

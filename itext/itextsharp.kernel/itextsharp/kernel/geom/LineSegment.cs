@@ -43,12 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Geom
-{
+namespace iTextSharp.Kernel.Geom {
     /// <summary>Represents a line segment in a particular coordinate system.</summary>
     /// <remarks>Represents a line segment in a particular coordinate system.  This class is immutable.</remarks>
-    public class LineSegment
-    {
+    public class LineSegment {
         /// <summary>Start vector of the segment.</summary>
         private readonly Vector startPoint;
 
@@ -58,27 +56,23 @@ namespace iTextSharp.Kernel.Geom
         /// <summary>Creates a new line segment.</summary>
         /// <param name="startPoint">the start point of a line segment.</param>
         /// <param name="endPoint">the end point of a line segment.</param>
-        public LineSegment(Vector startPoint, Vector endPoint)
-        {
+        public LineSegment(Vector startPoint, Vector endPoint) {
             this.startPoint = startPoint;
             this.endPoint = endPoint;
         }
 
         /// <returns>the start point</returns>
-        public virtual Vector GetStartPoint()
-        {
+        public virtual Vector GetStartPoint() {
             return startPoint;
         }
 
         /// <returns>the end point</returns>
-        public virtual Vector GetEndPoint()
-        {
+        public virtual Vector GetEndPoint() {
             return endPoint;
         }
 
         /// <returns>the length of this line segment</returns>
-        public virtual float GetLength()
-        {
+        public virtual float GetLength() {
             return endPoint.Subtract(startPoint).Length();
         }
 
@@ -90,8 +84,7 @@ namespace iTextSharp.Kernel.Geom
         /// origin of the lower left hand end point of the segment, with width = 4 and height = 3.
         /// </remarks>
         /// <returns>the bounding rectangle</returns>
-        public virtual Rectangle GetBoundingRectange()
-        {
+        public virtual Rectangle GetBoundingRectange() {
             float x1 = GetStartPoint().Get(Vector.I1);
             float y1 = GetStartPoint().Get(Vector.I2);
             float x2 = GetEndPoint().Get(Vector.I1);
@@ -102,8 +95,7 @@ namespace iTextSharp.Kernel.Geom
         /// <summary>Transforms the segment by the specified matrix</summary>
         /// <param name="m">the matrix for the transformation</param>
         /// <returns>the transformed segment</returns>
-        public virtual iTextSharp.Kernel.Geom.LineSegment TransformBy(Matrix m)
-        {
+        public virtual iTextSharp.Kernel.Geom.LineSegment TransformBy(Matrix m) {
             Vector newStart = startPoint.Cross(m);
             Vector newEnd = endPoint.Cross(m);
             return new iTextSharp.Kernel.Geom.LineSegment(newStart, newEnd);
@@ -112,28 +104,23 @@ namespace iTextSharp.Kernel.Geom
         /// <summary>Checks if a segment contains another segment in itself</summary>
         /// <param name="other">a segment to be checked</param>
         /// <returns>true if this segment contains other one, false otherwise</returns>
-        public virtual bool ContainsSegment(iTextSharp.Kernel.Geom.LineSegment other)
-        {
+        public virtual bool ContainsSegment(iTextSharp.Kernel.Geom.LineSegment other) {
             return other != null && ContainsPoint(other.startPoint) && ContainsPoint(other.endPoint);
         }
 
         /// <summary>Checks if a segment contains a given point in itself</summary>
         /// <param name="point">a point to be checked</param>
         /// <returns>true if this segment contains given point, false otherwise</returns>
-        public virtual bool ContainsPoint(Vector point)
-        {
-            if (point == null)
-            {
+        public virtual bool ContainsPoint(Vector point) {
+            if (point == null) {
                 return false;
             }
             Vector diff1 = point.Subtract(startPoint);
-            if (diff1.Get(0) < 0 || diff1.Get(1) < 0 || diff1.Get(2) < 0)
-            {
+            if (diff1.Get(0) < 0 || diff1.Get(1) < 0 || diff1.Get(2) < 0) {
                 return false;
             }
             Vector diff2 = endPoint.Subtract(point);
-            if (diff2.Get(0) < 0 || diff2.Get(1) < 0 || diff2.Get(2) < 0)
-            {
+            if (diff2.Get(0) < 0 || diff2.Get(1) < 0 || diff2.Get(2) < 0) {
                 return false;
             }
             return true;

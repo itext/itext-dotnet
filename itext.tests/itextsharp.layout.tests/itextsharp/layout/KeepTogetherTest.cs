@@ -9,33 +9,28 @@ using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Layout
-{
-    public class KeepTogetherTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class KeepTogetherTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/KeepTogetherTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/KeepTogetherTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void KeepTogetherParagraphTest01()
-        {
+        public virtual void KeepTogetherParagraphTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest01.pdf";
             String outFile = destinationFolder + "keepTogetherParagraphTest01.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            for (int i = 0; i < 29; i++)
-            {
+            for (int i = 0; i < 29; i++) {
                 doc.Add(new Paragraph("String number" + i));
             }
             String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanasdadasdadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -51,20 +46,17 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        public virtual void KeepTogetherParagraphTest02()
-        {
+        public virtual void KeepTogetherParagraphTest02() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest02.pdf";
             String outFile = destinationFolder + "keepTogetherParagraphTest02.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 doc.Add(new Paragraph("String number" + i));
             }
             String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanasdadasdadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            for (int i_1 = 0; i_1 < 5; i_1++)
-            {
+            for (int i_1 = 0; i_1 < 5; i_1++) {
                 str += str;
             }
             Paragraph p1 = new Paragraph(str);
@@ -78,15 +70,13 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void KeepTogetherListTest01()
-        {
+        public virtual void KeepTogetherListTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherListTest01.pdf";
             String outFile = destinationFolder + "keepTogetherListTest01.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 doc.Add(new Paragraph("String number" + i));
             }
             List list = new List();
@@ -101,16 +91,14 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void KeepTogetherDivTest01()
-        {
+        public virtual void KeepTogetherDivTest01() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest01.pdf";
             String outFile = destinationFolder + "keepTogetherDivTest01.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph("Test String");
-            for (int i = 0; i < 28; i++)
-            {
+            for (int i = 0; i < 28; i++) {
                 doc.Add(p);
             }
             Div div = new Div();
@@ -128,8 +116,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
-        public virtual void KeepTogetherDivTest02()
-        {
+        public virtual void KeepTogetherDivTest02() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest02.pdf";
             String outFile = destinationFolder + "keepTogetherDivTest02.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(outFile, FileMode.Create));
@@ -140,8 +127,7 @@ namespace iTextSharp.Layout
             doc.SetRenderer(new ColumnDocumentRenderer(doc, columns));
             Div div = new Div();
             doc.Add(new Paragraph("first string"));
-            for (int i = 0; i < 130; i++)
-            {
+            for (int i = 0; i < 130; i++) {
                 div.Add(new Paragraph("String number " + i));
             }
             div.SetKeepTogether(true);

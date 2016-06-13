@@ -43,27 +43,21 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging
-{
-    public class PdfMcrNumber : PdfMcr
-    {
+namespace iTextSharp.Kernel.Pdf.Tagging {
+    public class PdfMcrNumber : PdfMcr {
         public PdfMcrNumber(PdfNumber pdfObject, PdfStructElem parent)
-            : base(pdfObject, parent)
-        {
+            : base(pdfObject, parent) {
         }
 
         public PdfMcrNumber(PdfPage page, PdfStructElem parent)
-            : base(new PdfNumber(page.GetNextMcid()), parent)
-        {
+            : base(new PdfNumber(page.GetNextMcid()), parent) {
         }
 
-        public override int GetMcid()
-        {
+        public override int GetMcid() {
             return ((PdfNumber)GetPdfObject()).IntValue();
         }
 
-        public override PdfDictionary GetPageObject()
-        {
+        public override PdfDictionary GetPageObject() {
             return parent.GetPdfObject().GetAsDictionary(PdfName.Pg);
         }
     }

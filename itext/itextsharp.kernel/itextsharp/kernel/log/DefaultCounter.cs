@@ -45,11 +45,9 @@ using System;
 using iTextSharp.IO.Codec;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Log
-{
+namespace iTextSharp.Kernel.Log {
     /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
-    public class DefaultCounter : Counter
-    {
+    public class DefaultCounter : Counter {
         private volatile int count = 0;
 
         private int level = 0;
@@ -76,39 +74,30 @@ namespace iTextSharp.Kernel.Log
              + "gaW50ZW50aW9uLCBwbGVhc2UgY29udGFjdCB1cyBieSBmaWxsaW5nIG91dCB0aGlz" + "IGZvcm06IGh0dHA6Ly9pdGV4dHBkZi5jb20vc2FsZXMgb3IgYnkgY29udGFjdGluZ"
              + "yBvdXIgc2FsZXMgZGVwYXJ0bWVudC4=");
 
-        public virtual Counter GetCounter(Type cls)
-        {
+        public virtual Counter GetCounter(Type cls) {
             return this;
         }
 
-        public virtual void OnDocumentRead(long size)
-        {
+        public virtual void OnDocumentRead(long size) {
             PlusOne();
         }
 
-        public virtual void OnDocumentWritten(long size)
-        {
+        public virtual void OnDocumentWritten(long size) {
             PlusOne();
         }
 
-        private void PlusOne()
-        {
-            if (++count > repeat_level)
-            {
-                if (Version.IsAGPLVersion() || Version.IsExpired())
-                {
+        private void PlusOne() {
+            if (++count > repeat_level) {
+                if (Version.IsAGPLVersion() || Version.IsExpired()) {
                     String message = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(message_1);
-                    if (Version.IsExpired())
-                    {
+                    if (Version.IsExpired()) {
                         message = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(message_2);
                     }
                     level++;
-                    if (level == 1)
-                    {
+                    if (level == 1) {
                         repeat_level = repeat[1];
                     }
-                    else
-                    {
+                    else {
                         repeat_level = repeat[2];
                     }
                     System.Console.Out.WriteLine(message);

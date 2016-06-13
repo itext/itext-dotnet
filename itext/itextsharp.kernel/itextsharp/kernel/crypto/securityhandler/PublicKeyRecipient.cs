@@ -43,39 +43,32 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
-{
-    public class PublicKeyRecipient
-    {
+namespace iTextSharp.Kernel.Crypto.Securityhandler {
+    public class PublicKeyRecipient {
         private X509Certificate certificate = null;
 
         private int permission = 0;
 
         protected internal byte[] cms = null;
 
-        public PublicKeyRecipient(X509Certificate certificate, int permission)
-        {
+        public PublicKeyRecipient(X509Certificate certificate, int permission) {
             this.certificate = certificate;
             this.permission = permission;
         }
 
-        public virtual X509Certificate GetCertificate()
-        {
+        public virtual X509Certificate GetCertificate() {
             return certificate;
         }
 
-        public virtual int GetPermission()
-        {
+        public virtual int GetPermission() {
             return permission;
         }
 
-        protected internal virtual void SetCms(byte[] cms)
-        {
+        protected internal virtual void SetCms(byte[] cms) {
             this.cms = cms;
         }
 
-        protected internal virtual byte[] GetCms()
-        {
+        protected internal virtual byte[] GetCms() {
             return cms;
         }
     }

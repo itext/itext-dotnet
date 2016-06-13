@@ -47,34 +47,28 @@ using iTextSharp.IO.Codec;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Image
-{
-    public class Jbig2ImageData : ImageData
-    {
+namespace iTextSharp.IO.Image {
+    public class Jbig2ImageData : ImageData {
         private int page;
 
         protected internal Jbig2ImageData(Uri url, int page)
-            : base(url, ImageType.JBIG2)
-        {
+            : base(url, ImageType.JBIG2) {
             this.page = page;
         }
 
         protected internal Jbig2ImageData(byte[] bytes, int page)
-            : base(bytes, ImageType.JBIG2)
-        {
+            : base(bytes, ImageType.JBIG2) {
             this.page = page;
         }
 
-        public virtual int GetPage()
-        {
+        public virtual int GetPage() {
             return page;
         }
 
         /// <summary>Gets the number of pages in a JBIG2 image.</summary>
         /// <param name="bytes">a byte array containing a JBIG2 image</param>
         /// <returns>the number of pages</returns>
-        public static int GetNumberOfPages(byte[] bytes)
-        {
+        public static int GetNumberOfPages(byte[] bytes) {
             IRandomAccessSource ras = new RandomAccessSourceFactory().CreateSource(bytes);
             return GetNumberOfPages(new RandomAccessFileOrArray(ras));
         }
@@ -86,22 +80,18 @@ namespace iTextSharp.IO.Image
         /// containing a JBIG2 image
         /// </param>
         /// <returns>the number of pages</returns>
-        public static int GetNumberOfPages(RandomAccessFileOrArray raf)
-        {
-            try
-            {
+        public static int GetNumberOfPages(RandomAccessFileOrArray raf) {
+            try {
                 Jbig2SegmentReader sr = new Jbig2SegmentReader(raf);
                 sr.Read();
                 return sr.NumberOfPages();
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jbig2ImageException, e);
             }
         }
 
-        public override bool CanImageBeInline()
-        {
+        public override bool CanImageBeInline() {
             ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
             logger.Warn(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;

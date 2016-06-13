@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using iTextSharp.IO.Source;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    internal class PdfObjectStream : PdfStream
-    {
+namespace iTextSharp.Kernel.Pdf {
+    internal class PdfObjectStream : PdfStream {
         /// <summary>Max number of objects in object stream.</summary>
         public const int MAX_OBJ_STREAM_SIZE = 200;
 
@@ -58,8 +56,7 @@ namespace iTextSharp.Kernel.Pdf
         protected internal PdfOutputStream indexStream = new PdfOutputStream(new ByteArrayOutputStream());
 
         public PdfObjectStream(PdfDocument doc)
-            : base()
-        {
+            : base() {
             MakeIndirect(doc);
             GetOutputStream().document = doc;
             Put(PdfName.Type, PdfName.ObjStm);
@@ -74,8 +71,7 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="prev">previous PdfObjectStream.</param>
         internal PdfObjectStream(iTextSharp.Kernel.Pdf.PdfObjectStream prev)
-            : this(prev.GetIndirectReference().GetDocument())
-        {
+            : this(prev.GetIndirectReference().GetDocument()) {
             ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream().GetOutputStream();
             prevOutputStream.JReset();
             InitOutputStream(prevOutputStream);
@@ -87,10 +83,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Adds object to the object stream.</summary>
         /// <param name="object">object to add.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        public virtual void AddObject(PdfObject @object)
-        {
-            if (size.IntValue() == MAX_OBJ_STREAM_SIZE)
-            {
+        public virtual void AddObject(PdfObject @object) {
+            if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
                 throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);
             }
             PdfOutputStream outputStream = GetOutputStream();
@@ -106,32 +100,25 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <summary>Gets object stream size (number of objects inside).</summary>
         /// <returns>object stream size.</returns>
-        public virtual int GetSize()
-        {
+        public virtual int GetSize() {
             return size.IntValue();
         }
 
-        public virtual PdfOutputStream GetIndexStream()
-        {
+        public virtual PdfOutputStream GetIndexStream() {
             return indexStream;
         }
 
-        protected internal override void ReleaseContent()
-        {
+        protected internal override void ReleaseContent() {
             ReleaseContent(false);
         }
 
-        private void ReleaseContent(bool close)
-        {
-            if (close)
-            {
+        private void ReleaseContent(bool close) {
+            if (close) {
                 base.ReleaseContent();
-                try
-                {
+                try {
                     indexStream.Close();
                 }
-                catch (System.IO.IOException e)
-                {
+                catch (System.IO.IOException e) {
                     throw new PdfException(PdfException.IoException, e);
                 }
                 indexStream = null;

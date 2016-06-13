@@ -44,35 +44,28 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <summary>LookupType 1: Single Substitution Subtable</summary>
     /// <author>psoares</author>
-    public class GsubLookupType1 : OpenTableLookup
-    {
+    public class GsubLookupType1 : OpenTableLookup {
         private IDictionary<int, int?> substMap;
 
         /// <exception cref="System.IO.IOException"/>
         public GsubLookupType1(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
-            : base(openReader, lookupFlag, subTableLocations)
-        {
+            : base(openReader, lookupFlag, subTableLocations) {
             substMap = new Dictionary<int, int?>();
             ReadSubTables();
         }
 
-        public override bool TransformOne(GlyphLine line)
-        {
-            if (line.idx >= line.end)
-            {
+        public override bool TransformOne(GlyphLine line) {
+            if (line.idx >= line.end) {
                 return false;
             }
             Glyph g = line.Get(line.idx);
             bool changed = false;
-            if (!openReader.IsSkip(g.GetCode(), lookupFlag))
-            {
+            if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                 int? substCode = substMap.Get(g.GetCode());
-                if (substCode != null)
-                {
+                if (substCode != null) {
                     line.SubstituteOneToOne(openReader, (int)substCode);
                     changed = true;
                 }
@@ -82,47 +75,38 @@ namespace iTextSharp.IO.Font.Otf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        protected internal override void ReadSubTable(int subTableLocation)
-        {
+        protected internal override void ReadSubTable(int subTableLocation) {
             openReader.rf.Seek(subTableLocation);
             int substFormat = openReader.rf.ReadShort();
-            if (substFormat == 1)
-            {
+            if (substFormat == 1) {
                 int coverage = openReader.rf.ReadUnsignedShort();
                 int deltaGlyphID = openReader.rf.ReadShort();
                 IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
-                foreach (int coverageGlyphId in coverageGlyphIds)
-                {
+                foreach (int coverageGlyphId in coverageGlyphIds) {
                     int substituteGlyphId = coverageGlyphId + deltaGlyphID;
                     substMap[coverageGlyphId] = substituteGlyphId;
                 }
             }
-            else
-            {
-                if (substFormat == 2)
-                {
+            else {
+                if (substFormat == 2) {
                     int coverage = openReader.rf.ReadUnsignedShort();
                     int glyphCount = openReader.rf.ReadUnsignedShort();
                     int[] substitute = new int[glyphCount];
-                    for (int k = 0; k < glyphCount; ++k)
-                    {
+                    for (int k = 0; k < glyphCount; ++k) {
                         substitute[k] = openReader.rf.ReadUnsignedShort();
                     }
                     IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
-                    for (int k_1 = 0; k_1 < glyphCount; ++k_1)
-                    {
+                    for (int k_1 = 0; k_1 < glyphCount; ++k_1) {
                         substMap[coverageGlyphIds[k_1]] = substitute[k_1];
                     }
                 }
-                else
-                {
+                else {
                     throw new ArgumentException("Bad substFormat: " + substFormat);
                 }
             }
         }
 
-        public override bool HasSubstitution(int index)
-        {
+        public override bool HasSubstitution(int index) {
             return substMap.ContainsKey(index);
         }
     }

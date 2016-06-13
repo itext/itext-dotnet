@@ -44,41 +44,35 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border
-{
+namespace iTextSharp.Layout.Border {
     /// <summary>Draws a border with rounded dots aroudn the element it's been set to.</summary>
     /// <remarks>
     /// Draws a border with rounded dots aroudn the element it's been set to. For square dots see
     /// <see cref="DottedBorder"/>
     /// .
     /// </remarks>
-    public class RoundDotsBorder : iTextSharp.Layout.Border.Border
-    {
+    public class RoundDotsBorder : iTextSharp.Layout.Border.Border {
         private const float GAP_MODIFIER = 2.5f;
 
         /// <summary>Creates a RoundDotsBorder with the specified wit?dth and sets the color to black.</summary>
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(float width)
-            : base(width)
-        {
+            : base(width) {
         }
 
         /// <summary>Creates a RoundDotsBorder with the specified wit?dth and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(iTextSharp.Kernel.Color.Color color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
-        public override int GetBorderType()
-        {
+        public override int GetBorderType() {
             return iTextSharp.Layout.Border.Border.ROUND_DOTS;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
-            , float borderWidthAfter)
-        {
+            , float borderWidthAfter) {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
             float dy = y2 - y1;
@@ -86,31 +80,26 @@ namespace iTextSharp.Layout.Border
             float adjustedGap = GetDotsGap(borderLength, initialGap);
             float widthHalf = width / 2;
             Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
-            switch (borderSide)
-            {
-                case Border.Side.TOP:
-                {
+            switch (borderSide) {
+                case Border.Side.TOP: {
                     y1 += widthHalf;
                     y2 += widthHalf;
                     break;
                 }
 
-                case Border.Side.RIGHT:
-                {
+                case Border.Side.RIGHT: {
                     x1 += widthHalf;
                     x2 += widthHalf;
                     break;
                 }
 
-                case Border.Side.BOTTOM:
-                {
+                case Border.Side.BOTTOM: {
                     y1 -= widthHalf;
                     y2 -= widthHalf;
                     break;
                 }
 
-                case Border.Side.LEFT:
-                {
+                case Border.Side.LEFT: {
                     x1 -= widthHalf;
                     x2 -= widthHalf;
                     break;
@@ -122,20 +111,17 @@ namespace iTextSharp.Layout.Border
             canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
-        {
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
             float dy = y2 - y1;
             double borderLength = Math.Sqrt(dx * dx + dy * dy);
             float adjustedGap = GetDotsGap(borderLength, initialGap);
             bool isHorizontal = false;
-            if (Math.Abs(y2 - y1) < 0.0005f)
-            {
+            if (Math.Abs(y2 - y1) < 0.0005f) {
                 isHorizontal = true;
             }
-            if (isHorizontal)
-            {
+            if (isHorizontal) {
                 x2 -= width;
             }
             canvas.SetStrokeColor(color);
@@ -144,8 +130,7 @@ namespace iTextSharp.Layout.Border
             canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
-        protected internal virtual float GetDotsGap(double distance, float initialGap)
-        {
+        protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
             return (float)(distance / gapsNum);
         }

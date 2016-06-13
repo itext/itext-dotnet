@@ -49,8 +49,7 @@ using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout
-{
+namespace iTextSharp.Layout {
     /// <summary>
     /// This class is used for adding content directly onto a specified
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
@@ -62,8 +61,7 @@ namespace iTextSharp.Layout
     /// This class effectively acts as a bridge between the high-level <em>layout</em>
     /// API and the low-level <em>kernel</em> API.
     /// </summary>
-    public class Canvas : RootElement<iTextSharp.Layout.Canvas>
-    {
+    public class Canvas : RootElement<iTextSharp.Layout.Canvas> {
         protected internal PdfCanvas pdfCanvas;
 
         protected internal Rectangle rootArea;
@@ -81,8 +79,7 @@ namespace iTextSharp.Layout
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
         public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea)
-            : base()
-        {
+            : base() {
             this.pdfDocument = pdfDocument;
             this.pdfCanvas = pdfCanvas;
             this.rootArea = rootArea;
@@ -93,8 +90,7 @@ namespace iTextSharp.Layout
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         /// <param name="rootArea">the maximum area that the Canvas may write upon</param>
         public Canvas(PdfCanvas pdfCanvas, PdfDocument pdfDocument, Rectangle rootArea, bool immediateFlush)
-            : this(pdfCanvas, pdfDocument, rootArea)
-        {
+            : this(pdfCanvas, pdfDocument, rootArea) {
             this.immediateFlush = immediateFlush;
         }
 
@@ -106,8 +102,7 @@ namespace iTextSharp.Layout
         /// <param name="formXObject">the form</param>
         /// <param name="pdfDocument">the document that the resulting content stream will be written to</param>
         public Canvas(PdfFormXObject formXObject, PdfDocument pdfDocument)
-            : this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox().ToRectangle())
-        {
+            : this(new PdfCanvas(formXObject, pdfDocument), pdfDocument, formXObject.GetBBox().ToRectangle()) {
         }
 
         /// <summary>
@@ -116,15 +111,13 @@ namespace iTextSharp.Layout
         /// for this canvas.
         /// </summary>
         /// <returns>the document that the resulting content stream will be written to</returns>
-        public virtual PdfDocument GetPdfDocument()
-        {
+        public virtual PdfDocument GetPdfDocument() {
             return pdfDocument;
         }
 
         /// <summary>Gets the root area rectangle.</summary>
         /// <returns>the maximum area that the Canvas may write upon</returns>
-        public virtual Rectangle GetRootArea()
-        {
+        public virtual Rectangle GetRootArea() {
             return rootArea;
         }
 
@@ -134,8 +127,7 @@ namespace iTextSharp.Layout
         /// .
         /// </summary>
         /// <returns>the low-level content stream writer</returns>
-        public virtual PdfCanvas GetPdfCanvas()
-        {
+        public virtual PdfCanvas GetPdfCanvas() {
             return pdfCanvas;
         }
 
@@ -145,41 +137,34 @@ namespace iTextSharp.Layout
         /// for this Canvas.
         /// </summary>
         /// <param name="canvasRenderer">a renderer specific for canvas operations</param>
-        public virtual void SetRenderer(CanvasRenderer canvasRenderer)
-        {
+        public virtual void SetRenderer(CanvasRenderer canvasRenderer) {
             this.rootRenderer = canvasRenderer;
         }
 
         /// <summary>Returned value is not null only in case when autotagging is enabled.</summary>
         /// <returns>the page, on which this canvas will be rendered, or null if autotagging is not enabled.</returns>
-        public virtual PdfPage GetPage()
-        {
+        public virtual PdfPage GetPage() {
             return page;
         }
 
         /// <summary>Enables canvas content autotagging.</summary>
         /// <remarks>Enables canvas content autotagging. By default it is disabled.</remarks>
         /// <param name="page">the page, on which this canvas will be rendered.</param>
-        public virtual void EnableAutoTagging(PdfPage page)
-        {
+        public virtual void EnableAutoTagging(PdfPage page) {
             this.page = page;
         }
 
         /// <returns>true if autotagging of canvas content is enabled. Default value - false.</returns>
-        public virtual bool IsAutoTaggingEnabled()
-        {
+        public virtual bool IsAutoTaggingEnabled() {
             return page != null;
         }
 
-        public virtual void Relayout()
-        {
-            if (immediateFlush)
-            {
+        public virtual void Relayout() {
+            if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");
             }
             rootRenderer = new CanvasRenderer(this, immediateFlush);
-            foreach (IElement element in childElements)
-            {
+            foreach (IElement element in childElements) {
                 rootRenderer.AddChild(element.CreateRendererSubTree());
             }
         }
@@ -188,15 +173,12 @@ namespace iTextSharp.Layout
         /// Forces all registered renderers (including child element renderers) to
         /// flush their contents to the content stream.
         /// </summary>
-        public virtual void Flush()
-        {
+        public virtual void Flush() {
             rootRenderer.Flush();
         }
 
-        protected internal override RootRenderer EnsureRootRendererNotNull()
-        {
-            if (rootRenderer == null)
-            {
+        protected internal override RootRenderer EnsureRootRendererNotNull() {
+            if (rootRenderer == null) {
                 rootRenderer = new CanvasRenderer(this, immediateFlush);
             }
             return rootRenderer;

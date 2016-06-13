@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Font
-{
+namespace iTextSharp.IO.Font {
     /// <summary>
     /// Classes implementing this interface can create custom encodings or
     /// replace existing ones.
@@ -54,8 +53,7 @@ namespace iTextSharp.IO.Font
     /// replace existing ones. It is used in the context of <code>PdfEncoding</code>.
     /// </remarks>
     /// <author>Paulo Soares</author>
-    public interface IExtraEncoding
-    {
+    public interface IExtraEncoding {
         /// <summary>Converts an Unicode string to a byte array according to some encoding.</summary>
         /// <param name="text">the Unicode string</param>
         /// <param name="encoding">

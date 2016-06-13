@@ -47,32 +47,24 @@ using iTextSharp.IO.Color;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace
-{
-    public abstract class PdfCieBasedCs : PdfColorSpace
-    {
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+namespace iTextSharp.Kernel.Pdf.Colorspace {
+    public abstract class PdfCieBasedCs : PdfColorSpace {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
 
         protected internal PdfCieBasedCs(PdfArray pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public class CalGray : PdfCieBasedCs
-        {
+        public class CalGray : PdfCieBasedCs {
             public CalGray(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public CalGray(float[] whitePoint)
-                : this(GetInitialPdfArray())
-            {
-                if (whitePoint == null || whitePoint.Length != 3)
-                {
+                : this(GetInitialPdfArray()) {
+                if (whitePoint == null || whitePoint.Length != 3) {
                     throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
@@ -80,26 +72,21 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
 
             public CalGray(float[] whitePoint, float[] blackPoint, float gamma)
-                : this(whitePoint)
-            {
+                : this(whitePoint) {
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
-                if (blackPoint != null)
-                {
+                if (blackPoint != null) {
                     d.Put(PdfName.BlackPoint, new PdfArray(blackPoint));
                 }
-                if (gamma != float.NaN)
-                {
+                if (gamma != float.NaN) {
                     d.Put(PdfName.Gamma, new PdfNumber(gamma));
                 }
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 1;
             }
 
-            private static PdfArray GetInitialPdfArray()
-            {
+            private static PdfArray GetInitialPdfArray() {
                 List<PdfObject> tempArray = new List<PdfObject>(2);
                 tempArray.Add(PdfName.CalGray);
                 tempArray.Add(new PdfDictionary());
@@ -107,18 +94,14 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
         }
 
-        public class CalRgb : PdfCieBasedCs
-        {
+        public class CalRgb : PdfCieBasedCs {
             public CalRgb(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public CalRgb(float[] whitePoint)
-                : this(GetInitialPdfArray())
-            {
-                if (whitePoint == null || whitePoint.Length != 3)
-                {
+                : this(GetInitialPdfArray()) {
+                if (whitePoint == null || whitePoint.Length != 3) {
                     throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
@@ -126,30 +109,24 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
 
             public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix)
-                : this(whitePoint)
-            {
+                : this(whitePoint) {
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
-                if (blackPoint != null)
-                {
+                if (blackPoint != null) {
                     d.Put(PdfName.BlackPoint, new PdfArray(blackPoint));
                 }
-                if (gamma != null)
-                {
+                if (gamma != null) {
                     d.Put(PdfName.Gamma, new PdfArray(gamma));
                 }
-                if (matrix != null)
-                {
+                if (matrix != null) {
                     d.Put(PdfName.Matrix, new PdfArray(matrix));
                 }
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 3;
             }
 
-            private static PdfArray GetInitialPdfArray()
-            {
+            private static PdfArray GetInitialPdfArray() {
                 List<PdfObject> tempArray = new List<PdfObject>(2);
                 tempArray.Add(PdfName.CalRGB);
                 tempArray.Add(new PdfDictionary());
@@ -157,18 +134,14 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
         }
 
-        public class Lab : PdfCieBasedCs
-        {
+        public class Lab : PdfCieBasedCs {
             public Lab(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public Lab(float[] whitePoint)
-                : this(GetInitialPdfArray())
-            {
-                if (whitePoint == null || whitePoint.Length != 3)
-                {
+                : this(GetInitialPdfArray()) {
+                if (whitePoint == null || whitePoint.Length != 3) {
                     throw new PdfException(PdfException.WhitePointIsIncorrectlySpecified, this);
                 }
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
@@ -176,26 +149,21 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
 
             public Lab(float[] whitePoint, float[] blackPoint, float[] range)
-                : this(whitePoint)
-            {
+                : this(whitePoint) {
                 PdfDictionary d = ((PdfArray)GetPdfObject()).GetAsDictionary(1);
-                if (blackPoint != null)
-                {
+                if (blackPoint != null) {
                     d.Put(PdfName.BlackPoint, new PdfArray(blackPoint));
                 }
-                if (range != null)
-                {
+                if (range != null) {
                     d.Put(PdfName.Range, new PdfArray(range));
                 }
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return 3;
             }
 
-            private static PdfArray GetInitialPdfArray()
-            {
+            private static PdfArray GetInitialPdfArray() {
                 List<PdfObject> tempArray = new List<PdfObject>(2);
                 tempArray.Add(PdfName.Lab);
                 tempArray.Add(new PdfDictionary());
@@ -203,70 +171,57 @@ namespace iTextSharp.Kernel.Pdf.Colorspace
             }
         }
 
-        public class IccBased : PdfCieBasedCs
-        {
+        public class IccBased : PdfCieBasedCs {
             public IccBased(PdfArray pdfObject)
-                : base(pdfObject)
-            {
+                : base(pdfObject) {
             }
 
             public IccBased(Stream iccStream)
-                : this(GetInitialPdfArray(iccStream, null))
-            {
+                : this(GetInitialPdfArray(iccStream, null)) {
             }
 
             public IccBased(Stream iccStream, float[] range)
-                : this(GetInitialPdfArray(iccStream, range))
-            {
+                : this(GetInitialPdfArray(iccStream, range)) {
             }
 
-            public override int GetNumberOfComponents()
-            {
+            public override int GetNumberOfComponents() {
                 return (int)((PdfArray)GetPdfObject()).GetAsStream(1).GetAsInt(PdfName.N);
             }
 
-            public static PdfStream GetIccProfileStream(Stream iccStream)
-            {
+            public static PdfStream GetIccProfileStream(Stream iccStream) {
                 IccProfile iccProfile = IccProfile.GetInstance(iccStream);
                 PdfStream stream = new PdfStream(iccProfile.GetData());
                 stream.Put(PdfName.N, new PdfNumber(iccProfile.GetNumComponents()));
-                switch (iccProfile.GetNumComponents())
-                {
-                    case 1:
-                    {
+                switch (iccProfile.GetNumComponents()) {
+                    case 1: {
                         stream.Put(PdfName.Alternate, PdfName.DeviceGray);
                         break;
                     }
 
-                    case 3:
-                    {
+                    case 3: {
                         stream.Put(PdfName.Alternate, PdfName.DeviceRGB);
                         break;
                     }
 
-                    case 4:
-                    {
+                    case 4: {
                         stream.Put(PdfName.Alternate, PdfName.DeviceCMYK);
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         break;
                     }
                 }
                 return stream;
             }
 
-            public static PdfStream GetIccProfileStream(Stream iccStream, float[] range)
-            {
+            public static PdfStream GetIccProfileStream(Stream iccStream, float[] range) {
                 PdfStream stream = GetIccProfileStream(iccStream);
                 stream.Put(PdfName.Range, new PdfArray(range));
                 return stream;
             }
 
-            private static PdfArray GetInitialPdfArray(Stream iccStream, float[] range)
-            {
+            private static PdfArray GetInitialPdfArray(Stream iccStream, float[] range) {
                 List<PdfObject> tempArray = new List<PdfObject>(2);
                 tempArray.Add(PdfName.ICCBased);
                 tempArray.Add(range == null ? GetIccProfileStream(iccStream) : GetIccProfileStream(iccStream, range));

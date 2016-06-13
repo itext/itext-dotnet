@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Font.Otf
-{
-    public class OpenTypeGdefTableReader
-    {
+namespace iTextSharp.IO.Font.Otf {
+    public class OpenTypeGdefTableReader {
         private readonly int GLYPH_SKIP_BASE = 1;
 
         private readonly int GLYPH_SKIP_MARK = 2;
@@ -67,17 +65,14 @@ namespace iTextSharp.IO.Font.Otf
 
         private OtfClass markAttachmentClass;
 
-        public OpenTypeGdefTableReader(RandomAccessFileOrArray rf, int tableLocation)
-        {
+        public OpenTypeGdefTableReader(RandomAccessFileOrArray rf, int tableLocation) {
             this.rf = rf;
             this.tableLocation = tableLocation;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void ReadTable()
-        {
-            if (tableLocation > 0)
-            {
+        public virtual void ReadTable() {
+            if (tableLocation > 0) {
                 rf.Seek(tableLocation);
                 rf.ReadUnsignedInt();
                 //version, we only support 0x00010000
@@ -87,37 +82,29 @@ namespace iTextSharp.IO.Font.Otf
                 rf.ReadUnsignedShort();
                 //skip Ligature Caret List Table
                 int markAttachClassDefOffset = rf.ReadUnsignedShort();
-                if (glyphClassDefOffset > 0)
-                {
+                if (glyphClassDefOffset > 0) {
                     glyphClass = new OtfClass(rf, glyphClassDefOffset + tableLocation);
                 }
-                if (markAttachClassDefOffset > 0)
-                {
+                if (markAttachClassDefOffset > 0) {
                     markAttachmentClass = new OtfClass(rf, markAttachClassDefOffset + tableLocation);
                 }
             }
         }
 
-        public virtual bool IsSkip(int glyph, int flag)
-        {
-            if (glyphClass != null && (flag & (FLAG_IGNORE_BASE | FLAG_IGNORE_LIGATURE | FLAG_IGNORE_MARK)) != 0)
-            {
+        public virtual bool IsSkip(int glyph, int flag) {
+            if (glyphClass != null && (flag & (FLAG_IGNORE_BASE | FLAG_IGNORE_LIGATURE | FLAG_IGNORE_MARK)) != 0) {
                 int cla = glyphClass.GetOtfClass(glyph);
-                if (cla == GLYPH_SKIP_BASE && (flag & FLAG_IGNORE_BASE) != 0)
-                {
+                if (cla == GLYPH_SKIP_BASE && (flag & FLAG_IGNORE_BASE) != 0) {
                     return true;
                 }
-                if (cla == GLYPH_SKIP_MARK && (flag & FLAG_IGNORE_MARK) != 0)
-                {
+                if (cla == GLYPH_SKIP_MARK && (flag & FLAG_IGNORE_MARK) != 0) {
                     return true;
                 }
-                if (cla == GLYPH_SKIP_LIGATURE && (flag & FLAG_IGNORE_LIGATURE) != 0)
-                {
+                if (cla == GLYPH_SKIP_LIGATURE && (flag & FLAG_IGNORE_LIGATURE) != 0) {
                     return true;
                 }
             }
-            if (markAttachmentClass != null && (flag >> 8) > 0)
-            {
+            if (markAttachmentClass != null && (flag >> 8) > 0) {
                 return markAttachmentClass.GetOtfClass(glyph) != (flag >> 8);
             }
             return false;

@@ -45,11 +45,9 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Font;
 
-namespace iTextSharp.IO.Font.Cmap
-{
+namespace iTextSharp.IO.Font.Cmap {
     /// <author>psoares</author>
-    public abstract class AbstractCMap
-    {
+    public abstract class AbstractCMap {
         private String cmapName;
 
         private String registry;
@@ -58,83 +56,66 @@ namespace iTextSharp.IO.Font.Cmap
 
         private int supplement;
 
-        public virtual String GetName()
-        {
+        public virtual String GetName() {
             return cmapName;
         }
 
-        internal virtual void SetName(String cmapName)
-        {
+        internal virtual void SetName(String cmapName) {
             this.cmapName = cmapName;
         }
 
-        public virtual String GetOrdering()
-        {
+        public virtual String GetOrdering() {
             return ordering;
         }
 
-        internal virtual void SetOrdering(String ordering)
-        {
+        internal virtual void SetOrdering(String ordering) {
             this.ordering = ordering;
         }
 
-        public virtual String GetRegistry()
-        {
+        public virtual String GetRegistry() {
             return registry;
         }
 
-        internal virtual void SetRegistry(String registry)
-        {
+        internal virtual void SetRegistry(String registry) {
             this.registry = registry;
         }
 
-        public virtual int GetSupplement()
-        {
+        public virtual int GetSupplement() {
             return supplement;
         }
 
-        internal virtual void SetSupplement(int supplement)
-        {
+        internal virtual void SetSupplement(int supplement) {
             this.supplement = supplement;
         }
 
         internal abstract void AddChar(String mark, CMapObject code);
 
-        internal virtual void AddRange(String from, String to, CMapObject code)
-        {
+        internal virtual void AddRange(String from, String to, CMapObject code) {
             byte[] a1 = DecodeStringToByte(from);
             byte[] a2 = DecodeStringToByte(to);
-            if (a1.Length != a2.Length || a1.Length == 0)
-            {
+            if (a1.Length != a2.Length || a1.Length == 0) {
                 throw new ArgumentException("Invalid map.");
             }
             byte[] sout = null;
-            if (code.IsString())
-            {
+            if (code.IsString()) {
                 sout = DecodeStringToByte(code.ToString());
             }
             int start = a1[a1.Length - 1] & 0xff;
             int end = a2[a2.Length - 1] & 0xff;
-            for (int k = start; k <= end; ++k)
-            {
+            for (int k = start; k <= end; ++k) {
                 a1[a1.Length - 1] = (byte)k;
                 String mark = PdfEncodings.ConvertToString(a1, null);
-                if (code.IsArray())
-                {
+                if (code.IsArray()) {
                     IList<CMapObject> codes = (List<CMapObject>)code.GetValue();
                     AddChar(mark, codes[k - start]);
                 }
-                else
-                {
-                    if (code.IsNumber())
-                    {
+                else {
+                    if (code.IsNumber()) {
                         int nn = (int)code.GetValue() + k - start;
                         AddChar(mark, new CMapObject(CMapObject.NUMBER, nn));
                     }
-                    else
-                    {
-                        if (code.IsString())
-                        {
+                    else {
+                        if (code.IsString()) {
                             CMapObject s1 = new CMapObject(CMapObject.HEX_STRING, sout);
                             AddChar(mark, s1);
                             System.Diagnostics.Debug.Assert(sout != null);
@@ -152,31 +133,24 @@ namespace iTextSharp.IO.Font.Cmap
         //            return PdfEncodings.convertToBytes(value, null);
         //        }
         //    }
-        public static byte[] DecodeStringToByte(String range)
-        {
+        public static byte[] DecodeStringToByte(String range) {
             byte[] bytes = new byte[range.Length];
-            for (int i = 0; i < range.Length; i++)
-            {
+            for (int i = 0; i < range.Length; i++) {
                 bytes[i] = (byte)range[i];
             }
             return bytes;
         }
 
-        protected internal virtual String ToUnicodeString(String value, bool isHexWriting)
-        {
+        protected internal virtual String ToUnicodeString(String value, bool isHexWriting) {
             byte[] bytes = DecodeStringToByte(value);
-            if (isHexWriting)
-            {
+            if (isHexWriting) {
                 return PdfEncodings.ConvertToString(bytes, PdfEncodings.UNICODE_BIG_UNMARKED);
             }
-            else
-            {
-                if (bytes.Length >= 2 && bytes[0] == (byte)0xfe && bytes[1] == (byte)0xff)
-                {
+            else {
+                if (bytes.Length >= 2 && bytes[0] == (byte)0xfe && bytes[1] == (byte)0xff) {
                     return PdfEncodings.ConvertToString(bytes, PdfEncodings.UNICODE_BIG);
                 }
-                else
-                {
+                else {
                     return PdfEncodings.ConvertToString(bytes, PdfEncodings.PDF_DOC_ENCODING);
                 }
             }

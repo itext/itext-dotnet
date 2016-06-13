@@ -47,29 +47,24 @@ using iTextSharp.IO.Image;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Image implementation for WMF, Windows Metafile.</summary>
-    public class WmfImageData : ImageData
-    {
+    public class WmfImageData : ImageData {
         private static readonly byte[] wmf = new byte[] { (byte)0xD7, (byte)0xCD };
 
         /// <summary>Creates a WmfImage from a file.</summary>
         /// <param name="fileName">pah to the file</param>
         /// <exception cref="Java.Net.MalformedURLException"/>
         public WmfImageData(String fileName)
-            : this(UrlUtil.ToURL(fileName))
-        {
+            : this(UrlUtil.ToURL(fileName)) {
         }
 
         /// <summary>Creates a WmfImage from a URL.</summary>
         /// <param name="url">URL to the file</param>
         public WmfImageData(Uri url)
-            : base(url, ImageType.WMF)
-        {
+            : base(url, ImageType.WMF) {
             byte[] imageType = ReadImageType(url);
-            if (!ImageTypeIs(imageType, wmf))
-            {
+            if (!ImageTypeIs(imageType, wmf)) {
                 throw new PdfException(PdfException.IsNotWmfImage);
             }
         }
@@ -77,51 +72,39 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf
         /// <summary>Creates a WmfImage from a byte[].</summary>
         /// <param name="bytes">the image bytes</param>
         public WmfImageData(byte[] bytes)
-            : base(bytes, ImageType.WMF)
-        {
+            : base(bytes, ImageType.WMF) {
             byte[] imageType = ReadImageType(url);
-            if (!ImageTypeIs(imageType, wmf))
-            {
+            if (!ImageTypeIs(imageType, wmf)) {
                 throw new PdfException(PdfException.IsNotWmfImage);
             }
         }
 
-        private static bool ImageTypeIs(byte[] imageType, byte[] compareWith)
-        {
-            for (int i = 0; i < compareWith.Length; i++)
-            {
-                if (imageType[i] != compareWith[i])
-                {
+        private static bool ImageTypeIs(byte[] imageType, byte[] compareWith) {
+            for (int i = 0; i < compareWith.Length; i++) {
+                if (imageType[i] != compareWith[i]) {
                     return false;
                 }
             }
             return true;
         }
 
-        private static byte[] ReadImageType(Uri source)
-        {
+        private static byte[] ReadImageType(Uri source) {
             Stream @is = null;
-            try
-            {
+            try {
                 @is = iTextSharp.IO.Util.UrlUtil.OpenStream(source);
                 byte[] bytes = new byte[8];
                 @is.Read(bytes);
                 return bytes;
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.IoException, e);
             }
-            finally
-            {
-                if (@is != null)
-                {
-                    try
-                    {
+            finally {
+                if (@is != null) {
+                    try {
                         @is.Close();
                     }
-                    catch (System.IO.IOException)
-                    {
+                    catch (System.IO.IOException) {
                     }
                 }
             }

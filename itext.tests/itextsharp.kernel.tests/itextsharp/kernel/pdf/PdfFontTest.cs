@@ -12,10 +12,8 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfFontTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfFontTest : ExtendedITextTest {
         public const int PageCount = 1;
 
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfFontTest/";
@@ -32,16 +30,14 @@ namespace iTextSharp.Kernel.Pdf
         internal const String pangramme = "Amazingly few discothegues provide jukeboxes" + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithKozmin()
-        {
+        public virtual void CreateDocumentWithKozmin() {
             String filename = destinationFolder + "DocumentWithKozmin.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin.pdf";
             String title = "Type 0 test";
@@ -68,8 +64,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithStSongUni()
-        {
+        public virtual void CreateDocumentWithStSongUni() {
             String filename = destinationFolder + "DocumentWithStSongUni.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithStSongUni.pdf";
             String title = "Type0 test";
@@ -95,8 +90,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithStSong()
-        {
+        public virtual void CreateDocumentWithStSong() {
             String filename = destinationFolder + "DocumentWithStSong.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithStSong.pdf";
             String title = "Type0 test";
@@ -122,8 +116,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithTrueTypeAsType0()
-        {
+        public virtual void CreateDocumentWithTrueTypeAsType0() {
             String filename = destinationFolder + "DocumentWithTrueTypeAsType0.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0.pdf";
             String title = "Type0 test";
@@ -166,8 +159,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithType3Font()
-        {
+        public virtual void CreateDocumentWithType3Font() {
             String filename = destinationFolder + "DocumentWithType3Font.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithType3Font.pdf";
             String testString = "A A A A E E E ~ \u00E9";
@@ -207,8 +199,7 @@ namespace iTextSharp.Kernel.Pdf
             symbol233.LineTo(5, 340);
             symbol233.Stroke();
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            for (int i = 0; i < PageCount; i++)
-            {
+            for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().SetFontAndSize(type3, 12).MoveText(50, 800).ShowText(testString).EndText();
@@ -223,8 +214,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithHelvetica()
-        {
+        public virtual void CreateDocumentWithHelvetica() {
             String filename = destinationFolder + "DocumentWithHelvetica.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithHelvetica.pdf";
             String title = "Type3 test";
@@ -250,8 +240,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithHelveticaOblique()
-        {
+        public virtual void CreateDocumentWithHelveticaOblique() {
             String filename = destinationFolder + "DocumentWithHelveticaOblique.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithHelveticaOblique.pdf";
             String title = "Empty iText 6 Document";
@@ -277,8 +266,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithHelveticaBoldOblique()
-        {
+        public virtual void CreateDocumentWithHelveticaBoldOblique() {
             String filename = destinationFolder + "DocumentWithHelveticaBoldOblique.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithHelveticaBoldOblique.pdf";
             String title = "Empty iText 6 Document";
@@ -304,8 +292,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithCourierBold()
-        {
+        public virtual void CreateDocumentWithCourierBold() {
             String filename = destinationFolder + "DocumentWithCourierBold.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCourierBold.pdf";
             String title = "Empty iText 6 Document";
@@ -331,8 +318,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithType1FontAfm()
-        {
+        public virtual void CreateDocumentWithType1FontAfm() {
             String filename = destinationFolder + "DocumentWithCMR10Afm.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm.pdf";
             String title = "Empty iText 6 Document";
@@ -365,8 +351,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithType1FontPfm()
-        {
+        public virtual void CreateDocumentWithType1FontPfm() {
             String filename = destinationFolder + "DocumentWithCMR10Pfm.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Pfm.pdf";
             String title = "Empty iText 6 Document";
@@ -392,8 +377,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithTrueTypeFont1()
-        {
+        public virtual void CreateDocumentWithTrueTypeFont1() {
             String filename = destinationFolder + "DocumentWithTrueTypeFont1.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont1.pdf";
             String title = "Empty iText 6 Document";
@@ -425,8 +409,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithTrueTypeOtfFont()
-        {
+        public virtual void CreateDocumentWithTrueTypeOtfFont() {
             String filename = destinationFolder + "DocumentWithTrueTypeOtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeOtfFont.pdf";
             String title = "Empty iText 6 Document";
@@ -464,8 +447,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithType0OtfFont()
-        {
+        public virtual void CreateDocumentWithType0OtfFont() {
             String filename = destinationFolder + "DocumentWithType0OtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithType0OtfFont.pdf";
             String title = "Empty iText 6 Document";
@@ -503,8 +485,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestUpdateType3FontBasedExistingFont()
-        {
+        public virtual void TestUpdateType3FontBasedExistingFont() {
             String inputFileName = sourceFolder + "type3Font.pdf";
             String outputFileName = destinationFolder + "type3Font_update.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_update.pdf";
@@ -535,8 +516,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNewType3FontBasedExistingFont()
-        {
+        public virtual void TestNewType3FontBasedExistingFont() {
             String inputFileName = sourceFolder + "type3Font.pdf";
             String outputFileName = destinationFolder + "type3Font_new.pdf";
             String cmpOutputFileName = sourceFolder + "cmp_type3Font_new.pdf";
@@ -570,8 +550,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNewType1FontBasedExistingFont()
-        {
+        public virtual void TestNewType1FontBasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithCMR10Afm.pdf";
             String filename = destinationFolder + "DocumentWithCMR10Afm_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm_new.pdf";
@@ -600,8 +579,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNewTrueTypeFont1BasedExistingFont()
-        {
+        public virtual void TestNewTrueTypeFont1BasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeFont1.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeFont1_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont1_new.pdf";
@@ -630,8 +608,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNewTrueTypeFont2BasedExistingFont()
-        {
+        public virtual void TestNewTrueTypeFont2BasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeFont2.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeFont2_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont2_new.pdf";
@@ -660,8 +637,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestTrueTypeFont1BasedExistingFont()
-        {
+        public virtual void TestTrueTypeFont1BasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeFont1.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeFont1_updated.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeFont1_updated.pdf";
@@ -687,8 +663,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestUpdateCjkFontBasedExistingFont()
-        {
+        public virtual void TestUpdateCjkFontBasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithKozmin.pdf";
             String filename = destinationFolder + "DocumentWithKozmin_update.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin_update.pdf";
@@ -716,8 +691,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNewCjkFontBasedExistingFont()
-        {
+        public virtual void TestNewCjkFontBasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithKozmin.pdf";
             String filename = destinationFolder + "DocumentWithKozmin_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithKozmin_new.pdf";
@@ -746,8 +720,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithTrueTypeAsType0BasedExistingFont()
-        {
+        public virtual void CreateDocumentWithTrueTypeAsType0BasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeAsType0.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeAsType0_new.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0_new.pdf";
@@ -776,8 +749,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateUpdatedDocumentWithTrueTypeAsType0BasedExistingFont()
-        {
+        public virtual void CreateUpdatedDocumentWithTrueTypeAsType0BasedExistingFont() {
             String inputFileName1 = sourceFolder + "DocumentWithTrueTypeAsType0.pdf";
             String filename = destinationFolder + "DocumentWithTrueTypeAsType0_update.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeAsType0_update.pdf";
@@ -804,8 +776,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateDocumentWithType1WithToUnicodeBasedExistingFont()
-        {
+        public virtual void CreateDocumentWithType1WithToUnicodeBasedExistingFont() {
             String inputFileName1 = sourceFolder + "fontWithToUnicode.pdf";
             String filename = destinationFolder + "fontWithToUnicode_new.pdf";
             String cmpFilename = sourceFolder + "cmp_fontWithToUnicode_new.pdf";
@@ -834,8 +805,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestType1FontUpdateContent()
-        {
+        public virtual void TestType1FontUpdateContent() {
             String inputFileName1 = sourceFolder + "DocumentWithCMR10Afm.pdf";
             String filename = destinationFolder + "DocumentWithCMR10Afm_updated.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm_updated.pdf";
@@ -860,17 +830,14 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateWrongAfm1()
-        {
+        public virtual void CreateWrongAfm1() {
             String message = "";
-            try
-            {
+            try {
                 byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb", FileMode.Open, FileAccess.Read
                     ));
                 FontProgramFactory.CreateType1Font(null, pfb);
             }
-            catch (iTextSharp.IO.IOException e)
-            {
+            catch (iTextSharp.IO.IOException e) {
                 message = e.Message;
             }
             NUnit.Framework.Assert.AreEqual("invalid.afm.or.pfm.font.file", message);
@@ -879,15 +846,12 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateWrongAfm2()
-        {
+        public virtual void CreateWrongAfm2() {
             String message = "";
-            try
-            {
+            try {
                 FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.pfb", null);
             }
-            catch (iTextSharp.IO.IOException e)
-            {
+            catch (iTextSharp.IO.IOException e) {
                 message = e.Message;
             }
             NUnit.Framework.Assert.AreEqual(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
@@ -898,8 +862,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
-        public virtual void CreateWrongPfb()
-        {
+        public virtual void CreateWrongPfb() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
             PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm), null);
@@ -910,8 +873,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AutoDetect1()
-        {
+        public virtual void AutoDetect1() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected");
@@ -920,8 +882,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AutoDetect2()
-        {
+        public virtual void AutoDetect2() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
             byte[] pfb = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.pfb", FileMode.Open, FileAccess.Read
@@ -933,8 +894,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AutoDetect3()
-        {
+        public virtual void AutoDetect3() {
             byte[] otf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "Puritan2.otf", FileMode.Open, FileAccess.Read
                 ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(otf) is TrueTypeFont, "TrueType (OTF) font expected"
@@ -944,8 +904,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AutoDetect4()
-        {
+        public virtual void AutoDetect4() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read
                 ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, "TrueType (TTF) expected"
@@ -955,8 +914,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void AutoDetect5()
-        {
+        public virtual void AutoDetect5() {
             byte[] ttf = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read
                 ));
             NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(ttf) is TrueTypeFont, "TrueType (TTF) expected"
@@ -967,8 +925,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
-        public virtual void TestWriteTTC()
-        {
+        public virtual void TestWriteTTC() {
             String filename = destinationFolder + "DocumentWithTTC.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
             String title = "Empty iText 6 Document";
@@ -1004,8 +961,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TestNotoFont()
-        {
+        public virtual void TestNotoFont() {
             String filename = destinationFolder + "testNotoFont.pdf";
             String cmpFilename = sourceFolder + "cmp_testNotoFont.pdf";
             String japanese = "\u713C";
@@ -1024,8 +980,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("Invalid subset")]
-        public virtual void NotoSansCJKjpTest()
-        {
+        public virtual void NotoSansCJKjpTest() {
             String filename = destinationFolder + "NotoSansCJKjpTest.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
@@ -1052,8 +1007,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void TestCheckTTCSize()
-        {
+        public virtual void TestCheckTTCSize() {
             TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc", "WinAnsi");
             NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 4);
         }
@@ -1061,17 +1015,14 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.REGISTERING_DIRECTORY)]
-        public virtual void TestFontDirectoryRegister()
-        {
+        public virtual void TestFontDirectoryRegister() {
             PdfFontFactory.RegisterDirectory(sourceFolder);
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
-            foreach (String name in PdfFontFactory.GetRegisteredFonts())
-            {
+            foreach (String name in PdfFontFactory.GetRegisteredFonts()) {
                 PdfFont pdfFont = PdfFontFactory.CreateRegisteredFont(name);
-                if (pdfFont == null)
-                {
+                if (pdfFont == null) {
                     NUnit.Framework.Assert.IsTrue(false, "Font {" + name + "} can't be empty");
                 }
             }
@@ -1081,8 +1032,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void TestFontRegister()
-        {
+        public virtual void TestFontRegister() {
             FontProgramFactory.RegisterFont(fontsFolder + "Aller_Rg.ttf", "aller");
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -1095,8 +1045,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void TestSplitString()
-        {
+        public virtual void TestSplitString() {
             PdfFont font = PdfFontFactory.CreateFont();
             IList<String> list1 = font.SplitString("Hello", 12, 10);
             NUnit.Framework.Assert.IsTrue(list1.Count == 2);

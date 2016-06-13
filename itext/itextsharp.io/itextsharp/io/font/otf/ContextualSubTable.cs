@@ -43,16 +43,13 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font.Otf
-{
-    public abstract class ContextualSubTable
-    {
+namespace iTextSharp.IO.Font.Otf {
+    public abstract class ContextualSubTable {
         protected internal OpenTypeFontTableReader openReader;
 
         protected internal int lookupFlag;
 
-        protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag)
-        {
+        protected internal ContextualSubTable(OpenTypeFontTableReader openReader, int lookupFlag) {
             this.openReader = openReader;
             this.lookupFlag = lookupFlag;
         }
@@ -67,19 +64,15 @@ namespace iTextSharp.IO.Font.Otf
         /// </remarks>
         /// <param name="line">a line, which is to be checked if it matches some context.</param>
         /// <returns>matching context rule or null, if none was found.</returns>
-        public virtual ContextualSubstRule GetMatchingContextRule(GlyphLine line)
-        {
-            if (line.idx >= line.end)
-            {
+        public virtual ContextualSubstRule GetMatchingContextRule(GlyphLine line) {
+            if (line.idx >= line.end) {
                 return null;
             }
             Glyph g = line.Get(line.idx);
             IList<ContextualSubstRule> rules = GetSetOfRulesForStartGlyph(g.GetCode());
-            foreach (ContextualSubstRule rule in rules)
-            {
+            foreach (ContextualSubstRule rule in rules) {
                 int lastGlyphIndex = CheckIfContextMatch(line, rule);
-                if (lastGlyphIndex != -1)
-                {
+                if (lastGlyphIndex != -1) {
                     line.start = line.idx;
                     line.end = lastGlyphIndex + 1;
                     return rule;
@@ -97,28 +90,23 @@ namespace iTextSharp.IO.Font.Otf
         /// either index which corresponds to the last glyph of the matching context inside the glyph line if context matches,
         /// or -1 if context doesn't match.
         /// </returns>
-        protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule)
-        {
+        protected internal virtual int CheckIfContextMatch(GlyphLine line, ContextualSubstRule rule) {
             int j;
             OpenTableLookup.GlyphIndexer gidx = new OpenTableLookup.GlyphIndexer();
             gidx.line = line;
             gidx.idx = line.idx;
             //Note, that starting index shall be 1
-            for (j = 1; j < rule.GetContextLength(); ++j)
-            {
+            for (j = 1; j < rule.GetContextLength(); ++j) {
                 gidx.NextGlyph(openReader, lookupFlag);
-                if (gidx.glyph == null || !rule.IsGlyphMatchesInput(gidx.glyph.GetCode(), j))
-                {
+                if (gidx.glyph == null || !rule.IsGlyphMatchesInput(gidx.glyph.GetCode(), j)) {
                     break;
                 }
             }
             bool isMatch = j == rule.GetContextLength();
-            if (isMatch)
-            {
+            if (isMatch) {
                 return gidx.idx;
             }
-            else
-            {
+            else {
                 return -1;
             }
         }

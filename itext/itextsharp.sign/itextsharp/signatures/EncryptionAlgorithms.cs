@@ -44,16 +44,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Class that contains a map with the different encryption algorithms.</summary>
-    public class EncryptionAlgorithms
-    {
+    public class EncryptionAlgorithms {
         /// <summary>Maps IDs of encryption algorithms with its human-readable name.</summary>
         internal static readonly IDictionary<String, String> algorithmNames = new Dictionary<String, String>();
 
-        static EncryptionAlgorithms()
-        {
+        static EncryptionAlgorithms() {
             algorithmNames["1.2.840.113549.1.1.1"] = "RSA";
             algorithmNames["1.2.840.10040.4.1"] = "DSA";
             algorithmNames["1.2.840.113549.1.1.2"] = "RSA";
@@ -76,15 +73,12 @@ namespace iTextSharp.Signatures
         /// <summary>Gets the algorithm name for a certain id.</summary>
         /// <param name="oid">an id (for instance "1.2.840.113549.1.1.1")</param>
         /// <returns>an algorithm name (for instance "RSA")</returns>
-        public static String GetAlgorithm(String oid)
-        {
+        public static String GetAlgorithm(String oid) {
             String ret = algorithmNames.Get(oid);
-            if (ret == null)
-            {
+            if (ret == null) {
                 return oid;
             }
-            else
-            {
+            else {
                 return ret;
             }
         }

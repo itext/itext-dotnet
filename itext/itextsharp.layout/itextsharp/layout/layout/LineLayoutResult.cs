@@ -43,26 +43,21 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Layout.Renderer;
 
-namespace iTextSharp.Layout.Layout
-{
-    public class LineLayoutResult : LayoutResult
-    {
+namespace iTextSharp.Layout.Layout {
+    public class LineLayoutResult : LayoutResult {
         protected internal bool splitForcedByNewline;
 
         public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             )
-            : base(status, occupiedArea, splitRenderer, overflowRenderer)
-        {
+            : base(status, occupiedArea, splitRenderer, overflowRenderer) {
         }
 
-        public virtual bool IsSplitForcedByNewline()
-        {
+        public virtual bool IsSplitForcedByNewline() {
             return splitForcedByNewline;
         }
 
         public virtual iTextSharp.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline
-            )
-        {
+            ) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
         }

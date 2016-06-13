@@ -45,10 +45,8 @@ using System;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class Color {
         public static readonly iTextSharp.Kernel.Color.Color BLACK = new DeviceRgb(0, 0, 0);
 
         public static readonly iTextSharp.Kernel.Color.Color BLUE = new DeviceRgb(0, 0, 255);
@@ -79,145 +77,110 @@ namespace iTextSharp.Kernel.Color
 
         protected internal float[] colorValue;
 
-        protected internal Color(PdfColorSpace colorSpace, float[] colorValue)
-        {
+        protected internal Color(PdfColorSpace colorSpace, float[] colorValue) {
             this.colorSpace = colorSpace;
-            if (colorValue == null)
-            {
+            if (colorValue == null) {
                 this.colorValue = new float[colorSpace.GetNumberOfComponents()];
             }
-            else
-            {
+            else {
                 this.colorValue = colorValue;
             }
         }
 
-        public static iTextSharp.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace)
-        {
+        public static iTextSharp.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace) {
             return MakeColor(colorSpace, null);
         }
 
-        public static iTextSharp.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue)
-        {
+        public static iTextSharp.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue) {
             iTextSharp.Kernel.Color.Color c = null;
             bool unknownColorSpace = false;
-            if (colorSpace is PdfDeviceCs)
-            {
-                if (colorSpace is PdfDeviceCs.Gray)
-                {
+            if (colorSpace is PdfDeviceCs) {
+                if (colorSpace is PdfDeviceCs.Gray) {
                     c = colorValue != null ? new DeviceGray(colorValue[0]) : new DeviceGray();
                 }
-                else
-                {
-                    if (colorSpace is PdfDeviceCs.Rgb)
-                    {
+                else {
+                    if (colorSpace is PdfDeviceCs.Rgb) {
                         c = colorValue != null ? new DeviceRgb(colorValue[0], colorValue[1], colorValue[2]) : new DeviceRgb();
                     }
-                    else
-                    {
-                        if (colorSpace is PdfDeviceCs.Cmyk)
-                        {
+                    else {
+                        if (colorSpace is PdfDeviceCs.Cmyk) {
                             c = colorValue != null ? new DeviceCmyk(colorValue[0], colorValue[1], colorValue[2], colorValue[3]) : new 
                                 DeviceCmyk();
                         }
-                        else
-                        {
+                        else {
                             unknownColorSpace = true;
                         }
                     }
                 }
             }
-            else
-            {
-                if (colorSpace is PdfCieBasedCs)
-                {
-                    if (colorSpace is PdfCieBasedCs.CalGray)
-                    {
+            else {
+                if (colorSpace is PdfCieBasedCs) {
+                    if (colorSpace is PdfCieBasedCs.CalGray) {
                         PdfCieBasedCs.CalGray calGray = (PdfCieBasedCs.CalGray)colorSpace;
                         c = colorValue != null ? new CalGray(calGray, colorValue[0]) : new CalGray(calGray);
                     }
-                    else
-                    {
-                        if (colorSpace is PdfCieBasedCs.CalRgb)
-                        {
+                    else {
+                        if (colorSpace is PdfCieBasedCs.CalRgb) {
                             PdfCieBasedCs.CalRgb calRgb = (PdfCieBasedCs.CalRgb)colorSpace;
                             c = colorValue != null ? new CalRgb(calRgb, colorValue) : new CalRgb(calRgb);
                         }
-                        else
-                        {
-                            if (colorSpace is PdfCieBasedCs.IccBased)
-                            {
+                        else {
+                            if (colorSpace is PdfCieBasedCs.IccBased) {
                                 PdfCieBasedCs.IccBased iccBased = (PdfCieBasedCs.IccBased)colorSpace;
                                 c = colorValue != null ? new IccBased(iccBased, colorValue) : new IccBased(iccBased);
                             }
-                            else
-                            {
-                                if (colorSpace is PdfCieBasedCs.Lab)
-                                {
+                            else {
+                                if (colorSpace is PdfCieBasedCs.Lab) {
                                     PdfCieBasedCs.Lab lab = (PdfCieBasedCs.Lab)colorSpace;
                                     c = colorValue != null ? new Lab(lab, colorValue) : new Lab(lab);
                                 }
-                                else
-                                {
+                                else {
                                     unknownColorSpace = true;
                                 }
                             }
                         }
                     }
                 }
-                else
-                {
-                    if (colorSpace is PdfSpecialCs)
-                    {
-                        if (colorSpace is PdfSpecialCs.Separation)
-                        {
+                else {
+                    if (colorSpace is PdfSpecialCs) {
+                        if (colorSpace is PdfSpecialCs.Separation) {
                             PdfSpecialCs.Separation separation = (PdfSpecialCs.Separation)colorSpace;
                             c = colorValue != null ? new Separation(separation, colorValue[0]) : new Separation(separation);
                         }
-                        else
-                        {
-                            if (colorSpace is PdfSpecialCs.DeviceN)
-                            {
+                        else {
+                            if (colorSpace is PdfSpecialCs.DeviceN) {
                                 //NChannel goes here also
                                 PdfSpecialCs.DeviceN deviceN = (PdfSpecialCs.DeviceN)colorSpace;
                                 c = colorValue != null ? new DeviceN(deviceN, colorValue) : new DeviceN(deviceN);
                             }
-                            else
-                            {
-                                if (colorSpace is PdfSpecialCs.Indexed)
-                                {
+                            else {
+                                if (colorSpace is PdfSpecialCs.Indexed) {
                                     c = colorValue != null ? new Indexed(colorSpace, (int)colorValue[0]) : new Indexed(colorSpace);
                                 }
-                                else
-                                {
+                                else {
                                     unknownColorSpace = true;
                                 }
                             }
                         }
                     }
-                    else
-                    {
-                        if (colorSpace is PdfSpecialCs.Pattern)
-                        {
+                    else {
+                        if (colorSpace is PdfSpecialCs.Pattern) {
                             c = new iTextSharp.Kernel.Color.Color(colorSpace, colorValue);
                         }
-                        else
-                        {
+                        else {
                             // TODO review this. at least log a warning
                             unknownColorSpace = true;
                         }
                     }
                 }
             }
-            if (unknownColorSpace)
-            {
+            if (unknownColorSpace) {
                 throw new PdfException("unknown.color.space");
             }
             return c;
         }
 
-        public static DeviceRgb ConvertCmykToRgb(DeviceCmyk cmykColor)
-        {
+        public static DeviceRgb ConvertCmykToRgb(DeviceCmyk cmykColor) {
             float cyanComp = 1 - cmykColor.GetColorValue()[0];
             float magentaComp = 1 - cmykColor.GetColorValue()[1];
             float yellowComp = 1 - cmykColor.GetColorValue()[2];
@@ -228,8 +191,7 @@ namespace iTextSharp.Kernel.Color
             return new DeviceRgb(r, g, b);
         }
 
-        public static DeviceCmyk ConvertRgbToCmyk(DeviceRgb rgbColor)
-        {
+        public static DeviceCmyk ConvertRgbToCmyk(DeviceRgb rgbColor) {
             float redComp = rgbColor.GetColorValue()[0];
             float greenComp = rgbColor.GetColorValue()[1];
             float blueComp = rgbColor.GetColorValue()[2];
@@ -240,38 +202,30 @@ namespace iTextSharp.Kernel.Color
             return new DeviceCmyk(c, m, y, k);
         }
 
-        public virtual int GetNumberOfComponents()
-        {
+        public virtual int GetNumberOfComponents() {
             return colorValue.Length;
         }
 
-        public virtual PdfColorSpace GetColorSpace()
-        {
+        public virtual PdfColorSpace GetColorSpace() {
             return colorSpace;
         }
 
-        public virtual float[] GetColorValue()
-        {
+        public virtual float[] GetColorValue() {
             return colorValue;
         }
 
-        public virtual void SetColorValue(float[] value)
-        {
+        public virtual void SetColorValue(float[] value) {
             colorValue = value;
-            if (colorValue.Length != value.Length)
-            {
+            if (colorValue.Length != value.Length) {
                 throw new PdfException(PdfException.IncorrectNumberOfComponents, this);
             }
         }
 
-        public override bool Equals(Object o)
-        {
-            if (this == o)
-            {
+        public override bool Equals(Object o) {
+            if (this == o) {
                 return true;
             }
-            if (o == null || GetType() != o.GetType())
-            {
+            if (o == null || GetType() != o.GetType()) {
                 return false;
             }
             iTextSharp.Kernel.Color.Color color = (iTextSharp.Kernel.Color.Color)o;
@@ -279,8 +233,7 @@ namespace iTextSharp.Kernel.Color
                  == null) && iTextSharp.IO.Util.JavaUtil.ArraysEquals(colorValue, color.colorValue);
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             int result = colorSpace != null ? colorSpace.GetHashCode() : 0;
             result = 31 * result + (colorValue != null ? iTextSharp.IO.Util.JavaUtil.ArraysHashCode(colorValue) : 0);
             return result;

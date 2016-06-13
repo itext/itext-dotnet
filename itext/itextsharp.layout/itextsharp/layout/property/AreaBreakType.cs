@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property
-{
-    public enum AreaBreakType
-    {
+namespace iTextSharp.Layout.Property {
+    public enum AreaBreakType {
         NEXT_AREA,
         NEXT_PAGE,
         LAST_PAGE

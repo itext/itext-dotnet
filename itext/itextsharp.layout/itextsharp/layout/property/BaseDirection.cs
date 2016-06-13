@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property
-{
-    public enum BaseDirection
-    {
+namespace iTextSharp.Layout.Property {
+    public enum BaseDirection {
         NO_BIDI,
         DEFAULT_BIDI,
         LEFT_TO_RIGHT,

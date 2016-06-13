@@ -45,11 +45,9 @@ using System.Collections.Generic;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf.Lookuptype5
-{
+namespace iTextSharp.IO.Font.Otf.Lookuptype5 {
     /// <summary>Contextual Substitution Subtable: Class-based context glyph substitution</summary>
-    public class SubTableLookup5Format2 : ContextualSubTable
-    {
+    public class SubTableLookup5Format2 : ContextualSubTable {
         private ICollection<int> substCoverageGlyphIds;
 
         private IList<IList<ContextualSubstRule>> subClassSets;
@@ -58,29 +56,24 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
 
         public SubTableLookup5Format2(OpenTypeFontTableReader openReader, int lookupFlag, ICollection<int> substCoverageGlyphIds
             , OtfClass classDefinition)
-            : base(openReader, lookupFlag)
-        {
+            : base(openReader, lookupFlag) {
             this.substCoverageGlyphIds = substCoverageGlyphIds;
             this.classDefinition = classDefinition;
         }
 
-        public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets)
-        {
+        public virtual void SetSubClassSets(IList<IList<ContextualSubstRule>> subClassSets) {
             this.subClassSets = subClassSets;
         }
 
-        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId)
-        {
-            if (substCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag))
-            {
+        protected internal override IList<ContextualSubstRule> GetSetOfRulesForStartGlyph(int startId) {
+            if (substCoverageGlyphIds.Contains(startId) && !openReader.IsSkip(startId, lookupFlag)) {
                 int gClass = classDefinition.GetOtfClass(startId);
                 return subClassSets[gClass];
             }
             return JavaCollectionsUtil.EmptyList<ContextualSubstRule>();
         }
 
-        public class SubstRuleFormat2 : ContextualSubstRule
-        {
+        public class SubstRuleFormat2 : ContextualSubstRule {
             private int[] inputClassIds;
 
             private SubstLookupRecord[] substLookupRecords;
@@ -88,8 +81,7 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
             private OtfClass classDefinition;
 
             public SubstRuleFormat2(SubTableLookup5Format2 subTable, int[] inputClassIds, SubstLookupRecord[] substLookupRecords
-                )
-            {
+                ) {
                 // inputClassIds array omits the first class in the sequence,
                 // the first class is defined by corresponding index of subClassSet array
                 this.inputClassIds = inputClassIds;
@@ -97,18 +89,15 @@ namespace iTextSharp.IO.Font.Otf.Lookuptype5
                 this.classDefinition = subTable.classDefinition;
             }
 
-            public override int GetContextLength()
-            {
+            public override int GetContextLength() {
                 return inputClassIds.Length + 1;
             }
 
-            public override SubstLookupRecord[] GetSubstLookupRecords()
-            {
+            public override SubstLookupRecord[] GetSubstLookupRecords() {
                 return substLookupRecords;
             }
 
-            public override bool IsGlyphMatchesInput(int glyphId, int atIdx)
-            {
+            public override bool IsGlyphMatchesInput(int glyphId, int atIdx) {
                 return classDefinition.GetOtfClass(glyphId) == inputClassIds[atIdx - 1];
             }
         }

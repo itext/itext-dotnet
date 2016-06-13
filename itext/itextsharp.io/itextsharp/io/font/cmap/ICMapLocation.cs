@@ -44,11 +44,9 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Font.Cmap
-{
+namespace iTextSharp.IO.Font.Cmap {
     /// <author>psoares</author>
-    public interface ICMapLocation
-    {
+    public interface ICMapLocation {
         /// <exception cref="System.IO.IOException"/>
         PdfTokenizer GetLocation(String location);
     }

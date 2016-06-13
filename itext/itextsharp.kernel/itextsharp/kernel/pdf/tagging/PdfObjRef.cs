@@ -44,18 +44,14 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Kernel.Pdf.Tagging
-{
-    public class PdfObjRef : PdfMcr
-    {
+namespace iTextSharp.Kernel.Pdf.Tagging {
+    public class PdfObjRef : PdfMcr {
         public PdfObjRef(PdfDictionary pdfObject, PdfStructElem parent)
-            : base(pdfObject, parent)
-        {
+            : base(pdfObject, parent) {
         }
 
         public PdfObjRef(PdfAnnotation annot, PdfStructElem parent)
-            : base(new PdfDictionary(), parent)
-        {
+            : base(new PdfDictionary(), parent) {
             PdfDictionary parentObject = parent.GetPdfObject();
             EnsureObjectIsAddedToDocument(parentObject);
             PdfDocument doc = parentObject.GetIndirectReference().GetDocument();
@@ -65,23 +61,19 @@ namespace iTextSharp.Kernel.Pdf.Tagging
             dict.Put(PdfName.Obj, annot.GetPdfObject());
         }
 
-        public override int GetMcid()
-        {
+        public override int GetMcid() {
             return -1;
         }
 
-        public override PdfDictionary GetPageObject()
-        {
+        public override PdfDictionary GetPageObject() {
             PdfDictionary page = ((PdfDictionary)GetPdfObject()).GetAsDictionary(PdfName.Pg);
-            if (page == null)
-            {
+            if (page == null) {
                 page = parent.GetPdfObject().GetAsDictionary(PdfName.Pg);
             }
             return page;
         }
 
-        public virtual PdfDictionary GetReferencedObject()
-        {
+        public virtual PdfDictionary GetReferencedObject() {
             return ((PdfDictionary)GetPdfObject()).GetAsDictionary(PdfName.Obj);
         }
     }

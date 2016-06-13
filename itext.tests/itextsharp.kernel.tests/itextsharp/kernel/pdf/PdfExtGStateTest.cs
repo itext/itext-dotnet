@@ -7,25 +7,21 @@ using iTextSharp.Kernel.Pdf.Extgstate;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfExtGStateTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfExtGStateTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfExtGStateTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/PdfExtGStateTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EgsTest1()
-        {
+        public virtual void EgsTest1() {
             String destinationDocument = destinationFolder + "egsTest1.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);

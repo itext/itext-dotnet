@@ -30,12 +30,10 @@
 using System;
 using iTextSharp.Kernel.XMP.Options;
 
-namespace iTextSharp.Kernel.XMP.Properties
-{
+namespace iTextSharp.Kernel.XMP.Properties {
     /// <summary>This interface is used to return info about an alias.</summary>
     /// <since>27.01.2006</since>
-    public interface XMPAliasInfo
-    {
+    public interface XMPAliasInfo {
         /// <returns>Returns Returns the namespace URI for the base property.</returns>
         String GetNamespace();
 

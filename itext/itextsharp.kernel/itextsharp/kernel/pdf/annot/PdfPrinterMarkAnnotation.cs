@@ -45,34 +45,27 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfPrinterMarkAnnotation : PdfAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfPrinterMarkAnnotation : PdfAnnotation {
         public PdfPrinterMarkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
-            : base(rect)
-        {
+            : base(rect) {
             SetNormalAppearance(appearanceStream.GetPdfObject());
             SetFlags(PdfAnnotation.PRINT | PdfAnnotation.READ_ONLY);
         }
 
         public PdfPrinterMarkAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.PrinterMark;
         }
 
-        public virtual PdfMarkupAnnotation SetArbitraryTypeName(PdfName arbitraryTypeName)
-        {
+        public virtual PdfMarkupAnnotation SetArbitraryTypeName(PdfName arbitraryTypeName) {
             return (PdfMarkupAnnotation)Put(PdfName.MN, arbitraryTypeName);
         }
 
-        public virtual PdfName GetArbitraryTypeName()
-        {
+        public virtual PdfName GetArbitraryTypeName() {
             return GetPdfObject().GetAsName(PdfName.MN);
         }
     }

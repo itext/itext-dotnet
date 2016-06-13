@@ -20,13 +20,10 @@
 */
 using System;
 
-namespace iTextSharp.Kernel.Geom
-{
-    public class NoninvertibleTransformException : Exception
-    {
+namespace iTextSharp.Kernel.Geom {
+    public class NoninvertibleTransformException : Exception {
         public NoninvertibleTransformException(String s)
-            : base(s)
-        {
+            : base(s) {
         }
     }
 }

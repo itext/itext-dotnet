@@ -41,8 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A marker subinterface of
     /// <see cref="IElement"/>
@@ -52,7 +51,6 @@ namespace iTextSharp.Layout.Element
     /// must not act as a container for other
     /// elements.
     /// </summary>
-    public interface ILeafElement : IElement
-    {
+    public interface ILeafElement : IElement {
     }
 }

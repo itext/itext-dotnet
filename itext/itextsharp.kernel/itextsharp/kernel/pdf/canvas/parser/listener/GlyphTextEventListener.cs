@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>
     /// This class expands each
     /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
@@ -60,8 +59,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
     /// <see cref="ITextExtractionStrategy"/>
     /// and can therefore used as a strategy on its own.
     /// </summary>
-    public class GlyphTextEventListener : GlyphEventListener, ITextExtractionStrategy
-    {
+    public class GlyphTextEventListener : GlyphEventListener, ITextExtractionStrategy {
         /// <summary>
         /// Constructs a
         /// <see cref="GlyphEventListener"/>
@@ -72,8 +70,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         /// </summary>
         /// <param name="delegate_">delegate to pass the expanded glyph render events to.</param>
         public GlyphTextEventListener(ITextExtractionStrategy delegate_)
-            : base(delegate_)
-        {
+            : base(delegate_) {
         }
 
         /// <summary>
@@ -82,14 +79,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener
         /// and was passed to this class.
         /// </summary>
         /// <returns>the resulting text extracted from the delegate</returns>
-        public virtual String GetResultantText()
-        {
-            if (delegate_ is ITextExtractionStrategy)
-            {
+        public virtual String GetResultantText() {
+            if (delegate_ is ITextExtractionStrategy) {
                 return ((ITextExtractionStrategy)delegate_).GetResultantText();
             }
-            else
-            {
+            else {
                 return null;
             }
         }

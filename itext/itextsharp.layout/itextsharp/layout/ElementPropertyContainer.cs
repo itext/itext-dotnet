@@ -52,8 +52,7 @@ using iTextSharp.Layout.Layout;
 using iTextSharp.Layout.Property;
 using iTextSharp.Layout.Splitting;
 
-namespace iTextSharp.Layout
-{
+namespace iTextSharp.Layout {
     /// <summary>A generic abstract element that fits in a PDF layout object hierarchy.</summary>
     /// <remarks>
     /// A generic abstract element that fits in a PDF layout object hierarchy.
@@ -63,44 +62,35 @@ namespace iTextSharp.Layout
     /// </remarks>
     /// 
     public abstract class ElementPropertyContainer<T> : IPropertyContainer
-        where T : IPropertyContainer
-    {
+        where T : IPropertyContainer {
         protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
 
-        public virtual void SetProperty(int property, Object value)
-        {
+        public virtual void SetProperty(int property, Object value) {
             properties[property] = value;
         }
 
-        public virtual bool HasProperty(int property)
-        {
+        public virtual bool HasProperty(int property) {
             return HasOwnProperty(property);
         }
 
-        public virtual bool HasOwnProperty(int property)
-        {
+        public virtual bool HasOwnProperty(int property) {
             return properties.ContainsKey(property);
         }
 
-        public virtual void DeleteOwnProperty(int property)
-        {
+        public virtual void DeleteOwnProperty(int property) {
             properties.JRemove(property);
         }
 
-        public virtual T1 GetProperty<T1>(int property)
-        {
+        public virtual T1 GetProperty<T1>(int property) {
             return (T1)this.GetOwnProperty<T1>(property);
         }
 
-        public virtual T1 GetOwnProperty<T1>(int property)
-        {
+        public virtual T1 GetOwnProperty<T1>(int property) {
             return (T1)properties.Get(property);
         }
 
-        public virtual T1 GetDefaultProperty<T1>(int property)
-        {
-            switch (property)
-            {
+        public virtual T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
                 case iTextSharp.Layout.Property.Property.MARGIN_TOP:
                 case iTextSharp.Layout.Property.Property.MARGIN_RIGHT:
                 case iTextSharp.Layout.Property.Property.MARGIN_BOTTOM:
@@ -108,13 +98,11 @@ namespace iTextSharp.Layout
                 case iTextSharp.Layout.Property.Property.PADDING_TOP:
                 case iTextSharp.Layout.Property.Property.PADDING_RIGHT:
                 case iTextSharp.Layout.Property.Property.PADDING_BOTTOM:
-                case iTextSharp.Layout.Property.Property.PADDING_LEFT:
-                {
+                case iTextSharp.Layout.Property.Property.PADDING_LEFT: {
                     return (T1)(Object)0f;
                 }
 
-                default:
-                {
+                default: {
                     return (T1)(Object)null;
                 }
             }
@@ -123,16 +111,14 @@ namespace iTextSharp.Layout
         /// <summary>Gets the width property of the Element.</summary>
         /// <returns>the width of the element, with a value and a measurement unit.</returns>
         /// <seealso cref="iTextSharp.Layout.Property.UnitValue"/>
-        public virtual UnitValue GetWidth()
-        {
+        public virtual UnitValue GetWidth() {
             return (UnitValue)this.GetProperty<UnitValue>(iTextSharp.Layout.Property.Property.WIDTH);
         }
 
         /// <summary>Sets the width property of the Element, measured in points.</summary>
         /// <param name="width">a value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetWidth(float width)
-        {
+        public virtual T SetWidth(float width) {
             SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue(width));
             return (T)(Object)this;
         }
@@ -140,8 +126,7 @@ namespace iTextSharp.Layout
         /// <summary>Sets the width property of the Element, measured in percentage.</summary>
         /// <param name="widthPercent">a value measured in percentage.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetWidthPercent(float widthPercent)
-        {
+        public virtual T SetWidthPercent(float widthPercent) {
             SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePercentValue(widthPercent));
             return (T)(Object)this;
         }
@@ -157,24 +142,21 @@ namespace iTextSharp.Layout
         /// object
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetWidth(UnitValue width)
-        {
+        public virtual T SetWidth(UnitValue width) {
             SetProperty(iTextSharp.Layout.Property.Property.WIDTH, width);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the height property of the Element.</summary>
         /// <returns>the height of the element, as a floating point value.</returns>
-        public virtual float? GetHeight()
-        {
+        public virtual float? GetHeight() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HEIGHT);
         }
 
         /// <summary>Sets the height property of the Element.</summary>
         /// <param name="height">a floating point value for the new height</param>
         /// <returns>this Element.</returns>
-        public virtual T SetHeight(float height)
-        {
+        public virtual T SetHeight(float height) {
             SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, height);
             return (T)(Object)this;
         }
@@ -200,8 +182,7 @@ namespace iTextSharp.Layout
         /// <param name="bottom">movement downwards on the page</param>
         /// <returns>this Element.</returns>
         /// <seealso cref="iTextSharp.Layout.Layout.LayoutPosition.RELATIVE"/>
-        public virtual T SetRelativePosition(float left, float top, float right, float bottom)
-        {
+        public virtual T SetRelativePosition(float left, float top, float right, float bottom) {
             SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.RELATIVE);
             SetProperty(iTextSharp.Layout.Property.Property.LEFT, left);
             SetProperty(iTextSharp.Layout.Property.Property.RIGHT, right);
@@ -223,8 +204,7 @@ namespace iTextSharp.Layout
         /// <param name="y">vertical position on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(float x, float y, float width)
-        {
+        public virtual T SetFixedPosition(float x, float y, float width) {
             SetFixedPosition(x, y, UnitValue.CreatePointValue(width));
             return (T)(Object)this;
         }
@@ -245,8 +225,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Property.UnitValue"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(float x, float y, UnitValue width)
-        {
+        public virtual T SetFixedPosition(float x, float y, UnitValue width) {
             SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
             SetProperty(iTextSharp.Layout.Property.Property.X, x);
             SetProperty(iTextSharp.Layout.Property.Property.Y, y);
@@ -271,8 +250,7 @@ namespace iTextSharp.Layout
         /// <param name="y">vertical position on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(int pageNumber, float x, float y, float width)
-        {
+        public virtual T SetFixedPosition(int pageNumber, float x, float y, float width) {
             SetFixedPosition(x, y, width);
             SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
@@ -295,8 +273,7 @@ namespace iTextSharp.Layout
         /// <param name="y">vertical position on the page</param>
         /// <param name="width">a floating point value measured in points.</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFixedPosition(int pageNumber, float x, float y, UnitValue width)
-        {
+        public virtual T SetFixedPosition(int pageNumber, float x, float y, UnitValue width) {
             SetFixedPosition(x, y, width);
             SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
@@ -308,8 +285,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Property.HorizontalAlignment?"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetHorizontalAlignment(HorizontalAlignment? horizontalAlignment)
-        {
+        public virtual T SetHorizontalAlignment(HorizontalAlignment? horizontalAlignment) {
             SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT, horizontalAlignment);
             return (T)(Object)this;
         }
@@ -320,8 +296,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Kernel.Font.PdfFont">font program</see>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetFont(PdfFont font)
-        {
+        public virtual T SetFont(PdfFont font) {
             SetProperty(iTextSharp.Layout.Property.Property.FONT, font);
             return (T)(Object)this;
         }
@@ -333,8 +308,7 @@ namespace iTextSharp.Layout
         /// for the text in this Element.
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetFontColor(iTextSharp.Kernel.Color.Color fontColor)
-        {
+        public virtual T SetFontColor(iTextSharp.Kernel.Color.Color fontColor) {
             SetProperty(iTextSharp.Layout.Property.Property.FONT_COLOR, fontColor);
             return (T)(Object)this;
         }
@@ -342,8 +316,7 @@ namespace iTextSharp.Layout
         /// <summary>Sets the font size of this Element.</summary>
         /// <param name="fontSize">a floating point value</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFontSize(float fontSize)
-        {
+        public virtual T SetFontSize(float fontSize) {
             SetProperty(iTextSharp.Layout.Property.Property.FONT_SIZE, fontSize);
             return (T)(Object)this;
         }
@@ -354,8 +327,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Property.TextAlignment?"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetTextAlignment(TextAlignment? alignment)
-        {
+        public virtual T SetTextAlignment(TextAlignment? alignment) {
             SetProperty(iTextSharp.Layout.Property.Property.TEXT_ALIGNMENT, alignment);
             return (T)(Object)this;
         }
@@ -367,8 +339,7 @@ namespace iTextSharp.Layout
         /// </remarks>
         /// <param name="charSpacing">a floating point value</param>
         /// <returns>this Element.</returns>
-        public virtual T SetCharacterSpacing(float charSpacing)
-        {
+        public virtual T SetCharacterSpacing(float charSpacing) {
             SetProperty(iTextSharp.Layout.Property.Property.CHARACTER_SPACING, charSpacing);
             return (T)(Object)this;
         }
@@ -380,8 +351,7 @@ namespace iTextSharp.Layout
         /// </remarks>
         /// <param name="wordSpacing">a floating point value</param>
         /// <returns>this Element.</returns>
-        public virtual T SetWordSpacing(float wordSpacing)
-        {
+        public virtual T SetWordSpacing(float wordSpacing) {
             SetProperty(iTextSharp.Layout.Property.Property.WORD_SPACING, wordSpacing);
             return (T)(Object)this;
         }
@@ -394,8 +364,7 @@ namespace iTextSharp.Layout
         /// </remarks>
         /// <param name="fontKerning">an enum value as a boolean wrapper specifying whether or not to apply kerning</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFontKerning(FontKerning fontKerning)
-        {
+        public virtual T SetFontKerning(FontKerning fontKerning) {
             SetProperty(iTextSharp.Layout.Property.Property.FONT_KERNING, fontKerning);
             return (T)(Object)this;
         }
@@ -403,8 +372,7 @@ namespace iTextSharp.Layout
         /// <summary>Specifies a background color for the Element.</summary>
         /// <param name="backgroundColor">the background color</param>
         /// <returns>this Element.</returns>
-        public virtual T SetBackgroundColor(iTextSharp.Kernel.Color.Color backgroundColor)
-        {
+        public virtual T SetBackgroundColor(iTextSharp.Kernel.Color.Color backgroundColor) {
             return SetBackgroundColor(backgroundColor, 0, 0, 0, 0);
         }
 
@@ -419,8 +387,7 @@ namespace iTextSharp.Layout
         /// <param name="extraBottom">extra coloring at the bottom</param>
         /// <returns>this Element.</returns>
         public virtual T SetBackgroundColor(iTextSharp.Kernel.Color.Color backgroundColor, float extraLeft, float 
-            extraTop, float extraRight, float extraBottom)
-        {
+            extraTop, float extraRight, float extraBottom) {
             SetProperty(iTextSharp.Layout.Property.Property.BACKGROUND, new Background(backgroundColor, extraLeft, extraTop
                 , extraRight, extraBottom));
             return (T)(Object)this;
@@ -432,8 +399,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Border.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorder(iTextSharp.Layout.Border.Border border)
-        {
+        public virtual T SetBorder(iTextSharp.Layout.Border.Border border) {
             SetProperty(iTextSharp.Layout.Property.Property.BORDER, border);
             return (T)(Object)this;
         }
@@ -444,8 +410,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Border.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderTop(iTextSharp.Layout.Border.Border border)
-        {
+        public virtual T SetBorderTop(iTextSharp.Layout.Border.Border border) {
             SetProperty(iTextSharp.Layout.Property.Property.BORDER_TOP, border);
             return (T)(Object)this;
         }
@@ -456,8 +421,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Border.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderRight(iTextSharp.Layout.Border.Border border)
-        {
+        public virtual T SetBorderRight(iTextSharp.Layout.Border.Border border) {
             SetProperty(iTextSharp.Layout.Property.Property.BORDER_RIGHT, border);
             return (T)(Object)this;
         }
@@ -468,8 +432,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Border.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderBottom(iTextSharp.Layout.Border.Border border)
-        {
+        public virtual T SetBorderBottom(iTextSharp.Layout.Border.Border border) {
             SetProperty(iTextSharp.Layout.Property.Property.BORDER_BOTTOM, border);
             return (T)(Object)this;
         }
@@ -480,8 +443,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Border.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderLeft(iTextSharp.Layout.Border.Border border)
-        {
+        public virtual T SetBorderLeft(iTextSharp.Layout.Border.Border border) {
             SetProperty(iTextSharp.Layout.Property.Property.BORDER_LEFT, border);
             return (T)(Object)this;
         }
@@ -497,8 +459,7 @@ namespace iTextSharp.Layout
         /// <see cref="iTextSharp.Layout.Splitting.ISplitCharacters"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetSplitCharacters(ISplitCharacters splitCharacters)
-        {
+        public virtual T SetSplitCharacters(ISplitCharacters splitCharacters) {
             SetProperty(iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS, splitCharacters);
             return (T)(Object)this;
         }
@@ -508,8 +469,7 @@ namespace iTextSharp.Layout
         /// the current string splitting rule, an implementation of
         /// <see cref="iTextSharp.Layout.Splitting.ISplitCharacters"/>
         /// </returns>
-        public virtual ISplitCharacters GetSplitCharacters()
-        {
+        public virtual ISplitCharacters GetSplitCharacters() {
             return this.GetProperty<ISplitCharacters>(iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS);
         }
 
@@ -520,8 +480,7 @@ namespace iTextSharp.Layout
         /// </summary>
         /// <returns>the current text rendering mode</returns>
         /// <seealso cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
-        public virtual int? GetTextRenderingMode()
-        {
+        public virtual int? GetTextRenderingMode() {
             return this.GetProperty<int?>(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE);
         }
 
@@ -533,8 +492,7 @@ namespace iTextSharp.Layout
         /// <param name="textRenderingMode">an <code>int</code> value</param>
         /// <returns>this Element.</returns>
         /// <seealso cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
-        public virtual T SetTextRenderingMode(int textRenderingMode)
-        {
+        public virtual T SetTextRenderingMode(int textRenderingMode) {
             SetProperty(iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE, textRenderingMode);
             return (T)(Object)this;
         }
@@ -545,8 +503,7 @@ namespace iTextSharp.Layout
         /// The stroke color is the color of the outlines or edges of a shape.
         /// </remarks>
         /// <returns>the current stroke color</returns>
-        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor() {
             return this.GetProperty<iTextSharp.Kernel.Color.Color>(iTextSharp.Layout.Property.Property.STROKE_COLOR);
         }
 
@@ -557,8 +514,7 @@ namespace iTextSharp.Layout
         /// </remarks>
         /// <param name="strokeColor">a new stroke color</param>
         /// <returns>this Element.</returns>
-        public virtual T SetStrokeColor(iTextSharp.Kernel.Color.Color strokeColor)
-        {
+        public virtual T SetStrokeColor(iTextSharp.Kernel.Color.Color strokeColor) {
             SetProperty(iTextSharp.Layout.Property.Property.STROKE_COLOR, strokeColor);
             return (T)(Object)this;
         }
@@ -569,8 +525,7 @@ namespace iTextSharp.Layout
         /// The stroke width is the width of the outlines or edges of a shape.
         /// </remarks>
         /// <returns>the current stroke width</returns>
-        public virtual float? GetStrokeWidth()
-        {
+        public virtual float? GetStrokeWidth() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.STROKE_WIDTH);
         }
 
@@ -581,8 +536,7 @@ namespace iTextSharp.Layout
         /// </remarks>
         /// <param name="strokeWidth">a new stroke width</param>
         /// <returns>this Element.</returns>
-        public virtual T SetStrokeWidth(float strokeWidth)
-        {
+        public virtual T SetStrokeWidth(float strokeWidth) {
             SetProperty(iTextSharp.Layout.Property.Property.STROKE_WIDTH, strokeWidth);
             return (T)(Object)this;
         }
@@ -593,8 +547,7 @@ namespace iTextSharp.Layout
         /// Be aware that using correct bold font is highly preferred over this option.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetBold()
-        {
+        public virtual T SetBold() {
             SetProperty(iTextSharp.Layout.Property.Property.BOLD_SIMULATION, true);
             return (T)(Object)this;
         }
@@ -605,8 +558,7 @@ namespace iTextSharp.Layout
         /// Be aware that using correct italic (oblique) font is highly preferred over this option.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetItalic()
-        {
+        public virtual T SetItalic() {
             SetProperty(iTextSharp.Layout.Property.Property.ITALIC_SIMULATION, true);
             return (T)(Object)this;
         }
@@ -620,8 +572,7 @@ namespace iTextSharp.Layout
         /// for more fine tuning.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetLineThrough()
-        {
+        public virtual T SetLineThrough() {
             // 7/24 is the average between default browser behavior(1/4) and iText5 behavior(1/3)
             return SetUnderline(null, .75f, 0, 0, 7 / 24f, PdfCanvasConstants.LineCapStyle.BUTT);
         }
@@ -632,8 +583,7 @@ namespace iTextSharp.Layout
         /// See other overloads for more fine tuning.
         /// </remarks>
         /// <returns>this element</returns>
-        public virtual T SetUnderline()
-        {
+        public virtual T SetUnderline() {
             return SetUnderline(null, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT);
         }
 
@@ -646,8 +596,7 @@ namespace iTextSharp.Layout
         /// <param name="thickness">the absolute thickness of the line</param>
         /// <param name="yPosition">the absolute y position relative to the baseline</param>
         /// <returns>this element</returns>
-        public virtual T SetUnderline(float thickness, float yPosition)
-        {
+        public virtual T SetUnderline(float thickness, float yPosition) {
             return SetUnderline(null, thickness, 0, yPosition, 0, PdfCanvasConstants.LineCapStyle.BUTT);
         }
 
@@ -678,24 +627,19 @@ namespace iTextSharp.Layout
         /// </param>
         /// <returns>this element</returns>
         public virtual T SetUnderline(iTextSharp.Kernel.Color.Color color, float thickness, float thicknessMul, float
-             yPosition, float yPositionMul, int lineCapStyle)
-        {
+             yPosition, float yPositionMul, int lineCapStyle) {
             Underline newUnderline = new Underline(color, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
                 );
             Object currentProperty = this.GetProperty<Object>(iTextSharp.Layout.Property.Property.UNDERLINE);
-            if (currentProperty is IList)
-            {
+            if (currentProperty is IList) {
                 ((IList)currentProperty).Add(newUnderline);
             }
-            else
-            {
-                if (currentProperty is Underline)
-                {
+            else {
+                if (currentProperty is Underline) {
                     SetProperty(iTextSharp.Layout.Property.Property.UNDERLINE, iTextSharp.IO.Util.JavaUtil.ArraysAsList((Underline
                         )currentProperty, newUnderline));
                 }
-                else
-                {
+                else {
                     SetProperty(iTextSharp.Layout.Property.Property.UNDERLINE, newUnderline);
                 }
             }
@@ -709,8 +653,7 @@ namespace iTextSharp.Layout
         /// </summary>
         /// <param name="baseDirection">base direction</param>
         /// <returns>this element</returns>
-        public virtual T SetBaseDirection(BaseDirection baseDirection)
-        {
+        public virtual T SetBaseDirection(BaseDirection baseDirection) {
             SetProperty(iTextSharp.Layout.Property.Property.BASE_DIRECTION, baseDirection);
             return (T)(Object)this;
         }
@@ -721,8 +664,7 @@ namespace iTextSharp.Layout
         /// </summary>
         /// <param name="hyphenationConfig"/>
         /// <returns>this element</returns>
-        public virtual T SetHyphenation(HyphenationConfig hyphenationConfig)
-        {
+        public virtual T SetHyphenation(HyphenationConfig hyphenationConfig) {
             SetProperty(iTextSharp.Layout.Property.Property.HYPHENATION, hyphenationConfig);
             return (T)(Object)this;
         }
@@ -730,8 +672,7 @@ namespace iTextSharp.Layout
         /// <summary>Sets the writing system for this text element.</summary>
         /// <param name="script">a new script type</param>
         /// <returns>this Element.</returns>
-        public virtual T SetFontScript(UnicodeScript? script)
-        {
+        public virtual T SetFontScript(UnicodeScript? script) {
             SetProperty(iTextSharp.Layout.Property.Property.FONT_SCRIPT, script);
             return (T)(Object)this;
         }
@@ -739,8 +680,7 @@ namespace iTextSharp.Layout
         /// <summary>Sets a destination name that will be created when this element is drawn to content.</summary>
         /// <param name="destination">the destination name to be created</param>
         /// <returns>this Element.</returns>
-        public virtual T SetDestination(String destination)
-        {
+        public virtual T SetDestination(String destination) {
             SetProperty(iTextSharp.Layout.Property.Property.DESTINATION, destination);
             return (T)(Object)this;
         }

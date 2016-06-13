@@ -10,25 +10,21 @@ using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class TagTreePointerTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class TagTreePointerTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/TagTreePointerTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/TagTreePointerTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TagTreePointerTest01()
-        {
+        public virtual void TagTreePointerTest01() {
             FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest01.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
@@ -62,8 +58,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TagTreePointerTest02()
-        {
+        public virtual void TagTreePointerTest02() {
             FileStream fos = new FileStream(destinationFolder + "tagTreePointerTest02.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -91,8 +86,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TagTreePointerTest03()
-        {
+        public virtual void TagTreePointerTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -103,12 +97,10 @@ namespace iTextSharp.Kernel.Pdf
             tagPointer.RemoveTag();
             // tagPointerCopy now points at removed tag
             String exceptionMessage = null;
-            try
-            {
+            try {
                 tagPointerCopy.AddTag(PdfName.Span);
             }
-            catch (PdfException e)
-            {
+            catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
             NUnit.Framework.Assert.AreEqual(PdfException.TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot
@@ -118,22 +110,18 @@ namespace iTextSharp.Kernel.Pdf
             TagTreePointer tagPointerCopyCopy = new TagTreePointer(tagPointerCopy);
             tagPointerCopy.FlushTag();
             // tagPointerCopyCopy now points at flushed tag
-            try
-            {
+            try {
                 tagPointerCopyCopy.AddTag(PdfName.Span);
             }
-            catch (PdfException e)
-            {
+            catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
             NUnit.Framework.Assert.AreEqual(PdfException.TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot
                 , exceptionMessage);
-            try
-            {
+            try {
                 tagPointerCopy.MoveToKid(0);
             }
-            catch (PdfException e)
-            {
+            catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
             NUnit.Framework.Assert.AreEqual(PdfException.CannotMoveToFlushedKid, exceptionMessage);
@@ -142,8 +130,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TagTreePointerTest04()
-        {
+        public virtual void TagTreePointerTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest04.pdf").SetCompressionLevel(CompressionConstants
                 .NO_COMPRESSION);
@@ -159,8 +146,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TagTreePointerTest05()
-        {
+        public virtual void TagTreePointerTest05() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest05.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -181,8 +167,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TagTreePointerTest06()
-        {
+        public virtual void TagTreePointerTest06() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest06.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -211,8 +196,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureFlushingTest01()
-        {
+        public virtual void TagStructureFlushingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest01.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -222,12 +206,10 @@ namespace iTextSharp.Kernel.Pdf
             tagPointer.MoveToKid(3, PdfName.TR).MoveToKid(PdfName.TD).FlushTag();
             tagPointer.MoveToParent().FlushTag();
             String exceptionMessage = null;
-            try
-            {
+            try {
                 tagPointer.FlushTag();
             }
-            catch (PdfException e)
-            {
+            catch (PdfException e) {
                 exceptionMessage = e.Message;
             }
             document.Close();
@@ -241,8 +223,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureFlushingTest02()
-        {
+        public virtual void TagStructureFlushingTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -263,8 +244,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureFlushingTest03()
-        {
+        public virtual void TagStructureFlushingTest03() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -283,8 +263,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureFlushingTest04()
-        {
+        public virtual void TagStructureFlushingTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest04.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -308,8 +287,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureFlushingTest05()
-        {
+        public virtual void TagStructureFlushingTest05() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureFlushingTest05.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
@@ -361,8 +339,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureRemovingTest01()
-        {
+        public virtual void TagStructureRemovingTest01() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest01.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -377,8 +354,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureRemovingTest02()
-        {
+        public virtual void TagStructureRemovingTest02() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocument.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest02.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
@@ -407,8 +383,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureRemovingTest03()
-        {
+        public virtual void TagStructureRemovingTest03() {
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest03.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
@@ -442,8 +417,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         [NUnit.Framework.Test]
-        public virtual void TagStructureRemovingTest04()
-        {
+        public virtual void TagStructureRemovingTest04() {
             PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAnnots.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "tagStructureRemovingTest04.pdf").SetCompressionLevel
                 (CompressionConstants.NO_COMPRESSION);
@@ -457,8 +431,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.Exception"/>
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
-        private void CompareResult(String outFileName, String cmpFileName, String diffNamePrefix)
-        {
+        private void CompareResult(String outFileName, String cmpFileName, String diffNamePrefix) {
             CompareTool compareTool = new CompareTool();
             String outPdf = destinationFolder + outFileName;
             String cmpPdf = sourceFolder + cmpFileName;
@@ -468,8 +441,7 @@ namespace iTextSharp.Kernel.Pdf
             String errorMessage = "";
             errorMessage += taggedStructureDifferences == null ? "" : taggedStructureDifferences + "\n";
             errorMessage += contentDifferences == null ? "" : contentDifferences;
-            if (!String.IsNullOrEmpty(errorMessage))
-            {
+            if (!String.IsNullOrEmpty(errorMessage)) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
         }

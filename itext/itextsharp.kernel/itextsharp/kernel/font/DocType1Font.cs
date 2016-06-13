@@ -47,10 +47,8 @@ using iTextSharp.IO.Font.Cmap;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font
-{
-    internal class DocType1Font : Type1Font, IDocFontProgram
-    {
+namespace iTextSharp.Kernel.Font {
+    internal class DocType1Font : Type1Font, IDocFontProgram {
         private PdfStream fontFile;
 
         private PdfName fontFileName;
@@ -58,38 +56,30 @@ namespace iTextSharp.Kernel.Font
         private PdfName subtype;
 
         private DocType1Font(String fontName)
-            : base(fontName)
-        {
+            : base(fontName) {
         }
 
         internal static Type1Font CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding, CMapToUnicode
-             toUnicode)
-        {
+             toUnicode) {
             PdfName baseFontName = fontDictionary.GetAsName(PdfName.BaseFont);
             String baseFont;
-            if (baseFontName != null)
-            {
+            if (baseFontName != null) {
                 baseFont = baseFontName.GetValue();
             }
-            else
-            {
+            else {
                 baseFont = FontUtil.CreateRandomFontName();
             }
-            if (!fontDictionary.ContainsKey(PdfName.FontDescriptor))
-            {
+            if (!fontDictionary.ContainsKey(PdfName.FontDescriptor)) {
                 Type1Font type1StdFont;
-                try
-                {
+                try {
                     //if there are no font modifiers, cached font could be used,
                     //otherwise a new instance should be created.
                     type1StdFont = (Type1Font)FontProgramFactory.CreateFont(baseFont, true);
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                     type1StdFont = null;
                 }
-                if (type1StdFont != null)
-                {
+                if (type1StdFont != null) {
                     return type1StdFont;
                 }
             }
@@ -102,107 +92,85 @@ namespace iTextSharp.Kernel.Font
             int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar);
             fontProgram.avgWidth = 0;
             int glyphsWithWidths = 0;
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 Glyph glyph = new Glyph(i, widths[i], fontEncoding.GetUnicode(i));
                 fontProgram.codeToGlyph[i] = glyph;
-                if (glyph.HasValidUnicode())
-                {
+                if (glyph.HasValidUnicode()) {
                     // Workaround for fonts for embedded Document fonts with differences without base encoding
-                    if (!fontProgram.unicodeToGlyph.ContainsKey(glyph.GetUnicode()) || glyph.GetWidth() != 0)
-                    {
+                    if (!fontProgram.unicodeToGlyph.ContainsKey(glyph.GetUnicode()) || glyph.GetWidth() != 0) {
                         fontProgram.unicodeToGlyph[glyph.GetUnicode()] = glyph;
                     }
                 }
-                else
-                {
-                    if (toUnicode != null)
-                    {
+                else {
+                    if (toUnicode != null) {
                         glyph.SetChars(toUnicode.Lookup(i));
                     }
                 }
-                if (widths[i] > 0)
-                {
+                if (widths[i] > 0) {
                     glyphsWithWidths++;
                     fontProgram.avgWidth += widths[i];
                 }
             }
-            if (glyphsWithWidths != 0)
-            {
+            if (glyphsWithWidths != 0) {
                 fontProgram.avgWidth /= glyphsWithWidths;
             }
             return fontProgram;
         }
 
-        public virtual PdfStream GetFontFile()
-        {
+        public virtual PdfStream GetFontFile() {
             return fontFile;
         }
 
-        public virtual PdfName GetFontFileName()
-        {
+        public virtual PdfName GetFontFileName() {
             return fontFileName;
         }
 
-        public virtual PdfName GetSubtype()
-        {
+        public virtual PdfName GetSubtype() {
             return subtype;
         }
 
-        internal static void FillFontDescriptor(iTextSharp.Kernel.Font.DocType1Font font, PdfDictionary fontDesc)
-        {
-            if (fontDesc == null)
-            {
+        internal static void FillFontDescriptor(iTextSharp.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
+            if (fontDesc == null) {
                 return;
             }
             PdfNumber v = fontDesc.GetAsNumber(PdfName.Ascent);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetTypoAscender(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.Descent);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetTypoDescender(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.CapHeight);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetCapHeight(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.XHeight);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetXHeight(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.ItalicAngle);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetItalicAngle(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.StemV);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetStemV(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.StemH);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetStemH(v.IntValue());
             }
             v = fontDesc.GetAsNumber(PdfName.FontWeight);
-            if (v != null)
-            {
+            if (v != null) {
                 font.SetFontWeight(v.IntValue());
             }
             PdfName fontStretch = fontDesc.GetAsName(PdfName.FontStretch);
-            if (fontStretch != null)
-            {
+            if (fontStretch != null) {
                 font.SetFontWidth(fontStretch.GetValue());
             }
             PdfArray bboxValue = fontDesc.GetAsArray(PdfName.FontBBox);
-            if (bboxValue != null)
-            {
+            if (bboxValue != null) {
                 int[] bbox = new int[4];
                 //llx
                 bbox[0] = bboxValue.GetAsNumber(0).IntValue();
@@ -212,14 +180,12 @@ namespace iTextSharp.Kernel.Font
                 bbox[2] = bboxValue.GetAsNumber(2).IntValue();
                 //ury
                 bbox[3] = bboxValue.GetAsNumber(3).IntValue();
-                if (bbox[0] > bbox[2])
-                {
+                if (bbox[0] > bbox[2]) {
                     int t = bbox[0];
                     bbox[0] = bbox[2];
                     bbox[2] = t;
                 }
-                if (bbox[1] > bbox[3])
-                {
+                if (bbox[1] > bbox[3]) {
                     int t = bbox[1];
                     bbox[1] = bbox[3];
                     bbox[3] = t;
@@ -227,8 +193,7 @@ namespace iTextSharp.Kernel.Font
                 font.SetBbox(bbox);
                 // If ascender or descender in font descriptor are zero, we still want to get more or less correct valuee for
                 // text extraction, stamping etc. Thus we rely on font bbox in this case
-                if (font.GetFontMetrics().GetTypoAscender() == 0 && font.GetFontMetrics().GetTypoDescender() == 0)
-                {
+                if (font.GetFontMetrics().GetTypoAscender() == 0 && font.GetFontMetrics().GetTypoDescender() == 0) {
                     float maxAscent = Math.Max(bbox[3], font.GetFontMetrics().GetTypoAscender());
                     float minDescent = Math.Min(bbox[1], font.GetFontMetrics().GetTypoDescender());
                     font.SetTypoAscender((int)(maxAscent * 1000 / (maxAscent - minDescent)));
@@ -236,28 +201,22 @@ namespace iTextSharp.Kernel.Font
                 }
             }
             PdfString fontFamily = fontDesc.GetAsString(PdfName.FontFamily);
-            if (fontFamily != null)
-            {
+            if (fontFamily != null) {
                 font.SetFontFamily(fontFamily.GetValue());
             }
             PdfNumber flagsValue = fontDesc.GetAsNumber(PdfName.Flags);
-            if (flagsValue != null)
-            {
+            if (flagsValue != null) {
                 int flags = flagsValue.IntValue();
-                if ((flags & 1) != 0)
-                {
+                if ((flags & 1) != 0) {
                     font.SetFixedPitch(true);
                 }
-                if ((flags & 262144) != 0)
-                {
+                if ((flags & 262144) != 0) {
                     font.SetBold(true);
                 }
             }
             PdfName[] fontFileNames = new PdfName[] { PdfName.FontFile, PdfName.FontFile2, PdfName.FontFile3 };
-            foreach (PdfName fontFile in fontFileNames)
-            {
-                if (fontDesc.ContainsKey(fontFile))
-                {
+            foreach (PdfName fontFile in fontFileNames) {
+                if (fontDesc.ContainsKey(fontFile)) {
                     font.fontFileName = fontFile;
                     font.fontFile = fontDesc.GetAsStream(fontFile);
                     break;

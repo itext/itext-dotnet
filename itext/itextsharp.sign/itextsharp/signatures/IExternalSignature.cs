@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Interface that needs to be implemented to do the actual signing.</summary>
     /// <remarks>
     /// Interface that needs to be implemented to do the actual signing.
@@ -52,8 +51,7 @@ namespace iTextSharp.Signatures
     /// to sign a PDF using a smart card.
     /// </remarks>
     /// <author>Paulo Soares</author>
-    public interface IExternalSignature
-    {
+    public interface IExternalSignature {
         /// <summary>Returns the hash algorithm.</summary>
         /// <returns>The hash algorithm (e.g. "SHA-1", "SHA-256,...").</returns>
         String GetHashAlgorithm();

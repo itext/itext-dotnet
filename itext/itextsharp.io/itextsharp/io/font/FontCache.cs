@@ -48,10 +48,8 @@ using System.IO;
 using iTextSharp.IO.Font.Cmap;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class FontCache
-    {
+namespace iTextSharp.IO.Font {
+    public class FontCache {
         /// <summary>The path to the font resources.</summary>
         [Obsolete]
         public const String CMAP_RESOURCE_PATH = FontConstants.RESOURCE_PATH + "cmap/";
@@ -75,18 +73,14 @@ namespace iTextSharp.IO.Font
         private static IDictionary<String, FontProgram> fontCache = new ConcurrentDictionary<String, FontProgram>(
             );
 
-        static FontCache()
-        {
-            try
-            {
+        static FontCache() {
+            try {
                 LoadRegistry();
-                foreach (String font in registryNames.Get(FONTS_PROP))
-                {
+                foreach (String font in registryNames.Get(FONTS_PROP)) {
                     allFonts[font] = ReadFontProperties(font);
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
         }
 
@@ -100,33 +94,24 @@ namespace iTextSharp.IO.Font
         /// <see langword="true"/>
         /// if it is CJKFont.
         /// </returns>
-        protected internal static bool IsPredefinedCidFont(String fontName)
-        {
-            if (!registryNames.ContainsKey(FONTS_PROP))
-            {
+        protected internal static bool IsPredefinedCidFont(String fontName) {
+            if (!registryNames.ContainsKey(FONTS_PROP)) {
                 return false;
             }
-            else
-            {
-                if (!registryNames.Get(FONTS_PROP).Contains(fontName))
-                {
+            else {
+                if (!registryNames.Get(FONTS_PROP).Contains(fontName)) {
                     return false;
                 }
             }
             return true;
         }
 
-        public static String GetCompatibleCidFont(String cmap)
-        {
-            foreach (KeyValuePair<String, ICollection<String>> e in registryNames)
-            {
-                if (e.Value.Contains(cmap))
-                {
+        public static String GetCompatibleCidFont(String cmap) {
+            foreach (KeyValuePair<String, ICollection<String>> e in registryNames) {
+                if (e.Value.Contains(cmap)) {
                     String registry = e.Key;
-                    foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts)
-                    {
-                        if (registry.Equals(e1.Value.Get(REGISTRY_PROP)))
-                        {
+                    foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts) {
+                        if (registry.Equals(e1.Value.Get(REGISTRY_PROP))) {
                             return e1.Key;
                         }
                     }
@@ -135,62 +120,51 @@ namespace iTextSharp.IO.Font
             return null;
         }
 
-        public static ICollection<String> GetCompatibleCmaps(String fontName)
-        {
+        public static ICollection<String> GetCompatibleCmaps(String fontName) {
             String registry = (String)FontCache.GetAllFonts().Get(fontName).Get(REGISTRY_PROP);
             return registryNames.Get(registry);
         }
 
-        public static IDictionary<String, IDictionary<String, Object>> GetAllFonts()
-        {
+        public static IDictionary<String, IDictionary<String, Object>> GetAllFonts() {
             return allFonts;
         }
 
-        public static IDictionary<String, ICollection<String>> GetRegistryNames()
-        {
+        public static IDictionary<String, ICollection<String>> GetRegistryNames() {
             return registryNames;
         }
 
-        public static CMapCidUni GetCid2UniCmap(String uniMap)
-        {
+        public static CMapCidUni GetCid2UniCmap(String uniMap) {
             CMapCidUni cidUni = new CMapCidUni();
             return ParseCmap(uniMap, cidUni);
         }
 
-        public static CMapUniCid GetUni2CidCmap(String uniMap)
-        {
+        public static CMapUniCid GetUni2CidCmap(String uniMap) {
             CMapUniCid uniCid = new CMapUniCid();
             return ParseCmap(uniMap, uniCid);
         }
 
-        public static CMapByteCid GetByte2CidCmap(String cmap)
-        {
+        public static CMapByteCid GetByte2CidCmap(String cmap) {
             CMapByteCid uniCid = new CMapByteCid();
             return ParseCmap(cmap, uniCid);
         }
 
-        public static CMapCidByte GetCid2Byte(String cmap)
-        {
+        public static CMapCidByte GetCid2Byte(String cmap) {
             CMapCidByte cidByte = new CMapCidByte();
             return ParseCmap(cmap, cidByte);
         }
 
-        public static FontProgram GetFont(String fontName)
-        {
+        public static FontProgram GetFont(String fontName) {
             String key = GetFontCacheKey(fontName);
             FontProgram font = null;
-            if (fontCache.ContainsKey(key))
-            {
+            if (fontCache.ContainsKey(key)) {
                 font = fontCache.Get(key);
             }
             return font;
         }
 
-        public static FontProgram SaveFont(FontProgram font, String fontName)
-        {
+        public static FontProgram SaveFont(FontProgram font, String fontName) {
             FontProgram fontFound = GetFont(fontName);
-            if (fontFound != null)
-            {
+            if (fontFound != null) {
                 return fontFound;
             }
             String key = GetFontCacheKey(fontName);
@@ -199,69 +173,55 @@ namespace iTextSharp.IO.Font
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static void LoadRegistry()
-        {
+        private static void LoadRegistry() {
             Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + CJK_REGISTRY_FILENAME);
-            try
-            {
+            try {
                 Properties p = new Properties();
                 p.Load(resource);
-                foreach (KeyValuePair<Object, Object> entry in p)
-                {
+                foreach (KeyValuePair<Object, Object> entry in p) {
                     String value = (String)entry.Value;
                     String[] splitValue = value.Split(" ");
                     ICollection<String> set = new HashSet<String>();
-                    foreach (String s in splitValue)
-                    {
-                        if (s.Length != 0)
-                        {
+                    foreach (String s in splitValue) {
+                        if (s.Length != 0) {
                             set.Add(s);
                         }
                     }
                     registryNames[(String)entry.Key] = set;
                 }
             }
-            finally
-            {
-                if (resource != null)
-                {
+            finally {
+                if (resource != null) {
                     resource.Close();
                 }
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static IDictionary<String, Object> ReadFontProperties(String name)
-        {
+        private static IDictionary<String, Object> ReadFontProperties(String name) {
             Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name + ".properties");
-            try
-            {
+            try {
                 Properties p = new Properties();
                 p.Load(resource);
                 IDictionary<String, Object> fontProperties = new Dictionary<String, Object>();
-                foreach (KeyValuePair<Object, Object> entry in p)
-                {
+                foreach (KeyValuePair<Object, Object> entry in p) {
                     fontProperties[(String)entry.Key] = entry.Value;
                 }
                 fontProperties[W_PROP] = CreateMetric((String)fontProperties.Get(W_PROP));
                 fontProperties[W2_PROP] = CreateMetric((String)fontProperties.Get(W2_PROP));
                 return fontProperties;
             }
-            finally
-            {
-                if (resource != null)
-                {
+            finally {
+                if (resource != null) {
                     resource.Close();
                 }
             }
         }
 
-        private static IntHashtable CreateMetric(String s)
-        {
+        private static IntHashtable CreateMetric(String s) {
             IntHashtable h = new IntHashtable();
             StringTokenizer tk = new StringTokenizer(s);
-            while (tk.HasMoreTokens())
-            {
+            while (tk.HasMoreTokens()) {
                 int n1 = System.Convert.ToInt32(tk.NextToken());
                 h.Put(n1, System.Convert.ToInt32(tk.NextToken()));
             }
@@ -269,21 +229,17 @@ namespace iTextSharp.IO.Font
         }
 
         private static T ParseCmap<T>(String name, T cmap)
-            where T : AbstractCMap
-        {
-            try
-            {
+            where T : AbstractCMap {
+            try {
                 CMapParser.ParseCid(name, cmap, new CMapLocationResource());
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
             return cmap;
         }
 
-        private static String GetFontCacheKey(String fontName)
-        {
+        private static String GetFontCacheKey(String fontName) {
             return fontName;
         }
     }

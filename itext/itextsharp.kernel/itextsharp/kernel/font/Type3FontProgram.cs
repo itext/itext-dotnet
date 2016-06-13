@@ -45,52 +45,42 @@ using System.Collections.Generic;
 using iTextSharp.IO.Font;
 using iTextSharp.IO.Font.Otf;
 
-namespace iTextSharp.Kernel.Font
-{
-    public class Type3FontProgram : FontProgram
-    {
+namespace iTextSharp.Kernel.Font {
+    public class Type3FontProgram : FontProgram {
         private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph>();
 
         private bool colorized = false;
 
-        public Type3FontProgram(bool colorized)
-        {
+        public Type3FontProgram(bool colorized) {
             this.colorized = colorized;
             GetFontMetrics().SetBbox(0, 0, 0, 0);
         }
 
-        public virtual Type3Glyph GetType3Glyph(int unicode)
-        {
+        public virtual Type3Glyph GetType3Glyph(int unicode) {
             return type3Glyphs.Get(unicode);
         }
 
-        public override int GetPdfFontFlags()
-        {
+        public override int GetPdfFontFlags() {
             return 0;
         }
 
-        public override bool IsFontSpecific()
-        {
+        public override bool IsFontSpecific() {
             return false;
         }
 
-        public virtual bool IsColorized()
-        {
+        public virtual bool IsColorized() {
             return colorized;
         }
 
-        public override int GetKerning(Glyph glyph1, Glyph glyph2)
-        {
+        public override int GetKerning(Glyph glyph1, Glyph glyph2) {
             return 0;
         }
 
-        public virtual int GetGlyphsCount()
-        {
+        public virtual int GetGlyphsCount() {
             return type3Glyphs.Count;
         }
 
-        internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph type3Glyph)
-        {
+        internal virtual void AddGlyph(int code, int unicode, int width, int[] bbox, Type3Glyph type3Glyph) {
             Glyph glyph = new Glyph(code, width, unicode, bbox);
             codeToGlyph[code] = glyph;
             unicodeToGlyph[unicode] = glyph;

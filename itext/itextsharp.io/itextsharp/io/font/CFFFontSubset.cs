@@ -46,8 +46,7 @@ using System.Collections.Generic;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
+namespace iTextSharp.IO.Font {
     /// <summary>This Class subsets a CFF Type Font.</summary>
     /// <remarks>
     /// This Class subsets a CFF Type Font. The subset is preformed for CID fonts and NON CID fonts.
@@ -59,8 +58,7 @@ namespace iTextSharp.IO.Font
     /// The CID synthetic creation was written by Sivan Toledo (sivan@math.tau.ac.il)
     /// </remarks>
     /// <author>Oren Manor (manorore@post.tau.ac.il) and Ygal Blum (blumygal@post.tau.ac.il)</author>
-    public class CFFFontSubset : CFFFont
-    {
+    public class CFFFontSubset : CFFFont {
         /// <summary>The Strings in this array represent Type1/Type2 operator names</summary>
         internal static readonly String[] SubrsFunctions = new String[] { "RESERVED_0", "hstem", "RESERVED_2", "vstem"
             , "vmoveto", "rlineto", "hlineto", "vlineto", "rrcurveto", "RESERVED_9", "callsubr", "return", "escape"
@@ -136,14 +134,12 @@ namespace iTextSharp.IO.Font
         /// <param name="cff">- The font file</param>
         /// <param name="GlyphsUsed">- a Map that contains the glyph used in the subset</param>
         public CFFFontSubset(byte[] cff, IDictionary<int, int[]> GlyphsUsed)
-            : base(cff)
-        {
+            : base(cff) {
             // Use CFFFont c'tor in order to parse the font file.
             this.GlyphsUsed = GlyphsUsed;
             //Put the glyphs into a list
             glyphsInList = new List<int>(GlyphsUsed.Keys);
-            for (int i = 0; i < fonts.Length; ++i)
-            {
+            for (int i = 0; i < fonts.Length; ++i) {
                 // Read the number of glyphs in the font
                 Seek(fonts[i].charstringsOffset);
                 fonts[i].nglyphs = GetCard16();
@@ -153,15 +149,13 @@ namespace iTextSharp.IO.Font
                 // For each font save the offset array of the charstring
                 fonts[i].charstringsOffsets = GetIndex(fonts[i].charstringsOffset);
                 // Process the FDSelect if exist
-                if (fonts[i].fdselectOffset >= 0)
-                {
+                if (fonts[i].fdselectOffset >= 0) {
                     // Process the FDSelect
                     ReadFDSelect(i);
                     // Build the FDArrayUsed Map
                     BuildFDArrayUsed(i);
                 }
-                if (fonts[i].isCID)
-                {
+                if (fonts[i].isCID) {
                     // Build the FD Array used  Map
                     ReadFDArray(i);
                 }
@@ -174,36 +168,30 @@ namespace iTextSharp.IO.Font
         /// <param name="Offset">The Charset Offset</param>
         /// <param name="NumofGlyphs">Number of glyphs in the font</param>
         /// <returns>the length of the Charset</returns>
-        internal virtual int CountCharset(int Offset, int NumofGlyphs)
-        {
+        internal virtual int CountCharset(int Offset, int NumofGlyphs) {
             int format;
             int Length = 0;
             Seek(Offset);
             // Read the format
             format = GetCard8();
-            switch (format)
-            {
-                case 0:
-                {
+            switch (format) {
+                case 0: {
                     // Calc according to format
                     Length = 1 + 2 * NumofGlyphs;
                     break;
                 }
 
-                case 1:
-                {
+                case 1: {
                     Length = 1 + 3 * CountRange(NumofGlyphs, 1);
                     break;
                 }
 
-                case 2:
-                {
+                case 2: {
                     Length = 1 + 4 * CountRange(NumofGlyphs, 2);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -214,22 +202,18 @@ namespace iTextSharp.IO.Font
         /// <param name="NumofGlyphs">The number of glyphs in the font</param>
         /// <param name="Type">The format of the Charset</param>
         /// <returns>The number of ranges in the Charset data structure</returns>
-        internal virtual int CountRange(int NumofGlyphs, int Type)
-        {
+        internal virtual int CountRange(int NumofGlyphs, int Type) {
             int num = 0;
             char Sid;
             int i = 1;
             int nLeft;
-            while (i < NumofGlyphs)
-            {
+            while (i < NumofGlyphs) {
                 num++;
                 Sid = GetCard16();
-                if (Type == 1)
-                {
+                if (Type == 1) {
                     nLeft = GetCard8();
                 }
-                else
-                {
+                else {
                     nLeft = GetCard16();
                 }
                 i += nLeft + 1;
@@ -239,8 +223,7 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Read the FDSelect of the font and compute the array and its length</summary>
         /// <param name="Font">The index of the font being processed</param>
-        protected internal virtual void ReadFDSelect(int Font)
-        {
+        protected internal virtual void ReadFDSelect(int Font) {
             // Restore the number of glyphs
             int NumOfGlyphs = fonts[Font].nglyphs;
             int[] FDSelect = new int[NumOfGlyphs];
@@ -248,14 +231,11 @@ namespace iTextSharp.IO.Font
             Seek(fonts[Font].fdselectOffset);
             // Read the FDSelect's format
             fonts[Font].FDSelectFormat = GetCard8();
-            switch (fonts[Font].FDSelectFormat)
-            {
-                case 0:
-                {
+            switch (fonts[Font].FDSelectFormat) {
+                case 0: {
                     // Format==0 means each glyph has an entry that indicated
                     // its FD.
-                    for (int i = 0; i < NumOfGlyphs; i++)
-                    {
+                    for (int i = 0; i < NumOfGlyphs; i++) {
                         FDSelect[i] = GetCard8();
                     }
                     // The FDSelect's Length is one for each glyph + the format
@@ -264,24 +244,21 @@ namespace iTextSharp.IO.Font
                     break;
                 }
 
-                case 3:
-                {
+                case 3: {
                     // Format==3 means the ranges version
                     // The number of ranges
                     int nRanges = GetCard16();
                     int l = 0;
                     // Read the first in the first range
                     int first = GetCard16();
-                    for (int i_1 = 0; i_1 < nRanges; i_1++)
-                    {
+                    for (int i_1 = 0; i_1 < nRanges; i_1++) {
                         // Read the FD index
                         int fd = GetCard8();
                         // Read the first of the next range
                         int last = GetCard16();
                         // Calc the steps and write to the array
                         int steps = last - first;
-                        for (int k = 0; k < steps; k++)
-                        {
+                        for (int k = 0; k < steps; k++) {
                             FDSelect[l] = fd;
                             l++;
                         }
@@ -293,8 +270,7 @@ namespace iTextSharp.IO.Font
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -304,12 +280,10 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Function reads the FDSelect and builds the FDArrayUsed Map According to the glyphs used</summary>
         /// <param name="Font">the Number of font being processed</param>
-        protected internal virtual void BuildFDArrayUsed(int Font)
-        {
+        protected internal virtual void BuildFDArrayUsed(int Font) {
             int[] FDSelect = fonts[Font].FDSelect;
             // For each glyph used
-            foreach (int? glyphsInList1 in glyphsInList)
-            {
+            foreach (int? glyphsInList1 in glyphsInList) {
                 // Pop the glyphs index
                 int glyph = (int)glyphsInList1;
                 // Pop the glyph's FD
@@ -321,15 +295,13 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Read the FDArray count, offsize and Offset array</summary>
         /// <param name="Font"/>
-        protected internal virtual void ReadFDArray(int Font)
-        {
+        protected internal virtual void ReadFDArray(int Font) {
             Seek(fonts[Font].fdarrayOffset);
             fonts[Font].FDArrayCount = GetCard16();
             fonts[Font].FDArrayOffsize = GetCard8();
             // Since we will change values inside the FDArray objects
             // We increase its offsize to prevent errors
-            if (fonts[Font].FDArrayOffsize < 4)
-            {
+            if (fonts[Font].FDArrayOffsize < 4) {
                 fonts[Font].FDArrayOffsize++;
             }
             fonts[Font].FDArrayOffsets = GetIndex(fonts[Font].fdarrayOffset);
@@ -341,26 +313,20 @@ namespace iTextSharp.IO.Font
         /// </summary>
         /// <param name="fontName">- The name of the font to be taken out of the CFF</param>
         /// <returns>The new font stream</returns>
-        public virtual byte[] Process(String fontName)
-        {
-            try
-            {
+        public virtual byte[] Process(String fontName) {
+            try {
                 // Find the Font that we will be dealing with
                 int j;
-                for (j = 0; j < fonts.Length; j++)
-                {
-                    if (fontName.Equals(fonts[j].name))
-                    {
+                for (j = 0; j < fonts.Length; j++) {
+                    if (fontName.Equals(fonts[j].name)) {
                         break;
                     }
                 }
-                if (j == fonts.Length)
-                {
+                if (j == fonts.Length) {
                     return null;
                 }
                 // Calc the bias for the global subrs
-                if (gsubrIndexOffset >= 0)
-                {
+                if (gsubrIndexOffset >= 0) {
                     GBias = CalcBias(gsubrIndexOffset, j);
                 }
                 // Prepare the new CharStrings Index
@@ -370,18 +336,14 @@ namespace iTextSharp.IO.Font
                 // Build the new file
                 return BuildNewFile(j);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
             }
-            finally
-            {
-                try
-                {
+            finally {
+                try {
                     buf.Close();
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
             }
         }
@@ -394,30 +356,23 @@ namespace iTextSharp.IO.Font
         /// <param name="Offset">The offset to the relevant subrs index</param>
         /// <param name="Font">the font</param>
         /// <returns>The calculated Bias</returns>
-        protected internal virtual int CalcBias(int Offset, int Font)
-        {
+        protected internal virtual int CalcBias(int Offset, int Font) {
             Seek(Offset);
             int nSubrs = GetCard16();
             // If type==1 -> bias=0
-            if (fonts[Font].CharstringType == 1)
-            {
+            if (fonts[Font].CharstringType == 1) {
                 return 0;
             }
-            else
-            {
+            else {
                 // else calc according to the count
-                if (nSubrs < 1240)
-                {
+                if (nSubrs < 1240) {
                     return 107;
                 }
-                else
-                {
-                    if (nSubrs < 33900)
-                    {
+                else {
+                    if (nSubrs < 33900) {
                         return 1131;
                     }
-                    else
-                    {
+                    else {
                         return 32768;
                     }
                 }
@@ -427,8 +382,7 @@ namespace iTextSharp.IO.Font
         /// <summary>Function uses BuildNewIndex to create the new index of the subset charstrings</summary>
         /// <param name="FontIndex">the font</param>
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void BuildNewCharString(int FontIndex)
-        {
+        protected internal virtual void BuildNewCharString(int FontIndex) {
             NewCharStringsIndex = BuildNewIndex(fonts[FontIndex].charstringsOffsets, GlyphsUsed, ENDCHAR_OP);
         }
 
@@ -439,12 +393,10 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <param name="Font">the font</param>
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void BuildNewLGSubrs(int Font)
-        {
+        protected internal virtual void BuildNewLGSubrs(int Font) {
             // If the font is CID then the lsubrs are divided into FontDicts.
             // for each FD array the lsubrs will be subsetted.
-            if (fonts[Font].isCID)
-            {
+            if (fonts[Font].isCID) {
                 // Init the Map-array and the list-array to hold the subrs used
                 // in each private dict.
                 hSubrsUsed = new GenericArray<Dictionary<int, int[]>>(fonts[Font].fdprivateOffsets.Length);
@@ -458,8 +410,7 @@ namespace iTextSharp.IO.Font
                 // Put the FDarrayUsed into a list
                 IList<int> FDInList = new List<int>(FDArrayUsed);
                 // For each FD array which is used subset the lsubr
-                for (int j = 0; j < FDInList.Count; j++)
-                {
+                for (int j = 0; j < FDInList.Count; j++) {
                     // The FDArray index,  Map, List to work on
                     int FD = (int)FDInList[j];
                     hSubrsUsed.Set(FD, new Dictionary<int, int[]>());
@@ -468,8 +419,7 @@ namespace iTextSharp.IO.Font
                     // store both the offset for the index and its offset array
                     BuildFDSubrsOffsets(Font, FD);
                     // Verify that FDPrivate has a LSubrs index
-                    if (fonts[Font].PrivateSubrsOffset[FD] >= 0)
-                    {
+                    if (fonts[Font].PrivateSubrsOffset[FD] >= 0) {
                         //Scans the Charstring data storing the used Local and Global subroutines
                         // by the glyphs. Scans the Subrs recursively.
                         BuildSubrUsed(Font, FD, fonts[Font].PrivateSubrsOffset[FD], fonts[Font].PrivateSubrsOffsetsArray[FD], hSubrsUsed
@@ -480,11 +430,9 @@ namespace iTextSharp.IO.Font
                     }
                 }
             }
-            else
-            {
+            else {
                 // If the font is not CID && the Private Subr exists then subset:
-                if (fonts[Font].privateSubrs >= 0)
-                {
+                if (fonts[Font].privateSubrs >= 0) {
                     // Build the subrs offsets;
                     fonts[Font].SubrsOffsets = GetIndex(fonts[Font].privateSubrs);
                     //Scans the Charstring data storing the used Local and Global subroutines
@@ -496,8 +444,7 @@ namespace iTextSharp.IO.Font
             // For all fonts subset the Global Subroutines
             // Scan the Global Subr Map recursively on the Gsubrs
             BuildGSubrsUsed(Font);
-            if (fonts[Font].privateSubrs >= 0)
-            {
+            if (fonts[Font].privateSubrs >= 0) {
                 // Builds the New Local Subrs index
                 NewSubrsIndexNonCID = BuildNewIndex(fonts[Font].SubrsOffsets, hSubrsUsedNonCID, RETURN_OP);
             }
@@ -511,25 +458,21 @@ namespace iTextSharp.IO.Font
         /// </summary>
         /// <param name="Font">the font</param>
         /// <param name="FD">The FDARRAY processed</param>
-        protected internal virtual void BuildFDSubrsOffsets(int Font, int FD)
-        {
+        protected internal virtual void BuildFDSubrsOffsets(int Font, int FD) {
             // Initiate to -1 to indicate lsubr operator present
             fonts[Font].PrivateSubrsOffset[FD] = -1;
             // Goto beginning of objects
             Seek(fonts[Font].fdprivateOffsets[FD]);
             // While in the same object:
-            while (GetPosition() < fonts[Font].fdprivateOffsets[FD] + fonts[Font].fdprivateLengths[FD])
-            {
+            while (GetPosition() < fonts[Font].fdprivateOffsets[FD] + fonts[Font].fdprivateLengths[FD]) {
                 GetDictItem();
                 // If the dictItem is the "Subrs" then find and store offset,
-                if ("Subrs".Equals(key))
-                {
+                if ("Subrs".Equals(key)) {
                     fonts[Font].PrivateSubrsOffset[FD] = (int)((int?)args[0]) + fonts[Font].fdprivateOffsets[FD];
                 }
             }
             //Read the lsubr index if the lsubr was found
-            if (fonts[Font].PrivateSubrsOffset[FD] >= 0)
-            {
+            if (fonts[Font].PrivateSubrsOffset[FD] >= 0) {
                 fonts[Font].PrivateSubrsOffsetsArray[FD] = GetIndex(fonts[Font].PrivateSubrsOffset[FD]);
             }
         }
@@ -547,45 +490,38 @@ namespace iTextSharp.IO.Font
         /// <param name="hSubr">Map of the subrs used</param>
         /// <param name="lSubr">list of the subrs used</param>
         protected internal virtual void BuildSubrUsed(int Font, int FD, int SubrOffset, int[] SubrsOffsets, IDictionary
-            <int, int[]> hSubr, IList<int> lSubr)
-        {
+            <int, int[]> hSubr, IList<int> lSubr) {
             // Calc the Bias for the subr index
             int LBias = CalcBias(SubrOffset, Font);
             // For each glyph used find its GID, start & end pos
-            for (int i = 0; i < glyphsInList.Count; i++)
-            {
+            for (int i = 0; i < glyphsInList.Count; i++) {
                 int glyph = (int)glyphsInList[i];
                 int Start = fonts[Font].charstringsOffsets[glyph];
                 int End = fonts[Font].charstringsOffsets[glyph + 1];
                 // IF CID:
-                if (FD >= 0)
-                {
+                if (FD >= 0) {
                     EmptyStack();
                     NumOfHints = 0;
                     // Using FDSELECT find the FD Array the glyph belongs to.
                     int GlyphFD = fonts[Font].FDSelect[glyph];
                     // If the Glyph is part of the FD being processed
-                    if (GlyphFD == FD)
-                    {
+                    if (GlyphFD == FD) {
                         // Find the Subrs called by the glyph and insert to hash:
                         ReadASubr(Start, End, GBias, LBias, hSubr, lSubr, SubrsOffsets);
                     }
                 }
-                else
-                {
+                else {
                     // If the font is not CID
                     //Find the Subrs called by the glyph and insert to hash:
                     ReadASubr(Start, End, GBias, LBias, hSubr, lSubr, SubrsOffsets);
                 }
             }
             // For all Lsubrs used, check recursively for Lsubr & Gsubr used
-            for (int i_1 = 0; i_1 < lSubr.Count; i_1++)
-            {
+            for (int i_1 = 0; i_1 < lSubr.Count; i_1++) {
                 // Pop the subr value from the hash
                 int Subr = (int)lSubr[i_1];
                 // Ensure the Lsubr call is valid
-                if (Subr < SubrsOffsets.Length - 1 && Subr >= 0)
-                {
+                if (Subr < SubrsOffsets.Length - 1 && Subr >= 0) {
                     // Read and process the subr
                     int Start = SubrsOffsets[Subr];
                     int End = SubrsOffsets[Subr + 1];
@@ -599,40 +535,31 @@ namespace iTextSharp.IO.Font
         /// to Gsubrs and adds to Map & list
         /// </summary>
         /// <param name="Font">the font</param>
-        protected internal virtual void BuildGSubrsUsed(int Font)
-        {
+        protected internal virtual void BuildGSubrsUsed(int Font) {
             int LBias = 0;
             int SizeOfNonCIDSubrsUsed = 0;
-            if (fonts[Font].privateSubrs >= 0)
-            {
+            if (fonts[Font].privateSubrs >= 0) {
                 LBias = CalcBias(fonts[Font].privateSubrs, Font);
                 SizeOfNonCIDSubrsUsed = lSubrsUsedNonCID.Count;
             }
             // For each global subr used
-            for (int i = 0; i < lGSubrsUsed.Count; i++)
-            {
+            for (int i = 0; i < lGSubrsUsed.Count; i++) {
                 //Pop the value + check valid
                 int Subr = (int)lGSubrsUsed[i];
-                if (Subr < gsubrOffsets.Length - 1 && Subr >= 0)
-                {
+                if (Subr < gsubrOffsets.Length - 1 && Subr >= 0) {
                     // Read the subr and process
                     int Start = gsubrOffsets[Subr];
                     int End = gsubrOffsets[Subr + 1];
-                    if (fonts[Font].isCID)
-                    {
+                    if (fonts[Font].isCID) {
                         ReadASubr(Start, End, GBias, 0, hGSubrsUsed, lGSubrsUsed, null);
                     }
-                    else
-                    {
+                    else {
                         ReadASubr(Start, End, GBias, LBias, hSubrsUsedNonCID, lSubrsUsedNonCID, fonts[Font].SubrsOffsets);
-                        if (SizeOfNonCIDSubrsUsed < lSubrsUsedNonCID.Count)
-                        {
-                            for (int j = SizeOfNonCIDSubrsUsed; j < lSubrsUsedNonCID.Count; j++)
-                            {
+                        if (SizeOfNonCIDSubrsUsed < lSubrsUsedNonCID.Count) {
+                            for (int j = SizeOfNonCIDSubrsUsed; j < lSubrsUsedNonCID.Count; j++) {
                                 //Pop the value + check valid
                                 int LSubr = (int)lSubrsUsedNonCID[j];
-                                if (LSubr < fonts[Font].SubrsOffsets.Length - 1 && LSubr >= 0)
-                                {
+                                if (LSubr < fonts[Font].SubrsOffsets.Length - 1 && LSubr >= 0) {
                                     // Read the subr and process
                                     int LStart = fonts[Font].SubrsOffsets[LSubr];
                                     int LEnd = fonts[Font].SubrsOffsets[LSubr + 1];
@@ -659,42 +586,34 @@ namespace iTextSharp.IO.Font
         /// <param name="hSubr">the Map for the lSubrs</param>
         /// <param name="lSubr">the list for the lSubrs</param>
         protected internal virtual void ReadASubr(int begin, int end, int GBias, int LBias, IDictionary<int, int[]
-            > hSubr, IList<int> lSubr, int[] LSubrsOffsets)
-        {
+            > hSubr, IList<int> lSubr, int[] LSubrsOffsets) {
             // Clear the stack for the subrs
             EmptyStack();
             NumOfHints = 0;
             // Goto beginning of the subr
             Seek(begin);
-            while (GetPosition() < end)
-            {
+            while (GetPosition() < end) {
                 // Read the next command
                 ReadCommand();
                 int pos = GetPosition();
                 Object TopElement = null;
-                if (arg_count > 0)
-                {
+                if (arg_count > 0) {
                     TopElement = args[arg_count - 1];
                 }
                 int NumOfArgs = arg_count;
                 // Check the modification needed on the Argument Stack according to key;
                 HandelStack();
-                if (null != key)
-                {
-                    switch (key)
-                    {
-                        case "callsubr":
-                        {
+                if (null != key) {
+                    switch (key) {
+                        case "callsubr": {
                             // a call to a Lsubr
                             // a call to a Gsubr
                             // Verify that arguments are passed
-                            if (NumOfArgs > 0)
-                            {
+                            if (NumOfArgs > 0) {
                                 // Calc the index of the Subrs
                                 int Subr = (int)((int?)TopElement) + LBias;
                                 // If the subr isn't in the Map -> Put in
-                                if (!hSubr.ContainsKey(Subr))
-                                {
+                                if (!hSubr.ContainsKey(Subr)) {
                                     hSubr[Subr] = null;
                                     lSubr.Add(Subr);
                                 }
@@ -704,17 +623,14 @@ namespace iTextSharp.IO.Font
                             break;
                         }
 
-                        case "callgsubr":
-                        {
+                        case "callgsubr": {
                             // A call to "stem"
                             // Verify that arguments are passed
-                            if (NumOfArgs > 0)
-                            {
+                            if (NumOfArgs > 0) {
                                 // Calc the index of the Subrs
                                 int Subr = (int)((int?)TopElement) + GBias;
                                 // If the subr isn't in the Map -> Put in
-                                if (!hGSubrsUsed.ContainsKey(Subr))
-                                {
+                                if (!hGSubrsUsed.ContainsKey(Subr)) {
                                     hGSubrsUsed[Subr] = null;
                                     lGSubrsUsed.Add(Subr);
                                 }
@@ -727,28 +643,24 @@ namespace iTextSharp.IO.Font
                         case "hstem":
                         case "vstem":
                         case "hstemhm":
-                        case "vstemhm":
-                        {
+                        case "vstemhm": {
                             // Increment the NumOfHints by the number couples of of arguments
                             NumOfHints += NumOfArgs / 2;
                             break;
                         }
 
                         case "hintmask":
-                        case "cntrmask":
-                        {
+                        case "cntrmask": {
                             // if stack is not empty the reason is vstem implicit definition
                             // See Adobe Technical Note #5177, page 25, hintmask usage example.
                             NumOfHints += NumOfArgs / 2;
                             // Compute the size of the mask
                             int SizeOfMask = NumOfHints / 8;
-                            if (NumOfHints % 8 != 0 || SizeOfMask == 0)
-                            {
+                            if (NumOfHints % 8 != 0 || SizeOfMask == 0) {
                                 SizeOfMask++;
                             }
                             // Continue the pointer in SizeOfMask steps
-                            for (int i = 0; i < SizeOfMask; i++)
-                            {
+                            for (int i = 0; i < SizeOfMask; i++) {
                                 GetCard8();
                             }
                             break;
@@ -762,30 +674,24 @@ namespace iTextSharp.IO.Font
         /// Function Checks how the current operator effects the run time stack after being run
         /// An operator may increase or decrease the stack size
         /// </summary>
-        protected internal virtual void HandelStack()
-        {
+        protected internal virtual void HandelStack() {
             // Find out what the operator does to the stack
             int StackHandel = StackOpp();
-            if (StackHandel < 2)
-            {
+            if (StackHandel < 2) {
                 // The operators that enlarge the stack by one
-                if (StackHandel == 1)
-                {
+                if (StackHandel == 1) {
                     PushStack();
                 }
-                else
-                {
+                else {
                     // The operators that pop the stack
                     // Abs value for the for loop
                     StackHandel *= -1;
-                    for (int i = 0; i < StackHandel; i++)
-                    {
+                    for (int i = 0; i < StackHandel; i++) {
                         PopStack();
                     }
                 }
             }
-            else
-            {
+            else {
                 // All other flush the stack
                 EmptyStack();
             }
@@ -793,18 +699,14 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Function checks the key and return the change to the stack after the operator</summary>
         /// <returns>The change in the stack. 2-&gt; flush the stack</returns>
-        protected internal virtual int StackOpp()
-        {
-            switch (key)
-            {
-                case "ifelse":
-                {
+        protected internal virtual int StackOpp() {
+            switch (key) {
+                case "ifelse": {
                     return -3;
                 }
 
                 case "roll":
-                case "put":
-                {
+                case "put": {
                     return -2;
                 }
 
@@ -817,8 +719,7 @@ namespace iTextSharp.IO.Font
                 case "drop":
                 case "and":
                 case "or":
-                case "eq":
-                {
+                case "eq": {
                     return -1;
                 }
 
@@ -829,14 +730,12 @@ namespace iTextSharp.IO.Font
                 case "index":
                 case "get":
                 case "not":
-                case "return":
-                {
+                case "return": {
                     return 0;
                 }
 
                 case "random":
-                case "dup":
-                {
+                case "dup": {
                     return 1;
                 }
             }
@@ -844,45 +743,37 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>Empty the Type2 Stack</summary>
-        protected internal virtual void EmptyStack()
-        {
+        protected internal virtual void EmptyStack() {
             // Null the arguments
-            for (int i = 0; i < arg_count; i++)
-            {
+            for (int i = 0; i < arg_count; i++) {
                 args[i] = null;
             }
             arg_count = 0;
         }
 
         /// <summary>Pop one element from the stack</summary>
-        protected internal virtual void PopStack()
-        {
-            if (arg_count > 0)
-            {
+        protected internal virtual void PopStack() {
+            if (arg_count > 0) {
                 args[arg_count - 1] = null;
                 arg_count--;
             }
         }
 
         /// <summary>Add an item to the stack</summary>
-        protected internal virtual void PushStack()
-        {
+        protected internal virtual void PushStack() {
             arg_count++;
         }
 
         /// <summary>The function reads the next command after the file pointer is set</summary>
-        protected internal virtual void ReadCommand()
-        {
+        protected internal virtual void ReadCommand() {
             key = null;
             bool gotKey = false;
             // Until a key is found
-            while (!gotKey)
-            {
+            while (!gotKey) {
                 // Read the first Char
                 char b0 = GetCard8();
                 // decode according to the type1/type2 format
-                if (b0 == 28)
-                {
+                if (b0 == 28) {
                     // the two next bytes represent a short int;
                     int first = GetCard8();
                     int second = GetCard8();
@@ -890,31 +781,27 @@ namespace iTextSharp.IO.Font
                     arg_count++;
                     continue;
                 }
-                if (b0 >= 32 && b0 <= 246)
-                {
+                if (b0 >= 32 && b0 <= 246) {
                     // The byte read is the byte;
                     args[arg_count] = b0 - 139;
                     arg_count++;
                     continue;
                 }
-                if (b0 >= 247 && b0 <= 250)
-                {
+                if (b0 >= 247 && b0 <= 250) {
                     // The byte read and the next byte constitute a short int
                     int w = GetCard8();
                     args[arg_count] = (b0 - 247) * 256 + w + 108;
                     arg_count++;
                     continue;
                 }
-                if (b0 >= 251 && b0 <= 254)
-                {
+                if (b0 >= 251 && b0 <= 254) {
                     // Same as above except negative
                     int w = GetCard8();
                     args[arg_count] = -(b0 - 251) * 256 - w - 108;
                     arg_count++;
                     continue;
                 }
-                if (b0 == 255)
-                {
+                if (b0 == 255) {
                     // The next for bytes represent a double.
                     int first = GetCard8();
                     int second = GetCard8();
@@ -924,23 +811,19 @@ namespace iTextSharp.IO.Font
                     arg_count++;
                     continue;
                 }
-                if (b0 <= 31 && b0 != 28)
-                {
+                if (b0 <= 31 && b0 != 28) {
                     // An operator was found.. Set Key.
                     gotKey = true;
                     // 12 is an escape command therefore the next byte is a part
                     // of this command
-                    if (b0 == 12)
-                    {
+                    if (b0 == 12) {
                         int b1 = GetCard8();
-                        if (b1 > SubrsEscapeFuncs.Length - 1)
-                        {
+                        if (b1 > SubrsEscapeFuncs.Length - 1) {
                             b1 = SubrsEscapeFuncs.Length - 1;
                         }
                         key = SubrsEscapeFuncs[b1];
                     }
-                    else
-                    {
+                    else {
                         key = SubrsFunctions[b0];
                     }
                     continue;
@@ -959,31 +842,25 @@ namespace iTextSharp.IO.Font
         /// <param name="GBias">the bias of the Global Subrs</param>
         /// <param name="LSubrsOffsets">The Offsets array of the subroutines</param>
         /// <returns>The number of hints in the subroutine read.</returns>
-        protected internal virtual int CalcHints(int begin, int end, int LBias, int GBias, int[] LSubrsOffsets)
-        {
+        protected internal virtual int CalcHints(int begin, int end, int LBias, int GBias, int[] LSubrsOffsets) {
             // Goto beginning of the subr
             Seek(begin);
-            while (GetPosition() < end)
-            {
+            while (GetPosition() < end) {
                 // Read the next command
                 ReadCommand();
                 int pos = GetPosition();
                 Object TopElement = null;
-                if (arg_count > 0)
-                {
+                if (arg_count > 0) {
                     TopElement = args[arg_count - 1];
                 }
                 int NumOfArgs = arg_count;
                 //Check the modification needed on the Argument Stack according to key;
                 HandelStack();
-                switch (key)
-                {
-                    case "callsubr":
-                    {
+                switch (key) {
+                    case "callsubr": {
                         // a call to a Lsubr
                         // a call to a Gsubr
-                        if (NumOfArgs > 0)
-                        {
+                        if (NumOfArgs > 0) {
                             int Subr = (int)((int?)TopElement) + LBias;
                             CalcHints(LSubrsOffsets[Subr], LSubrsOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
                             Seek(pos);
@@ -991,11 +868,9 @@ namespace iTextSharp.IO.Font
                         break;
                     }
 
-                    case "callgsubr":
-                    {
+                    case "callgsubr": {
                         // A call to "stem"
-                        if (NumOfArgs > 0)
-                        {
+                        if (NumOfArgs > 0) {
                             int Subr = (int)((int?)TopElement) + GBias;
                             CalcHints(gsubrOffsets[Subr], gsubrOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
                             Seek(pos);
@@ -1006,25 +881,21 @@ namespace iTextSharp.IO.Font
                     case "hstem":
                     case "vstem":
                     case "hstemhm":
-                    case "vstemhm":
-                    {
+                    case "vstemhm": {
                         // Increment the NumOfHints by the number couples of of arguments
                         NumOfHints += NumOfArgs / 2;
                         break;
                     }
 
                     case "hintmask":
-                    case "cntrmask":
-                    {
+                    case "cntrmask": {
                         // Compute the size of the mask
                         int SizeOfMask = NumOfHints / 8;
-                        if (NumOfHints % 8 != 0 || SizeOfMask == 0)
-                        {
+                        if (NumOfHints % 8 != 0 || SizeOfMask == 0) {
                             SizeOfMask++;
                         }
                         // Continue the pointer in SizeOfMask steps
-                        for (int i = 0; i < SizeOfMask; i++)
-                        {
+                        for (int i = 0; i < SizeOfMask; i++) {
                             GetCard8();
                         }
                         break;
@@ -1045,23 +916,19 @@ namespace iTextSharp.IO.Font
         /// <returns>the new index subset version</returns>
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual byte[] BuildNewIndex(int[] Offsets, IDictionary<int, int[]> Used, byte OperatorForUnusedEntries
-            )
-        {
+            ) {
             int unusedCount = 0;
             int Offset = 0;
             int[] NewOffsets = new int[Offsets.Length];
             // Build the Offsets Array for the Subset
-            for (int i = 0; i < Offsets.Length; ++i)
-            {
+            for (int i = 0; i < Offsets.Length; ++i) {
                 NewOffsets[i] = Offset;
                 // If the object in the offset is also present in the used
                 // Map then increment the offset var by its size
-                if (Used.ContainsKey(i))
-                {
+                if (Used.ContainsKey(i)) {
                     Offset += Offsets[i + 1] - Offsets[i];
                 }
-                else
-                {
+                else {
                     // Else the same offset is kept in i+1.
                     unusedCount++;
                 }
@@ -1070,23 +937,20 @@ namespace iTextSharp.IO.Font
             byte[] NewObjects = new byte[Offset + unusedCount];
             // Build the new Object array
             int unusedOffset = 0;
-            for (int i_1 = 0; i_1 < Offsets.Length - 1; ++i_1)
-            {
+            for (int i_1 = 0; i_1 < Offsets.Length - 1; ++i_1) {
                 int start = NewOffsets[i_1];
                 int end = NewOffsets[i_1 + 1];
                 NewOffsets[i_1] = start + unusedOffset;
                 // If start != End then the Object is used
                 // So, we will copy the object data from the font file
-                if (start != end)
-                {
+                if (start != end) {
                     // All offsets are Global Offsets relative to the beginning of the font file.
                     // Jump the file pointer to the start address to read from.
                     buf.Seek(Offsets[i_1]);
                     // Read from the buffer and write into the array at start.
                     buf.ReadFully(NewObjects, start + unusedOffset, end - start);
                 }
-                else
-                {
+                else {
                     NewObjects[start + unusedOffset] = OperatorForUnusedEntries;
                     unusedOffset++;
                 }
@@ -1103,32 +967,25 @@ namespace iTextSharp.IO.Font
         /// <param name="NewOffsets">the subsetted offset array</param>
         /// <param name="NewObjects">the subsetted object array</param>
         /// <returns>the new index created</returns>
-        protected internal virtual byte[] AssembleIndex(int[] NewOffsets, byte[] NewObjects)
-        {
+        protected internal virtual byte[] AssembleIndex(int[] NewOffsets, byte[] NewObjects) {
             // Calc the index' count field
             char Count = (char)(NewOffsets.Length - 1);
             // Calc the size of the object array
             int Size = NewOffsets[NewOffsets.Length - 1];
             // Calc the Offsize
             byte Offsize;
-            if (Size <= 0xff)
-            {
+            if (Size <= 0xff) {
                 Offsize = 1;
             }
-            else
-            {
-                if (Size <= 0xffff)
-                {
+            else {
+                if (Size <= 0xffff) {
                     Offsize = 2;
                 }
-                else
-                {
-                    if (Size <= 0xffffff)
-                    {
+                else {
+                    if (Size <= 0xffffff) {
                         Offsize = 3;
                     }
-                    else
-                    {
+                    else {
                         Offsize = 4;
                     }
                 }
@@ -1146,19 +1003,16 @@ namespace iTextSharp.IO.Font
             // Write the offsize field
             NewIndex[Place++] = Offsize;
             // Write the offset array according to the offsize
-            foreach (int newOffset in NewOffsets)
-            {
+            foreach (int newOffset in NewOffsets) {
                 // The value to be written
                 int Num = newOffset - NewOffsets[0] + 1;
                 // Write in bytes according to the offsize
-                for (int i = Offsize; i > 0; i--)
-                {
+                for (int i = Offsize; i > 0; i--) {
                     NewIndex[Place++] = (byte)((int)(((uint)Num) >> ((i - 1) << 3)) & 0xff);
                 }
             }
             // Write the new object array one by one
-            foreach (byte newObject in NewObjects)
-            {
+            foreach (byte newObject in NewObjects) {
                 NewIndex[Place++] = newObject;
             }
             // Return the new index
@@ -1168,8 +1022,7 @@ namespace iTextSharp.IO.Font
         /// <summary>The function builds the new output stream according to the subset process</summary>
         /// <param name="Font">the font</param>
         /// <returns>the subsetted font stream</returns>
-        protected internal virtual byte[] BuildNewFile(int Font)
-        {
+        protected internal virtual byte[] BuildNewFile(int Font) {
             // Prepare linked list for new font components
             OutputList = new LinkedList<CFFFont.Item>();
             // copy the header of the font
@@ -1191,8 +1044,7 @@ namespace iTextSharp.IO.Font
             CFFFont.OffsetItem fdselectRef = new CFFFont.DictOffsetItem();
             CFFFont.OffsetItem privateRef = new CFFFont.DictOffsetItem();
             // If the font is not CID create the following keys
-            if (!fonts[Font].isCID)
-            {
+            if (!fonts[Font].isCID) {
                 // create a ROS key
                 OutputList.AddLast(new CFFFont.DictNumberItem(fonts[Font].nstrings));
                 OutputList.AddLast(new CFFFont.DictNumberItem(fonts[Font].nstrings + 1));
@@ -1210,18 +1062,15 @@ namespace iTextSharp.IO.Font
             // Go to the TopDict of the font being processed
             Seek(topdictOffsets[Font]);
             // Run until the end of the TopDict
-            while (GetPosition() < topdictOffsets[Font + 1])
-            {
+            while (GetPosition() < topdictOffsets[Font + 1]) {
                 int p1 = GetPosition();
                 GetDictItem();
                 int p2 = GetPosition();
                 // The encoding key is disregarded since CID has no encoding
                 if ("Encoding".Equals(key) || "Private".Equals(key) || "FDSelect".Equals(key) || "FDArray".Equals(key) || 
-                    "charset".Equals(key) || "CharStrings".Equals(key))
-                {
+                    "charset".Equals(key) || "CharStrings".Equals(key)) {
                 }
-                else
-                {
+                else {
                     // These keys will be added manually by the process.
                     //OtherWise copy key "as is" to the output list
                     OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
@@ -1232,12 +1081,10 @@ namespace iTextSharp.IO.Font
             // Mark the end of the top dict area
             OutputList.AddLast(new CFFFont.IndexMarkerItem(topdictIndex1Ref, topdictBase));
             // Copy the string index
-            if (fonts[Font].isCID)
-            {
+            if (fonts[Font].isCID) {
                 OutputList.AddLast(GetEntireIndexRange(stringIndexOffset));
             }
-            else
-            {
+            else {
                 // If the font is not CID we need to append new strings.
                 // We need 3 more strings: Registry, Ordering, and a FontName for one FD.
                 // The total length is at most "Adobe"+"Identity"+63 = 76
@@ -1248,19 +1095,16 @@ namespace iTextSharp.IO.Font
                 )), 0, NewGSubrsIndex.Length));
             // deal with fdarray, fdselect, and the font descriptors
             // If the font is CID:
-            if (fonts[Font].isCID)
-            {
+            if (fonts[Font].isCID) {
                 // copy the FDArray, FDSelect, charset
                 // Copy FDSelect
                 // Mark the beginning
                 OutputList.AddLast(new CFFFont.MarkerItem(fdselectRef));
                 // If an FDSelect exists copy it
-                if (fonts[Font].fdselectOffset >= 0)
-                {
+                if (fonts[Font].fdselectOffset >= 0) {
                     OutputList.AddLast(new CFFFont.RangeItem(buf, fonts[Font].fdselectOffset, fonts[Font].FDSelectLength));
                 }
-                else
-                {
+                else {
                     // Else create a new one
                     CreateFDSelect(fdselectRef, fonts[Font].nglyphs);
                 }
@@ -1270,21 +1114,18 @@ namespace iTextSharp.IO.Font
                 OutputList.AddLast(new CFFFont.RangeItem(buf, fonts[Font].charsetOffset, fonts[Font].CharsetLength));
                 // Copy the FDArray
                 // If an FDArray exists
-                if (fonts[Font].fdarrayOffset >= 0)
-                {
+                if (fonts[Font].fdarrayOffset >= 0) {
                     // Mark the beginning
                     OutputList.AddLast(new CFFFont.MarkerItem(fdarrayRef));
                     // Build a new FDArray with its private dicts and their LSubrs
                     Reconstruct(Font);
                 }
-                else
-                {
+                else {
                     // Else create a new one
                     CreateFDArray(fdarrayRef, privateRef, Font);
                 }
             }
-            else
-            {
+            else {
                 // If the font is not CID
                 // create FDSelect
                 CreateFDSelect(fdselectRef, fonts[Font].nglyphs);
@@ -1294,8 +1135,7 @@ namespace iTextSharp.IO.Font
                 CreateFDArray(fdarrayRef, privateRef, Font);
             }
             // if a private dict exists insert its subsetted version
-            if (fonts[Font].privateOffset >= 0)
-            {
+            if (fonts[Font].privateOffset >= 0) {
                 // Mark the beginning of the private dict
                 CFFFont.IndexBaseItem PrivateBase = new CFFFont.IndexBaseItem();
                 OutputList.AddLast(PrivateBase);
@@ -1315,20 +1155,17 @@ namespace iTextSharp.IO.Font
             int[] currentOffset = new int[1];
             currentOffset[0] = 0;
             // Count and save the offset for each item
-            foreach (CFFFont.Item item in OutputList)
-            {
+            foreach (CFFFont.Item item in OutputList) {
                 item.Increment(currentOffset);
             }
             // Compute the Xref for each of the offset items
-            foreach (CFFFont.Item item_1 in OutputList)
-            {
+            foreach (CFFFont.Item item_1 in OutputList) {
                 item_1.Xref();
             }
             int size = currentOffset[0];
             byte[] b = new byte[size];
             // Emit all the items into the new byte array
-            foreach (CFFFont.Item item_2 in OutputList)
-            {
+            foreach (CFFFont.Item item_2 in OutputList) {
                 item_2.Emit(b);
             }
             // Return the new stream
@@ -1336,8 +1173,7 @@ namespace iTextSharp.IO.Font
         }
 
         /// <summary>Function Copies the header from the original fileto the output list</summary>
-        protected internal virtual void CopyHeader()
-        {
+        protected internal virtual void CopyHeader() {
             Seek(0);
             int major = GetCard8();
             int minor = GetCard8();
@@ -1351,17 +1187,14 @@ namespace iTextSharp.IO.Font
         /// <param name="Count">the count field of the index</param>
         /// <param name="Offsize">the offsize field of the index</param>
         /// <param name="First">the first offset of the index</param>
-        protected internal virtual void BuildIndexHeader(int Count, int Offsize, int First)
-        {
+        protected internal virtual void BuildIndexHeader(int Count, int Offsize, int First) {
             // Add the count field
             OutputList.AddLast(new CFFFont.UInt16Item((char)Count));
             // count
             // Add the offsize field
             OutputList.AddLast(new CFFFont.UInt8Item((char)Offsize));
-            switch (Offsize)
-            {
-                case 1:
-                {
+            switch (Offsize) {
+                case 1: {
                     // offSize
                     // Add the first offset according to the offsize
                     OutputList.AddLast(new CFFFont.UInt8Item((char)First));
@@ -1369,29 +1202,25 @@ namespace iTextSharp.IO.Font
                     break;
                 }
 
-                case 2:
-                {
+                case 2: {
                     OutputList.AddLast(new CFFFont.UInt16Item((char)First));
                     // first offset
                     break;
                 }
 
-                case 3:
-                {
+                case 3: {
                     OutputList.AddLast(new CFFFont.UInt24Item((char)First));
                     // first offset
                     break;
                 }
 
-                case 4:
-                {
+                case 4: {
                     OutputList.AddLast(new CFFFont.UInt32Item((char)First));
                     // first offset
                     break;
                 }
 
-                default:
-                {
+                default: {
                     break;
                 }
             }
@@ -1403,8 +1232,7 @@ namespace iTextSharp.IO.Font
         /// <param name="charsetRef">OffsetItem for the CharSet</param>
         /// <param name="charstringsRef">OffsetItem for the CharString</param>
         protected internal virtual void CreateKeys(CFFFont.OffsetItem fdarrayRef, CFFFont.OffsetItem fdselectRef, 
-            CFFFont.OffsetItem charsetRef, CFFFont.OffsetItem charstringsRef)
-        {
+            CFFFont.OffsetItem charsetRef, CFFFont.OffsetItem charstringsRef) {
             // create an FDArray key
             OutputList.AddLast(fdarrayRef);
             OutputList.AddLast(new CFFFont.UInt8Item((char)12));
@@ -1426,35 +1254,27 @@ namespace iTextSharp.IO.Font
         /// to accommodate the CID rules
         /// </summary>
         /// <param name="Font">the font</param>
-        protected internal virtual void CreateNewStringIndex(int Font)
-        {
+        protected internal virtual void CreateNewStringIndex(int Font) {
             String fdFontName = fonts[Font].name + "-OneRange";
-            if (fdFontName.Length > 127)
-            {
+            if (fdFontName.Length > 127) {
                 fdFontName = fdFontName.JSubstring(0, 127);
             }
             String extraStrings = "Adobe" + "Identity" + fdFontName;
             int origStringsLen = stringOffsets[stringOffsets.Length - 1] - stringOffsets[0];
             int stringsBaseOffset = stringOffsets[0] - 1;
             byte stringsIndexOffSize;
-            if (origStringsLen + extraStrings.Length <= 0xff)
-            {
+            if (origStringsLen + extraStrings.Length <= 0xff) {
                 stringsIndexOffSize = 1;
             }
-            else
-            {
-                if (origStringsLen + extraStrings.Length <= 0xffff)
-                {
+            else {
+                if (origStringsLen + extraStrings.Length <= 0xffff) {
                     stringsIndexOffSize = 2;
                 }
-                else
-                {
-                    if (origStringsLen + extraStrings.Length <= 0xffffff)
-                    {
+                else {
+                    if (origStringsLen + extraStrings.Length <= 0xffffff) {
                         stringsIndexOffSize = 3;
                     }
-                    else
-                    {
+                    else {
                         stringsIndexOffSize = 4;
                     }
                 }
@@ -1463,8 +1283,7 @@ namespace iTextSharp.IO.Font
             // count
             OutputList.AddLast(new CFFFont.UInt8Item((char)stringsIndexOffSize));
             // offSize
-            foreach (int stringOffset in stringOffsets)
-            {
+            foreach (int stringOffset in stringOffsets) {
                 OutputList.AddLast(new CFFFont.IndexOffsetItem(stringsIndexOffSize, stringOffset - stringsBaseOffset));
             }
             int currentStringsOffset = stringOffsets[stringOffsets.Length - 1] - stringsBaseOffset;
@@ -1486,8 +1305,7 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <param name="fdselectRef">OffsetItem for the FDSelect</param>
         /// <param name="nglyphs">the number of glyphs in the font</param>
-        protected internal virtual void CreateFDSelect(CFFFont.OffsetItem fdselectRef, int nglyphs)
-        {
+        protected internal virtual void CreateFDSelect(CFFFont.OffsetItem fdselectRef, int nglyphs) {
             OutputList.AddLast(new CFFFont.MarkerItem(fdselectRef));
             OutputList.AddLast(new CFFFont.UInt8Item((char)3));
             // format identifier
@@ -1508,8 +1326,7 @@ namespace iTextSharp.IO.Font
         /// </remarks>
         /// <param name="charsetRef">OffsetItem for the CharSet</param>
         /// <param name="nglyphs">the number of glyphs in the font</param>
-        protected internal virtual void CreateCharset(CFFFont.OffsetItem charsetRef, int nglyphs)
-        {
+        protected internal virtual void CreateCharset(CFFFont.OffsetItem charsetRef, int nglyphs) {
             OutputList.AddLast(new CFFFont.MarkerItem(charsetRef));
             OutputList.AddLast(new CFFFont.UInt8Item((char)2));
             // format identifier
@@ -1529,8 +1346,7 @@ namespace iTextSharp.IO.Font
         /// <param name="privateRef">OffsetItem for the Private Dict</param>
         /// <param name="Font">the font</param>
         protected internal virtual void CreateFDArray(CFFFont.OffsetItem fdarrayRef, CFFFont.OffsetItem privateRef
-            , int Font)
-        {
+            , int Font) {
             OutputList.AddLast(new CFFFont.MarkerItem(fdarrayRef));
             // Build the header (count=offsize=first=1)
             BuildIndexHeader(1, 1, 1);
@@ -1546,8 +1362,7 @@ namespace iTextSharp.IO.Font
             // Calc the original size of the Subr offset in the private
             int OrgSubrsOffsetSize = CalcSubrOffsetSize(fonts[Font].privateOffset, fonts[Font].privateLength);
             // Increase the ptivate's size
-            if (OrgSubrsOffsetSize != 0)
-            {
+            if (OrgSubrsOffsetSize != 0) {
                 NewSize += 5 - OrgSubrsOffsetSize;
             }
             OutputList.AddLast(new CFFFont.DictNumberItem(NewSize));
@@ -1559,8 +1374,7 @@ namespace iTextSharp.IO.Font
 
         /// <summary>Function reconstructs the FDArray, PrivateDict and LSubr for CID fonts</summary>
         /// <param name="Font">the font</param>
-        internal virtual void Reconstruct(int Font)
-        {
+        internal virtual void Reconstruct(int Font) {
             // Init for later use
             CFFFont.OffsetItem[] fdPrivate = new CFFFont.DictOffsetItem[fonts[Font].FDArrayOffsets.Length - 1];
             CFFFont.IndexBaseItem[] fdPrivateBase = new CFFFont.IndexBaseItem[fonts[Font].fdprivateOffsets.Length];
@@ -1574,14 +1388,12 @@ namespace iTextSharp.IO.Font
         /// <summary>Function subsets the FDArray and builds the new one with new offsets</summary>
         /// <param name="Font">The font</param>
         /// <param name="fdPrivate">OffsetItem Array (one for each FDArray)</param>
-        internal virtual void ReconstructFDArray(int Font, CFFFont.OffsetItem[] fdPrivate)
-        {
+        internal virtual void ReconstructFDArray(int Font, CFFFont.OffsetItem[] fdPrivate) {
             // Build the header of the index
             BuildIndexHeader(fonts[Font].FDArrayCount, fonts[Font].FDArrayOffsize, 1);
             // For each offset create an Offset Item
             CFFFont.OffsetItem[] fdOffsets = new CFFFont.IndexOffsetItem[fonts[Font].FDArrayOffsets.Length - 1];
-            for (int i = 0; i < fonts[Font].FDArrayOffsets.Length - 1; i++)
-            {
+            for (int i = 0; i < fonts[Font].FDArrayOffsets.Length - 1; i++) {
                 fdOffsets[i] = new CFFFont.IndexOffsetItem(fonts[Font].FDArrayOffsize);
                 OutputList.AddLast(fdOffsets[i]);
             }
@@ -1592,29 +1404,25 @@ namespace iTextSharp.IO.Font
             // if is used build a new one by changing the private object
             // Else do nothing
             // At the end of each object mark its ending (Even if wasn't written)
-            for (int k = 0; k < fonts[Font].FDArrayOffsets.Length - 1; k++)
-            {
+            for (int k = 0; k < fonts[Font].FDArrayOffsets.Length - 1; k++) {
                 //			if (FDArrayUsed.contains(Integer.valueOf(k)))
                 //			{
                 // Goto beginning of objects
                 Seek(fonts[Font].FDArrayOffsets[k]);
-                while (GetPosition() < fonts[Font].FDArrayOffsets[k + 1])
-                {
+                while (GetPosition() < fonts[Font].FDArrayOffsets[k + 1]) {
                     int p1 = GetPosition();
                     GetDictItem();
                     int p2 = GetPosition();
                     // If the dictItem is the "Private" then compute and copy length,
                     // use marker for offset and write operator number
-                    if ("Private".Equals(key))
-                    {
+                    if ("Private".Equals(key)) {
                         // Save the original length of the private dict
                         int NewSize = (int)((int?)args[0]);
                         // Save the size of the offset to the subrs in that private
                         int OrgSubrsOffsetSize = CalcSubrOffsetSize(fonts[Font].fdprivateOffsets[k], fonts[Font].fdprivateLengths[
                             k]);
                         // Increase the private's length accordingly
-                        if (OrgSubrsOffsetSize != 0)
-                        {
+                        if (OrgSubrsOffsetSize != 0) {
                             NewSize += 5 - OrgSubrsOffsetSize;
                         }
                         // Insert the new size, OffsetItem and operator key number
@@ -1626,8 +1434,7 @@ namespace iTextSharp.IO.Font
                         // Go back to place
                         Seek(p2);
                     }
-                    else
-                    {
+                    else {
                         // Else copy the entire range
                         // other than private
                         OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
@@ -1645,13 +1452,11 @@ namespace iTextSharp.IO.Font
         /// <param name="fdPrivateBase">IndexBaseItem array one element for each private</param>
         /// <param name="fdSubrs">OffsetItem array one element for each private</param>
         internal virtual void ReconstructPrivateDict(int Font, CFFFont.OffsetItem[] fdPrivate, CFFFont.IndexBaseItem
-            [] fdPrivateBase, CFFFont.OffsetItem[] fdSubrs)
-        {
+            [] fdPrivateBase, CFFFont.OffsetItem[] fdSubrs) {
             // For each fdarray private dict check if that FD is used.
             // if is used build a new one by changing the subrs offset
             // Else do nothing
-            for (int i = 0; i < fonts[Font].fdprivateOffsets.Length; i++)
-            {
+            for (int i = 0; i < fonts[Font].fdprivateOffsets.Length; i++) {
                 //			if (FDArrayUsed.contains(Integer.valueOf(i)))
                 //			{
                 // Mark beginning
@@ -1660,21 +1465,18 @@ namespace iTextSharp.IO.Font
                 OutputList.AddLast(fdPrivateBase[i]);
                 // Goto beginning of objects
                 Seek(fonts[Font].fdprivateOffsets[i]);
-                while (GetPosition() < fonts[Font].fdprivateOffsets[i] + fonts[Font].fdprivateLengths[i])
-                {
+                while (GetPosition() < fonts[Font].fdprivateOffsets[i] + fonts[Font].fdprivateLengths[i]) {
                     int p1 = GetPosition();
                     GetDictItem();
                     int p2 = GetPosition();
                     // If the dictItem is the "Subrs" then,
                     // use marker for offset and write operator number
-                    if ("Subrs".Equals(key))
-                    {
+                    if ("Subrs".Equals(key)) {
                         fdSubrs[i] = new CFFFont.DictOffsetItem();
                         OutputList.AddLast(fdSubrs[i]);
                         OutputList.AddLast(new CFFFont.UInt8Item((char)19));
                     }
-                    else
-                    {
+                    else {
                         // Subrs
                         // Else copy the entire range
                         OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
@@ -1689,18 +1491,14 @@ namespace iTextSharp.IO.Font
         /// <param name="fdPrivateBase">The IndexBaseItem array for the linked list</param>
         /// <param name="fdSubrs">OffsetItem array for the linked list</param>
         internal virtual void ReconstructPrivateSubrs(int Font, CFFFont.IndexBaseItem[] fdPrivateBase, CFFFont.OffsetItem
-            [] fdSubrs)
-        {
+            [] fdSubrs) {
             // For each private dict
-            for (int i = 0; i < fonts[Font].fdprivateLengths.Length; i++)
-            {
+            for (int i = 0; i < fonts[Font].fdprivateLengths.Length; i++) {
                 // If that private dict's Subrs are used insert the new LSubrs
                 // computed earlier
-                if (fdSubrs[i] != null && fonts[Font].PrivateSubrsOffset[i] >= 0)
-                {
+                if (fdSubrs[i] != null && fonts[Font].PrivateSubrsOffset[i] >= 0) {
                     OutputList.AddLast(new CFFFont.SubrMarkerItem(fdSubrs[i], fdPrivateBase[i]));
-                    if (NewLSubrsIndex[i] != null)
-                    {
+                    if (NewLSubrsIndex[i] != null) {
                         OutputList.AddLast(new CFFFont.RangeItem(new RandomAccessFileOrArray(rasFactory.CreateSource(NewLSubrsIndex
                             [i])), 0, NewLSubrsIndex[i].Length));
                     }
@@ -1715,21 +1513,18 @@ namespace iTextSharp.IO.Font
         /// <param name="Offset">The Offset for the private dict</param>
         /// <param name="Size">The size of the private dict</param>
         /// <returns>The size of the offset of the subrs in the private dict</returns>
-        internal virtual int CalcSubrOffsetSize(int Offset, int Size)
-        {
+        internal virtual int CalcSubrOffsetSize(int Offset, int Size) {
             // Set the size to 0
             int OffsetSize = 0;
             // Go to the beginning of the private dict
             Seek(Offset);
             // Go until the end of the private dict
-            while (GetPosition() < Offset + Size)
-            {
+            while (GetPosition() < Offset + Size) {
                 int p1 = GetPosition();
                 GetDictItem();
                 int p2 = GetPosition();
                 // When reached to the subrs offset
-                if ("Subrs".Equals(key))
-                {
+                if ("Subrs".Equals(key)) {
                     // The Offsize (minus the subrs key)
                     OffsetSize = p2 - p1 - 1;
                 }
@@ -1742,19 +1537,16 @@ namespace iTextSharp.IO.Font
         /// <summary>Function computes the size of an index</summary>
         /// <param name="indexOffset">The offset for the computed index</param>
         /// <returns>The size of the index</returns>
-        protected internal virtual int CountEntireIndexRange(int indexOffset)
-        {
+        protected internal virtual int CountEntireIndexRange(int indexOffset) {
             // Go to the beginning of the index
             Seek(indexOffset);
             // Read the count field
             int count = GetCard16();
             // If count==0 -> size=2
-            if (count == 0)
-            {
+            if (count == 0) {
                 return 2;
             }
-            else
-            {
+            else {
                 // Read the offsize field
                 int indexOffSize = GetCard8();
                 // Go to the last element of the offset array
@@ -1772,24 +1564,20 @@ namespace iTextSharp.IO.Font
         /// </summary>
         /// <param name="Font">the font</param>
         /// <param name="Subr">The OffsetItem for the subrs of the private</param>
-        internal virtual void CreateNonCIDPrivate(int Font, CFFFont.OffsetItem Subr)
-        {
+        internal virtual void CreateNonCIDPrivate(int Font, CFFFont.OffsetItem Subr) {
             // Go to the beginning of the private dict and read until the end
             Seek(fonts[Font].privateOffset);
-            while (GetPosition() < fonts[Font].privateOffset + fonts[Font].privateLength)
-            {
+            while (GetPosition() < fonts[Font].privateOffset + fonts[Font].privateLength) {
                 int p1 = GetPosition();
                 GetDictItem();
                 int p2 = GetPosition();
                 // If the dictItem is the "Subrs" then,
                 // use marker for offset and write operator number
-                if ("Subrs".Equals(key))
-                {
+                if ("Subrs".Equals(key)) {
                     OutputList.AddLast(Subr);
                     OutputList.AddLast(new CFFFont.UInt8Item((char)19));
                 }
-                else
-                {
+                else {
                     // Subrs
                     // Else copy the entire range
                     OutputList.AddLast(new CFFFont.RangeItem(buf, p1, p2 - p1));
@@ -1805,13 +1593,11 @@ namespace iTextSharp.IO.Font
         /// <param name="PrivateBase">IndexBaseItem for the private that's referencing to the subrs</param>
         /// <param name="Subrs">OffsetItem for the subrs</param>
         internal virtual void CreateNonCIDSubrs(int Font, CFFFont.IndexBaseItem PrivateBase, CFFFont.OffsetItem Subrs
-            )
-        {
+            ) {
             // Mark the beginning of the Subrs index
             OutputList.AddLast(new CFFFont.SubrMarkerItem(Subrs, PrivateBase));
             // Put the subsetted new subrs index
-            if (NewSubrsIndexNonCID != null)
-            {
+            if (NewSubrsIndexNonCID != null) {
                 OutputList.AddLast(new CFFFont.RangeItem(new RandomAccessFileOrArray(rasFactory.CreateSource(NewSubrsIndexNonCID
                     )), 0, NewSubrsIndexNonCID.Length));
             }

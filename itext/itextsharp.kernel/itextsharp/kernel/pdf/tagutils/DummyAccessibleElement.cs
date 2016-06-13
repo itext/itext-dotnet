@@ -43,32 +43,26 @@ address: sales@itextpdf.com
 */
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils
-{
-    internal class DummyAccessibleElement : IAccessibleElement
-    {
+namespace iTextSharp.Kernel.Pdf.Tagutils {
+    internal class DummyAccessibleElement : IAccessibleElement {
         private PdfName role;
 
         private AccessibilityProperties properties;
 
-        internal DummyAccessibleElement(PdfName role, AccessibilityProperties properties)
-        {
+        internal DummyAccessibleElement(PdfName role, AccessibilityProperties properties) {
             this.role = role;
             this.properties = properties;
         }
 
-        public virtual PdfName GetRole()
-        {
+        public virtual PdfName GetRole() {
             return role;
         }
 
-        public virtual void SetRole(PdfName role)
-        {
+        public virtual void SetRole(PdfName role) {
             this.role = role;
         }
 
-        public virtual AccessibilityProperties GetAccessibilityProperties()
-        {
+        public virtual AccessibilityProperties GetAccessibilityProperties() {
             return properties;
         }
     }

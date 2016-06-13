@@ -21,8 +21,7 @@ using System.IO;
 using System.Text;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary>
     /// <p>This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup.
@@ -33,8 +32,7 @@ namespace iTextSharp.Layout.Hyphenation
     /// hyphenate a word.</p>
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
     /// </remarks>
-    public class HyphenationTree : TernaryTree, IPatternConsumer
-    {
+    public class HyphenationTree : TernaryTree, IPatternConsumer {
         /// <summary>value space: stores the interletter values</summary>
         protected internal ByteVector vspace;
 
@@ -49,8 +47,7 @@ namespace iTextSharp.Layout.Hyphenation
         private TernaryTree ivalues;
 
         /// <summary>Default constructor.</summary>
-        public HyphenationTree()
-        {
+        public HyphenationTree() {
             stoplist = new Dictionary<String, IList>(23);
             classmap = new TernaryTree();
             vspace = new ByteVector();
@@ -75,23 +72,19 @@ namespace iTextSharp.Layout.Hyphenation
         /// the index into the vspace array where the packed values
         /// are stored.
         /// </returns>
-        protected internal virtual int PackValues(String values)
-        {
+        protected internal virtual int PackValues(String values) {
             int i;
             int n = values.Length;
             int m = (n & 1) == 1 ? (n >> 1) + 2 : (n >> 1) + 1;
             int offset = vspace.Alloc(m);
             byte[] va = vspace.GetArray();
-            for (i = 0; i < n; i++)
-            {
+            for (i = 0; i < n; i++) {
                 int j = i >> 1;
                 byte v = (byte)((values[i] - '0' + 1) & 0x0f);
-                if ((i & 1) == 1)
-                {
+                if ((i & 1) == 1) {
                     va[j + offset] = (byte)(va[j + offset] | v);
                 }
-                else
-                {
+                else {
                     va[j + offset] = (byte)(v << 4);
                 }
             }
@@ -104,17 +97,14 @@ namespace iTextSharp.Layout.Hyphenation
         /// <summary>Unpack values.</summary>
         /// <param name="k">an integer</param>
         /// <returns>a string</returns>
-        protected internal virtual String UnpackValues(int k)
-        {
+        protected internal virtual String UnpackValues(int k) {
             StringBuilder buf = new StringBuilder();
             byte v = vspace.Get(k++);
-            while (v != 0)
-            {
+            while (v != 0) {
                 char c = (char)((v >> 4) - 1 + '0');
                 buf.Append(c);
                 c = (char)(v & 0x0f);
-                if (c == 0)
-                {
+                if (c == 0) {
                     break;
                 }
                 c = (char)(c - 1 + '0');
@@ -129,8 +119,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <exception cref="HyphenationException">In case the parsing fails</exception>
         /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
         /// <exception cref="System.IO.FileNotFoundException"/>
-        public virtual void LoadPatterns(String filename)
-        {
+        public virtual void LoadPatterns(String filename) {
             LoadPatterns(new FileStream(filename, FileMode.Open, FileAccess.Read), filename);
         }
 
@@ -139,8 +128,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="name">unique key representing country-language combination</param>
         /// <exception cref="HyphenationException">In case the parsing fails</exception>
         /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
-        public virtual void LoadPatterns(Stream stream, String name)
-        {
+        public virtual void LoadPatterns(Stream stream, String name) {
             PatternParser pp = new PatternParser(this);
             ivalues = new TernaryTree();
             pp.Parse(stream, name);
@@ -156,11 +144,9 @@ namespace iTextSharp.Layout.Hyphenation
         /// <summary>Find pattern.</summary>
         /// <param name="pat">a pattern</param>
         /// <returns>a string</returns>
-        public virtual String FindPattern(String pat)
-        {
+        public virtual String FindPattern(String pat) {
             int k = base.Find(pat);
-            if (k >= 0)
-            {
+            if (k >= 0) {
                 return UnpackValues(k);
             }
             return "";
@@ -175,17 +161,13 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="t">second character array</param>
         /// <param name="ti">starting index into second array</param>
         /// <returns>an integer</returns>
-        protected internal virtual int Hstrcmp(char[] s, int si, char[] t, int ti)
-        {
-            for (; s[si] == t[ti]; si++, ti++)
-            {
-                if (s[si] == 0)
-                {
+        protected internal virtual int Hstrcmp(char[] s, int si, char[] t, int ti) {
+            for (; s[si] == t[ti]; si++, ti++) {
+                if (s[si] == 0) {
                     return 0;
                 }
             }
-            if (t[ti] == 0)
-            {
+            if (t[ti] == 0) {
                 return 0;
             }
             return s[si] - t[ti];
@@ -194,17 +176,14 @@ namespace iTextSharp.Layout.Hyphenation
         /// <summary>Get values.</summary>
         /// <param name="k">an integer</param>
         /// <returns>a byte array</returns>
-        protected internal virtual byte[] GetValues(int k)
-        {
+        protected internal virtual byte[] GetValues(int k) {
             StringBuilder buf = new StringBuilder();
             byte v = vspace.Get(k++);
-            while (v != 0)
-            {
+            while (v != 0) {
                 char c = (char)((v >> 4) - 1);
                 buf.Append(c);
                 c = (char)(v & 0x0f);
-                if (c == 0)
-                {
+                if (c == 0) {
                     break;
                 }
                 c = (char)(c - 1);
@@ -212,8 +191,7 @@ namespace iTextSharp.Layout.Hyphenation
                 v = vspace.Get(k++);
             }
             byte[] res = new byte[buf.Length];
-            for (int i = 0; i < res.Length; i++)
-            {
+            for (int i = 0; i < res.Length; i++) {
                 res[i] = (byte)buf[i];
             }
             return res;
@@ -247,27 +225,21 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="word">null terminated word to match</param>
         /// <param name="index">start index from word</param>
         /// <param name="il">interletter values array to update</param>
-        protected internal virtual void SearchPatterns(char[] word, int index, byte[] il)
-        {
+        protected internal virtual void SearchPatterns(char[] word, int index, byte[] il) {
             byte[] values;
             int i = index;
             char p;
             char q;
             char sp = word[i];
             p = root;
-            while (p > 0 && p < sc.Length)
-            {
-                if (sc[p] == 0xFFFF)
-                {
-                    if (Hstrcmp(word, i, kv.GetArray(), lo[p]) == 0)
-                    {
+            while (p > 0 && p < sc.Length) {
+                if (sc[p] == 0xFFFF) {
+                    if (Hstrcmp(word, i, kv.GetArray(), lo[p]) == 0) {
                         values = GetValues(eq[p]);
                         // data pointer is in eq[]
                         int j = index;
-                        for (int k = 0; k < values.Length; k++)
-                        {
-                            if (j < il.Length && values[k] > il[j])
-                            {
+                        for (int k = 0; k < values.Length; k++) {
+                            if (j < il.Length && values[k] > il[j]) {
                                 il[j] = values[k];
                             }
                             j++;
@@ -276,10 +248,8 @@ namespace iTextSharp.Layout.Hyphenation
                     return;
                 }
                 int d = sp - sc[p];
-                if (d == 0)
-                {
-                    if (sp == 0)
-                    {
+                if (d == 0) {
+                    if (sp == 0) {
                         break;
                     }
                     sp = word[++i];
@@ -287,35 +257,28 @@ namespace iTextSharp.Layout.Hyphenation
                     q = p;
                     // look for a pattern ending at this position by searching for
                     // the null char ( splitchar == 0 )
-                    while (q > 0 && q < sc.Length)
-                    {
-                        if (sc[q] == 0xFFFF)
-                        {
+                    while (q > 0 && q < sc.Length) {
+                        if (sc[q] == 0xFFFF) {
                             // stop at compressed branch
                             break;
                         }
-                        if (sc[q] == 0)
-                        {
+                        if (sc[q] == 0) {
                             values = GetValues(eq[q]);
                             int j = index;
-                            for (int k = 0; k < values.Length; k++)
-                            {
-                                if (j < il.Length && values[k] > il[j])
-                                {
+                            for (int k = 0; k < values.Length; k++) {
+                                if (j < il.Length && values[k] > il[j]) {
                                     il[j] = values[k];
                                 }
                                 j++;
                             }
                             break;
                         }
-                        else
-                        {
+                        else {
                             q = lo[q];
                         }
                     }
                 }
-                else
-                {
+                else {
                     p = d < 0 ? lo[p] : hi[p];
                 }
             }
@@ -338,41 +301,32 @@ namespace iTextSharp.Layout.Hyphenation
         /// the hyphenated word or null if word is not hyphenated.
         /// </returns>
         public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word, int remainCharCount, int pushCharCount
-            )
-        {
+            ) {
             char[] w = word.ToCharArray();
-            if (IsMultiPartWord(w, w.Length))
-            {
+            if (IsMultiPartWord(w, w.Length)) {
                 IList<char[]> words = SplitOnNonCharacters(w);
                 return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w), GetHyphPointsForWords(words, remainCharCount
                     , pushCharCount));
             }
-            else
-            {
+            else {
                 return Hyphenate(w, 0, w.Length, remainCharCount, pushCharCount);
             }
         }
 
-        private bool IsMultiPartWord(char[] w, int len)
-        {
+        private bool IsMultiPartWord(char[] w, int len) {
             int wordParts = 0;
-            for (int i = 0; i < len; i++)
-            {
+            for (int i = 0; i < len; i++) {
                 char[] c = new char[2];
                 c[0] = w[i];
                 int nc = classmap.Find(c, 0);
-                if (nc > 0)
-                {
-                    if (wordParts > 1)
-                    {
+                if (nc > 0) {
+                    if (wordParts > 1) {
                         return true;
                     }
                     wordParts = 1;
                 }
-                else
-                {
-                    if (wordParts == 1)
-                    {
+                else {
+                    if (wordParts == 1) {
                         wordParts++;
                     }
                 }
@@ -380,79 +334,64 @@ namespace iTextSharp.Layout.Hyphenation
             return false;
         }
 
-        private IList<char[]> SplitOnNonCharacters(char[] word)
-        {
+        private IList<char[]> SplitOnNonCharacters(char[] word) {
             IList<int> breakPoints = GetNonLetterBreaks(word);
-            if (breakPoints.Count == 0)
-            {
+            if (breakPoints.Count == 0) {
                 return JavaCollectionsUtil.EmptyList<char[]>();
             }
             IList<char[]> words = new List<char[]>();
-            for (int ibreak = 0; ibreak < breakPoints.Count; ibreak++)
-            {
+            for (int ibreak = 0; ibreak < breakPoints.Count; ibreak++) {
                 char[] newWord = GetWordFromCharArray(word, ((ibreak == 0) ? 0 : breakPoints[ibreak - 1]), breakPoints[ibreak
                     ]);
                 words.Add(newWord);
             }
-            if (word.Length - breakPoints[breakPoints.Count - 1] - 1 > 1)
-            {
+            if (word.Length - breakPoints[breakPoints.Count - 1] - 1 > 1) {
                 char[] newWord = GetWordFromCharArray(word, breakPoints[breakPoints.Count - 1], word.Length);
                 words.Add(newWord);
             }
             return words;
         }
 
-        private IList<int> GetNonLetterBreaks(char[] word)
-        {
+        private IList<int> GetNonLetterBreaks(char[] word) {
             char[] c = new char[2];
             IList<int> breakPoints = new List<int>();
             bool foundLetter = false;
-            for (int i = 0; i < word.Length; i++)
-            {
+            for (int i = 0; i < word.Length; i++) {
                 c[0] = word[i];
-                if (classmap.Find(c, 0) < 0)
-                {
-                    if (foundLetter)
-                    {
+                if (classmap.Find(c, 0) < 0) {
+                    if (foundLetter) {
                         breakPoints.Add(i);
                     }
                 }
-                else
-                {
+                else {
                     foundLetter = true;
                 }
             }
             return breakPoints;
         }
 
-        private char[] GetWordFromCharArray(char[] word, int startIndex, int endIndex)
-        {
+        private char[] GetWordFromCharArray(char[] word, int startIndex, int endIndex) {
             char[] newWord = new char[endIndex - ((startIndex == 0) ? startIndex : startIndex + 1)];
             int iChar = 0;
-            for (int i = (startIndex == 0) ? 0 : startIndex + 1; i < endIndex; i++)
-            {
+            for (int i = (startIndex == 0) ? 0 : startIndex + 1; i < endIndex; i++) {
                 newWord[iChar++] = word[i];
             }
             return newWord;
         }
 
-        private int[] GetHyphPointsForWords(IList<char[]> nonLetterWords, int remainCharCount, int pushCharCount)
-        {
+        private int[] GetHyphPointsForWords(IList<char[]> nonLetterWords, int remainCharCount, int pushCharCount) {
             int[] breaks = new int[0];
-            for (int iNonLetterWord = 0; iNonLetterWord < nonLetterWords.Count; iNonLetterWord++)
-            {
+            for (int iNonLetterWord = 0; iNonLetterWord < nonLetterWords.Count; iNonLetterWord++) {
                 char[] nonLetterWord = nonLetterWords[iNonLetterWord];
                 iTextSharp.Layout.Hyphenation.Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord.Length, (iNonLetterWord
                      == 0) ? remainCharCount : 1, (iNonLetterWord == nonLetterWords.Count - 1) ? pushCharCount : 1);
-                if (curHyph == null)
-                {
+                if (curHyph == null) {
                     continue;
                 }
                 int[] combined = new int[breaks.Length + curHyph.GetHyphenationPoints().Length];
                 int[] hyphPoints = curHyph.GetHyphenationPoints();
                 int foreWordsSize = CalcForeWordsSize(nonLetterWords, iNonLetterWord);
-                for (int i = 0; i < hyphPoints.Length; i++)
-                {
+                for (int i = 0; i < hyphPoints.Length; i++) {
                     hyphPoints[i] += foreWordsSize;
                 }
                 System.Array.Copy(breaks, 0, combined, 0, breaks.Length);
@@ -462,11 +401,9 @@ namespace iTextSharp.Layout.Hyphenation
             return breaks;
         }
 
-        private int CalcForeWordsSize(IList<char[]> nonLetterWords, int iNonLetterWord)
-        {
+        private int CalcForeWordsSize(IList<char[]> nonLetterWords, int iNonLetterWord) {
             int result = 0;
-            for (int i = 0; i < iNonLetterWord; i++)
-            {
+            for (int i = 0; i < iNonLetterWord; i++) {
                 result += nonLetterWords[i].Length + 1;
             }
             return result;
@@ -491,8 +428,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// the hyphenated word or null if word is not hyphenated.
         /// </returns>
         public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(char[] w, int offset, int len, int remainCharCount
-            , int pushCharCount)
-        {
+            , int pushCharCount) {
             int i;
             char[] word = new char[len + 3];
             // normalize word
@@ -500,40 +436,32 @@ namespace iTextSharp.Layout.Hyphenation
             int iIgnoreAtBeginning = 0;
             int iLength = len;
             bool bEndOfLetters = false;
-            for (i = 1; i <= len; i++)
-            {
+            for (i = 1; i <= len; i++) {
                 c[0] = w[offset + i - 1];
                 int nc = classmap.Find(c, 0);
-                if (nc < 0)
-                {
+                if (nc < 0) {
                     // found a non-letter character ...
-                    if (i == (1 + iIgnoreAtBeginning))
-                    {
+                    if (i == (1 + iIgnoreAtBeginning)) {
                         // ... before any letter character
                         iIgnoreAtBeginning++;
                     }
-                    else
-                    {
+                    else {
                         // ... after a letter character
                         bEndOfLetters = true;
                     }
                     iLength--;
                 }
-                else
-                {
-                    if (!bEndOfLetters)
-                    {
+                else {
+                    if (!bEndOfLetters) {
                         word[i - iIgnoreAtBeginning] = (char)nc;
                     }
-                    else
-                    {
+                    else {
                         return null;
                     }
                 }
             }
             len = iLength;
-            if (len < (remainCharCount + pushCharCount))
-            {
+            if (len < (remainCharCount + pushCharCount)) {
                 // word is too short to be hyphenated
                 return null;
             }
@@ -541,28 +469,23 @@ namespace iTextSharp.Layout.Hyphenation
             int k = 0;
             // check exception list first
             String sw = new String(word, 1, len);
-            if (stoplist.ContainsKey(sw))
-            {
+            if (stoplist.ContainsKey(sw)) {
                 // assume only simple hyphens (Hyphen.pre="-", Hyphen.post = Hyphen.no = null)
                 ArrayList hw = (ArrayList)stoplist.Get(sw);
                 int j = 0;
-                for (i = 0; i < hw.Count; i++)
-                {
+                for (i = 0; i < hw.Count; i++) {
                     Object o = hw[i];
                     // j = index(sw) = letterindex(word)?
                     // result[k] = corresponding index(w)
-                    if (o is String)
-                    {
+                    if (o is String) {
                         j += ((String)o).Length;
-                        if (j >= remainCharCount && j < (len - pushCharCount))
-                        {
+                        if (j >= remainCharCount && j < (len - pushCharCount)) {
                             result[k++] = j + iIgnoreAtBeginning;
                         }
                     }
                 }
             }
-            else
-            {
+            else {
                 // use algorithm to get hyphenation points
                 word[0] = '.';
                 // word start marker
@@ -572,31 +495,26 @@ namespace iTextSharp.Layout.Hyphenation
                 // null terminated
                 byte[] il = new byte[len + 3];
                 // initialized to zero
-                for (i = 0; i < len + 1; i++)
-                {
+                for (i = 0; i < len + 1; i++) {
                     SearchPatterns(word, i, il);
                 }
                 // hyphenation points are located where interletter value is odd
                 // i is letterindex(word),
                 // i + 1 is index(word),
                 // result[k] = corresponding index(w)
-                for (i = 0; i < len; i++)
-                {
-                    if (((il[i + 1] & 1) == 1) && i >= remainCharCount && i <= (len - pushCharCount))
-                    {
+                for (i = 0; i < len; i++) {
+                    if (((il[i + 1] & 1) == 1) && i >= remainCharCount && i <= (len - pushCharCount)) {
                         result[k++] = i + iIgnoreAtBeginning;
                     }
                 }
             }
-            if (k > 0)
-            {
+            if (k > 0) {
                 // trim result array
                 int[] res = new int[k];
                 System.Array.Copy(result, 0, res, 0, k);
                 return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w, offset, len), res);
             }
-            else
-            {
+            else {
                 return null;
             }
         }
@@ -616,15 +534,12 @@ namespace iTextSharp.Layout.Hyphenation
         /// character being the normalization char.
         /// </remarks>
         /// <param name="chargroup">a character class (group)</param>
-        public virtual void AddClass(String chargroup)
-        {
-            if (chargroup.Length > 0)
-            {
+        public virtual void AddClass(String chargroup) {
+            if (chargroup.Length > 0) {
                 char equivChar = chargroup[0];
                 char[] key = new char[2];
                 key[1] = (char)0;
-                for (int i = 0; i < chargroup.Length; i++)
-                {
+                for (int i = 0; i < chargroup.Length; i++) {
                     key[0] = chargroup[i];
                     classmap.Insert(key, 0, equivChar);
                 }
@@ -644,8 +559,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <see cref="Hyphen">hyphen</see>
         /// objects.
         /// </param>
-        public virtual void AddException(String word, IList hyphenatedword)
-        {
+        public virtual void AddException(String word, IList hyphenatedword) {
             stoplist[word] = hyphenatedword;
         }
 
@@ -663,11 +577,9 @@ namespace iTextSharp.Layout.Hyphenation
         /// within the pattern. It should contain only digit characters.
         /// (i.e. '0' to '9').
         /// </param>
-        public virtual void AddPattern(String pattern, String ivalue)
-        {
+        public virtual void AddPattern(String pattern, String ivalue) {
             int k = ivalues.Find(ivalue);
-            if (k <= 0)
-            {
+            if (k <= 0) {
                 k = PackValues(ivalue);
                 ivalues.Insert(ivalue, (char)k);
             }

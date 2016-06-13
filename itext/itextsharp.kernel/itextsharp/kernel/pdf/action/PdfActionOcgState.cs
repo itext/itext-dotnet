@@ -44,34 +44,28 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Action
-{
+namespace iTextSharp.Kernel.Pdf.Action {
     /// <summary>USed in Set OCG State actions.</summary>
-    public class PdfActionOcgState
-    {
+    public class PdfActionOcgState {
         /// <summary>Can be: OFF, ON, Toggle</summary>
         private PdfName state;
 
         private IList<PdfDictionary> ocgs;
 
-        public PdfActionOcgState(PdfName state, IList<PdfDictionary> ocgs)
-        {
+        public PdfActionOcgState(PdfName state, IList<PdfDictionary> ocgs) {
             this.state = state;
             this.ocgs = ocgs;
         }
 
-        public virtual PdfName GetState()
-        {
+        public virtual PdfName GetState() {
             return state;
         }
 
-        public virtual IList<PdfDictionary> GetOcgs()
-        {
+        public virtual IList<PdfDictionary> GetOcgs() {
             return ocgs;
         }
 
-        public virtual IList<PdfObject> GetObjectList()
-        {
+        public virtual IList<PdfObject> GetObjectList() {
             IList<PdfObject> states = new List<PdfObject>();
             states.Add(state);
             states.AddAll(ocgs);

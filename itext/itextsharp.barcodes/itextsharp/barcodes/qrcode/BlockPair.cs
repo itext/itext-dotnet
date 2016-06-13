@@ -41,27 +41,22 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Barcodes.Qrcode
-{
-    internal sealed class BlockPair
-    {
+namespace iTextSharp.Barcodes.Qrcode {
+    internal sealed class BlockPair {
         private readonly ByteArray dataBytes;
 
         private readonly ByteArray errorCorrectionBytes;
 
-        internal BlockPair(ByteArray data, ByteArray errorCorrection)
-        {
+        internal BlockPair(ByteArray data, ByteArray errorCorrection) {
             dataBytes = data;
             errorCorrectionBytes = errorCorrection;
         }
 
-        public ByteArray GetDataBytes()
-        {
+        public ByteArray GetDataBytes() {
             return dataBytes;
         }
 
-        public ByteArray GetErrorCorrectionBytes()
-        {
+        public ByteArray GetErrorCorrectionBytes() {
             return errorCorrectionBytes;
         }
     }

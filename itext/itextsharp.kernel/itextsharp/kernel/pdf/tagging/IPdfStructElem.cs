@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging
-{
-    public interface IPdfStructElem
-    {
+namespace iTextSharp.Kernel.Pdf.Tagging {
+    public interface IPdfStructElem {
         IPdfStructElem GetParent();
 
         IList<IPdfStructElem> GetKids();

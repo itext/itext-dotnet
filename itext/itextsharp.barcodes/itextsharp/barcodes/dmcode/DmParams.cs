@@ -41,13 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Barcodes.Dmcode
-{
-    public class DmParams
-    {
+namespace iTextSharp.Barcodes.Dmcode {
+    public class DmParams {
         public DmParams(int height, int width, int heightSection, int widthSection, int dataSize, int dataBlock, int
-             errorBlock)
-        {
+             errorBlock) {
             this.height = height;
             this.width = width;
             this.heightSection = heightSection;

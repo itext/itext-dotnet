@@ -6,23 +6,19 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfWriterTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfWriterTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfWriterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreateEmptyDocument()
-        {
+        public virtual void CreateEmptyDocument() {
             FileStream fos = new FileStream(destinationFolder + "emptyDocument.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -45,8 +41,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void UseObjectForMultipleTimes1()
-        {
+        public virtual void UseObjectForMultipleTimes1() {
             FileStream fos = new FileStream(destinationFolder + "useObjectForMultipleTimes1.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -62,8 +57,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void UseObjectForMultipleTimes2()
-        {
+        public virtual void UseObjectForMultipleTimes2() {
             FileStream fos = new FileStream(destinationFolder + "useObjectForMultipleTimes2.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -80,8 +74,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void UseObjectForMultipleTimes3()
-        {
+        public virtual void UseObjectForMultipleTimes3() {
             FileStream fos = new FileStream(destinationFolder + "useObjectForMultipleTimes3.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -98,8 +91,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void UseObjectForMultipleTimes4()
-        {
+        public virtual void UseObjectForMultipleTimes4() {
             FileStream fos = new FileStream(destinationFolder + "useObjectForMultipleTimes4.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -115,8 +107,7 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void ValidateUseObjectForMultipleTimesTest(String filename)
-        {
+        private void ValidateUseObjectForMultipleTimesTest(String filename) {
             PdfReader reader = new PdfReader(filename);
             PdfDocument pdfDoc = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
@@ -138,8 +129,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject1()
-        {
+        public virtual void CopyObject1() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject1_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -196,8 +186,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject2()
-        {
+        public virtual void CopyObject2() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject2_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -255,9 +244,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject3()
-        {
-            {
+        public virtual void CopyObject3() {
+ {
                 FileStream fos1 = new FileStream(destinationFolder + "copyObject3_1.pdf", FileMode.Create);
                 PdfWriter writer1 = new PdfWriter(fos1);
                 PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -287,7 +275,7 @@ namespace iTextSharp.Kernel.Pdf
                 pdfDoc1R.Close();
                 pdfDoc2.Close();
             }
-            {
+ {
                 PdfReader reader = new PdfReader(destinationFolder + "copyObject3_2.pdf");
                 PdfDocument pdfDocument = new PdfDocument(reader);
                 NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
@@ -305,8 +293,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject4()
-        {
+        public virtual void CopyObject4() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject4_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -346,8 +333,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject5()
-        {
+        public virtual void CopyObject5() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject5_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
@@ -382,8 +368,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Copies object with different method overloads.</summary>
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject6()
-        {
+        public virtual void CopyObject6() {
             FileStream fos = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -426,8 +411,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Attempts to copy from the document that is being written.</summary>
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject7()
-        {
+        public virtual void CopyObject7() {
             String exceptionMessage = null;
             PdfDocument pdfDoc1;
             PdfDocument pdfDoc2;
@@ -437,8 +421,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer2 = new PdfWriter(fos2);
             pdfDoc1 = new PdfDocument(writer1);
             pdfDoc2 = new PdfDocument(writer2);
-            try
-            {
+            try {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfDictionary directDict = new PdfDictionary();
                 PdfObject indirectDict = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1));
@@ -448,12 +431,10 @@ namespace iTextSharp.Kernel.Pdf
                 page2.GetPdfObject().Put(new PdfName("HelloWorldDirect"), ((PdfDictionary)directDict.CopyTo(pdfDoc2)));
                 page2.GetPdfObject().Put(new PdfName("HelloWorldIndirect"), indirectDict.CopyTo(pdfDoc2));
             }
-            catch (PdfException ex)
-            {
+            catch (PdfException ex) {
                 exceptionMessage = ex.Message;
             }
-            finally
-            {
+            finally {
                 pdfDoc1.Close();
                 pdfDoc2.Close();
             }
@@ -464,15 +445,13 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Attempts to copy to copy with null document</summary>
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CopyObject8()
-        {
+        public virtual void CopyObject8() {
             String exceptionMessage = null;
             PdfDocument pdfDoc1;
             FileStream fos1 = new FileStream(destinationFolder + "copyObject6_1.pdf", FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             pdfDoc1 = new PdfDocument(writer1);
-            try
-            {
+            try {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 PdfDictionary directDict = new PdfDictionary();
                 PdfObject indirectDict = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc1));
@@ -480,12 +459,10 @@ namespace iTextSharp.Kernel.Pdf
                 page1.GetPdfObject().Put(new PdfName("HelloWorldIndirect"), indirectDict);
                 indirectDict.CopyTo(null);
             }
-            catch (PdfException ex)
-            {
+            catch (PdfException ex) {
                 exceptionMessage = ex.Message;
             }
-            finally
-            {
+            finally {
                 pdfDoc1.Close();
             }
             NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DocumentToCopyToCannotBeNull);
@@ -493,27 +470,23 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CloseStream1()
-        {
+        public virtual void CloseStream1() {
             FileStream fos = new FileStream(destinationFolder + "closeStream1.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.AddNewPage();
             pdfDoc.Close();
-            try
-            {
+            try {
                 fos.Write(1);
                 NUnit.Framework.Assert.Fail("Exception expected");
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CloseStream2()
-        {
+        public virtual void CloseStream2() {
             FileStream fos = new FileStream(destinationFolder + "closeStream2.pdf", FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);
             writer.SetCloseStream(false);
@@ -525,8 +498,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void DirectInIndirectChain()
-        {
+        public virtual void DirectInIndirectChain() {
             String filename = destinationFolder + "directInIndirectChain.pdf";
             PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -556,8 +528,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void CreatePdfStreamByInputStream()
-        {
+        public virtual void CreatePdfStreamByInputStream() {
             String filename = destinationFolder + "createPdfStreamByInputStream.pdf";
             FileStream fos = new FileStream(filename, FileMode.Create);
             PdfWriter writer = new PdfWriter(fos);

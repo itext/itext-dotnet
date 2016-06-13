@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfTextMarkupAnnotation : PdfMarkupAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfTextMarkupAnnotation : PdfMarkupAnnotation {
         /// <summary>Subtypes</summary>
         public static readonly PdfName MarkupHighlight = PdfName.Highlight;
 
@@ -58,46 +56,38 @@ namespace iTextSharp.Kernel.Pdf.Annot
         public static readonly PdfName MarkupSquiggly = PdfName.Squiggly;
 
         public PdfTextMarkupAnnotation(Rectangle rect, PdfName subtype, float[] quadPoints)
-            : base(rect)
-        {
+            : base(rect) {
             Put(PdfName.Subtype, subtype);
             SetQuadPoints(new PdfArray(quadPoints));
         }
 
         public PdfTextMarkupAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateHighLight(Rectangle rect, float[] 
-            quadPoints)
-        {
+            quadPoints) {
             return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupHighlight, quadPoints);
         }
 
         public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateUnderline(Rectangle rect, float[] 
-            quadPoints)
-        {
+            quadPoints) {
             return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupUnderline, quadPoints);
         }
 
         public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateStrikeout(Rectangle rect, float[] 
-            quadPoints)
-        {
+            quadPoints) {
             return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupStrikeout, quadPoints);
         }
 
         public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateSquiggly(Rectangle rect, float[] quadPoints
-            )
-        {
+            ) {
             return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupSquiggly, quadPoints);
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             PdfName subType = GetPdfObject().GetAsName(PdfName.Subtype);
-            if (subType == null)
-            {
+            if (subType == null) {
                 subType = PdfName.Underline;
             }
             return subType;

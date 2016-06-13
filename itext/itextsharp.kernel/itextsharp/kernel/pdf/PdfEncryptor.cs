@@ -46,8 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     /// <summary>
     /// This class takes any PDF and returns exactly the same but
     /// encrypted.
@@ -57,10 +56,8 @@ namespace iTextSharp.Kernel.Pdf
     /// encrypted. All the content, links, outlines, etc, are kept.
     /// It is also possible to change the info dictionary.
     /// </remarks>
-    public sealed class PdfEncryptor
-    {
-        private PdfEncryptor()
-        {
+    public sealed class PdfEncryptor {
+        private PdfEncryptor() {
         }
 
         /// <summary>Entry point to encrypt a PDF document.</summary>
@@ -80,8 +77,7 @@ namespace iTextSharp.Kernel.Pdf
         /// values delete the key in the original info dictionary
         /// </param>
         public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties, IDictionary<String
-            , String> newInfo)
-        {
+            , String> newInfo) {
             WriterProperties writerProperties = new WriterProperties();
             writerProperties.encryptionProperties = properties;
             PdfWriter writer = new PdfWriter(os, writerProperties);
@@ -98,47 +94,40 @@ namespace iTextSharp.Kernel.Pdf
         /// <see cref="EncryptionProperties"/>
         /// .
         /// </param>
-        public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties)
-        {
+        public static void Encrypt(PdfReader reader, Stream os, EncryptionProperties properties) {
             Encrypt(reader, os, properties, null);
         }
 
         /// <summary>Give you a verbose analysis of the permissions.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>a String that explains the meaning of the permissions value</returns>
-        public static String GetPermissionsVerbose(int permissions)
-        {
+        public static String GetPermissionsVerbose(int permissions) {
             StringBuilder buf = new StringBuilder("Allowed:");
-            if ((EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.ALLOW_PRINTING)
-            {
+            if ((EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.ALLOW_PRINTING) {
                 buf.Append(" Printing");
             }
-            if ((EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants.ALLOW_MODIFY_CONTENTS)
-            {
+            if ((EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants.ALLOW_MODIFY_CONTENTS
+                ) {
                 buf.Append(" Modify contents");
             }
-            if ((EncryptionConstants.ALLOW_COPY & permissions) == EncryptionConstants.ALLOW_COPY)
-            {
+            if ((EncryptionConstants.ALLOW_COPY & permissions) == EncryptionConstants.ALLOW_COPY) {
                 buf.Append(" Copy");
             }
-            if ((EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS)
-            {
+            if ((EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS
+                ) {
                 buf.Append(" Modify annotations");
             }
-            if ((EncryptionConstants.ALLOW_FILL_IN & permissions) == EncryptionConstants.ALLOW_FILL_IN)
-            {
+            if ((EncryptionConstants.ALLOW_FILL_IN & permissions) == EncryptionConstants.ALLOW_FILL_IN) {
                 buf.Append(" Fill in");
             }
-            if ((EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants.ALLOW_SCREENREADERS)
-            {
+            if ((EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants.ALLOW_SCREENREADERS) {
                 buf.Append(" Screen readers");
             }
-            if ((EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.ALLOW_ASSEMBLY)
-            {
+            if ((EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.ALLOW_ASSEMBLY) {
                 buf.Append(" Assembly");
             }
-            if ((EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants.ALLOW_DEGRADED_PRINTING)
-            {
+            if ((EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants.ALLOW_DEGRADED_PRINTING
+                ) {
                 buf.Append(" Degraded printing");
             }
             return buf.ToString();
@@ -147,64 +136,56 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Tells you if printing is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if printing is allowed</returns>
-        public static bool IsPrintingAllowed(int permissions)
-        {
+        public static bool IsPrintingAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_PRINTING & permissions) == EncryptionConstants.ALLOW_PRINTING;
         }
 
         /// <summary>Tells you if modifying content is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if modifying content is allowed</returns>
-        public static bool IsModifyContentsAllowed(int permissions)
-        {
+        public static bool IsModifyContentsAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_MODIFY_CONTENTS & permissions) == EncryptionConstants.ALLOW_MODIFY_CONTENTS;
         }
 
         /// <summary>Tells you if copying is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if copying is allowed</returns>
-        public static bool IsCopyAllowed(int permissions)
-        {
+        public static bool IsCopyAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_COPY & permissions) == EncryptionConstants.ALLOW_COPY;
         }
 
         /// <summary>Tells you if modifying annotations is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if modifying annotations is allowed</returns>
-        public static bool IsModifyAnnotationsAllowed(int permissions)
-        {
+        public static bool IsModifyAnnotationsAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS & permissions) == EncryptionConstants.ALLOW_MODIFY_ANNOTATIONS;
         }
 
         /// <summary>Tells you if filling in fields is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if filling in fields is allowed</returns>
-        public static bool IsFillInAllowed(int permissions)
-        {
+        public static bool IsFillInAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_FILL_IN & permissions) == EncryptionConstants.ALLOW_FILL_IN;
         }
 
         /// <summary>Tells you if repurposing for screenreaders is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if repurposing for screenreaders is allowed</returns>
-        public static bool IsScreenReadersAllowed(int permissions)
-        {
+        public static bool IsScreenReadersAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_SCREENREADERS & permissions) == EncryptionConstants.ALLOW_SCREENREADERS;
         }
 
         /// <summary>Tells you if document assembly is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if document assembly is allowed</returns>
-        public static bool IsAssemblyAllowed(int permissions)
-        {
+        public static bool IsAssemblyAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_ASSEMBLY & permissions) == EncryptionConstants.ALLOW_ASSEMBLY;
         }
 
         /// <summary>Tells you if degraded printing is allowed.</summary>
         /// <param name="permissions">the permissions value of a PDF file</param>
         /// <returns>true if degraded printing is allowed</returns>
-        public static bool IsDegradedPrintingAllowed(int permissions)
-        {
+        public static bool IsDegradedPrintingAllowed(int permissions) {
             return (EncryptionConstants.ALLOW_DEGRADED_PRINTING & permissions) == EncryptionConstants.ALLOW_DEGRADED_PRINTING;
         }
     }

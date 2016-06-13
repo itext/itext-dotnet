@@ -47,8 +47,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 using iTextSharp.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils
-{
+namespace iTextSharp.Kernel.Pdf.Tagutils {
     /// <summary>
     /// <c>TagStructureContext</c>
     /// class is used to track necessary information of document's tag structure.
@@ -61,12 +60,10 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
     /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
     /// .
     /// </summary>
-    public class TagStructureContext
-    {
+    public class TagStructureContext {
         private static readonly ICollection<PdfName> allowedRootTagRoles = new HashSet<PdfName>();
 
-        static TagStructureContext()
-        {
+        static TagStructureContext() {
             allowedRootTagRoles.Add(PdfName.Book);
             allowedRootTagRoles.Add(PdfName.Document);
             allowedRootTagRoles.Add(PdfName.Part);
@@ -119,15 +116,12 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// </summary>
         /// <param name="document">the document which tag structure will be manipulated with this class.</param>
         public TagStructureContext(PdfDocument document)
-            : this(document, document.GetPdfVersion())
-        {
+            : this(document, document.GetPdfVersion()) {
         }
 
-        public TagStructureContext(PdfDocument document, PdfVersion tagStructureTargetVersion)
-        {
+        public TagStructureContext(PdfDocument document, PdfVersion tagStructureTargetVersion) {
             this.document = document;
-            if (!document.IsTagged())
-            {
+            if (!document.IsTagged()) {
                 throw new PdfException(PdfException.MustBeATaggedDocument);
             }
             connectedModelToStruct = new Dictionary<IAccessibleElement, PdfStructElem>();
@@ -153,14 +147,12 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance.
         /// </returns>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext SetForbidUnknownRoles(bool forbidUnknownRoles
-            )
-        {
+            ) {
             this.forbidUnknownRoles = forbidUnknownRoles;
             return this;
         }
 
-        public virtual PdfVersion GetTagStructureTargetVersion()
-        {
+        public virtual PdfVersion GetTagStructureTargetVersion() {
             return tagStructureTargetVersion;
         }
 
@@ -177,10 +169,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <c>TagTreePointer</c>
         /// which is used for all auto tagging of the document.
         /// </returns>
-        public virtual TagTreePointer GetAutoTaggingPointer()
-        {
-            if (autoTaggingPointer == null)
-            {
+        public virtual TagTreePointer GetAutoTaggingPointer() {
+            if (autoTaggingPointer == null) {
                 autoTaggingPointer = new TagTreePointer(document);
             }
             return autoTaggingPointer;
@@ -193,8 +183,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// </summary>
         /// <param name="element">element to check if it has a connected tag.</param>
         /// <returns>true, if there is a tag which retains the connection to the given accessible element.</returns>
-        public virtual bool IsElementConnectedToTag(IAccessibleElement element)
-        {
+        public virtual bool IsElementConnectedToTag(IAccessibleElement element) {
             return connectedModelToStruct.ContainsKey(element);
         }
 
@@ -211,8 +200,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance.
         /// </returns>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag(IAccessibleElement
-             element)
-        {
+             element) {
             PdfStructElem structElem = connectedModelToStruct.JRemove(element);
             RemoveStructToModelConnection(structElem);
             return this;
@@ -229,25 +217,21 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance which points at annotation tag parent if annotation was removed,
         /// otherwise returns null.
         /// </returns>
-        public virtual TagTreePointer RemoveAnnotationTag(PdfAnnotation annotation)
-        {
+        public virtual TagTreePointer RemoveAnnotationTag(PdfAnnotation annotation) {
             PdfStructElem structElem = null;
             PdfDictionary annotDic = annotation.GetPdfObject();
             PdfNumber structParentIndex = (PdfNumber)annotDic.Get(PdfName.StructParent);
-            if (structParentIndex != null)
-            {
+            if (structParentIndex != null) {
                 PdfObjRef objRef = document.GetStructTreeRoot().FindObjRefByStructParentIndex(annotDic.GetAsDictionary(PdfName
                     .P), structParentIndex.IntValue());
-                if (objRef != null)
-                {
+                if (objRef != null) {
                     PdfStructElem parent = (PdfStructElem)objRef.GetParent();
                     parent.RemoveKid(objRef);
                     structElem = parent;
                 }
             }
             annotDic.Remove(PdfName.StructParent);
-            if (structElem != null)
-            {
+            if (structElem != null) {
                 return new TagTreePointer(document).SetCurrentStructElem(structElem);
             }
             return null;
@@ -267,11 +251,9 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// which points at the parent of the removed content item, or null if there is no
         /// such mcid on given page.
         /// </returns>
-        public virtual TagTreePointer RemoveContentItem(PdfPage page, int mcid)
-        {
+        public virtual TagTreePointer RemoveContentItem(PdfPage page, int mcid) {
             PdfMcr mcr = document.GetStructTreeRoot().FindMcrByMcid(page.GetPdfObject(), mcid);
-            if (mcr == null)
-            {
+            if (mcr == null) {
                 return null;
             }
             PdfStructElem parent = (PdfStructElem)mcr.GetParent();
@@ -292,16 +274,13 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemovePageTags(PdfPage page)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemovePageTags(PdfPage page) {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             ICollection<PdfMcr> pageMcrs = structTreeRoot.GetPageMarkedContentReferences(page);
-            if (pageMcrs != null)
-            {
+            if (pageMcrs != null) {
                 // We create a copy here, because pageMcrs is backed by the internal collection which is changed when mcrs are removed.
                 IList<PdfMcr> mcrsList = new List<PdfMcr>(pageMcrs);
-                foreach (PdfMcr mcr in mcrsList)
-                {
+                foreach (PdfMcr mcr in mcrsList) {
                     RemovePageTagFromParent(mcr, mcr.GetParent());
                 }
             }
@@ -325,11 +304,9 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// instance.
         /// </returns>
         public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag(IAccessibleElement element
-            , TagTreePointer tagPointer)
-        {
+            , TagTreePointer tagPointer) {
             PdfStructElem connectedStructElem = connectedModelToStruct.Get(element);
-            if (connectedStructElem == null)
-            {
+            if (connectedStructElem == null) {
                 throw new PdfException(PdfException.GivenAccessibleElementIsNotConnectedToAnyTag);
             }
             tagPointer.SetCurrentStructElem(connectedStructElem);
@@ -342,10 +319,8 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags()
-        {
-            foreach (PdfStructElem structElem in connectedModelToStruct.Values)
-            {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags() {
+            foreach (PdfStructElem structElem in connectedModelToStruct.Values) {
                 RemoveStructToModelConnection(structElem);
             }
             connectedModelToStruct.Clear();
@@ -365,14 +340,11 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// as not yet finished ones, and they won't be flushed.
         /// </remarks>
         /// <param name="page">a page which tags will be flushed.</param>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext FlushPageTags(PdfPage page)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext FlushPageTags(PdfPage page) {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             ICollection<PdfMcr> pageMcrs = structTreeRoot.GetPageMarkedContentReferences(page);
-            if (pageMcrs != null)
-            {
-                foreach (PdfMcr mcr in pageMcrs)
-                {
+            if (pageMcrs != null) {
+                foreach (PdfMcr mcr in pageMcrs) {
                     PdfStructElem parent = (PdfStructElem)mcr.GetParent();
                     FlushParentIfBelongsToPage(parent, page);
                 }
@@ -394,56 +366,45 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// file contains a well-formed document fragment, one of the structure types Part, Art, Sect, or Div
         /// may be used instead.
         /// </remarks>
-        public virtual void NormalizeDocumentRootTag()
-        {
+        public virtual void NormalizeDocumentRootTag() {
             // in this method we could deal with existing document, so we don't won't to throw exceptions here
             bool forbid = forbidUnknownRoles;
             forbidUnknownRoles = false;
             IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
-            if (rootKids.Count == 1 && allowedRootTagRoles.Contains(rootKids[0].GetRole()))
-            {
+            if (rootKids.Count == 1 && allowedRootTagRoles.Contains(rootKids[0].GetRole())) {
                 rootTagElement = (PdfStructElem)rootKids[0];
             }
-            else
-            {
+            else {
                 PdfStructElem prevRootTag = rootTagElement;
                 document.GetStructTreeRoot().GetPdfObject().Remove(PdfName.K);
-                if (prevRootTag == null)
-                {
+                if (prevRootTag == null) {
                     rootTagElement = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
                 }
-                else
-                {
+                else {
                     document.GetStructTreeRoot().AddKid(rootTagElement);
-                    if (!PdfName.Document.Equals(rootTagElement.GetRole()))
-                    {
+                    if (!PdfName.Document.Equals(rootTagElement.GetRole())) {
                         WrapAllKidsInTag(rootTagElement, rootTagElement.GetRole());
                         rootTagElement.SetRole(PdfName.Document);
                     }
                 }
                 int originalRootKidsIndex = 0;
                 bool isBeforeOriginalRoot = true;
-                foreach (IPdfStructElem elem in rootKids)
-                {
+                foreach (IPdfStructElem elem in rootKids) {
                     // StructTreeRoot kids are always PdfStructElem, so we are save here to cast it
                     PdfStructElem kid = (PdfStructElem)elem;
-                    if (kid.GetPdfObject() == rootTagElement.GetPdfObject())
-                    {
+                    if (kid.GetPdfObject() == rootTagElement.GetPdfObject()) {
                         isBeforeOriginalRoot = false;
                         continue;
                     }
                     bool kidIsDocument = PdfName.Document.Equals(kid.GetRole());
-                    if (isBeforeOriginalRoot)
-                    {
+                    if (isBeforeOriginalRoot) {
                         rootTagElement.AddKid(originalRootKidsIndex, kid);
                         originalRootKidsIndex += kidIsDocument ? kid.GetKids().Count : 1;
                     }
-                    else
-                    {
+                    else {
                         rootTagElement.AddKid(kid);
                     }
-                    if (kidIsDocument)
-                    {
+                    if (kidIsDocument) {
                         RemoveOldRoot(kid);
                     }
                 }
@@ -457,61 +418,49 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
         /// Essentially, all it does is just making sure that for connected tags properties are
         /// up to date with connected accessible elements properties.
         /// </remarks>
-        public virtual void ActualizeTagsProperties()
-        {
-            foreach (KeyValuePair<IAccessibleElement, PdfStructElem> structToModel in connectedModelToStruct)
-            {
+        public virtual void ActualizeTagsProperties() {
+            foreach (KeyValuePair<IAccessibleElement, PdfStructElem> structToModel in connectedModelToStruct) {
                 IAccessibleElement element = structToModel.Key;
                 PdfStructElem structElem = structToModel.Value;
                 structElem.SetRole(element.GetRole());
-                if (element.GetAccessibilityProperties() != null)
-                {
+                if (element.GetAccessibilityProperties() != null) {
                     element.GetAccessibilityProperties().SetToStructElem(structElem);
                 }
             }
         }
 
-        internal virtual PdfStructElem GetRootTag()
-        {
+        internal virtual PdfStructElem GetRootTag() {
             return rootTagElement;
         }
 
-        internal virtual PdfDocument GetDocument()
-        {
+        internal virtual PdfDocument GetDocument() {
             return document;
         }
 
-        internal virtual PdfStructElem GetStructConnectedToModel(IAccessibleElement element)
-        {
+        internal virtual PdfStructElem GetStructConnectedToModel(IAccessibleElement element) {
             return connectedModelToStruct.Get(element);
         }
 
-        internal virtual IAccessibleElement GetModelConnectedToStruct(PdfStructElem @struct)
-        {
+        internal virtual IAccessibleElement GetModelConnectedToStruct(PdfStructElem @struct) {
             return connectedStructToModel.Get(@struct.GetPdfObject());
         }
 
-        internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role)
-        {
-            if (forbidUnknownRoles && PdfStructElem.IdentifyType(GetDocument(), role) == PdfStructElem.Unknown)
-            {
+        internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role) {
+            if (forbidUnknownRoles && PdfStructElem.IdentifyType(GetDocument(), role) == PdfStructElem.Unknown) {
                 throw new PdfException(PdfException.RoleIsNotMappedWithAnyStandardRole);
             }
         }
 
         internal virtual void SaveConnectionBetweenStructAndModel(IAccessibleElement element, PdfStructElem structElem
-            )
-        {
+            ) {
             connectedModelToStruct[element] = structElem;
             connectedStructToModel[structElem.GetPdfObject()] = element;
         }
 
         /// <returns>parent of the flushed tag</returns>
-        internal virtual IPdfStructElem FlushTag(PdfStructElem tagStruct)
-        {
+        internal virtual IPdfStructElem FlushTag(PdfStructElem tagStruct) {
             IAccessibleElement modelElement = connectedStructToModel.JRemove(tagStruct.GetPdfObject());
-            if (modelElement != null)
-            {
+            if (modelElement != null) {
                 connectedModelToStruct.JRemove(modelElement);
             }
             IPdfStructElem parent = tagStruct.GetParent();
@@ -519,44 +468,34 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
             return parent;
         }
 
-        private void RemoveStructToModelConnection(PdfStructElem structElem)
-        {
-            if (structElem != null)
-            {
+        private void RemoveStructToModelConnection(PdfStructElem structElem) {
+            if (structElem != null) {
                 IAccessibleElement element = connectedStructToModel.JRemove(structElem.GetPdfObject());
                 structElem.SetRole(element.GetRole());
-                if (element.GetAccessibilityProperties() != null)
-                {
+                if (element.GetAccessibilityProperties() != null) {
                     element.GetAccessibilityProperties().SetToStructElem(structElem);
                 }
-                if (structElem.GetParent() == null)
-                {
+                if (structElem.GetParent() == null) {
                     // is flushed
                     FlushStructElementAndItKids(structElem);
                 }
             }
         }
 
-        private void RemovePageTagFromParent(IPdfStructElem pageTag, IPdfStructElem parent)
-        {
-            if (parent is PdfStructElem)
-            {
+        private void RemovePageTagFromParent(IPdfStructElem pageTag, IPdfStructElem parent) {
+            if (parent is PdfStructElem) {
                 PdfStructElem structParent = (PdfStructElem)parent;
-                if (!structParent.IsFlushed())
-                {
+                if (!structParent.IsFlushed()) {
                     structParent.RemoveKid(pageTag);
                     PdfDictionary parentObject = structParent.GetPdfObject();
                     if (!connectedStructToModel.ContainsKey(parentObject) && parent.GetKids().Count == 0 && parentObject != rootTagElement
-                        .GetPdfObject())
-                    {
+                        .GetPdfObject()) {
                         RemovePageTagFromParent(structParent, parent.GetParent());
                         parentObject.GetIndirectReference().SetFree();
                     }
                 }
-                else
-                {
-                    if (pageTag is PdfMcr)
-                    {
+                else {
+                    if (pageTag is PdfMcr) {
                         throw new PdfException(PdfException.CannotRemoveTagBecauseItsParentIsFlushed);
                     }
                 }
@@ -565,30 +504,23 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
 
         // it is StructTreeRoot
         // should never happen as we always should have only one root tag and we don't remove it
-        private void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage)
-        {
+        private void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
             if (parent.IsFlushed() || connectedStructToModel.ContainsKey(parent.GetPdfObject()) || parent.GetPdfObject
-                () == rootTagElement.GetPdfObject())
-            {
+                () == rootTagElement.GetPdfObject()) {
                 return;
             }
             IList<IPdfStructElem> kids = parent.GetKids();
             bool allKidsBelongToPage = true;
-            foreach (IPdfStructElem kid in kids)
-            {
-                if (kid is PdfMcr)
-                {
+            foreach (IPdfStructElem kid in kids) {
+                if (kid is PdfMcr) {
                     PdfDictionary kidPage = ((PdfMcr)kid).GetPageObject();
-                    if (!kidPage.IsFlushed() && !kidPage.Equals(currentPage.GetPdfObject()))
-                    {
+                    if (!kidPage.IsFlushed() && !kidPage.Equals(currentPage.GetPdfObject())) {
                         allKidsBelongToPage = false;
                         break;
                     }
                 }
-                else
-                {
-                    if (kid is PdfStructElem)
-                    {
+                else {
+                    if (kid is PdfStructElem) {
                         // If kid is structElem and was already flushed then in kids list there will be null for it instead of
                         // PdfStructElem. And therefore if we get into this if clause it means that some StructElem wasn't flushed.
                         allKidsBelongToPage = false;
@@ -596,49 +528,40 @@ namespace iTextSharp.Kernel.Pdf.Tagutils
                     }
                 }
             }
-            if (allKidsBelongToPage)
-            {
+            if (allKidsBelongToPage) {
                 IPdfStructElem parentsParent = parent.GetParent();
                 parent.Flush();
-                if (parentsParent is PdfStructElem)
-                {
+                if (parentsParent is PdfStructElem) {
                     FlushParentIfBelongsToPage((PdfStructElem)parentsParent, currentPage);
                 }
             }
             return;
         }
 
-        private void FlushStructElementAndItKids(PdfStructElem elem)
-        {
-            if (connectedStructToModel.ContainsKey(elem.GetPdfObject()))
-            {
+        private void FlushStructElementAndItKids(PdfStructElem elem) {
+            if (connectedStructToModel.ContainsKey(elem.GetPdfObject())) {
                 return;
             }
-            foreach (IPdfStructElem kid in elem.GetKids())
-            {
-                if (kid is PdfStructElem)
-                {
+            foreach (IPdfStructElem kid in elem.GetKids()) {
+                if (kid is PdfStructElem) {
                     FlushStructElementAndItKids((PdfStructElem)kid);
                 }
             }
             elem.Flush();
         }
 
-        private void WrapAllKidsInTag(PdfStructElem parent, PdfName wrapTagRole)
-        {
+        private void WrapAllKidsInTag(PdfStructElem parent, PdfName wrapTagRole) {
             int kidsNum = parent.GetKids().Count;
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetCurrentStructElem(parent).AddTag(0, wrapTagRole);
             TagTreePointer newParentOfKids = new TagTreePointer(tagPointer);
             tagPointer.MoveToParent();
-            for (int i = 0; i < kidsNum; ++i)
-            {
+            for (int i = 0; i < kidsNum; ++i) {
                 tagPointer.RelocateKid(1, newParentOfKids);
             }
         }
 
-        private void RemoveOldRoot(PdfStructElem oldRoot)
-        {
+        private void RemoveOldRoot(PdfStructElem oldRoot) {
             TagTreePointer tagPointer = new TagTreePointer(document);
             tagPointer.SetCurrentStructElem(oldRoot).RemoveTag();
         }

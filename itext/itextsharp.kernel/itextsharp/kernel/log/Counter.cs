@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log
-{
+namespace iTextSharp.Kernel.Log {
     /// <summary>
     /// Interface that can be implemented if you want to count the number of documents
     /// that are being processed by iText.
@@ -56,8 +55,7 @@ namespace iTextSharp.Kernel.Log
     /// Implementers may use this method to record actual system usage for licensing purposes
     /// (e.g. count the number of documents or the volumne in bytes in the context of a SaaS license).
     /// </remarks>
-    public interface Counter
-    {
+    public interface Counter {
         /// <summary>Gets a Counter instance for a specific class.</summary>
         Counter GetCounter(Type cls);
 

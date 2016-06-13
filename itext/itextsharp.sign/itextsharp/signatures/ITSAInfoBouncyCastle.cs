@@ -43,14 +43,12 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.Tsp;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Interface you can implement and pass to TSAClientBouncyCastle in case
     /// you want to do something with the information returned
     /// </summary>
-    public interface ITSAInfoBouncyCastle
-    {
+    public interface ITSAInfoBouncyCastle {
         /// <summary>
         /// When a timestamp is created using TSAClientBouncyCastle,
         /// this method is triggered passing an object that contains

@@ -45,11 +45,9 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Contains information relating to painting current path.</summary>
-    public class PathRenderInfo : IEventData
-    {
+    public class PathRenderInfo : IEventData {
         /// <summary>End the path object without filling or stroking it.</summary>
         /// <remarks>
         /// End the path object without filling or stroking it. This operator shall be a path-painting no-op,
@@ -105,8 +103,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// </param>
         /// <param name="gs">The graphics state.</param>
         public PathRenderInfo(Path path, int operation, int rule, bool isClip, int clipRule, CanvasGraphicsState gs
-            )
-        {
+            ) {
             this.path = path;
             this.operation = operation;
             this.rule = rule;
@@ -129,8 +126,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// </summary>
         public PathRenderInfo(Path path, int operation, CanvasGraphicsState gs)
             : this(path, operation, PdfCanvasConstants.FillingRule.NONZERO_WINDING, false, PdfCanvasConstants.FillingRule
-                .NONZERO_WINDING, gs)
-        {
+                .NONZERO_WINDING, gs) {
         }
 
         /// <returns>
@@ -138,8 +134,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <see cref="iTextSharp.Kernel.Geom.Path"/>
         /// to be rendered.
         /// </returns>
-        public virtual Path GetPath()
-        {
+        public virtual Path GetPath() {
             return path;
         }
 
@@ -152,8 +147,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// and
         /// <see cref="FILL"/>
         /// </returns>
-        public virtual int GetOperation()
-        {
+        public virtual int GetOperation() {
             return operation;
         }
 
@@ -164,14 +158,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </returns>
-        public virtual int GetRule()
-        {
+        public virtual int GetRule() {
             return rule;
         }
 
         /// <returns>true indicates that current path modifies the clipping path, false - if not.</returns>
-        public virtual bool IsPathModifiesClippingPath()
-        {
+        public virtual bool IsPathModifiesClippingPath() {
             return isClip;
         }
 
@@ -182,49 +174,40 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
         /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </returns>
-        public virtual int GetClippingRule()
-        {
+        public virtual int GetClippingRule() {
             return clippingRule;
         }
 
         /// <returns>Current transformation matrix.</returns>
-        public virtual Matrix GetCtm()
-        {
+        public virtual Matrix GetCtm() {
             return gs.GetCtm();
         }
 
-        public virtual float GetLineWidth()
-        {
+        public virtual float GetLineWidth() {
             return gs.GetLineWidth();
         }
 
-        public virtual int GetLineCapStyle()
-        {
+        public virtual int GetLineCapStyle() {
             return gs.GetLineCapStyle();
         }
 
-        public virtual int GetLineJoinStyle()
-        {
+        public virtual int GetLineJoinStyle() {
             return gs.GetLineJoinStyle();
         }
 
-        public virtual float GetMiterLimit()
-        {
+        public virtual float GetMiterLimit() {
             return gs.GetMiterLimit();
         }
 
-        public virtual PdfArray GetLineDashPattern()
-        {
+        public virtual PdfArray GetLineDashPattern() {
             return gs.GetDashPattern();
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor() {
             return gs.GetStrokeColor();
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetFillColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetFillColor() {
             return gs.GetFillColor();
         }
     }

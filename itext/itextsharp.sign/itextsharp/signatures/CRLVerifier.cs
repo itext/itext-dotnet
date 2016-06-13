@@ -47,14 +47,12 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iTextSharp.IO.Log;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>
     /// Class that allows you to verify a certificate against
     /// one or more Certificate Revocation Lists.
     /// </summary>
-    public class CRLVerifier : RootStoreVerifier
-    {
+    public class CRLVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
         protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.CRLVerifier
             ));
@@ -66,8 +64,7 @@ namespace iTextSharp.Signatures
         /// <param name="verifier">the next verifier in the chain</param>
         /// <param name="crls">a list of CRLs</param>
         public CRLVerifier(CertificateVerifier verifier, IList<X509Crl> crls)
-            : base(verifier)
-        {
+            : base(verifier) {
             this.crls = crls;
         }
 
@@ -88,40 +85,32 @@ namespace iTextSharp.Signatures
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
         public override IList<VerificationOK> Verify(X509Certificate signCert, X509Certificate issuerCert, DateTime
-             signDate)
-        {
+             signDate) {
             IList<VerificationOK> result = new List<VerificationOK>();
             int validCrlsFound = 0;
             // first check the list of CRLs that is provided
-            if (crls != null)
-            {
-                foreach (X509Crl crl in crls)
-                {
-                    if (Verify(crl, signCert, issuerCert, signDate))
-                    {
+            if (crls != null) {
+                foreach (X509Crl crl in crls) {
+                    if (Verify(crl, signCert, issuerCert, signDate)) {
                         validCrlsFound++;
                     }
                 }
             }
             // then check online if allowed
             bool online = false;
-            if (onlineCheckingAllowed && validCrlsFound == 0)
-            {
-                if (Verify(GetCRL(signCert, issuerCert), signCert, issuerCert, signDate))
-                {
+            if (onlineCheckingAllowed && validCrlsFound == 0) {
+                if (Verify(GetCRL(signCert, issuerCert), signCert, issuerCert, signDate)) {
                     validCrlsFound++;
                     online = true;
                 }
             }
             // show how many valid CRLs were found
             LOGGER.Info("Valid CRLs found: " + validCrlsFound);
-            if (validCrlsFound > 0)
-            {
+            if (validCrlsFound > 0) {
                 result.Add(new VerificationOK(signCert, this.GetType(), "Valid CRLs found: " + validCrlsFound + (online ? 
                     " (online)" : "")));
             }
-            if (verifier != null)
-            {
+            if (verifier != null) {
                 result.AddAll(verifier.Verify(signCert, issuerCert, signDate));
             }
             // verify using the previous verifier in the chain (if any)
@@ -136,19 +125,15 @@ namespace iTextSharp.Signatures
         /// <returns>true if the verification succeeded</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual bool Verify(X509Crl crl, X509Certificate signCert, X509Certificate issuerCert, DateTime signDate
-            )
-        {
-            if (crl == null || signDate == SignUtils.UNDEFINED_TIMESTAMP_DATE)
-            {
+            ) {
+            if (crl == null || signDate == SignUtils.UNDEFINED_TIMESTAMP_DATE) {
                 return false;
             }
             // We only check CRLs valid on the signing date for which the issuer matches
             if (crl.IssuerDN.Equals(signCert.IssuerDN) && signDate.After(crl.ThisUpdate) && signDate.Before(crl.NextUpdate
-                ))
-            {
+                )) {
                 // the signing certificate may not be revoked
-                if (IsSignatureValid(crl, issuerCert) && crl.IsRevoked(signCert))
-                {
+                if (IsSignatureValid(crl, issuerCert) && crl.IsRevoked(signCert)) {
                     throw new VerificationException(signCert, "The certificate has been revoked.");
                 }
                 return true;
@@ -160,29 +145,23 @@ namespace iTextSharp.Signatures
         /// <param name="signCert">the certificate</param>
         /// <param name="issuerCert">its issuer</param>
         /// <returns>an X509CRL object</returns>
-        public virtual X509Crl GetCRL(X509Certificate signCert, X509Certificate issuerCert)
-        {
-            if (issuerCert == null)
-            {
+        public virtual X509Crl GetCRL(X509Certificate signCert, X509Certificate issuerCert) {
+            if (issuerCert == null) {
                 issuerCert = signCert;
             }
-            try
-            {
+            try {
                 // gets the URL from the certificate
                 String crlurl = CertificateUtil.GetCRLURL(signCert);
-                if (crlurl == null)
-                {
+                if (crlurl == null) {
                     return null;
                 }
                 LOGGER.Info("Getting CRL from " + crlurl);
                 return (X509Crl)SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(crlurl)));
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 return null;
             }
-            catch (GeneralSecurityException)
-            {
+            catch (GeneralSecurityException) {
                 return null;
             }
         }
@@ -191,45 +170,35 @@ namespace iTextSharp.Signatures
         /// <param name="crl">the CRL</param>
         /// <param name="crlIssuer">the trusted anchor</param>
         /// <returns>true if the CRL can be trusted</returns>
-        public virtual bool IsSignatureValid(X509Crl crl, X509Certificate crlIssuer)
-        {
+        public virtual bool IsSignatureValid(X509Crl crl, X509Certificate crlIssuer) {
             // check if the CRL was issued by the issuer
-            if (crlIssuer != null)
-            {
-                try
-                {
+            if (crlIssuer != null) {
+                try {
                     crl.Verify(crlIssuer.GetPublicKey());
                     return true;
                 }
-                catch (GeneralSecurityException)
-                {
+                catch (GeneralSecurityException) {
                     LOGGER.Warn("CRL not issued by the same authority as the certificate that is being checked");
                 }
             }
             // check the CRL against trusted anchors
-            if (rootStore == null)
-            {
+            if (rootStore == null) {
                 return false;
             }
-            try
-            {
+            try {
                 // loop over the certificate in the key store
-                foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore))
-                {
-                    try
-                    {
+                foreach (X509Certificate anchor in SignUtils.GetCertificates(rootStore)) {
+                    try {
                         // check if the crl was signed by a trusted party (indirect CRLs)
                         crl.Verify(anchor.GetPublicKey());
                         return true;
                     }
-                    catch (GeneralSecurityException)
-                    {
+                    catch (GeneralSecurityException) {
                         continue;
                     }
                 }
             }
-            catch (GeneralSecurityException)
-            {
+            catch (GeneralSecurityException) {
                 return false;
             }
             return false;

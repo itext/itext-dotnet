@@ -5,25 +5,21 @@ using iTextSharp.IO.Util;
 using iTextSharp.Kernel.XMP;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Pdf
-{
-    public class PdfStampingTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public class PdfStampingTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStampingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/pdf/PdfStampingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping1()
-        {
+        public virtual void Stamping1() {
             String filename1 = destinationFolder + "stamping1_1.pdf";
             String filename2 = destinationFolder + "stamping1_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -44,8 +40,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -71,8 +66,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping2()
-        {
+        public virtual void Stamping2() {
             String filename1 = destinationFolder + "stamping2_1.pdf";
             String filename2 = destinationFolder + "stamping2_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -93,8 +87,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -113,8 +106,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping3()
-        {
+        public virtual void Stamping3() {
             String filename1 = destinationFolder + "stamping3_1.pdf";
             String filename2 = destinationFolder + "stamping3_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -135,8 +127,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -155,8 +146,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping4()
-        {
+        public virtual void Stamping4() {
             String filename1 = destinationFolder + "stamping4_1.pdf";
             String filename2 = destinationFolder + "stamping4_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -172,8 +162,7 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
-            for (int i = 2; i <= pageCount; i++)
-            {
+            for (int i = 2; i <= pageCount; i++) {
                 PdfPage page2 = pdfDoc2.AddNewPage();
                 page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
@@ -181,8 +170,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -193,8 +181,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
-            {
+            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ));
@@ -204,8 +191,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping5()
-        {
+        public virtual void Stamping5() {
             String filename1 = destinationFolder + "stamping5_1.pdf";
             String filename2 = destinationFolder + "stamping5_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -221,8 +207,7 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
-            for (int i = 2; i <= pageCount; i++)
-            {
+            for (int i = 2; i <= pageCount; i++) {
                 PdfPage page2 = pdfDoc2.AddNewPage();
                 page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
@@ -230,8 +215,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -242,8 +226,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
-            {
+            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ));
@@ -253,8 +236,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping6()
-        {
+        public virtual void Stamping6() {
             String filename1 = destinationFolder + "stamping6_1.pdf";
             String filename2 = destinationFolder + "stamping6_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -275,8 +257,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -295,8 +276,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping7()
-        {
+        public virtual void Stamping7() {
             String filename1 = destinationFolder + "stamping7_1.pdf";
             String filename2 = destinationFolder + "stamping7_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -317,8 +297,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -337,16 +316,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping8()
-        {
+        public virtual void Stamping8() {
             String filename1 = destinationFolder + "stamping8_1.pdf";
             String filename2 = destinationFolder + "stamping8_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -359,8 +336,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -371,8 +347,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -382,16 +357,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping9()
-        {
+        public virtual void Stamping9() {
             String filename1 = destinationFolder + "stamping9_1.pdf";
             String filename2 = destinationFolder + "stamping9_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -404,8 +377,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -416,8 +388,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -427,16 +398,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping10()
-        {
+        public virtual void Stamping10() {
             String filename1 = destinationFolder + "stamping10_1.pdf";
             String filename2 = destinationFolder + "stamping10_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -449,8 +418,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -461,8 +429,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -472,16 +439,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping11()
-        {
+        public virtual void Stamping11() {
             String filename1 = destinationFolder + "stamping11_1.pdf";
             String filename2 = destinationFolder + "stamping11_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -494,8 +459,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -506,8 +470,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -517,16 +480,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping12()
-        {
+        public virtual void Stamping12() {
             String filename1 = destinationFolder + "stamping12_1.pdf";
             String filename2 = destinationFolder + "stamping12_2.pdf";
             int pageCount = 1010;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -536,15 +497,13 @@ namespace iTextSharp.Kernel.Pdf
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
             int newPageCount = 10;
-            for (int i_1 = pageCount; i_1 > newPageCount; i_1--)
-            {
+            for (int i_1 = pageCount; i_1 > newPageCount; i_1--) {
                 NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i_1), "Remove page " + i_1);
             }
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_2 = 1; i_2 <= pdfDoc3.GetNumberOfPages(); i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pdfDoc3.GetNumberOfPages(); i_2++) {
                 pdfDoc3.GetPage(i_2);
             }
             PdfPage pdfPage = pdfDoc3.GetPage(1);
@@ -558,8 +517,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_3 = 1; i_3 <= pdfDocument.GetNumberOfPages(); i_3++)
-            {
+            for (int i_3 = 1; i_3 <= pdfDocument.GetNumberOfPages(); i_3++) {
                 byte[] bytes = pdfDocument.GetPage(i_3).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_3 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_3);
@@ -569,16 +527,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void Stamping13()
-        {
+        public virtual void Stamping13() {
             String filename1 = destinationFolder + "stamping13_1.pdf";
             String filename2 = destinationFolder + "stamping13_2.pdf";
             int pageCount = 1010;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -587,13 +543,11 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
-            for (int i_1 = pageCount; i_1 > 1; i_1--)
-            {
+            for (int i_1 = pageCount; i_1 > 1; i_1--) {
                 NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i_1), "Remove page " + i_1);
             }
             pdfDoc2.RemovePage(1);
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 PdfPage page = pdfDoc2.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i_2 + "\n"));
                 page.Flush();
@@ -601,8 +555,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_3 = 1; i_3 <= pdfDoc3.GetNumberOfPages(); i_3++)
-            {
+            for (int i_3 = 1; i_3 <= pdfDoc3.GetNumberOfPages(); i_3++) {
                 pdfDoc3.GetPage(i_3);
             }
             PdfArray rootKids = pdfDoc3.GetCatalog().GetPageTree().GetRoot().GetPdfObject().GetAsArray(PdfName.Kids);
@@ -615,8 +568,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_4 = 1; i_4 <= pageCount; i_4++)
-            {
+            for (int i_4 = 1; i_4 <= pageCount; i_4++) {
                 byte[] bytes = pdfDocument.GetPage(i_4).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_4 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_4);
@@ -627,22 +579,19 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("ignore")]
-        public virtual void Stamping14()
-        {
+        public virtual void Stamping14() {
             String filename1 = sourceFolder + "20000PagesDocument.pdf";
             String filename2 = destinationFolder + "stamping14.pdf";
             PdfReader reader2 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
             PdfWriter writer2 = new PdfWriter(new FileStream(filename2, FileMode.Create));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2);
-            for (int i = pdfDoc2.GetNumberOfPages(); i > 3; i--)
-            {
+            for (int i = pdfDoc2.GetNumberOfPages(); i > 3; i--) {
                 NUnit.Framework.Assert.IsNotNull(pdfDoc2.RemovePage(i), "Remove page " + i);
             }
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 1; i_1 <= pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 1; i_1 <= pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1);
             }
             NUnit.Framework.Assert.IsTrue(pdfDoc3.GetXref().Size() < 20, "Xref size is " + pdfDoc3.GetXref().Size());
@@ -654,8 +603,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pdfDocument.GetNumberOfPages(); i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -665,8 +613,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingStreamsCompression01()
-        {
+        public virtual void StampingStreamsCompression01() {
             // by default, old streams should not be recompressed
             String filenameIn = sourceFolder + "stampingStreamsCompression.pdf";
             String filenameOut = destinationFolder + "stampingStreamsCompression01.pdf";
@@ -688,8 +635,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingStreamsCompression02()
-        {
+        public virtual void StampingStreamsCompression02() {
             // if user specified, stream may be uncompressed
             String filenameIn = sourceFolder + "stampingStreamsCompression.pdf";
             String filenameOut = destinationFolder + "stampingStreamsCompression02.pdf";
@@ -711,8 +657,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingStreamsCompression03()
-        {
+        public virtual void StampingStreamsCompression03() {
             // if user specified, stream may be recompressed
             String filenameIn = sourceFolder + "stampingStreamsCompression.pdf";
             String filenameOut = destinationFolder + "stampingStreamsCompression03.pdf";
@@ -735,16 +680,14 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingXmp1()
-        {
+        public virtual void StampingXmp1() {
             String filename1 = destinationFolder + "stampingXmp1_1.pdf";
             String filename2 = destinationFolder + "stampingXmp1_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -758,8 +701,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
@@ -772,8 +714,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -784,16 +725,14 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingXmp2()
-        {
+        public virtual void StampingXmp2() {
             String filename1 = destinationFolder + "stampingXmp2_1.pdf";
             String filename2 = destinationFolder + "stampingXmp2_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -807,8 +746,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.IsNotNull(XMPMetaFactory.ParseFromBuffer(pdfDoc3.GetXmpMetadata()), "XmpMetadata not found"
@@ -821,8 +759,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -832,8 +769,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend1()
-        {
+        public virtual void StampingAppend1() {
             String filename1 = destinationFolder + "stampingAppend1_1.pdf";
             String filename2 = destinationFolder + "stampingAppend1_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -855,8 +791,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -882,8 +817,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend2()
-        {
+        public virtual void StampingAppend2() {
             String filename1 = destinationFolder + "stampingAppend2_1.pdf";
             String filename2 = destinationFolder + "stampingAppend2_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -905,8 +839,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -925,8 +858,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend3()
-        {
+        public virtual void StampingAppend3() {
             String filename1 = destinationFolder + "stampingAppend3_1.pdf";
             String filename2 = destinationFolder + "stampingAppend3_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -947,8 +879,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++)
-            {
+            for (int i = 0; i < pdfDoc3.GetNumberOfPages(); i++) {
                 pdfDoc3.GetPage(i + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -967,8 +898,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend4()
-        {
+        public virtual void StampingAppend4() {
             String filename1 = destinationFolder + "stampingAppend4_1.pdf";
             String filename2 = destinationFolder + "stampingAppend4_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -984,8 +914,7 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2);
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
-            for (int i = 2; i <= pageCount; i++)
-            {
+            for (int i = 2; i <= pageCount; i++) {
                 PdfPage page2 = pdfDoc2.AddNewPage();
                 page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
@@ -993,8 +922,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -1005,8 +933,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
-            {
+            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ));
@@ -1016,8 +943,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend5()
-        {
+        public virtual void StampingAppend5() {
             String filename1 = destinationFolder + "stampingAppend5_1.pdf";
             String filename2 = destinationFolder + "stampingAppend5_2.pdf";
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
@@ -1033,8 +959,7 @@ namespace iTextSharp.Kernel.Pdf
             FileStream fos2 = new FileStream(filename2, FileMode.Create);
             PdfWriter writer2 = new PdfWriter(fos2, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc2 = new PdfDocument(reader2, writer2, new StampingProperties().UseAppendMode());
-            for (int i = 2; i <= pageCount; i++)
-            {
+            for (int i = 2; i <= pageCount; i++) {
                 PdfPage page2 = pdfDoc2.AddNewPage();
                 page2.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page2.Flush();
@@ -1042,8 +967,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(false, reader3.HasRebuiltXref(), "Rebuilt");
@@ -1054,8 +978,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++)
-            {
+            for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ));
@@ -1065,16 +988,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend8()
-        {
+        public virtual void StampingAppend8() {
             String filename1 = destinationFolder + "stampingAppend8_1.pdf";
             String filename2 = destinationFolder + "stampingAppend8_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -1086,8 +1007,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -1098,8 +1018,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -1109,16 +1028,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend9()
-        {
+        public virtual void StampingAppend9() {
             String filename1 = destinationFolder + "stampingAppend9_1.pdf";
             String filename2 = destinationFolder + "stampingAppend9_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -1131,8 +1048,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -1143,8 +1059,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -1154,16 +1069,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend10()
-        {
+        public virtual void StampingAppend10() {
             String filename1 = destinationFolder + "stampingAppend10_1.pdf";
             String filename2 = destinationFolder + "stampingAppend10_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(true));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -1176,8 +1089,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -1188,8 +1100,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -1199,16 +1110,14 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppend11()
-        {
+        public virtual void StampingAppend11() {
             String filename1 = destinationFolder + "stampingAppend11_1.pdf";
             String filename2 = destinationFolder + "stampingAppend11_2.pdf";
             int pageCount = 10;
             FileStream fos1 = new FileStream(filename1, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1, new WriterProperties().SetFullCompressionMode(false));
             PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            for (int i = 1; i <= pageCount; i++)
-            {
+            for (int i = 1; i <= pageCount; i++) {
                 PdfPage page = pdfDoc1.AddNewPage();
                 page.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + i + "\n"));
                 page.Flush();
@@ -1221,8 +1130,7 @@ namespace iTextSharp.Kernel.Pdf
             pdfDoc2.Close();
             PdfReader reader3 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
             PdfDocument pdfDoc3 = new PdfDocument(reader3);
-            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++)
-            {
+            for (int i_1 = 0; i_1 < pdfDoc3.GetNumberOfPages(); i_1++) {
                 pdfDoc3.GetPage(i_1 + 1);
             }
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDoc3.GetNumberOfPages(), "Number of pages");
@@ -1233,8 +1141,7 @@ namespace iTextSharp.Kernel.Pdf
             PdfReader reader = new PdfReader(filename2);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 1; i_2 <= pageCount; i_2++)
-            {
+            for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
                 NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
                     ), "Page content at page " + i_2);
@@ -1244,8 +1151,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingVersionTest01()
-        {
+        public virtual void StampingVersionTest01() {
             // By default the version of the output file should be the same as the original one
             String @in = sourceFolder + "hello.pdf";
             String @out = destinationFolder + "hello_stamped01.pdf";
@@ -1261,8 +1167,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingVersionTest02()
-        {
+        public virtual void StampingVersionTest02() {
             // There is a possibility to override version in stamping mode
             String @in = sourceFolder + "hello.pdf";
             String @out = destinationFolder + "hello_stamped02.pdf";
@@ -1279,8 +1184,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingAppendVersionTest01()
-        {
+        public virtual void StampingAppendVersionTest01() {
             // There is a possibility to override version in stamping mode
             String @in = sourceFolder + "hello.pdf";
             String @out = destinationFolder + "stampingAppendVersionTest01.pdf";
@@ -1297,8 +1201,7 @@ namespace iTextSharp.Kernel.Pdf
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        public virtual void StampingTestWithTaggedStructure()
-        {
+        public virtual void StampingTestWithTaggedStructure() {
             String filename = sourceFolder + "iphone_user_guide.pdf";
             PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
             FileStream fos = new FileStream(destinationFolder + "stampingDocWithTaggedStructure.pdf", FileMode.Create);
@@ -1310,8 +1213,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void StampingTestWithFullCompression01()
-        {
+        public virtual void StampingTestWithFullCompression01() {
             PdfReader reader = new PdfReader(sourceFolder + "fullCompressedDocument.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(destinationFolder + "stampingTestWithFullCompression01.pdf"
                 ));
@@ -1325,8 +1227,7 @@ namespace iTextSharp.Kernel.Pdf
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void StampingTestWithFullCompression02()
-        {
+        public virtual void StampingTestWithFullCompression02() {
             PdfReader reader = new PdfReader(sourceFolder + "fullCompressedDocument.pdf");
             PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(destinationFolder + "stampingTestWithFullCompression02.pdf"
                 , new WriterProperties().SetFullCompressionMode(false)));
@@ -1337,32 +1238,25 @@ namespace iTextSharp.Kernel.Pdf
             NUnit.Framework.Assert.IsTrue(coef < 0.01);
         }
 
-        internal static void VerifyPdfPagesCount(PdfObject root)
-        {
-            if (root.GetObjectType() == PdfObject.INDIRECT_REFERENCE)
-            {
+        internal static void VerifyPdfPagesCount(PdfObject root) {
+            if (root.GetObjectType() == PdfObject.INDIRECT_REFERENCE) {
                 root = ((PdfIndirectReference)root).GetRefersTo();
             }
             PdfDictionary pages = (PdfDictionary)root;
-            if (!pages.ContainsKey(PdfName.Kids))
-            {
+            if (!pages.ContainsKey(PdfName.Kids)) {
                 return;
             }
             PdfNumber count = pages.GetAsNumber(PdfName.Count);
-            if (count != null)
-            {
+            if (count != null) {
                 NUnit.Framework.Assert.IsTrue(count.IntValue() > 0, "PdfPages with zero count");
             }
             PdfObject kids = pages.Get(PdfName.Kids);
-            if (kids.GetObjectType() == PdfObject.ARRAY)
-            {
-                foreach (PdfObject kid in (PdfArray)kids)
-                {
+            if (kids.GetObjectType() == PdfObject.ARRAY) {
+                foreach (PdfObject kid in (PdfArray)kids) {
                     VerifyPdfPagesCount(kid);
                 }
             }
-            else
-            {
+            else {
                 VerifyPdfPagesCount(kids);
             }
         }

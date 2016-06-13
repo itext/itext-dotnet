@@ -46,8 +46,7 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Tagutils;
 using iTextSharp.Layout.Property;
 
-namespace iTextSharp.Layout.Element
-{
+namespace iTextSharp.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="BlockElement{T}"/>
@@ -58,73 +57,63 @@ namespace iTextSharp.Layout.Element
     /// </summary>
     /// 
     public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement
-        where T : IElement
-    {
+        where T : IElement {
         /// <summary>Creates a BlockElement.</summary>
-        protected internal BlockElement()
-        {
+        protected internal BlockElement() {
         }
 
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>the left margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginLeft()
-        {
+        public virtual float? GetMarginLeft() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
         }
 
         /// <summary>Sets the left margin width of the element.</summary>
         /// <param name="value">the new left margin width</param>
         /// <returns>this element</returns>
-        public virtual T SetMarginLeft(float value)
-        {
+        public virtual T SetMarginLeft(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current right margin width of the element.</summary>
         /// <returns>the right margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginRight()
-        {
+        public virtual float? GetMarginRight() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_RIGHT);
         }
 
         /// <summary>Sets the right margin width of the element.</summary>
         /// <param name="value">the new right margin width</param>
         /// <returns>this element</returns>
-        public virtual T SetMarginRight(float value)
-        {
+        public virtual T SetMarginRight(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current top margin width of the element.</summary>
         /// <returns>the top margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginTop()
-        {
+        public virtual float? GetMarginTop() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_TOP);
         }
 
         /// <summary>Sets the top margin width of the element.</summary>
         /// <param name="value">the new top margin width</param>
         /// <returns>this element</returns>
-        public virtual T SetMarginTop(float value)
-        {
+        public virtual T SetMarginTop(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current bottom margin width of the element.</summary>
         /// <returns>the bottom margin width, as a <code>float</code></returns>
-        public virtual float? GetMarginBottom()
-        {
+        public virtual float? GetMarginBottom() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
         /// <param name="value">the new bottom margin width</param>
         /// <returns>this element</returns>
-        public virtual T SetMarginBottom(float value)
-        {
+        public virtual T SetMarginBottom(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM, value);
             return (T)(Object)this;
         }
@@ -132,8 +121,7 @@ namespace iTextSharp.Layout.Element
         /// <summary>Sets all margins around the element to the same width.</summary>
         /// <param name="commonMargin">the new margin width</param>
         /// <returns>this element</returns>
-        public virtual T SetMargin(float commonMargin)
-        {
+        public virtual T SetMargin(float commonMargin) {
             return SetMargins(commonMargin, commonMargin, commonMargin, commonMargin);
         }
 
@@ -143,8 +131,7 @@ namespace iTextSharp.Layout.Element
         /// <param name="marginBottom">the new margin bottom width</param>
         /// <param name="marginLeft">the new margin left width</param>
         /// <returns>this element</returns>
-        public virtual T SetMargins(float marginTop, float marginRight, float marginBottom, float marginLeft)
-        {
+        public virtual T SetMargins(float marginTop, float marginRight, float marginBottom, float marginLeft) {
             SetMarginTop(marginTop);
             SetMarginRight(marginRight);
             SetMarginBottom(marginBottom);
@@ -154,64 +141,56 @@ namespace iTextSharp.Layout.Element
 
         /// <summary>Gets the current left padding width of the element.</summary>
         /// <returns>the left padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingLeft()
-        {
+        public virtual float? GetPaddingLeft() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_LEFT);
         }
 
         /// <summary>Sets the left padding width of the element.</summary>
         /// <param name="value">the new left padding width</param>
         /// <returns>this element</returns>
-        public virtual T SetPaddingLeft(float value)
-        {
+        public virtual T SetPaddingLeft(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.PADDING_LEFT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current right padding width of the element.</summary>
         /// <returns>the right padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingRight()
-        {
+        public virtual float? GetPaddingRight() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_RIGHT);
         }
 
         /// <summary>Sets the right padding width of the element.</summary>
         /// <param name="value">the new right padding width</param>
         /// <returns>this element</returns>
-        public virtual T SetPaddingRight(float value)
-        {
+        public virtual T SetPaddingRight(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.PADDING_RIGHT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current top padding width of the element.</summary>
         /// <returns>the top padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingTop()
-        {
+        public virtual float? GetPaddingTop() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_TOP);
         }
 
         /// <summary>Sets the top padding width of the element.</summary>
         /// <param name="value">the new top padding width</param>
         /// <returns>this element</returns>
-        public virtual T SetPaddingTop(float value)
-        {
+        public virtual T SetPaddingTop(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.PADDING_TOP, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current bottom padding width of the element.</summary>
         /// <returns>the bottom padding width, as a <code>float</code></returns>
-        public virtual float? GetPaddingBottom()
-        {
+        public virtual float? GetPaddingBottom() {
             return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.PADDING_BOTTOM);
         }
 
         /// <summary>Sets the bottom padding width of the element.</summary>
         /// <param name="value">the new bottom padding width</param>
         /// <returns>this element</returns>
-        public virtual T SetPaddingBottom(float value)
-        {
+        public virtual T SetPaddingBottom(float value) {
             SetProperty(iTextSharp.Layout.Property.Property.PADDING_BOTTOM, value);
             return (T)(Object)this;
         }
@@ -219,8 +198,7 @@ namespace iTextSharp.Layout.Element
         /// <summary>Sets all paddings around the element to the same width.</summary>
         /// <param name="commonPadding">the new padding width</param>
         /// <returns>this element</returns>
-        public virtual T SetPadding(float commonPadding)
-        {
+        public virtual T SetPadding(float commonPadding) {
             return SetPaddings(commonPadding, commonPadding, commonPadding, commonPadding);
         }
 
@@ -230,8 +208,7 @@ namespace iTextSharp.Layout.Element
         /// <param name="paddingBottom">the new padding bottom width</param>
         /// <param name="paddingLeft">the new padding left width</param>
         /// <returns>this element</returns>
-        public virtual T SetPaddings(float paddingTop, float paddingRight, float paddingBottom, float paddingLeft)
-        {
+        public virtual T SetPaddings(float paddingTop, float paddingRight, float paddingBottom, float paddingLeft) {
             SetPaddingTop(paddingTop);
             SetPaddingRight(paddingRight);
             SetPaddingBottom(paddingBottom);
@@ -242,8 +219,7 @@ namespace iTextSharp.Layout.Element
         /// <summary>Sets the vertical alignment of the element.</summary>
         /// <param name="verticalAlignment">the vertical alignment setting</param>
         /// <returns>this element</returns>
-        public virtual T SetVerticalAlignment(VerticalAlignment? verticalAlignment)
-        {
+        public virtual T SetVerticalAlignment(VerticalAlignment? verticalAlignment) {
             SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment);
             return (T)(Object)this;
         }
@@ -260,8 +236,7 @@ namespace iTextSharp.Layout.Element
         /// If <b>ratio</b> is 1, additional character spacing will not be applied.
         /// If <b>ratio</b> is 0, additional word spacing will not be applied.
         /// </param>
-        public virtual T SetSpacingRatio(float ratio)
-        {
+        public virtual T SetSpacingRatio(float ratio) {
             SetProperty(iTextSharp.Layout.Property.Property.SPACING_RATIO, ratio);
             return (T)(Object)this;
         }
@@ -277,8 +252,7 @@ namespace iTextSharp.Layout.Element
         /// <see cref="iTextSharp.Layout.Property.Property.KEEP_TOGETHER"/>
         /// property
         /// </returns>
-        public virtual bool? IsKeepTogether()
-        {
+        public virtual bool? IsKeepTogether() {
             return this.GetProperty<bool?>(iTextSharp.Layout.Property.Property.KEEP_TOGETHER);
         }
 
@@ -294,8 +268,7 @@ namespace iTextSharp.Layout.Element
         /// property
         /// </param>
         /// <returns>this element</returns>
-        public virtual T SetKeepTogether(bool keepTogether)
-        {
+        public virtual T SetKeepTogether(bool keepTogether) {
             SetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER, keepTogether);
             return (T)(Object)this;
         }
@@ -303,8 +276,7 @@ namespace iTextSharp.Layout.Element
         /// <summary>Sets the rotation radAngle.</summary>
         /// <param name="radAngle">the new rotation radAngle, as a <code>float</code></param>
         /// <returns>this element</returns>
-        public virtual T SetRotationAngle(float radAngle)
-        {
+        public virtual T SetRotationAngle(float radAngle) {
             SetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE, radAngle);
             return (T)(Object)this;
         }
@@ -312,8 +284,7 @@ namespace iTextSharp.Layout.Element
         /// <summary>Sets the rotation angle.</summary>
         /// <param name="angle">the new rotation angle, as a <code>double</code></param>
         /// <returns>this element</returns>
-        public virtual T SetRotationAngle(double angle)
-        {
+        public virtual T SetRotationAngle(double angle) {
             SetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE, (float)angle);
             return (T)(Object)this;
         }

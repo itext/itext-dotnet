@@ -49,14 +49,12 @@ using iTextSharp.IO.Log;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Forms
-{
+namespace iTextSharp.Forms {
     /// <summary>
     /// A sample implementation of the {#link IPdfPageExtraCopier} interface which
     /// copies only AcroForm fields to a new page.
     /// </summary>
-    public class PdfPageFormCopier : IPdfPageExtraCopier
-    {
+    public class PdfPageFormCopier : IPdfPageExtraCopier {
         internal PdfAcroForm formFrom;
 
         internal PdfAcroForm formTo;
@@ -65,19 +63,15 @@ namespace iTextSharp.Forms
 
         internal PdfDocument documentTo;
 
-        public virtual void Copy(PdfPage fromPage, PdfPage toPage)
-        {
-            if (documentFrom != fromPage.GetDocument())
-            {
+        public virtual void Copy(PdfPage fromPage, PdfPage toPage) {
+            if (documentFrom != fromPage.GetDocument()) {
                 documentFrom = fromPage.GetDocument();
                 formFrom = PdfAcroForm.GetAcroForm(documentFrom, false);
             }
-            if (documentTo != toPage.GetDocument())
-            {
+            if (documentTo != toPage.GetDocument()) {
                 documentTo = toPage.GetDocument();
                 formTo = PdfAcroForm.GetAcroForm(documentTo, true);
-                if (formFrom != null)
-                {
+                if (formFrom != null) {
                     //duplicate AcroForm dictionary
                     IList<PdfName> excludedKeys = new List<PdfName>();
                     excludedKeys.Add(PdfName.Fields);
@@ -87,51 +81,39 @@ namespace iTextSharp.Forms
                 }
             }
             IList<PdfDictionary> usedParents = new List<PdfDictionary>();
-            if (formFrom != null)
-            {
+            if (formFrom != null) {
                 IDictionary<String, PdfFormField> fieldsFrom = formFrom.GetFormFields();
-                if (fieldsFrom.Count > 0)
-                {
+                if (fieldsFrom.Count > 0) {
                     IDictionary<String, PdfFormField> fieldsTo = formTo.GetFormFields();
                     IList<PdfAnnotation> annots = toPage.GetAnnotations();
-                    foreach (PdfAnnotation annot in annots)
-                    {
-                        if (annot.GetSubtype().Equals(PdfName.Widget))
-                        {
+                    foreach (PdfAnnotation annot in annots) {
+                        if (annot.GetSubtype().Equals(PdfName.Widget)) {
                             PdfDictionary parent = annot.GetPdfObject().GetAsDictionary(PdfName.Parent);
-                            if (parent != null)
-                            {
+                            if (parent != null) {
                                 PdfString parentName = parent.GetAsString(PdfName.T);
-                                if (parentName == null)
-                                {
+                                if (parentName == null) {
                                     continue;
                                 }
-                                if (!usedParents.Contains(parent))
-                                {
+                                if (!usedParents.Contains(parent)) {
                                     PdfFormField field = PdfFormField.MakeFormField(parent, toPage.GetDocument());
                                     field.GetKids().Clear();
                                     formTo.AddField(field, toPage);
                                     usedParents.Add(parent);
                                     field.AddKid((PdfWidgetAnnotation)annot);
                                 }
-                                else
-                                {
+                                else {
                                     parent.GetAsArray(PdfName.Kids).Add(annot.GetPdfObject());
                                 }
                             }
-                            else
-                            {
+                            else {
                                 PdfString annotName = annot.GetPdfObject().GetAsString(PdfName.T);
                                 String annotNameString = null;
-                                if (annotName != null)
-                                {
+                                if (annotName != null) {
                                     annotNameString = annotName.ToUnicodeString();
                                 }
-                                if (annotNameString != null && fieldsFrom.ContainsKey(annotNameString))
-                                {
+                                if (annotNameString != null && fieldsFrom.ContainsKey(annotNameString)) {
                                     PdfFormField field = PdfFormField.MakeFormField(annot.GetPdfObject(), toPage.GetDocument());
-                                    if (fieldsTo.ContainsKey(annotNameString))
-                                    {
+                                    if (fieldsTo.ContainsKey(annotNameString)) {
                                         field = MergeFieldsWithTheSameName(field, fieldsTo.Get(annotNameString));
                                         ILogger logger = LoggerFactory.GetLogger(typeof(PdfPageFormCopier));
                                         logger.Warn(String.Format(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString));
@@ -145,14 +127,12 @@ namespace iTextSharp.Forms
             }
         }
 
-        private PdfFormField MergeFieldsWithTheSameName(PdfFormField existingField, PdfFormField newField)
-        {
+        private PdfFormField MergeFieldsWithTheSameName(PdfFormField existingField, PdfFormField newField) {
             String fieldName = newField.GetFieldName().ToUnicodeString();
             existingField.GetPdfObject().Remove(PdfName.T);
             PdfFormField mergedField = formTo.GetField(fieldName);
             PdfArray kids = mergedField.GetKids();
-            if (kids != null && !kids.IsEmpty())
-            {
+            if (kids != null && !kids.IsEmpty()) {
                 mergedField.AddKid(existingField);
                 return mergedField;
             }
@@ -161,13 +141,11 @@ namespace iTextSharp.Forms
             formTo.GetFields().Remove(newField.GetPdfObject());
             mergedField.Put(PdfName.FT, existingField.GetFormType()).Put(PdfName.T, new PdfString(fieldName));
             PdfDictionary parent = existingField.GetParent();
-            if (parent != null)
-            {
+            if (parent != null) {
                 mergedField.Put(PdfName.Parent, parent);
             }
             kids = existingField.GetKids();
-            if (kids != null)
-            {
+            if (kids != null) {
                 mergedField.Put(PdfName.Kids, kids);
             }
             mergedField.AddKid(existingField).AddKid(newField);

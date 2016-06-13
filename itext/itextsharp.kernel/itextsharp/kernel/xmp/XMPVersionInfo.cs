@@ -29,8 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>XMP Toolkit Version Information.</summary>
     /// <remarks>
     /// XMP Toolkit Version Information.
@@ -42,8 +41,7 @@ namespace iTextSharp.Kernel.XMP
     /// defined in "version.properties".
     /// </remarks>
     /// <since>23.01.2006</since>
-    public interface XMPVersionInfo
-    {
+    public interface XMPVersionInfo {
         /// <returns>Returns the primary release number, the "1" in version "1.2.3".</returns>
         int GetMajor();
 

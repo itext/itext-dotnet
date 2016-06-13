@@ -9,26 +9,22 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 using iTextSharp.Test.Attributes;
 
-namespace iTextSharp.Layout
-{
-    public class DefaultLayoutTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class DefaultLayoutTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/DefaultLayoutTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/DefaultLayoutTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void MultipleAdditionsOfSameModelElementTest()
-        {
+        public virtual void MultipleAdditionsOfSameModelElementTest() {
             String outFileName = destinationFolder + "multipleAdditionsOfSameModelElementTest1.pdf";
             String cmpFileName = sourceFolder + "cmp_multipleAdditionsOfSameModelElementTest1.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -43,8 +39,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RendererTest01()
-        {
+        public virtual void RendererTest01() {
             String outFileName = destinationFolder + "rendererTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_rendererTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -62,8 +57,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
-        public virtual void EmptyParagraphsTest01()
-        {
+        public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -83,8 +77,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EmptyParagraphsTest02()
-        {
+        public virtual void EmptyParagraphsTest02() {
             String outFileName = destinationFolder + "emptyParagraphsTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));

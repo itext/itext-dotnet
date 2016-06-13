@@ -7,18 +7,15 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfAFontTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfAFontTest : ExtendedITextTest {
         internal static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + 
             "/../../resources/itextsharp/pdfa/";
 
         internal static readonly String outputDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itextsharp/pdfa/PdfAFontTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(outputDir);
         }
 
@@ -26,8 +23,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA1_01()
-        {
+        public virtual void FontCheckPdfA1_01() {
             String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_01.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA1b_fontCheckPdfA1_01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -46,10 +42,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA1_02()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void FontCheckPdfA1_02() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -69,8 +63,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA1_03()
-        {
+        public virtual void FontCheckPdfA1_03() {
             String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_03.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA1b_fontCheckPdfA1_03.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -90,10 +83,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA1_04()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void FontCheckPdfA1_04() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfDocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, new PdfOutputIntent("Custom", ""
@@ -113,8 +104,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA1_05()
-        {
+        public virtual void FontCheckPdfA1_05() {
             String outPdf = outputDir + "pdfA1b_fontCheckPdfA1_05.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA1b_fontCheckPdfA1_05.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -135,8 +125,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA2_01()
-        {
+        public virtual void FontCheckPdfA2_01() {
             String outPdf = outputDir + "pdfA2b_fontCheckPdfA2_01.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_fontCheckPdfA2_01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -157,8 +146,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void FontCheckPdfA3_01()
-        {
+        public virtual void FontCheckPdfA3_01() {
             String outPdf = outputDir + "pdfA3b_fontCheckPdfA3_01.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA3b_fontCheckPdfA3_01.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -179,8 +167,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CidFontCheckTest1()
-        {
+        public virtual void CidFontCheckTest1() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest1.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest1.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -201,8 +188,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CidFontCheckTest2()
-        {
+        public virtual void CidFontCheckTest2() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest2.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest2.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -223,8 +209,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CidFontCheckTest3()
-        {
+        public virtual void CidFontCheckTest3() {
             String outPdf = outputDir + "pdfA2b_cidFontCheckTest3.pdf";
             String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_pdfA2b_cidFontCheckTest3.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -243,11 +228,9 @@ namespace iTextSharp.Pdfa
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareResult(String outPdf, String cmpPdf)
-        {
+        private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, outputDir, "diff_");
-            if (result != null)
-            {
+            if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
         }

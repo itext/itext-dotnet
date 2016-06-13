@@ -45,95 +45,73 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Codec;
 
-namespace iTextSharp.IO.Image
-{
-    public sealed class RawImageHelper
-    {
-        public static void UpdateImageAttributes(RawImageData image, IDictionary<String, Object> additional)
-        {
-            if (!image.IsRawImage())
-            {
+namespace iTextSharp.IO.Image {
+    public sealed class RawImageHelper {
+        public static void UpdateImageAttributes(RawImageData image, IDictionary<String, Object> additional) {
+            if (!image.IsRawImage()) {
                 throw new ArgumentException("Raw image expected.");
             }
             // will also have the CCITT parameters
             int colorSpace = image.GetColorSpace();
             int typeCCITT = image.GetTypeCcitt();
-            if (typeCCITT > 0xff)
-            {
-                if (!image.IsMask())
-                {
+            if (typeCCITT > 0xff) {
+                if (!image.IsMask()) {
                     image.SetColorSpace(1);
                 }
                 image.SetBpc(1);
                 image.SetFilter("CCITTFaxDecode");
                 int k = typeCCITT - RawImageData.CCITTG3_1D;
                 IDictionary<String, Object> decodeparms = new Dictionary<String, Object>();
-                if (k != 0)
-                {
+                if (k != 0) {
                     decodeparms["K"] = k;
                 }
-                if ((colorSpace & RawImageData.CCITT_BLACKIS1) != 0)
-                {
+                if ((colorSpace & RawImageData.CCITT_BLACKIS1) != 0) {
                     decodeparms["BlackIs1"] = true;
                 }
-                if ((colorSpace & RawImageData.CCITT_ENCODEDBYTEALIGN) != 0)
-                {
+                if ((colorSpace & RawImageData.CCITT_ENCODEDBYTEALIGN) != 0) {
                     decodeparms["EncodedByteAlign"] = true;
                 }
-                if ((colorSpace & RawImageData.CCITT_ENDOFLINE) != 0)
-                {
+                if ((colorSpace & RawImageData.CCITT_ENDOFLINE) != 0) {
                     decodeparms["EndOfLine"] = true;
                 }
-                if ((colorSpace & RawImageData.CCITT_ENDOFBLOCK) != 0)
-                {
+                if ((colorSpace & RawImageData.CCITT_ENDOFBLOCK) != 0) {
                     decodeparms["EndOfBlock"] = false;
                 }
                 decodeparms["Columns"] = image.GetWidth();
                 decodeparms["Rows"] = image.GetHeight();
                 image.decodeParms = decodeparms;
             }
-            else
-            {
-                switch (colorSpace)
-                {
-                    case 1:
-                    {
-                        if (image.IsInverted())
-                        {
+            else {
+                switch (colorSpace) {
+                    case 1: {
+                        if (image.IsInverted()) {
                             image.decode = new float[] { 1, 0 };
                         }
                         break;
                     }
 
-                    case 3:
-                    {
-                        if (image.IsInverted())
-                        {
+                    case 3: {
+                        if (image.IsInverted()) {
                             image.decode = new float[] { 1, 0, 1, 0, 1, 0 };
                         }
                         break;
                     }
 
                     case 4:
-                    default:
-                    {
-                        if (image.IsInverted())
-                        {
+                    default: {
+                        if (image.IsInverted()) {
                             image.decode = new float[] { 1, 0, 1, 0, 1, 0, 1, 0 };
                         }
                         break;
                     }
                 }
-                if (additional != null)
-                {
+                if (additional != null) {
                     image.SetImageAttributes(additional);
                 }
-                if (image.IsMask() && (image.GetBpc() == 1 || image.GetBpc() > 8))
-                {
+                if (image.IsMask() && (image.GetBpc() == 1 || image.GetBpc() > 8)) {
                     image.SetColorSpace(-1);
                 }
-                if (image.IsDeflated())
-                {
+                if (image.IsDeflated()) {
                     image.SetFilter("FlateDecode");
                 }
             }
@@ -147,16 +125,13 @@ namespace iTextSharp.IO.Image
         /// <param name="data">the image data</param>
         /// <exception cref="iTextSharp.IO.IOException">on error</exception>
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, int components
-            , int bpc, byte[] data)
-        {
+            , int bpc, byte[] data) {
             image.SetHeight(height);
             image.SetWidth(width);
-            if (components != 1 && components != 3 && components != 4)
-            {
+            if (components != 1 && components != 3 && components != 4) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4);
             }
-            if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8)
-            {
+            if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
             image.SetColorSpace(components);
@@ -165,31 +140,25 @@ namespace iTextSharp.IO.Image
         }
 
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, int components
-            , int bpc, byte[] data, int[] transparency)
-        {
-            if (transparency != null && transparency.Length != components * 2)
-            {
+            , int bpc, byte[] data, int[] transparency) {
+            if (transparency != null && transparency.Length != components * 2) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
                     );
             }
-            if (components == 1 && bpc == 1)
-            {
+            if (components == 1 && bpc == 1) {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
                 UpdateRawImageParameters(image, width, height, false, RawImageData.CCITTG4, RawImageData.CCITT_BLACKIS1, g4
                     , transparency);
             }
-            else
-            {
+            else {
                 UpdateRawImageParameters(image, width, height, components, bpc, data);
                 image.SetTransparency(transparency);
             }
         }
 
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, bool reverseBits
-            , int typeCCITT, int parameters, byte[] data, int[] transparency)
-        {
-            if (transparency != null && transparency.Length != 2)
-            {
+            , int typeCCITT, int parameters, byte[] data, int[] transparency) {
+            if (transparency != null && transparency.Length != 2) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
                     );
             }
@@ -198,16 +167,13 @@ namespace iTextSharp.IO.Image
         }
 
         protected internal static void UpdateCcittImageParameters(RawImageData image, int width, int height, bool 
-            reverseBits, int typeCcitt, int parameters, byte[] data)
-        {
+            reverseBits, int typeCcitt, int parameters, byte[] data) {
             if (typeCcitt != RawImageData.CCITTG4 && typeCcitt != RawImageData.CCITTG3_1D && typeCcitt != RawImageData
-                .CCITTG3_2D)
-            {
+                .CCITTG3_2D) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
             }
-            if (reverseBits)
-            {
+            if (reverseBits) {
                 TIFFFaxDecoder.ReverseBits(data);
             }
             image.SetHeight(height);

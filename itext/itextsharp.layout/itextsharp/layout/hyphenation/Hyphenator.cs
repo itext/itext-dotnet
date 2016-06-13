@@ -20,16 +20,14 @@ using System.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary><p>This class is the main entry point to the hyphenation package.</summary>
     /// <remarks>
     /// <p>This class is the main entry point to the hyphenation package.
     /// You can use only the static methods or create an instance.</p>
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
     /// </remarks>
-    public sealed class Hyphenator
-    {
+    public sealed class Hyphenator {
         private const String HYPHENATION_DEFAULT_RESOURCE = "iTextSharp.Hyph.";
 
         /// <summary>Logging instance.</summary>
@@ -54,8 +52,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="country">the optional country code (may be null or "none")</param>
         /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
-        public Hyphenator(String lang, String country, int leftMin, int rightMin)
-        {
+        public Hyphenator(String lang, String country, int leftMin, int rightMin) {
             this.lang = lang;
             this.country = country;
             this.leftMin = leftMin;
@@ -70,8 +67,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         public Hyphenator(String lang, String country, int leftMin, int rightMin, IDictionary<String, String> hyphPathNames
             )
-            : this(lang, country, leftMin, rightMin)
-        {
+            : this(lang, country, leftMin, rightMin) {
             this.hyphPathNames = hyphPathNames;
         }
 
@@ -79,10 +75,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="directory">directory to register</param>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
             )]
-        public static void RegisterAdditionalHyphenationFileDirectory(String directory)
-        {
-            if (additionalHyphenationFileDirectories == null)
-            {
+        public static void RegisterAdditionalHyphenationFileDirectory(String directory) {
+            if (additionalHyphenationFileDirectories == null) {
                 additionalHyphenationFileDirectories = new List<String>();
             }
             additionalHyphenationFileDirectories.Add(directory);
@@ -92,10 +86,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// <returns>the default (static) hyphenation tree cache</returns>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
             )]
-        public static HyphenationTreeCache GetHyphenationTreeCache()
-        {
-            if (hTreeCache == null)
-            {
+        public static HyphenationTreeCache GetHyphenationTreeCache() {
+            if (hTreeCache == null) {
                 hTreeCache = new HyphenationTreeCache();
             }
             return hTreeCache;
@@ -106,8 +98,7 @@ namespace iTextSharp.Layout.Hyphenation
         ///     </remarks>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
             )]
-        public static void ClearHyphenationTreeCache()
-        {
+        public static void ClearHyphenationTreeCache() {
             hTreeCache = new HyphenationTreeCache();
         }
 
@@ -125,42 +116,34 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="hyphPathNames">the map with user-configured hyphenation pattern file names</param>
         /// <returns>the hyphenation tree</returns>
         public static HyphenationTree GetHyphenationTree(String lang, String country, IDictionary<String, String> 
-            hyphPathNames)
-        {
+            hyphPathNames) {
             String llccKey = HyphenationTreeCache.ConstructLlccKey(lang, country);
             HyphenationTreeCache cache = GetHyphenationTreeCache();
             // If this hyphenation tree has been registered as missing, return immediately
-            if (cache.IsMissing(llccKey))
-            {
+            if (cache.IsMissing(llccKey)) {
                 return null;
             }
             HyphenationTree hTree = GetHyphenationTree2(lang, country, hyphPathNames);
             // fallback to lang only
-            if (hTree == null && country != null && !country.Equals("none"))
-            {
+            if (hTree == null && country != null && !country.Equals("none")) {
                 String llKey = HyphenationTreeCache.ConstructLlccKey(lang, null);
-                if (!cache.IsMissing(llKey))
-                {
+                if (!cache.IsMissing(llKey)) {
                     hTree = GetHyphenationTree2(lang, null, hyphPathNames);
-                    if (hTree != null && log.IsDebugEnabled())
-                    {
+                    if (hTree != null && log.IsDebugEnabled()) {
                         log.Debug("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\",country=\"" + country + "\"." 
                             + " Using general language pattern " + "for lang=\"" + lang + "\" instead.");
                     }
-                    if (hTree == null)
-                    {
+                    if (hTree == null) {
                         // no fallback; register as missing
                         cache.NoteMissing(llKey);
                     }
-                    else
-                    {
+                    else {
                         // also register for (lang,country)
                         cache.Cache(llccKey, hTree);
                     }
                 }
             }
-            if (hTree == null)
-            {
+            if (hTree == null) {
                 // (lang,country) and (lang) tried; register as missing
                 cache.NoteMissing(llccKey);
                 log.Error("Couldn't find hyphenation pattern " + "for lang=\"" + lang + "\"" + (country != null && !country
@@ -176,46 +159,37 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="hyphPathNames">the map with user-configured hyphenation pattern file names</param>
         /// <returns>the hyphenation tree</returns>
         public static HyphenationTree GetHyphenationTree2(String lang, String country, IDictionary<String, String>
-             hyphPathNames)
-        {
+             hyphPathNames) {
             String llccKey = HyphenationTreeCache.ConstructLlccKey(lang, country);
             HyphenationTreeCache cache = GetHyphenationTreeCache();
             HyphenationTree hTree;
             // first try to find it in the cache
             hTree = GetHyphenationTreeCache().GetHyphenationTree(lang, country);
-            if (hTree != null)
-            {
+            if (hTree != null) {
                 return hTree;
             }
             String key = HyphenationTreeCache.ConstructUserKey(lang, country, hyphPathNames);
-            if (key == null)
-            {
+            if (key == null) {
                 key = llccKey;
             }
-            if (additionalHyphenationFileDirectories != null)
-            {
-                foreach (String dir in additionalHyphenationFileDirectories)
-                {
+            if (additionalHyphenationFileDirectories != null) {
+                foreach (String dir in additionalHyphenationFileDirectories) {
                     hTree = GetHyphenationTree(dir, key);
-                    if (hTree != null)
-                    {
+                    if (hTree != null) {
                         break;
                     }
                 }
             }
-            if (hTree == null)
-            {
+            if (hTree == null) {
                 // get from the default directory
                 Stream defaultHyphenationResourceStream = ResourceUtil.GetResourceStream(HYPHENATION_DEFAULT_RESOURCE + key
                      + ".xml");
-                if (defaultHyphenationResourceStream != null)
-                {
+                if (defaultHyphenationResourceStream != null) {
                     hTree = GetHyphenationTree(defaultHyphenationResourceStream, key);
                 }
             }
             // put it into the pattern cache
-            if (hTree != null)
-            {
+            if (hTree != null) {
                 cache.Cache(llccKey, hTree);
             }
             return hTree;
@@ -225,20 +199,16 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="searchDirectory">the directory to search the file into</param>
         /// <param name="key">language key for the requested hyphenation file</param>
         /// <returns>the requested HyphenationTree or null if it is not available</returns>
-        public static HyphenationTree GetHyphenationTree(String searchDirectory, String key)
-        {
+        public static HyphenationTree GetHyphenationTree(String searchDirectory, String key) {
             // try the raw XML file
             String name = key + ".xml";
-            try
-            {
+            try {
                 Stream fis = new FileStream(searchDirectory + Path.DirectorySeparatorChar + name, FileMode.Open, FileAccess.Read
                     );
                 return GetHyphenationTree(fis, name);
             }
-            catch (System.IO.IOException ioe)
-            {
-                if (log.IsDebugEnabled())
-                {
+            catch (System.IO.IOException ioe) {
+                if (log.IsDebugEnabled()) {
                     log.Debug("I/O problem while trying to load " + name + ": " + ioe.Message);
                 }
                 return null;
@@ -249,31 +219,24 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="in">the input stream to load the tree from</param>
         /// <param name="name">unique key representing country-language combination</param>
         /// <returns>the requested HyphenationTree or null if it is not available</returns>
-        public static HyphenationTree GetHyphenationTree(Stream @in, String name)
-        {
-            if (@in == null)
-            {
+        public static HyphenationTree GetHyphenationTree(Stream @in, String name) {
+            if (@in == null) {
                 return null;
             }
             HyphenationTree hTree;
-            try
-            {
+            try {
                 hTree = new HyphenationTree();
                 hTree.LoadPatterns(@in, name);
             }
-            catch (HyphenationException ex)
-            {
+            catch (HyphenationException ex) {
                 log.Error("Can't load user patterns from XML file " + name + ": " + ex.Message);
                 return null;
             }
-            finally
-            {
-                try
-                {
+            finally {
+                try {
                     @in.Close();
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                 }
             }
             return hTree;
@@ -288,44 +251,36 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         /// <returns>the hyphenation result</returns>
         public static iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, IDictionary
-            <String, String> hyphPathNames, String word, int leftMin, int rightMin)
-        {
+            <String, String> hyphPathNames, String word, int leftMin, int rightMin) {
             HyphenationTree hTree = GetHyphenationTree(lang, country, hyphPathNames);
-            if (hTree == null)
-            {
+            if (hTree == null) {
                 log.Warn("Soft hyphen unicode symbols will be used as hints for hyphenation");
                 char softHyphen = '\u00ad';
                 IList<int> softHyphens = new List<int>();
                 int lastSoftHyphenIndex = -1;
                 int curSoftHyphenIndex;
-                while ((curSoftHyphenIndex = word.IndexOf(softHyphen, lastSoftHyphenIndex + 1)) > 0)
-                {
+                while ((curSoftHyphenIndex = word.IndexOf(softHyphen, lastSoftHyphenIndex + 1)) > 0) {
                     softHyphens.Add(curSoftHyphenIndex);
                     lastSoftHyphenIndex = curSoftHyphenIndex;
                 }
                 int leftInd = 0;
                 int rightInd = softHyphens.Count - 1;
                 while (leftInd < softHyphens.Count && word.JSubstring(0, softHyphens[leftInd]).Replace(softHyphen.ToString
-                    (), "").Length < leftMin)
-                {
+                    (), "").Length < leftMin) {
                     leftInd++;
                 }
                 while (rightInd >= 0 && word.Substring(softHyphens[rightInd] + 1).Replace(softHyphen.ToString(), "").Length
-                     < rightMin)
-                {
+                     < rightMin) {
                     rightInd--;
                 }
-                if (leftInd <= rightInd)
-                {
+                if (leftInd <= rightInd) {
                     int[] hyphenationPoints = new int[rightInd - leftInd + 1];
-                    for (int i = leftInd; i <= rightInd; i++)
-                    {
+                    for (int i = leftInd; i <= rightInd; i++) {
                         hyphenationPoints[i - leftInd] = softHyphens[i];
                     }
                     return new iTextSharp.Layout.Hyphenation.Hyphenation(word, hyphenationPoints);
                 }
-                else
-                {
+                else {
                     return null;
                 }
             }
@@ -340,16 +295,14 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         /// <returns>the hyphenation result</returns>
         public static iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, String word
-            , int leftMin, int rightMin)
-        {
+            , int leftMin, int rightMin) {
             return Hyphenate(lang, country, null, word, leftMin, rightMin);
         }
 
         /// <summary>Hyphenates a word.</summary>
         /// <param name="word">the word to hyphenate</param>
         /// <returns>the hyphenation result</returns>
-        public iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word)
-        {
+        public iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word) {
             return Hyphenate(lang, country, hyphPathNames, word, leftMin, rightMin);
         }
     }

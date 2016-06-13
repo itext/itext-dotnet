@@ -7,26 +7,22 @@ using iTextSharp.Layout.Element;
 using iTextSharp.Layout.Property;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class AreaBreakTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class AreaBreakTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/AreaBreakTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/AreaBreakTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PageBreakTest1()
-        {
+        public virtual void PageBreakTest1() {
             String outFileName = destinationFolder + "pageBreak1.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak1.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -40,8 +36,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PageBreakTest2()
-        {
+        public virtual void PageBreakTest2() {
             String outFileName = destinationFolder + "pageBreak2.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak2.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -55,8 +50,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void PageBreakTest03()
-        {
+        public virtual void PageBreakTest03() {
             String outFileName = destinationFolder + "pageBreak3.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak3.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -73,8 +67,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void LastPageAreaBreakTest()
-        {
+        public virtual void LastPageAreaBreakTest() {
             String inputFileName = sourceFolder + "input.pdf";
             String cmpFileName = sourceFolder + "cmp_lastPageAreaBreakTest.pdf";
             String outFileName = destinationFolder + "lastPageAreaBreakTest.pdf";

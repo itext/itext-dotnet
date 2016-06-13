@@ -49,10 +49,8 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodeEAN : Barcode1D
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodeEAN : Barcode1D {
         /// <summary>A type of barcode</summary>
         public const int EAN13 = 1;
 
@@ -150,8 +148,7 @@ namespace iTextSharp.Barcodes
 
         /// <summary>Creates new BarcodeEAN</summary>
         public BarcodeEAN(PdfDocument document)
-            : base(document)
-        {
+            : base(document) {
             // 0
             // 1
             // 2
@@ -196,8 +193,7 @@ namespace iTextSharp.Barcodes
             // 7
             // 8
             // 9
-            try
-            {
+            try {
                 x = 0.8f;
                 font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
                 size = 8;
@@ -207,8 +203,7 @@ namespace iTextSharp.Barcodes
                 codeType = EAN13;
                 code = "";
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(e);
             }
         }
@@ -216,12 +211,10 @@ namespace iTextSharp.Barcodes
         /// <summary>Calculates the EAN parity character.</summary>
         /// <param name="code">the code</param>
         /// <returns>the parity character</returns>
-        public static int CalculateEANParity(String code)
-        {
+        public static int CalculateEANParity(String code) {
             int mul = 3;
             int total = 0;
-            for (int k = code.Length - 1; k >= 0; --k)
-            {
+            for (int k = code.Length - 1; k >= 0; --k) {
                 int n = code[k] - '0';
                 total += mul * n;
                 mul ^= 2;
@@ -239,45 +232,32 @@ namespace iTextSharp.Barcodes
         /// the 8 converted digits or <CODE>null</CODE> if the
         /// code could not be converted
         /// </returns>
-        public static String ConvertUPCAtoUPCE(String text)
-        {
-            if (text.Length != 12 || !(text.StartsWith("0") || text.StartsWith("1")))
-            {
+        public static String ConvertUPCAtoUPCE(String text) {
+            if (text.Length != 12 || !(text.StartsWith("0") || text.StartsWith("1"))) {
                 return null;
             }
             if (text.JSubstring(3, 6).Equals("000") || text.JSubstring(3, 6).Equals("100") || text.JSubstring(3, 6).Equals
-                ("200"))
-            {
-                if (text.JSubstring(6, 8).Equals("00"))
-                {
+                ("200")) {
+                if (text.JSubstring(6, 8).Equals("00")) {
                     return text.JSubstring(0, 1) + text.JSubstring(1, 3) + text.JSubstring(8, 11) + text.JSubstring(3, 4) + text
                         .Substring(11);
                 }
             }
-            else
-            {
-                if (text.JSubstring(4, 6).Equals("00"))
-                {
-                    if (text.JSubstring(6, 9).Equals("000"))
-                    {
+            else {
+                if (text.JSubstring(4, 6).Equals("00")) {
+                    if (text.JSubstring(6, 9).Equals("000")) {
                         return text.JSubstring(0, 1) + text.JSubstring(1, 4) + text.JSubstring(9, 11) + "3" + text.Substring(11);
                     }
                 }
-                else
-                {
-                    if (text.JSubstring(5, 6).Equals("0"))
-                    {
-                        if (text.JSubstring(6, 10).Equals("0000"))
-                        {
+                else {
+                    if (text.JSubstring(5, 6).Equals("0")) {
+                        if (text.JSubstring(6, 10).Equals("0000")) {
                             return text.JSubstring(0, 1) + text.JSubstring(1, 5) + text.JSubstring(10, 11) + "4" + text.Substring(11);
                         }
                     }
-                    else
-                    {
-                        if (text[10] >= '5')
-                        {
-                            if (text.JSubstring(6, 10).Equals("0000"))
-                            {
+                    else {
+                        if (text[10] >= '5') {
+                            if (text.JSubstring(6, 10).Equals("0000")) {
                                 return text.JSubstring(0, 1) + text.JSubstring(1, 6) + text.JSubstring(10, 11) + text.Substring(11);
                             }
                         }
@@ -290,11 +270,9 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the bars for the barcode EAN13 and UPCA.</summary>
         /// <param name="_code">the text with 13 digits</param>
         /// <returns>the barcode</returns>
-        public static byte[] GetBarsEAN13(String _code)
-        {
+        public static byte[] GetBarsEAN13(String _code) {
             int[] code = new int[_code.Length];
-            for (int k = 0; k < code.Length; ++k)
-            {
+            for (int k = 0; k < code.Length; ++k) {
                 code[k] = _code[k] - '0';
             }
             byte[] bars = new byte[TOTALBARS_EAN13];
@@ -303,19 +281,16 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 1;
             byte[] sequence = PARITY13[code[0]];
-            for (int k_1 = 0; k_1 < sequence.Length; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < sequence.Length; ++k_1) {
                 int c = code[k_1 + 1];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1] == ODD)
-                {
+                if (sequence[k_1] == ODD) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[3];
                 }
-                else
-                {
+                else {
                     bars[pb++] = stripes[3];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[1];
@@ -327,8 +302,7 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 1;
-            for (int k_2 = 7; k_2 < 13; ++k_2)
-            {
+            for (int k_2 = 7; k_2 < 13; ++k_2) {
                 int c = code[k_2];
                 byte[] stripes = BARS[c];
                 bars[pb++] = stripes[0];
@@ -345,11 +319,9 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the bars for the barcode EAN8.</summary>
         /// <param name="_code">the text with 8 digits</param>
         /// <returns>the barcode</returns>
-        public static byte[] GetBarsEAN8(String _code)
-        {
+        public static byte[] GetBarsEAN8(String _code) {
             int[] code = new int[_code.Length];
-            for (int k = 0; k < code.Length; ++k)
-            {
+            for (int k = 0; k < code.Length; ++k) {
                 code[k] = _code[k] - '0';
             }
             byte[] bars = new byte[TOTALBARS_EAN8];
@@ -357,8 +329,7 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 1;
-            for (int k_1 = 0; k_1 < 4; ++k_1)
-            {
+            for (int k_1 = 0; k_1 < 4; ++k_1) {
                 int c = code[k_1];
                 byte[] stripes = BARS[c];
                 bars[pb++] = stripes[0];
@@ -371,8 +342,7 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 1;
-            for (int k_2 = 4; k_2 < 8; ++k_2)
-            {
+            for (int k_2 = 4; k_2 < 8; ++k_2) {
                 int c = code[k_2];
                 byte[] stripes = BARS[c];
                 bars[pb++] = stripes[0];
@@ -389,11 +359,9 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the bars for the barcode UPCE.</summary>
         /// <param name="_code">the text with 8 digits</param>
         /// <returns>the barcode</returns>
-        public static byte[] GetBarsUPCE(String _code)
-        {
+        public static byte[] GetBarsUPCE(String _code) {
             int[] code = new int[_code.Length];
-            for (int k = 0; k < code.Length; ++k)
-            {
+            for (int k = 0; k < code.Length; ++k) {
                 code[k] = _code[k] - '0';
             }
             byte[] bars = new byte[TOTALBARS_UPCE];
@@ -403,19 +371,16 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 1;
             byte[] sequence = PARITYE[code[code.Length - 1]];
-            for (int k_1 = 1; k_1 < code.Length - 1; ++k_1)
-            {
+            for (int k_1 = 1; k_1 < code.Length - 1; ++k_1) {
                 int c = code[k_1];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1 - 1] == (flip ? EVEN : ODD))
-                {
+                if (sequence[k_1 - 1] == (flip ? EVEN : ODD)) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[3];
                 }
-                else
-                {
+                else {
                     bars[pb++] = stripes[3];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[1];
@@ -434,11 +399,9 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the bars for the barcode supplemental 2.</summary>
         /// <param name="_code">the text with 2 digits</param>
         /// <returns>the barcode</returns>
-        public static byte[] GetBarsSupplemental2(String _code)
-        {
+        public static byte[] GetBarsSupplemental2(String _code) {
             int[] code = new int[2];
-            for (int k = 0; k < code.Length; ++k)
-            {
+            for (int k = 0; k < code.Length; ++k) {
                 code[k] = _code[k] - '0';
             }
             byte[] bars = new byte[TOTALBARS_SUPP2];
@@ -448,24 +411,20 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 2;
             byte[] sequence = PARITY2[parity];
-            for (int k_1 = 0; k_1 < sequence.Length; ++k_1)
-            {
-                if (k_1 == 1)
-                {
+            for (int k_1 = 0; k_1 < sequence.Length; ++k_1) {
+                if (k_1 == 1) {
                     bars[pb++] = 1;
                     bars[pb++] = 1;
                 }
                 int c = code[k_1];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1] == ODD)
-                {
+                if (sequence[k_1] == ODD) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[3];
                 }
-                else
-                {
+                else {
                     bars[pb++] = stripes[3];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[1];
@@ -478,11 +437,9 @@ namespace iTextSharp.Barcodes
         /// <summary>Creates the bars for the barcode supplemental 5.</summary>
         /// <param name="_code">the text with 5 digits</param>
         /// <returns>the barcode</returns>
-        public static byte[] GetBarsSupplemental5(String _code)
-        {
+        public static byte[] GetBarsSupplemental5(String _code) {
             int[] code = new int[5];
-            for (int k = 0; k < code.Length; ++k)
-            {
+            for (int k = 0; k < code.Length; ++k) {
                 code[k] = _code[k] - '0';
             }
             byte[] bars = new byte[TOTALBARS_SUPP5];
@@ -492,24 +449,20 @@ namespace iTextSharp.Barcodes
             bars[pb++] = 1;
             bars[pb++] = 2;
             byte[] sequence = PARITY5[parity];
-            for (int k_1 = 0; k_1 < sequence.Length; ++k_1)
-            {
-                if (k_1 != 0)
-                {
+            for (int k_1 = 0; k_1 < sequence.Length; ++k_1) {
+                if (k_1 != 0) {
                     bars[pb++] = 1;
                     bars[pb++] = 1;
                 }
                 int c = code[k_1];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1] == ODD)
-                {
+                if (sequence[k_1] == ODD) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[3];
                 }
-                else
-                {
+                else {
                     bars[pb++] = stripes[3];
                     bars[pb++] = stripes[2];
                     bars[pb++] = stripes[1];
@@ -528,73 +481,58 @@ namespace iTextSharp.Barcodes
         /// any, will occupy. The lower left corner is always (0, 0).
         /// </remarks>
         /// <returns>the size the barcode occupies.</returns>
-        public override Rectangle GetBarcodeSize()
-        {
+        public override Rectangle GetBarcodeSize() {
             float width;
             float height = barHeight;
-            if (font != null)
-            {
-                if (baseline <= 0)
-                {
+            if (font != null) {
+                if (baseline <= 0) {
                     height += -baseline + size;
                 }
-                else
-                {
+                else {
                     height += baseline - GetDescender();
                 }
             }
-            switch (codeType)
-            {
-                case EAN13:
-                {
+            switch (codeType) {
+                case EAN13: {
                     width = x * (11 + 12 * 7);
-                    if (font != null)
-                    {
+                    if (font != null) {
                         width += font.GetWidth(code[0], size);
                     }
                     break;
                 }
 
-                case EAN8:
-                {
+                case EAN8: {
                     width = x * (11 + 8 * 7);
                     break;
                 }
 
-                case UPCA:
-                {
+                case UPCA: {
                     width = x * (11 + 12 * 7);
-                    if (font != null)
-                    {
+                    if (font != null) {
                         width += font.GetWidth(code[0], size) + font.GetWidth(code[11], size);
                     }
                     break;
                 }
 
-                case UPCE:
-                {
+                case UPCE: {
                     width = x * (9 + 6 * 7);
-                    if (font != null)
-                    {
+                    if (font != null) {
                         width += font.GetWidth(code[0], size) + font.GetWidth(code[7], size);
                     }
                     break;
                 }
 
-                case SUPP2:
-                {
+                case SUPP2: {
                     width = x * (6 + 2 * 7);
                     break;
                 }
 
-                case SUPP5:
-                {
+                case SUPP5: {
                     width = x * (4 + 5 * 7 + 4 * 2);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     throw new PdfException("Invalid code type");
                 }
             }
@@ -640,32 +578,25 @@ namespace iTextSharp.Barcodes
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
         public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
-             textColor)
-        {
+             textColor) {
             Rectangle rect = GetBarcodeSize();
             float barStartX = 0;
             float barStartY = 0;
             float textStartY = 0;
-            if (font != null)
-            {
-                if (baseline <= 0)
-                {
+            if (font != null) {
+                if (baseline <= 0) {
                     textStartY = barHeight - baseline;
                 }
-                else
-                {
+                else {
                     textStartY = -GetDescender();
                     barStartY = textStartY + baseline;
                 }
             }
-            switch (codeType)
-            {
+            switch (codeType) {
                 case EAN13:
                 case UPCA:
-                case UPCE:
-                {
-                    if (font != null)
-                    {
+                case UPCE: {
+                    if (font != null) {
                         barStartX += font.GetWidth(code[0], size);
                     }
                     break;
@@ -673,75 +604,61 @@ namespace iTextSharp.Barcodes
             }
             byte[] bars;
             int[] guard = GUARD_EMPTY;
-            switch (codeType)
-            {
-                case EAN13:
-                {
+            switch (codeType) {
+                case EAN13: {
                     bars = GetBarsEAN13(code);
                     guard = GUARD_EAN13;
                     break;
                 }
 
-                case EAN8:
-                {
+                case EAN8: {
                     bars = GetBarsEAN8(code);
                     guard = GUARD_EAN8;
                     break;
                 }
 
-                case UPCA:
-                {
+                case UPCA: {
                     bars = GetBarsEAN13("0" + code);
                     guard = GUARD_UPCA;
                     break;
                 }
 
-                case UPCE:
-                {
+                case UPCE: {
                     bars = GetBarsUPCE(code);
                     guard = GUARD_UPCE;
                     break;
                 }
 
-                case SUPP2:
-                {
+                case SUPP2: {
                     bars = GetBarsSupplemental2(code);
                     break;
                 }
 
-                case SUPP5:
-                {
+                case SUPP5: {
                     bars = GetBarsSupplemental5(code);
                     break;
                 }
 
-                default:
-                {
+                default: {
                     throw new PdfException("Invalid code type");
                 }
             }
             float keepBarX = barStartX;
             bool print = true;
             float gd = 0;
-            if (font != null && baseline > 0 && guardBars)
-            {
+            if (font != null && baseline > 0 && guardBars) {
                 gd = baseline / 2;
             }
-            if (barColor != null)
-            {
+            if (barColor != null) {
                 canvas.SetFillColor(barColor);
             }
-            for (int k = 0; k < bars.Length; ++k)
-            {
+            for (int k = 0; k < bars.Length; ++k) {
                 float w = bars[k] * x;
-                if (print)
-                {
-                    if (iTextSharp.IO.Util.JavaUtil.ArraysBinarySearch(guard, k) >= 0)
-                    {
+                if (print) {
+                    if (iTextSharp.IO.Util.JavaUtil.ArraysBinarySearch(guard, k) >= 0) {
                         canvas.Rectangle(barStartX, barStartY - gd, w - inkSpreading, barHeight + gd);
                     }
-                    else
-                    {
+                    else {
                         canvas.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
                     }
                 }
@@ -749,22 +666,17 @@ namespace iTextSharp.Barcodes
                 barStartX += w;
             }
             canvas.Fill();
-            if (font != null)
-            {
-                if (textColor != null)
-                {
+            if (font != null) {
+                if (textColor != null) {
                     canvas.SetFillColor(textColor);
                 }
                 canvas.BeginText();
                 canvas.SetFontAndSize(font, size);
-                switch (codeType)
-                {
-                    case EAN13:
-                    {
+                switch (codeType) {
+                    case EAN13: {
                         canvas.SetTextMatrix(0, textStartY);
                         canvas.ShowText(code.JSubstring(0, 1));
-                        for (int k_1 = 1; k_1 < 13; ++k_1)
-                        {
+                        for (int k_1 = 1; k_1 < 13; ++k_1) {
                             String c = code.JSubstring(k_1, k_1 + 1);
                             float len = font.GetWidth(c, size);
                             float pX = keepBarX + TEXTPOS_EAN13[k_1 - 1] * x - len / 2;
@@ -774,10 +686,8 @@ namespace iTextSharp.Barcodes
                         break;
                     }
 
-                    case EAN8:
-                    {
-                        for (int k_2 = 0; k_2 < 8; ++k_2)
-                        {
+                    case EAN8: {
+                        for (int k_2 = 0; k_2 < 8; ++k_2) {
                             String c = code.JSubstring(k_2, k_2 + 1);
                             float len = font.GetWidth(c, size);
                             float pX = TEXTPOS_EAN8[k_2] * x - len / 2;
@@ -787,12 +697,10 @@ namespace iTextSharp.Barcodes
                         break;
                     }
 
-                    case UPCA:
-                    {
+                    case UPCA: {
                         canvas.SetTextMatrix(0, textStartY);
                         canvas.ShowText(code.JSubstring(0, 1));
-                        for (int k_3 = 1; k_3 < 11; ++k_3)
-                        {
+                        for (int k_3 = 1; k_3 < 11; ++k_3) {
                             String c = code.JSubstring(k_3, k_3 + 1);
                             float len = font.GetWidth(c, size);
                             float pX = keepBarX + TEXTPOS_EAN13[k_3] * x - len / 2;
@@ -804,12 +712,10 @@ namespace iTextSharp.Barcodes
                         break;
                     }
 
-                    case UPCE:
-                    {
+                    case UPCE: {
                         canvas.SetTextMatrix(0, textStartY);
                         canvas.ShowText(code.JSubstring(0, 1));
-                        for (int k_4 = 1; k_4 < 7; ++k_4)
-                        {
+                        for (int k_4 = 1; k_4 < 7; ++k_4) {
                             String c = code.JSubstring(k_4, k_4 + 1);
                             float len = font.GetWidth(c, size);
                             float pX = keepBarX + TEXTPOS_EAN13[k_4 - 1] * x - len / 2;
@@ -822,10 +728,8 @@ namespace iTextSharp.Barcodes
                     }
 
                     case SUPP2:
-                    case SUPP5:
-                    {
-                        for (int k_5 = 0; k_5 < code.Length; ++k_5)
-                        {
+                    case SUPP5: {
+                        for (int k_5 = 0; k_5 < code.Length; ++k_5) {
                             String c = code.JSubstring(k_5, k_5 + 1);
                             float len = font.GetWidth(c, size);
                             float pX = (7.5f + (9 * k_5)) * x - len / 2;

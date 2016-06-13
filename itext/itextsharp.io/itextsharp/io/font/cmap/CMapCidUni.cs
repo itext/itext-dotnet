@@ -44,38 +44,30 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap
-{
+namespace iTextSharp.IO.Font.Cmap {
     /// <author>psoares</author>
-    public class CMapCidUni : AbstractCMap
-    {
+    public class CMapCidUni : AbstractCMap {
         private IntHashtable map = new IntHashtable(65537);
 
-        internal override void AddChar(String mark, CMapObject code)
-        {
-            if (code.IsNumber())
-            {
+        internal override void AddChar(String mark, CMapObject code) {
+            if (code.IsNumber()) {
                 int codePoint;
                 String s = ToUnicodeString(mark, true);
-                if (TextUtil.IsSurrogatePair(s, 0))
-                {
+                if (TextUtil.IsSurrogatePair(s, 0)) {
                     codePoint = TextUtil.ConvertToUtf32(s, 0);
                 }
-                else
-                {
+                else {
                     codePoint = (int)s[0];
                 }
                 map.Put((int)code.GetValue(), codePoint);
             }
         }
 
-        public virtual int Lookup(int character)
-        {
+        public virtual int Lookup(int character) {
             return map.Get(character);
         }
 
-        public virtual int[] GetCids()
-        {
+        public virtual int[] GetCids() {
             return map.GetKeys();
         }
     }

@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection
-{
-    public class PdfCollection : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Collection {
+    public class PdfCollection : PdfObjectWrapper<PdfDictionary> {
         /// <summary>A type of initial view</summary>
         public const int DETAILS = 0;
 
@@ -58,27 +56,23 @@ namespace iTextSharp.Kernel.Pdf.Collection
         public const int HIDDEN = 2;
 
         public PdfCollection(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         /// <summary>Constructs a PDF Collection.</summary>
         public PdfCollection()
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
         }
 
         /// <summary>Sets the Collection schema dictionary.</summary>
         /// <param name="schema">an overview of the collection fields</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema schema)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema schema) {
             GetPdfObject().Put(PdfName.Schema, schema.GetPdfObject());
             return this;
         }
 
-        public virtual PdfCollectionSchema GetSchema()
-        {
+        public virtual PdfCollectionSchema GetSchema() {
             return new PdfCollectionSchema(GetPdfObject().GetAsDictionary(PdfName.Schema));
         }
 
@@ -88,38 +82,31 @@ namespace iTextSharp.Kernel.Pdf.Collection
         /// </summary>
         /// <param name="documentName">a string that identifies an entry in the EmbeddedFiles name tree</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(String documentName)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(String documentName) {
             GetPdfObject().Put(PdfName.D, new PdfString(documentName));
             return this;
         }
 
-        public virtual PdfString GetInitialDocument()
-        {
+        public virtual PdfString GetInitialDocument() {
             return GetPdfObject().GetAsString(PdfName.D);
         }
 
         /// <summary>Sets the initial view.</summary>
         /// <param name="viewType"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetView(int viewType)
-        {
-            switch (viewType)
-            {
-                default:
-                {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetView(int viewType) {
+            switch (viewType) {
+                default: {
                     GetPdfObject().Put(PdfName.View, PdfName.D);
                     break;
                 }
 
-                case TILE:
-                {
+                case TILE: {
                     GetPdfObject().Put(PdfName.View, PdfName.T);
                     break;
                 }
 
-                case HIDDEN:
-                {
+                case HIDDEN: {
                     GetPdfObject().Put(PdfName.View, PdfName.H);
                     break;
                 }
@@ -127,27 +114,23 @@ namespace iTextSharp.Kernel.Pdf.Collection
             return this;
         }
 
-        public virtual PdfNumber GetView()
-        {
+        public virtual PdfNumber GetView() {
             return GetPdfObject().GetAsNumber(PdfName.View);
         }
 
         /// <summary>Sets the Collection sort dictionary.</summary>
         /// <param name="sort"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort sort)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort sort) {
             GetPdfObject().Put(PdfName.Sort, sort.GetPdfObject());
             return this;
         }
 
-        public virtual PdfCollectionSort GetSort()
-        {
+        public virtual PdfCollectionSort GetSort() {
             return new PdfCollectionSort(GetPdfObject().GetAsDictionary(PdfName.Sort));
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
     }

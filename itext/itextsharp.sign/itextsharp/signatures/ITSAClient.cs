@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Time Stamp Authority client (caller) interface.</summary>
     /// <remarks>
     /// Time Stamp Authority client (caller) interface.
@@ -52,8 +51,7 @@ namespace iTextSharp.Signatures
     /// Interface used by the PdfPKCS7 digital signature builder to call
     /// Time Stamp Authority providing RFC 3161 compliant time stamp token.
     /// </remarks>
-    public interface ITSAClient
-    {
+    public interface ITSAClient {
         // TODO: refactor docs
         /// <summary>Get the time stamp estimated token size.</summary>
         /// <remarks>

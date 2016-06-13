@@ -44,39 +44,31 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfPopupAnnotation : PdfAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfPopupAnnotation : PdfAnnotation {
         protected internal PdfAnnotation parent;
 
         public PdfPopupAnnotation(Rectangle rect)
-            : base(rect)
-        {
+            : base(rect) {
         }
 
         public PdfPopupAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.Popup;
         }
 
-        public virtual PdfDictionary GetParentObject()
-        {
+        public virtual PdfDictionary GetParentObject() {
             return GetPdfObject().GetAsDictionary(PdfName.Parent);
         }
 
-        public virtual PdfAnnotation GetParent()
-        {
+        public virtual PdfAnnotation GetParent() {
             return parent;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation parent)
-        {
+        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation parent) {
             this.parent = parent;
             return (iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent.GetPdfObject());
         }

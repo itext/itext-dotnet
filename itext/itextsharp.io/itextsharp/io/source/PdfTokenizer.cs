@@ -44,12 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.IO.Source
-{
-    public class PdfTokenizer
-    {
-        public enum TokenType
-        {
+namespace iTextSharp.IO.Source {
+    public class PdfTokenizer {
+        public enum TokenType {
             Number,
             String,
             Name,
@@ -129,61 +126,50 @@ namespace iTextSharp.IO.Source
         /// as necessary to account for any junk that occurs in the byte source before the header
         /// </summary>
         /// <param name="file">the source</param>
-        public PdfTokenizer(RandomAccessFileOrArray file)
-        {
+        public PdfTokenizer(RandomAccessFileOrArray file) {
             this.file = file;
             this.outBuf = new ByteBuffer();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Seek(long pos)
-        {
+        public virtual void Seek(long pos) {
             file.Seek(pos);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void ReadFully(byte[] bytes)
-        {
+        public virtual void ReadFully(byte[] bytes) {
             file.ReadFully(bytes);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long GetPosition()
-        {
+        public virtual long GetPosition() {
             return file.GetPosition();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Close()
-        {
-            if (closeStream)
-            {
+        public virtual void Close() {
+            if (closeStream) {
                 file.Close();
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long Length()
-        {
+        public virtual long Length() {
             return file.Length();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Read()
-        {
+        public virtual int Read() {
             return file.Read();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual String ReadString(int size)
-        {
+        public virtual String ReadString(int size) {
             StringBuilder buf = new StringBuilder();
             int ch;
-            while ((size--) > 0)
-            {
+            while ((size--) > 0) {
                 ch = Read();
-                if (ch == -1)
-                {
+                if (ch == -1) {
                     break;
                 }
                 buf.Append((char)ch);
@@ -191,75 +177,59 @@ namespace iTextSharp.IO.Source
             return buf.ToString();
         }
 
-        public virtual PdfTokenizer.TokenType GetTokenType()
-        {
+        public virtual PdfTokenizer.TokenType GetTokenType() {
             return type;
         }
 
-        public virtual byte[] GetByteContent()
-        {
+        public virtual byte[] GetByteContent() {
             return outBuf.ToByteArray();
         }
 
-        public virtual String GetStringValue()
-        {
+        public virtual String GetStringValue() {
             return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
         }
 
-        public virtual byte[] GetDecodedStringContent()
-        {
+        public virtual byte[] GetDecodedStringContent() {
             return DecodeStringContent(outBuf.GetInternalBuffer(), 0, outBuf.Size() - 1, IsHexString());
         }
 
-        public virtual bool TokenValueEqualsTo(byte[] cmp)
-        {
-            if (cmp == null)
-            {
+        public virtual bool TokenValueEqualsTo(byte[] cmp) {
+            if (cmp == null) {
                 return false;
             }
             int size = cmp.Length;
-            if (outBuf.Size() != size)
-            {
+            if (outBuf.Size() != size) {
                 return false;
             }
-            for (int i = 0; i < size; i++)
-            {
-                if (cmp[i] != outBuf.GetInternalBuffer()[i])
-                {
+            for (int i = 0; i < size; i++) {
+                if (cmp[i] != outBuf.GetInternalBuffer()[i]) {
                     return false;
                 }
             }
             return true;
         }
 
-        public virtual int GetObjNr()
-        {
+        public virtual int GetObjNr() {
             return reference;
         }
 
-        public virtual int GetGenNr()
-        {
+        public virtual int GetGenNr() {
             return generation;
         }
 
-        public virtual void BackOnePosition(int ch)
-        {
-            if (ch != -1)
-            {
+        public virtual void BackOnePosition(int ch) {
+            if (ch != -1) {
                 file.PushBack((byte)ch);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual int GetHeaderOffset()
-        {
+        public virtual int GetHeaderOffset() {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-");
-            if (idx < 0)
-            {
+            if (idx < 0) {
                 idx = str.IndexOf("%FDF-");
-                if (idx < 0)
-                {
+                if (idx < 0) {
                     throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, this);
                 }
             }
@@ -267,47 +237,39 @@ namespace iTextSharp.IO.Source
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual String CheckPdfHeader()
-        {
+        public virtual String CheckPdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-");
-            if (idx != 0)
-            {
+            if (idx != 0) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, this);
             }
             return str.JSubstring(idx + 1, idx + 8);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void CheckFdfHeader()
-        {
+        public virtual void CheckFdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
             int idx = str.IndexOf("%FDF-");
-            if (idx != 0)
-            {
+            if (idx != 0) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FdfStartxrefNotFound, this);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual long GetStartxref()
-        {
+        public virtual long GetStartxref() {
             int arrLength = 1024;
             long fileLength = file.Length();
             long pos = fileLength - arrLength;
-            if (pos < 1)
-            {
+            if (pos < 1) {
                 pos = 1;
             }
-            while (pos > 0)
-            {
+            while (pos > 0) {
                 file.Seek(pos);
                 String str = ReadString(arrLength);
                 int idx = str.LastIndexOf("startxref");
-                if (idx >= 0)
-                {
+                if (idx >= 0) {
                     return pos + idx;
                 }
                 pos = pos - arrLength + 9;
@@ -317,24 +279,18 @@ namespace iTextSharp.IO.Source
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void NextValidToken()
-        {
+        public virtual void NextValidToken() {
             int level = 0;
             byte[] n1 = null;
             byte[] n2 = null;
             long ptr = 0;
-            while (NextToken())
-            {
-                if (type == PdfTokenizer.TokenType.Comment)
-                {
+            while (NextToken()) {
+                if (type == PdfTokenizer.TokenType.Comment) {
                     continue;
                 }
-                switch (level)
-                {
-                    case 0:
-                    {
-                        if (type != PdfTokenizer.TokenType.Number)
-                        {
+                switch (level) {
+                    case 0: {
+                        if (type != PdfTokenizer.TokenType.Number) {
                             return;
                         }
                         ptr = file.GetPosition();
@@ -343,10 +299,8 @@ namespace iTextSharp.IO.Source
                         break;
                     }
 
-                    case 1:
-                    {
-                        if (type != PdfTokenizer.TokenType.Number)
-                        {
+                    case 1: {
+                        if (type != PdfTokenizer.TokenType.Number) {
                             file.Seek(ptr);
                             type = PdfTokenizer.TokenType.Number;
                             outBuf.Reset().Append(n1);
@@ -357,22 +311,17 @@ namespace iTextSharp.IO.Source
                         break;
                     }
 
-                    case 2:
-                    {
-                        if (type == PdfTokenizer.TokenType.Other)
-                        {
-                            if (TokenValueEqualsTo(R))
-                            {
+                    case 2: {
+                        if (type == PdfTokenizer.TokenType.Other) {
+                            if (TokenValueEqualsTo(R)) {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
                                 reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n1));
                                 generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n2));
                                 return;
                             }
-                            else
-                            {
-                                if (TokenValueEqualsTo(Obj))
-                                {
+                            else {
+                                if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
                                     reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n1));
@@ -388,8 +337,7 @@ namespace iTextSharp.IO.Source
                     }
                 }
             }
-            if (level == 1)
-            {
+            if (level == 1) {
                 // if the level 1 check returns EOF, then we are still looking at a number - set the type back to Number
                 type = PdfTokenizer.TokenType.Number;
             }
@@ -399,42 +347,33 @@ namespace iTextSharp.IO.Source
         // or the last token ended exactly at the end of a stream.  This last
         // case can occur inside an Object Stream.
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool NextToken()
-        {
+        public virtual bool NextToken() {
             int ch;
             outBuf.Reset();
-            do
-            {
+            do {
                 ch = file.Read();
             }
             while (ch != -1 && IsWhitespace(ch));
-            if (ch == -1)
-            {
+            if (ch == -1) {
                 type = PdfTokenizer.TokenType.EndOfFile;
                 return false;
             }
-            switch (ch)
-            {
-                case '[':
-                {
+            switch (ch) {
+                case '[': {
                     type = PdfTokenizer.TokenType.StartArray;
                     break;
                 }
 
-                case ']':
-                {
+                case ']': {
                     type = PdfTokenizer.TokenType.EndArray;
                     break;
                 }
 
-                case '/':
-                {
+                case '/': {
                     type = PdfTokenizer.TokenType.Name;
-                    while (true)
-                    {
+                    while (true) {
                         ch = file.Read();
-                        if (delims[ch + 1])
-                        {
+                        if (delims[ch + 1]) {
                             break;
                         }
                         outBuf.Append(ch);
@@ -443,113 +382,89 @@ namespace iTextSharp.IO.Source
                     break;
                 }
 
-                case '>':
-                {
+                case '>': {
                     ch = file.Read();
-                    if (ch != '>')
-                    {
+                    if (ch != '>') {
                         ThrowError(iTextSharp.IO.IOException.GtNotExpected);
                     }
                     type = PdfTokenizer.TokenType.EndDic;
                     break;
                 }
 
-                case '<':
-                {
+                case '<': {
                     int v1 = file.Read();
-                    if (v1 == '<')
-                    {
+                    if (v1 == '<') {
                         type = PdfTokenizer.TokenType.StartDic;
                         break;
                     }
                     type = PdfTokenizer.TokenType.String;
                     hexString = true;
                     int v2 = 0;
-                    while (true)
-                    {
-                        while (IsWhitespace(v1))
-                        {
+                    while (true) {
+                        while (IsWhitespace(v1)) {
                             v1 = file.Read();
                         }
-                        if (v1 == '>')
-                        {
+                        if (v1 == '>') {
                             break;
                         }
                         outBuf.Append(v1);
                         v1 = ByteBuffer.GetHex(v1);
-                        if (v1 < 0)
-                        {
+                        if (v1 < 0) {
                             break;
                         }
                         v2 = file.Read();
-                        while (IsWhitespace(v2))
-                        {
+                        while (IsWhitespace(v2)) {
                             v2 = file.Read();
                         }
-                        if (v2 == '>')
-                        {
+                        if (v2 == '>') {
                             break;
                         }
                         outBuf.Append(v2);
                         v2 = ByteBuffer.GetHex(v2);
-                        if (v2 < 0)
-                        {
+                        if (v2 < 0) {
                             break;
                         }
                         v1 = file.Read();
                     }
-                    if (v1 < 0 || v2 < 0)
-                    {
+                    if (v1 < 0 || v2 < 0) {
                         ThrowError(iTextSharp.IO.IOException.ErrorReadingString);
                     }
                     break;
                 }
 
-                case '%':
-                {
+                case '%': {
                     type = PdfTokenizer.TokenType.Comment;
-                    do
-                    {
+                    do {
                         ch = file.Read();
                     }
                     while (ch != -1 && ch != '\r' && ch != '\n');
                     break;
                 }
 
-                case '(':
-                {
+                case '(': {
                     type = PdfTokenizer.TokenType.String;
                     hexString = false;
                     int nesting = 0;
-                    while (true)
-                    {
+                    while (true) {
                         ch = file.Read();
-                        if (ch == -1)
-                        {
+                        if (ch == -1) {
                             break;
                         }
-                        if (ch == '(')
-                        {
+                        if (ch == '(') {
                             ++nesting;
                         }
-                        else
-                        {
-                            if (ch == ')')
-                            {
+                        else {
+                            if (ch == ')') {
                                 --nesting;
-                                if (nesting == -1)
-                                {
+                                if (nesting == -1) {
                                     break;
                                 }
                             }
-                            else
-                            {
-                                if (ch == '\\')
-                                {
+                            else {
+                                if (ch == '\\') {
                                     outBuf.Append('\\');
                                     ch = file.Read();
-                                    if (ch < 0)
-                                    {
+                                    if (ch < 0) {
                                         break;
                                     }
                                 }
@@ -557,24 +472,19 @@ namespace iTextSharp.IO.Source
                         }
                         outBuf.Append(ch);
                     }
-                    if (ch == -1)
-                    {
+                    if (ch == -1) {
                         ThrowError(iTextSharp.IO.IOException.ErrorReadingString);
                     }
                     break;
                 }
 
-                default:
-                {
-                    if (ch == '-' || ch == '+' || ch == '.' || (ch >= '0' && ch <= '9'))
-                    {
+                default: {
+                    if (ch == '-' || ch == '+' || ch == '.' || (ch >= '0' && ch <= '9')) {
                         type = PdfTokenizer.TokenType.Number;
                         bool isReal = false;
                         int numberOfMinuses = 0;
-                        if (ch == '-')
-                        {
-                            do
-                            {
+                        if (ch == '-') {
+                            do {
                                 // Take care of number like "--234". If Acrobat can read them so must we.
                                 ++numberOfMinuses;
                                 ch = file.Read();
@@ -582,42 +492,35 @@ namespace iTextSharp.IO.Source
                             while (ch == '-');
                             outBuf.Append('-');
                         }
-                        else
-                        {
+                        else {
                             outBuf.Append(ch);
                             // We don't need to check if the number is real over here
                             // as we need to know that fact only in case if there are any minuses.
                             ch = file.Read();
                         }
-                        while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.'))
-                        {
-                            if (ch == '.')
-                            {
+                        while (ch != -1 && ((ch >= '0' && ch <= '9') || ch == '.')) {
+                            if (ch == '.') {
                                 isReal = true;
                             }
                             outBuf.Append(ch);
                             ch = file.Read();
                         }
-                        if (numberOfMinuses > 1 && !isReal)
-                        {
+                        if (numberOfMinuses > 1 && !isReal) {
                             // Numbers of integer type and with more than one minus before them
                             // are interpreted by Acrobat as zero.
                             outBuf.Reset();
                             outBuf.Append('0');
                         }
                     }
-                    else
-                    {
+                    else {
                         type = PdfTokenizer.TokenType.Other;
-                        do
-                        {
+                        do {
                             outBuf.Append(ch);
                             ch = file.Read();
                         }
                         while (!delims[ch + 1]);
                     }
-                    if (ch != -1)
-                    {
+                    if (ch != -1) {
                         BackOnePosition(ch);
                     }
                     break;
@@ -626,33 +529,27 @@ namespace iTextSharp.IO.Source
             return true;
         }
 
-        public virtual long GetLongValue()
-        {
+        public virtual long GetLongValue() {
             return System.Convert.ToInt64(GetStringValue());
         }
 
-        public virtual int GetIntValue()
-        {
+        public virtual int GetIntValue() {
             return System.Convert.ToInt32(GetStringValue());
         }
 
-        public virtual bool IsHexString()
-        {
+        public virtual bool IsHexString() {
             return this.hexString;
         }
 
-        public virtual bool IsCloseStream()
-        {
+        public virtual bool IsCloseStream() {
             return closeStream;
         }
 
-        public virtual void SetCloseStream(bool closeStream)
-        {
+        public virtual void SetCloseStream(bool closeStream) {
             this.closeStream = closeStream;
         }
 
-        public virtual RandomAccessFileOrArray GetSafeFile()
-        {
+        public virtual RandomAccessFileOrArray GetSafeFile() {
             return file.CreateView();
         }
 
@@ -668,17 +565,13 @@ namespace iTextSharp.IO.Source
         /// <see cref="System.String"/>
         /// .
         /// </returns>
-        protected internal static byte[] DecodeStringContent(byte[] content, int from, int to, bool hexWriting)
-        {
+        protected internal static byte[] DecodeStringContent(byte[] content, int from, int to, bool hexWriting) {
             ByteBuffer buffer = new ByteBuffer(to - from + 1);
-            if (hexWriting)
-            {
+            if (hexWriting) {
                 // <6954657874ae...>
-                for (int i = from; i <= to; )
-                {
+                for (int i = from; i <= to; ) {
                     int v1 = ByteBuffer.GetHex(content[i++]);
-                    if (i > to)
-                    {
+                    if (i > to) {
                         buffer.Append(v1 << 4);
                         break;
                     }
@@ -687,89 +580,72 @@ namespace iTextSharp.IO.Source
                     buffer.Append((v1 << 4) + v2);
                 }
             }
-            else
-            {
+            else {
                 // ((iText\( some version)...)
-                for (int i = from; i <= to; )
-                {
+                for (int i = from; i <= to; ) {
                     int ch = content[i++];
-                    if (ch == '\\')
-                    {
+                    if (ch == '\\') {
                         bool lineBreak = false;
                         ch = content[i++];
-                        switch (ch)
-                        {
-                            case 'n':
-                            {
+                        switch (ch) {
+                            case 'n': {
                                 ch = '\n';
                                 break;
                             }
 
-                            case 'r':
-                            {
+                            case 'r': {
                                 ch = '\r';
                                 break;
                             }
 
-                            case 't':
-                            {
+                            case 't': {
                                 ch = '\t';
                                 break;
                             }
 
-                            case 'b':
-                            {
+                            case 'b': {
                                 ch = '\b';
                                 break;
                             }
 
-                            case 'f':
-                            {
+                            case 'f': {
                                 ch = '\f';
                                 break;
                             }
 
                             case '(':
                             case ')':
-                            case '\\':
-                            {
+                            case '\\': {
                                 break;
                             }
 
-                            case '\r':
-                            {
+                            case '\r': {
                                 lineBreak = true;
-                                if (i <= to && content[i++] != '\n')
-                                {
+                                if (i <= to && content[i++] != '\n') {
                                     i--;
                                 }
                                 break;
                             }
 
-                            case '\n':
-                            {
+                            case '\n': {
                                 lineBreak = true;
                                 break;
                             }
 
-                            default:
-                            {
-                                if (ch < '0' || ch > '7')
-                                {
+                            default: {
+                                if (ch < '0' || ch > '7') {
                                     break;
                                 }
                                 int octal = ch - '0';
                                 ch = content[i++];
-                                if (ch < '0' || ch > '7')
-                                {
+                                if (ch < '0' || ch > '7') {
                                     i--;
                                     ch = octal;
                                     break;
                                 }
                                 octal = (octal << 3) + ch - '0';
                                 ch = content[i++];
-                                if (ch < '0' || ch > '7')
-                                {
+                                if (ch < '0' || ch > '7') {
                                     i--;
                                     ch = octal;
                                     break;
@@ -779,19 +655,15 @@ namespace iTextSharp.IO.Source
                                 break;
                             }
                         }
-                        if (lineBreak)
-                        {
+                        if (lineBreak) {
                             continue;
                         }
                     }
-                    else
-                    {
-                        if (ch == '\r')
-                        {
+                    else {
+                        if (ch == '\r') {
                             // in this case current char is '\n' and we have to skip next '\n' if it presents.
                             ch = '\n';
-                            if (i <= to && content[i++] != '\n')
-                            {
+                            if (i <= to && content[i++] != '\n') {
                                 i--;
                             }
                         }
@@ -814,8 +686,7 @@ namespace iTextSharp.IO.Source
         /// <see cref="System.String"/>
         /// .
         /// </returns>
-        public static byte[] DecodeStringContent(byte[] content, bool hexWriting)
-        {
+        public static byte[] DecodeStringContent(byte[] content, bool hexWriting) {
             return DecodeStringContent(content, 0, content.Length - 1, hexWriting);
         }
 
@@ -829,8 +700,7 @@ namespace iTextSharp.IO.Source
         /// </remarks>
         /// <param name="ch">int</param>
         /// <returns>boolean</returns>
-        public static bool IsWhitespace(int ch)
-        {
+        public static bool IsWhitespace(int ch) {
             return IsWhitespace(ch, true);
         }
 
@@ -840,19 +710,16 @@ namespace iTextSharp.IO.Source
         /// <param name="ch">int</param>
         /// <param name="isWhitespace">boolean</param>
         /// <returns>boolean</returns>
-        protected internal static bool IsWhitespace(int ch, bool isWhitespace)
-        {
+        protected internal static bool IsWhitespace(int ch, bool isWhitespace) {
             return ((isWhitespace && ch == 0) || ch == 9 || ch == 10 || ch == 12 || ch == 13 || ch == 32);
         }
 
-        protected internal static bool IsDelimiter(int ch)
-        {
+        protected internal static bool IsDelimiter(int ch) {
             return (ch == '(' || ch == ')' || ch == '<' || ch == '>' || ch == '[' || ch == ']' || ch == '/' || ch == '%'
                 );
         }
 
-        protected internal static bool IsDelimiterWhitespace(int ch)
-        {
+        protected internal static bool IsDelimiterWhitespace(int ch) {
             return delims[ch + 1];
         }
 
@@ -869,15 +736,12 @@ namespace iTextSharp.IO.Source
         /// <c>PdfRuntimeException</c>
         /// and add position in file.
         /// </wrap>
-        public virtual void ThrowError(String error, params Object[] messageParams)
-        {
-            try
-            {
+        public virtual void ThrowError(String error, params Object[] messageParams) {
+            try {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1, new iTextSharp.IO.IOException
                     (error).SetMessageParams(messageParams)).SetMessageParams(file.GetPosition());
             }
-            catch (System.IO.IOException)
-            {
+            catch (System.IO.IOException) {
                 throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1, new iTextSharp.IO.IOException
                     (error).SetMessageParams(messageParams)).SetMessageParams(error, "no position");
             }
@@ -890,16 +754,12 @@ namespace iTextSharp.IO.Source
         /// </summary>
         /// <param name="line">for check.</param>
         /// <returns>true, if line is equals tio 'trailer', otherwise false.</returns>
-        public static bool CheckTrailer(ByteBuffer line)
-        {
-            if (Trailer.Length > line.Size())
-            {
+        public static bool CheckTrailer(ByteBuffer line) {
+            if (Trailer.Length > line.Size()) {
                 return false;
             }
-            for (int i = 0; i < Trailer.Length; i++)
-            {
-                if (Trailer[i] != line.Get(i))
-                {
+            for (int i = 0; i < Trailer.Length; i++) {
+                if (Trailer[i] != line.Get(i)) {
                     return false;
                 }
             }
@@ -921,8 +781,7 @@ namespace iTextSharp.IO.Source
         /// <param name="buffer">@see ByteBuffer</param>
         /// <returns>boolean</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool ReadLineSegment(ByteBuffer buffer)
-        {
+        public virtual bool ReadLineSegment(ByteBuffer buffer) {
             return ReadLineSegment(buffer, true);
         }
 
@@ -943,34 +802,27 @@ namespace iTextSharp.IO.Source
         /// </param>
         /// <returns>boolean</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual bool ReadLineSegment(ByteBuffer buffer, bool isNullWhitespace)
-        {
+        public virtual bool ReadLineSegment(ByteBuffer buffer, bool isNullWhitespace) {
             int c;
             bool eol = false;
             // ssteward, pdftk-1.10, 040922:
             // skip initial whitespace; added this because PdfReader.rebuildXref()
             // assumes that line provided by readLineSegment does not have init. whitespace;
-            while (IsWhitespace((c = Read()), isNullWhitespace))
-            {
+            while (IsWhitespace((c = Read()), isNullWhitespace)) {
             }
             bool prevWasWhitespace = false;
-            while (!eol)
-            {
-                switch (c)
-                {
+            while (!eol) {
+                switch (c) {
                     case -1:
-                    case '\n':
-                    {
+                    case '\n': {
                         eol = true;
                         break;
                     }
 
-                    case '\r':
-                    {
+                    case '\r': {
                         eol = true;
                         long cur = GetPosition();
-                        if ((Read()) != '\n')
-                        {
+                        if ((Read()) != '\n') {
                             Seek(cur);
                         }
                         break;
@@ -978,11 +830,9 @@ namespace iTextSharp.IO.Source
 
                     case 9:
                     case 12:
-                    case 32:
-                    {
+                    case 32: {
                         //whitespaces
-                        if (prevWasWhitespace)
-                        {
+                        if (prevWasWhitespace) {
                             break;
                         }
                         prevWasWhitespace = true;
@@ -990,43 +840,34 @@ namespace iTextSharp.IO.Source
                         break;
                     }
 
-                    default:
-                    {
+                    default: {
                         prevWasWhitespace = false;
                         buffer.Append((byte)c);
                         break;
                     }
                 }
                 // break loop? do it before we read() again
-                if (eol || buffer.Size() == buffer.Capacity())
-                {
+                if (eol || buffer.Size() == buffer.Capacity()) {
                     eol = true;
                 }
-                else
-                {
+                else {
                     c = Read();
                 }
             }
-            if (buffer.Size() == buffer.Capacity())
-            {
+            if (buffer.Size() == buffer.Capacity()) {
                 eol = false;
-                while (!eol)
-                {
-                    switch (c = Read())
-                    {
+                while (!eol) {
+                    switch (c = Read()) {
                         case -1:
-                        case '\n':
-                        {
+                        case '\n': {
                             eol = true;
                             break;
                         }
 
-                        case '\r':
-                        {
+                        case '\r': {
                             eol = true;
                             long cur = GetPosition();
-                            if ((Read()) != '\n')
-                            {
+                            if ((Read()) != '\n') {
                                 Seek(cur);
                             }
                             break;
@@ -1040,86 +881,68 @@ namespace iTextSharp.IO.Source
         /// <summary>Check whether line starts with object declaration.</summary>
         /// <param name="lineTokenizer">tokenizer, built by single line.</param>
         /// <returns>object number and generation if check is successful, otherwise - null.</returns>
-        public static int[] CheckObjectStart(iTextSharp.IO.Source.PdfTokenizer lineTokenizer)
-        {
-            try
-            {
+        public static int[] CheckObjectStart(iTextSharp.IO.Source.PdfTokenizer lineTokenizer) {
+            try {
                 lineTokenizer.Seek(0);
-                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number)
-                {
+                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number) {
                     return null;
                 }
                 int num = lineTokenizer.GetIntValue();
-                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number)
-                {
+                if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number) {
                     return null;
                 }
                 int gen = lineTokenizer.GetIntValue();
-                if (!lineTokenizer.NextToken())
-                {
+                if (!lineTokenizer.NextToken()) {
                     return null;
                 }
-                if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent()))
-                {
+                if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent())) {
                     return null;
                 }
                 return new int[] { num, gen };
             }
-            catch (Exception)
-            {
+            catch (Exception) {
             }
             // empty on purpose
             return null;
         }
 
-        protected internal class ReusableRandomAccessSource : IRandomAccessSource
-        {
+        protected internal class ReusableRandomAccessSource : IRandomAccessSource {
             private ByteBuffer buffer;
 
-            public ReusableRandomAccessSource(ByteBuffer buffer)
-            {
-                if (buffer == null)
-                {
+            public ReusableRandomAccessSource(ByteBuffer buffer) {
+                if (buffer == null) {
                     throw new ArgumentNullException();
                 }
                 this.buffer = buffer;
             }
 
-            public virtual int Get(long offset)
-            {
-                if (offset >= buffer.Size())
-                {
+            public virtual int Get(long offset) {
+                if (offset >= buffer.Size()) {
                     return -1;
                 }
                 return 0xff & buffer.GetInternalBuffer()[(int)offset];
             }
 
-            public virtual int Get(long offset, byte[] bytes, int off, int len)
-            {
-                if (buffer == null)
-                {
+            public virtual int Get(long offset, byte[] bytes, int off, int len) {
+                if (buffer == null) {
                     throw new InvalidOperationException("Already closed");
                 }
-                if (offset >= buffer.Size())
-                {
+                if (offset >= buffer.Size()) {
                     return -1;
                 }
-                if (offset + len > buffer.Size())
-                {
+                if (offset + len > buffer.Size()) {
                     len = (int)(buffer.Size() - offset);
                 }
                 System.Array.Copy(buffer.GetInternalBuffer(), (int)offset, bytes, off, len);
                 return len;
             }
 
-            public virtual long Length()
-            {
+            public virtual long Length() {
                 return buffer.Size();
             }
 
             /// <exception cref="System.IO.IOException"/>
-            public virtual void Close()
-            {
+            public virtual void Close() {
                 buffer = null;
             }
         }

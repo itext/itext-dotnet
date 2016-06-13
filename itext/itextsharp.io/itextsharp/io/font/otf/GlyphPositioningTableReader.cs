@@ -44,8 +44,7 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iTextSharp.IO.Source;
 
-namespace iTextSharp.IO.Font.Otf
-{
+namespace iTextSharp.IO.Font.Otf {
     /// <summary>
     /// <p>
     /// Parses an OpenTypeFont file and reads the Glyph Substitution Table.
@@ -60,39 +59,31 @@ namespace iTextSharp.IO.Font.Otf
     /// </p>
     /// </remarks>
     /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
-    public class GlyphPositioningTableReader : OpenTypeFontTableReader
-    {
+    public class GlyphPositioningTableReader : OpenTypeFontTableReader {
         /// <exception cref="System.IO.IOException"/>
         public GlyphPositioningTableReader(RandomAccessFileOrArray rf, int gposTableLocation, OpenTypeGdefTableReader
              gdef, IDictionary<int, Glyph> indexGlyphMap, int unitsPerEm)
-            : base(rf, gposTableLocation, gdef, indexGlyphMap, unitsPerEm)
-        {
+            : base(rf, gposTableLocation, gdef, indexGlyphMap, unitsPerEm) {
             StartReadingTable();
         }
 
         /// <exception cref="System.IO.IOException"/>
         protected internal override OpenTableLookup ReadLookupTable(int lookupType, int lookupFlag, int[] subTableLocations
-            )
-        {
-            switch (lookupType)
-            {
-                case 2:
-                {
+            ) {
+            switch (lookupType) {
+                case 2: {
                     return new GposLookupType2(this, lookupFlag, subTableLocations);
                 }
 
-                case 4:
-                {
+                case 4: {
                     return new GposLookupType4(this, lookupFlag, subTableLocations);
                 }
 
-                case 5:
-                {
+                case 5: {
                     return new GposLookupType5(this, lookupFlag, subTableLocations);
                 }
 
-                default:
-                {
+                default: {
                     return null;
                 }
             }

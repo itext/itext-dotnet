@@ -45,30 +45,24 @@ using System.IO;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color
-{
-    public class IccBased : iTextSharp.Kernel.Color.Color
-    {
+namespace iTextSharp.Kernel.Color {
+    public class IccBased : iTextSharp.Kernel.Color.Color {
         public IccBased(PdfCieBasedCs.IccBased cs)
-            : this(cs, new float[cs.GetNumberOfComponents()])
-        {
+            : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
         public IccBased(PdfCieBasedCs.IccBased cs, float[] value)
-            : base(cs, value)
-        {
+            : base(cs, value) {
         }
 
         /// <summary>Creates IccBased color.</summary>
         /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public IccBased(Stream iccStream)
-            : this(new PdfCieBasedCs.IccBased(iccStream), null)
-        {
+            : this(new PdfCieBasedCs.IccBased(iccStream), null) {
             // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
             colorValue = new float[GetNumberOfComponents()];
-            for (int i = 0; i < GetNumberOfComponents(); i++)
-            {
+            for (int i = 0; i < GetNumberOfComponents(); i++) {
                 colorValue[i] = 0f;
             }
         }
@@ -78,15 +72,12 @@ namespace iTextSharp.Kernel.Color
         /// <param name="value">color value.</param>
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         public IccBased(Stream iccStream, float[] value)
-            : this(new PdfCieBasedCs.IccBased(iccStream), value)
-        {
+            : this(new PdfCieBasedCs.IccBased(iccStream), value) {
         }
 
         public IccBased(Stream iccStream, float[] range, float[] value)
-            : this(new PdfCieBasedCs.IccBased(iccStream, range), value)
-        {
-            if (GetNumberOfComponents() * 2 != range.Length)
-            {
+            : this(new PdfCieBasedCs.IccBased(iccStream, range), value) {
+            if (GetNumberOfComponents() * 2 != range.Length) {
                 throw new PdfException(PdfException.InvalidRangeArray, this);
             }
         }

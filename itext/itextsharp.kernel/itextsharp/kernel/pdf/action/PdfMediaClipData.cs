@@ -45,20 +45,16 @@ using System;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Filespec;
 
-namespace iTextSharp.Kernel.Pdf.Action
-{
-    public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary>
-    {
+namespace iTextSharp.Kernel.Pdf.Action {
+    public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary> {
         private static readonly PdfString TEMPACCESS = new PdfString("TEMPACCESS");
 
         public PdfMediaClipData(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
         public PdfMediaClipData(String file, PdfFileSpec fs, String mimeType)
-            : this(new PdfDictionary())
-        {
+            : this(new PdfDictionary()) {
             PdfDictionary dic = new PdfDictionary();
             MarkObjectAsIndirect(dic);
             dic.Put(PdfName.TF, TEMPACCESS);
@@ -70,8 +66,7 @@ namespace iTextSharp.Kernel.Pdf.Action
             GetPdfObject().Put(PdfName.D, fs.GetPdfObject());
         }
 
-        protected internal override bool IsWrappedObjectMustBeIndirect()
-        {
+        protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
     }

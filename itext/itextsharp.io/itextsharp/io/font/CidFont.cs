@@ -47,76 +47,61 @@ using iTextSharp.IO.Font.Cmap;
 using iTextSharp.IO.Font.Otf;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO.Font
-{
-    public class CidFont : FontProgram
-    {
+namespace iTextSharp.IO.Font {
+    public class CidFont : FontProgram {
         private int pdfFontFlags;
 
         private ICollection<String> compatibleCmaps;
 
-        internal CidFont(String fontName, ICollection<String> cmaps)
-        {
+        internal CidFont(String fontName, ICollection<String> cmaps) {
             compatibleCmaps = cmaps;
             InitializeCidFontNameAndStyle(fontName);
             IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames.GetFontName());
-            if (fontDesc == null)
-            {
+            if (fontDesc == null) {
                 throw new iTextSharp.IO.IOException("no.such.predefined.font.1").SetMessageParams(fontName);
             }
             InitializeCidFontProperties(fontDesc);
         }
 
-        internal CidFont(String fontName, ICollection<String> cmaps, IDictionary<String, Object> fontDescription)
-        {
+        internal CidFont(String fontName, ICollection<String> cmaps, IDictionary<String, Object> fontDescription) {
             InitializeCidFontNameAndStyle(fontName);
             InitializeCidFontProperties(fontDescription);
             compatibleCmaps = cmaps;
         }
 
-        public virtual bool CompatibleWith(String cmap)
-        {
-            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V))
-            {
+        public virtual bool CompatibleWith(String cmap) {
+            if (cmap.Equals(PdfEncodings.IDENTITY_H) || cmap.Equals(PdfEncodings.IDENTITY_V)) {
                 return true;
             }
-            else
-            {
+            else {
                 return compatibleCmaps != null && compatibleCmaps.Contains(cmap);
             }
         }
 
-        public override int GetKerning(Glyph glyph1, Glyph glyph2)
-        {
+        public override int GetKerning(Glyph glyph1, Glyph glyph2) {
             return 0;
         }
 
-        public override int GetPdfFontFlags()
-        {
+        public override int GetPdfFontFlags() {
             return pdfFontFlags;
         }
 
-        public override bool IsFontSpecific()
-        {
+        public override bool IsFontSpecific() {
             return false;
         }
 
-        private void InitializeCidFontNameAndStyle(String fontName)
-        {
+        private void InitializeCidFontNameAndStyle(String fontName) {
             String nameBase = GetBaseName(fontName);
-            if (nameBase.Length < fontName.Length)
-            {
+            if (nameBase.Length < fontName.Length) {
                 fontNames.SetFontName(fontName);
                 fontNames.SetStyle(fontName.Substring(nameBase.Length));
             }
-            else
-            {
+            else {
                 fontNames.SetFontName(fontName);
             }
         }
 
-        private void InitializeCidFontProperties(IDictionary<String, Object> fontDesc)
-        {
+        private void InitializeCidFontProperties(IDictionary<String, Object> fontDesc) {
             fontIdentification.SetPanose((String)fontDesc.Get("Panose"));
             fontMetrics.SetItalicAngle(System.Convert.ToInt32((String)fontDesc.Get("ItalicAngle")));
             fontMetrics.SetCapHeight(System.Convert.ToInt32((String)fontDesc.Get("CapHeight")));
@@ -133,13 +118,11 @@ namespace iTextSharp.IO.Font
             fontMetrics.UpdateBbox((int)llx, (int)lly, (int)urx, (int)ury);
             registry = (String)fontDesc.Get("Registry");
             String uniMap = GetCompatibleUniMap(registry);
-            if (uniMap != null)
-            {
+            if (uniMap != null) {
                 IntHashtable metrics = (IntHashtable)fontDesc.Get("W");
                 CMapCidUni cid2Uni = FontCache.GetCid2UniCmap(uniMap);
                 avgWidth = 0;
-                foreach (int cid in cid2Uni.GetCids())
-                {
+                foreach (int cid in cid2Uni.GetCids()) {
                     int uni = cid2Uni.Lookup(cid);
                     int width = metrics.ContainsKey(cid) ? metrics.Get(cid) : DEFAULT_WIDTH;
                     Glyph glyph = new Glyph(cid, width, uni);
@@ -148,21 +131,17 @@ namespace iTextSharp.IO.Font
                     unicodeToGlyph[uni] = glyph;
                 }
                 FixSpaceIssue();
-                if (codeToGlyph.Count != 0)
-                {
+                if (codeToGlyph.Count != 0) {
                     avgWidth /= codeToGlyph.Count;
                 }
             }
         }
 
-        private static String GetCompatibleUniMap(String registry)
-        {
+        private static String GetCompatibleUniMap(String registry) {
             String uniMap = "";
-            foreach (String name in CidFontProperties.GetRegistryNames().Get(registry + "_Uni"))
-            {
+            foreach (String name in CidFontProperties.GetRegistryNames().Get(registry + "_Uni")) {
                 uniMap = name;
-                if (name.EndsWith("H"))
-                {
+                if (name.EndsWith("H")) {
                     break;
                 }
             }

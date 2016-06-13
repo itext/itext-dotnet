@@ -48,10 +48,8 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Pdfa.Checker
-{
-    public abstract class PdfAChecker
-    {
+namespace iTextSharp.Pdfa.Checker {
+    public abstract class PdfAChecker {
         public const String ICC_COLOR_SPACE_RGB = "RGB ";
 
         public const String ICC_COLOR_SPACE_CMYK = "CMYK";
@@ -90,13 +88,11 @@ namespace iTextSharp.Pdfa.Checker
         protected internal IDictionary<PdfObject, PdfColorSpace> checkedObjectsColorspace = new Dictionary<PdfObject
             , PdfColorSpace>();
 
-        protected internal PdfAChecker(PdfAConformanceLevel conformanceLevel)
-        {
+        protected internal PdfAChecker(PdfAConformanceLevel conformanceLevel) {
             this.conformanceLevel = conformanceLevel;
         }
 
-        public virtual void CheckDocument(PdfCatalog catalog)
-        {
+        public virtual void CheckDocument(PdfCatalog catalog) {
             PdfDictionary catalogDict = catalog.GetPdfObject();
             SetPdfAOutputIntentColorSpace(catalogDict);
             CheckOutputIntents(catalogDict);
@@ -111,23 +107,18 @@ namespace iTextSharp.Pdfa.Checker
             CheckColorsUsages();
         }
 
-        public virtual void CheckSinglePage(PdfPage page)
-        {
+        public virtual void CheckSinglePage(PdfPage page) {
             CheckPage(page);
         }
 
-        public virtual void CheckPdfObject(PdfObject obj)
-        {
-            switch (obj.GetObjectType())
-            {
-                case PdfObject.NUMBER:
-                {
+        public virtual void CheckPdfObject(PdfObject obj) {
+            switch (obj.GetObjectType()) {
+                case PdfObject.NUMBER: {
                     CheckPdfNumber((PdfNumber)obj);
                     break;
                 }
 
-                case PdfObject.STREAM:
-                {
+                case PdfObject.STREAM: {
                     PdfStream stream = (PdfStream)obj;
                     //form xObjects, annotation appearance streams, patterns and type3 glyphs may have their own resources dictionary
                     CheckResources(stream.GetAsDictionary(PdfName.Resources));
@@ -135,18 +126,15 @@ namespace iTextSharp.Pdfa.Checker
                     break;
                 }
 
-                case PdfObject.STRING:
-                {
+                case PdfObject.STRING: {
                     CheckPdfString((PdfString)obj);
                     break;
                 }
 
-                case PdfObject.DICTIONARY:
-                {
+                case PdfObject.DICTIONARY: {
                     PdfDictionary dict = (PdfDictionary)obj;
                     PdfName type = dict.GetAsName(PdfName.Type);
-                    if (PdfName.Filespec.Equals(type))
-                    {
+                    if (PdfName.Filespec.Equals(type)) {
                         CheckFileSpec(dict);
                     }
                     break;
@@ -154,13 +142,11 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        public virtual PdfAConformanceLevel GetConformanceLevel()
-        {
+        public virtual PdfAConformanceLevel GetConformanceLevel() {
             return conformanceLevel;
         }
 
-        public virtual bool ObjectIsChecked(PdfObject @object)
-        {
+        public virtual bool ObjectIsChecked(PdfObject @object) {
             return checkedObjects.Contains(@object);
         }
 
@@ -216,37 +202,28 @@ namespace iTextSharp.Pdfa.Checker
 
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
 
-        protected internal virtual void CheckResources(PdfDictionary resources)
-        {
-            if (resources == null)
-            {
+        protected internal virtual void CheckResources(PdfDictionary resources) {
+            if (resources == null) {
                 return;
             }
             PdfDictionary xObjects = resources.GetAsDictionary(PdfName.XObject);
             PdfDictionary shadings = resources.GetAsDictionary(PdfName.Shading);
-            if (xObjects != null)
-            {
-                foreach (PdfObject xObject in xObjects.Values())
-                {
+            if (xObjects != null) {
+                foreach (PdfObject xObject in xObjects.Values()) {
                     PdfStream xObjStream = (PdfStream)xObject;
                     PdfObject subtype = xObjStream.Get(PdfName.Subtype);
-                    if (PdfName.Image.Equals(subtype))
-                    {
+                    if (PdfName.Image.Equals(subtype)) {
                         CheckImage(xObjStream, resources.GetAsDictionary(PdfName.ColorSpace));
                     }
-                    else
-                    {
-                        if (PdfName.Form.Equals(subtype))
-                        {
+                    else {
+                        if (PdfName.Form.Equals(subtype)) {
                             CheckFormXObject(xObjStream);
                         }
                     }
                 }
             }
-            if (shadings != null)
-            {
-                foreach (PdfObject shading in shadings.Values())
-                {
+            if (shadings != null) {
+                foreach (PdfObject shading in shadings.Values()) {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
                         (PdfName.ColorSpace), true, null);
@@ -254,40 +231,32 @@ namespace iTextSharp.Pdfa.Checker
             }
         }
 
-        protected internal static bool CheckFlag(int flags, int flag)
-        {
+        protected internal static bool CheckFlag(int flags, int flag) {
             return (flags & flag) != 0;
         }
 
-        protected internal static bool CheckStructure(PdfAConformanceLevel conformanceLevel)
-        {
+        protected internal static bool CheckStructure(PdfAConformanceLevel conformanceLevel) {
             return conformanceLevel == PdfAConformanceLevel.PDF_A_1A || conformanceLevel == PdfAConformanceLevel.PDF_A_2A
                  || conformanceLevel == PdfAConformanceLevel.PDF_A_3A;
         }
 
-        protected internal virtual bool IsAlreadyChecked(PdfDictionary dictionary)
-        {
-            if (checkedObjects.Contains(dictionary))
-            {
+        protected internal virtual bool IsAlreadyChecked(PdfDictionary dictionary) {
+            if (checkedObjects.Contains(dictionary)) {
                 return true;
             }
             checkedObjects.Add(dictionary);
             return false;
         }
 
-        private void CheckPages(PdfDocument document)
-        {
-            for (int i = 1; i <= document.GetNumberOfPages(); i++)
-            {
+        private void CheckPages(PdfDocument document) {
+            for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 CheckPage(document.GetPage(i));
             }
         }
 
-        private void CheckPage(PdfPage page)
-        {
+        private void CheckPage(PdfPage page) {
             PdfDictionary pageDict = page.GetPdfObject();
-            if (IsAlreadyChecked(pageDict))
-            {
+            if (IsAlreadyChecked(pageDict)) {
                 return;
             }
             CheckPageObject(pageDict, page.GetResources().GetPdfObject());
@@ -296,119 +265,93 @@ namespace iTextSharp.Pdfa.Checker
             CheckAnnotations(pageDict);
             CheckPageSize(pageDict);
             int contentStreamCount = page.GetContentStreamCount();
-            for (int j = 0; j < contentStreamCount; ++j)
-            {
+            for (int j = 0; j < contentStreamCount; ++j) {
                 checkedObjects.Add(page.GetContentStream(j));
             }
         }
 
-        private void CheckOpenAction(PdfObject openAction)
-        {
-            if (openAction == null)
-            {
+        private void CheckOpenAction(PdfObject openAction) {
+            if (openAction == null) {
                 return;
             }
-            if (openAction.IsDictionary())
-            {
+            if (openAction.IsDictionary()) {
                 CheckAction((PdfDictionary)openAction);
             }
-            else
-            {
-                if (openAction.IsArray())
-                {
+            else {
+                if (openAction.IsArray()) {
                     PdfArray actions = (PdfArray)openAction;
-                    foreach (PdfObject action in actions)
-                    {
+                    foreach (PdfObject action in actions) {
                         CheckAction((PdfDictionary)action);
                     }
                 }
             }
         }
 
-        private void CheckAnnotations(PdfDictionary page)
-        {
+        private void CheckAnnotations(PdfDictionary page) {
             PdfArray annots = page.GetAsArray(PdfName.Annots);
-            if (annots != null)
-            {
+            if (annots != null) {
                 // explicit iteration to resolve indirect references on get().
                 // TODO DEVSIX-591
-                for (int i = 0; i < annots.Size(); i++)
-                {
+                for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
                     CheckAnnotation(annot);
                     PdfDictionary action = annot.GetAsDictionary(PdfName.A);
-                    if (action != null)
-                    {
+                    if (action != null) {
                         CheckAction(action);
                     }
                 }
             }
         }
 
-        private void CheckOutlines(PdfDictionary catalogDict)
-        {
+        private void CheckOutlines(PdfDictionary catalogDict) {
             PdfDictionary outlines = catalogDict.GetAsDictionary(PdfName.Outlines);
-            if (outlines != null)
-            {
-                foreach (PdfDictionary outline in GetOutlines(outlines))
-                {
+            if (outlines != null) {
+                foreach (PdfDictionary outline in GetOutlines(outlines)) {
                     PdfDictionary action = outline.GetAsDictionary(PdfName.A);
-                    if (action != null)
-                    {
+                    if (action != null) {
                         CheckAction(action);
                     }
                 }
             }
         }
 
-        private IList<PdfDictionary> GetOutlines(PdfDictionary item)
-        {
+        private IList<PdfDictionary> GetOutlines(PdfDictionary item) {
             IList<PdfDictionary> outlines = new List<PdfDictionary>();
             outlines.Add(item);
             PdfDictionary processItem = item.GetAsDictionary(PdfName.First);
-            if (processItem != null)
-            {
+            if (processItem != null) {
                 outlines.AddAll(GetOutlines(processItem));
             }
             processItem = item.GetAsDictionary(PdfName.Next);
-            if (processItem != null)
-            {
+            if (processItem != null) {
                 outlines.AddAll(GetOutlines(processItem));
             }
             return outlines;
         }
 
-        private void SetPdfAOutputIntentColorSpace(PdfDictionary catalog)
-        {
+        private void SetPdfAOutputIntentColorSpace(PdfDictionary catalog) {
             PdfArray outputIntents = catalog.GetAsArray(PdfName.OutputIntents);
-            if (outputIntents == null)
-            {
+            if (outputIntents == null) {
                 return;
             }
             PdfDictionary pdfAOutputIntent = GetPdfAOutputIntent(outputIntents);
             SetCheckerOutputIntent(pdfAOutputIntent);
         }
 
-        private PdfDictionary GetPdfAOutputIntent(PdfArray outputIntents)
-        {
-            for (int i = 0; i < outputIntents.Size(); ++i)
-            {
+        private PdfDictionary GetPdfAOutputIntent(PdfArray outputIntents) {
+            for (int i = 0; i < outputIntents.Size(); ++i) {
                 PdfName outputIntentSubtype = outputIntents.GetAsDictionary(i).GetAsName(PdfName.S);
-                if (PdfName.GTS_PDFA1.Equals(outputIntentSubtype))
-                {
+                if (PdfName.GTS_PDFA1.Equals(outputIntentSubtype)) {
                     return outputIntents.GetAsDictionary(i);
                 }
             }
             return null;
         }
 
-        private void SetCheckerOutputIntent(PdfDictionary outputIntent)
-        {
-            if (outputIntent != null)
-            {
+        private void SetCheckerOutputIntent(PdfDictionary outputIntent) {
+            if (outputIntent != null) {
                 PdfStream destOutputProfile = outputIntent.GetAsStream(PdfName.DestOutputProfile);
-                if (destOutputProfile != null)
-                {
+                if (destOutputProfile != null) {
                     String intentCS = IccProfile.GetIccColorSpaceName(destOutputProfile.GetBytes());
                     this.pdfAOutputIntentColorSpace = intentCS;
                 }

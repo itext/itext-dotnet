@@ -43,8 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Source
-{
+namespace iTextSharp.IO.Source {
     /// <summary>
     /// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
     /// a specific length.
@@ -53,8 +52,7 @@ namespace iTextSharp.IO.Source
     /// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
     /// a specific length.  Position 0 becomes the offset position in the underlying source.
     /// </remarks>
-    public class WindowRandomAccessSource : IRandomAccessSource
-    {
+    public class WindowRandomAccessSource : IRandomAccessSource {
         /// <summary>The source</summary>
         private readonly IRandomAccessSource source;
 
@@ -68,16 +66,14 @@ namespace iTextSharp.IO.Source
         /// <param name="source">the source</param>
         /// <param name="offset">the amount of the offset to use</param>
         public WindowRandomAccessSource(IRandomAccessSource source, long offset)
-            : this(source, offset, source.Length() - offset)
-        {
+            : this(source, offset, source.Length() - offset) {
         }
 
         /// <summary>Constructs a new OffsetRandomAccessSource with an explicit length</summary>
         /// <param name="source">the source</param>
         /// <param name="offset">the amount of the offset to use</param>
         /// <param name="length">the number of bytes to be included in this RAS</param>
-        public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length)
-        {
+        public WindowRandomAccessSource(IRandomAccessSource source, long offset, long length) {
             this.source = source;
             this.offset = offset;
             this.length = length;
@@ -88,10 +84,8 @@ namespace iTextSharp.IO.Source
         /// Note that the position will be adjusted to read from the corrected location in the underlying source
         /// </summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Get(long position)
-        {
-            if (position >= length)
-            {
+        public virtual int Get(long position) {
+            if (position >= length) {
                 return -1;
             }
             return source.Get(offset + position);
@@ -102,10 +96,8 @@ namespace iTextSharp.IO.Source
         /// Note that the position will be adjusted to read from the corrected location in the underlying source
         /// </summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual int Get(long position, byte[] bytes, int off, int len)
-        {
-            if (position >= length)
-            {
+        public virtual int Get(long position, byte[] bytes, int off, int len) {
+            if (position >= length) {
                 return -1;
             }
             long toRead = Math.Min(len, length - position);
@@ -116,15 +108,13 @@ namespace iTextSharp.IO.Source
         /// <inheritDoc/>
         /// Note that the length will be adjusted to read from the corrected location in the underlying source
         /// </summary>
-        public virtual long Length()
-        {
+        public virtual long Length() {
             return length;
         }
 
         /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
-        public virtual void Close()
-        {
+        public virtual void Close() {
             source.Close();
         }
     }

@@ -44,14 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Forms.Xfa
-{
+namespace iTextSharp.Forms.Xfa {
     /// <summary>
     /// A structure to store each part of a SOM name and link it to the next part
     /// beginning from the lower hierarchy.
     /// </summary>
-    internal class InverseStore
-    {
+    internal class InverseStore {
         protected internal IList<String> part = new List<String>();
 
         protected internal IList<Object> follow = new List<Object>();
@@ -61,14 +59,11 @@ namespace iTextSharp.Forms.Xfa
         /// index 0.
         /// </summary>
         /// <returns>the full name</returns>
-        public virtual String GetDefaultName()
-        {
+        public virtual String GetDefaultName() {
             InverseStore store = this;
-            while (true)
-            {
+            while (true) {
                 Object obj = store.follow[0];
-                if (obj is String)
-                {
+                if (obj is String) {
                     return (String)obj;
                 }
                 store = (InverseStore)obj;
@@ -84,14 +79,11 @@ namespace iTextSharp.Forms.Xfa
         /// </remarks>
         /// <param name="name">the name to search</param>
         /// <returns><CODE>true</CODE> if a similitude was found</returns>
-        public virtual bool IsSimilar(String name)
-        {
+        public virtual bool IsSimilar(String name) {
             int idx = name.IndexOf('[');
             name = name.JSubstring(0, idx + 1);
-            for (int k = 0; k < part.Count; ++k)
-            {
-                if (part[k].StartsWith(name))
-                {
+            for (int k = 0; k < part.Count; ++k) {
+                if (part[k].StartsWith(name)) {
                     return true;
                 }
             }

@@ -46,10 +46,8 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Barcodes
-{
-    public abstract class Barcode2D
-    {
+namespace iTextSharp.Barcodes {
+    public abstract class Barcode2D {
         protected internal const float DEFAULT_MODULE_SIZE = 1;
 
         /// <summary>
@@ -80,8 +78,7 @@ namespace iTextSharp.Barcodes
         /// Default foreground color will be used.
         /// </remarks>
         /// <returns>the XObject.</returns>
-        public virtual PdfFormXObject CreateFormXObject(PdfDocument document)
-        {
+        public virtual PdfFormXObject CreateFormXObject(PdfDocument document) {
             return CreateFormXObject(null, document);
         }
 

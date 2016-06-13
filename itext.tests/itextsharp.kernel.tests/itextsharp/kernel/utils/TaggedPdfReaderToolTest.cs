@@ -3,18 +3,15 @@ using System.IO;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Test;
 
-namespace iTextSharp.Kernel.Utils
-{
-    public class TaggedPdfReaderToolTest : ExtendedITextTest
-    {
+namespace iTextSharp.Kernel.Utils {
+    public class TaggedPdfReaderToolTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/kernel/utils/TaggedPdfReaderToolTest/";
 
         [NUnit.Framework.SetUp]
-        public virtual void SetUp()
-        {
+        public virtual void SetUp() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -23,8 +20,7 @@ namespace iTextSharp.Kernel.Utils
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        public virtual void TaggedPdfReaderToolTest01()
-        {
+        public virtual void TaggedPdfReaderToolTest01() {
             String filename = "iphone_user_guide.pdf";
             String outXmlPath = destinationFolder + "outXml01.xml";
             String cmpXmlPath = sourceFolder + "cmpXml01.xml";
@@ -37,8 +33,7 @@ namespace iTextSharp.Kernel.Utils
             outXml.Close();
             document.Close();
             CompareTool compareTool = new CompareTool();
-            if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath))
-            {
+            if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath)) {
                 NUnit.Framework.Assert.Fail("Resultant xml is different.");
             }
         }

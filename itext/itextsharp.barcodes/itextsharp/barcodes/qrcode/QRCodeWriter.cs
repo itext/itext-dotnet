@@ -44,38 +44,30 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>This object renders a QR Code as a ByteMatrix 2D array of greyscale values.</summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
-    public sealed class QRCodeWriter
-    {
+    public sealed class QRCodeWriter {
         private const int QUIET_ZONE_SIZE = 4;
 
         /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
-        public ByteMatrix Encode(String contents, int width, int height)
-        {
+        public ByteMatrix Encode(String contents, int width, int height) {
             return Encode(contents, width, height, null);
         }
 
         /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType, Object> hints
-            )
-        {
-            if (contents == null || contents.Length == 0)
-            {
+            ) {
+            if (contents == null || contents.Length == 0) {
                 throw new ArgumentException("Found empty contents");
             }
-            if (width < 0 || height < 0)
-            {
+            if (width < 0 || height < 0) {
                 throw new ArgumentException("Requested dimensions are too small: " + width + 'x' + height);
             }
             ErrorCorrectionLevel errorCorrectionLevel = ErrorCorrectionLevel.L;
-            if (hints != null)
-            {
+            if (hints != null) {
                 ErrorCorrectionLevel requestedECLevel = (ErrorCorrectionLevel)hints.Get(EncodeHintType.ERROR_CORRECTION);
-                if (requestedECLevel != null)
-                {
+                if (requestedECLevel != null) {
                     errorCorrectionLevel = requestedECLevel;
                 }
             }
@@ -86,8 +78,7 @@ namespace iTextSharp.Barcodes.Qrcode
 
         // Note that the input matrix uses 0 == white, 1 == black, while the output matrix uses
         // 0 == black, 255 == white (i.e. an 8 bit greyscale bitmap).
-        private static ByteMatrix RenderResult(QRCode code, int width, int height)
-        {
+        private static ByteMatrix RenderResult(QRCode code, int width, int height) {
             ByteMatrix input = code.GetMatrix();
             int inputWidth = input.GetWidth();
             int inputHeight = input.GetHeight();
@@ -108,56 +99,46 @@ namespace iTextSharp.Barcodes.Qrcode
             // instead of allocating this separate array.
             byte[] row = new byte[outputWidth];
             // 1. Write the white lines at the top
-            for (int y = 0; y < topPadding; y++)
-            {
+            for (int y = 0; y < topPadding; y++) {
                 SetRowColor(outputArray[y], (byte)255);
             }
             // 2. Expand the QR image to the multiple
             byte[][] inputArray = input.GetArray();
-            for (int y_1 = 0; y_1 < inputHeight; y_1++)
-            {
+            for (int y_1 = 0; y_1 < inputHeight; y_1++) {
                 // a. Write the white pixels at the left of each row
-                for (int x = 0; x < leftPadding; x++)
-                {
+                for (int x = 0; x < leftPadding; x++) {
                     row[x] = (byte)255;
                 }
                 // b. Write the contents of this row of the barcode
                 int offset = leftPadding;
-                for (int x_1 = 0; x_1 < inputWidth; x_1++)
-                {
+                for (int x_1 = 0; x_1 < inputWidth; x_1++) {
                     byte value = (inputArray[y_1][x_1] == 1) ? (byte)0 : (byte)255;
-                    for (int z = 0; z < multiple; z++)
-                    {
+                    for (int z = 0; z < multiple; z++) {
                         row[offset + z] = value;
                     }
                     offset += multiple;
                 }
                 // c. Write the white pixels at the right of each row
                 offset = leftPadding + (inputWidth * multiple);
-                for (int x_2 = offset; x_2 < outputWidth; x_2++)
-                {
+                for (int x_2 = offset; x_2 < outputWidth; x_2++) {
                     row[x_2] = (byte)255;
                 }
                 // d. Write the completed row multiple times
                 offset = topPadding + (y_1 * multiple);
-                for (int z_1 = 0; z_1 < multiple; z_1++)
-                {
+                for (int z_1 = 0; z_1 < multiple; z_1++) {
                     System.Array.Copy(row, 0, outputArray[offset + z_1], 0, outputWidth);
                 }
             }
             // 3. Write the white lines at the bottom
             int offset_1 = topPadding + (inputHeight * multiple);
-            for (int y_2 = offset_1; y_2 < outputHeight; y_2++)
-            {
+            for (int y_2 = offset_1; y_2 < outputHeight; y_2++) {
                 SetRowColor(outputArray[y_2], (byte)255);
             }
             return output;
         }
 
-        private static void SetRowColor(byte[] row, byte value)
-        {
-            for (int x = 0; x < row.Length; x++)
-            {
+        private static void SetRowColor(byte[] row, byte value) {
+            for (int x = 0; x < row.Length; x++) {
                 row[x] = value;
             }
         }

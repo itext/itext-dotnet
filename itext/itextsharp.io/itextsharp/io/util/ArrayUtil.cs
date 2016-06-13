@@ -43,23 +43,18 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Util
-{
+namespace iTextSharp.IO.Util {
     /// <summary>This file is a helper class for internal usage only.</summary>
     /// <remarks>
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </remarks>
-    public sealed class ArrayUtil
-    {
-        private ArrayUtil()
-        {
+    public sealed class ArrayUtil {
+        private ArrayUtil() {
         }
 
-        public static byte[] ShortenArray(byte[] src, int length)
-        {
-            if (length < src.Length)
-            {
+        public static byte[] ShortenArray(byte[] src, int length) {
+            if (length < src.Length) {
                 byte[] shortened = new byte[length];
                 System.Array.Copy(src, 0, shortened, 0, length);
                 return shortened;
@@ -67,49 +62,39 @@ namespace iTextSharp.IO.Util
             return src;
         }
 
-        public static int[] ToArray(ICollection<int> collection)
-        {
+        public static int[] ToArray(ICollection<int> collection) {
             int[] array = new int[collection.Count];
             int k = 0;
-            foreach (int? key in collection)
-            {
+            foreach (int? key in collection) {
                 array[k++] = (int)key;
             }
             return array;
         }
 
-        public static int HashCode(byte[] a)
-        {
-            if (a == null)
-            {
+        public static int HashCode(byte[] a) {
+            if (a == null) {
                 return 0;
             }
             int result = 1;
-            foreach (byte element in a)
-            {
+            foreach (byte element in a) {
                 result = 31 * result + element;
             }
             return result;
         }
 
-        public static void FillWithValue(int[] a, int value)
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
+        public static void FillWithValue(int[] a, int value) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = value;
             }
         }
 
-        public static void FillWithValue<T>(T[] a, T value)
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
+        public static void FillWithValue<T>(T[] a, T value) {
+            for (int i = 0; i < a.Length; i++) {
                 a[i] = value;
             }
         }
 
-        public static int[] CloneArray(int[] src)
-        {
+        public static int[] CloneArray(int[] src) {
             return (int[])src.Clone();
         }
     }

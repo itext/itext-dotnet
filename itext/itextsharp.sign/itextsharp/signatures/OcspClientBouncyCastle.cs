@@ -50,12 +50,10 @@ using iTextSharp.IO;
 using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>OcspClient implementation using BouncyCastle.</summary>
     /// <author>Paulo Soarees</author>
-    public class OcspClientBouncyCastle : IOcspClient
-    {
+    public class OcspClientBouncyCastle : IOcspClient {
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.OcspClientBouncyCastle
             ));
@@ -71,8 +69,7 @@ namespace iTextSharp.Signatures
         /// <seealso>OCSPVerifier</seealso>
         /// .
         /// </param>
-        public OcspClientBouncyCastle(OCSPVerifier verifier)
-        {
+        public OcspClientBouncyCastle(OCSPVerifier verifier) {
             this.verifier = verifier;
         }
 
@@ -83,28 +80,22 @@ namespace iTextSharp.Signatures
         /// was setted, the response will be checked.
         /// </remarks>
         public virtual BasicOcspResp GetBasicOCSPResp(X509Certificate checkCert, X509Certificate rootCert, String 
-            url)
-        {
-            try
-            {
+            url) {
+            try {
                 OcspResp ocspResponse = GetOcspResponse(checkCert, rootCert, url);
-                if (ocspResponse == null)
-                {
+                if (ocspResponse == null) {
                     return null;
                 }
-                if (ocspResponse.Status != OcspRespStatus.Successful)
-                {
+                if (ocspResponse.Status != OcspRespStatus.Successful) {
                     return null;
                 }
                 BasicOcspResp basicResponse = (BasicOcspResp)ocspResponse.GetResponseObject();
-                if (verifier != null)
-                {
+                if (verifier != null) {
                     verifier.IsValidResponse(basicResponse, rootCert);
                 }
                 return basicResponse;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 LOGGER.Error(ex.Message);
             }
             return null;
@@ -119,38 +110,29 @@ namespace iTextSharp.Signatures
         /// from the check cert or from other implementation specific source
         /// </param>
         /// <returns>a byte array with the validation or null if the validation could not be obtained</returns>
-        public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate rootCert, String url)
-        {
-            try
-            {
+        public virtual byte[] GetEncoded(X509Certificate checkCert, X509Certificate rootCert, String url) {
+            try {
                 BasicOcspResp basicResponse = GetBasicOCSPResp(checkCert, rootCert, url);
-                if (basicResponse != null)
-                {
+                if (basicResponse != null) {
                     SingleResp[] responses = basicResponse.Responses;
-                    if (responses.Length == 1)
-                    {
+                    if (responses.Length == 1) {
                         SingleResp resp = responses[0];
                         Object status = resp.GetCertStatus();
-                        if (status == CertificateStatus.Good)
-                        {
+                        if (status == CertificateStatus.Good) {
                             return basicResponse.GetEncoded();
                         }
-                        else
-                        {
-                            if (status is RevokedStatus)
-                            {
+                        else {
+                            if (status is RevokedStatus) {
                                 throw new System.IO.IOException(LogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
-                            else
-                            {
+                            else {
                                 throw new System.IO.IOException(LogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 LOGGER.Error(ex.Message);
             }
             return null;
@@ -164,8 +146,7 @@ namespace iTextSharp.Signatures
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
-        private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger serialNumber)
-        {
+        private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger serialNumber) {
             //Add provider BC
             // Generate the id for the certificate we are looking for
             CertificateID id = SignUtils.GenerateCertificateId(issuerCert, serialNumber, Org.BouncyCastle.Ocsp.CertificateID.HashSha1
@@ -178,18 +159,14 @@ namespace iTextSharp.Signatures
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
-        private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url)
-        {
-            if (checkCert == null || rootCert == null)
-            {
+        private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
+            if (checkCert == null || rootCert == null) {
                 return null;
             }
-            if (url == null)
-            {
+            if (url == null) {
                 url = CertificateUtil.GetOCSPURL(checkCert);
             }
-            if (url == null)
-            {
+            if (url == null) {
                 return null;
             }
             LOGGER.Info("Getting OCSP from " + url);

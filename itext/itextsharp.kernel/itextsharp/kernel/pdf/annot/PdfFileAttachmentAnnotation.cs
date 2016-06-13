@@ -45,33 +45,26 @@ using iTextSharp.Kernel.Geom;
 using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Pdf.Filespec;
 
-namespace iTextSharp.Kernel.Pdf.Annot
-{
-    public class PdfFileAttachmentAnnotation : PdfMarkupAnnotation
-    {
+namespace iTextSharp.Kernel.Pdf.Annot {
+    public class PdfFileAttachmentAnnotation : PdfMarkupAnnotation {
         public PdfFileAttachmentAnnotation(Rectangle rect)
-            : base(rect)
-        {
+            : base(rect) {
         }
 
         public PdfFileAttachmentAnnotation(Rectangle rect, PdfFileSpec file)
-            : this(rect)
-        {
+            : this(rect) {
             Put(PdfName.FS, file.GetPdfObject());
         }
 
         public PdfFileAttachmentAnnotation(PdfDictionary pdfObject)
-            : base(pdfObject)
-        {
+            : base(pdfObject) {
         }
 
-        public override PdfName GetSubtype()
-        {
+        public override PdfName GetSubtype() {
             return PdfName.FileAttachment;
         }
 
-        public virtual PdfObject GetFileSpecObject()
-        {
+        public virtual PdfObject GetFileSpecObject() {
             return GetPdfObject().Get(PdfName.FS);
         }
     }

@@ -1,13 +1,10 @@
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class StylesTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class StylesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
-        public virtual void StylesTest01()
-        {
+        public virtual void StylesTest01() {
             Style myStyle = new Style();
             myStyle.SetFontColor(iTextSharp.Kernel.Color.Color.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle).SetFontColor(iTextSharp.Kernel.Color.Color.GREEN);
@@ -16,8 +13,7 @@ namespace iTextSharp.Layout
         }
 
         [NUnit.Framework.Test]
-        public virtual void StylesTest02()
-        {
+        public virtual void StylesTest02() {
             Style myStyle = new Style();
             myStyle.SetFontColor(iTextSharp.Kernel.Color.Color.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle);

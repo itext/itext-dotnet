@@ -31,8 +31,7 @@ using System;
 using System.Collections;
 using iTextSharp.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.XMP
-{
+namespace iTextSharp.Kernel.XMP {
     /// <summary>
     /// The schema registry keeps track of all namespaces and aliases used in the XMP
     /// metadata.
@@ -64,8 +63,7 @@ namespace iTextSharp.Kernel.XMP
     /// first item of an array of structures.
     /// </remarks>
     /// <since>27.01.2006</since>
-    public interface XMPSchemaRegistry
-    {
+    public interface XMPSchemaRegistry {
         // ---------------------------------------------------------------------------------------------
         // Namespace Functions
         /// <summary>Register a namespace URI with a suggested prefix.</summary>

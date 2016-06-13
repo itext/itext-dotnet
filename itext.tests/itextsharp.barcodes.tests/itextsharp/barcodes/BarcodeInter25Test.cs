@@ -4,18 +4,15 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodeInter25Test : ExtendedITextTest
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodeInter25Test : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/barcodes/BarcodeInter25/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
@@ -23,8 +20,7 @@ namespace iTextSharp.Barcodes
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Barcode01Test()
-        {
+        public virtual void Barcode01Test() {
             String filename = "barcodeInter25.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);

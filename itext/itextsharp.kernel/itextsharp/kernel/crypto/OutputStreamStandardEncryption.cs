@@ -44,23 +44,19 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 
-namespace iTextSharp.Kernel.Crypto
-{
-    public class OutputStreamStandardEncryption : OutputStreamEncryption
-    {
+namespace iTextSharp.Kernel.Crypto {
+    public class OutputStreamStandardEncryption : OutputStreamEncryption {
         protected internal ARCFOUREncryption arcfour;
 
         /// <summary>Creates a new instance of OutputStreamStandardEncryption</summary>
         public OutputStreamStandardEncryption(Stream @out, byte[] key, int off, int len)
-            : base(@out)
-        {
+            : base(@out) {
             arcfour = new ARCFOUREncryption();
             arcfour.PrepareARCFOURKey(key, off, len);
         }
 
         public OutputStreamStandardEncryption(Stream @out, byte[] key)
-            : this(@out, key, 0, key.Length)
-        {
+            : this(@out, key, 0, key.Length) {
         }
 
         /// <summary>
@@ -121,11 +117,9 @@ namespace iTextSharp.Kernel.Crypto
         /// is thrown if the output
         /// stream is closed.
         /// </exception>
-        public override void Write(byte[] b, int off, int len)
-        {
+        public override void Write(byte[] b, int off, int len) {
             byte[] b2 = new byte[Math.Min(len, 4192)];
-            while (len > 0)
-            {
+            while (len > 0) {
                 int sz = Math.Min(len, b2.Length);
                 arcfour.EncryptARCFOUR(b, off, sz, b2, 0);
                 @out.Write(b2, 0, sz);
@@ -134,8 +128,7 @@ namespace iTextSharp.Kernel.Crypto
             }
         }
 
-        public override void Finish()
-        {
+        public override void Finish() {
         }
     }
 }

@@ -17,11 +17,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Layout.Hyphenation
-{
+namespace iTextSharp.Layout.Hyphenation {
     /// <summary><p>This is a cache for HyphenationTree instances.</p></summary>
-    public class HyphenationTreeCache
-    {
+    public class HyphenationTreeCache {
         /// <summary>Contains the cached hyphenation trees</summary>
         private IDictionary<String, HyphenationTree> hyphenTrees = new Dictionary<String, HyphenationTree>();
 
@@ -32,26 +30,20 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="lang">the language</param>
         /// <param name="country">the country (may be null or "none")</param>
         /// <returns>the HyhenationTree instance or null if it's not in the cache</returns>
-        public virtual HyphenationTree GetHyphenationTree(String lang, String country)
-        {
+        public virtual HyphenationTree GetHyphenationTree(String lang, String country) {
             String key = ConstructLlccKey(lang, country);
-            if (key == null)
-            {
+            if (key == null) {
                 return null;
             }
             // first try to find it in the cache
-            if (hyphenTrees.ContainsKey(key))
-            {
+            if (hyphenTrees.ContainsKey(key)) {
                 return hyphenTrees.Get(key);
             }
-            else
-            {
-                if (hyphenTrees.ContainsKey(lang))
-                {
+            else {
+                if (hyphenTrees.ContainsKey(lang)) {
                     return hyphenTrees.Get(lang);
                 }
-                else
-                {
+                else {
                     return null;
                 }
             }
@@ -61,12 +53,10 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="lang">the language</param>
         /// <param name="country">the country (may be null or "none")</param>
         /// <returns>the resulting key</returns>
-        public static String ConstructLlccKey(String lang, String country)
-        {
+        public static String ConstructLlccKey(String lang, String country) {
             String key = lang;
             // check whether the country code has been used
-            if (country != null && !country.Equals("none"))
-            {
+            if (country != null && !country.Equals("none")) {
                 key += "_" + country;
             }
             return key;
@@ -85,11 +75,9 @@ namespace iTextSharp.Layout.Hyphenation
         /// <param name="hyphPatNames">the map of user-configured hyphenation pattern file names</param>
         /// <returns>the hyphenation pattern file name or null</returns>
         public static String ConstructUserKey(String lang, String country, IDictionary<String, String> hyphPatNames
-            )
-        {
+            ) {
             String userKey = null;
-            if (hyphPatNames != null)
-            {
+            if (hyphPatNames != null) {
                 String key = ConstructLlccKey(lang, country);
                 key = key.Replace('_', '-');
                 userKey = hyphPatNames.Get(key);
@@ -100,8 +88,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// <summary>Cache a hyphenation tree under its key.</summary>
         /// <param name="key">the key (ex. "de_CH" or "en")</param>
         /// <param name="hTree">the hyphenation tree</param>
-        public virtual void Cache(String key, HyphenationTree hTree)
-        {
+        public virtual void Cache(String key, HyphenationTree hTree) {
             hyphenTrees[key] = hTree;
         }
 
@@ -112,10 +99,8 @@ namespace iTextSharp.Layout.Hyphenation
         /// available.
         /// </remarks>
         /// <param name="key">the key (ex. "de_CH" or "en")</param>
-        public virtual void NoteMissing(String key)
-        {
-            if (missingHyphenationTrees == null)
-            {
+        public virtual void NoteMissing(String key) {
+            if (missingHyphenationTrees == null) {
                 missingHyphenationTrees = new HashSet<String>();
             }
             missingHyphenationTrees.Add(key);
@@ -129,8 +114,7 @@ namespace iTextSharp.Layout.Hyphenation
         /// </remarks>
         /// <param name="key">the key (ex. "de_CH" or "en")</param>
         /// <returns>true if the hyphenation tree is unavailable</returns>
-        public virtual bool IsMissing(String key)
-        {
+        public virtual bool IsMissing(String key) {
             return (missingHyphenationTrees != null && missingHyphenationTrees.Contains(key));
         }
     }

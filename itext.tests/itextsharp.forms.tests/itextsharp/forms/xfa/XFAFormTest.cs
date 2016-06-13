@@ -4,10 +4,8 @@ using iTextSharp.Kernel.Pdf;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Forms.Xfa
-{
-    public class XFAFormTest : ExtendedITextTest
-    {
+namespace iTextSharp.Forms.Xfa {
+    public class XFAFormTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/xfa/XFAFormTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -16,16 +14,14 @@ namespace iTextSharp.Forms.Xfa
         public static readonly String XML = sourceFolder + "xfa.xml";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateEmptyXFAFormTest01()
-        {
+        public virtual void CreateEmptyXFAFormTest01() {
             String outFileName = destinationFolder + "createEmptyXFAFormTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest01.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -40,8 +36,7 @@ namespace iTextSharp.Forms.Xfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateEmptyXFAFormTest02()
-        {
+        public virtual void CreateEmptyXFAFormTest02() {
             String outFileName = destinationFolder + "createEmptyXFAFormTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest02.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -56,8 +51,7 @@ namespace iTextSharp.Forms.Xfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CreateXFAFormTest()
-        {
+        public virtual void CreateXFAFormTest() {
             String outFileName = destinationFolder + "createXFAFormTest.pdf";
             String cmpFileName = sourceFolder + "cmp_createXFAFormTest.pdf";
             PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));

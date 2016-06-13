@@ -43,19 +43,15 @@ address: sales@itextpdf.com
 */
 using iTextSharp.IO.Font.Otf;
 
-namespace iTextSharp.Layout.Splitting
-{
+namespace iTextSharp.Layout.Splitting {
     /// <summary>
     /// The default implementation of
     /// <seealso>ISplitCharacters interface</seealso>
     /// .
     /// </summary>
-    public class DefaultSplitCharacters : ISplitCharacters
-    {
-        public virtual bool IsSplitCharacter(GlyphLine text, int glyphPos)
-        {
-            if (!text.Get(glyphPos).HasValidUnicode())
-            {
+    public class DefaultSplitCharacters : ISplitCharacters {
+        public virtual bool IsSplitCharacter(GlyphLine text, int glyphPos) {
+            if (!text.Get(glyphPos).HasValidUnicode()) {
                 return false;
             }
             int charCode = (int)text.Get(glyphPos).GetUnicode();

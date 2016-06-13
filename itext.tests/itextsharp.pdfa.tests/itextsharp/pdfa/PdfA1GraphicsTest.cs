@@ -9,10 +9,8 @@ using iTextSharp.Kernel.Pdf.Xobject;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Pdfa
-{
-    public class PdfA1GraphicsTest : ExtendedITextTest
-    {
+namespace iTextSharp.Pdfa {
+    public class PdfA1GraphicsTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA1GraphicsTest/";
@@ -21,18 +19,15 @@ namespace iTextSharp.Pdfa
              + "/test/itextsharp/pdfa/PdfA1GraphicsTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ColorCheckTest1()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ColorCheckTest1() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -59,10 +54,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ColorCheckTest2()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ColorCheckTest2() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -84,10 +77,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void ColorCheckTest3()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void ColorCheckTest3() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_1B, null);
                 doc.AddNewPage();
@@ -107,8 +98,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void ColorCheckTest4()
-        {
+        public virtual void ColorCheckTest4() {
             String outPdf = destinationFolder + "pdfA1b_colorCheckTest4.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_colorCheckTest4.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -130,10 +120,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void EgsCheckTest1()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void EgsCheckTest1() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -153,8 +141,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void EgsCheckTest2()
-        {
+        public virtual void EgsCheckTest2() {
             String outPdf = destinationFolder + "pdfA1b_egsCheckTest2.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_egsCheckTest2.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -173,10 +160,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void EgsCheckTest3()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void EgsCheckTest3() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -195,10 +180,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void EgsCheckTest4()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void EgsCheckTest4() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -217,10 +200,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void TransparencyCheckTest1()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void TransparencyCheckTest1() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -246,10 +227,8 @@ namespace iTextSharp.Pdfa
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void TransparencyCheckTest2()
-        {
-            NUnit.Framework.Assert.That(() => 
-            {
+        public virtual void TransparencyCheckTest2() {
+            NUnit.Framework.Assert.That(() =>  {
                 PdfWriter writer = new PdfWriter(new MemoryStream());
                 Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
                 PdfOutputIntent outputIntent = new PdfOutputIntent("Custom", "", "http://www.color.org", "sRGB IEC61966-2.1"
@@ -269,8 +248,7 @@ namespace iTextSharp.Pdfa
         /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TransparencyCheckTest3()
-        {
+        public virtual void TransparencyCheckTest3() {
             String outPdf = destinationFolder + "pdfA1b_transparencyCheckTest3.pdf";
             String cmpPdf = cmpFolder + "cmp_pdfA1b_transparencyCheckTest3.pdf";
             PdfWriter writer = new PdfWriter(outPdf);
@@ -288,11 +266,9 @@ namespace iTextSharp.Pdfa
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareResult(String outPdf, String cmpPdf)
-        {
+        private void CompareResult(String outPdf, String cmpPdf) {
             String result = new CompareTool().CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
-            if (result != null)
-            {
+            if (result != null) {
                 NUnit.Framework.Assert.Fail(result);
             }
         }

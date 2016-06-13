@@ -47,8 +47,7 @@ using iTextSharp.IO.Font;
 using iTextSharp.IO.Source;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Kernel.Pdf
-{
+namespace iTextSharp.Kernel.Pdf {
     /// <summary>
     /// A
     /// <c>PdfString</c>
@@ -70,8 +69,7 @@ namespace iTextSharp.Kernel.Pdf
     /// <p/>
     /// <see cref="PdfObject"/>
     /// </summary>
-    public class PdfString : PdfPrimitiveObject
-    {
+    public class PdfString : PdfPrimitiveObject {
         private static String defaultCharset = "UTF-8";
 
         protected internal String value;
@@ -85,8 +83,7 @@ namespace iTextSharp.Kernel.Pdf
         private int decryptInfoGen = 0;
 
         public PdfString(String value, String encoding)
-            : base()
-        {
+            : base() {
             /*
             * using for decryption
             * */
@@ -98,54 +95,43 @@ namespace iTextSharp.Kernel.Pdf
         }
 
         public PdfString(String value)
-            : this(value, null)
-        {
+            : this(value, null) {
         }
 
         public PdfString(byte[] content)
-            : base()
-        {
-            if (content != null && content.Length > 0)
-            {
+            : base() {
+            if (content != null && content.Length > 0) {
                 StringBuilder str = new StringBuilder(content.Length);
-                foreach (byte b in content)
-                {
+                foreach (byte b in content) {
                     str.Append((char)(b & 0xff));
                 }
                 this.value = str.ToString();
             }
-            else
-            {
+            else {
                 this.value = "";
             }
         }
 
         /// <summary>Only PdfReader can use this method!</summary>
         protected internal PdfString(byte[] content, bool hexWriting)
-            : base(content)
-        {
+            : base(content) {
             this.hexWriting = hexWriting;
         }
 
         private PdfString()
-            : base()
-        {
+            : base() {
         }
 
-        public override byte GetObjectType()
-        {
+        public override byte GetObjectType() {
             return STRING;
         }
 
-        public virtual bool IsHexWriting()
-        {
+        public virtual bool IsHexWriting() {
             return hexWriting;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting)
-        {
-            if (value == null)
-            {
+        public virtual iTextSharp.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting) {
+            if (value == null) {
                 GenerateValue();
                 content = null;
             }
@@ -153,18 +139,15 @@ namespace iTextSharp.Kernel.Pdf
             return this;
         }
 
-        public virtual String GetValue()
-        {
-            if (value == null)
-            {
+        public virtual String GetValue() {
+            if (value == null) {
                 GenerateValue();
             }
             return value;
         }
 
         /// <summary>Gets the encoding of this string.</summary>
-        public virtual String GetEncoding()
-        {
+        public virtual String GetEncoding() {
             return encoding;
         }
 
@@ -173,8 +156,7 @@ namespace iTextSharp.Kernel.Pdf
         /// Sets the encoding of this string.
         /// NOTE. Byte content will be removed.
         /// </remarks>
-        public virtual void SetEncoding(String encoding)
-        {
+        public virtual void SetEncoding(String encoding) {
             this.encoding = encoding;
             this.content = null;
         }
@@ -186,42 +168,33 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>PdfString</c>
         /// -object.
         /// </summary>
-        public virtual String ToUnicodeString()
-        {
-            if (encoding != null && encoding.Length != 0)
-            {
+        public virtual String ToUnicodeString() {
+            if (encoding != null && encoding.Length != 0) {
                 return GetValue();
             }
-            if (content == null)
-            {
+            if (content == null) {
                 GenerateContent();
             }
             byte[] b = PdfTokenizer.DecodeStringContent(content, hexWriting);
-            if (b.Length >= 2 && b[0] == (byte)0xFE && b[1] == (byte)0xFF)
-            {
+            if (b.Length >= 2 && b[0] == (byte)0xFE && b[1] == (byte)0xFF) {
                 return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
             }
-            else
-            {
+            else {
                 return PdfEncodings.ConvertToString(b, PdfEncodings.PDF_DOC_ENCODING);
             }
         }
 
         /// <summary>Gets bytes of String-value considering encoding.</summary>
         /// <returns>byte array</returns>
-        public virtual byte[] GetValueBytes()
-        {
+        public virtual byte[] GetValueBytes() {
             // Analog of com.itextpdf.text.pdf.PdfString.getBytes() method in iText5.
-            if (value == null)
-            {
+            if (value == null) {
                 GenerateValue();
             }
-            if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings.IsPdfDocEncoding(value))
-            {
+            if (encoding != null && encoding.Equals(PdfEncodings.UNICODE_BIG) && PdfEncodings.IsPdfDocEncoding(value)) {
                 return PdfEncodings.ConvertToBytes(value, PdfEncodings.PDF_DOC_ENCODING);
             }
-            else
-            {
+            else {
                 return PdfEncodings.ConvertToBytes(value, encoding);
             }
         }
@@ -229,16 +202,14 @@ namespace iTextSharp.Kernel.Pdf
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference)
-        {
+        public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
             return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
         }
 
@@ -249,8 +220,7 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document)
-        {
+        public override PdfObject CopyTo(PdfDocument document) {
             return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, true);
         }
 
@@ -266,32 +236,26 @@ namespace iTextSharp.Kernel.Pdf
         /// If allowDuplicating is true then object will be copied and new indirect reference will be assigned.
         /// </param>
         /// <returns>copied object.</returns>
-        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
-        {
+        public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
         }
 
-        public override String ToString()
-        {
-            if (value == null)
-            {
+        public override String ToString() {
+            if (value == null) {
                 return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent(content, hexWriting)
                     );
             }
-            else
-            {
+            else {
                 return GetValue();
             }
         }
 
-        protected internal virtual void GenerateValue()
-        {
+        protected internal virtual void GenerateValue() {
             System.Diagnostics.Debug.Assert(content != null, "No byte[] content to generate value");
             value = PdfEncodings.ConvertToString(PdfTokenizer.DecodeStringContent(content, hexWriting), null);
         }
 
-        protected internal override void GenerateContent()
-        {
+        protected internal override void GenerateContent() {
             content = EncodeBytes(GetValueBytes());
         }
 
@@ -300,10 +264,8 @@ namespace iTextSharp.Kernel.Pdf
         /// <c>PdfString</c>
         /// .
         /// </summary>
-        protected internal virtual iTextSharp.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt)
-        {
-            if (decrypt != null)
-            {
+        protected internal virtual iTextSharp.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt) {
+            if (decrypt != null) {
                 System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value");
                 byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
                 content = null;
@@ -322,10 +284,8 @@ namespace iTextSharp.Kernel.Pdf
         /// </summary>
         /// <param name="encrypt">@see PdfEncryption</param>
         /// <returns>true if value was encrypted, otherwise false.</returns>
-        protected internal virtual bool Encrypt(PdfEncryption encrypt)
-        {
-            if (encrypt != null && !encrypt.IsEmbeddedFilesOnly())
-            {
+        protected internal virtual bool Encrypt(PdfEncryption encrypt) {
+            if (encrypt != null && !encrypt.IsEmbeddedFilesOnly()) {
                 byte[] b = encrypt.EncryptByteArray(GetValueBytes());
                 content = EncodeBytes(b);
                 return true;
@@ -346,44 +306,36 @@ namespace iTextSharp.Kernel.Pdf
         /// </remarks>
         /// <param name="bytes">byte array to manipulate with.</param>
         /// <returns>Hexadecimal string or string with escaped symbols in byte array view.</returns>
-        protected internal virtual byte[] EncodeBytes(byte[] bytes)
-        {
-            if (hexWriting)
-            {
+        protected internal virtual byte[] EncodeBytes(byte[] bytes) {
+            if (hexWriting) {
                 ByteBuffer buf = new ByteBuffer(bytes.Length * 2);
-                foreach (byte b in bytes)
-                {
+                foreach (byte b in bytes) {
                     buf.AppendHex(b);
                 }
                 return buf.GetInternalBuffer();
             }
-            else
-            {
+            else {
                 ByteBuffer buf = StreamUtil.CreateBufferedEscapedString(bytes);
                 return buf.ToByteArray(1, buf.Size() - 2);
             }
         }
 
-        protected internal override PdfObject NewInstance()
-        {
+        protected internal override PdfObject NewInstance() {
             return new iTextSharp.Kernel.Pdf.PdfString();
         }
 
-        protected internal override void CopyContent(PdfObject from, PdfDocument document)
-        {
+        protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
             iTextSharp.Kernel.Pdf.PdfString @string = (iTextSharp.Kernel.Pdf.PdfString)from;
             value = @string.value;
             hexWriting = @string.hexWriting;
         }
 
-        internal virtual void SetDecryptInfoNum(int decryptInfoNum)
-        {
+        internal virtual void SetDecryptInfoNum(int decryptInfoNum) {
             this.decryptInfoNum = decryptInfoNum;
         }
 
-        internal virtual void SetDecryptInfoGen(int decryptInfoGen)
-        {
+        internal virtual void SetDecryptInfoGen(int decryptInfoGen) {
             this.decryptInfoGen = decryptInfoGen;
         }
     }

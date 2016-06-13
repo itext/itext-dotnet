@@ -49,10 +49,8 @@ using iTextSharp.Kernel;
 using iTextSharp.Kernel.Crypto;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
-{
-    public class StandardHandlerUsingAes256 : StandardSecurityHandler
-    {
+namespace iTextSharp.Kernel.Crypto.Securityhandler {
+    public class StandardHandlerUsingAes256 : StandardSecurityHandler {
         private const int VALIDATION_SALT_OFFSET = 32;
 
         private const int KEY_SALT_OFFSET = 40;
@@ -64,52 +62,43 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         protected internal bool encryptMetadata;
 
         public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
-            , int permissions, bool encryptMetadata, bool embeddedFilesOnly)
-        {
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, 
                 embeddedFilesOnly);
         }
 
-        public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] password)
-        {
+        public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] password) {
             InitKeyAndReadDictionary(encryptionDictionary, password);
         }
 
-        public virtual bool IsEncryptMetadata()
-        {
+        public virtual bool IsEncryptMetadata() {
             return encryptMetadata;
         }
 
-        public override void SetHashKeyForNextObject(int objNumber, int objGeneration)
-        {
+        public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
         }
 
         // in AES256 we don't recalculate nextObjectKey
-        public override OutputStreamEncryption GetEncryptionStream(Stream os)
-        {
+        public override OutputStreamEncryption GetEncryptionStream(Stream os) {
             return new OutputStreamAesEncryption(os, nextObjectKey, 0, nextObjectKeySize);
         }
 
-        public override IDecryptor GetDecryptor()
-        {
+        public override IDecryptor GetDecryptor() {
             return new AesDecryptor(nextObjectKey, 0, nextObjectKeySize);
         }
 
         private void InitKeyAndFillDictionary(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
-            , int permissions, bool encryptMetadata, bool embeddedFilesOnly)
-        {
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly) {
             ownerPassword = GenerateOwnerPasswordIfNullOrEmpty(ownerPassword);
             permissions |= PERMS_MASK_1_FOR_REVISION_3_OR_GREATER;
             permissions &= PERMS_MASK_2;
-            try
-            {
+            try {
                 byte[] userKey;
                 byte[] ownerKey;
                 byte[] ueKey;
                 byte[] oeKey;
                 byte[] aes256Perms;
-                if (userPassword == null)
-                {
+                if (userPassword == null) {
                     userPassword = new byte[0];
                 }
                 byte[] uvs = IVGenerator.GetIV(8);
@@ -166,15 +155,13 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
                 SetStandardHandlerDicEntries(encryptionDictionary, userKey, ownerKey);
                 SetAES256DicEntries(encryptionDictionary, oeKey, ueKey, aes256Perms, encryptMetadata, embeddedFilesOnly);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 throw new PdfException(PdfException.PdfEncryption, ex);
             }
         }
 
         private void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte[] ueKey, byte[] aes256Perms
-            , bool encryptMetadata, bool embeddedFilesOnly)
-        {
+            , bool encryptMetadata, bool embeddedFilesOnly) {
             int aes256Revision = 5;
             encryptionDictionary.Put(PdfName.OE, new PdfLiteral(StreamUtil.CreateEscapedString(oeKey)));
             encryptionDictionary.Put(PdfName.UE, new PdfLiteral(StreamUtil.CreateEscapedString(ueKey)));
@@ -183,19 +170,16 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             encryptionDictionary.Put(PdfName.V, new PdfNumber(aes256Revision));
             PdfDictionary stdcf = new PdfDictionary();
             stdcf.Put(PdfName.Length, new PdfNumber(32));
-            if (!encryptMetadata)
-            {
+            if (!encryptMetadata) {
                 encryptionDictionary.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
             }
-            if (embeddedFilesOnly)
-            {
+            if (embeddedFilesOnly) {
                 stdcf.Put(PdfName.AuthEvent, PdfName.EFOpen);
                 encryptionDictionary.Put(PdfName.EFF, PdfName.StdCF);
                 encryptionDictionary.Put(PdfName.StrF, PdfName.Identity);
                 encryptionDictionary.Put(PdfName.StmF, PdfName.Identity);
             }
-            else
-            {
+            else {
                 stdcf.Put(PdfName.AuthEvent, PdfName.DocOpen);
                 encryptionDictionary.Put(PdfName.StrF, PdfName.StdCF);
                 encryptionDictionary.Put(PdfName.StmF, PdfName.StdCF);
@@ -206,12 +190,9 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             encryptionDictionary.Put(PdfName.CF, cf);
         }
 
-        private void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, byte[] password)
-        {
-            try
-            {
-                if (password == null)
-                {
+        private void InitKeyAndReadDictionary(PdfDictionary encryptionDictionary, byte[] password) {
+            try {
+                if (password == null) {
                     password = new byte[0];
                 }
                 byte[] oValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O));
@@ -227,8 +208,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
                 md.Update(uValue, 0, OU_LENGTH);
                 byte[] hash = md.Digest();
                 usedOwnerPassword = CompareArray(hash, oValue, 32);
-                if (usedOwnerPassword)
-                {
+                if (usedOwnerPassword) {
                     md.Update(password, 0, Math.Min(password.Length, 127));
                     md.Update(oValue, KEY_SALT_OFFSET, SALT_LENGTH);
                     md.Update(uValue, 0, OU_LENGTH);
@@ -236,13 +216,11 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
                     nextObjectKey = ac.ProcessBlock(oeValue, 0, oeValue.Length);
                 }
-                else
-                {
+                else {
                     md.Update(password, 0, Math.Min(password.Length, 127));
                     md.Update(uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
                     hash = md.Digest();
-                    if (!CompareArray(hash, uValue, 32))
-                    {
+                    if (!CompareArray(hash, uValue, 32)) {
                         throw new BadPasswordException(PdfException.BadUserPassword);
                     }
                     md.Update(password, 0, Math.Min(password.Length, 127));
@@ -254,30 +232,24 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
                 nextObjectKeySize = 32;
                 AESCipherCBCnoPad ac_1 = new AESCipherCBCnoPad(false, nextObjectKey);
                 byte[] decPerms = ac_1.ProcessBlock(perms, 0, perms.Length);
-                if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte)'b')
-                {
+                if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte)'b') {
                     throw new BadPasswordException(PdfException.BadUserPassword);
                 }
                 permissions = (decPerms[0] & 0xff) | ((decPerms[1] & 0xff) << 8) | ((decPerms[2] & 0xff) << 16) | ((decPerms
                     [2] & 0xff) << 24);
                 encryptMetadata = decPerms[8] == (byte)'T';
             }
-            catch (BadPasswordException ex)
-            {
+            catch (BadPasswordException ex) {
                 throw;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 throw new PdfException(PdfException.PdfEncryption, ex);
             }
         }
 
-        private static bool CompareArray(byte[] a, byte[] b, int len)
-        {
-            for (int k = 0; k < len; ++k)
-            {
-                if (a[k] != b[k])
-                {
+        private static bool CompareArray(byte[] a, byte[] b, int len) {
+            for (int k = 0; k < len; ++k) {
+                if (a[k] != b[k]) {
                     return false;
                 }
             }

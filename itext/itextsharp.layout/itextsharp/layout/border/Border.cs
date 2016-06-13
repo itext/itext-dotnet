@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border
-{
-    public abstract class Border
-    {
+namespace iTextSharp.Layout.Border {
+    public abstract class Border {
         public static readonly iTextSharp.Layout.Border.Border NO_BORDER = null;
 
         public const int SOLID = 0;
@@ -77,12 +75,10 @@ namespace iTextSharp.Layout.Border
         private int hash;
 
         protected internal Border(float width)
-            : this(iTextSharp.Kernel.Color.Color.BLACK, width)
-        {
+            : this(iTextSharp.Kernel.Color.Color.BLACK, width) {
         }
 
-        protected internal Border(iTextSharp.Kernel.Color.Color color, float width)
-        {
+        protected internal Border(iTextSharp.Kernel.Color.Color color, float width) {
             this.color = color;
             this.width = width;
         }
@@ -123,85 +119,66 @@ namespace iTextSharp.Layout.Border
 
         public abstract int GetBorderType();
 
-        public virtual iTextSharp.Kernel.Color.Color GetColor()
-        {
+        public virtual iTextSharp.Kernel.Color.Color GetColor() {
             return color;
         }
 
-        public virtual float GetWidth()
-        {
+        public virtual float GetWidth() {
             return width;
         }
 
-        public override bool Equals(Object anObject)
-        {
-            if (this == anObject)
-            {
+        public override bool Equals(Object anObject) {
+            if (this == anObject) {
                 return true;
             }
-            if (anObject is iTextSharp.Layout.Border.Border)
-            {
+            if (anObject is iTextSharp.Layout.Border.Border) {
                 iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)anObject;
                 if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() != GetColor() || anotherBorder
-                    .GetWidth() != GetWidth())
-                {
+                    .GetWidth() != GetWidth()) {
                     return false;
                 }
             }
-            else
-            {
+            else {
                 return false;
             }
             return true;
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             int h = hash;
-            if (h == 0)
-            {
+            if (h == 0) {
                 h = (int)GetWidth() * 31 + GetColor().GetHashCode();
                 hash = h;
             }
             return h;
         }
 
-        protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2, float y2)
-        {
+        protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2, float y2) {
             bool isLeft = false;
             bool isRight = false;
-            if (Math.Abs(y2 - y1) > 0.0005f)
-            {
+            if (Math.Abs(y2 - y1) > 0.0005f) {
                 isLeft = y2 - y1 > 0;
                 isRight = y2 - y1 < 0;
             }
             bool isTop = false;
             bool isBottom = false;
-            if (Math.Abs(x2 - x1) > 0.0005f)
-            {
+            if (Math.Abs(x2 - x1) > 0.0005f) {
                 isTop = x2 - x1 > 0;
                 isBottom = x2 - x1 < 0;
             }
-            if (isTop)
-            {
+            if (isTop) {
                 return Border.Side.TOP;
             }
-            else
-            {
-                if (isRight)
-                {
+            else {
+                if (isRight) {
                     return Border.Side.RIGHT;
                 }
-                else
-                {
-                    if (isBottom)
-                    {
+                else {
+                    if (isBottom) {
                         return Border.Side.BOTTOM;
                     }
-                    else
-                    {
-                        if (isLeft)
-                        {
+                    else {
+                        if (isLeft) {
                             return Border.Side.LEFT;
                         }
                     }
@@ -210,8 +187,7 @@ namespace iTextSharp.Layout.Border
             return Border.Side.NONE;
         }
 
-        protected internal enum Side
-        {
+        protected internal enum Side {
             NONE,
             TOP,
             RIGHT,

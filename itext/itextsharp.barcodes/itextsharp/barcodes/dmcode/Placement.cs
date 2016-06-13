@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.Barcodes.Dmcode
-{
-    public class Placement
-    {
+namespace iTextSharp.Barcodes.Dmcode {
+    public class Placement {
         private int nrow;
 
         private int ncol;
@@ -55,16 +53,13 @@ namespace iTextSharp.Barcodes.Dmcode
 
         private static readonly IDictionary<int, short[]> cache = new Dictionary<int, short[]>();
 
-        private Placement()
-        {
+        private Placement() {
         }
 
-        public static short[] DoPlacement(int nrow, int ncol)
-        {
+        public static short[] DoPlacement(int nrow, int ncol) {
             int key = nrow * 1000 + ncol;
             short[] pc = cache.Get(key);
-            if (pc != null)
-            {
+            if (pc != null) {
                 return pc;
             }
             iTextSharp.Barcodes.Dmcode.Placement p = new iTextSharp.Barcodes.Dmcode.Placement();
@@ -77,15 +72,12 @@ namespace iTextSharp.Barcodes.Dmcode
         }
 
         /* "module" places "chr+bit" with appropriate wrapping within array[] */
-        private void Module(int row, int col, int chr, int bit)
-        {
-            if (row < 0)
-            {
+        private void Module(int row, int col, int chr, int bit) {
+            if (row < 0) {
                 row += nrow;
                 col += 4 - (nrow + 4) % 8;
             }
-            if (col < 0)
-            {
+            if (col < 0) {
                 col += ncol;
                 row += 4 - (ncol + 4) % 8;
             }
@@ -93,8 +85,7 @@ namespace iTextSharp.Barcodes.Dmcode
         }
 
         /* "utah" places the 8 bits of a utah-shaped symbol character in ECC200 */
-        private void Utah(int row, int col, int chr)
-        {
+        private void Utah(int row, int col, int chr) {
             Module(row - 2, col - 2, chr, 0);
             Module(row - 2, col - 1, chr, 1);
             Module(row - 1, col - 2, chr, 2);
@@ -106,8 +97,7 @@ namespace iTextSharp.Barcodes.Dmcode
         }
 
         /* "cornerN" places 8 bits of the four special corner cases in ECC200 */
-        private void Corner1(int chr)
-        {
+        private void Corner1(int chr) {
             Module(nrow - 1, 0, chr, 0);
             Module(nrow - 1, 1, chr, 1);
             Module(nrow - 1, 2, chr, 2);
@@ -118,8 +108,7 @@ namespace iTextSharp.Barcodes.Dmcode
             Module(3, ncol - 1, chr, 7);
         }
 
-        private void Corner2(int chr)
-        {
+        private void Corner2(int chr) {
             Module(nrow - 3, 0, chr, 0);
             Module(nrow - 2, 0, chr, 1);
             Module(nrow - 1, 0, chr, 2);
@@ -130,8 +119,7 @@ namespace iTextSharp.Barcodes.Dmcode
             Module(1, ncol - 1, chr, 7);
         }
 
-        private void Corner3(int chr)
-        {
+        private void Corner3(int chr) {
             Module(nrow - 3, 0, chr, 0);
             Module(nrow - 2, 0, chr, 1);
             Module(nrow - 1, 0, chr, 2);
@@ -142,8 +130,7 @@ namespace iTextSharp.Barcodes.Dmcode
             Module(3, ncol - 1, chr, 7);
         }
 
-        private void Corner4(int chr)
-        {
+        private void Corner4(int chr) {
             Module(nrow - 1, 0, chr, 0);
             Module(nrow - 1, ncol - 1, chr, 1);
             Module(0, ncol - 3, chr, 2);
@@ -155,8 +142,7 @@ namespace iTextSharp.Barcodes.Dmcode
         }
 
         /* "ECC200" fills an nrow x ncol array with appropriate values for ECC200 */
-        private void Ecc200()
-        {
+        private void Ecc200() {
             int row;
             int col;
             int chr;
@@ -166,30 +152,23 @@ namespace iTextSharp.Barcodes.Dmcode
             chr = 1;
             row = 4;
             col = 0;
-            do
-            {
+            do {
                 /* repeatedly first check for one of the special corner cases, then... */
-                if (row == nrow && col == 0)
-                {
+                if (row == nrow && col == 0) {
                     Corner1(chr++);
                 }
-                if (row == nrow - 2 && col == 0 && ncol % 4 != 0)
-                {
+                if (row == nrow - 2 && col == 0 && ncol % 4 != 0) {
                     Corner2(chr++);
                 }
-                if (row == nrow - 2 && col == 0 && ncol % 8 == 4)
-                {
+                if (row == nrow - 2 && col == 0 && ncol % 8 == 4) {
                     Corner3(chr++);
                 }
-                if (row == nrow + 4 && col == 2 && ncol % 8 == 0)
-                {
+                if (row == nrow + 4 && col == 2 && ncol % 8 == 0) {
                     Corner4(chr++);
                 }
-                do
-                {
+                do {
                     /* sweep upward diagonally, inserting successive characters,... */
-                    if (row < nrow && col >= 0 && array[row * ncol + col] == 0)
-                    {
+                    if (row < nrow && col >= 0 && array[row * ncol + col] == 0) {
                         Utah(row, col, chr++);
                     }
                     row -= 2;
@@ -198,11 +177,9 @@ namespace iTextSharp.Barcodes.Dmcode
                 while (row >= 0 && col < ncol);
                 row += 1;
                 col += 3;
-                do
-                {
+                do {
                     /* & then sweep downward diagonally, inserting successive characters,... */
-                    if (row >= 0 && col < ncol && array[row * ncol + col] == 0)
-                    {
+                    if (row >= 0 && col < ncol && array[row * ncol + col] == 0) {
                         Utah(row, col, chr++);
                     }
                     row += 2;
@@ -215,8 +192,7 @@ namespace iTextSharp.Barcodes.Dmcode
             while (row < nrow || col < ncol);
             /* ... until the entire array is scanned */
             /* Lastly, if the lower righthand corner is untouched, fill in fixed pattern */
-            if (array[nrow * ncol - 1] == 0)
-            {
+            if (array[nrow * ncol - 1] == 0) {
                 array[nrow * ncol - 1] = array[nrow * ncol - ncol - 2] = 1;
             }
         }

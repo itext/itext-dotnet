@@ -41,8 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property
-{
+namespace iTextSharp.Layout.Property {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
     /// elements.
@@ -57,10 +56,8 @@ namespace iTextSharp.Layout.Property
     /// <see cref="Property"/>
     /// as its potential keys.
     /// </remarks>
-    public sealed class Property
-    {
-        private Property()
-        {
+    public sealed class Property {
+        private Property() {
         }
 
         public const int ACTION = 1;
@@ -237,8 +234,7 @@ namespace iTextSharp.Layout.Property
 
         private const int MAX_INHERITED_PROPERTY_ID = 80;
 
-        static Property()
-        {
+        static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.BOLD_SIMULATION] = true;
@@ -267,8 +263,7 @@ namespace iTextSharp.Layout.Property
             INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.WORD_SPACING] = true;
         }
 
-        public static bool IsPropertyInherited(int property)
-        {
+        public static bool IsPropertyInherited(int property) {
             return property >= 0 && property < MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES[property];
         }
     }

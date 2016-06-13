@@ -7,10 +7,8 @@ using iTextSharp.Layout.Border;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class BorderTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class BorderTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/BorderTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
@@ -25,16 +23,14 @@ namespace iTextSharp.Layout
         internal String cmpFileName;
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleBordersTest()
-        {
+        public virtual void SimpleBordersTest() {
             fileName = "simpleBordersTest.pdf";
             Document doc = CreateDocument();
             List list = new List();
@@ -66,8 +62,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Borders3DTest()
-        {
+        public virtual void Borders3DTest() {
             fileName = "borders3DTest.pdf";
             Document doc = CreateDocument();
             List list = new List();
@@ -126,8 +121,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BorderSidesTest()
-        {
+        public virtual void BorderSidesTest() {
             fileName = "borderSidesTest.pdf";
             Document doc = CreateDocument();
             String text = "<p class=\"none\"  >No border.</p>\n" + "<p class=\"dotted\">A dotted border.</p>\n" + "<p class=\"dashed\">A dashed border.</p>\n"
@@ -151,8 +145,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void BorderBoxTest()
-        {
+        public virtual void BorderBoxTest() {
             fileName = "borderBoxTest.pdf";
             Document doc = CreateDocument();
             String textBefore = "At the mid-oceanic ridges, two tectonic plates diverge from one another as new oceanic crust is formed by the cooling and "
@@ -187,8 +180,7 @@ namespace iTextSharp.Layout
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        private Document CreateDocument()
-        {
+        private Document CreateDocument() {
             outFileName = destinationFolder + fileName;
             cmpFileName = sourceFolder + cmpPrefix + fileName;
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
@@ -197,13 +189,11 @@ namespace iTextSharp.Layout
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CloseDocumentAndCompareOutputs(Document document)
-        {
+        private void CloseDocumentAndCompareOutputs(Document document) {
             document.Close();
             String compareResult = new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder, "diff"
                 );
-            if (compareResult != null)
-            {
+            if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
         }

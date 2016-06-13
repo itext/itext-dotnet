@@ -44,48 +44,41 @@ address: sales@itextpdf.com
 using iTextSharp.Kernel.Color;
 using iTextSharp.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border
-{
+namespace iTextSharp.Layout.Border {
     /// <summary>Represents a border that is displayed using a 3D effect.</summary>
-    public abstract class Border3D : iTextSharp.Layout.Border.Border
-    {
+    public abstract class Border3D : iTextSharp.Layout.Border.Border {
         private static readonly DeviceRgb GRAY = new DeviceRgb(212, 208, 200);
 
         /// <summary>Creates a Border3D instance with the specified width.</summary>
         /// <remarks>Creates a Border3D instance with the specified width. Also sets the color to gray.</remarks>
         /// <param name="width">with of the border</param>
         protected internal Border3D(float width)
-            : this(GRAY, width)
-        {
+            : this(GRAY, width) {
         }
 
         /// <summary>Creates a Border3D instance with the specified width and color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">with of the border</param>
         protected internal Border3D(DeviceRgb color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
         /// <summary>Creates a Border3D instance with the specified width and color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">with of the border</param>
         protected internal Border3D(DeviceCmyk color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
         /// <summary>Creates a Border3D instance with the specified width and color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">with of the border</param>
         protected internal Border3D(DeviceGray color, float width)
-            : base(color, width)
-        {
+            : base(color, width) {
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
-            , float borderWidthAfter)
-        {
+            , float borderWidthAfter) {
             float x3 = 0;
             float y3 = 0;
             float x4 = 0;
@@ -94,10 +87,8 @@ namespace iTextSharp.Layout.Border
             float halfOfWidthBefore = borderWidthBefore / 2;
             float halfOfWidthAfter = borderWidthAfter / 2;
             Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
-            switch (borderSide)
-            {
-                case Border.Side.TOP:
-                {
+            switch (borderSide) {
+                case Border.Side.TOP: {
                     x3 = x2 + halfOfWidthAfter;
                     y3 = y2 + widthHalf;
                     x4 = x1 - halfOfWidthBefore;
@@ -105,8 +96,7 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
 
-                case Border.Side.RIGHT:
-                {
+                case Border.Side.RIGHT: {
                     x3 = x2 + widthHalf;
                     y3 = y2 - halfOfWidthAfter;
                     x4 = x1 + widthHalf;
@@ -114,8 +104,7 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
 
-                case Border.Side.BOTTOM:
-                {
+                case Border.Side.BOTTOM: {
                     x3 = x2 - halfOfWidthAfter;
                     y3 = y2 - widthHalf;
                     x4 = x1 + halfOfWidthBefore;
@@ -123,8 +112,7 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
 
-                case Border.Side.LEFT:
-                {
+                case Border.Side.LEFT: {
                     x3 = x2 - widthHalf;
                     y3 = y2 + halfOfWidthAfter;
                     x4 = x1 - widthHalf;
@@ -134,10 +122,8 @@ namespace iTextSharp.Layout.Border
             }
             SetInnerHalfColor(canvas, borderSide);
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
-            switch (borderSide)
-            {
-                case Border.Side.TOP:
-                {
+            switch (borderSide) {
+                case Border.Side.TOP: {
                     x2 += borderWidthAfter;
                     y2 += width;
                     x1 -= borderWidthBefore;
@@ -145,8 +131,7 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
 
-                case Border.Side.RIGHT:
-                {
+                case Border.Side.RIGHT: {
                     x2 += width;
                     y2 -= borderWidthAfter;
                     x1 += width;
@@ -154,8 +139,7 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
 
-                case Border.Side.BOTTOM:
-                {
+                case Border.Side.BOTTOM: {
                     x2 -= borderWidthAfter;
                     y2 -= width;
                     x1 += borderWidthBefore;
@@ -163,8 +147,7 @@ namespace iTextSharp.Layout.Border
                     break;
                 }
 
-                case Border.Side.LEFT:
-                {
+                case Border.Side.LEFT: {
                     x2 -= width;
                     y2 += borderWidthAfter;
                     x1 -= width;
@@ -176,28 +159,21 @@ namespace iTextSharp.Layout.Border
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
         }
 
-        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2)
-        {
+        public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
                 ();
         }
 
-        protected internal virtual iTextSharp.Kernel.Color.Color GetDarkerColor()
-        {
-            if (color is DeviceRgb)
-            {
+        protected internal virtual iTextSharp.Kernel.Color.Color GetDarkerColor() {
+            if (color is DeviceRgb) {
                 return DeviceRgb.MakeDarker((DeviceRgb)color);
             }
-            else
-            {
-                if (color is DeviceCmyk)
-                {
+            else {
+                if (color is DeviceCmyk) {
                     return DeviceCmyk.MakeDarker((DeviceCmyk)color);
                 }
-                else
-                {
-                    if (color is DeviceGray)
-                    {
+                else {
+                    if (color is DeviceGray) {
                         return DeviceGray.MakeDarker((DeviceGray)color);
                     }
                 }

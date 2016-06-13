@@ -45,10 +45,8 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.IO
-{
-    public class IOException : Exception
-    {
+namespace iTextSharp.IO {
+    public class IOException : Exception {
         public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit.samples.are.not.supported.for.horizontal.differencing.predictor";
 
         public const String _1CorruptedJfifMarker = "{0} corrupted.jfif.marker";
@@ -238,59 +236,47 @@ namespace iTextSharp.IO
         private IList<Object> messageParams;
 
         public IOException(String message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         public IOException(Exception cause)
-            : this(UnknownIOException, cause)
-        {
+            : this(UnknownIOException, cause) {
         }
 
         public IOException(String message, Object obj)
-            : this(message)
-        {
+            : this(message) {
             this.obj = obj;
         }
 
         public IOException(String message, Exception cause)
-            : base(message, cause)
-        {
+            : base(message, cause) {
         }
 
         public IOException(String message, Exception cause, Object obj)
-            : this(message, cause)
-        {
+            : this(message, cause) {
             this.obj = obj;
         }
 
-        public override String Message
-        {
-            get
-            {
-                if (messageParams == null || messageParams.Count == 0)
-                {
+        public override String Message {
+            get {
+                if (messageParams == null || messageParams.Count == 0) {
                     return base.Message;
                 }
-                else
-                {
+                else {
                     return String.Format(base.Message, GetMessageParams());
                 }
             }
         }
 
-        public virtual iTextSharp.IO.IOException SetMessageParams(params Object[] messageParams)
-        {
+        public virtual iTextSharp.IO.IOException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;
         }
 
-        protected internal virtual Object[] GetMessageParams()
-        {
+        protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
-            for (int i = 0; i < messageParams.Count; i++)
-            {
+            for (int i = 0; i < messageParams.Count; i++) {
                 parameters[i] = messageParams[i];
             }
             return parameters;

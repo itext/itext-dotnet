@@ -45,10 +45,8 @@ using System;
 using System.Collections.Generic;
 using iTextSharp.IO.Util;
 
-namespace iTextSharp.Kernel
-{
-    public class PdfException : Exception
-    {
+namespace iTextSharp.Kernel {
+    public class PdfException : Exception {
         public const String _1IsAnUnknownGraphicsStateDictionary = "{0} is.an.unknown.graphics.state.dictionary";
 
         public const String _1IsNotAValidPlaceableWindowsMetafile = "{0} is.not.a.valid.placeable.windows.metafile";
@@ -432,59 +430,47 @@ namespace iTextSharp.Kernel
         private IList<Object> messageParams;
 
         public PdfException(String message)
-            : base(message)
-        {
+            : base(message) {
         }
 
         public PdfException(Exception cause)
-            : this(UnknownPdfException, cause)
-        {
+            : this(UnknownPdfException, cause) {
         }
 
         public PdfException(String message, Object @object)
-            : this(message)
-        {
+            : this(message) {
             this.@object = @object;
         }
 
         public PdfException(String message, Exception cause)
-            : base(message, cause)
-        {
+            : base(message, cause) {
         }
 
         public PdfException(String message, Exception cause, Object @object)
-            : this(message, cause)
-        {
+            : this(message, cause) {
             this.@object = @object;
         }
 
-        public override String Message
-        {
-            get
-            {
-                if (messageParams == null || messageParams.Count == 0)
-                {
+        public override String Message {
+            get {
+                if (messageParams == null || messageParams.Count == 0) {
                     return base.Message;
                 }
-                else
-                {
+                else {
                     return String.Format(base.Message, GetMessageParams());
                 }
             }
         }
 
-        public virtual iTextSharp.Kernel.PdfException SetMessageParams(params Object[] messageParams)
-        {
+        public virtual iTextSharp.Kernel.PdfException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;
         }
 
-        protected internal virtual Object[] GetMessageParams()
-        {
+        protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
-            for (int i = 0; i < messageParams.Count; i++)
-            {
+            for (int i = 0; i < messageParams.Count; i++) {
                 parameters[i] = messageParams[i];
             }
             return parameters;

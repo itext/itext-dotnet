@@ -45,16 +45,13 @@ using System;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>An exception that is thrown when something is wrong with a certificate.</summary>
-    public class VerificationException : GeneralSecurityException
-    {
+    public class VerificationException : GeneralSecurityException {
         /// <summary>Creates a VerificationException</summary>
         public VerificationException(X509Certificate cert, String message)
             : base(String.Format("Certificate {0} failed: {1}", cert == null ? "Unknown" : ((X509Certificate)cert).SubjectDN
-                .ToString(), message))
-        {
+                .ToString(), message)) {
         }
     }
 }

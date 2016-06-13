@@ -44,23 +44,20 @@ address: sales@itextpdf.com
 using System.IO;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Signatures
-{
+namespace iTextSharp.Signatures {
     /// <summary>Produces a blank (or empty) signature.</summary>
     /// <remarks>
     /// Produces a blank (or empty) signature. Useful for deferred signing with
     /// MakeSignature.signExternalContainer().
     /// </remarks>
     /// <author>Paulo Soares</author>
-    public class ExternalBlankSignatureContainer : IExternalSignatureContainer
-    {
+    public class ExternalBlankSignatureContainer : IExternalSignatureContainer {
         private PdfDictionary sigDic;
 
         /// <summary>Creates an ExternalBlankSignatureContainer.</summary>
         /// <param name="sigDic">PdfDictionary containing signature iformation. /SubFilter and /Filter aren't set in this constructor.
         ///     </param>
-        public ExternalBlankSignatureContainer(PdfDictionary sigDic)
-        {
+        public ExternalBlankSignatureContainer(PdfDictionary sigDic) {
             /* The Signature dictionary. Should contain values for /Filter and /SubFilter at minimum. */
             this.sigDic = sigDic;
         }
@@ -72,21 +69,18 @@ namespace iTextSharp.Signatures
         /// </remarks>
         /// <param name="filter">PdfName of the signature handler to use when validating this signature</param>
         /// <param name="subFilter">PdfName that describes the encoding of the signature</param>
-        public ExternalBlankSignatureContainer(PdfName filter, PdfName subFilter)
-        {
+        public ExternalBlankSignatureContainer(PdfName filter, PdfName subFilter) {
             sigDic = new PdfDictionary();
             sigDic.Put(PdfName.Filter, filter);
             sigDic.Put(PdfName.SubFilter, subFilter);
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        public virtual byte[] Sign(Stream data)
-        {
+        public virtual byte[] Sign(Stream data) {
             return new byte[0];
         }
 
-        public virtual void ModifySigningDictionary(PdfDictionary signDic)
-        {
+        public virtual void ModifySigningDictionary(PdfDictionary signDic) {
             signDic.PutAll(sigDic);
         }
     }

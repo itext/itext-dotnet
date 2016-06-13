@@ -51,64 +51,49 @@ using iTextSharp.IO.Log;
 using iTextSharp.IO.Util;
 using iTextSharp.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font
-{
-    internal class FontUtil
-    {
+namespace iTextSharp.Kernel.Font {
+    internal class FontUtil {
         private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
             );
 
-        internal static CMapToUnicode ProcessToUnicode(PdfObject toUnicode)
-        {
+        internal static CMapToUnicode ProcessToUnicode(PdfObject toUnicode) {
             CMapToUnicode cMapToUnicode = null;
-            if (toUnicode is PdfStream)
-            {
-                try
-                {
+            if (toUnicode is PdfStream) {
+                try {
                     byte[] uniBytes = ((PdfStream)toUnicode).GetBytes();
                     ICMapLocation lb = new CMapLocationFromBytes(uniBytes);
                     cMapToUnicode = new CMapToUnicode();
                     CMapParser.ParseCid("", cMapToUnicode, lb);
                 }
-                catch (Exception)
-                {
+                catch (Exception) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
                     logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
                     cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
                 }
             }
-            else
-            {
-                if (PdfName.IdentityH.Equals(toUnicode))
-                {
+            else {
+                if (PdfName.IdentityH.Equals(toUnicode)) {
                     cMapToUnicode = CMapToUnicode.GetIdentity();
                 }
             }
             return cMapToUnicode;
         }
 
-        internal static CMapToUnicode GetToUnicodeFromUniMap(String uniMap)
-        {
-            if (uniMap == null)
-            {
+        internal static CMapToUnicode GetToUnicodeFromUniMap(String uniMap) {
+            if (uniMap == null) {
                 return null;
             }
-            lock (uniMaps)
-            {
-                if (uniMaps.Contains(uniMap))
-                {
+            lock (uniMaps) {
+                if (uniMaps.Contains(uniMap)) {
                     return uniMaps.Get(uniMap);
                 }
                 CMapToUnicode toUnicode;
-                if (PdfEncodings.IDENTITY_H.Equals(uniMap))
-                {
+                if (PdfEncodings.IDENTITY_H.Equals(uniMap)) {
                     toUnicode = CMapToUnicode.GetIdentity();
                 }
-                else
-                {
+                else {
                     CMapUniCid uni = FontCache.GetUni2CidCmap(uniMap);
-                    if (uni == null)
-                    {
+                    if (uni == null) {
                         return null;
                     }
                     toUnicode = uni.ExportToUnicode();
@@ -118,57 +103,45 @@ namespace iTextSharp.Kernel.Font
             }
         }
 
-        internal static String CreateRandomFontName()
-        {
+        internal static String CreateRandomFontName() {
             StringBuilder s = new StringBuilder("");
-            for (int k = 0; k < 7; ++k)
-            {
+            for (int k = 0; k < 7; ++k) {
                 s.Append((char)(iTextSharp.IO.Util.JavaUtil.Random() * 26 + 'A'));
             }
             return s.ToString();
         }
 
-        internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first)
-        {
+        internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first) {
             int[] res = new int[256];
-            if (widthsArray == null)
-            {
+            if (widthsArray == null) {
                 return res;
             }
-            for (int i = 0; i < widthsArray.Size() && first + i < 256; i++)
-            {
+            for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {
                 PdfNumber number = widthsArray.GetAsNumber(i);
                 res[first + i] = number != null ? number.IntValue() : 0;
             }
             return res;
         }
 
-        internal static IntHashtable ConvertCompositeWidthsArray(PdfArray widthsArray)
-        {
+        internal static IntHashtable ConvertCompositeWidthsArray(PdfArray widthsArray) {
             IntHashtable res = new IntHashtable();
-            if (widthsArray == null)
-            {
+            if (widthsArray == null) {
                 return res;
             }
-            for (int k = 0; k < widthsArray.Size(); ++k)
-            {
+            for (int k = 0; k < widthsArray.Size(); ++k) {
                 int c1 = widthsArray.GetAsNumber(k).IntValue();
                 PdfObject obj = widthsArray.Get(++k);
-                if (obj.IsArray())
-                {
+                if (obj.IsArray()) {
                     PdfArray subWidths = (PdfArray)obj;
-                    for (int j = 0; j < subWidths.Size(); ++j)
-                    {
+                    for (int j = 0; j < subWidths.Size(); ++j) {
                         int c2 = subWidths.GetAsNumber(j).IntValue();
                         res.Put(c1++, c2);
                     }
                 }
-                else
-                {
+                else {
                     int c2 = ((PdfNumber)obj).IntValue();
                     int w = widthsArray.GetAsNumber(++k).IntValue();
-                    for (; c1 <= c2; ++c1)
-                    {
+                    for (; c1 <= c2; ++c1) {
                         res.Put(c1, w);
                     }
                 }

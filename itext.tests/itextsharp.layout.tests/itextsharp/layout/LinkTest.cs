@@ -7,26 +7,22 @@ using iTextSharp.Kernel.Utils;
 using iTextSharp.Layout.Element;
 using iTextSharp.Test;
 
-namespace iTextSharp.Layout
-{
-    public class LinkTest : ExtendedITextTest
-    {
+namespace iTextSharp.Layout {
+    public class LinkTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/LinkTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/layout/LinkTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void LinkTest01()
-        {
+        public virtual void LinkTest01() {
             String outFileName = destinationFolder + "linkTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest01.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);
@@ -44,8 +40,7 @@ namespace iTextSharp.Layout
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void LinkTest02()
-        {
+        public virtual void LinkTest02() {
             String outFileName = destinationFolder + "linkTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest02.pdf";
             FileStream file = new FileStream(outFileName, FileMode.Create);

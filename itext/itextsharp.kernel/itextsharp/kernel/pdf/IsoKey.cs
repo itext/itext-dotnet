@@ -41,10 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf
-{
-    public enum IsoKey
-    {
+namespace iTextSharp.Kernel.Pdf {
+    public enum IsoKey {
         CANVAS_STACK,
         DRAWMODE_FILL,
         DRAWMODE_FILL_STROKE,

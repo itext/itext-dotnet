@@ -43,16 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode
-{
+namespace iTextSharp.Barcodes.Qrcode {
     /// <summary>
     /// <p>Encapsulates a QR Code's format information, including the data mask used and
     /// error correction level.</p>
     /// </summary>
     /// <author>Sean Owen</author>
     /// <seealso cref="ErrorCorrectionLevel"/>
-    internal sealed class FormatInformation
-    {
+    internal sealed class FormatInformation {
         private const int FORMAT_INFO_MASK_QR = 0x5412;
 
         /// <summary>See ISO 18004:2006, Annex C, Table C.1</summary>
@@ -75,16 +73,14 @@ namespace iTextSharp.Barcodes.Qrcode
 
         private readonly byte dataMask;
 
-        private FormatInformation(int formatInfo)
-        {
+        private FormatInformation(int formatInfo) {
             // Bits 3,4
             errorCorrectionLevel = ErrorCorrectionLevel.ForBits((formatInfo >> 3) & 0x03);
             // Bottom 3 bits
             dataMask = (byte)(formatInfo & 0x07);
         }
 
-        internal static int NumBitsDiffering(int a, int b)
-        {
+        internal static int NumBitsDiffering(int a, int b) {
             a ^= b;
             // a now has a 1 bit exactly where its bit differs with b's
             // Count bits set quickly with a series of lookups:
@@ -104,12 +100,10 @@ namespace iTextSharp.Barcodes.Qrcode
         /// if doesn't seem to match any known pattern
         /// </returns>
         internal static iTextSharp.Barcodes.Qrcode.FormatInformation DecodeFormatInformation(int maskedFormatInfo1
-            , int maskedFormatInfo2)
-        {
+            , int maskedFormatInfo2) {
             iTextSharp.Barcodes.Qrcode.FormatInformation formatInfo = DoDecodeFormatInformation(maskedFormatInfo1, maskedFormatInfo2
                 );
-            if (formatInfo != null)
-            {
+            if (formatInfo != null) {
                 return formatInfo;
             }
             // Should return null, but, some QR codes apparently
@@ -120,32 +114,26 @@ namespace iTextSharp.Barcodes.Qrcode
         }
 
         private static iTextSharp.Barcodes.Qrcode.FormatInformation DoDecodeFormatInformation(int maskedFormatInfo1
-            , int maskedFormatInfo2)
-        {
+            , int maskedFormatInfo2) {
             // Find the int in FORMAT_INFO_DECODE_LOOKUP with fewest bits differing
             int bestDifference = int.MaxValue;
             int bestFormatInfo = 0;
-            for (int i = 0; i < FORMAT_INFO_DECODE_LOOKUP.Length; i++)
-            {
+            for (int i = 0; i < FORMAT_INFO_DECODE_LOOKUP.Length; i++) {
                 int[] decodeInfo = FORMAT_INFO_DECODE_LOOKUP[i];
                 int targetInfo = decodeInfo[0];
-                if (targetInfo == maskedFormatInfo1 || targetInfo == maskedFormatInfo2)
-                {
+                if (targetInfo == maskedFormatInfo1 || targetInfo == maskedFormatInfo2) {
                     // Found an exact match
                     return new iTextSharp.Barcodes.Qrcode.FormatInformation(decodeInfo[1]);
                 }
                 int bitsDifference = NumBitsDiffering(maskedFormatInfo1, targetInfo);
-                if (bitsDifference < bestDifference)
-                {
+                if (bitsDifference < bestDifference) {
                     bestFormatInfo = decodeInfo[1];
                     bestDifference = bitsDifference;
                 }
-                if (maskedFormatInfo1 != maskedFormatInfo2)
-                {
+                if (maskedFormatInfo1 != maskedFormatInfo2) {
                     // also try the other option
                     bitsDifference = NumBitsDiffering(maskedFormatInfo2, targetInfo);
-                    if (bitsDifference < bestDifference)
-                    {
+                    if (bitsDifference < bestDifference) {
                         bestFormatInfo = decodeInfo[1];
                         bestDifference = bitsDifference;
                     }
@@ -153,32 +141,26 @@ namespace iTextSharp.Barcodes.Qrcode
             }
             // Hamming distance of the 32 masked codes is 7, by construction, so <= 3 bits
             // differing means we found a match
-            if (bestDifference <= 3)
-            {
+            if (bestDifference <= 3) {
                 return new iTextSharp.Barcodes.Qrcode.FormatInformation(bestFormatInfo);
             }
             return null;
         }
 
-        internal ErrorCorrectionLevel GetErrorCorrectionLevel()
-        {
+        internal ErrorCorrectionLevel GetErrorCorrectionLevel() {
             return errorCorrectionLevel;
         }
 
-        internal byte GetDataMask()
-        {
+        internal byte GetDataMask() {
             return dataMask;
         }
 
-        public override int GetHashCode()
-        {
+        public override int GetHashCode() {
             return (errorCorrectionLevel.Ordinal() << 3) | (int)dataMask;
         }
 
-        public override bool Equals(Object o)
-        {
-            if (!(o is iTextSharp.Barcodes.Qrcode.FormatInformation))
-            {
+        public override bool Equals(Object o) {
+            if (!(o is iTextSharp.Barcodes.Qrcode.FormatInformation)) {
                 return false;
             }
             iTextSharp.Barcodes.Qrcode.FormatInformation other = (iTextSharp.Barcodes.Qrcode.FormatInformation)o;

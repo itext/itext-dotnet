@@ -43,11 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Events
-{
+namespace iTextSharp.Kernel.Events {
     /// <summary>Event dispatcher interface.</summary>
-    public interface IEventDispatcher
-    {
+    public interface IEventDispatcher {
         /// <summary>Adds new event handler.</summary>
         /// <param name="type">a type of event to be handled.</param>
         /// <param name="handler">event handler.</param>

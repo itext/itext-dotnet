@@ -41,13 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data
-{
+namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>
     /// Marker interface for the set of classes used to combine
     /// parameters required for different types of events.
     /// </summary>
-    public interface IEventData
-    {
+    public interface IEventData {
     }
 }

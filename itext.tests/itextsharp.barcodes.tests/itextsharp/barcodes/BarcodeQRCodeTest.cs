@@ -6,18 +6,15 @@ using iTextSharp.Kernel.Pdf.Canvas;
 using iTextSharp.Kernel.Utils;
 using iTextSharp.Test;
 
-namespace iTextSharp.Barcodes
-{
-    public class BarcodeQRCodeTest : ExtendedITextTest
-    {
+namespace iTextSharp.Barcodes {
+    public class BarcodeQRCodeTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itextsharp/barcodes/BarcodeQRCode/";
 
         [NUnit.Framework.TestFixtureSetUp]
-        public static void BeforeClass()
-        {
+        public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }
 
@@ -25,8 +22,7 @@ namespace iTextSharp.Barcodes
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Barcode01Test()
-        {
+        public virtual void Barcode01Test() {
             String filename = "barcodeQRCode01.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);
@@ -45,8 +41,7 @@ namespace iTextSharp.Barcodes
         /// <exception cref="iTextSharp.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void Barcode02Test()
-        {
+        public virtual void Barcode02Test() {
             String filename = "barcodeQRCode02.pdf";
             PdfWriter writer = new PdfWriter(destinationFolder + filename);
             PdfDocument document = new PdfDocument(writer);

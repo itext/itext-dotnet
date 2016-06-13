@@ -45,11 +45,9 @@ using System;
 using System.IO;
 using iTextSharp.Kernel;
 
-namespace iTextSharp.Kernel.Pdf.Filters
-{
+namespace iTextSharp.Kernel.Pdf.Filters {
     /// <summary>A class for performing LZW decoding.</summary>
-    public class LZWDecoder
-    {
+    public class LZWDecoder {
         internal byte[][] stringTable;
 
         internal byte[] data = null;
@@ -71,18 +69,15 @@ namespace iTextSharp.Kernel.Pdf.Filters
         internal int[] andTable = new int[] { 511, 1023, 2047, 4095 };
 
         /// <summary>Creates an LZWDecoder instance.</summary>
-        public LZWDecoder()
-        {
+        public LZWDecoder() {
         }
 
         // Empty body
         /// <summary>Method to decode LZW compressed data.</summary>
         /// <param name="data">The compressed data.</param>
         /// <param name="uncompData">Array to return the uncompressed data in.</param>
-        public virtual void Decode(byte[] data, Stream uncompData)
-        {
-            if (data[0] == (byte)0x00 && data[1] == (byte)0x01)
-            {
+        public virtual void Decode(byte[] data, Stream uncompData) {
+            if (data[0] == (byte)0x00 && data[1] == (byte)0x01) {
                 throw new PdfException(PdfException.LzwFlavourNotSupported);
             }
             InitializeStringTable();
@@ -96,30 +91,24 @@ namespace iTextSharp.Kernel.Pdf.Filters
             int code;
             int oldCode = 0;
             byte[] @string;
-            while ((code = GetNextCode()) != 257)
-            {
-                if (code == 256)
-                {
+            while ((code = GetNextCode()) != 257) {
+                if (code == 256) {
                     InitializeStringTable();
                     code = GetNextCode();
-                    if (code == 257)
-                    {
+                    if (code == 257) {
                         break;
                     }
                     WriteString(stringTable[code]);
                     oldCode = code;
                 }
-                else
-                {
-                    if (code < tableIndex)
-                    {
+                else {
+                    if (code < tableIndex) {
                         @string = stringTable[code];
                         WriteString(@string);
                         AddStringToTable(stringTable[oldCode], @string[0]);
                         oldCode = code;
                     }
-                    else
-                    {
+                    else {
                         @string = stringTable[oldCode];
                         @string = ComposeString(@string, @string[0]);
                         WriteString(@string);
@@ -131,11 +120,9 @@ namespace iTextSharp.Kernel.Pdf.Filters
         }
 
         /// <summary>Initialize the string table.</summary>
-        public virtual void InitializeStringTable()
-        {
+        public virtual void InitializeStringTable() {
             stringTable = new byte[8192][];
-            for (int i = 0; i < 256; i++)
-            {
+            for (int i = 0; i < 256; i++) {
                 stringTable[i] = new byte[1];
                 stringTable[i][0] = (byte)i;
             }
@@ -145,14 +132,11 @@ namespace iTextSharp.Kernel.Pdf.Filters
 
         /// <summary>Write out the string just uncompressed.</summary>
         /// <param name="string">content to write to the uncompressed data</param>
-        public virtual void WriteString(byte[] @string)
-        {
-            try
-            {
+        public virtual void WriteString(byte[] @string) {
+            try {
                 uncompData.Write(@string);
             }
-            catch (System.IO.IOException e)
-            {
+            catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.LzwDecoderException, e);
             }
         }
@@ -160,28 +144,22 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// <summary>Add a new string to the string table.</summary>
         /// <param name="oldString">stored string</param>
         /// <param name="newString">string to be appended to the stored string</param>
-        public virtual void AddStringToTable(byte[] oldString, byte newString)
-        {
+        public virtual void AddStringToTable(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] @string = new byte[length + 1];
             System.Array.Copy(oldString, 0, @string, 0, length);
             @string[length] = newString;
             // Add this new String to the table
             stringTable[tableIndex++] = @string;
-            if (tableIndex == 511)
-            {
+            if (tableIndex == 511) {
                 bitsToGet = 10;
             }
-            else
-            {
-                if (tableIndex == 1023)
-                {
+            else {
+                if (tableIndex == 1023) {
                     bitsToGet = 11;
                 }
-                else
-                {
-                    if (tableIndex == 2047)
-                    {
+                else {
+                    if (tableIndex == 2047) {
                         bitsToGet = 12;
                     }
                 }
@@ -190,24 +168,18 @@ namespace iTextSharp.Kernel.Pdf.Filters
 
         /// <summary>Add a new string to the string table.</summary>
         /// <param name="string">byte[] to store in the string table</param>
-        public virtual void AddStringToTable(byte[] @string)
-        {
+        public virtual void AddStringToTable(byte[] @string) {
             // Add this new String to the table
             stringTable[tableIndex++] = @string;
-            if (tableIndex == 511)
-            {
+            if (tableIndex == 511) {
                 bitsToGet = 10;
             }
-            else
-            {
-                if (tableIndex == 1023)
-                {
+            else {
+                if (tableIndex == 1023) {
                     bitsToGet = 11;
                 }
-                else
-                {
-                    if (tableIndex == 2047)
-                    {
+                else {
+                    if (tableIndex == 2047) {
                         bitsToGet = 12;
                     }
                 }
@@ -218,8 +190,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// <param name="oldString">string be appended to</param>
         /// <param name="newString">string that is to be appended to oldString</param>
         /// <returns>combined string</returns>
-        public virtual byte[] ComposeString(byte[] oldString, byte newString)
-        {
+        public virtual byte[] ComposeString(byte[] oldString, byte newString) {
             int length = oldString.Length;
             byte[] @string = new byte[length + 1];
             System.Array.Copy(oldString, 0, @string, 0, length);
@@ -236,15 +207,12 @@ namespace iTextSharp.Kernel.Pdf.Filters
         /// in practice.
         /// </remarks>
         /// <returns>next code</returns>
-        public virtual int GetNextCode()
-        {
+        public virtual int GetNextCode() {
             //
-            try
-            {
+            try {
                 nextData = (nextData << 8) | (data[bytePointer++] & 0xff);
                 nextBits += 8;
-                if (nextBits < bitsToGet)
-                {
+                if (nextBits < bitsToGet) {
                     nextData = (nextData << 8) | (data[bytePointer++] & 0xff);
                     nextBits += 8;
                 }
@@ -252,8 +220,7 @@ namespace iTextSharp.Kernel.Pdf.Filters
                 nextBits -= bitsToGet;
                 return code;
             }
-            catch (IndexOutOfRangeException)
-            {
+            catch (IndexOutOfRangeException) {
                 // Strip not terminated as expected: return EndOfInformation code.
                 return 257;
             }

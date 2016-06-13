@@ -47,10 +47,8 @@ using Org.BouncyCastle.Crypto;
 using iTextSharp.Kernel;
 using iTextSharp.Kernel.Crypto;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
-{
-    public abstract class SecurityHandler
-    {
+namespace iTextSharp.Kernel.Crypto.Securityhandler {
+    public abstract class SecurityHandler {
         /// <summary>The global encryption key</summary>
         protected internal byte[] mkey = new byte[0];
 
@@ -76,14 +74,11 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];
 
-        protected internal SecurityHandler()
-        {
-            try
-            {
+        protected internal SecurityHandler() {
+            try {
                 md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new PdfException(PdfException.PdfEncryption, e);
             }
         }
@@ -94,8 +89,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
         /// </summary>
         /// <param name="objNumber"/>
         /// <param name="objGeneration"/>
-        public virtual void SetHashKeyForNextObject(int objNumber, int objGeneration)
-        {
+        public virtual void SetHashKeyForNextObject(int objNumber, int objGeneration) {
             md5.Reset();
             // added by ujihara
             extra[0] = (byte)objNumber;
@@ -107,8 +101,7 @@ namespace iTextSharp.Kernel.Crypto.Securityhandler
             md5.Update(extra);
             nextObjectKey = md5.Digest();
             nextObjectKeySize = mkey.Length + 5;
-            if (nextObjectKeySize > 16)
-            {
+            if (nextObjectKeySize > 16) {
                 nextObjectKeySize = 16;
             }
         }

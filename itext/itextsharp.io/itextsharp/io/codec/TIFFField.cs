@@ -45,8 +45,7 @@
 */
 using System;
 
-namespace iTextSharp.IO.Codec
-{
+namespace iTextSharp.IO.Codec {
     /// <summary>A class representing a field in a TIFF 6.0 Image File Directory.</summary>
     /// <remarks>
     /// A class representing a field in a TIFF 6.0 Image File Directory.
@@ -60,8 +59,7 @@ namespace iTextSharp.IO.Codec
     /// be removed or changed in future releases of JAI.</b>
     /// </remarks>
     /// <seealso cref="TIFFDirectory"/>
-    public class TIFFField : IComparable<iTextSharp.IO.Codec.TIFFField>
-    {
+    public class TIFFField : IComparable<iTextSharp.IO.Codec.TIFFField> {
         /// <summary>Flag for 8 bit unsigned integers.</summary>
         public const int TIFF_BYTE = 1;
 
@@ -111,8 +109,7 @@ namespace iTextSharp.IO.Codec
         internal Object data;
 
         /// <summary>The default constructor.</summary>
-        internal TIFFField()
-        {
+        internal TIFFField() {
         }
 
         /// <summary>Constructs a TIFFField with arbitrary data.</summary>
@@ -151,8 +148,7 @@ namespace iTextSharp.IO.Codec
         /// <td><tt>TIFF_DOUBLE</tt></td>    <td><tt>double</tt></td>
         /// </table>
         /// </remarks>
-        public TIFFField(int tag, int type, int count, Object data)
-        {
+        public TIFFField(int tag, int type, int count, Object data) {
             this.tag = tag;
             this.type = type;
             this.count = count;
@@ -160,8 +156,7 @@ namespace iTextSharp.IO.Codec
         }
 
         /// <summary>Returns the tag number, between 0 and 65535.</summary>
-        public virtual int GetTag()
-        {
+        public virtual int GetTag() {
             return tag;
         }
 
@@ -172,14 +167,12 @@ namespace iTextSharp.IO.Codec
         /// TIFF_ constants defined in this class.  For future
         /// revisions of TIFF, higher values are possible.
         /// </remarks>
-        public virtual int GetFieldType()
-        {
+        public virtual int GetFieldType() {
             return type;
         }
 
         /// <summary>Returns the number of elements in the IFD.</summary>
-        public virtual int GetCount()
-        {
+        public virtual int GetCount() {
             return count;
         }
 
@@ -194,8 +187,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_BYTE, TIFF_SBYTE, or TIFF_UNDEFINED.
         /// </remarks>
-        public virtual byte[] GetAsBytes()
-        {
+        public virtual byte[] GetAsBytes() {
             return (byte[])data;
         }
 
@@ -209,8 +201,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SHORT.
         /// </remarks>
-        public virtual char[] GetAsChars()
-        {
+        public virtual char[] GetAsChars() {
             return (char[])data;
         }
 
@@ -224,8 +215,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SSHORT.
         /// </remarks>
-        public virtual short[] GetAsShorts()
-        {
+        public virtual short[] GetAsShorts() {
             return (short[])data;
         }
 
@@ -239,8 +229,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SLONG.
         /// </remarks>
-        public virtual int[] GetAsInts()
-        {
+        public virtual int[] GetAsInts() {
             return (int[])data;
         }
 
@@ -254,8 +243,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_LONG.
         /// </remarks>
-        public virtual long[] GetAsLongs()
-        {
+        public virtual long[] GetAsLongs() {
             return (long[])data;
         }
 
@@ -265,8 +253,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_FLOAT.
         /// </remarks>
-        public virtual float[] GetAsFloats()
-        {
+        public virtual float[] GetAsFloats() {
             return (float[])data;
         }
 
@@ -276,8 +263,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_DOUBLE.
         /// </remarks>
-        public virtual double[] GetAsDoubles()
-        {
+        public virtual double[] GetAsDoubles() {
             return (double[])data;
         }
 
@@ -287,8 +273,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SRATIONAL.
         /// </remarks>
-        public virtual int[][] GetAsSRationals()
-        {
+        public virtual int[][] GetAsSRationals() {
             return (int[][])data;
         }
 
@@ -298,8 +283,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_RATTIONAL.
         /// </remarks>
-        public virtual long[][] GetAsRationals()
-        {
+        public virtual long[][] GetAsRationals() {
             return (long[][])data;
         }
 
@@ -318,38 +302,30 @@ namespace iTextSharp.IO.Codec
         /// type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED, TIFF_SHORT,
         /// TIFF_SSHORT, or TIFF_SLONG.
         /// </remarks>
-        public virtual int GetAsInt(int index)
-        {
-            switch (type)
-            {
+        public virtual int GetAsInt(int index) {
+            switch (type) {
                 case TIFF_BYTE:
-                case TIFF_UNDEFINED:
-                {
+                case TIFF_UNDEFINED: {
                     return ((byte[])data)[index] & 0xff;
                 }
 
-                case TIFF_SBYTE:
-                {
+                case TIFF_SBYTE: {
                     return ((byte[])data)[index];
                 }
 
-                case TIFF_SHORT:
-                {
+                case TIFF_SHORT: {
                     return ((char[])data)[index] & 0xffff;
                 }
 
-                case TIFF_SSHORT:
-                {
+                case TIFF_SSHORT: {
                     return ((short[])data)[index];
                 }
 
-                case TIFF_SLONG:
-                {
+                case TIFF_SLONG: {
                     return ((int[])data)[index];
                 }
 
-                default:
-                {
+                default: {
                     throw new InvalidCastException();
                 }
             }
@@ -370,43 +346,34 @@ namespace iTextSharp.IO.Codec
         /// type TIFF_BYTE, TIFF_SBYTE, TIFF_UNDEFINED, TIFF_SHORT,
         /// TIFF_SSHORT, TIFF_SLONG, or TIFF_LONG.
         /// </remarks>
-        public virtual long GetAsLong(int index)
-        {
-            switch (type)
-            {
+        public virtual long GetAsLong(int index) {
+            switch (type) {
                 case TIFF_BYTE:
-                case TIFF_UNDEFINED:
-                {
+                case TIFF_UNDEFINED: {
                     return ((byte[])data)[index] & 0xff;
                 }
 
-                case TIFF_SBYTE:
-                {
+                case TIFF_SBYTE: {
                     return ((byte[])data)[index];
                 }
 
-                case TIFF_SHORT:
-                {
+                case TIFF_SHORT: {
                     return ((char[])data)[index] & 0xffff;
                 }
 
-                case TIFF_SSHORT:
-                {
+                case TIFF_SSHORT: {
                     return ((short[])data)[index];
                 }
 
-                case TIFF_SLONG:
-                {
+                case TIFF_SLONG: {
                     return ((int[])data)[index];
                 }
 
-                case TIFF_LONG:
-                {
+                case TIFF_LONG: {
                     return ((long[])data)[index];
                 }
 
-                default:
-                {
+                default: {
                     throw new InvalidCastException();
                 }
             }
@@ -423,64 +390,51 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is
         /// of type TIFF_UNDEFINED or TIFF_ASCII.
         /// </remarks>
-        public virtual float GetAsFloat(int index)
-        {
-            switch (type)
-            {
-                case TIFF_BYTE:
-                {
+        public virtual float GetAsFloat(int index) {
+            switch (type) {
+                case TIFF_BYTE: {
                     return ((byte[])data)[index] & 0xff;
                 }
 
-                case TIFF_SBYTE:
-                {
+                case TIFF_SBYTE: {
                     return ((byte[])data)[index];
                 }
 
-                case TIFF_SHORT:
-                {
+                case TIFF_SHORT: {
                     return ((char[])data)[index] & 0xffff;
                 }
 
-                case TIFF_SSHORT:
-                {
+                case TIFF_SSHORT: {
                     return ((short[])data)[index];
                 }
 
-                case TIFF_SLONG:
-                {
+                case TIFF_SLONG: {
                     return ((int[])data)[index];
                 }
 
-                case TIFF_LONG:
-                {
+                case TIFF_LONG: {
                     return ((long[])data)[index];
                 }
 
-                case TIFF_FLOAT:
-                {
+                case TIFF_FLOAT: {
                     return ((float[])data)[index];
                 }
 
-                case TIFF_DOUBLE:
-                {
+                case TIFF_DOUBLE: {
                     return (float)((double[])data)[index];
                 }
 
-                case TIFF_SRATIONAL:
-                {
+                case TIFF_SRATIONAL: {
                     int[] ivalue = GetAsSRational(index);
                     return (float)((double)ivalue[0] / ivalue[1]);
                 }
 
-                case TIFF_RATIONAL:
-                {
+                case TIFF_RATIONAL: {
                     long[] lvalue = GetAsRational(index);
                     return (float)((double)lvalue[0] / lvalue[1]);
                 }
 
-                default:
-                {
+                default: {
                     throw new InvalidCastException();
                 }
             }
@@ -495,64 +449,51 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is of
         /// type TIFF_UNDEFINED or TIFF_ASCII.
         /// </remarks>
-        public virtual double GetAsDouble(int index)
-        {
-            switch (type)
-            {
-                case TIFF_BYTE:
-                {
+        public virtual double GetAsDouble(int index) {
+            switch (type) {
+                case TIFF_BYTE: {
                     return ((byte[])data)[index] & 0xff;
                 }
 
-                case TIFF_SBYTE:
-                {
+                case TIFF_SBYTE: {
                     return ((byte[])data)[index];
                 }
 
-                case TIFF_SHORT:
-                {
+                case TIFF_SHORT: {
                     return ((char[])data)[index] & 0xffff;
                 }
 
-                case TIFF_SSHORT:
-                {
+                case TIFF_SSHORT: {
                     return ((short[])data)[index];
                 }
 
-                case TIFF_SLONG:
-                {
+                case TIFF_SLONG: {
                     return ((int[])data)[index];
                 }
 
-                case TIFF_LONG:
-                {
+                case TIFF_LONG: {
                     return ((long[])data)[index];
                 }
 
-                case TIFF_FLOAT:
-                {
+                case TIFF_FLOAT: {
                     return ((float[])data)[index];
                 }
 
-                case TIFF_DOUBLE:
-                {
+                case TIFF_DOUBLE: {
                     return ((double[])data)[index];
                 }
 
-                case TIFF_SRATIONAL:
-                {
+                case TIFF_SRATIONAL: {
                     int[] ivalue = GetAsSRational(index);
                     return (double)ivalue[0] / ivalue[1];
                 }
 
-                case TIFF_RATIONAL:
-                {
+                case TIFF_RATIONAL: {
                     long[] lvalue = GetAsRational(index);
                     return (double)lvalue[0] / lvalue[1];
                 }
 
-                default:
-                {
+                default: {
                     throw new InvalidCastException();
                 }
             }
@@ -564,8 +505,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_ASCII.
         /// </remarks>
-        public virtual String GetAsString(int index)
-        {
+        public virtual String GetAsString(int index) {
             return ((String[])data)[index];
         }
 
@@ -579,8 +519,7 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_SRATIONAL.
         /// </remarks>
-        public virtual int[] GetAsSRational(int index)
-        {
+        public virtual int[] GetAsSRational(int index) {
             return ((int[][])data)[index];
         }
 
@@ -594,10 +533,8 @@ namespace iTextSharp.IO.Codec
         /// <p> A ClassCastException will be thrown if the field is not
         /// of type TIFF_RATIONAL.
         /// </remarks>
-        public virtual long[] GetAsRational(int index)
-        {
-            if (type == TIFF_LONG)
-            {
+        public virtual long[] GetAsRational(int index) {
+            if (type == TIFF_LONG) {
                 return GetAsLongs();
             }
             return ((long[][])data)[index];
@@ -614,25 +551,19 @@ namespace iTextSharp.IO.Codec
         /// with <code>equals()</code>.</b>
         /// </remarks>
         /// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.</exception>
-        public virtual int CompareTo(iTextSharp.IO.Codec.TIFFField o)
-        {
-            if (o == null)
-            {
+        public virtual int CompareTo(iTextSharp.IO.Codec.TIFFField o) {
+            if (o == null) {
                 throw new ArgumentException();
             }
             int oTag = o.GetTag();
-            if (tag < oTag)
-            {
+            if (tag < oTag) {
                 return -1;
             }
-            else
-            {
-                if (tag > oTag)
-                {
+            else {
+                if (tag > oTag) {
                     return 1;
                 }
-                else
-                {
+                else {
                     return 0;
                 }
             }
