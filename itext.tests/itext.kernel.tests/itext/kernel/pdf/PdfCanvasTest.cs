@@ -730,7 +730,7 @@ namespace iText.Kernel.Pdf {
                 canvas.BeginText();
                 canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 12);
                 canvas.SetTextMatrix(1, 0, 0, 1, 100, 500);
-                canvas.ShowText(String.Format("Page_%d", i + 1));
+                canvas.ShowText(String.Format("Page_{0}", i + 1));
                 canvas.EndText();
                 canvas.Release();
                 pdfDoc1.Close();
