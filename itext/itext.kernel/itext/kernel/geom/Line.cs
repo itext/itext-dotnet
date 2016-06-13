@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     /// <summary>Represents a line.</summary>
     public class Line : IShape {
         private readonly Point p1;

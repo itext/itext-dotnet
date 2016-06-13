@@ -42,13 +42,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.IO.Font.Cmap;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     internal class DocTrueTypeFont : TrueTypeFont, IDocFontProgram {
         private PdfStream fontFile;
 
@@ -69,8 +69,7 @@ namespace iTextSharp.Kernel.Font {
         }
 
         internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, FontEncoding fontEncoding) {
-            iTextSharp.Kernel.Font.DocTrueTypeFont fontProgram = new iTextSharp.Kernel.Font.DocTrueTypeFont(fontDictionary
-                );
+            iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
             FillFontDescriptor(fontProgram, fontDictionary.GetAsDictionary(PdfName.FontDescriptor));
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
@@ -95,8 +94,7 @@ namespace iTextSharp.Kernel.Font {
         }
 
         internal static TrueTypeFont CreateFontProgram(PdfDictionary fontDictionary, CMapToUnicode toUnicode) {
-            iTextSharp.Kernel.Font.DocTrueTypeFont fontProgram = new iTextSharp.Kernel.Font.DocTrueTypeFont(fontDictionary
-                );
+            iText.Kernel.Font.DocTrueTypeFont fontProgram = new iText.Kernel.Font.DocTrueTypeFont(fontDictionary);
             PdfDictionary fontDescriptor = fontDictionary.GetAsDictionary(PdfName.FontDescriptor);
             FillFontDescriptor(fontProgram, fontDescriptor);
             int dw = (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) ? (int)fontDescriptor.GetAsInt
@@ -135,8 +133,7 @@ namespace iTextSharp.Kernel.Font {
             return subtype;
         }
 
-        internal static void FillFontDescriptor(iTextSharp.Kernel.Font.DocTrueTypeFont font, PdfDictionary fontDesc
-            ) {
+        internal static void FillFontDescriptor(iText.Kernel.Font.DocTrueTypeFont font, PdfDictionary fontDesc) {
             if (fontDesc == null) {
                 return;
             }

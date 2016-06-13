@@ -41,11 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter {
+namespace iText.Kernel.Pdf.Canvas.Parser.Filter {
     /// <summary>
     /// This
     /// <see cref="IEventFilter"/>

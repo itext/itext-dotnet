@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class WriterProperties {
         protected internal int compressionLevel;
 
@@ -81,7 +81,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPdfVersion(PdfVersion version) {
+        public virtual iText.Kernel.Pdf.WriterProperties SetPdfVersion(PdfVersion version) {
             this.pdfVersion = version;
             return this;
         }
@@ -101,7 +101,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties UseSmartMode() {
+        public virtual iText.Kernel.Pdf.WriterProperties UseSmartMode() {
             this.smartMode = true;
             return this;
         }
@@ -116,7 +116,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties AddXmpMetadata() {
+        public virtual iText.Kernel.Pdf.WriterProperties AddXmpMetadata() {
             this.addXmpMetadata = true;
             return this;
         }
@@ -133,7 +133,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetCompressionLevel(int compressionLevel) {
+        public virtual iText.Kernel.Pdf.WriterProperties SetCompressionLevel(int compressionLevel) {
             this.compressionLevel = compressionLevel;
             return this;
         }
@@ -149,7 +149,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetFullCompressionMode(bool fullCompressionMode) {
+        public virtual iText.Kernel.Pdf.WriterProperties SetFullCompressionMode(bool fullCompressionMode) {
             this.isFullCompression = fullCompressionMode;
             return this;
         }
@@ -179,7 +179,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
+        public virtual iText.Kernel.Pdf.WriterProperties SetStandardEncryption(byte[] userPassword, byte[] ownerPassword
             , int permissions, int encryptionAlgorithm) {
             encryptionProperties.SetStandardEncryption(userPassword, ownerPassword, permissions, encryptionAlgorithm);
             return this;
@@ -209,8 +209,8 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[]
-             permissions, int encryptionAlgorithm) {
+        public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions
+            , int encryptionAlgorithm) {
             encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
             return this;
         }
@@ -226,7 +226,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>WriterProperties</c>
         /// instance
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.WriterProperties UseDebugMode() {
+        public virtual iText.Kernel.Pdf.WriterProperties UseDebugMode() {
             this.debugMode = true;
             return this;
         }

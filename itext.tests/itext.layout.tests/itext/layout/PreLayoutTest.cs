@@ -2,22 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
-using iTextSharp.Layout.Renderer;
-using iTextSharp.Test;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Layout.Layout;
+using iText.Layout.Renderer;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class PreLayoutTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PreLayoutTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/PreLayoutTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/PreLayoutTest/";
+             + "/test/itext/layout/PreLayoutTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -34,7 +34,7 @@ namespace iTextSharp.Layout {
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
-            document.SetProperty(iTextSharp.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA
+            document.SetProperty(iText.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ));
             for (int i = 0; i < 200; i++) {
                 document.Add(new Paragraph("This is just junk text"));
@@ -75,7 +75,7 @@ namespace iTextSharp.Layout {
             }
             Paragraph twoColumnParagraph = new Paragraph();
             twoColumnParagraph.SetNextRenderer(new PreLayoutTest.TwoColumnParagraphRenderer(twoColumnParagraph));
-            iTextSharp.Layout.Element.Text textElement = new iTextSharp.Layout.Element.Text(text.ToString());
+            iText.Layout.Element.Text textElement = new iText.Layout.Element.Text(text.ToString());
             twoColumnParagraph.Add(textElement).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA));
             document.Add(twoColumnParagraph);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));

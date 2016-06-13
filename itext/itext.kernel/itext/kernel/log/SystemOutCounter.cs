@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log {
+namespace iText.Kernel.Log {
     /// <summary>
     /// A
     /// <see cref="Counter"/>
@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Log {
         }
 
         public virtual Counter GetCounter(Type cls) {
-            return new iTextSharp.Kernel.Log.SystemOutCounter(cls);
+            return new iText.Kernel.Log.SystemOutCounter(cls);
         }
 
         public virtual void OnDocumentRead(long size) {

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Forms.Xfa {
+namespace iText.Forms.Xfa {
     /// <summary>
     /// A structure to store each part of a SOM name and link it to the next part
     /// beginning from the lower hierarchy.

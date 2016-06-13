@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Navigation {
+namespace iText.Kernel.Pdf.Navigation {
     public class PdfStringDestination : PdfDestination {
         public PdfStringDestination(String @string)
             : this(new PdfString(@string)) {

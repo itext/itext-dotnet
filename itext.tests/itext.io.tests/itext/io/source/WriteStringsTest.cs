@@ -1,6 +1,6 @@
 using System;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     public class WriteStringsTest {
         [NUnit.Framework.Test]
         public virtual void WriteStringTest() {

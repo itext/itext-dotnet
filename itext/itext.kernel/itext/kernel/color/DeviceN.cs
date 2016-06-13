@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Kernel.Pdf.Function;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Function;
 
-namespace iTextSharp.Kernel.Color {
-    public class DeviceN : iTextSharp.Kernel.Color.Color {
+namespace iText.Kernel.Color {
+    public class DeviceN : iText.Kernel.Color.Color {
         public DeviceN(PdfSpecialCs.DeviceN cs)
             : this(cs, GetDefaultColorants(cs.GetNumberOfComponents())) {
         }
@@ -62,7 +62,7 @@ namespace iTextSharp.Kernel.Color {
 
         private static float[] GetDefaultColorants(int numOfColorants) {
             float[] colorants = new float[numOfColorants];
-            iTextSharp.IO.Util.JavaUtil.Fill(colorants, 1f);
+            iText.IO.Util.JavaUtil.Fill(colorants, 1f);
             return colorants;
         }
     }

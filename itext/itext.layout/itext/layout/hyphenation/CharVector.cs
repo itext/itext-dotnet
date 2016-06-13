@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>This class implements a simple char vector with access to the
     /// underlying array.</p>
@@ -72,7 +72,7 @@ namespace iTextSharp.Layout.Hyphenation {
             n = a.Length;
         }
 
-        public CharVector(iTextSharp.Layout.Hyphenation.CharVector cv) {
+        public CharVector(iText.Layout.Hyphenation.CharVector cv) {
             this.array = (char[])cv.array.Clone();
             this.blockSize = cv.blockSize;
             this.n = cv.n;

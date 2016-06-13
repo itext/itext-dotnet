@@ -1,20 +1,20 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.IO.Font;
+using iText.Kernel.Color;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class TextWritingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TextWritingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/TextWritingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/TextWritingTest/";
+             + "/test/itext/layout/TextWritingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -33,8 +33,8 @@ namespace iTextSharp.Layout {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++) {
                 Paragraph p = new Paragraph().Add("country").Add(" ");
-                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(iTextSharp.Kernel.Color.Color
-                    .WHITE).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLACK, 0, 0, 0, 0);
+                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(iText.Kernel.Color.Color
+                    .WHITE).SetBackgroundColor(iText.Kernel.Color.Color.BLACK, 0, 0, 0, 0);
                 p.Add(id);
                 document.Add(p);
             }
@@ -52,13 +52,13 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.RED).SetStrokeWidth(0.1f);
+                .FILL_STROKE).SetStrokeColor(iText.Kernel.Color.Color.RED).SetStrokeWidth(0.1f);
             document.Add(new Paragraph().Add(text1));
             Text text2 = new Text("This is a stroke-only text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.GREEN).SetStrokeWidth(0.3f);
+                .STROKE).SetStrokeColor(iText.Kernel.Color.Color.GREEN).SetStrokeWidth(0.3f);
             document.Add(new Paragraph(text2));
             Text text3 = new Text("This is a colorful text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(iTextSharp.Kernel.Color.Color.BLUE).SetStrokeWidth(0.3f).SetFontColor(iTextSharp.Kernel.Color.Color
+                .FILL_STROKE).SetStrokeColor(iText.Kernel.Color.Color.BLUE).SetStrokeWidth(0.3f).SetFontColor(iText.Kernel.Color.Color
                 .GREEN).SetFontSize(20);
             document.Add(new Paragraph(text3));
             document.Close();
@@ -94,7 +94,7 @@ namespace iTextSharp.Layout {
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
-            document.SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, 25);
+            document.SetProperty(iText.Layout.Property.Property.FIRST_LINE_INDENT, 25);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
                  + "independent of application software, hardware, and operating systems.[2] Each PDF file encapsulates a complete "
                  + "description of a fixed-layout flat document, including the text, fonts, graphics, and other information needed to "
@@ -179,12 +179,12 @@ namespace iTextSharp.Layout {
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());
-            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(iTextSharp.Kernel.Color.Color
+            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(iText.Kernel.Color.Color
                 .GREEN)).SetBold());
-            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(iTextSharp.Kernel.Color.Color
+            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(iText.Kernel.Color.Color
                 .GREEN)).SetItalic());
             document.Add(new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
-                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(iTextSharp.Kernel.Color.Color
+                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(iText.Kernel.Color.Color
                 .GREEN)).SetItalic().SetBold().SetUnderline().SetLineThrough());
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

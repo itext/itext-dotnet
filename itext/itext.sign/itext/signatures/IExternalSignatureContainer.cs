@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Interface to sign a document.</summary>
     /// <remarks>Interface to sign a document. The signing is fully done externally, including the container composition.
     ///     </remarks>
@@ -60,9 +60,9 @@ namespace iTextSharp.Signatures {
         /// <summary>Modifies the signature dictionary to suit the container.</summary>
         /// <remarks>
         /// Modifies the signature dictionary to suit the container. At least the keys
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfName.Filter"/>
+        /// <see cref="iText.Kernel.Pdf.PdfName.Filter"/>
         /// and
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfName.SubFilter"/>
+        /// <see cref="iText.Kernel.Pdf.PdfName.SubFilter"/>
         /// will have to be set.
         /// </remarks>
         /// <param name="signDic">the signature dictionary</param>

@@ -44,22 +44,22 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Layout;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
-using iTextSharp.Layout.Property;
+using iText.IO;
+using iText.IO.Log;
+using iText.IO.Util;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Layout;
+using iText.Layout.Property;
 
-namespace iTextSharp.Layout.Renderer
+namespace iText.Layout.Renderer
 {
 	/// <summary>
 	/// Defines the most common properties and behavior that are shared by most
@@ -104,7 +104,7 @@ namespace iTextSharp.Layout.Renderer
 			this.modelElement = modelElement;
 		}
 
-		protected internal AbstractRenderer(iTextSharp.Layout.Renderer.AbstractRenderer other
+		protected internal AbstractRenderer(iText.Layout.Renderer.AbstractRenderer other
 			)
 		{
 			this.childRenderers = other.childRenderers;
@@ -121,7 +121,7 @@ namespace iTextSharp.Layout.Renderer
 		{
 			// https://www.webkit.org/blog/116/webcore-rendering-iii-layout-basics
 			// "The rules can be summarized as follows:"...
-			int? positioning = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property.
+			int? positioning = renderer.GetProperty<int?>(iText.Layout.Property.Property.
 				POSITION);
 			if (positioning == null || positioning == LayoutPosition.RELATIVE || positioning 
 				== LayoutPosition.STATIC)
@@ -132,10 +132,10 @@ namespace iTextSharp.Layout.Renderer
 			{
 				if (positioning == LayoutPosition.FIXED)
 				{
-					iTextSharp.Layout.Renderer.AbstractRenderer root = this;
-					while (root.parent is iTextSharp.Layout.Renderer.AbstractRenderer)
+					iText.Layout.Renderer.AbstractRenderer root = this;
+					while (root.parent is iText.Layout.Renderer.AbstractRenderer)
 					{
-						root = (iTextSharp.Layout.Renderer.AbstractRenderer)root.parent;
+						root = (iText.Layout.Renderer.AbstractRenderer)root.parent;
 					}
 					if (root == this)
 					{
@@ -162,7 +162,7 @@ namespace iTextSharp.Layout.Renderer
 		public virtual bool HasProperty(int property)
 		{
 			return HasOwnProperty(property) || (modelElement != null && modelElement.HasProperty
-				(property)) || (parent != null && iTextSharp.Layout.Property.Property.IsPropertyInherited
+				(property)) || (parent != null && iText.Layout.Property.Property.IsPropertyInherited
 				(property) && parent.HasProperty(property));
 		}
 
@@ -209,7 +209,7 @@ namespace iTextSharp.Layout.Renderer
 				return (T1)property;
 			}
 			// TODO in some situations we will want to check inheritance with additional info, such as parent and descendant.
-			if (parent != null && iTextSharp.Layout.Property.Property.IsPropertyInherited(key
+			if (parent != null && iText.Layout.Property.Property.IsPropertyInherited(key
 				) && (property = parent.GetProperty<T1>(key)) != null)
 			{
 				return (T1)property;
@@ -247,11 +247,11 @@ namespace iTextSharp.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a font object.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
+		/// <see cref="iText.Layout.Property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
-		/// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+		/// <see cref="iText.Kernel.Font.PdfFont"/>
 		/// </returns>
 		public virtual PdfFont GetPropertyAsFont(int property)
 		{
@@ -261,21 +261,21 @@ namespace iTextSharp.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a color.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
+		/// <see cref="iText.Layout.Property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
-		/// <see cref="iTextSharp.Kernel.Color.Color"/>
+		/// <see cref="iText.Kernel.Color.Color"/>
 		/// </returns>
-		public virtual iTextSharp.Kernel.Color.Color GetPropertyAsColor(int property)
+		public virtual iText.Kernel.Color.Color GetPropertyAsColor(int property)
 		{
-			return this.GetProperty<iTextSharp.Kernel.Color.Color>(property);
+			return this.GetProperty<iText.Kernel.Color.Color>(property);
 		}
 
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
+		/// <see cref="iText.Layout.Property.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -322,7 +322,7 @@ namespace iTextSharp.Layout.Renderer
 
 		/// <summary>
 		/// Draws a background layer if it is defined by a key
-		/// <see cref="iTextSharp.Layout.Property.Property.BACKGROUND"/>
+		/// <see cref="iText.Layout.Property.Property.BACKGROUND"/>
 		/// in either the layout element or this
 		/// <see cref="IRenderer"/>
 		/// itself.
@@ -331,7 +331,7 @@ namespace iTextSharp.Layout.Renderer
 		/// 	</param>
 		public virtual void DrawBackground(DrawContext drawContext)
 		{
-			Background background = this.GetProperty<Background>(iTextSharp.Layout.Property.Property
+			Background background = this.GetProperty<Background>(iText.Layout.Property.Property
 				.BACKGROUND);
 			if (background != null)
 			{
@@ -344,7 +344,7 @@ namespace iTextSharp.Layout.Renderer
 				Rectangle backgroundArea = ApplyMargins(bBox, false);
 				if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0)
 				{
-					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.AbstractRenderer
+					ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer
 						));
 					logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
 						, "background"));
@@ -380,7 +380,7 @@ namespace iTextSharp.Layout.Renderer
 		/// <summary>
 		/// Performs the drawing operation for the border of this renderer, if
 		/// defined by any of the
-		/// <see cref="iTextSharp.Layout.Property.Property.BORDER"/>
+		/// <see cref="iText.Layout.Property.Property.BORDER"/>
 		/// values in either the layout
 		/// element or this
 		/// <see cref="IRenderer"/>
@@ -390,9 +390,9 @@ namespace iTextSharp.Layout.Renderer
 		/// 	</param>
 		public virtual void DrawBorder(DrawContext drawContext)
 		{
-			iTextSharp.Layout.Border.Border[] borders = GetBorders();
+			iText.Layout.Border.Border[] borders = GetBorders();
 			bool gotBorders = false;
-			foreach (iTextSharp.Layout.Border.Border border in borders)
+			foreach (iText.Layout.Border.Border border in borders)
 			{
 				gotBorders = gotBorders || border != null;
 			}
@@ -405,7 +405,7 @@ namespace iTextSharp.Layout.Renderer
 				Rectangle bBox = GetBorderAreaBBox();
 				if (bBox.GetWidth() <= 0 || bBox.GetHeight() <= 0)
 				{
-					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.AbstractRenderer
+					ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer
 						));
 					logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES
 						, "border"));
@@ -484,7 +484,7 @@ namespace iTextSharp.Layout.Renderer
 		/// </param>
 		/// <returns>
 		/// a list of
-		/// <see cref="iTextSharp.Kernel.Geom.Rectangle">rectangles</see>
+		/// <see cref="iText.Kernel.Geom.Rectangle">rectangles</see>
 		/// </returns>
 		public virtual IList<Rectangle> InitElementAreas(LayoutArea area)
 		{
@@ -500,7 +500,7 @@ namespace iTextSharp.Layout.Renderer
 		/// </summary>
 		/// <returns>
 		/// the smallest
-		/// <see cref="iTextSharp.Kernel.Geom.Rectangle"/>
+		/// <see cref="iText.Kernel.Geom.Rectangle"/>
 		/// that surrounds the content
 		/// </returns>
 		public virtual Rectangle GetOccupiedAreaBBox()
@@ -533,13 +533,13 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float? RetrieveWidth(float parentBoxWidth)
 		{
-			return RetrieveUnitValue(parentBoxWidth, iTextSharp.Layout.Property.Property.WIDTH
+			return RetrieveUnitValue(parentBoxWidth, iText.Layout.Property.Property.WIDTH
 				);
 		}
 
 		protected internal virtual float? RetrieveHeight()
 		{
-			return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HEIGHT);
+			return this.GetProperty<float?>(iText.Layout.Property.Property.HEIGHT);
 		}
 
 		protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property
@@ -595,7 +595,7 @@ namespace iTextSharp.Layout.Renderer
 			{
 				return null;
 			}
-			return ((iTextSharp.Layout.Renderer.AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively
+			return ((iText.Layout.Renderer.AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively
 				();
 		}
 
@@ -617,19 +617,19 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual float[] GetMargins()
 		{
-			return new float[] { (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.MARGIN_TOP), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.MARGIN_RIGHT), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.MARGIN_BOTTOM), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			return new float[] { (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
+				.MARGIN_TOP), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
+				.MARGIN_RIGHT), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
+				.MARGIN_BOTTOM), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
 				.MARGIN_LEFT) };
 		}
 
 		protected internal virtual float[] GetPaddings()
 		{
-			return new float[] { (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.PADDING_TOP), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.PADDING_RIGHT), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-				.PADDING_BOTTOM), (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			return new float[] { (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
+				.PADDING_TOP), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
+				.PADDING_RIGHT), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
+				.PADDING_BOTTOM), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
 				.PADDING_LEFT) };
 		}
 
@@ -647,11 +647,11 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse)
 		{
-			iTextSharp.Layout.Border.Border[] borders = GetBorders();
+			iText.Layout.Border.Border[] borders = GetBorders();
 			return ApplyBorderBox(rect, borders, reverse);
 		}
 
-		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, iTextSharp.Layout.Border.Border
+		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, iText.Layout.Border.Border
 			[] borders, bool reverse)
 		{
 			float topWidth = borders[0] != null ? borders[0].GetWidth() : 0;
@@ -664,13 +664,13 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void ApplyAbsolutePositioningTranslation(bool reverse)
 		{
-			float top = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TOP
+			float top = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.TOP
 				);
-			float bottom = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+			float bottom = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
 				.BOTTOM);
-			float left = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.LEFT
+			float left = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.LEFT
 				);
-			float right = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+			float right = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.
 				RIGHT);
 			int reverseMultiplier = reverse ? -1 : 1;
 			float dxRight = left != 0 ? left * reverseMultiplier : -right * reverseMultiplier;
@@ -683,7 +683,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void ApplyDestination(PdfDocument document)
 		{
-			String destination = this.GetProperty<String>(iTextSharp.Layout.Property.Property
+			String destination = this.GetProperty<String>(iText.Layout.Property.Property
 				.DESTINATION);
 			if (destination != null)
 			{
@@ -696,20 +696,20 @@ namespace iTextSharp.Layout.Renderer
 				array.Add(new PdfNumber(1));
 				document.AddNamedDestination(destination, ((PdfArray)array.MakeIndirect(document)
 					));
-				DeleteProperty(iTextSharp.Layout.Property.Property.DESTINATION);
+				DeleteProperty(iText.Layout.Property.Property.DESTINATION);
 			}
 		}
 
 		protected internal virtual void ApplyAction(PdfDocument document)
 		{
-			PdfAction action = this.GetProperty<PdfAction>(iTextSharp.Layout.Property.Property
+			PdfAction action = this.GetProperty<PdfAction>(iText.Layout.Property.Property
 				.ACTION);
 			if (action != null)
 			{
 				PdfLinkAnnotation link = new PdfLinkAnnotation(GetOccupiedArea().GetBBox());
 				link.SetAction(action);
-				iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border
-					>(iTextSharp.Layout.Property.Property.BORDER);
+				iText.Layout.Border.Border border = this.GetProperty<iText.Layout.Border.Border
+					>(iText.Layout.Property.Property.BORDER);
 				if (border != null)
 				{
 					link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
@@ -731,28 +731,28 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual bool IsPositioned()
 		{
-			Object positioning = this.GetProperty<Object>(iTextSharp.Layout.Property.Property
+			Object positioning = this.GetProperty<Object>(iText.Layout.Property.Property
 				.POSITION);
 			return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
 		}
 
 		protected internal virtual bool IsFixedLayout()
 		{
-			Object positioning = this.GetProperty<Object>(iTextSharp.Layout.Property.Property
+			Object positioning = this.GetProperty<Object>(iText.Layout.Property.Property
 				.POSITION);
 			return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
 		}
 
 		protected internal virtual bool IsRelativePosition()
 		{
-			int? positioning = this.GetPropertyAsInteger(iTextSharp.Layout.Property.Property.
+			int? positioning = this.GetPropertyAsInteger(iText.Layout.Property.Property.
 				POSITION);
 			return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
 		}
 
 		protected internal virtual bool IsKeepTogether()
 		{
-			return true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.KEEP_TOGETHER
+			return true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.KEEP_TOGETHER
 				));
 		}
 
@@ -760,7 +760,7 @@ namespace iTextSharp.Layout.Renderer
 			 availableWidth)
 		{
 			HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?
-                >(iTextSharp.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
+                >(iText.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
 			if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT)
 			{
 				float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth
@@ -790,19 +790,19 @@ namespace iTextSharp.Layout.Renderer
 		/// and if <code>Property.BORDER</code> is also not set then <code>null<code/> is returned
 		/// on position of this border
 		/// </returns>
-		protected internal virtual iTextSharp.Layout.Border.Border[] GetBorders()
+		protected internal virtual iText.Layout.Border.Border[] GetBorders()
 		{
-			iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border
-				>(iTextSharp.Layout.Property.Property.BORDER);
-			iTextSharp.Layout.Border.Border topBorder = this.GetProperty<iTextSharp.Layout.Border.Border
-				>(iTextSharp.Layout.Property.Property.BORDER_TOP);
-			iTextSharp.Layout.Border.Border rightBorder = this.GetProperty<iTextSharp.Layout.Border.Border
-				>(iTextSharp.Layout.Property.Property.BORDER_RIGHT);
-			iTextSharp.Layout.Border.Border bottomBorder = this.GetProperty<iTextSharp.Layout.Border.Border
-				>(iTextSharp.Layout.Property.Property.BORDER_BOTTOM);
-			iTextSharp.Layout.Border.Border leftBorder = this.GetProperty<iTextSharp.Layout.Border.Border
-				>(iTextSharp.Layout.Property.Property.BORDER_LEFT);
-			iTextSharp.Layout.Border.Border[] borders = new iTextSharp.Layout.Border.Border[]
+			iText.Layout.Border.Border border = this.GetProperty<iText.Layout.Border.Border
+				>(iText.Layout.Property.Property.BORDER);
+			iText.Layout.Border.Border topBorder = this.GetProperty<iText.Layout.Border.Border
+				>(iText.Layout.Property.Property.BORDER_TOP);
+			iText.Layout.Border.Border rightBorder = this.GetProperty<iText.Layout.Border.Border
+				>(iText.Layout.Property.Property.BORDER_RIGHT);
+			iText.Layout.Border.Border bottomBorder = this.GetProperty<iText.Layout.Border.Border
+				>(iText.Layout.Property.Property.BORDER_BOTTOM);
+			iText.Layout.Border.Border leftBorder = this.GetProperty<iText.Layout.Border.Border
+				>(iText.Layout.Property.Property.BORDER_LEFT);
+			iText.Layout.Border.Border[] borders = new iText.Layout.Border.Border[]
 				 { topBorder, rightBorder, bottomBorder, leftBorder };
 			for (int i = 0; i < borders.Length; ++i)
 			{
@@ -814,32 +814,32 @@ namespace iTextSharp.Layout.Renderer
 			return borders;
 		}
 
-		protected internal virtual iTextSharp.Layout.Renderer.AbstractRenderer SetBorders
-			(iTextSharp.Layout.Border.Border border, int borderNumber)
+		protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders
+			(iText.Layout.Border.Border border, int borderNumber)
 		{
 			switch (borderNumber)
 			{
 				case 0:
 				{
-					SetProperty(iTextSharp.Layout.Property.Property.BORDER_TOP, border);
+					SetProperty(iText.Layout.Property.Property.BORDER_TOP, border);
 					break;
 				}
 
 				case 1:
 				{
-					SetProperty(iTextSharp.Layout.Property.Property.BORDER_RIGHT, border);
+					SetProperty(iText.Layout.Property.Property.BORDER_RIGHT, border);
 					break;
 				}
 
 				case 2:
 				{
-					SetProperty(iTextSharp.Layout.Property.Property.BORDER_BOTTOM, border);
+					SetProperty(iText.Layout.Property.Property.BORDER_BOTTOM, border);
 					break;
 				}
 
 				case 3:
 				{
-					SetProperty(iTextSharp.Layout.Property.Property.BORDER_LEFT, border);
+					SetProperty(iText.Layout.Property.Property.BORDER_LEFT, border);
 					break;
 				}
 			}

@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Pdfa;
+using iText.Kernel.Pdf;
+using iText.Pdfa;
 
-namespace iTextSharp.Pdfa.Checker {
+namespace iText.Pdfa.Checker {
     public class PdfA3Checker : PdfA2Checker {
-        protected internal static readonly ICollection<PdfName> allowedAFRelationships = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedAFRelationships = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Source, PdfName.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
 
         public PdfA3Checker(PdfAConformanceLevel conformanceLevel)

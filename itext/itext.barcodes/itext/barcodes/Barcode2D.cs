@@ -41,12 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public abstract class Barcode2D {
         protected internal const float DEFAULT_MODULE_SIZE = 1;
 
@@ -70,7 +70,7 @@ namespace iTextSharp.Barcodes {
         /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
         /// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground);
+        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground);
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <remarks>
@@ -85,7 +85,7 @@ namespace iTextSharp.Barcodes {
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <returns>the XObject.</returns>
-        public abstract PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, PdfDocument document
+        public abstract PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, PdfDocument document
             );
     }
 }

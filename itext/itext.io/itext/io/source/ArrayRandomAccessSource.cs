@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     /// <summary>A RandomAccessSource that is based on an underlying byte array</summary>
     internal class ArrayRandomAccessSource : IRandomAccessSource {
         private byte[] array;

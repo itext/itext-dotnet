@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace iTextSharp.IO.Log
+namespace iText.IO.Log
 {
     public interface ILoggerFactory {
 

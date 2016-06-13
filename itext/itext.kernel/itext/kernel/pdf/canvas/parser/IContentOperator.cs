@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     /// <summary>Root interface for a series of handlers for content stream operators.</summary>
     public interface IContentOperator {
         /// <summary>Called when a content operator should be processed.</summary>

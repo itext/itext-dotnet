@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Wmf;
-using iTextSharp.Kernel.Pdf.Filters;
+using iText.IO.Codec;
+using iText.IO.Image;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Wmf;
+using iText.Kernel.Pdf.Filters;
 
-namespace iTextSharp.Kernel.Pdf.Xobject {
+namespace iText.Kernel.Pdf.Xobject {
     public class PdfImageXObject : PdfXObject {
         private float width;
 
@@ -77,7 +77,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject {
             : this(image, null) {
         }
 
-        public PdfImageXObject(ImageData image, iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject imageMask)
+        public PdfImageXObject(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject imageMask)
             : this(CreatePdfStream(CheckImageType(image), imageMask)) {
             mask = image.IsMask();
             softMask = image.IsSoftMask();
@@ -113,9 +113,9 @@ namespace iTextSharp.Kernel.Pdf.Xobject {
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document) {
-            iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject image = new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(((
-                PdfStream)GetPdfObject().CopyTo(document)));
+        public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document) {
+            iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject(((PdfStream)
+                GetPdfObject().CopyTo(document)));
             image.width = width;
             image.height = height;
             image.mask = mask;
@@ -150,12 +150,12 @@ namespace iTextSharp.Kernel.Pdf.Xobject {
             return bytes;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject value) {
+        public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
-        protected internal static PdfStream CreatePdfStream(ImageData image, iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject
+        protected internal static PdfStream CreatePdfStream(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject
              imageMask) {
             PdfStream stream;
             if (image.GetOriginalType() == ImageType.RAW) {
@@ -223,13 +223,13 @@ namespace iTextSharp.Kernel.Pdf.Xobject {
             ImageData mask = image.GetImageMask();
             if (mask != null) {
                 if (mask.IsSoftMask()) {
-                    stream.Put(PdfName.SMask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image.GetImageMask()).GetPdfObject
-                        ());
+                    stream.Put(PdfName.SMask, new iText.Kernel.Pdf.Xobject.PdfImageXObject(image.GetImageMask()).GetPdfObject(
+                        ));
                 }
                 else {
                     if (mask.IsMask()) {
-                        stream.Put(PdfName.Mask, new iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject(image.GetImageMask()).GetPdfObject
-                            ());
+                        stream.Put(PdfName.Mask, new iText.Kernel.Pdf.Xobject.PdfImageXObject(image.GetImageMask()).GetPdfObject()
+                            );
                     }
                 }
             }
@@ -361,27 +361,26 @@ namespace iTextSharp.Kernel.Pdf.Xobject {
             MemoryStream ms = new MemoryStream();
             if (pngColorType < 0) {
                 if (bpc != 8) {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorDepthIsNotSupported).SetMessageParams(bpc
-                        );
+                    throw new iText.IO.IOException(iText.IO.IOException.ColorDepthIsNotSupported).SetMessageParams(bpc);
                 }
                 if (colorspace is PdfArray) {
                     PdfArray ca = (PdfArray)colorspace;
                     PdfObject tyca = ca.Get(0);
                     if (!PdfName.ICCBased.Equals(tyca)) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(tyca
-                            .ToString());
+                        throw new iText.IO.IOException(iText.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(tyca.ToString
+                            ());
                     }
                     PdfStream pr = (PdfStream)ca.Get(1);
                     int n = pr.GetAsNumber(PdfName.N).IntValue();
                     if (n != 4) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.NValueIsNotSupported).SetMessageParams(n);
+                        throw new iText.IO.IOException(iText.IO.IOException.NValueIsNotSupported).SetMessageParams(n);
                     }
                     icc = pr.GetBytes();
                 }
                 else {
                     if (!PdfName.DeviceCMYK.Equals(colorspace)) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(colorspace
-                            .ToString());
+                        throw new iText.IO.IOException(iText.IO.IOException.ColorSpaceIsNotSupported).SetMessageParams(colorspace.
+                            ToString());
                     }
                 }
                 stride = (int)(4 * width);

@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// A helper class that tells you more about the type of signature
     /// (certification or approval) and the signature's DMP settings.

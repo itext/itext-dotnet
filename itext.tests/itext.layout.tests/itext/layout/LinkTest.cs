@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Kernel.Pdf.Navigation;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class LinkTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/LinkTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/LinkTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/LinkTest/";
+             + "/test/itext/layout/LinkTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

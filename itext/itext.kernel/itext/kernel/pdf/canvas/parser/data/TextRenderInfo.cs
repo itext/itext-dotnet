@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.IO.Util;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
+namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>
     /// Provides information and calculations needed by render listeners
     /// to display/evaluate text render operations.
@@ -59,9 +59,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
     /// to display/evaluate text render operations.
     /// <br /><br />
     /// This is passed between the
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.PdfCanvasProcessor"/>
     /// and
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
     /// objects as text rendering operations are
     /// discovered
     /// </remarks>
@@ -102,8 +102,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="string">the content of a TextRenderInfo</param>
         /// <param name="horizontalOffset">the unscaled horizontal offset of the character that this TextRenderInfo represents
         ///     </param>
-        private TextRenderInfo(iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo parent, PdfString @string, 
-            float horizontalOffset) {
+        private TextRenderInfo(iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo parent, PdfString @string, float
+             horizontalOffset) {
             this.@string = @string;
             this.textToUserSpaceTransformMatrix = new Matrix(horizontalOffset, 0).Multiply(parent.textToUserSpaceTransformMatrix
                 );
@@ -250,20 +250,20 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="TextRenderInfo"/>
         /// objects that represent each glyph used in the draw operation. The next effect is if there was a separate Tj opertion for each character in the rendered string
         /// </returns>
-        public virtual IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> GetCharacterRenderInfos() {
-            IList<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> rslt = new List<iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
+        public virtual IList<iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> GetCharacterRenderInfos() {
+            IList<iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo> rslt = new List<iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
                 >(@string.GetValue().Length);
             PdfString[] strings = SplitString(@string);
             float totalWidth = 0;
             foreach (PdfString str in strings) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(str);
-                iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo subInfo = new iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
+                iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo subInfo = new iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
                     (this, str, totalWidth);
                 rslt.Add(subInfo);
                 totalWidth += (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) *
                      (gs.GetHorizontalScaling() / 100f);
             }
-            foreach (iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo tri in rslt) {
+            foreach (iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo tri in rslt) {
                 tri.GetUnscaledWidth();
             }
             return rslt;
@@ -293,12 +293,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <returns>the current fill color.</returns>
-        public virtual iTextSharp.Kernel.Color.Color GetFillColor() {
+        public virtual iText.Kernel.Color.Color GetFillColor() {
             return gs.GetFillColor();
         }
 
         /// <returns>the current stroke color.</returns>
-        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor() {
+        public virtual iText.Kernel.Color.Color GetStrokeColor() {
             return gs.GetStrokeColor();
         }
 

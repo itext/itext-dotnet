@@ -44,7 +44,7 @@ using System;
  * address: sales@itextpdf.com
  */
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
 
     // a replacement for the StringTokenizer java class
     public class StringTokenizer {

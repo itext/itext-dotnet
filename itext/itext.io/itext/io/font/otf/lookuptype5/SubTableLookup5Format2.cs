@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Util;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf.Lookuptype5 {
+namespace iText.IO.Font.Otf.Lookuptype5 {
     /// <summary>Contextual Substitution Subtable: Class-based context glyph substitution</summary>
     public class SubTableLookup5Format2 : ContextualSubTable {
         private ICollection<int> substCoverageGlyphIds;

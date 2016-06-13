@@ -42,15 +42,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Source;
+using iText.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfBoolean : PdfPrimitiveObject {
-        public static readonly iTextSharp.Kernel.Pdf.PdfBoolean TRUE = new iTextSharp.Kernel.Pdf.PdfBoolean(true, 
-            true);
+        public static readonly iText.Kernel.Pdf.PdfBoolean TRUE = new iText.Kernel.Pdf.PdfBoolean(true, true);
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfBoolean FALSE = new iTextSharp.Kernel.Pdf.PdfBoolean(false
-            , true);
+        public static readonly iText.Kernel.Pdf.PdfBoolean FALSE = new iText.Kernel.Pdf.PdfBoolean(false, true);
 
         private static readonly byte[] True = ByteUtils.GetIsoBytes("true");
 
@@ -83,14 +81,14 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
+            return (iText.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document, reference);
+            return (iText.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document, reference);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -101,7 +99,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, true);
+            return (iText.Kernel.Pdf.PdfBoolean)base.CopyTo(document, true);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -117,7 +115,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iTextSharp.Kernel.Pdf.PdfBoolean)base.CopyTo(document, allowDuplicating);
+            return (iText.Kernel.Pdf.PdfBoolean)base.CopyTo(document, allowDuplicating);
         }
 
         public override String ToString() {
@@ -129,12 +127,12 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         protected internal override PdfObject NewInstance() {
-            return new iTextSharp.Kernel.Pdf.PdfBoolean();
+            return new iText.Kernel.Pdf.PdfBoolean();
         }
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfBoolean @bool = (iTextSharp.Kernel.Pdf.PdfBoolean)from;
+            iText.Kernel.Pdf.PdfBoolean @bool = (iText.Kernel.Pdf.PdfBoolean)from;
             value = @bool.value;
         }
     }

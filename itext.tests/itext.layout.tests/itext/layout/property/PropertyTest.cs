@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using iTextSharp.Test;
+using iText.Test;
 
-namespace iTextSharp.Layout.Property {
+namespace iText.Layout.Property {
     public class PropertyTest : ExtendedITextTest {
         /// <exception cref="System.MemberAccessException"/>
         [NUnit.Framework.Test]
         public virtual void PropertyUniquenessTest() {
             ICollection<int> fieldValues = new HashSet<int>();
             int maxFieldValue = 1;
-            foreach (FieldInfo field in typeof(iTextSharp.Layout.Property.Property).GetFields()) {
+            foreach (FieldInfo field in typeof(iText.Layout.Property.Property).GetFields()) {
                 if (field.FieldType == typeof(int)) {
                     int value = (int)field.GetValue(null);
                     maxFieldValue = Math.Max(maxFieldValue, value);

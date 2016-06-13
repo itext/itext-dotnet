@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class FontConstants {
         internal static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String>();
 
@@ -66,11 +66,11 @@ namespace iTextSharp.IO.Font {
         }
 
         /// <summary>The path to the font resources.</summary>
-        public const String RESOURCE_PATH = "iTextSharp.IO.Font.";
+        public const String RESOURCE_PATH = "iText.IO.Font.";
 
-        public const String AFM_RESOURCE_PATH = "iTextSharp.IO.Font.Afm.";
+        public const String AFM_RESOURCE_PATH = "iText.IO.Font.Afm.";
 
-        public const String CMAP_RESOURCE_PATH = "iTextSharp.IO.Font.Cmap.";
+        public const String CMAP_RESOURCE_PATH = "iText.IO.Font.Cmap.";
 
         public const int UNDEFINED = -1;
 

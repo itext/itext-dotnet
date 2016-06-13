@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Border;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.Kernel.Color;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Border;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class BorderTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/BorderTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/BorderTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/BorderTest/";
+             + "/test/itext/layout/BorderTest/";
 
         public const String cmpPrefix = "cmp_";
 
@@ -35,25 +35,25 @@ namespace iTextSharp.Layout {
             Document doc = CreateDocument();
             List list = new List();
             ListItem solidBorderItem = new ListItem("solid");
-            solidBorderItem.SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 6)).SetMarginBottom(5);
-            solidBorderItem.SetBorderTop(new SolidBorder(iTextSharp.Kernel.Color.Color.BLUE, 10));
+            solidBorderItem.SetBorder(new SolidBorder(iText.Kernel.Color.Color.RED, 6)).SetMarginBottom(5);
+            solidBorderItem.SetBorderTop(new SolidBorder(iText.Kernel.Color.Color.BLUE, 10));
             list.Add(solidBorderItem);
             ListItem doubleBorderItem = new ListItem("double");
-            doubleBorderItem.SetBorder(new DoubleBorder(iTextSharp.Kernel.Color.Color.RED, 10)).SetMarginBottom(5);
-            doubleBorderItem.SetBorderRight(new DoubleBorder(iTextSharp.Kernel.Color.Color.BLUE, 6));
+            doubleBorderItem.SetBorder(new DoubleBorder(iText.Kernel.Color.Color.RED, 10)).SetMarginBottom(5);
+            doubleBorderItem.SetBorderRight(new DoubleBorder(iText.Kernel.Color.Color.BLUE, 6));
             list.Add(doubleBorderItem);
             ListItem dashedBorderItem = new ListItem("dashed");
-            dashedBorderItem.SetBorder(new DashedBorder(iTextSharp.Kernel.Color.Color.GRAY, 2)).SetMarginBottom(5);
-            dashedBorderItem.SetBorderBottom(new DashedBorder(iTextSharp.Kernel.Color.Color.BLACK, 4));
+            dashedBorderItem.SetBorder(new DashedBorder(iText.Kernel.Color.Color.GRAY, 2)).SetMarginBottom(5);
+            dashedBorderItem.SetBorderBottom(new DashedBorder(iText.Kernel.Color.Color.BLACK, 4));
             list.Add(dashedBorderItem);
             ListItem dottedBorderItem = new ListItem("dotted");
-            dottedBorderItem.SetBorder(new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 3)).SetMarginBottom(5);
-            dottedBorderItem.SetBorderLeft(new DottedBorder(iTextSharp.Kernel.Color.Color.GRAY, 6));
+            dottedBorderItem.SetBorder(new DottedBorder(iText.Kernel.Color.Color.BLACK, 3)).SetMarginBottom(5);
+            dottedBorderItem.SetBorderLeft(new DottedBorder(iText.Kernel.Color.Color.GRAY, 6));
             list.Add(dottedBorderItem);
             ListItem roundDotsBorderItem = new ListItem("round dots");
-            roundDotsBorderItem.SetBorder(new RoundDotsBorder(iTextSharp.Kernel.Color.Color.LIGHT_GRAY, 3)).SetMarginBottom
+            roundDotsBorderItem.SetBorder(new RoundDotsBorder(iText.Kernel.Color.Color.LIGHT_GRAY, 3)).SetMarginBottom
                 (5);
-            roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(iTextSharp.Kernel.Color.Color.BLUE, 5));
+            roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(iText.Kernel.Color.Color.BLUE, 5));
             list.Add(roundDotsBorderItem);
             doc.Add(list);
             CloseDocumentAndCompareOutputs(doc);
@@ -169,13 +169,13 @@ namespace iTextSharp.Layout {
                  + "its high silica content, so often does not reach the surface and cools at depth. When it does reach the surface, a volcano is formed. Typical examples"
                  + " of this kind of volcano are Mount Etna and the volcanoes in the Pacific Ring of Fire.";
             doc.Add(new Paragraph(textBefore).SetMargins(25, 60, 70, 80));
-            Paragraph p = new Paragraph(text).SetBackgroundColor(iTextSharp.Kernel.Color.Color.GRAY);
+            Paragraph p = new Paragraph(text).SetBackgroundColor(iText.Kernel.Color.Color.GRAY);
             p.SetMargins(25, 60, 70, 80);
             p.SetBorderLeft(new DoubleBorder(DeviceRgb.RED, 25));
             p.SetBorder(new DoubleBorder(DeviceRgb.BLACK, 6));
             doc.Add(p);
-            doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 3)).SetBorderRight
-                (new DottedBorder(iTextSharp.Kernel.Color.Color.BLACK, 12)));
+            doc.Add(new Paragraph(textAfter).SetBorder(new DottedBorder(iText.Kernel.Color.Color.BLACK, 3)).SetBorderRight
+                (new DottedBorder(iText.Kernel.Color.Color.BLACK, 12)));
             CloseDocumentAndCompareOutputs(doc);
         }
 

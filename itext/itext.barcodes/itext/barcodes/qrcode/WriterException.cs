@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>
     /// A base class which covers the range of exceptions which may occur when encoding a barcode using
     /// the Writer framework.

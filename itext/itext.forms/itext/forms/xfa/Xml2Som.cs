@@ -47,7 +47,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace iTextSharp.Forms.Xfa
+namespace iText.Forms.Xfa
 {
 	/// <summary>A class for some basic SOM processing.</summary>
 	internal class Xml2Som

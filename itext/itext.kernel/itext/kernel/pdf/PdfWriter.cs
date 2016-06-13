@@ -45,13 +45,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
+using iText.IO;
+using iText.IO.Log;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfWriter : PdfOutputStream {
         private static readonly byte[] obj = ByteUtils.GetIsoBytes(" obj\n");
 
@@ -139,7 +139,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// .
         /// </remarks>
         /// <param name="compressionLevel">compression level.</param>
-        public virtual iTextSharp.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel) {
+        public virtual iText.Kernel.Pdf.PdfWriter SetCompressionLevel(int compressionLevel) {
             this.properties.SetCompressionLevel(compressionLevel);
             return this;
         }
@@ -154,7 +154,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// This requires more memory, but reduces the file size
         /// of the resulting PDF document.
         /// </remarks>
-        public virtual iTextSharp.Kernel.Pdf.PdfWriter SetSmartMode(bool smartMode) {
+        public virtual iText.Kernel.Pdf.PdfWriter SetSmartMode(bool smartMode) {
             this.properties.smartMode = smartMode;
             return this;
         }
@@ -194,7 +194,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Gets the current object stream.</summary>
         /// <returns>object stream.</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual PdfObjectStream GetObjectStream() {
             if (!IsFullCompression()) {
                 return null;
@@ -217,7 +217,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="pdfObject">object to flush.</param>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
             if (IsFullCompression() && canBeInObjStm) {
@@ -306,7 +306,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Writes object to body of PDF document.</summary>
         /// <param name="pdfObj">object to write.</param>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void WriteToBody(PdfObject pdfObj) {
             if (crypto != null) {
                 crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj.GetIndirectReference()
@@ -319,14 +319,14 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         /// <summary>Writes PDF header.</summary>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void WriteHeader() {
             WriteByte('%').WriteString(document.GetPdfVersion().ToString()).WriteString("\n%\u00e2\u00e3\u00cf\u00d3\n"
                 );
         }
 
         /// <summary>Flushes all objects which have not been flushed yet.</summary>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void FlushWaitingObjects() {
             PdfXrefTable xref = document.GetXref();
             bool needFlush = true;
@@ -351,7 +351,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Flushes all modified objects which have not been flushed yet.</summary>
         /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void FlushModifiedWaitingObjects() {
             PdfXrefTable xref = document.GetXref();
             for (int i = 1; i < xref.Size(); i++) {
@@ -429,7 +429,7 @@ namespace iTextSharp.Kernel.Pdf {
             }
         }
 
-        private iTextSharp.Kernel.Pdf.PdfWriter SetDebugMode() {
+        private iText.Kernel.Pdf.PdfWriter SetDebugMode() {
             duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());
             return this;
         }
@@ -549,7 +549,7 @@ namespace iTextSharp.Kernel.Pdf {
                 }
                 PdfName[] keys = new PdfName[dic.KeySet().Count];
                 dic.KeySet().ToArray(keys);
-                iTextSharp.IO.Util.JavaUtil.Sort(keys);
+                iText.IO.Util.JavaUtil.Sort(keys);
                 foreach (Object key in keys) {
                     if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.Get((PdfName)key).IsDictionary
                         ()) || key.Equals(PdfName.Parent)) {
@@ -611,7 +611,7 @@ namespace iTextSharp.Kernel.Pdf {
             }
 
             public override bool Equals(Object obj) {
-                return obj is PdfWriter.ByteStore && GetHashCode() == obj.GetHashCode() && iTextSharp.IO.Util.JavaUtil.ArraysEquals
+                return obj is PdfWriter.ByteStore && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
                     (b, ((PdfWriter.ByteStore)obj).b);
             }
 

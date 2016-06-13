@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>Exports images as TIFF.</summary>
     public class TiffWriter {
         private SortedDictionary<int, TiffWriter.FieldBase> ifd = new SortedDictionary<int, TiffWriter.FieldBase>(

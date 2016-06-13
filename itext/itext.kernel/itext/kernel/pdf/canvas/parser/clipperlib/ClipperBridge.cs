@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
+namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// <summary>
     /// This class contains variety of methods allowing to convert iText
     /// abstractions into the abstractions of the Clipper library and vise versa.
@@ -60,17 +60,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
     /// <li>
     /// <see cref="PolyTree"/>
     /// to
-    /// <see cref="iTextSharp.Kernel.Geom.Path"/>
+    /// <see cref="iText.Kernel.Geom.Path"/>
     /// </li>
     /// <li>
-    /// <see cref="iTextSharp.Kernel.Geom.Point"/>
+    /// <see cref="iText.Kernel.Geom.Point"/>
     /// to
     /// <see cref="IntPoint"/>
     /// </li>
     /// <li>
     /// <see cref="IntPoint"/>
     /// to
-    /// <see cref="iTextSharp.Kernel.Geom.Point"/>
+    /// <see cref="iText.Kernel.Geom.Point"/>
     /// </li>
     /// </ul>
     /// </p>
@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// Converts Clipper library
         /// <see cref="PolyTree"/>
         /// abstraction into iText
-        /// <see cref="iTextSharp.Kernel.Geom.Path"/>
+        /// <see cref="iText.Kernel.Geom.Path"/>
         /// object.
         /// </summary>
         public static Path ConvertToPath(PolyTree result) {
@@ -119,7 +119,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </param>
         /// <param name="path">
         /// The
-        /// <see cref="iTextSharp.Kernel.Geom.Path"/>
+        /// <see cref="iText.Kernel.Geom.Path"/>
         /// object to be added to the
         /// <see cref="Clipper"/>
         /// .
@@ -140,7 +140,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
 
         /// <summary>
         /// Adds all iText
-        /// <see cref="iTextSharp.Kernel.Geom.Subpath"/>
+        /// <see cref="iText.Kernel.Geom.Subpath"/>
         /// s of the iText
         /// <see cref="List<IntPoint>"/>
         /// to the
@@ -152,7 +152,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// 
         /// <see cref="System.Collections.IList{E}"/>
         /// consisting of all degenerate iText
-        /// <see cref="iTextSharp.Kernel.Geom.Subpath"/>
+        /// <see cref="iText.Kernel.Geom.Subpath"/>
         /// s of the path.
         /// </returns>
         public static IList<Subpath> AddPath(ClipperOffset offset, Path path, JoinType joinType, EndType endType) {
@@ -182,7 +182,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// Converts list of
         /// <see cref="IntPoint"/>
         /// objects into list of
-        /// <see cref="iTextSharp.Kernel.Geom.Point"/>
+        /// <see cref="iText.Kernel.Geom.Point"/>
         /// objects.
         /// </summary>
         public static IList<Point> ConvertToFloatPoints(IList<IntPoint> points) {
@@ -195,7 +195,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
 
         /// <summary>
         /// Converts list of
-        /// <see cref="iTextSharp.Kernel.Geom.Point"/>
+        /// <see cref="iText.Kernel.Geom.Point"/>
         /// objects into list of
         /// <see cref="IntPoint"/>
         /// objects.
@@ -214,7 +214,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </summary>
         /// <param name="lineJoinStyle">
         /// iText line join style constant. See
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
         /// </param>
         /// <returns>Clipper line join style constant.</returns>
         public static JoinType GetJoinType(int lineJoinStyle) {
@@ -236,7 +236,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </summary>
         /// <param name="lineCapStyle">
         /// iText line cap style constant. See
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants"/>
         /// </param>
         /// <returns>Clipper line cap (end type) style constant.</returns>
         public static EndType GetEndType(int lineCapStyle) {
@@ -258,9 +258,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         /// </summary>
         /// <param name="fillingRule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
         /// <returns>Clipper fill type constant.</returns>
@@ -287,7 +287,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
         }
 
         public static void AddRectToClipper(Clipper clipper, Point[] rectVertices, PolyType polyType) {
-            clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            clipper.AddPath(new List<IntPoint>(ConvertToLongPoints(new List<Point>(iText.IO.Util.JavaUtil.ArraysAsList
                 (rectVertices)))), polyType, true);
         }
     }

@@ -43,14 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.IO.Font;
+using iText.Kernel;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public class Barcode39 : Barcode1D {
         /// <summary>The bars to generate the code.</summary>
         private static readonly byte[][] BARS = new byte[][] { new byte[] { 0, 0, 0, 1, 1, 0, 1, 0, 0 }, new byte[
@@ -249,7 +249,7 @@ namespace iTextSharp.Barcodes {
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
              textColor) {
             String fullCode = code;
             float fontX = 0;

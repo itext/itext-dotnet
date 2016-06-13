@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf
+namespace iText.IO.Font.Otf
 {
 	public class ActualTextIterator : IEnumerator<GlyphLine.GlyphLinePart>
 	{

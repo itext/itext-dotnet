@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.IO.Font;
+using iText.Kernel;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public class Barcode128 : Barcode1D {
         /// <summary>A type of barcode</summary>
         public const int CODE128 = 1;
@@ -551,7 +551,7 @@ namespace iTextSharp.Barcodes {
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
              textColor) {
             String fullCode;
             if (codeType == CODE128_RAW) {
@@ -664,7 +664,7 @@ namespace iTextSharp.Barcodes {
         /// </remarks>
         /// <param name="code">the code to generate</param>
         public override void SetCode(String code) {
-            if (GetCodeType() == iTextSharp.Barcodes.Barcode128.CODE128_UCC && code.StartsWith("(")) {
+            if (GetCodeType() == iText.Barcodes.Barcode128.CODE128_UCC && code.StartsWith("(")) {
                 int idx = 0;
                 StringBuilder ret = new StringBuilder("");
                 while (idx >= 0) {
@@ -681,7 +681,7 @@ namespace iTextSharp.Barcodes {
                     if (len == 0) {
                         throw new ArgumentException("AI not found");
                     }
-                    sai = iTextSharp.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(ai));
+                    sai = iText.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(ai));
                     if (sai.Length == 1) {
                         sai = "0" + sai;
                     }

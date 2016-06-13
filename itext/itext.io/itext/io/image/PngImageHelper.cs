@@ -45,12 +45,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Color;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Color;
+using iText.IO.Font;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     internal class PngImageHelper {
         private class PngParameters {
             internal PngParameters(PngImageData image) {
@@ -197,7 +197,7 @@ namespace iTextSharp.IO.Image {
                 ProcessPng(pngStream, png);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.PngImageException, e);
             }
             finally {
                 if (pngStream != null) {
@@ -322,7 +322,7 @@ namespace iTextSharp.IO.Image {
                 png.image.SetXYRatio(png.XYRatio);
             }
             catch (Exception e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngImageException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.PngImageException, e);
             }
         }
 
@@ -745,7 +745,7 @@ namespace iTextSharp.IO.Image {
 
                     default: {
                         // Error -- uknown filter type
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PngFilterUnknown);
+                        throw new iText.IO.IOException(iText.IO.IOException.PngFilterUnknown);
                     }
                 }
                 ProcessPixels(curr, xOffset, xStep, dstY, passWidth, png);

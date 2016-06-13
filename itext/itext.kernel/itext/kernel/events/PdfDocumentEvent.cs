@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Events {
+namespace iText.Kernel.Events {
     /// <summary>Event dispatched by PdfDocument.</summary>
     public class PdfDocumentEvent : Event {
         /// <summary>Dispatched after page is created.</summary>

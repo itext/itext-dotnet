@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf.Colorspace;
+using iText.Kernel;
+using iText.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color {
-    public class IccBased : iTextSharp.Kernel.Color.Color {
+namespace iText.Kernel.Color {
+    public class IccBased : iText.Kernel.Color.Color {
         public IccBased(PdfCieBasedCs.IccBased cs)
             : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
@@ -57,7 +57,7 @@ namespace iTextSharp.Kernel.Color {
 
         /// <summary>Creates IccBased color.</summary>
         /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public IccBased(Stream iccStream)
             : this(new PdfCieBasedCs.IccBased(iccStream), null) {
             // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Color {
         /// <summary>Creates IccBased color.</summary>
         /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
         /// <param name="value">color value.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public IccBased(Stream iccStream, float[] value)
             : this(new PdfCieBasedCs.IccBased(iccStream), value) {
         }

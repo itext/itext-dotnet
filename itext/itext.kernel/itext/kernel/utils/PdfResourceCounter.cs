@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Utils {
+namespace iText.Kernel.Utils {
     /// <summary>
     /// This class can be used to count the number of bytes needed when copying
     /// pages from an existing PDF into a newly created PDF.

@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     public sealed class PdfFontFactory {
         /// <summary>This is the default encoding to use.</summary>
         private static String DEFAULT_ENCODING = "";

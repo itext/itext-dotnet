@@ -1,21 +1,21 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Layer;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Image;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Layer;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfXObjectTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfXObjectTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfXObjectTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfXObjectTest/";
+             + "/test/itext/kernel/pdf/PdfXObjectTest/";
 
         public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp", sourceFolder
              + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder + "WP_20140410_001.tif" };

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Class that contains a map with the different encryption algorithms.</summary>
     public class EncryptionAlgorithms {
         /// <summary>Maps IDs of encryption algorithms with its human-readable name.</summary>

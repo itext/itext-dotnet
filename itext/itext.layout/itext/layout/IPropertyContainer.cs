@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     /// <summary>
     /// A generic Map-like interface that defines methods for storing and retrieving
     /// objects by an enum key of the
-    /// <see cref="iTextSharp.Layout.Property.Property"/>
+    /// <see cref="iText.Layout.Property.Property"/>
     /// type.
     /// </summary>
     public interface IPropertyContainer {

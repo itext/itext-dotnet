@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
     public sealed class FontProgramFactory {
         private FontProgramFactory() {
@@ -293,7 +293,7 @@ namespace iTextSharp.IO.Font {
                     catch (Exception) {
                     }
                 }
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontIsNotRecognized);
+                throw new iText.IO.IOException(iText.IO.IOException.FontIsNotRecognized);
             }
             FontProgram fontBuilt;
             if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm") ||
@@ -316,7 +316,7 @@ namespace iTextSharp.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Font1IsNotRecognized).SetMessageParams(name);
+                        throw new iText.IO.IOException(iText.IO.IOException.Font1IsNotRecognized).SetMessageParams(name);
                     }
                 }
             }

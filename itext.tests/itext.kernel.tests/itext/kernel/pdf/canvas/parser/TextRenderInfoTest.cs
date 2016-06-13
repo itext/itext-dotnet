@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Test;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     public class TextRenderInfoTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/TextRenderInfoTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/TextRenderInfoTest/";
 
         public const int FIRST_PAGE = 1;
 

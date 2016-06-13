@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Crypto;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Crypto;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler {
+namespace iText.Kernel.Crypto.Securityhandler {
     public class StandardHandlerUsingStandard40 : StandardSecurityHandler {
         protected internal static readonly byte[] pad = new byte[] { (byte)0x28, (byte)0xBF, (byte)0x4E, (byte)0x5E
             , (byte)0x4E, (byte)0x75, (byte)0x8A, (byte)0x41, (byte)0x64, (byte)0x00, (byte)0x4E, (byte)0x56, (byte

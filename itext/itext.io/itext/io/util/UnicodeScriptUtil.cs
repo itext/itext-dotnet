@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace iTextSharp.IO.Util
+namespace iText.IO.Util
 {
     /// <summary>
     /// This file is a helper class for internal usage only.

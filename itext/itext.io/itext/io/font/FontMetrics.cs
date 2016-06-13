@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class FontMetrics {
         protected internal float normalizationCoef = 1f;
 

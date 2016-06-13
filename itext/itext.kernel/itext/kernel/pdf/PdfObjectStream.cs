@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
+using iText.IO.Source;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     internal class PdfObjectStream : PdfStream {
         /// <summary>Max number of objects in object stream.</summary>
         public const int MAX_OBJ_STREAM_SIZE = 200;
@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// NOTE Only for internal use in PdfWriter!
         /// </remarks>
         /// <param name="prev">previous PdfObjectStream.</param>
-        internal PdfObjectStream(iTextSharp.Kernel.Pdf.PdfObjectStream prev)
+        internal PdfObjectStream(iText.Kernel.Pdf.PdfObjectStream prev)
             : this(prev.GetIndirectReference().GetDocument()) {
             ByteArrayOutputStream prevOutputStream = (ByteArrayOutputStream)prev.GetOutputStream().GetOutputStream();
             prevOutputStream.JReset();
@@ -82,7 +82,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Adds object to the object stream.</summary>
         /// <param name="object">object to add.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void AddObject(PdfObject @object) {
             if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
                 throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);

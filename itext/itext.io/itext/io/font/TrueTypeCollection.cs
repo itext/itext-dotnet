@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     /// <summary>Use this class for working with true type collection font (*.ttc)</summary>
     public class TrueTypeCollection {
         protected internal RandomAccessFileOrArray raf;
@@ -71,7 +71,7 @@ namespace iTextSharp.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeCollection(String ttcPath, String encoding) {
             if (!FileUtil.FileExists(ttcPath)) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).SetMessageParams(ttcPath);
+                throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(ttcPath);
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
             this.ttcPath = ttcPath;
@@ -85,7 +85,7 @@ namespace iTextSharp.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public virtual FontProgram GetFontByTccIndex(int ttcIndex) {
             if (ttcIndex > TTCSize - 1) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TTCIndexDoesNotExistInFile);
+                throw new iText.IO.IOException(iText.IO.IOException.TTCIndexDoesNotExistInFile);
             }
             if (ttcPath != null) {
                 return FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);
@@ -113,7 +113,7 @@ namespace iTextSharp.IO.Font {
         private void InitFontSize() {
             String mainTag = raf.ReadString(4, PdfEncodings.WINANSI);
             if (!mainTag.Equals("ttcf")) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidTTCFile);
+                throw new iText.IO.IOException(iText.IO.IOException.InvalidTTCFile);
             }
             raf.SkipBytes(4);
             TTCSize = raf.ReadInt();

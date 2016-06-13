@@ -42,16 +42,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace {
+namespace iText.Kernel.Pdf.Colorspace {
     public abstract class PdfPattern : PdfObjectWrapper<PdfDictionary> {
         protected internal PdfPattern(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
-        public static iTextSharp.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary pdfObject) {
+        public static iText.Kernel.Pdf.Colorspace.PdfPattern GetPatternInstance(PdfDictionary pdfObject) {
             PdfNumber type = pdfObject.GetAsNumber(PdfName.PatternType);
             if (type.IntValue() == 1 && pdfObject is PdfStream) {
                 return new PdfPattern.Tiling((PdfStream)pdfObject);

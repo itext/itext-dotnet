@@ -44,15 +44,15 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Crypto;
-using iTextSharp.Kernel.Pdf.Filters;
+using iText.IO;
+using iText.IO.Log;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Crypto;
+using iText.Kernel.Pdf.Filters;
 
-namespace iTextSharp.Kernel.Pdf {
-    public class PdfOutputStream : OutputStream<iTextSharp.Kernel.Pdf.PdfOutputStream> {
+namespace iText.Kernel.Pdf {
+    public class PdfOutputStream : OutputStream<iText.Kernel.Pdf.PdfOutputStream> {
         private static readonly byte[] stream = ByteUtils.GetIsoBytes("stream\n");
 
         private static readonly byte[] endstream = ByteUtils.GetIsoBytes("\nendstream");
@@ -78,7 +78,7 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         // For internal usage only
-        public virtual iTextSharp.Kernel.Pdf.PdfOutputStream Write(PdfObject pdfObject) {
+        public virtual iText.Kernel.Pdf.PdfOutputStream Write(PdfObject pdfObject) {
             if (pdfObject.CheckState(PdfObject.MUST_BE_INDIRECT) && document != null) {
                 pdfObject.MakeIndirect(document);
                 pdfObject = pdfObject.GetIndirectReference();
@@ -161,7 +161,7 @@ namespace iTextSharp.Kernel.Pdf {
                 Write(entry.Key);
                 PdfObject value = entry.Value;
                 if (value == null) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfOutputStream));
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
                     logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, entry.Key));
                     value = PdfNull.PDF_NULL;
                 }
@@ -272,7 +272,7 @@ namespace iTextSharp.Kernel.Pdf {
                         fout = def = new DeflaterOutputStream(fout, pdfStream.GetCompressionLevel(), 0x8000);
                     }
                     this.Write((PdfDictionary)pdfStream);
-                    WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.stream);
+                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.stream);
                     long beginStreamContent = GetCurrentPos();
                     byte[] buf = new byte[4192];
                     while (true) {
@@ -291,7 +291,7 @@ namespace iTextSharp.Kernel.Pdf {
                     PdfNumber length = pdfStream.GetAsNumber(PdfName.Length);
                     length.SetValue((int)(GetCurrentPos() - beginStreamContent));
                     pdfStream.UpdateLength(length.IntValue());
-                    WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.endstream);
+                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
                 }
                 else {
                     //When document is opened in stamping mode the output stream can be uninitialized.
@@ -351,10 +351,10 @@ namespace iTextSharp.Kernel.Pdf {
                     pdfStream.Put(PdfName.Length, new PdfNumber(byteArrayStream.Length));
                     pdfStream.UpdateLength((int)byteArrayStream.Length);
                     this.Write((PdfDictionary)pdfStream);
-                    WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.stream);
+                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.stream);
                     byteArrayStream.WriteTo(this);
                     byteArrayStream.Close();
-                    WriteBytes(iTextSharp.Kernel.Pdf.PdfOutputStream.endstream);
+                    WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
                 }
             }
             catch (System.IO.IOException e) {

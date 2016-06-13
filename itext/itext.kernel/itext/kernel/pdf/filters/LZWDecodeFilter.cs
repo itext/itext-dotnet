@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters {
+namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles LZWDECODE filter</summary>
     public class LZWDecodeFilter : IFilterHandler {
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary

@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
+using iText.IO.Font;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Font.Cmap {
+namespace iText.IO.Font.Cmap {
     public class CMapContentParser {
         /// <summary>Commands have this type.</summary>
         public const int COMMAND_TYPE = 200;
@@ -97,7 +97,7 @@ namespace iTextSharp.IO.Font.Cmap {
             IDictionary<String, CMapObject> dic = new Dictionary<String, CMapObject>();
             while (true) {
                 if (!NextValidToken()) {
-                    throw new iTextSharp.IO.IOException("unexpected.end.of.file");
+                    throw new iText.IO.IOException("unexpected.end.of.file");
                 }
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
                     break;
@@ -106,17 +106,17 @@ namespace iTextSharp.IO.Font.Cmap {
                     continue;
                 }
                 if (tokeniser.GetTokenType() != PdfTokenizer.TokenType.Name) {
-                    throw new iTextSharp.IO.IOException("dictionary.key.1.is.not.a.name").SetMessageParams(tokeniser.GetStringValue
+                    throw new iText.IO.IOException("dictionary.key.1.is.not.a.name").SetMessageParams(tokeniser.GetStringValue
                         ());
                 }
                 String name = tokeniser.GetStringValue();
                 CMapObject obj = ReadObject();
                 if (obj.IsToken()) {
                     if (obj.ToString().Equals(">>")) {
-                        tokeniser.ThrowError(iTextSharp.IO.IOException.UnexpectedGtGt);
+                        tokeniser.ThrowError(iText.IO.IOException.UnexpectedGtGt);
                     }
                     if (obj.ToString().Equals("]")) {
-                        tokeniser.ThrowError(iTextSharp.IO.IOException.UnexpectedCloseBracket);
+                        tokeniser.ThrowError(iText.IO.IOException.UnexpectedCloseBracket);
                     }
                 }
                 dic[name] = obj;
@@ -137,7 +137,7 @@ namespace iTextSharp.IO.Font.Cmap {
                         break;
                     }
                     if (obj.ToString().Equals(">>")) {
-                        tokeniser.ThrowError(iTextSharp.IO.IOException.UnexpectedGtGt);
+                        tokeniser.ThrowError(iText.IO.IOException.UnexpectedGtGt);
                     }
                 }
                 array.Add(obj);
@@ -250,7 +250,7 @@ namespace iTextSharp.IO.Font.Cmap {
         }
 
         private static String ToHex4(int n) {
-            String s = "0000" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(n);
+            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(n);
             return s.Substring(s.Length - 4);
         }
 

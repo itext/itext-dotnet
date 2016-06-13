@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>A list of IDs that are used by the security classes</summary>
     public class SecurityIDs {
         public const String ID_PKCS7_DATA = "1.2.840.113549.1.7.1";

@@ -1,10 +1,10 @@
 using System;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
+using iText.IO.Font;
+using iText.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfTokenizerTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfTokeniserTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfTokeniserTest/";
 
         /// <exception cref="System.Exception"/>
         private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
@@ -83,7 +83,7 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("+", pdfString.GetValue());
             byte[] b = new byte[] { (byte)46, (byte)56, (byte)40 };
             pdfString = new PdfString(b, false);
-            NUnit.Framework.Assert.AreEqual(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(b), pdfString.GetValue());
+            NUnit.Framework.Assert.AreEqual(iText.IO.Util.JavaUtil.GetStringForBytes(b), pdfString.GetValue());
         }
 
         /// <exception cref="System.IO.IOException"/>

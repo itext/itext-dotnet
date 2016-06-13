@@ -42,13 +42,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.Kernel;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfTrapNetworkAnnotation : PdfAnnotation {
         public PdfTrapNetworkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
             : base(rect) {
@@ -68,8 +68,8 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return PdfName.TrapNet;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetLastModified(PdfDate lastModified) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.LastModified, lastModified.GetPdfObject
+        public virtual iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetLastModified(PdfDate lastModified) {
+            return (iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.LastModified, lastModified.GetPdfObject
                 ());
         }
 
@@ -77,28 +77,27 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsString(PdfName.LastModified);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetVersion(PdfArray version) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.Version, version);
+        public virtual iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetVersion(PdfArray version) {
+            return (iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.Version, version);
         }
 
         public virtual PdfArray GetVersion() {
             return GetPdfObject().GetAsArray(PdfName.Version);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetAnnotStates(PdfArray annotStates) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.AnnotStates, annotStates);
+        public virtual iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetAnnotStates(PdfArray annotStates) {
+            return (iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.AnnotStates, annotStates);
         }
 
         public virtual PdfArray GetAnnotStates() {
             return GetPdfObject().GetAsArray(PdfName.AnnotStates);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts(PdfArray fauxedFonts) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.FontFauxing, fauxedFonts);
+        public virtual iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts(PdfArray fauxedFonts) {
+            return (iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation)Put(PdfName.FontFauxing, fauxedFonts);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts(IList<PdfFont> fauxedFonts
-            ) {
+        public virtual iText.Kernel.Pdf.Annot.PdfTrapNetworkAnnotation SetFauxedFonts(IList<PdfFont> fauxedFonts) {
             PdfArray arr = new PdfArray();
             foreach (PdfFont f in fauxedFonts) {
                 arr.Add(f.GetPdfObject());

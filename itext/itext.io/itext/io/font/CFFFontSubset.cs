@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     /// <summary>This Class subsets a CFF Type Font.</summary>
     /// <remarks>
     /// This Class subsets a CFF Type Font. The subset is preformed for CID fonts and NON CID fonts.
@@ -337,7 +337,7 @@ namespace iTextSharp.IO.Font {
                 return BuildNewFile(j);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
             finally {
                 try {

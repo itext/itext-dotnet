@@ -1,19 +1,19 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     public class PdfA2EmbeddedFilesCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2EmbeddedFilesCheckTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/pdfa/PdfA2EmbeddedFilesCheckTest/";
+             + "/test/itext/pdfa/PdfA2EmbeddedFilesCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -21,7 +21,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("ignore")]
@@ -49,7 +49,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest02() {
@@ -79,7 +79,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void FileSpecCheckTest03() {
             NUnit.Framework.Assert.That(() =>  {

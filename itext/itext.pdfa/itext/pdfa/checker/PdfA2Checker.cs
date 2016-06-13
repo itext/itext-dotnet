@@ -43,27 +43,27 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Color;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Kernel.Pdf.Extgstate;
-using iTextSharp.Pdfa;
+using iText.IO.Color;
+using iText.IO.Image;
+using iText.Kernel.Color;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Pdfa;
 
-namespace iTextSharp.Pdfa.Checker {
+namespace iText.Pdfa.Checker {
     public class PdfA2Checker : PdfA1Checker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
             , PdfName.Hide, PdfName.SetOCGState, PdfName.Rendition, PdfName.Trans, PdfName.GoTo3DView));
 
-        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedBlendModes = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Normal, PdfName.Compatible, PdfName.Multiply, PdfName.Screen, PdfName.Overlay, PdfName.Darken
             , PdfName.Lighten, PdfName.ColorDodge, PdfName.ColorBurn, PdfName.HardLight, PdfName.SoftLight, PdfName
             .Difference, PdfName.Exclusion, PdfName.Hue, PdfName.Saturation, PdfName.Color, PdfName.Luminosity));
@@ -110,8 +110,8 @@ namespace iTextSharp.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool?
-             fill) {
+        public override void CheckColor(iText.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool? fill
+            ) {
             if (color is PatternColor) {
                 PdfPattern pattern = ((PatternColor)color).GetPattern();
                 if (pattern is PdfPattern.Shading) {

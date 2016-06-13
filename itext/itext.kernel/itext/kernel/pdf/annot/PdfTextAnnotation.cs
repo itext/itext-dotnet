@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfTextAnnotation : PdfMarkupAnnotation {
         public PdfTextAnnotation(Rectangle rect)
             : base(rect) {
@@ -62,16 +62,16 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsString(PdfName.State);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetState(PdfString state) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.State, state);
+        public virtual iText.Kernel.Pdf.Annot.PdfTextAnnotation SetState(PdfString state) {
+            return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.State, state);
         }
 
         public virtual PdfString GetStateModel() {
             return GetPdfObject().GetAsString(PdfName.StateModel);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString stateModel) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.StateModel, stateModel);
+        public virtual iText.Kernel.Pdf.Annot.PdfTextAnnotation SetStateModel(PdfString stateModel) {
+            return (iText.Kernel.Pdf.Annot.PdfTextAnnotation)Put(PdfName.StateModel, stateModel);
         }
     }
 }

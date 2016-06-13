@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Property {
+namespace iText.Layout.Property {
     /// <summary>
     /// A specialized class that specifies the leading, "the vertical distance between
     /// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
@@ -56,7 +56,7 @@ namespace iTextSharp.Layout.Property {
     /// This class is meant to be used as the value for the
     /// <see cref="Property.LEADING"/>
     /// key in an
-    /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
+    /// <see cref="iText.Layout.IPropertyContainer"/>
     /// .
     /// </remarks>
     public class Leading {
@@ -102,8 +102,8 @@ namespace iTextSharp.Layout.Property {
         }
 
         public override bool Equals(Object obj) {
-            return obj is iTextSharp.Layout.Property.Leading && type == ((iTextSharp.Layout.Property.Leading)obj).type
-                 && value == ((iTextSharp.Layout.Property.Leading)obj).value;
+            return obj is iText.Layout.Property.Leading && type == ((iText.Layout.Property.Leading)obj).type && value 
+                == ((iText.Layout.Property.Leading)obj).value;
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfObjectTest {
         [NUnit.Framework.Test]
         public virtual void IndirectsChain1() {

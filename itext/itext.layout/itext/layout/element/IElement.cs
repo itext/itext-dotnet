@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Layout;
-using iTextSharp.Layout.Renderer;
+using iText.Layout;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     /// <summary>This class represents a layout element, i.e.</summary>
     /// <remarks>
     /// This class represents a layout element, i.e. a piece of content that will
@@ -68,7 +68,7 @@ namespace iTextSharp.Layout.Element {
         /// <remarks>
         /// Gets a renderer for this element. Note that this method can be called more than once.
         /// By default each element should define its own renderer, but the renderer can be overridden by
-        /// <see cref="SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)"/>
+        /// <see cref="SetNextRenderer(iText.Layout.Renderer.IRenderer)"/>
         /// method call.
         /// </remarks>
         /// <returns>a renderer for this element</returns>

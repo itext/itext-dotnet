@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Numbering {
+namespace iText.Kernel.Numbering {
     /// <summary>
     /// This class is responsible for converting integer numbers to their
     /// English alphabet letter representations.

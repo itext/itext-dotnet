@@ -17,7 +17,7 @@
 using System;
 using System.Text;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>Represents a hyphen.</summary>
     public class Hyphen {
         /// <summary>pre break string</summary>

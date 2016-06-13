@@ -1,14 +1,14 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Test;
+using iText.Kernel.Pdf.Action;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfActionTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfActionTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfActionTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfActionTest/";
+             + "/test/itext/kernel/pdf/PdfActionTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

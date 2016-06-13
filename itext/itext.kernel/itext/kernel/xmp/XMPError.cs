@@ -27,7 +27,7 @@
 //        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
     /// <since>21.09.2006</since>
     public abstract class XMPError {
         public const int UNKNOWN = 0;

@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
-using iTextSharp.Barcodes.Qrcode;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Barcodes.Qrcode;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public class BarcodeQRCodeTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/barcodes/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/barcodes/BarcodeQRCode/";
+             + "/test/itext/barcodes/BarcodeQRCode/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -19,7 +19,7 @@ namespace iTextSharp.Barcodes {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
@@ -31,14 +31,14 @@ namespace iTextSharp.Barcodes {
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.L;
             BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world");
-            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GRAY, 12);
+            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.GRAY, 12);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
@@ -50,7 +50,7 @@ namespace iTextSharp.Barcodes {
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints[EncodeHintType.CHARACTER_SET] = "UTF-8";
             BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
-            barcode1.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GRAY, 12);
+            barcode1.PlaceBarcode(canvas, iText.Kernel.Color.Color.GRAY, 12);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

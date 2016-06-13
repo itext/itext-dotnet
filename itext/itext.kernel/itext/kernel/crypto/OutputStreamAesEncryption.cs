@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     public class OutputStreamAesEncryption : OutputStreamEncryption {
         protected internal AESCipher cipher;
 

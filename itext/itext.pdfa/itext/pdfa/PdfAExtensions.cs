@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     internal static class PdfAExtensions {
 
         public static void AddAll<T>(this IList<T> list, IEnumerable<T> c) {

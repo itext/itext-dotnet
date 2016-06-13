@@ -41,16 +41,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Layout.Element;
+using iText.Layout.Element;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class DivRenderer : BlockRenderer {
         public DivRenderer(Div modelElement)
             : base(modelElement) {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iTextSharp.Layout.Renderer.DivRenderer((Div)modelElement);
+            return new iText.Layout.Renderer.DivRenderer((Div)modelElement);
         }
     }
 }

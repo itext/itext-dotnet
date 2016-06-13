@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Layout.Renderer;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Layout {
+namespace iText.Layout.Layout {
     public class LineLayoutResult : LayoutResult {
         protected internal bool splitForcedByNewline;
 
@@ -56,8 +56,7 @@ namespace iTextSharp.Layout.Layout {
             return splitForcedByNewline;
         }
 
-        public virtual iTextSharp.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline
-            ) {
+        public virtual iText.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
         }

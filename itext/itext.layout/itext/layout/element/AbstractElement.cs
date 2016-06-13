@@ -43,14 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Layout;
-using iTextSharp.Layout.Renderer;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     /// <summary>
     /// Defines the most common properties that most
     /// <see cref="IElement"/>
@@ -144,12 +144,12 @@ namespace iTextSharp.Layout.Element {
         }
 
         public virtual T SetAction(PdfAction action) {
-            SetProperty(iTextSharp.Layout.Property.Property.ACTION, action);
+            SetProperty(iText.Layout.Property.Property.ACTION, action);
             return (T)(Object)this;
         }
 
         public virtual T SetPageNumber(int pageNumber) {
-            SetProperty(iTextSharp.Layout.Property.Property.PAGE_NUMBER, pageNumber);
+            SetProperty(iText.Layout.Property.Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
     }

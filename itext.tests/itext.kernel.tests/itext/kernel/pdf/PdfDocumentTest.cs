@@ -1,17 +1,17 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Pdf.Navigation;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.IO.Image;
+using iText.IO.Source;
+using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfDocumentTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfDocumentTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfDocumentTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfDocumentTest/";
+             + "/test/itext/kernel/pdf/PdfDocumentTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

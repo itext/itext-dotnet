@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO.Source;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     /// <summary>This file is a helper class for internal usage only.</summary>
     /// <remarks>
     /// This file is a helper class for internal usage only.
@@ -133,7 +133,7 @@ namespace iTextSharp.IO.Util {
                 outputStream.Write(buf.GetInternalBuffer(), 0, buf.Size());
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e);
+                throw new iText.IO.IOException(iText.IO.IOException.CannotWriteBytes, e);
             }
         }
 
@@ -143,7 +143,7 @@ namespace iTextSharp.IO.Util {
                 outputStream.Write(buf.GetInternalBuffer(), 0, buf.Size());
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotWriteBytes, e);
+                throw new iText.IO.IOException(iText.IO.IOException.CannotWriteBytes, e);
             }
         }
 
@@ -186,11 +186,11 @@ namespace iTextSharp.IO.Util {
 
                     default: {
                         if (b < 8 && b >= 0) {
-                            buf.Append("\\00").Append(iTextSharp.IO.Util.JavaUtil.IntegerToOctalString(b));
+                            buf.Append("\\00").Append(iText.IO.Util.JavaUtil.IntegerToOctalString(b));
                         }
                         else {
                             if (b >= 8 && b < 32) {
-                                buf.Append("\\0").Append(iTextSharp.IO.Util.JavaUtil.IntegerToOctalString(b));
+                                buf.Append("\\0").Append(iText.IO.Util.JavaUtil.IntegerToOctalString(b));
                             }
                             else {
                                 buf.Append(b);

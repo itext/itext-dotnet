@@ -41,7 +41,7 @@ using System.Runtime.CompilerServices;
  * For more information, please contact iText Software Corp. at this address:
  * sales@itextpdf.com
  */
-namespace iTextSharp.IO.Log
+namespace iText.IO.Log
 {
     /// <summary>
     /// LoggerFactory can be used to set a logger. The logger should be created by

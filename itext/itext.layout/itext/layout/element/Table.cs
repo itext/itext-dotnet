@@ -43,14 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Layout;
-using iTextSharp.Layout.Property;
-using iTextSharp.Layout.Renderer;
+using iText.IO.Log;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
+using iText.Layout.Property;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element
+namespace iText.Layout.Element
 {
 	/// <summary>
 	/// A
@@ -64,7 +64,7 @@ namespace iTextSharp.Layout.Element
 	/// , which means it can be flushed
 	/// to the canvas, in order to reclaim memory that is locked up.
 	/// </summary>
-	public class Table : BlockElement<iTextSharp.Layout.Element.Table>, ILargeElement
+	public class Table : BlockElement<iText.Layout.Element.Table>, ILargeElement
 	{
 		protected internal PdfName role = PdfName.Table;
 
@@ -78,9 +78,9 @@ namespace iTextSharp.Layout.Element
 
 		private int currentRow = -1;
 
-		private iTextSharp.Layout.Element.Table header;
+		private iText.Layout.Element.Table header;
 
-		private iTextSharp.Layout.Element.Table footer;
+		private iText.Layout.Element.Table footer;
 
 		private bool skipFirstHeader;
 
@@ -184,7 +184,7 @@ namespace iTextSharp.Layout.Element
 		/// <summary>Sets the full width of the table.</summary>
 		/// <param name="width">the full width of the table.</param>
 		/// <returns>this element</returns>
-		public override iTextSharp.Layout.Element.Table SetWidth(UnitValue width)
+		public override iText.Layout.Element.Table SetWidth(UnitValue width)
 		{
 			if (width.IsPointValue() && width.GetValue() == 0)
 			{
@@ -230,7 +230,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="headerCell">a header cell to be added</param>
-		public virtual iTextSharp.Layout.Element.Table AddHeaderCell(Cell headerCell)
+		public virtual iText.Layout.Element.Table AddHeaderCell(Cell headerCell)
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(headerCell);
@@ -247,7 +247,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="blockElement">an element to be added to a header cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddHeaderCell<T>(BlockElement<T> blockElement
+		public virtual iText.Layout.Element.Table AddHeaderCell<T>(BlockElement<T> blockElement
 			)
 			where T : IElement
 		{
@@ -265,7 +265,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="image">an element to be added to a header cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddHeaderCell(Image image)
+		public virtual iText.Layout.Element.Table AddHeaderCell(Image image)
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(image);
@@ -282,7 +282,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="content">a string to be added to a header cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddHeaderCell(String content)
+		public virtual iText.Layout.Element.Table AddHeaderCell(String content)
 		{
 			EnsureHeaderIsInitialized();
 			header.AddCell(content);
@@ -299,7 +299,7 @@ namespace iTextSharp.Layout.Element
 		/// <see cref="AddHeaderCell(Cell)"/>
 		/// hasn't been called.
 		/// </returns>
-		public virtual iTextSharp.Layout.Element.Table GetHeader()
+		public virtual iText.Layout.Element.Table GetHeader()
 		{
 			return header;
 		}
@@ -313,7 +313,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="footerCell">a footer cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddFooterCell(Cell footerCell)
+		public virtual iText.Layout.Element.Table AddFooterCell(Cell footerCell)
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(footerCell);
@@ -330,7 +330,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="blockElement">an element to be added to a footer cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddFooterCell<T>(BlockElement<T> blockElement
+		public virtual iText.Layout.Element.Table AddFooterCell<T>(BlockElement<T> blockElement
 			)
 			where T : IElement
 		{
@@ -349,7 +349,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="image">an image to be added to a footer cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddFooterCell(Image image)
+		public virtual iText.Layout.Element.Table AddFooterCell(Image image)
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(image);
@@ -366,7 +366,7 @@ namespace iTextSharp.Layout.Element
 		/// .
 		/// </remarks>
 		/// <param name="content">a content string to be added to a footer cell</param>
-		public virtual iTextSharp.Layout.Element.Table AddFooterCell(String content)
+		public virtual iText.Layout.Element.Table AddFooterCell(String content)
 		{
 			EnsureFooterIsInitialized();
 			footer.AddCell(content);
@@ -383,7 +383,7 @@ namespace iTextSharp.Layout.Element
 		/// <see cref="AddFooterCell(Cell)"/>
 		/// hasn't been called.
 		/// </returns>
-		public virtual iTextSharp.Layout.Element.Table GetFooter()
+		public virtual iText.Layout.Element.Table GetFooter()
 		{
 			return footer;
 		}
@@ -415,7 +415,7 @@ namespace iTextSharp.Layout.Element
 		/// </remarks>
 		/// <param name="skipFirstHeader">New value of property skipFirstHeader.</param>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table SetSkipFirstHeader(bool skipFirstHeader
+		public virtual iText.Layout.Element.Table SetSkipFirstHeader(bool skipFirstHeader
 			)
 		{
 			this.skipFirstHeader = skipFirstHeader;
@@ -429,7 +429,7 @@ namespace iTextSharp.Layout.Element
 		/// </remarks>
 		/// <param name="skipLastFooter">New value of property skipLastFooter.</param>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table SetSkipLastFooter(bool skipLastFooter
+		public virtual iText.Layout.Element.Table SetSkipLastFooter(bool skipLastFooter
 			)
 		{
 			this.skipLastFooter = skipLastFooter;
@@ -440,7 +440,7 @@ namespace iTextSharp.Layout.Element
 		/// <remarks>Starts new row. This mean that next cell will be added at the beginning of next line.
 		/// 	</remarks>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table StartNewRow()
+		public virtual iText.Layout.Element.Table StartNewRow()
 		{
 			currentColumn = 0;
 			currentRow++;
@@ -463,7 +463,7 @@ namespace iTextSharp.Layout.Element
 		/// to add.
 		/// </param>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table AddCell(Cell cell)
+		public virtual iText.Layout.Element.Table AddCell(Cell cell)
 		{
 			// Try to find first empty slot in table.
 			// We shall not use colspan or rowspan, 1x1 will be enough.
@@ -510,7 +510,7 @@ namespace iTextSharp.Layout.Element
 		/// <param name="blockElement">a blockElement to add to the cell and then to the table
 		/// 	</param>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table AddCell<T>(BlockElement<T> blockElement
+		public virtual iText.Layout.Element.Table AddCell<T>(BlockElement<T> blockElement
 			)
 			where T : IElement
 		{
@@ -520,7 +520,7 @@ namespace iTextSharp.Layout.Element
 		/// <summary>Adds a new cell with received image as a content.</summary>
 		/// <param name="image">an image to add to the cell and then to the table</param>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table AddCell(Image image)
+		public virtual iText.Layout.Element.Table AddCell(Image image)
 		{
 			return AddCell(new Cell().Add(image));
 		}
@@ -528,7 +528,7 @@ namespace iTextSharp.Layout.Element
 		/// <summary>Adds a new cell with received string as a content.</summary>
 		/// <param name="content">a string to add to the cell and then to the table</param>
 		/// <returns>this element</returns>
-		public virtual iTextSharp.Layout.Element.Table AddCell(String content)
+		public virtual iText.Layout.Element.Table AddCell(String content)
 		{
 			return AddCell(new Cell().Add(new Paragraph(content)));
 		}
@@ -565,7 +565,7 @@ namespace iTextSharp.Layout.Element
 		/// </remarks>
 		/// <returns>
 		/// a
-		/// <see cref="iTextSharp.Layout.Renderer.TableRenderer"/>
+		/// <see cref="iText.Layout.Renderer.TableRenderer"/>
 		/// subtree for this element
 		/// </returns>
 		public override IRenderer CreateRendererSubTree()
@@ -592,7 +592,7 @@ namespace iTextSharp.Layout.Element
 		/// <remarks>
 		/// Gets a table renderer for this element. Note that this method can be called more than once.
 		/// By default each element should define its own renderer, but the renderer can be overridden by
-		/// <see cref="AbstractElement{T}.SetNextRenderer(iTextSharp.Layout.Renderer.IRenderer)
+		/// <see cref="AbstractElement{T}.SetNextRenderer(iText.Layout.Renderer.IRenderer)
 		/// 	"/>
 		/// method call.
 		/// </remarks>
@@ -609,7 +609,7 @@ namespace iTextSharp.Layout.Element
 				}
 				else
 				{
-					ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Table));
+					ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Table));
 					logger.Error("Invalid renderer for Table: must be inherited from TableRenderer");
 				}
 			}
@@ -718,12 +718,12 @@ namespace iTextSharp.Layout.Element
 		/// 	</summary>
 		/// <returns>
 		/// an array of
-		/// <see cref="iTextSharp.Layout.Border.Border"/>
+		/// <see cref="iText.Layout.Border.Border"/>
 		/// objects
 		/// </returns>
-		public virtual List<iTextSharp.Layout.Border.Border> GetLastRowBottomBorder()
+		public virtual List<iText.Layout.Border.Border> GetLastRowBottomBorder()
 		{
-			List<iTextSharp.Layout.Border.Border> horizontalBorder = new List<iTextSharp.Layout.Border.Border
+			List<iText.Layout.Border.Border> horizontalBorder = new List<iText.Layout.Border.Border
 				>();
 			if (lastAddedRow != null)
 			{
@@ -732,12 +732,12 @@ namespace iTextSharp.Layout.Element
 					Cell cell = lastAddedRow[i];
 					if (cell != null)
 					{
-						iTextSharp.Layout.Border.Border border = ((iTextSharp.Layout.Border.Border)cell.GetProperty
-							<iTextSharp.Layout.Border.Border>(iTextSharp.Layout.Property.Property.BORDER));
+						iText.Layout.Border.Border border = ((iText.Layout.Border.Border)cell.GetProperty
+							<iText.Layout.Border.Border>(iText.Layout.Property.Property.BORDER));
 						if (border == null)
 						{
-							border = ((iTextSharp.Layout.Border.Border)cell.GetProperty<iTextSharp.Layout.Border.Border
-								>(iTextSharp.Layout.Property.Property.BORDER_BOTTOM));
+							border = ((iText.Layout.Border.Border)cell.GetProperty<iText.Layout.Border.Border
+								>(iText.Layout.Property.Property.BORDER_BOTTOM));
 						}
 						horizontalBorder.Add(border);
 					}
@@ -855,7 +855,7 @@ namespace iTextSharp.Layout.Element
 		{
 			if (header == null)
 			{
-				header = new iTextSharp.Layout.Element.Table(columnWidths);
+				header = new iText.Layout.Element.Table(columnWidths);
 				header.SetWidth(GetWidth());
 				header.SetRole(PdfName.THead);
 			}
@@ -865,7 +865,7 @@ namespace iTextSharp.Layout.Element
 		{
 			if (footer == null)
 			{
-				footer = new iTextSharp.Layout.Element.Table(columnWidths);
+				footer = new iText.Layout.Element.Table(columnWidths);
 				footer.SetWidth(GetWidth());
 				footer.SetRole(PdfName.TFoot);
 			}

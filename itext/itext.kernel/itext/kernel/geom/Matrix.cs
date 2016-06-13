@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     /// <summary>
     /// Keeps all the values of a 3 by 3 matrix and allows you to
     /// do some math with matrices.
@@ -137,8 +137,8 @@ namespace iTextSharp.Kernel.Geom {
         /// </summary>
         /// <param name="by">The matrix to multiply by</param>
         /// <returns>the resulting matrix</returns>
-        public virtual iTextSharp.Kernel.Geom.Matrix Multiply(iTextSharp.Kernel.Geom.Matrix by) {
-            iTextSharp.Kernel.Geom.Matrix rslt = new iTextSharp.Kernel.Geom.Matrix();
+        public virtual iText.Kernel.Geom.Matrix Multiply(iText.Kernel.Geom.Matrix by) {
+            iText.Kernel.Geom.Matrix rslt = new iText.Kernel.Geom.Matrix();
             float[] a = vals;
             float[] b = by.vals;
             float[] c = rslt.vals;
@@ -157,8 +157,8 @@ namespace iTextSharp.Kernel.Geom {
         /// <summary>Subtracts a matrix from this matrix and returns the results</summary>
         /// <param name="arg">the matrix to subtract from this matrix</param>
         /// <returns>a Matrix object</returns>
-        public virtual iTextSharp.Kernel.Geom.Matrix Subtract(iTextSharp.Kernel.Geom.Matrix arg) {
-            iTextSharp.Kernel.Geom.Matrix rslt = new iTextSharp.Kernel.Geom.Matrix();
+        public virtual iText.Kernel.Geom.Matrix Subtract(iText.Kernel.Geom.Matrix arg) {
+            iText.Kernel.Geom.Matrix rslt = new iText.Kernel.Geom.Matrix();
             float[] a = vals;
             float[] b = arg.vals;
             float[] c = rslt.vals;
@@ -190,10 +190,10 @@ namespace iTextSharp.Kernel.Geom {
         /// <returns>true if both matrices are equal</returns>
         /// <seealso cref="System.Object.Equals(System.Object)"/>
         public override bool Equals(Object obj) {
-            if (!(obj is iTextSharp.Kernel.Geom.Matrix)) {
+            if (!(obj is iText.Kernel.Geom.Matrix)) {
                 return false;
             }
-            return iTextSharp.IO.Util.JavaUtil.ArraysEquals(vals, ((iTextSharp.Kernel.Geom.Matrix)obj).vals);
+            return iText.IO.Util.JavaUtil.ArraysEquals(vals, ((iText.Kernel.Geom.Matrix)obj).vals);
         }
 
         /// <summary>Generates a hash code for this object.</summary>
@@ -203,7 +203,7 @@ namespace iTextSharp.Kernel.Geom {
             //return Arrays.hashCode(vals); // JDK 5 code, replaced with the following
             int result = 1;
             for (int i = 0; i < vals.Length; i++) {
-                result = 31 * result + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(vals[i]);
+                result = 31 * result + iText.IO.Util.JavaUtil.FloatToIntBits(vals[i]);
             }
             return result;
         }

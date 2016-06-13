@@ -45,7 +45,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     internal class TernaryTreeIterator : IEnumerator {
         /// <summary>current node index</summary>
         internal int cur;

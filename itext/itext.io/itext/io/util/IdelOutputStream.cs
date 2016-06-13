@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
 	public class IdelOutputStream : Stream
 	{
 	    public override void Flush()

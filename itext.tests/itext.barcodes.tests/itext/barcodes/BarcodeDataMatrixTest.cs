@@ -1,15 +1,15 @@
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public class BarcodeDataMatrixTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/barcodes/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/barcodes/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/barcodes/BarcodeDataMatrix/";
+             + "/test/itext/barcodes/BarcodeDataMatrix/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -17,7 +17,7 @@ namespace iTextSharp.Barcodes {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
@@ -29,14 +29,14 @@ namespace iTextSharp.Barcodes {
             BarcodeDataMatrix barcode = new BarcodeDataMatrix();
             barcode.SetCode("AAAAAAAAAA;BBBBAAAA3;00028;BBBAA05;AAAA;AAAAAA;1234567;AQWXSZ;JEAN;;;;7894561;AQWXSZ;GEO;;;;1;1;1;1;0;0;1;0;1;0;0;0;1;0;1;0;0;0;0;0;0;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1;1"
                 );
-            barcode.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GREEN, 5);
+            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.GREEN, 5);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
@@ -46,7 +46,7 @@ namespace iTextSharp.Barcodes {
             PdfPage page1 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             BarcodeDataMatrix barcode2 = new BarcodeDataMatrix("дима", "UTF-8");
-            barcode2.PlaceBarcode(canvas, iTextSharp.Kernel.Color.Color.GREEN, 10);
+            barcode2.PlaceBarcode(canvas, iText.Kernel.Color.Color.GREEN, 10);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

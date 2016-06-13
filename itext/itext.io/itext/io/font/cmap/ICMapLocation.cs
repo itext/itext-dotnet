@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Source;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Font.Cmap {
+namespace iText.IO.Font.Cmap {
     /// <author>psoares</author>
     public interface ICMapLocation {
         /// <exception cref="System.IO.IOException"/>

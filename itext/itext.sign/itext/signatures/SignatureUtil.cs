@@ -45,15 +45,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.Forms;
-using iTextSharp.Forms.Fields;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Forms;
+using iText.Forms.Fields;
+using iText.IO.Font;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Utility class that provides several convenience methods concerning digital signatures.</summary>
     public class SignatureUtil {
         private PdfDocument document;
@@ -326,7 +326,7 @@ namespace iTextSharp.Signatures {
 
         /// <summary>
         /// Converts a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// to an array of longs
         /// </summary>
         /// <param name="pdfArray">PdfArray to be converted</param>

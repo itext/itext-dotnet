@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf.Filters {
+namespace iText.Kernel.Pdf.Filters {
     /// <summary>A class for performing LZW decoding.</summary>
     public class LZWDecoder {
         internal byte[][] stringTable;

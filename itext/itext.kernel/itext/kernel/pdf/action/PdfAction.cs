@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Filespec;
-using iTextSharp.Kernel.Pdf.Navigation;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf.Navigation;
 
-namespace iTextSharp.Kernel.Pdf.Action {
+namespace iText.Kernel.Pdf.Action {
     public class PdfAction : PdfObjectWrapper<PdfDictionary> {
         /// <summary>a possible submitvalue</summary>
         public const int SUBMIT_EXCLUDE = 1;
@@ -103,56 +103,54 @@ namespace iTextSharp.Kernel.Pdf.Action {
             MarkObjectAsIndirect(GetPdfObject());
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoTo(PdfDestination destination) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoTo).Put(PdfName.D, destination
-                .GetPdfObject());
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoTo(PdfDestination destination) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoTo).Put(PdfName.D, destination.GetPdfObject
+                ());
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoTo(String destination) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoTo(String destination) {
             return CreateGoTo(new PdfStringDestination(destination));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.
-                GetPdfObject()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, new PdfBoolean(newWindow
-                ));
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
+                ()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             ) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.
-                GetPdfObject()).Put(PdfName.D, destination.GetPdfObject());
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
+                ()).Put(PdfName.D, destination.GetPdfObject());
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum) {
             return CreateGoToR(filename, pageNum, false);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum, bool newWindow
-            ) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum, bool newWindow) {
             return CreateGoToR(new PdfStringFS(filename), PdfExplicitDestination.CreateFitH(pageNum, 10000), newWindow
                 );
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, String destination, bool
-             newWindow) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, String destination, bool newWindow
+            ) {
             return CreateGoToR(new PdfStringFS(filename), new PdfStringDestination(destination), newWindow);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, String destination) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, String destination) {
             return CreateGoToR(filename, destination, false);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow
-            , PdfTargetDictionary targetDictionary) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow, PdfTargetDictionary
+             targetDictionary) {
             return CreateGoToE(null, destination, newWindow, targetDictionary);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfFileSpec fileSpec, PdfDestination destination
+        public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow, PdfTargetDictionary targetDictionary) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S
-                , PdfName.GoToE).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
+                GoToE).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
@@ -165,23 +163,23 @@ namespace iTextSharp.Kernel.Pdf.Action {
             return action;
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, bool newWindow) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, bool newWindow) {
             return CreateLaunch(fileSpec, null, newWindow);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S
-                , PdfName.Launch);
+        public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec) {
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
+                Launch);
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
             return action;
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
+        public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
             ) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S
-                , PdfName.Launch).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
+                Launch).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
@@ -191,105 +189,102 @@ namespace iTextSharp.Kernel.Pdf.Action {
             return action;
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateThread(PdfFileSpec fileSpec, PdfObject destinationThread
+        public static iText.Kernel.Pdf.Action.PdfAction CreateThread(PdfFileSpec fileSpec, PdfObject destinationThread
             , PdfObject bead) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S
-                , PdfName.Launch).Put(PdfName.D, destinationThread).Put(PdfName.B, bead);
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
+                Launch).Put(PdfName.D, destinationThread).Put(PdfName.B, bead);
             if (fileSpec != null) {
                 action.Put(PdfName.F, fileSpec.GetPdfObject());
             }
             return action;
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateThread(PdfFileSpec fileSpec) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateThread(PdfFileSpec fileSpec) {
             return CreateThread(fileSpec, null, null);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateURI(String uri) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateURI(String uri) {
             return CreateURI(uri, false);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateURI(String uri, bool isMap) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.URI).Put(PdfName.URI, new PdfString
-                (uri)).Put(PdfName.IsMap, new PdfBoolean(isMap));
+        public static iText.Kernel.Pdf.Action.PdfAction CreateURI(String uri, bool isMap) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.URI).Put(PdfName.URI, new PdfString(
+                uri)).Put(PdfName.IsMap, new PdfBoolean(isMap));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateSound(PdfStream sound) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound
-                );
+        public static iText.Kernel.Pdf.Action.PdfAction CreateSound(PdfStream sound) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateSound(PdfStream sound, float volume, bool synchronous
+        public static iText.Kernel.Pdf.Action.PdfAction CreateSound(PdfStream sound, float volume, bool synchronous
             , bool repeat, bool mix) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound
-                ).Put(PdfName.Volume, new PdfNumber(volume)).Put(PdfName.Synchronous, new PdfBoolean(synchronous)).Put
-                (PdfName.Repeat, new PdfBoolean(repeat)).Put(PdfName.Mix, new PdfBoolean(mix));
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound).Put
+                (PdfName.Volume, new PdfNumber(volume)).Put(PdfName.Synchronous, new PdfBoolean(synchronous)).Put(PdfName
+                .Repeat, new PdfBoolean(repeat)).Put(PdfName.Mix, new PdfBoolean(mix));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateMovie(PdfAnnotation annotation, String title, PdfName
+        public static iText.Kernel.Pdf.Action.PdfAction CreateMovie(PdfAnnotation annotation, String title, PdfName
              operation) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S
-                , PdfName.Movie).Put(PdfName.T, new PdfString(title)).Put(PdfName.Operation, operation);
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
+                Movie).Put(PdfName.T, new PdfString(title)).Put(PdfName.Operation, operation);
             if (annotation != null) {
                 action.Put(PdfName.Annotation, annotation.GetPdfObject());
             }
             return action;
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation annotation, bool hidden) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, annotation
-                .GetPdfObject()).Put(PdfName.H, new PdfBoolean(hidden));
+        public static iText.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation annotation, bool hidden) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, annotation.GetPdfObject
+                ()).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation[] annotations, bool hidden) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetPdfArrayFromAnnotationsList
+        public static iText.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation[] annotations, bool hidden) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetPdfArrayFromAnnotationsList
                 (annotations)).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateHide(String text, bool hidden) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, new PdfString
+        public static iText.Kernel.Pdf.Action.PdfAction CreateHide(String text, bool hidden) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, new PdfString(text
+                )).Put(PdfName.H, new PdfBoolean(hidden));
+        }
+
+        public static iText.Kernel.Pdf.Action.PdfAction CreateHide(String[] text, bool hidden) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetArrayFromStringList
                 (text)).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateHide(String[] text, bool hidden) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetArrayFromStringList
-                (text)).Put(PdfName.H, new PdfBoolean(hidden));
+        public static iText.Kernel.Pdf.Action.PdfAction CreateNamed(PdfName namedAction) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Named).Put(PdfName.N, namedAction);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateNamed(PdfName namedAction) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Named).Put(PdfName.N, namedAction
-                );
-        }
-
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateSetOcgState(IList<PdfActionOcgState> states) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateSetOcgState(IList<PdfActionOcgState> states) {
             return CreateSetOcgState(states, false);
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateSetOcgState(IList<PdfActionOcgState> states, bool
-             preserveRb) {
+        public static iText.Kernel.Pdf.Action.PdfAction CreateSetOcgState(IList<PdfActionOcgState> states, bool preserveRb
+            ) {
             PdfArray stateArr = new PdfArray();
             foreach (PdfActionOcgState state in states) {
                 stateArr.AddAll(state.GetObjectList());
             }
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.SetOCGState).Put(PdfName.State, 
-                stateArr).Put(PdfName.PreserveRB, new PdfBoolean(preserveRb));
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.SetOCGState).Put(PdfName.State, stateArr
+                ).Put(PdfName.PreserveRB, new PdfBoolean(preserveRb));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateRendition(String file, PdfFileSpec fileSpec, String
-             mimeType, PdfAnnotation screenAnnotation) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new 
-                PdfNumber(0)).Put(PdfName.AN, screenAnnotation.GetPdfObject()).Put(PdfName.R, new PdfRendition(file, fileSpec
-                , mimeType).GetPdfObject());
+        public static iText.Kernel.Pdf.Action.PdfAction CreateRendition(String file, PdfFileSpec fileSpec, String 
+            mimeType, PdfAnnotation screenAnnotation) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber
+                (0)).Put(PdfName.AN, screenAnnotation.GetPdfObject()).Put(PdfName.R, new PdfRendition(file, fileSpec, 
+                mimeType).GetPdfObject());
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateJavaScript(String javaScript) {
-            return new iTextSharp.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.JavaScript).Put(PdfName.JS, new 
-                PdfString(javaScript));
+        public static iText.Kernel.Pdf.Action.PdfAction CreateJavaScript(String javaScript) {
+            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.JavaScript).Put(PdfName.JS, new PdfString
+                (javaScript));
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateSubmitForm(String file, Object[] names, int flags
-            ) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction();
+        public static iText.Kernel.Pdf.Action.PdfAction CreateSubmitForm(String file, Object[] names, int flags) {
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction();
             action.Put(PdfName.S, PdfName.SubmitForm);
             PdfDictionary dic = new PdfDictionary();
             dic.Put(PdfName.F, new PdfString(file));
@@ -302,8 +297,8 @@ namespace iTextSharp.Kernel.Pdf.Action {
             return action;
         }
 
-        public static iTextSharp.Kernel.Pdf.Action.PdfAction CreateResetForm(Object[] names, int flags) {
-            iTextSharp.Kernel.Pdf.Action.PdfAction action = new iTextSharp.Kernel.Pdf.Action.PdfAction();
+        public static iText.Kernel.Pdf.Action.PdfAction CreateResetForm(Object[] names, int flags) {
+            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction();
             action.Put(PdfName.S, PdfName.ResetForm);
             if (names != null) {
                 action.Put(PdfName.Fields, BuildArray(names));
@@ -312,7 +307,7 @@ namespace iTextSharp.Kernel.Pdf.Action {
             return action;
         }
 
-        public static void SetAdditionalAction(PdfObjectWrapper<PdfDictionary> wrapper, PdfName key, iTextSharp.Kernel.Pdf.Action.PdfAction
+        public static void SetAdditionalAction(PdfObjectWrapper<PdfDictionary> wrapper, PdfName key, iText.Kernel.Pdf.Action.PdfAction
              action) {
             PdfDictionary dic;
             PdfObject obj = wrapper.GetPdfObject().Get(PdfName.AA);
@@ -328,7 +323,7 @@ namespace iTextSharp.Kernel.Pdf.Action {
 
         /// <summary>Add a chained action.</summary>
         /// <param name="na"/>
-        public virtual void Next(iTextSharp.Kernel.Pdf.Action.PdfAction na) {
+        public virtual void Next(iText.Kernel.Pdf.Action.PdfAction na) {
             PdfObject nextAction = GetPdfObject().Get(PdfName.Next);
             if (nextAction == null) {
                 Put(PdfName.Next, na.GetPdfObject());
@@ -345,7 +340,7 @@ namespace iTextSharp.Kernel.Pdf.Action {
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Action.PdfAction Put(PdfName key, PdfObject value) {
+        public virtual iText.Kernel.Pdf.Action.PdfAction Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }

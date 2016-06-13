@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using iTextSharp.Kernel;
+using iText.Kernel;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Utilities.Date;
 
-namespace iTextSharp.Signatures
+namespace iText.Signatures
 {
     internal static class SignExtensions {
 

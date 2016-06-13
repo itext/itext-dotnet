@@ -43,7 +43,7 @@ Copyright (c) 1998-2016 iText Group NV
 */
 using System;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     /// <summary>Utilities to construct an XMP for a PDF/A file.</summary>
     public class PdfAXMPUtil {
         public const String PDF_UA_EXTENSION = "    <x:xmpmeta xmlns:x=\"adobe:ns:meta/\">\n" + "      <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"

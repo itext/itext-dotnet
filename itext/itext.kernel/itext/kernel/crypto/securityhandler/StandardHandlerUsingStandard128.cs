@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler {
+namespace iText.Kernel.Crypto.Securityhandler {
     public class StandardHandlerUsingStandard128 : StandardHandlerUsingStandard40 {
         public StandardHandlerUsingStandard128(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
             , int permissions, bool encryptMetadata, bool embeddedFilesOnly, byte[] documentId)

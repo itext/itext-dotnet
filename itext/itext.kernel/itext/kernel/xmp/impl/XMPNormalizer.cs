@@ -31,12 +31,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Impl.XPath;
-using iTextSharp.Kernel.XMP.Options;
-using iTextSharp.Kernel.XMP.Properties;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Impl.XPath;
+using iText.Kernel.XMP.Options;
+using iText.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.XMP.Impl
+namespace iText.Kernel.XMP.Impl
 {
 	/// <since>Aug 18, 2006</since>
 	public class XMPNormalizer
@@ -59,7 +59,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="xmp">the raw metadata object</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns the normalized metadata object</returns>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Collects all severe processing errors.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Collects all severe processing errors.
 		/// 	</exception>
 		internal static XMPMeta Process(XMPMetaImpl xmp, ParseOptions options)
 		{
@@ -86,7 +86,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// property is updated by an old app that uses <em>rdf:about</em>.
 		/// </remarks>
 		/// <param name="tree">the root of the metadata tree</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if tweaking fails.</exception>
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if tweaking fails.</exception>
 		private static void TweakOldXMP(XMPNode tree)
 		{
 			if (tree.GetName() != null && tree.GetName().Length >= Utils.UUID_LENGTH)
@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
 		/// <summary>Visit all schemas to do general fixes and handle special cases.</summary>
 		/// <param name="xmp">the metadata object implementation</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the normalisation fails.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the normalisation fails.
 		/// 	</exception>
 		private static void TouchUpDataModel(XMPMetaImpl xmp)
 		{
@@ -192,7 +192,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <code>alt-text</code> item if the language was <code>x-default</code>.
 		/// </remarks>
 		/// <param name="dcSchema">the DC schema node</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if normalization fails
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if normalization fails
 		/// 	</exception>
 		private static void NormalizeDCArrays(XMPNode dcSchema)
 		{
@@ -244,7 +244,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// non-empty items by adding the "xml:lang" with value "x-repair".
 		/// </remarks>
 		/// <param name="arrayNode">the property node of the array to repair.</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Forwards unexpected exceptions.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards unexpected exceptions.
 		/// 	</exception>
 		private static void RepairAltText(XMPNode arrayNode)
 		{
@@ -293,7 +293,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// </remarks>
 		/// <param name="tree">the root of the metadata tree</param>
 		/// <param name="options">th parsing options</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Forwards XMP errors</exception>
+		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards XMP errors</exception>
 		private static void MoveExplicitAliases(XMPNode tree, ParseOptions options)
 		{
 			if (!tree.GetHasAliases()) {
@@ -417,7 +417,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
 		/// <summary>Fixes the GPS Timestamp in EXIF.</summary>
 		/// <param name="exifSchema">the EXIF schema node</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the date conversion fails.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the date conversion fails.
 		/// 	</exception>
 		private static void FixGPSTimeStamp(XMPNode exifSchema)
 		{
@@ -476,7 +476,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="aliasNode">the alias node</param>
 		/// <param name="baseNode">the base node of the alias</param>
 		/// <param name="outerCall">marks the outer call of the recursion</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Forwards XMP errors</exception>
+		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards XMP errors</exception>
 		private static void CompareAliasedSubtrees(XMPNode aliasNode, XMPNode baseNode, bool
 			 outerCall)
 		{

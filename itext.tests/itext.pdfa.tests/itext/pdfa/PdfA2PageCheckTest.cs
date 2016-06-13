@@ -1,15 +1,15 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Test;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
+using iText.Test;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     public class PdfA2PageCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void CatalogCheck01() {
             NUnit.Framework.Assert.That(() =>  {

@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Font.Otf;
+using iText.IO.Font.Otf;
 
-namespace iTextSharp.IO.Font.Otf.Lookuptype6 {
+namespace iText.IO.Font.Otf.Lookuptype6 {
     public abstract class SubTableLookup6 : ContextualSubTable {
         protected internal SubTableLookup6(OpenTypeFontTableReader openReader, int lookupFlag)
             : base(openReader, lookupFlag) {

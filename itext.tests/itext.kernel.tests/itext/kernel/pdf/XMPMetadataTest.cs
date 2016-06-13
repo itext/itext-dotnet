@@ -1,13 +1,13 @@
 using System;
 using System.IO;
-using iTextSharp.Test;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class XMPMetadataTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/XmpWriterTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/XmpWriterTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/XmpWriterTest/";
+             + "/test/itext/kernel/pdf/XmpWriterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -38,7 +38,7 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocumentWithAbcXmp() {
             MemoryStream fos = new MemoryStream();

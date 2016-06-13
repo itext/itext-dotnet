@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary><p>A simple, fast array of bits, represented compactly by an array of ints internally.</p></summary>
     /// <author>Sean Owen</author>
     internal sealed class BitArray {

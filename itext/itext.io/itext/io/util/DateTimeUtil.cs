@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     /// <summary>
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.

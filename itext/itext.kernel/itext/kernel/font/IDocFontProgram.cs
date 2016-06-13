@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     internal interface IDocFontProgram {
         PdfStream GetFontFile();
 

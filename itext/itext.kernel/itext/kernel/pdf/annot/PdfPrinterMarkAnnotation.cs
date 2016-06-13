@@ -41,11 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfPrinterMarkAnnotation : PdfAnnotation {
         public PdfPrinterMarkAnnotation(Rectangle rect, PdfFormXObject appearanceStream)
             : base(rect) {

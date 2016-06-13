@@ -46,9 +46,9 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
     public class CertificateVerification {
         /// <summary>Verifies a single certificate for the current date.</summary>

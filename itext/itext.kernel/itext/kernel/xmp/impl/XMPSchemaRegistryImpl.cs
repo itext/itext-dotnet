@@ -31,12 +31,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Options;
-using iTextSharp.Kernel.XMP.Properties;
+using iText.IO.Util;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
+using iText.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.XMP.Impl
+namespace iText.Kernel.XMP.Impl
 {
 	/// <summary>The schema registry handles the namespaces, aliases and global options for the XMP Toolkit.
 	/// 	</summary>
@@ -82,9 +82,9 @@ namespace iTextSharp.Kernel.XMP.Impl
 
 		// ---------------------------------------------------------------------------------------------
 		// Namespace Functions
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.RegisterNamespace(System.String, System.String)
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.RegisterNamespace(System.String, System.String)
 		/// 	"/>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public String RegisterNamespace(String namespaceURI, String suggestedPrefix)
 		{
 			lock (this)
@@ -128,7 +128,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.DeleteNamespace(System.String)
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.DeleteNamespace(System.String)
 		/// 	"/>
 		public void DeleteNamespace(String namespaceURI)
 		{
@@ -145,7 +145,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.GetNamespacePrefix(System.String)
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.GetNamespacePrefix(System.String)
 		/// 	"/>
 		public String GetNamespacePrefix(String namespaceURI)
 		{
@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.GetNamespaceURI(System.String)
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.GetNamespaceURI(System.String)
 		/// 	"/>
 		public String GetNamespaceURI(String namespacePrefix)
 		{
@@ -169,7 +169,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.GetNamespaces()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.GetNamespaces()"/>
 		public IDictionary GetNamespaces()
 		{
 			lock (this)
@@ -178,7 +178,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.GetPrefixes()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.GetPrefixes()"/>
 		public IDictionary GetPrefixes()
 		{
 			lock (this)
@@ -196,7 +196,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// Specification and some other Adobe private namespaces.
 		/// Note: This method is not lock because only called by the constructor.
 		/// </remarks>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Forwards processing exceptions
+		/// <exception cref="iText.Kernel.XMP.XMPException">Forwards processing exceptions
 		/// 	</exception>
 		private void RegisterStandardNamespaces()
 		{
@@ -265,7 +265,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
 		// ---------------------------------------------------------------------------------------------
 		// Alias Functions
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.ResolveAlias(System.String, System.String)
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.ResolveAlias(System.String, System.String)
 		/// 	"/>
 		public XMPAliasInfo ResolveAlias(String aliasNS, String aliasProp)
 		{
@@ -280,7 +280,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.FindAlias(System.String)"/
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.FindAlias(System.String)"/
 		/// 	>
 		public XMPAliasInfo FindAlias(String qname)
 		{
@@ -290,7 +290,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.FindAliases(System.String)
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.FindAliases(System.String)
 		/// 	"/>
 		public XMPAliasInfo[] FindAliases(String aliasNS)
 		{
@@ -351,10 +351,10 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <code>XMP_NoOptions</code>, the default value, for all
 		/// direct aliases regardless of whether the actual data type is
 		/// an array or not (see
-		/// <see cref="iTextSharp.Kernel.XMP.Options.AliasOptions"/>
+		/// <see cref="iText.Kernel.XMP.Options.AliasOptions"/>
 		/// ).
 		/// </param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">for inconsistant aliases.</exception>
+		/// <exception cref="iText.Kernel.XMP.XMPException">for inconsistant aliases.</exception>
 		internal void RegisterAlias(String aliasNS, String aliasProp, String actualNS, String
 			 actualProp, AliasOptions aliasForm)
 		{
@@ -415,25 +415,25 @@ namespace iTextSharp.Kernel.XMP.Impl
 				this.aliasOpts = aliasOpts;
 			}
 
-			/// <seealso cref="iTextSharp.Kernel.XMP.Properties.XMPAliasInfo.GetNamespace()"/>
+			/// <seealso cref="iText.Kernel.XMP.Properties.XMPAliasInfo.GetNamespace()"/>
 			public String GetNamespace()
 			{
 				return actualNS;
 			}
 
-			/// <seealso cref="iTextSharp.Kernel.XMP.Properties.XMPAliasInfo.GetPrefix()"/>
+			/// <seealso cref="iText.Kernel.XMP.Properties.XMPAliasInfo.GetPrefix()"/>
 			public String GetPrefix()
 			{
 				return actualPrefix;
 			}
 
-			/// <seealso cref="iTextSharp.Kernel.XMP.Properties.XMPAliasInfo.GetPropName()"/>
+			/// <seealso cref="iText.Kernel.XMP.Properties.XMPAliasInfo.GetPropName()"/>
 			public String GetPropName()
 			{
 				return actualProp;
 			}
 
-			/// <seealso cref="iTextSharp.Kernel.XMP.Properties.XMPAliasInfo.GetAliasForm()"/>
+			/// <seealso cref="iText.Kernel.XMP.Properties.XMPAliasInfo.GetAliasForm()"/>
 			public AliasOptions GetAliasForm()
 			{
 				return aliasOpts;
@@ -454,7 +454,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			private readonly AliasOptions aliasOpts;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPSchemaRegistry.GetAliases()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPSchemaRegistry.GetAliases()"/>
 		public IDictionary GetAliases()
 		{
 			lock (this)
@@ -469,7 +469,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// Register the standard aliases.
 		/// Note: This method is not lock because only called by the constructor.
 		/// </remarks>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the registrations of at least one alias fails.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If the registrations of at least one alias fails.
 		/// 	</exception>
 		private void RegisterStandardAliases()
 		{

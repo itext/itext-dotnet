@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
+using iText.IO;
+using iText.IO.Log;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public abstract class PdfPrimitiveObject : PdfObject {
         protected internal byte[] content = null;
 
@@ -102,13 +102,13 @@ namespace iTextSharp.Kernel.Pdf {
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfPrimitiveObject @object = (iTextSharp.Kernel.Pdf.PdfPrimitiveObject)from;
+            iText.Kernel.Pdf.PdfPrimitiveObject @object = (iText.Kernel.Pdf.PdfPrimitiveObject)from;
             if (@object.content != null) {
-                content = iTextSharp.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content.Length);
+                content = iText.IO.Util.JavaUtil.ArraysCopyOf(@object.content, @object.content.Length);
             }
         }
 
-        protected internal virtual int CompareContent(iTextSharp.Kernel.Pdf.PdfPrimitiveObject o) {
+        protected internal virtual int CompareContent(iText.Kernel.Pdf.PdfPrimitiveObject o) {
             for (int i = 0; i < Math.Min(content.Length, o.content.Length); i++) {
                 if (content[i] > o.content[i]) {
                     return 1;
@@ -117,7 +117,7 @@ namespace iTextSharp.Kernel.Pdf {
                     return -1;
                 }
             }
-            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length);
+            return iText.IO.Util.JavaUtil.IntegerCompare(content.Length, o.content.Length);
         }
     }
 }

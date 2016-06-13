@@ -43,17 +43,17 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     /// <summary>
     /// If you are using True Type fonts, you can declare the paths of the different ttf- and ttc-files
     /// to this class first and then create fonts in your code using one of the getFont method
     /// without having to enter a path as parameter.
     /// </summary>
     internal class FontRegisterProvider {
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.FontRegisterProvider
+        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.FontRegisterProvider
             ));
 
         /// <summary>This is a map of postscriptfontnames of fonts and the path of their font file.</summary>
@@ -189,7 +189,7 @@ namespace iTextSharp.IO.Font {
                     // the font is a type 1 font or CJK font
                     fontProgram = FontProgramFactory.CreateFont(fontName, cached);
                 }
-                catch (iTextSharp.IO.IOException) {
+                catch (iText.IO.IOException) {
                 }
             }
             return fontProgram;
@@ -336,7 +336,7 @@ namespace iTextSharp.IO.Font {
                 LOGGER.Trace(String.Format("Registered {0}", path));
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(e);
+                throw new iText.IO.IOException(e);
             }
         }
 

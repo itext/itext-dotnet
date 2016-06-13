@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     /// <summary>Represents a Bezier curve.</summary>
     public class BezierCurve : IShape {
         /// <summary>

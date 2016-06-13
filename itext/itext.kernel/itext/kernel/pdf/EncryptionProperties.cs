@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class EncryptionProperties {
         protected internal int encryptionAlgorithm;
 

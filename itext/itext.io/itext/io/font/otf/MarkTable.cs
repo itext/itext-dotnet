@@ -41,14 +41,14 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     /// <author>psoares</author>
     public class MarkTable {
         private MarkTable() {
         }
 
         public static bool IsMark(int charPoint) {
-            int p = iTextSharp.IO.Util.JavaUtil.ArraysBinarySearch(markTable, charPoint);
+            int p = iText.IO.Util.JavaUtil.ArraysBinarySearch(markTable, charPoint);
             if (p >= 0) {
                 return true;
             }

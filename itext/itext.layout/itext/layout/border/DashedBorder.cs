@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border {
+namespace iText.Layout.Border {
     /// <summary>Draws a border with dashes around the element it's been set to.</summary>
-    public class DashedBorder : iTextSharp.Layout.Border.Border {
+    public class DashedBorder : iText.Layout.Border.Border {
         private const float DASH_MODIFIER = 5f;
 
         private const float GAP_MODIFIER = 3.5f;
@@ -60,12 +60,12 @@ namespace iTextSharp.Layout.Border {
         /// <summary>Creates a DashedBorder with the specified width and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
-        public DashedBorder(iTextSharp.Kernel.Color.Color color, float width)
+        public DashedBorder(iText.Kernel.Color.Color color, float width)
             : base(color, width) {
         }
 
         public override int GetBorderType() {
-            return iTextSharp.Layout.Border.Border.DASHED;
+            return iText.Layout.Border.Border.DASHED;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore

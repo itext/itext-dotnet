@@ -45,7 +45,7 @@ using System;
 using System.Text;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Class that informs you that the verification of a Certificate
     /// succeeded using a specific CertificateVerifier and for a specific

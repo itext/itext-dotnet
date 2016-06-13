@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.Kernel {
+namespace iText.Kernel {
     public class PdfException : Exception {
         public const String _1IsAnUnknownGraphicsStateDictionary = "{0} is.an.unknown.graphics.state.dictionary";
 
@@ -462,7 +462,7 @@ namespace iTextSharp.Kernel {
             }
         }
 
-        public virtual iTextSharp.Kernel.PdfException SetMessageParams(params Object[] messageParams) {
+        public virtual iText.Kernel.PdfException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;

@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace iTextSharp.Test {
+namespace iText.Test {
     [LogListener]
     public abstract class ExtendedITextTest : ITextTest {
         [SetUp]

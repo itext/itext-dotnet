@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.Kernel.Pdf.Navigation;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Utils;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfOutlineTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfOutlineTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfOutlineTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfOutlineTest/";
+             + "/test/itext/kernel/pdf/PdfOutlineTest/";
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         [NUnit.Framework.TestFixtureSetUp]

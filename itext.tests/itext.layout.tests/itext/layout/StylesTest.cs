@@ -1,24 +1,24 @@
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class StylesTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void StylesTest01() {
             Style myStyle = new Style();
-            myStyle.SetFontColor(iTextSharp.Kernel.Color.Color.RED);
-            Paragraph p = new Paragraph("text").AddStyle(myStyle).SetFontColor(iTextSharp.Kernel.Color.Color.GREEN);
-            NUnit.Framework.Assert.AreEqual(iTextSharp.Kernel.Color.Color.GREEN, p.GetRenderer().GetProperty<iTextSharp.Kernel.Color.Color
-                >(iTextSharp.Layout.Property.Property.FONT_COLOR));
+            myStyle.SetFontColor(iText.Kernel.Color.Color.RED);
+            Paragraph p = new Paragraph("text").AddStyle(myStyle).SetFontColor(iText.Kernel.Color.Color.GREEN);
+            NUnit.Framework.Assert.AreEqual(iText.Kernel.Color.Color.GREEN, p.GetRenderer().GetProperty<iText.Kernel.Color.Color
+                >(iText.Layout.Property.Property.FONT_COLOR));
         }
 
         [NUnit.Framework.Test]
         public virtual void StylesTest02() {
             Style myStyle = new Style();
-            myStyle.SetFontColor(iTextSharp.Kernel.Color.Color.RED);
+            myStyle.SetFontColor(iText.Kernel.Color.Color.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle);
-            NUnit.Framework.Assert.AreEqual(iTextSharp.Kernel.Color.Color.RED, p.GetRenderer().GetProperty<iTextSharp.Kernel.Color.Color
-                >(iTextSharp.Layout.Property.Property.FONT_COLOR));
+            NUnit.Framework.Assert.AreEqual(iText.Kernel.Color.Color.RED, p.GetRenderer().GetProperty<iText.Kernel.Color.Color
+                >(iText.Layout.Property.Property.FONT_COLOR));
         }
     }
 }

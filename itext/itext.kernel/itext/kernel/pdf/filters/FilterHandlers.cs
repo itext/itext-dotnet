@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters {
+namespace iText.Kernel.Pdf.Filters {
     /// <summary>Encapsulates filter behavior for PDF streams.</summary>
     /// <remarks>
     /// Encapsulates filter behavior for PDF streams.  Classes generally interace with this

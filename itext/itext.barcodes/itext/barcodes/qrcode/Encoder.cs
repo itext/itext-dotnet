@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
     /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
     internal sealed class Encoder {
@@ -87,12 +87,12 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
         /// with which clients can specify the encoding mode. For now, we don't need the functionality.
         /// </remarks>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void Encode(String content, ErrorCorrectionLevel ecLevel, QRCode qrCode) {
             Encode(content, ecLevel, null, qrCode);
         }
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void Encode(String content, ErrorCorrectionLevel ecLevel, IDictionary<EncodeHintType, Object
             > hints, QRCode qrCode) {
             String encoding = hints == null ? null : (String)hints.Get(EncodeHintType.CHARACTER_SET);
@@ -214,7 +214,7 @@ namespace iTextSharp.Barcodes.Qrcode {
             return true;
         }
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static int ChooseMaskPattern(BitVector bits, ErrorCorrectionLevel ecLevel, int version, ByteMatrix
              matrix) {
             int minPenalty = int.MaxValue;
@@ -237,7 +237,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// Initialize "qrCode" according to "numInputBytes", "ecLevel", and "mode". On success,
         /// modify "qrCode".
         /// </remarks>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         private static void InitQRCode(int numInputBytes, ErrorCorrectionLevel ecLevel, Mode mode, QRCode qrCode) {
             qrCode.SetECLevel(ecLevel);
             qrCode.SetMode(mode);
@@ -273,7 +273,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         }
 
         /// <summary>Terminate bits as described in 8.4.8 and 8.4.9 of JISX0510:2004 (p.24).</summary>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void TerminateBits(int numDataBytes, BitVector bits) {
             int capacity = numDataBytes << 3;
             if (bits.Size() > capacity) {
@@ -316,7 +316,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// the result in "numDataBytesInBlock", and "numECBytesInBlock". See table 12 in 8.5.1 of
         /// JISX0510:2004 (p.30)
         /// </remarks>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void GetNumDataBytesAndNumECBytesForBlockID(int numTotalBytes, int numDataBytes, int numRSBlocks
             , int blockID, int[] numDataBytesInBlock, int[] numECBytesInBlock) {
             if (blockID >= numRSBlocks) {
@@ -367,7 +367,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// Interleave "bits" with corresponding error correction bytes. On success, store the result in
         /// "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
         /// </remarks>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void InterleaveWithECBytes(BitVector bits, int numTotalBytes, int numDataBytes, int numRSBlocks
             , BitVector result) {
             // "bits" must have "getNumDataBytes" bytes of data.
@@ -444,7 +444,7 @@ namespace iTextSharp.Barcodes.Qrcode {
 
         /// <summary>Append length info.</summary>
         /// <remarks>Append length info. On success, store the result in "bits".</remarks>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void AppendLengthInfo(int numLetters, int version, Mode mode, BitVector bits) {
             int numBits = mode.GetCharacterCountBits(Version.GetVersionForNumber(version));
             if (numLetters > ((1 << numBits) - 1)) {
@@ -455,7 +455,7 @@ namespace iTextSharp.Barcodes.Qrcode {
 
         /// <summary>Append "bytes" in "mode" mode (encoding) into "bits".</summary>
         /// <remarks>Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".</remarks>
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void AppendBytes(String content, Mode mode, BitVector bits, String encoding) {
             if (mode.Equals(Mode.NUMERIC)) {
                 AppendNumericBytes(content, bits);
@@ -508,7 +508,7 @@ namespace iTextSharp.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void AppendAlphanumericBytes(String content, BitVector bits) {
             int length = content.Length;
             int i = 0;
@@ -534,7 +534,7 @@ namespace iTextSharp.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void Append8BitBytes(String content, BitVector bits, String encoding) {
             byte[] bytes;
             try {
@@ -548,7 +548,7 @@ namespace iTextSharp.Barcodes.Qrcode {
             }
         }
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         internal static void AppendKanjiBytes(String content, BitVector bits) {
             byte[] bytes;
             try {

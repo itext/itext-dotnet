@@ -41,12 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Layout;
-using iTextSharp.Layout.Layout;
+using iText.IO.Log;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout;
+using iText.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class CanvasRenderer : RootRenderer {
         protected internal Canvas canvas;
 
@@ -61,8 +61,8 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         public override void AddChild(IRenderer renderer) {
-            if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FULL))) {
-                LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
+            if (true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.FULL))) {
+                LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
                     );
             }
             else {
@@ -91,7 +91,7 @@ namespace iTextSharp.Layout.Renderer {
                 currentArea = new LayoutArea(0, canvas.GetRootArea().Clone());
             }
             else {
-                SetProperty(iTextSharp.Layout.Property.Property.FULL, true);
+                SetProperty(iText.Layout.Property.Property.FULL, true);
                 currentArea = null;
             }
             return currentArea;

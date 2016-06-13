@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>A class which wraps a 2D array of bytes.</summary>
     /// <remarks>
     /// A class which wraps a 2D array of bytes. The default usage is signed. If you want to use it as a

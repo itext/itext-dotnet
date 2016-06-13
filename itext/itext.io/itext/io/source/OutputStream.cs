@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
 	public class OutputStream<T> : Stream
 		where T : Stream
 	{

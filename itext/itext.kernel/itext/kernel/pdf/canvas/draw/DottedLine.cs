@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
+namespace iText.Kernel.Pdf.Canvas.Draw {
     /// <summary>
     /// Implementation of
     /// <see cref="ILineDrawer"/>
@@ -57,7 +57,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
 
         private float lineWidth = 1;
 
-        private iTextSharp.Kernel.Color.Color color = iTextSharp.Kernel.Color.Color.BLACK;
+        private iText.Kernel.Color.Color color = iText.Kernel.Color.Color.BLACK;
 
         /// <summary>Constructs a dotted horizontal line which will be drawn along the bottom edge of the specified rectangle.
         ///     </summary>
@@ -110,11 +110,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
             this.lineWidth = lineWidth;
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetColor() {
+        public virtual iText.Kernel.Color.Color GetColor() {
             return color;
         }
 
-        public virtual void SetColor(iTextSharp.Kernel.Color.Color color) {
+        public virtual void SetColor(iText.Kernel.Color.Color color) {
             this.color = color;
         }
     }

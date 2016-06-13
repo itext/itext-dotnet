@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Interface that needs to be implemented to do the actual signing.</summary>
     /// <remarks>
     /// Interface that needs to be implemented to do the actual signing.

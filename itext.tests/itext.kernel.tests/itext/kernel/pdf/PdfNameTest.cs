@@ -1,7 +1,7 @@
 using System;
-using iTextSharp.Test;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfNameTest : ITextTest {
         [NUnit.Framework.Test]
         public virtual void SpecialCharactersTest() {

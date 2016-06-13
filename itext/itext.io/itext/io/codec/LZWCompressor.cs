@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.IO;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>
     /// Modified from original LZWCompressor to change interface to passing a
     /// buffer of data to be compressed.

@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     /// <summary>This file is a helper class for internal usage only.</summary>
     /// <remarks>
     /// This file is a helper class for internal usage only.

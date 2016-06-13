@@ -32,10 +32,10 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Options;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 
-namespace iTextSharp.Kernel.XMP.Impl
+namespace iText.Kernel.XMP.Impl
 {
 	/// <summary>
 	/// This class replaces the <code>ExpatAdapter.cpp</code> and does the
@@ -67,7 +67,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// </param>
 		/// <param name="options">the parse options</param>
 		/// <returns>Returns the resulting XMP metadata object</returns>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if parsing or normalisation fails.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if parsing or normalisation fails.
 		/// 	</exception>
 		public static XMPMeta Parse(Object input, ParseOptions options)
 		{
@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// </param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns the parsed XML document or an exception.</returns>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the parsing fails for different reasons
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the parsing fails for different reasons
 		/// 	</exception>
 		private static XmlDocument ParseXml(Object input, ParseOptions options) {
 			if (input is Stream) {
@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="buffer">a byte buffer containing the XMP packet</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static XmlDocument ParseXmlFromBytebuffer(ByteBuffer buffer, ParseOptions options) {
 			try {
@@ -193,7 +193,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="input">a <code>String</code> containing the XMP packet</param>
 		/// <param name="options">the parsing options</param>
 		/// <returns>Returns an XML DOM-Document.</returns>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown when the parsing fails.
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown when the parsing fails.
 		/// 	</exception>
 		private static XmlDocument ParseXmlFromString(string input, ParseOptions options) {
 			try {

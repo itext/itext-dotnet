@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>This class implements an array of unsigned bytes.</summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
     internal sealed class ByteArray {

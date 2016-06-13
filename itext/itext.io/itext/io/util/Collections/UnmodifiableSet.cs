@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Util.Collections
+namespace iText.IO.Util.Collections
 {
     internal class UnmodifiableSet<T> : ISet<T> {
         private ISet<T> _set;

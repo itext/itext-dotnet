@@ -17,10 +17,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary><p>This class is the main entry point to the hyphenation package.</summary>
     /// <remarks>
     /// <p>This class is the main entry point to the hyphenation package.
@@ -28,10 +28,10 @@ namespace iTextSharp.Layout.Hyphenation {
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
     /// </remarks>
     public sealed class Hyphenator {
-        private const String HYPHENATION_DEFAULT_RESOURCE = "iTextSharp.Hyph.";
+        private const String HYPHENATION_DEFAULT_RESOURCE = "iText.Hyph.";
 
         /// <summary>Logging instance.</summary>
-        private static ILogger log = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Hyphenation.Hyphenator));
+        private static ILogger log = LoggerFactory.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
 
         private static HyphenationTreeCache hTreeCache;
 
@@ -250,8 +250,8 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         /// <returns>the hyphenation result</returns>
-        public static iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, IDictionary
-            <String, String> hyphPathNames, String word, int leftMin, int rightMin) {
+        public static iText.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, IDictionary<String
+            , String> hyphPathNames, String word, int leftMin, int rightMin) {
             HyphenationTree hTree = GetHyphenationTree(lang, country, hyphPathNames);
             if (hTree == null) {
                 log.Warn("Soft hyphen unicode symbols will be used as hints for hyphenation");
@@ -278,7 +278,7 @@ namespace iTextSharp.Layout.Hyphenation {
                     for (int i = leftInd; i <= rightInd; i++) {
                         hyphenationPoints[i - leftInd] = softHyphens[i];
                     }
-                    return new iTextSharp.Layout.Hyphenation.Hyphenation(word, hyphenationPoints);
+                    return new iText.Layout.Hyphenation.Hyphenation(word, hyphenationPoints);
                 }
                 else {
                     return null;
@@ -294,15 +294,15 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <param name="leftMin">the minimum number of characters before the hyphenation point</param>
         /// <param name="rightMin">the minimum number of characters after the hyphenation point</param>
         /// <returns>the hyphenation result</returns>
-        public static iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, String word
-            , int leftMin, int rightMin) {
+        public static iText.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, String word, int
+             leftMin, int rightMin) {
             return Hyphenate(lang, country, null, word, leftMin, rightMin);
         }
 
         /// <summary>Hyphenates a word.</summary>
         /// <param name="word">the word to hyphenate</param>
         /// <returns>the hyphenation result</returns>
-        public iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word) {
+        public iText.Layout.Hyphenation.Hyphenation Hyphenate(String word) {
             return Hyphenate(lang, country, hyphPathNames, word, leftMin, rightMin);
         }
     }

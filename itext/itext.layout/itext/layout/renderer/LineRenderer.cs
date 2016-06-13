@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
-using iTextSharp.Layout.Property;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Layout.Element;
+using iText.Layout.Layout;
+using iText.Layout.Property;
 
-namespace iTextSharp.Layout.Renderer
+namespace iText.Layout.Renderer
 {
 	public class LineRenderer : AbstractRenderer
 	{
@@ -70,7 +70,7 @@ namespace iTextSharp.Layout.Renderer
 			maxAscent = 0;
 			maxDescent = 0;
 			int childPos = 0;
-			BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(iTextSharp.Layout.Property.Property
+			BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(iText.Layout.Property.Property
 				.BASE_DIRECTION, BaseDirection.NO_BIDI);
 			foreach (IRenderer renderer in childRenderers)
 			{
@@ -81,7 +81,7 @@ namespace iTextSharp.Layout.Renderer
 					renderer.SetParent(null);
                     if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI)
 					{
-						baseDirection = renderer.GetOwnProperty<BaseDirection?>(iTextSharp.Layout.Property.Property
+						baseDirection = renderer.GetOwnProperty<BaseDirection?>(iText.Layout.Property.Property
 							.BASE_DIRECTION);
 					}
 				}
@@ -119,9 +119,9 @@ namespace iTextSharp.Layout.Renderer
 				if (childRenderer is TextRenderer)
 				{
 					// Delete these properties in case of relayout. We might have applied them during justify().
-					childRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.CHARACTER_SPACING
+					childRenderer.DeleteOwnProperty(iText.Layout.Property.Property.CHARACTER_SPACING
 						);
-					childRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.WORD_SPACING);
+					childRenderer.DeleteOwnProperty(iText.Layout.Property.Property.WORD_SPACING);
 				}
 				else
 				{
@@ -153,7 +153,7 @@ namespace iTextSharp.Layout.Renderer
 				if (nextTabStop != null && nextTabStop.GetTabAlignment() == TabAlignment.ANCHOR &&
 					 childRenderer is TextRenderer)
 				{
-					childRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_ANCHOR, nextTabStop
+					childRenderer.SetProperty(iText.Layout.Property.Property.TAB_ANCHOR, nextTabStop
 						.GetTabAnchor());
 				}
 				childResult = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea
@@ -316,7 +316,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							IRenderer renderer_1 = lineGlyphs[pos].renderer;
 							TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_1);
-							newRenderer.DeleteOwnProperty(iTextSharp.Layout.Property.Property.REVERSED);
+							newRenderer.DeleteOwnProperty(iText.Layout.Property.Property.REVERSED);
 							children.Add(newRenderer);
 							((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)
 								children[children.Count - 1]).line);
@@ -336,7 +336,7 @@ namespace iTextSharp.Layout.Renderer
 										{
 											IList<int[]> reversedRange = new List<int[]>();
 											reversedRange.Add(new int[] { initialPos - offset, pos - offset });
-											newRenderer.SetProperty(iTextSharp.Layout.Property.Property.REVERSED, reversedRange
+											newRenderer.SetProperty(iText.Layout.Property.Property.REVERSED, reversedRange
 												);
 											reversedRanges.Add(new int[] { initialPos - offset, pos - offset });
 											reversed = false;
@@ -351,7 +351,7 @@ namespace iTextSharp.Layout.Renderer
 							{
 								IList<int[]> reversedRange = new List<int[]>();
 								reversedRange.Add(new int[] { initialPos - offset, pos - 1 - offset });
-								newRenderer.SetProperty(iTextSharp.Layout.Property.Property.REVERSED, reversedRange
+								newRenderer.SetProperty(iText.Layout.Property.Property.REVERSED, reversedRange
 									);
 								reversedRanges.Add(new int[] { initialPos - offset, pos - 1 - offset });
 								reversed = false;
@@ -368,7 +368,7 @@ namespace iTextSharp.Layout.Renderer
 							}
 							IList<int[]> reversedRange = new List<int[]>();
 							reversedRange.Add(new int[] { initialPos - offset, pos - offset - 1 });
-							lineGlyphs[pos - 1].renderer.SetProperty(iTextSharp.Layout.Property.Property.REVERSED
+							lineGlyphs[pos - 1].renderer.SetProperty(iText.Layout.Property.Property.REVERSED
 								, reversedRange);
 							reversedRanges.Add(new int[] { initialPos - offset, pos - 1 - offset });
 						}
@@ -376,7 +376,7 @@ namespace iTextSharp.Layout.Renderer
 						{
 							if (children.Count == 1)
 							{
-								lineGlyphs[0].renderer.SetProperty(iTextSharp.Layout.Property.Property.REVERSED, 
+								lineGlyphs[0].renderer.SetProperty(iText.Layout.Property.Property.REVERSED, 
 									reversedRanges);
 							}
 						}
@@ -458,7 +458,7 @@ namespace iTextSharp.Layout.Renderer
 
 		protected internal virtual void Justify(float width)
 		{
-			float ratio = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.
+			float ratio = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.
 				SPACING_RATIO);
 			float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().
 				GetOccupiedArea().GetBBox().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox
@@ -481,11 +481,11 @@ namespace iTextSharp.Layout.Renderer
 				childX = lastRightPos;
 				if (child is TextRenderer)
 				{
-					float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+					float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(iText.Layout.Property.Property
 						.HORIZONTAL_SCALING, 1f);
-					child.SetProperty(iTextSharp.Layout.Property.Property.CHARACTER_SPACING, characterSpacing
+					child.SetProperty(iText.Layout.Property.Property.CHARACTER_SPACING, characterSpacing
 						 / childHSCale);
-					child.SetProperty(iTextSharp.Layout.Property.Property.WORD_SPACING, wordSpacing /
+					child.SetProperty(iText.Layout.Property.Property.WORD_SPACING, wordSpacing /
 						 childHSCale);
 					isLastTextRenderer = !iterator.MoveNext();
 					float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() -
@@ -639,7 +639,7 @@ namespace iTextSharp.Layout.Renderer
 		private TabStop GetNextTabStop(float curWidth)
 		{
 			SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float
-				, TabStop>>(iTextSharp.Layout.Property.Property.TAB_STOPS);
+				, TabStop>>(iText.Layout.Property.Property.TAB_STOPS);
 			KeyValuePair<float, TabStop>? nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)
@@ -668,11 +668,11 @@ namespace iTextSharp.Layout.Renderer
 				ProcessDefaultTab(childRenderer, curWidth, lineWidth);
 				return null;
 			}
-			childRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_LEADER, nextTabStop
+			childRenderer.SetProperty(iText.Layout.Property.Property.TAB_LEADER, nextTabStop
 				.GetTabLeader());
-			childRenderer.SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
+			childRenderer.SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
 				(nextTabStop.GetTabPosition() - curWidth));
-			childRenderer.SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, maxAscent -
+			childRenderer.SetProperty(iText.Layout.Property.Property.HEIGHT, maxAscent -
 				 maxDescent);
 			if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT)
 			{
@@ -735,9 +735,9 @@ namespace iTextSharp.Layout.Renderer
 			{
 				tabWidth -= (curWidth + childWidth + tabWidth) - layoutBox.GetWidth();
 			}
-			tabRenderer.SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
+			tabRenderer.SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
 				(tabWidth));
-			tabRenderer.SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
+			tabRenderer.SetProperty(iText.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
 				);
 			return tabWidth;
 		}
@@ -745,16 +745,16 @@ namespace iTextSharp.Layout.Renderer
 		private void ProcessDefaultTab(IRenderer tabRenderer, float curWidth, float lineWidth
 			)
 		{
-			float? tabDefault = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.TAB_DEFAULT
+			float? tabDefault = this.GetPropertyAsFloat(iText.Layout.Property.Property.TAB_DEFAULT
 				);
 			float? tabWidth = tabDefault - curWidth % tabDefault;
 			if (curWidth + tabWidth > lineWidth)
 			{
 				tabWidth = lineWidth - curWidth;
 			}
-			tabRenderer.SetProperty(iTextSharp.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
+			tabRenderer.SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
 				((float)tabWidth));
-			tabRenderer.SetProperty(iTextSharp.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
+			tabRenderer.SetProperty(iText.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
 				);
 		}
 

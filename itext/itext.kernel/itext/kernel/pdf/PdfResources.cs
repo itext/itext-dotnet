@@ -43,12 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Kernel.Pdf.Extgstate;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfResources : PdfObjectWrapper<PdfDictionary> {
         private const String F = "F";
 
@@ -205,7 +205,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Sets the default color space.</summary>
         /// <param name="defaultCsKey"/>
         /// <param name="defaultCsValue"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue) {
             AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }

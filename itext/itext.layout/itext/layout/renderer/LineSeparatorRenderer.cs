@@ -41,18 +41,18 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf.Canvas.Draw;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
+using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Layout.Element;
+using iText.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class LineSeparatorRenderer : BlockRenderer {
         public LineSeparatorRenderer(LineSeparator lineSeparator)
             : base(lineSeparator) {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property.LINE_DRAWER);
+            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iText.Layout.Property.Property.LINE_DRAWER);
             float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
             occupiedArea = layoutContext.GetArea().Clone();
             ApplyMargins(occupiedArea.GetBBox(), false);
@@ -65,12 +65,12 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iTextSharp.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement);
+            return new iText.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement);
         }
 
         public override void Draw(DrawContext drawContext) {
             base.Draw(drawContext);
-            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property.LINE_DRAWER);
+            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iText.Layout.Property.Property.LINE_DRAWER);
             if (lineDrawer != null) {
                 lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
             }

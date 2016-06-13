@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Test;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfWriterTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfWriterTest/";
+             + "/test/itext/kernel/pdf/PdfWriterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -127,7 +127,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Copying direct objects.</summary>
         /// <remarks>Copying direct objects. Objects of all types are added into document catalog.</remarks>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject1() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject1_1.pdf", FileMode.Create);
@@ -184,7 +184,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <remarks>Copying objects, some of those are indirect. Objects of all types are added into document catalog.
         ///     </remarks>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject2() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject2_1.pdf", FileMode.Create);
@@ -242,7 +242,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Copy objects recursively.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject3() {
  {
@@ -291,7 +291,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Copies stream.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject4() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject4_1.pdf", FileMode.Create);
@@ -331,7 +331,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Copies page.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject5() {
             FileStream fos1 = new FileStream(destinationFolder + "copyObject5_1.pdf", FileMode.Create);

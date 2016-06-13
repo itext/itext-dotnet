@@ -47,16 +47,16 @@ using System.IO;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iTextSharp.Forms;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
+using iText.Forms;
+using iText.IO.Log;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Verifies the signatures in an LTV document.</summary>
     public class LtvVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerifier
+        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.LtvVerifier
             ));
 
         /// <summary>Option to specify level of verification; signing certificate only or the entire chain.</summary>

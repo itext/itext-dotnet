@@ -41,12 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Crypto;
+using iText.IO;
+using iText.IO.Log;
+using iText.Kernel;
+using iText.Kernel.Crypto;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public abstract class PdfObject {
         public const byte ARRAY = 1;
 
@@ -117,14 +117,14 @@ namespace iTextSharp.Kernel.Pdf {
         public abstract byte GetObjectType();
 
         /// <summary>Flushes the object to the document.</summary>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush() {
             Flush(true);
         }
 
         /// <summary>Flushes the object to the document.</summary>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush(bool canBeInObjStm) {
             if (IsFlushed() || GetIndirectReference() == null) {
                 //            Logger logger = LoggerFactory.getLogger(PdfObject.class);

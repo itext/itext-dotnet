@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log {
+namespace iText.Kernel.Log {
     /// <summary>Factory that creates a counter for every reader or writer class.</summary>
     /// <remarks>
     /// Factory that creates a counter for every reader or writer class.
@@ -56,13 +56,13 @@ namespace iTextSharp.Kernel.Log {
     /// </remarks>
     public class CounterFactory {
         /// <summary>The singleton instance.</summary>
-        private static iTextSharp.Kernel.Log.CounterFactory instance;
+        private static iText.Kernel.Log.CounterFactory instance;
 
         /// <summary>The current counter implementation.</summary>
         private Counter counter = new DefaultCounter();
 
         static CounterFactory() {
-            instance = new iTextSharp.Kernel.Log.CounterFactory();
+            instance = new iText.Kernel.Log.CounterFactory();
         }
 
         /// <summary>The empty constructor.</summary>
@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Log {
         }
 
         /// <summary>Returns the singleton instance of the factory.</summary>
-        public static iTextSharp.Kernel.Log.CounterFactory GetInstance() {
+        public static iText.Kernel.Log.CounterFactory GetInstance() {
             return instance;
         }
 

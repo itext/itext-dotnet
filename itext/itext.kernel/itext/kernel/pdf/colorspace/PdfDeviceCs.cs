@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace {
+namespace iText.Kernel.Pdf.Colorspace {
     public abstract class PdfDeviceCs : PdfColorSpace {
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;

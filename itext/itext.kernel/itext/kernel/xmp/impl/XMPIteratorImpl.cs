@@ -29,13 +29,13 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Collections;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Impl.XPath;
-using iTextSharp.Kernel.XMP.Options;
-using iTextSharp.Kernel.XMP.Properties;
+using iText.IO.Util;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Impl.XPath;
+using iText.Kernel.XMP.Options;
+using iText.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.XMP.Impl
+namespace iText.Kernel.XMP.Impl
 {
 	/// <summary>The <code>XMPIterator</code> implementation.</summary>
 	/// <remarks>
@@ -76,9 +76,9 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// 	</param>
 		/// <param name="options">
 		/// advanced iteration options, see
-		/// <see cref="iTextSharp.Kernel.XMP.Options.IteratorOptions"/>
+		/// <see cref="iText.Kernel.XMP.Options.IteratorOptions"/>
 		/// </param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the node defined by the paramters is not existing.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If the node defined by the paramters is not existing.
 		/// 	</exception>
 		public XMPIteratorImpl(XMPMetaImpl xmp, String schemaNS, String propPath, IteratorOptions
 			 options)
@@ -133,13 +133,13 @@ namespace iTextSharp.Kernel.XMP.Impl
 			}
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPIterator.SkipSubtree()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPIterator.SkipSubtree()"/>
 		public virtual void SkipSubtree()
 		{
 			this.skipSubtree = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPIterator.SkipSiblings()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPIterator.SkipSiblings()"/>
 		public virtual void SkipSiblings()
 		{
 			SkipSubtree();

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Util.Collections
+namespace iText.IO.Util.Collections
 {
     internal class EmptyList<T> : IList<T> {
         public IEnumerator<T> GetEnumerator() {

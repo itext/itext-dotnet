@@ -41,11 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Layout.Renderer;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     /// <summary>
     /// A
     /// <see cref="Div"/>

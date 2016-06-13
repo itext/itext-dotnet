@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace iTextSharp.Layout
+namespace iText.Layout
 {
     internal static class LayoutExtensions
     {

@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Tagging;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils {
+namespace iText.Kernel.Pdf.Tagutils {
     /// <summary>
     /// <c>TagStructureContext</c>
     /// class is used to track necessary information of document's tag structure.
@@ -57,7 +57,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
     /// There shall be only one instance of this class per
     /// <c>PdfDocument</c>
     /// . To obtain instance of this class use
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
+    /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
     /// .
     /// </summary>
     public class TagStructureContext {
@@ -104,7 +104,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
 
         /// <summary>
         /// Do not use this constructor, instead use
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
         /// method.
         /// <br/><br/>
         /// Creates
@@ -146,7 +146,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext SetForbidUnknownRoles(bool forbidUnknownRoles
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext SetForbidUnknownRoles(bool forbidUnknownRoles
             ) {
             this.forbidUnknownRoles = forbidUnknownRoles;
             return this;
@@ -199,7 +199,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag(IAccessibleElement
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag(IAccessibleElement
              element) {
             PdfStructElem structElem = connectedModelToStruct.JRemove(element);
             RemoveStructToModelConnection(structElem);
@@ -265,7 +265,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <remarks>
         /// Removes all tags that belong only to this page. The logic which defines if tag belongs to the page is described
         /// at
-        /// <see cref="FlushPageTags(iTextSharp.Kernel.Pdf.PdfPage)"/>
+        /// <see cref="FlushPageTags(iText.Kernel.Pdf.PdfPage)"/>
         /// .
         /// </remarks>
         /// <param name="page">page that defines which tags are to be removed</param>
@@ -274,7 +274,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemovePageTags(PdfPage page) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemovePageTags(PdfPage page) {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             ICollection<PdfMcr> pageMcrs = structTreeRoot.GetPageMarkedContentReferences(page);
             if (pageMcrs != null) {
@@ -303,7 +303,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag(IAccessibleElement element
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag(IAccessibleElement element
             , TagTreePointer tagPointer) {
             PdfStructElem connectedStructElem = connectedModelToStruct.Get(element);
             if (connectedStructElem == null) {
@@ -319,7 +319,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags() {
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags() {
             foreach (PdfStructElem structElem in connectedModelToStruct.Values) {
                 RemoveStructToModelConnection(structElem);
             }
@@ -340,7 +340,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// as not yet finished ones, and they won't be flushed.
         /// </remarks>
         /// <param name="page">a page which tags will be flushed.</param>
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagStructureContext FlushPageTags(PdfPage page) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext FlushPageTags(PdfPage page) {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             ICollection<PdfMcr> pageMcrs = structTreeRoot.GetPageMarkedContentReferences(page);
             if (pageMcrs != null) {

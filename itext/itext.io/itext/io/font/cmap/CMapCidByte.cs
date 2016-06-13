@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap {
+namespace iText.IO.Font.Cmap {
     /// <author>psoares</author>
     public class CMapCidByte : AbstractCMap {
         private IDictionary<int, byte[]> map = new Dictionary<int, byte[]>();

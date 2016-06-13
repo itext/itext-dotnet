@@ -1,4 +1,4 @@
-namespace iTextSharp.IO.Util
+namespace iText.IO.Util
 {
 	public class GenericArray<T>
 	{

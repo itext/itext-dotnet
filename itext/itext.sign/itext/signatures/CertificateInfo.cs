@@ -48,9 +48,9 @@ using System.IO;
 using System.Text;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Class containing static methods that allow you to get information from
     /// an X509 Certificate: the issuer and the subject.

@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Color;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Color;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace {
+namespace iText.Kernel.Pdf.Colorspace {
     public abstract class PdfCieBasedCs : PdfColorSpace {
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;

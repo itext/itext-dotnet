@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Crypto;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Crypto;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler {
+namespace iText.Kernel.Crypto.Securityhandler {
     public class StandardHandlerUsingAes256 : StandardSecurityHandler {
         private const int VALIDATION_SALT_OFFSET = 32;
 

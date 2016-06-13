@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
+using iText.IO;
+using iText.IO.Log;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public class Jpeg2000ImageData : ImageData {
         public class Parameters {
             public int numOfComps;

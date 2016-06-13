@@ -1,17 +1,17 @@
 using System;
-using iTextSharp.Forms.Fields;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Forms.Fields;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     public class FormFieldsTaggingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/FormFieldsTaggingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/FormFieldsTaggingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/forms/FormFieldsTaggingTest/";
+             + "/test/itext/forms/FormFieldsTaggingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

@@ -31,7 +31,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace iTextSharp.Kernel.XMP.Impl.XPath {
+namespace iText.Kernel.XMP.Impl.XPath {
     /// <summary>Representates an XMP XMPPath with segment accessor methods.</summary>
     /// <since>28.02.2006</since>
     public class XMPPath {

@@ -41,15 +41,15 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Layout;
-using iTextSharp.Layout.Element;
+using iText.Layout;
+using iText.Layout.Element;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class CellRenderer : BlockRenderer {
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
-            SetProperty(iTextSharp.Layout.Property.Property.ROWSPAN, modelElement.GetRowspan());
-            SetProperty(iTextSharp.Layout.Property.Property.COLSPAN, modelElement.GetColspan());
+            SetProperty(iText.Layout.Property.Property.ROWSPAN, modelElement.GetRowspan());
+            SetProperty(iText.Layout.Property.Property.COLSPAN, modelElement.GetColspan());
         }
 
         public override IPropertyContainer GetModelElement() {
@@ -57,8 +57,7 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
-            iTextSharp.Layout.Renderer.CellRenderer splitRenderer = (iTextSharp.Layout.Renderer.CellRenderer)GetNextRenderer
-                ();
+            iText.Layout.Renderer.CellRenderer splitRenderer = (iText.Layout.Renderer.CellRenderer)GetNextRenderer();
             splitRenderer.parent = parent;
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
@@ -68,8 +67,8 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
-            iTextSharp.Layout.Renderer.CellRenderer overflowRenderer = (iTextSharp.Layout.Renderer.CellRenderer)GetNextRenderer
-                ();
+            iText.Layout.Renderer.CellRenderer overflowRenderer = (iText.Layout.Renderer.CellRenderer)GetNextRenderer(
+                );
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
@@ -81,7 +80,7 @@ namespace iTextSharp.Layout.Renderer {
 
         // Do nothing here. Border drawing for tables is done on TableRenderer.
         public override IRenderer GetNextRenderer() {
-            return new iTextSharp.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
+            return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
         }
     }
 }

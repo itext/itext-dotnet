@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class AdobeGlyphList {
         private static IDictionary<int, String> unicode2names = new Dictionary<int, String>();
 

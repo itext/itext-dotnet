@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util {
+namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Parses the page or form XObject content.</summary>
     /// <author>Paulo Soares</author>
     public class PdfCanvasParser {

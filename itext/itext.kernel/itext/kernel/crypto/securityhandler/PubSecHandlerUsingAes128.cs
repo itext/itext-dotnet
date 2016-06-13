@@ -45,10 +45,10 @@ using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel.Crypto;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Crypto;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler {
+namespace iText.Kernel.Crypto.Securityhandler {
     public class PubSecHandlerUsingAes128 : PubKeySecurityHandler {
         public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
             , bool encryptMetadata, bool embeddedFilesOnly) {

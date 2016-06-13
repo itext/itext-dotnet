@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     public class GlyphLine {
         protected internal IList<Glyph> glyphs;
 
@@ -80,7 +80,7 @@ namespace iTextSharp.IO.Font.Otf {
             this.actualText = actualText;
         }
 
-        public GlyphLine(iTextSharp.IO.Font.Otf.GlyphLine other) {
+        public GlyphLine(iText.IO.Font.Otf.GlyphLine other) {
             this.glyphs = other.glyphs;
             this.actualText = other.actualText;
             this.start = other.start;
@@ -88,7 +88,7 @@ namespace iTextSharp.IO.Font.Otf {
             this.idx = other.idx;
         }
 
-        public GlyphLine(iTextSharp.IO.Font.Otf.GlyphLine other, int start, int end) {
+        public GlyphLine(iText.IO.Font.Otf.GlyphLine other, int start, int end) {
             this.glyphs = other.glyphs.SubList(start, end);
             if (other.actualText != null) {
                 this.actualText = other.actualText.SubList(start, end);
@@ -122,8 +122,8 @@ namespace iTextSharp.IO.Font.Otf {
             return str.ToString();
         }
 
-        public virtual iTextSharp.IO.Font.Otf.GlyphLine Copy(int left, int right) {
-            iTextSharp.IO.Font.Otf.GlyphLine glyphLine = new iTextSharp.IO.Font.Otf.GlyphLine();
+        public virtual iText.IO.Font.Otf.GlyphLine Copy(int left, int right) {
+            iText.IO.Font.Otf.GlyphLine glyphLine = new iText.IO.Font.Otf.GlyphLine();
             glyphLine.start = 0;
             glyphLine.end = right - left;
             glyphLine.glyphs = new List<Glyph>(glyphs.SubList(left, right));
@@ -161,7 +161,7 @@ namespace iTextSharp.IO.Font.Otf {
             actualText = null;
         }
 
-        public virtual void ReplaceContent(iTextSharp.IO.Font.Otf.GlyphLine other) {
+        public virtual void ReplaceContent(iText.IO.Font.Otf.GlyphLine other) {
             glyphs.Clear();
             glyphs.AddAll(other.glyphs);
             if (actualText != null) {
@@ -254,7 +254,7 @@ namespace iTextSharp.IO.Font.Otf {
             }
         }
 
-        public virtual iTextSharp.IO.Font.Otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter filter) {
+        public virtual iText.IO.Font.Otf.GlyphLine Filter(GlyphLine.IGlyphLineFilter filter) {
             bool anythingFiltered = false;
             IList<Glyph> filteredGlyphs = new List<Glyph>(end - start);
             IList<GlyphLine.ActualText> filteredActualText = actualText != null ? new List<GlyphLine.ActualText>(end -
@@ -271,7 +271,7 @@ namespace iTextSharp.IO.Font.Otf {
                 }
             }
             if (anythingFiltered) {
-                return new iTextSharp.IO.Font.Otf.GlyphLine(filteredGlyphs, filteredActualText, 0, filteredGlyphs.Count);
+                return new iText.IO.Font.Otf.GlyphLine(filteredGlyphs, filteredActualText, 0, filteredGlyphs.Count);
             }
             else {
                 return this;

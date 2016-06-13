@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     public abstract class PdfFont : PdfObjectWrapper<PdfDictionary> {
         protected internal FontProgram fontProgram;
 
@@ -414,7 +414,7 @@ namespace iTextSharp.Kernel.Font {
         protected internal static String CreateSubsetPrefix() {
             StringBuilder s = new StringBuilder("");
             for (int k = 0; k < 6; ++k) {
-                s.Append((char)(iTextSharp.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
             }
             return s + "+";
         }

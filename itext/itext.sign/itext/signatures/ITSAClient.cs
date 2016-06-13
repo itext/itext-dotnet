@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Time Stamp Authority client (caller) interface.</summary>
     /// <remarks>
     /// Time Stamp Authority client (caller) interface.

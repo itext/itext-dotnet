@@ -45,10 +45,10 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Util;
+using iText.IO.Font;
+using iText.IO.Util;
 
-namespace iTextSharp.Kernel.Pdf
+namespace iText.Kernel.Pdf
 {
 	/// <summary>Acts like a <CODE>StringBuffer</CODE> but works with <CODE>byte</CODE> arrays.
 	/// 	</summary>
@@ -208,7 +208,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <remarks>Appends an <CODE>int</CODE>. The size of the array will grow by one.</remarks>
 		/// <param name="b">the int to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append_i(int b)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append_i(int b)
 		{
 			int newcount = count + 1;
 			if (newcount > buf.Length)
@@ -231,7 +231,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <param name="off">the offset to the start of the array</param>
 		/// <param name="len">the length of bytes to append</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(byte[] b, int 
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(byte[] b, int 
 			off, int len)
 		{
 			if ((off < 0) || (off > b.Length) || (len < 0) || ((off + len) > b.Length) || ((off
@@ -254,7 +254,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Appends an array of bytes.</summary>
 		/// <param name="b">the array to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(byte[] b)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(byte[] b)
 		{
 			return Append(b, 0, b.Length);
 		}
@@ -266,7 +266,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </remarks>
 		/// <param name="str">the <CODE>String</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(String str)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(String str)
 		{
 			if (str != null)
 			{
@@ -282,7 +282,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </remarks>
 		/// <param name="c">the <CODE>char</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(char c)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(char c)
 		{
 			return Append_i(c);
 		}
@@ -290,7 +290,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Appends another <CODE>ByteBufferOutputStream</CODE> to this buffer.</summary>
 		/// <param name="buf">the <CODE>ByteBufferOutputStream</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(iTextSharp.Kernel.Pdf.ByteBufferOutputStream
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(iText.Kernel.Pdf.ByteBufferOutputStream
 			 buf)
 		{
 			return Append(buf.buf, 0, buf.count);
@@ -299,7 +299,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Appends the string representation of an <CODE>int</CODE>.</summary>
 		/// <param name="i">the <CODE>int</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(int i)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(int i)
 		{
 			return Append((double)i);
 		}
@@ -307,17 +307,17 @@ namespace iTextSharp.Kernel.Pdf
 		/// <summary>Appends the string representation of a <CODE>long</CODE>.</summary>
 		/// <param name="i">the <CODE>long</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(long i)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(long i)
 		{
 			return Append(System.Convert.ToString(i));
 		}
 
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(byte b)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(byte b)
 		{
 			return Append_i(b);
 		}
 
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream AppendHex(byte b)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream AppendHex(byte b)
 		{
 			Append(bytes[(b >> 4) & 0x0f]);
 			return Append(bytes[b & 0x0f]);
@@ -329,7 +329,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </summary>
 		/// <param name="i">the <CODE>float</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(float i)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(float i)
 		{
 			return Append((double)i);
 		}
@@ -340,7 +340,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </summary>
 		/// <param name="d">the <CODE>double</CODE> to be appended</param>
 		/// <returns>a reference to this <CODE>ByteBufferOutputStream</CODE> object</returns>
-		public virtual iTextSharp.Kernel.Pdf.ByteBufferOutputStream Append(double d)
+		public virtual iText.Kernel.Pdf.ByteBufferOutputStream Append(double d)
 		{
 			Append(FormatDouble(d, this));
 			return this;
@@ -362,7 +362,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <CODE>buf</CODE> is <CODE>null</CODE>. If <CODE>buf</CODE> is <B>not</B> <CODE>null</CODE>,
 		/// then the double is appended directly to the buffer and this methods returns <CODE>null</CODE>.
 		/// </returns>
-		public static String FormatDouble(double d, iTextSharp.Kernel.Pdf.ByteBufferOutputStream
+		public static String FormatDouble(double d, iText.Kernel.Pdf.ByteBufferOutputStream
 			 buf)
 		{
 			if (HIGH_PRECISION)
@@ -728,7 +728,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>String translated from the buffer's contents.</returns>
 		public override String ToString()
 		{
-			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, 0, count);
+			return iText.IO.Util.JavaUtil.GetStringForBytes(buf, 0, count);
 		}
 
 		/// <summary>
@@ -741,7 +741,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</exception>
 		public virtual String ToString(String enc)
 		{
-			return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, 0, count, enc);
+			return iText.IO.Util.JavaUtil.GetStringForBytes(buf, 0, count, enc);
 		}
 
 		/// <summary>

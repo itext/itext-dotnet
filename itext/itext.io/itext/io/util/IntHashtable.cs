@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     /// <summary>
     /// <p>A hash map that uses primitive ints for the key rather than objects.</p>
     /// <p>Note that this class is for internal optimization purposes only, and may
@@ -128,7 +128,7 @@ namespace iTextSharp.IO.Util {
             threshold = (int)(initialCapacity * loadFactor);
         }
 
-        public IntHashtable(iTextSharp.IO.Util.IntHashtable o)
+        public IntHashtable(iText.IO.Util.IntHashtable o)
             : this(o.table.Length, o.loadFactor) {
         }
 
@@ -381,7 +381,7 @@ namespace iTextSharp.IO.Util {
 
         public virtual int[] ToOrderedKeys() {
             int[] res = GetKeys();
-            iTextSharp.IO.Util.JavaUtil.Sort(res);
+            iText.IO.Util.JavaUtil.Sort(res);
             return res;
         }
 

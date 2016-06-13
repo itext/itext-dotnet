@@ -57,10 +57,10 @@ using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// This class does all the processing related to signing
     /// and verifying a PKCS#7 signature.
@@ -309,7 +309,7 @@ namespace iTextSharp.Signatures {
                                     IDigest m2 = SignUtils.GetMessageDigest("SHA-1");
                                     byte[] signCertHash = m2.Digest(enc2);
                                     byte[] hs2 = cerv2.GetCertHash();
-                                    if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2)) {
+                                    if (!iText.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2)) {
                                         throw new ArgumentException("Signing certificate doesn't match the ESS information.");
                                     }
                                     foundCades = true;
@@ -326,7 +326,7 @@ namespace iTextSharp.Signatures {
                                         IDigest m2 = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(ai2.ObjectID.Id));
                                         byte[] signCertHash = m2.Digest(enc2);
                                         byte[] hs2 = cerv2.GetCertHash();
-                                        if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2)) {
+                                        if (!iText.IO.Util.JavaUtil.ArraysEquals(signCertHash, hs2)) {
                                             throw new ArgumentException("Signing certificate doesn't match the ESS information.");
                                         }
                                         foundCades = true;
@@ -952,7 +952,7 @@ namespace iTextSharp.Signatures {
                 MessageImprint imprint = info.TstInfo.MessageImprint;
                 byte[] md = messageDigest.Digest();
                 byte[] imphashed = imprint.GetHashedMessage();
-                verifyResult = iTextSharp.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
+                verifyResult = iText.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
             }
             else {
                 if (sigAttr != null || sigAttrDer != null) {
@@ -961,11 +961,11 @@ namespace iTextSharp.Signatures {
                     // Stefan Santesson fixed a bug, keeping the code backward compatible
                     bool encContDigestCompare = false;
                     if (RSAdata != null) {
-                        verifyRSAdata = iTextSharp.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, RSAdata);
+                        verifyRSAdata = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, RSAdata);
                         encContDigest.Update(RSAdata);
-                        encContDigestCompare = iTextSharp.IO.Util.JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
+                        encContDigestCompare = iText.IO.Util.JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
                     }
-                    bool absentEncContDigestCompare = iTextSharp.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
+                    bool absentEncContDigestCompare = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
                     bool concludingDigestCompare = absentEncContDigestCompare || encContDigestCompare;
                     bool sigVerify = VerifySigAttributes(sigAttr) || VerifySigAttributes(sigAttrDer);
                     verifyResult = concludingDigestCompare && sigVerify && verifyRSAdata;
@@ -1000,7 +1000,7 @@ namespace iTextSharp.Signatures {
             String algOID = info.HashAlgorithm.ObjectID.Id;
             byte[] md = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(algOID)).Digest(digest);
             byte[] imphashed = imprint.GetHashedMessage();
-            bool res = iTextSharp.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
+            bool res = iText.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
             return res;
         }
 

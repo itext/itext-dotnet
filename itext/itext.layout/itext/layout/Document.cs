@@ -42,13 +42,13 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Renderer;
+using iText.Kernel;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Layout.Element;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     /// <summary>Document is the default root element when creating a self-sufficient PDF.</summary>
     /// <remarks>
     /// Document is the default root element when creating a self-sufficient PDF. It
@@ -58,12 +58,12 @@ namespace iTextSharp.Layout {
     /// A
     /// <see cref="Document"/>
     /// 's rendering behavior can be modified by extending
-    /// <see cref="iTextSharp.Layout.Renderer.DocumentRenderer"/>
+    /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
     /// and setting an instance of this newly created with
-    /// <see cref="SetRenderer(iTextSharp.Layout.Renderer.DocumentRenderer)"></see>
+    /// <see cref="SetRenderer(iText.Layout.Renderer.DocumentRenderer)"></see>
     /// .
     /// </remarks>
-    public class Document : RootElement<iTextSharp.Layout.Document> {
+    public class Document : RootElement<iText.Layout.Document> {
         protected internal float leftMargin = 36;
 
         protected internal float rightMargin = 36;
@@ -74,12 +74,12 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Creates a document from a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// . Initializes the first page
         /// with the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// 's current default
-        /// <see cref="iTextSharp.Kernel.Geom.PageSize"/>
+        /// <see cref="iText.Kernel.Geom.PageSize"/>
         /// .
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
@@ -89,9 +89,9 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Creates a document from a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with a manually set
-        /// <see cref="iTextSharp.Kernel.Geom.PageSize"/>
+        /// <see cref="iText.Kernel.Geom.PageSize"/>
         /// .
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
@@ -102,9 +102,9 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Creates a document from a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// with a manually set
-        /// <see cref="iTextSharp.Kernel.Geom.PageSize"/>
+        /// <see cref="iText.Kernel.Geom.PageSize"/>
         /// .
         /// </summary>
         /// <param name="pdfDoc">the in-memory representation of the PDF document</param>
@@ -112,7 +112,7 @@ namespace iTextSharp.Layout {
         /// <param name="immediateFlush">
         /// if true, write pages and page-related instructions
         /// to the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// as soon as possible.
         /// </param>
         public Document(PdfDocument pdfDoc, PageSize pageSize, bool immediateFlush)
@@ -137,17 +137,17 @@ namespace iTextSharp.Layout {
         /// </remarks>
         /// <param name="areaBreak">
         /// an
-        /// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
+        /// <see cref="iText.Layout.Element.AreaBreak"/>
         /// , optionally with a specified size
         /// </param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Document Add(AreaBreak areaBreak) {
+        public virtual iText.Layout.Document Add(AreaBreak areaBreak) {
             childElements.Add(areaBreak);
             EnsureRootRendererNotNull().AddChild(areaBreak.CreateRendererSubTree());
             return this;
         }
 
-        public override iTextSharp.Layout.Document Add<T>(BlockElement<T> element) {
+        public override iText.Layout.Document Add<T>(BlockElement<T> element) {
             CheckClosingStatus();
             base.Add(element);
             if (element is ILargeElement) {
@@ -165,10 +165,10 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Changes the
-        /// <see cref="iTextSharp.Layout.Renderer.DocumentRenderer"/>
+        /// <see cref="iText.Layout.Renderer.DocumentRenderer"/>
         /// at runtime. Use this to customize
         /// the Document's
-        /// <see cref="iTextSharp.Layout.Renderer.IRenderer"/>
+        /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// behavior.
         /// </summary>
         /// <param name="documentRenderer"/>
@@ -271,7 +271,7 @@ namespace iTextSharp.Layout {
         /// <param name="pageSize">the size of the page to</param>
         /// <returns>
         /// a
-        /// <see cref="iTextSharp.Kernel.Geom.Rectangle"/>
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
         /// with the required dimensions and origin point
         /// </returns>
         public virtual Rectangle GetPageEffectiveArea(PageSize pageSize) {
@@ -280,7 +280,7 @@ namespace iTextSharp.Layout {
         }
 
         /// <summary>checks whether a method is invoked at the closed document</summary>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void CheckClosingStatus() {
             if (GetPdfDocument().IsClosed()) {
                 throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);

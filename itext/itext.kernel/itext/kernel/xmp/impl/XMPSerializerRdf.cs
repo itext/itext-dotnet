@@ -31,10 +31,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Options;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 
-namespace iTextSharp.Kernel.XMP.Impl
+namespace iText.Kernel.XMP.Impl
 {
 	/// <summary>Serializes the <code>XMPMeta</code>-object using the standard RDF serialization format.
 	/// 	</summary>
@@ -76,7 +76,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 
 		/// <summary>a set of all rdf attribute qualifier</summary>
 		internal static readonly ICollection<String> RDF_ATTR_QUALIFIER = new HashSet<String
-			>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(new String[] { XMPConst.XML_LANG, "rdf:resource"
+			>(iText.IO.Util.JavaUtil.ArraysAsList(new String[] { XMPConst.XML_LANG, "rdf:resource"
 			, "rdf:ID", "rdf:bagID", "rdf:nodeID" }));
 
 		/// <summary>the metadata object to be serialized.</summary>
@@ -109,7 +109,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="xmp">the metadata object to be serialized</param>
 		/// <param name="output">outputStream the output stream to serialize to</param>
 		/// <param name="options">the serialization options</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If case of wrong options or any other serialization error.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If case of wrong options or any other serialization error.
 		/// 	</exception>
 		public virtual void Serialize(XMPMeta xmp, Stream output, SerializeOptions options)
 		{
@@ -141,7 +141,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <summary>Calculates the padding according to the options and write it to the stream.
 		/// 	</summary>
 		/// <param name="tailLength">the length of the tail string</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">thrown if packet size is to small to fit the padding
+		/// <exception cref="iText.Kernel.XMP.XMPException">thrown if packet size is to small to fit the padding
 		/// 	</exception>
 		/// <exception cref="System.IO.IOException">forwards writer errors</exception>
 		private void AddPadding(int tailLength)
@@ -181,7 +181,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		}
 
 		/// <summary>Checks if the supplied options are consistent.</summary>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if options are conflicting
+		/// <exception cref="iText.Kernel.XMP.XMPException">Thrown if options are conflicting
 		/// 	</exception>
 		protected internal virtual void CheckOptionsConsistence()
 		{
@@ -246,7 +246,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <returns>Returns the packet end processing instraction to be written after the padding.
 		/// 	</returns>
 		/// <exception cref="System.IO.IOException">Forwarded writer exceptions.</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private String SerializeAsRDF()
 		{
 			int level = 0;
@@ -314,7 +314,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <summary>Serializes the metadata in pretty-printed manner.</summary>
 		/// <param name="level">indent level</param>
 		/// <exception cref="System.IO.IOException">Forwarded writer exceptions</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void SerializeCanonicalRDFSchemas(int level)
 		{
 			if (xmp.GetRoot().GetChildrenLength() > 0)
@@ -353,7 +353,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <summary>Serializes the metadata in compact manner.</summary>
 		/// <param name="level">indent level to start with</param>
 		/// <exception cref="System.IO.IOException">Forwarded writer exceptions</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void SerializeCompactRDFSchemas(int level)
 		{
 			// Begin the rdf:Description start tag.
@@ -476,7 +476,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="parentNode">the parent node</param>
 		/// <param name="indent">the current indent level</param>
 		/// <exception cref="System.IO.IOException">Forwards writer exceptions</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
 		/// 	</exception>
 		private void SerializeCompactRDFElementProps(XMPNode parentNode, int indent)
 		{
@@ -599,7 +599,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="node">an XMPNode</param>
 		/// <param name="indent">the current indent level</param>
 		/// <exception cref="System.IO.IOException">Forwards the writer exceptions.</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
 		/// 	</exception>
 		private void SerializeCompactRDFArrayProp(XMPNode node, int indent)
 		{
@@ -621,7 +621,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="hasRDFResourceQual">Flag if the element has resource qualifier</param>
 		/// <returns>Returns true if an end flag shall be emitted.</returns>
 		/// <exception cref="System.IO.IOException">Forwards the writer exceptions.</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
 		/// 	</exception>
 		private bool SerializeCompactRDFStructProp(XMPNode node, int indent, bool hasRDFResourceQual
 			)
@@ -707,7 +707,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="node">the root node of the subtree</param>
 		/// <param name="indent">the current indent level</param>
 		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If qualifier and element fields are mixed.
 		/// 	</exception>
 		private void SerializeCompactRDFGeneralQualifier(int indent, XMPNode node)
 		{
@@ -753,7 +753,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// <param name="schemaNode">a schema node</param>
 		/// <param name="level"/>
 		/// <exception cref="System.IO.IOException">Forwarded writer exceptions</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		private void SerializeCanonicalRDFSchema(XMPNode schemaNode, int level)
 		{
 			// Write each of the schema's actual properties.
@@ -920,7 +920,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 		/// </param>
 		/// <param name="indent">the current indent level</param>
 		/// <exception cref="System.IO.IOException">Forwards all writer exceptions.</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If &quot;rdf:resource&quot; and general qualifiers are mixed.
+		/// <exception cref="iText.Kernel.XMP.XMPException">If &quot;rdf:resource&quot; and general qualifiers are mixed.
 		/// 	</exception>
 		private void SerializeCanonicalRDFProperty(XMPNode node, bool useCanonicalRDF, bool
 			 emitAsRDFValue, int indent)

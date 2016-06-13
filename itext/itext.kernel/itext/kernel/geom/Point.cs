@@ -19,9 +19,9 @@
 *  That's why we imported the code into iText.
 */
 using System;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     public class Point : ICloneable {
         public double x;
 
@@ -39,7 +39,7 @@ namespace iTextSharp.Kernel.Geom {
             SetLocation(x, y);
         }
 
-        public Point(iTextSharp.Kernel.Geom.Point p) {
+        public Point(iText.Kernel.Geom.Point p) {
             SetLocation(p.x, p.y);
         }
 
@@ -47,8 +47,8 @@ namespace iTextSharp.Kernel.Geom {
             if (obj == this) {
                 return true;
             }
-            if (obj is iTextSharp.Kernel.Geom.Point) {
-                iTextSharp.Kernel.Geom.Point p = (iTextSharp.Kernel.Geom.Point)obj;
+            if (obj is iText.Kernel.Geom.Point) {
+                iText.Kernel.Geom.Point p = (iText.Kernel.Geom.Point)obj;
                 return x == p.x && y == p.y;
             }
             return false;
@@ -67,11 +67,11 @@ namespace iTextSharp.Kernel.Geom {
             return y;
         }
 
-        public virtual iTextSharp.Kernel.Geom.Point GetLocation() {
-            return new iTextSharp.Kernel.Geom.Point(x, y);
+        public virtual iText.Kernel.Geom.Point GetLocation() {
+            return new iText.Kernel.Geom.Point(x, y);
         }
 
-        public virtual void SetLocation(iTextSharp.Kernel.Geom.Point p) {
+        public virtual void SetLocation(iText.Kernel.Geom.Point p) {
             SetLocation(p.x, p.y);
         }
 
@@ -110,7 +110,7 @@ namespace iTextSharp.Kernel.Geom {
             return DistanceSq(GetX(), GetY(), px, py);
         }
 
-        public virtual double DistanceSq(iTextSharp.Kernel.Geom.Point p) {
+        public virtual double DistanceSq(iText.Kernel.Geom.Point p) {
             return DistanceSq(GetX(), GetY(), p.GetX(), p.GetY());
         }
 
@@ -122,12 +122,12 @@ namespace iTextSharp.Kernel.Geom {
             return Math.Sqrt(DistanceSq(px, py));
         }
 
-        public virtual double Distance(iTextSharp.Kernel.Geom.Point p) {
+        public virtual double Distance(iText.Kernel.Geom.Point p) {
             return Math.Sqrt(DistanceSq(p));
         }
 
         public virtual Object Clone() {
-            return new iTextSharp.Kernel.Geom.Point(x, y);
+            return new iText.Kernel.Geom.Point(x, y);
         }
     }
 }

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Interface for the Online Certificate Status Protocol (OCSP) Client.</summary>
     public interface IOcspClient {
         /// <summary>Gets an encoded byte array with OCSP validation.</summary>

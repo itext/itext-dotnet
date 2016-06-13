@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 using NUnit.Framework;
 
-namespace iTextSharp.IO
+namespace iText.IO
 {
     public class JavaUtilTest
     {

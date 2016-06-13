@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf.Canvas {
+namespace iText.Kernel.Pdf.Canvas {
     /// <summary>A container for constants defined in the PDF specification (ISO 32000-1).</summary>
     public class PdfCanvasConstants {
         /// <summary>

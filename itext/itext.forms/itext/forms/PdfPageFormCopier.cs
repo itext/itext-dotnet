@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Forms.Fields;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
+using iText.Forms.Fields;
+using iText.IO;
+using iText.IO.Log;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     /// <summary>
     /// A sample implementation of the {#link IPdfPageExtraCopier} interface which
     /// copies only AcroForm fields to a new page.

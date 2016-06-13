@@ -1,24 +1,24 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Border;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Renderer;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Image;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Layout.Border;
+using iText.Layout.Element;
+using iText.Layout.Renderer;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class TableTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TableTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/TableTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/TableTest/";
+             + "/test/itext/layout/TableTest/";
 
         internal const String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
              + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -274,7 +274,7 @@ namespace iTextSharp.Layout {
             doc.Add(new Paragraph("Table 3"));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 50);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
             Table table3 = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph("1, 1"))).AddCell(
                 new Cell().Add(image)).AddCell(new Cell().Add(new Paragraph("2, 1"))).AddCell(new Cell().Add(new Paragraph
                 ("2, 2")));
@@ -468,7 +468,7 @@ namespace iTextSharp.Layout {
                  + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + longTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + middleTextContent)).SetBorder(new SolidBorder
-                (iTextSharp.Kernel.Color.Color.RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent
+                (iText.Kernel.Color.Color.RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent
                  + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
             doc.Add(table);
             doc.Close();
@@ -546,7 +546,7 @@ namespace iTextSharp.Layout {
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
                  + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 2, 3\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 3\n"
-                 + textContent))).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
+                 + textContent))).AddCell(new Cell().Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
                  + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n" + shortTextContent))).AddCell(new 
                 Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 1\n"
                  + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 5, 2\n" + shortTextContent))).AddCell
@@ -571,7 +571,7 @@ namespace iTextSharp.Layout {
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
                 (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
                  + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
@@ -603,7 +603,7 @@ namespace iTextSharp.Layout {
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             doc.Add(new Paragraph(textContent));
-            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iTextSharp.Layout.Element.Image
+            Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
                 (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
                  + shortTextContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 3\n" + middleTextContent))).AddCell
                 (new Cell().Add(new Paragraph("cell 5, 1\n" + shortTextContent))).AddCell(new Cell().Add(new Paragraph
@@ -789,7 +789,7 @@ namespace iTextSharp.Layout {
                 result += str;
             }
             Paragraph p = new Paragraph(new Text(result));
-            p.SetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER, true);
+            p.SetProperty(iText.Layout.Property.Property.KEEP_TOGETHER, true);
             cell.Add(p);
             table.AddCell(cell);
             doc.Add(table);
@@ -840,8 +840,8 @@ namespace iTextSharp.Layout {
                 table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
             }
             Table t = new Table(1);
-            t.AddCell(new Cell().SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.RED, 1)).SetPaddings(3, 3, 3, 
-                3).Add(table));
+            t.AddCell(new Cell().SetBorder(new SolidBorder(iText.Kernel.Color.Color.RED, 1)).SetPaddings(3, 3, 3, 3).Add
+                (table));
             doc.Add(t);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

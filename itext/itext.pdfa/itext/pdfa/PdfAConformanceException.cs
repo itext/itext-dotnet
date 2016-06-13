@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     /// <summary>Exception that is thrown when the PDF Document doesn't adhere to the PDF/A specification.</summary>
     public class PdfAConformanceException : PdfException {
         public const String _1ActionsAreNotAllowed = "1.actions.are.not.allowed";

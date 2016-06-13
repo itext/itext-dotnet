@@ -43,19 +43,19 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Util;
-using iTextSharp.Kernel.Pdf.Colorspace;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Color;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Canvas.Parser.Util;
+using iText.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     /// <summary>Processor for a PDF content stream.</summary>
     public class PdfCanvasProcessor {
         public const String DEFAULT_OPERATOR = "DefaultOperator";
@@ -65,7 +65,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>
         /// Cache supported events in case the user's
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.IEventListener.GetSupportedEvents()"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener.GetSupportedEvents()"/>
         /// method is not very efficient
         /// </summary>
         protected internal readonly ICollection<EventType> supportedEvents;
@@ -118,7 +118,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         /// </summary>
         /// <param name="eventListener">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
         /// that will receive rendering notifications
         /// </param>
         public PdfCanvasProcessor(IEventListener eventListener) {
@@ -239,7 +239,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>
         /// Accessor method for the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
         /// object maintained in this class.
         /// Necessary for implementing custom ContentOperator implementations.
         /// </summary>
@@ -355,17 +355,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         /// <summary>Displays the current path.</summary>
         /// <param name="operation">
         /// One of the possible combinations of
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.STROKE"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.STROKE"/>
         /// and
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.FILL"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.FILL"/>
         /// values or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.NO_OP"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.NO_OP"/>
         /// </param>
         /// <param name="rule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// In case it isn't applicable pass any <CODE>byte</CODE> value.
         /// </param>
         protected internal virtual void PaintPath(int operation, int rule) {
@@ -753,8 +753,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Gets a color based on a list of operands and Color space.</summary>
-        private static iTextSharp.Kernel.Color.Color GetColor(PdfColorSpace pdfColorSpace, IList<PdfObject> operands
-            , PdfResources resources) {
+        private static iText.Kernel.Color.Color GetColor(PdfColorSpace pdfColorSpace, IList<PdfObject> operands, PdfResources
+             resources) {
             PdfObject pdfObject;
             if (pdfColorSpace.GetPdfObject().IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfColorSpace.GetPdfObject()).GetRefersTo();
@@ -831,7 +831,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Gets a color based on a list of operands.</summary>
-        private static iTextSharp.Kernel.Color.Color GetColor(int nOperands, IList<PdfObject> operands) {
+        private static iText.Kernel.Color.Color GetColor(int nOperands, IList<PdfObject> operands) {
             float[] c = new float[nOperands];
             for (int i = 0; i < nOperands; i++) {
                 c[i] = ((PdfNumber)operands[i]).FloatValue();
@@ -916,7 +916,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         private class SetColorSpaceFillOperator : IContentOperator {
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfColorSpace pdfColorSpace = DetermineColorSpace((PdfName)operands[0], processor);
-                processor.GetGraphicsState().SetFillColor(iTextSharp.Kernel.Color.Color.MakeColor(pdfColorSpace));
+                processor.GetGraphicsState().SetFillColor(iText.Kernel.Color.Color.MakeColor(pdfColorSpace));
             }
 
             internal static PdfColorSpace DetermineColorSpace(PdfName colorSpace, PdfCanvasProcessor processor) {
@@ -938,7 +938,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfColorSpace pdfColorSpace = PdfCanvasProcessor.SetColorSpaceFillOperator.DetermineColorSpace((PdfName)operands
                     [0], processor);
-                processor.GetGraphicsState().SetStrokeColor(iTextSharp.Kernel.Color.Color.MakeColor(pdfColorSpace));
+                processor.GetGraphicsState().SetStrokeColor(iText.Kernel.Color.Color.MakeColor(pdfColorSpace));
             }
         }
 
@@ -1081,8 +1081,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         /// <summary>A content operator implementation (d).</summary>
         private class SetLineDashPatternOperator : IContentOperator {
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral oper, IList<PdfObject> operands) {
-                processor.GetGraphicsState().SetDashPattern(new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList(operands
-                    [0], operands[1])));
+                processor.GetGraphicsState().SetDashPattern(new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(operands[0], 
+                    operands[1])));
             }
 
             internal SetLineDashPatternOperator(PdfCanvasProcessor _enclosing) {
@@ -1221,17 +1221,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
             /// <summary>Constructs PainPath object.</summary>
             /// <param name="operation">
             /// One of the possible combinations of
-            /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.STROKE"/>
+            /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.STROKE"/>
             /// and
-            /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.FILL"/>
+            /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.FILL"/>
             /// values or
-            /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.NO_OP"/>
+            /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.PathRenderInfo.NO_OP"/>
             /// </param>
             /// <param name="rule">
             /// Either
-            /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+            /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
             /// or
-            /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+            /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
             /// In case it isn't applicable pass any value.
             /// </param>
             /// <param name="close">Indicates whether the path should be closed or not.</param>

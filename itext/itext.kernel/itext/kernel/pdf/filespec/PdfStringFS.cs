@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filespec {
+namespace iText.Kernel.Pdf.Filespec {
     public class PdfStringFS : PdfFileSpec {
         public PdfStringFS(String @string)
             : base(new PdfString(@string)) {

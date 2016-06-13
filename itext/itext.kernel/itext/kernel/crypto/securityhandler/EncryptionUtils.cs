@@ -1,6 +1,6 @@
 using System;
 using System.Globalization;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Cms;
@@ -9,7 +9,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler
+namespace iText.Kernel.Crypto.Securityhandler
 {
 	internal static class EncryptionUtils
 	{

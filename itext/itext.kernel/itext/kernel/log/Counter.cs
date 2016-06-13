@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log {
+namespace iText.Kernel.Log {
     /// <summary>
     /// Interface that can be implemented if you want to count the number of documents
     /// that are being processed by iText.

@@ -29,14 +29,14 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Options {
+namespace iText.Kernel.XMP.Options {
     /// <summary>
     /// Options for
-    /// <see cref="iTextSharp.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)"/>
+    /// <see cref="iText.Kernel.XMP.XMPMetaFactory.Parse(System.IO.Stream, ParseOptions)"/>
     /// .
     /// </summary>
     /// <since>24.01.2006</since>
-    public sealed class ParseOptions : iTextSharp.Kernel.XMP.Options.Options {
+    public sealed class ParseOptions : iText.Kernel.XMP.Options.Options {
         /// <summary>Require a surrounding &quot;x:xmpmeta&quot; element in the xml-document.</summary>
         public const int REQUIRE_XMP_META = 0x0001;
 
@@ -64,7 +64,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.ParseOptions SetRequireXMPMeta(bool value) {
+        public iText.Kernel.XMP.Options.ParseOptions SetRequireXMPMeta(bool value) {
             SetOption(REQUIRE_XMP_META, value);
             return this;
         }
@@ -76,7 +76,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.ParseOptions SetStrictAliasing(bool value) {
+        public iText.Kernel.XMP.Options.ParseOptions SetStrictAliasing(bool value) {
             SetOption(STRICT_ALIASING, value);
             return this;
         }
@@ -88,7 +88,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.ParseOptions SetFixControlChars(bool value) {
+        public iText.Kernel.XMP.Options.ParseOptions SetFixControlChars(bool value) {
             SetOption(FIX_CONTROL_CHARS, value);
             return this;
         }
@@ -100,7 +100,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.ParseOptions SetOmitNormalization(bool value) {
+        public iText.Kernel.XMP.Options.ParseOptions SetOmitNormalization(bool value) {
             SetOption(OMIT_NORMALIZATION, value);
             return this;
         }
@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns the instance to call more set-methods.</returns>
-        public iTextSharp.Kernel.XMP.Options.ParseOptions SetAcceptLatin1(bool value) {
+        public iText.Kernel.XMP.Options.ParseOptions SetAcceptLatin1(bool value) {
             SetOption(ACCEPT_LATIN_1, value);
             return this;
         }

@@ -43,15 +43,15 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
+namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>
     /// This class expands each
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
     /// for
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
     /// event types into
     /// multiple
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
     /// instances for each glyph occurred.
     /// The only difference from
     /// <see cref="GlyphEventListener"/>

@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Layout.Property;
-using iTextSharp.Layout.Renderer;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Property;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     /// <summary>
     /// A List is a layout element representing a series of objects that are vertically
     /// outlined with the same or very similar layout properties, giving it a sense
@@ -61,7 +61,7 @@ namespace iTextSharp.Layout.Element {
     /// objects that can optionally be prefixed
     /// with a symbol and/or numbered.
     /// </remarks>
-    public class List : BlockElement<iTextSharp.Layout.Element.List> {
+    public class List : BlockElement<iText.Layout.Element.List> {
         public const String DEFAULT_LIST_SYMBOL = "- ";
 
         protected internal PdfName role = PdfName.L;
@@ -87,11 +87,11 @@ namespace iTextSharp.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT: {
+                case iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT: {
                     return (T1)(Object)"";
                 }
 
-                case iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT: {
+                case iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT: {
                     return (T1)(Object)". ";
                 }
 
@@ -108,7 +108,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="listItem">a new list item</param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List Add(ListItem listItem) {
+        public virtual iText.Layout.Element.List Add(ListItem listItem) {
             childElements.Add(listItem);
             return this;
         }
@@ -120,15 +120,15 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="text">textual contents of the new list item</param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List Add(String text) {
+        public virtual iText.Layout.Element.List Add(String text) {
             return Add(new ListItem(text));
         }
 
         /// <summary>Customizes the index of the first item in the list.</summary>
         /// <param name="start">the custom index, as an <code>int</code></param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List SetItemStartIndex(int start) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_START, start);
+        public virtual iText.Layout.Element.List SetItemStartIndex(int start) {
+            SetProperty(iText.Layout.Property.Property.LIST_START, start);
             return this;
         }
 
@@ -141,7 +141,7 @@ namespace iTextSharp.Layout.Element {
         /// </remarks>
         /// <param name="symbol">the textual symbol to be used for all items.</param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List SetListSymbol(String symbol) {
+        public virtual iText.Layout.Element.List SetListSymbol(String symbol) {
             return SetListSymbol(new Text(symbol));
         }
 
@@ -158,8 +158,8 @@ namespace iTextSharp.Layout.Element {
         /// object to be used for all items.
         /// </param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List SetListSymbol(Text text) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL, text);
+        public virtual iText.Layout.Element.List SetListSymbol(Text text) {
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, text);
             return this;
         }
 
@@ -176,8 +176,8 @@ namespace iTextSharp.Layout.Element {
         /// object to be used for all items.
         /// </param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List SetListSymbol(Image image) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL, image);
+        public virtual iText.Layout.Element.List SetListSymbol(Image image) {
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, image);
             return this;
         }
 
@@ -190,38 +190,38 @@ namespace iTextSharp.Layout.Element {
         /// </remarks>
         /// <param name="listNumberingType">
         /// the
-        /// <see cref="iTextSharp.Layout.Property.ListNumberingType"/>
+        /// <see cref="iText.Layout.Property.ListNumberingType"/>
         /// that will generate appropriate prefixes for the
         /// <see cref="ListItem"/>
         /// s.
         /// </param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List SetListSymbol(ListNumberingType listNumberingType) {
+        public virtual iText.Layout.Element.List SetListSymbol(ListNumberingType listNumberingType) {
             // Do not draw any points after ZapfDingbats special number symbol
             if (listNumberingType == ListNumberingType.ZAPF_DINGBATS_1 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_2
                  || listNumberingType == ListNumberingType.ZAPF_DINGBATS_3 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_4
                 ) {
                 SetPostSymbolText(" ");
             }
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL, listNumberingType);
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, listNumberingType);
             return this;
         }
 
         /// <summary>A specialized enum containing alignment properties for list symbols.</summary>
         /// <remarks>
         /// A specialized enum containing alignment properties for list symbols.
-        /// <see cref="iTextSharp.Layout.Property.ListSymbolAlignment.LEFT"/>
+        /// <see cref="iText.Layout.Property.ListSymbolAlignment.LEFT"/>
         /// means that the items will be aligned as follows:
         /// 9.  Item 9
         /// 10. Item 10
         /// Whereas
-        /// <see cref="iTextSharp.Layout.Property.ListSymbolAlignment.RIGHT"/>
+        /// <see cref="iText.Layout.Property.ListSymbolAlignment.RIGHT"/>
         /// means the items will be aligned as follows:
         /// 9. Item 9
         /// 10. Item 10
         /// </remarks>
-        public virtual iTextSharp.Layout.Element.List SetListSymbolAlignment(ListSymbolAlignment alignment) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_ALIGNMENT, alignment);
+        public virtual iText.Layout.Element.List SetListSymbolAlignment(ListSymbolAlignment alignment) {
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_ALIGNMENT, alignment);
             return this;
         }
 
@@ -232,7 +232,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <returns>the indent offset as a <code>float</code>.</returns>
         public virtual float? GetSymbolIndent() {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT);
+            return this.GetProperty<float?>(iText.Layout.Property.Property.LIST_SYMBOL_INDENT);
         }
 
         /// <summary>
@@ -242,8 +242,8 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="symbolIndent">the new indent offset.</param>
         /// <returns>this list.</returns>
-        public virtual iTextSharp.Layout.Element.List SetSymbolIndent(float symbolIndent) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_INDENT, symbolIndent);
+        public virtual iText.Layout.Element.List SetSymbolIndent(float symbolIndent) {
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_INDENT, symbolIndent);
             return this;
         }
 
@@ -254,7 +254,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <returns>the post symbol text</returns>
         public virtual String GetPostSymbolText() {
-            return this.GetProperty<String>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT);
+            return this.GetProperty<String>(iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="postSymbolText">the post symbol text</param>
         public virtual void SetPostSymbolText(String postSymbolText) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT, postSymbolText);
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT, postSymbolText);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <returns>the pre symbol text</returns>
         public virtual String GetPreSymbolText() {
-            return this.GetProperty<String>(iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT);
+            return this.GetProperty<String>(iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="preSymbolText">the pre symbol text</param>
         public virtual void SetPreSymbolText(String preSymbolText) {
-            SetProperty(iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT, preSymbolText);
+            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT, preSymbolText);
         }
 
         public override PdfName GetRole() {

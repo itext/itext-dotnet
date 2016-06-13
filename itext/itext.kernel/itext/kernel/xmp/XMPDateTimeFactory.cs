@@ -28,9 +28,9 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.XMP.Impl;
+using iText.Kernel.XMP.Impl;
 
-namespace iTextSharp.Kernel.XMP
+namespace iText.Kernel.XMP
 {
 	/// <summary>
 	/// A factory to create <code>XMPDateTime</code>-instances from a <code>Calendar</code> or an
@@ -112,7 +112,7 @@ namespace iTextSharp.Kernel.XMP
 		/// <param name="strValue">The ISO 8601 string representation of the date/time.</param>
 		/// <returns>An <code>XMPDateTime</code>-object.</returns>
 		/// <exception cref="XMPException">When the ISO 8601 string is non-conform</exception>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+		/// <exception cref="iText.Kernel.XMP.XMPException"/>
 		public static XMPDateTime CreateFromISO8601(String strValue)
 		{
 			return new XMPDateTimeImpl(strValue);

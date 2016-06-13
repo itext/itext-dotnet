@@ -45,7 +45,7 @@ using System;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>An exception that is thrown when something is wrong with a certificate.</summary>
     public class VerificationException : GeneralSecurityException {
         /// <summary>Creates a VerificationException</summary>

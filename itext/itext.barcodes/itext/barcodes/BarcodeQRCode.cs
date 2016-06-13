@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Barcodes.Qrcode;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.Barcodes.Qrcode;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     /// <summary>A QRCode implementation based on the zxing code.</summary>
     public class BarcodeQRCode : Barcode2D {
         internal ByteMatrix bm;
@@ -133,7 +133,7 @@ namespace iTextSharp.Barcodes {
             return new Rectangle(0, 0, bm.GetWidth() * moduleSize, bm.GetHeight() * moduleSize);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground) {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
         }
 
@@ -147,7 +147,7 @@ namespace iTextSharp.Barcodes {
         /// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
         /// <param name="moduleSide">the size of the square grid cell</param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color foreground, float moduleSide
+        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground, float moduleSide
             ) {
             int width = bm.GetWidth();
             int height = bm.GetHeight();
@@ -170,7 +170,7 @@ namespace iTextSharp.Barcodes {
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <returns>the XObject.</returns>
-        public override PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, PdfDocument document
+        public override PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, PdfDocument document
             ) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
         }
@@ -179,8 +179,8 @@ namespace iTextSharp.Barcodes {
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <param name="moduleSize">the size of the pixels.</param>
         /// <returns>the XObject.</returns>
-        public virtual PdfFormXObject CreateFormXObject(iTextSharp.Kernel.Color.Color foreground, float moduleSize
-            , PdfDocument document) {
+        public virtual PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, float moduleSize, PdfDocument
+             document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSize);
             xObject.SetBBox(new PdfArray(rect));

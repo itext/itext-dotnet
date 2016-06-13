@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color {
-    public class DeviceRgb : iTextSharp.Kernel.Color.Color {
+namespace iText.Kernel.Color {
+    public class DeviceRgb : iText.Kernel.Color.Color {
         public DeviceRgb(int r, int g, int b)
             : this(r / 255f, g / 255f, b / 255f) {
         }
@@ -58,22 +58,22 @@ namespace iTextSharp.Kernel.Color {
             : this(0f, 0f, 0f) {
         }
 
-        public static iTextSharp.Kernel.Color.DeviceRgb MakeLighter(iTextSharp.Kernel.Color.DeviceRgb rgbColor) {
+        public static iText.Kernel.Color.DeviceRgb MakeLighter(iText.Kernel.Color.DeviceRgb rgbColor) {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];
             float b = rgbColor.GetColorValue()[2];
             float v = Math.Max(r, Math.Max(g, b));
             if (v == 0f) {
-                return new iTextSharp.Kernel.Color.DeviceRgb(0x54, 0x54, 0x54);
+                return new iText.Kernel.Color.DeviceRgb(0x54, 0x54, 0x54);
             }
             float multiplier = Math.Min(1f, v + 0.33f) / v;
             r = multiplier * r;
             g = multiplier * g;
             b = multiplier * b;
-            return new iTextSharp.Kernel.Color.DeviceRgb(r, g, b);
+            return new iText.Kernel.Color.DeviceRgb(r, g, b);
         }
 
-        public static iTextSharp.Kernel.Color.DeviceRgb MakeDarker(iTextSharp.Kernel.Color.DeviceRgb rgbColor) {
+        public static iText.Kernel.Color.DeviceRgb MakeDarker(iText.Kernel.Color.DeviceRgb rgbColor) {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];
             float b = rgbColor.GetColorValue()[2];
@@ -82,7 +82,7 @@ namespace iTextSharp.Kernel.Color {
             r = multiplier * r;
             g = multiplier * g;
             b = multiplier * b;
-            return new iTextSharp.Kernel.Color.DeviceRgb(r, g, b);
+            return new iText.Kernel.Color.DeviceRgb(r, g, b);
         }
     }
 }

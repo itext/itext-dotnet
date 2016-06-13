@@ -28,9 +28,9 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.XMP;
+using iText.Kernel.XMP;
 
-namespace iTextSharp.Kernel.XMP.Impl {
+namespace iText.Kernel.XMP.Impl {
     /// <since>11.08.2006</since>
     internal class ParameterAsserts : XMPConst {
         /// <summary>private constructor</summary>
@@ -40,7 +40,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
         // EMPTY
         /// <summary>Asserts that an array name is set.</summary>
         /// <param name="arrayName">an array name</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Array name is null or empty</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Array name is null or empty</exception>
         public static void AssertArrayName(String arrayName) {
             if (arrayName == null || arrayName.Length == 0) {
                 throw new XMPException("Empty array name", XMPError.BADPARAM);
@@ -49,7 +49,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Asserts that a property name is set.</summary>
         /// <param name="propName">a property name or path</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Property name is null or empty</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Property name is null or empty</exception>
         public static void AssertPropName(String propName) {
             if (propName == null || propName.Length == 0) {
                 throw new XMPException("Empty property name", XMPError.BADPARAM);
@@ -58,7 +58,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Asserts that a schema namespace is set.</summary>
         /// <param name="schemaNS">a schema namespace</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Schema is null or empty</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Schema is null or empty</exception>
         public static void AssertSchemaNS(String schemaNS) {
             if (schemaNS == null || schemaNS.Length == 0) {
                 throw new XMPException("Empty schema namespace URI", XMPError.BADPARAM);
@@ -67,7 +67,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Asserts that a prefix is set.</summary>
         /// <param name="prefix">a prefix</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Prefix is null or empty</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Prefix is null or empty</exception>
         public static void AssertPrefix(String prefix) {
             if (prefix == null || prefix.Length == 0) {
                 throw new XMPException("Empty prefix", XMPError.BADPARAM);
@@ -76,7 +76,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Asserts that a specific language is set.</summary>
         /// <param name="specificLang">a specific lang</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Specific language is null or empty</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Specific language is null or empty</exception>
         public static void AssertSpecificLang(String specificLang) {
             if (specificLang == null || specificLang.Length == 0) {
                 throw new XMPException("Empty specific language", XMPError.BADPARAM);
@@ -85,7 +85,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Asserts that a struct name is set.</summary>
         /// <param name="structName">a struct name</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Struct name is null or empty</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Struct name is null or empty</exception>
         public static void AssertStructName(String structName) {
             if (structName == null || structName.Length == 0) {
                 throw new XMPException("Empty array name", XMPError.BADPARAM);
@@ -94,7 +94,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Asserts that any string parameter is set.</summary>
         /// <param name="param">any string parameter</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the parameter is null or has length 0.</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the parameter is null or has length 0.</exception>
         public static void AssertNotNull(Object param) {
             if (param == null) {
                 throw new XMPException("Parameter must not be null", XMPError.BADPARAM);
@@ -113,7 +113,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
         /// ).
         /// </summary>
         /// <param name="xmp">the XMP object</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">A wrong implentaion is used.</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">A wrong implentaion is used.</exception>
         public static void AssertImplementation(XMPMeta xmp) {
             if (xmp == null) {
                 throw new XMPException("Parameter must not be null", XMPError.BADPARAM);

@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils {
+namespace iText.Kernel.Pdf.Tagutils {
     /// <summary>A layout element which can have a <em>role</em>.</summary>
     /// <remarks>
     /// A layout element which can have a <em>role</em>. The name of the role will be
@@ -56,7 +56,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
         /// <summary>Gets the element's role.</summary>
         /// <returns>
         /// a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// containing the name of the role
         /// </returns>
         PdfName GetRole();

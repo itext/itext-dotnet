@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Canvas {
+namespace iText.Kernel.Pdf.Canvas {
     /// <summary>
     /// A subclass of
     /// <see cref="CanvasTag"/>
@@ -59,7 +59,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas {
         /// <see cref="CanvasTag"/>
         /// with a role
         /// of
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfName.Artifact">Artifact</see>
+        /// <see cref="iText.Kernel.Pdf.PdfName.Artifact">Artifact</see>
         /// .
         /// </summary>
         public CanvasArtifact()

@@ -42,16 +42,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border {
+namespace iText.Layout.Border {
     /// <summary>Draws a border with rounded dots aroudn the element it's been set to.</summary>
     /// <remarks>
     /// Draws a border with rounded dots aroudn the element it's been set to. For square dots see
     /// <see cref="DottedBorder"/>
     /// .
     /// </remarks>
-    public class RoundDotsBorder : iTextSharp.Layout.Border.Border {
+    public class RoundDotsBorder : iText.Layout.Border.Border {
         private const float GAP_MODIFIER = 2.5f;
 
         /// <summary>Creates a RoundDotsBorder with the specified wit?dth and sets the color to black.</summary>
@@ -63,12 +63,12 @@ namespace iTextSharp.Layout.Border {
         /// <summary>Creates a RoundDotsBorder with the specified wit?dth and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
-        public RoundDotsBorder(iTextSharp.Kernel.Color.Color color, float width)
+        public RoundDotsBorder(iText.Kernel.Color.Color color, float width)
             : base(color, width) {
         }
 
         public override int GetBorderType() {
-            return iTextSharp.Layout.Border.Border.ROUND_DOTS;
+            return iText.Layout.Border.Border.ROUND_DOTS;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore

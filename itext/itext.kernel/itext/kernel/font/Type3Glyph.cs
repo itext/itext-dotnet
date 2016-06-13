@@ -42,14 +42,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.IO.Image;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     /// <summary>The content where Type3 glyphs are written to.</summary>
     public sealed class Type3Glyph : PdfCanvas {
         private const String D_0_STR = "d0\n";
@@ -192,7 +192,7 @@ namespace iTextSharp.Kernel.Font {
         }
 
         private void FillBBFromBytes(byte[] bytes) {
-            String str = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes);
+            String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes);
             int d0Pos = str.IndexOf(D_0_STR);
             int d1Pos = str.IndexOf(D_1_STR);
             if (d0Pos != -1) {

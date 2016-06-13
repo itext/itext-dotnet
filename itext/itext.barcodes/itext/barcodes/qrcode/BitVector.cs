@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>
     /// JAVAPORT: This should be combined with BitArray in the future, although that class is not yet
     /// dynamically resizeable.
@@ -132,7 +132,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         }
 
         // Append "bits".
-        public void AppendBitVector(iTextSharp.Barcodes.Qrcode.BitVector bits) {
+        public void AppendBitVector(iText.Barcodes.Qrcode.BitVector bits) {
             int size = bits.Size();
             for (int i = 0; i < size; ++i) {
                 AppendBit(bits.At(i));
@@ -140,7 +140,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         }
 
         // Modify the bit vector by XOR'ing with "other"
-        public void Xor(iTextSharp.Barcodes.Qrcode.BitVector other) {
+        public void Xor(iText.Barcodes.Qrcode.BitVector other) {
             if (sizeInBits != other.Size()) {
                 throw new ArgumentException("BitVector sizes don't match");
             }

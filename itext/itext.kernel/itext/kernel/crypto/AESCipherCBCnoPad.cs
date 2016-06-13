@@ -47,7 +47,7 @@ using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Parameters;
 
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     /// <summary>Creates an AES Cipher with CBC and no padding.</summary>
     /// <author>Paulo Soares</author>
     public class AESCipherCBCnoPad {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Util.Collections
+namespace iText.IO.Util.Collections
 {
     internal class UnmodifiableCollection<T> : ICollection<T> {
         private ICollection<T> _collection;

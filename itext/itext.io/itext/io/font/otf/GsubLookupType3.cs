@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     /// <summary>LookupType 3: Alternate Substitution Subtable</summary>
     /// <author>psoares</author>
     public class GsubLookupType3 : OpenTableLookup {

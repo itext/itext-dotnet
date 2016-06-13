@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Layer;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Layer;
 
-namespace iTextSharp.Kernel.Pdf.Xobject {
+namespace iText.Kernel.Pdf.Xobject {
     public class PdfXObject : PdfObjectWrapper<PdfStream> {
         public PdfXObject()
             : this(new PdfStream()) {
@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Pdf.Xobject {
             : base(pdfObject) {
         }
 
-        public static iTextSharp.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream) {
+        public static iText.Kernel.Pdf.Xobject.PdfXObject MakeXObject(PdfStream stream) {
             if (PdfName.Form.Equals(stream.GetAsName(PdfName.Subtype)) || stream.ContainsKey(PdfName.BBox)) {
                 return new PdfFormXObject(stream);
             }

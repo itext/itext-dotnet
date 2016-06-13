@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace iTextSharp.IO.Source
+namespace iText.IO.Source
 {
 	public class ByteArrayOutputStream : MemoryStream
 	{

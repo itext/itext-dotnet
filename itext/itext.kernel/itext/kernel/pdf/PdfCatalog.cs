@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Kernel.Pdf.Collection;
-using iTextSharp.Kernel.Pdf.Layer;
-using iTextSharp.Kernel.Pdf.Navigation;
+using iText.Kernel;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Collection;
+using iText.Kernel.Pdf.Layer;
+using iText.Kernel.Pdf.Navigation;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfCatalog : PdfObjectWrapper<PdfDictionary> {
         private readonly PdfPagesTree pageTree;
 
@@ -137,15 +137,15 @@ namespace iTextSharp.Kernel.Pdf {
             throw new PdfException(PdfException.YouCannotFlushPdfCatalogManually);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination) {
             return Put(PdfName.OpenAction, destination.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetOpenAction(PdfAction action) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfAction action) {
             return Put(PdfName.OpenAction, action.GetPdfObject());
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetAdditionalAction(PdfName key, PdfAction action) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
@@ -170,7 +170,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </remarks>
         /// <param name="pageMode">page mode.</param>
         /// <returns>current instance of PdfCatalog</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetPageMode(PdfName pageMode) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetPageMode(PdfName pageMode) {
             if (pageMode.Equals(PdfName.UseNone) || pageMode.Equals(PdfName.UseOutlines) || pageMode.Equals(PdfName.UseThumbs
                 ) || pageMode.Equals(PdfName.FullScreen) || pageMode.Equals(PdfName.UseOC) || pageMode.Equals(PdfName.
                 UseAttachments)) {
@@ -186,7 +186,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>This method sets a page layout of the document</summary>
         /// <param name="pageLayout"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
             if (pageLayout.Equals(PdfName.SinglePage) || pageLayout.Equals(PdfName.OneColumn) || pageLayout.Equals(PdfName
                 .TwoColumnLeft) || pageLayout.Equals(PdfName.TwoColumnRight) || pageLayout.Equals(PdfName.TwoPageLeft)
                  || pageLayout.Equals(PdfName.TwoPageRight)) {
@@ -205,7 +205,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="preferences"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
         }
 
@@ -287,17 +287,17 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="collection"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
+        public virtual iText.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
             GetPdfObject().Put(PdfName.Collection, collection.GetPdfObject());
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value) {
+        public virtual iText.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfCatalog Remove(PdfName key) {
+        public virtual iText.Kernel.Pdf.PdfCatalog Remove(PdfName key) {
             GetPdfObject().Remove(key);
             return this;
         }
@@ -332,7 +332,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// An object destination refers to. Must be an array or a dictionary with key /D and array.
         /// See PdfSpec 12.3.2.3 for more info.
         /// </param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual void AddNamedDestination(String key, PdfObject value) {
             AddNameToNameTree(key, value, PdfName.Dests);
         }
@@ -353,7 +353,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// If false the method gets cached outline tree (if it was cached via calling getOutlines method before).
         /// </param>
         /// <returns/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual PdfOutline GetOutlines(bool updateOutlines) {
             if (outlines != null && !updateOutlines) {
                 return outlines;
@@ -401,7 +401,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>This method removes all outlines associated with a given page</summary>
         /// <param name="page"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual void RemoveOutlines(PdfPage page) {
             if (GetDocument().GetWriter() == null) {
                 return;
@@ -418,7 +418,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>This method sets the root outline element in the catalog.</summary>
         /// <param name="outline"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual void AddRootOutline(PdfOutline outline) {
             if (!outlineMode) {
                 return;

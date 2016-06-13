@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
 using Org.BouncyCastle.Pkcs;
 
-namespace iTextSharp.Signatures
+namespace iText.Signatures
 {
 	public class SigningTest : ExtendedITextTest
 	{
 		public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/../../resources/itextsharp/signatures/";
+			.TestDirectory + "/../../resources/itext/signatures/";
 
 		public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/test/itextsharp/signatures/";
+			.TestDirectory + "/test/itext/signatures/";
 
 		public static readonly String keystorePath = NUnit.Framework.TestContext.CurrentContext
-			.TestDirectory + "/../../resources/itextsharp/signatures/ks";
+			.TestDirectory + "/../../resources/itext/signatures/ks";
 
 		public static readonly char[] password = "password".ToCharArray();
 

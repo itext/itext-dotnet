@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
+using iText.IO.Font;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfLiteral : PdfPrimitiveObject {
         private long position;
 
@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         public PdfLiteral(int size)
             : this(new byte[size]) {
-            iTextSharp.IO.Util.JavaUtil.Fill(content, (byte)32);
+            iText.IO.Util.JavaUtil.Fill(content, (byte)32);
         }
 
         public PdfLiteral(String content)
@@ -72,7 +72,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         public override String ToString() {
             if (content != null) {
-                return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
+                return iText.IO.Util.JavaUtil.GetStringForBytes(content);
             }
             else {
                 return "";
@@ -95,12 +95,12 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         protected internal override PdfObject NewInstance() {
-            return new iTextSharp.Kernel.Pdf.PdfLiteral();
+            return new iText.Kernel.Pdf.PdfLiteral();
         }
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfLiteral literal = (iTextSharp.Kernel.Pdf.PdfLiteral)from;
+            iText.Kernel.Pdf.PdfLiteral literal = (iText.Kernel.Pdf.PdfLiteral)from;
             this.content = literal.GetInternalContent();
         }
     }

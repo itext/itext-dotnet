@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
+using iText.IO;
+using iText.IO.Font;
+using iText.IO.Font.Cmap;
+using iText.IO.Log;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     internal class FontUtil {
         private static readonly Dictionary<String, CMapToUnicode> uniMaps = new Dictionary<String, CMapToUnicode>(
             );
@@ -106,7 +106,7 @@ namespace iTextSharp.Kernel.Font {
         internal static String CreateRandomFontName() {
             StringBuilder s = new StringBuilder("");
             for (int k = 0; k < 7; ++k) {
-                s.Append((char)(iTextSharp.IO.Util.JavaUtil.Random() * 26 + 'A'));
+                s.Append((char)(iText.IO.Util.JavaUtil.Random() * 26 + 'A'));
             }
             return s.ToString();
         }

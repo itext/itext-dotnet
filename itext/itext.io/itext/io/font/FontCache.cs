@@ -45,10 +45,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Util;
+using iText.IO.Font.Cmap;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class FontCache {
         /// <summary>The path to the font resources.</summary>
         [Obsolete]
@@ -234,7 +234,7 @@ namespace iTextSharp.IO.Font {
                 CMapParser.ParseCid(name, cmap, new CMapLocationResource());
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
             return cmap;
         }

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     /// <summary>Paths define shapes, trajectories, and regions of all sorts.</summary>
     /// <remarks>
     /// Paths define shapes, trajectories, and regions of all sorts. They shall be used
@@ -66,7 +66,7 @@ namespace iTextSharp.Kernel.Geom {
             AddSubpaths(subpaths);
         }
 
-        public Path(iTextSharp.Kernel.Geom.Path path) {
+        public Path(iText.Kernel.Geom.Path path) {
             AddSubpaths(path.GetSubpaths());
         }
 
@@ -144,7 +144,7 @@ namespace iTextSharp.Kernel.Geom {
             Point secondPoint = new Point(x1, y1);
             Point thirdPoint = new Point(x2, y2);
             Point fourthPoint = new Point(x3, y3);
-            IList<Point> controlPoints = new List<Point>(iTextSharp.IO.Util.JavaUtil.ArraysAsList(currentPoint, secondPoint
+            IList<Point> controlPoints = new List<Point>(iText.IO.Util.JavaUtil.ArraysAsList(currentPoint, secondPoint
                 , thirdPoint, fourthPoint));
             GetLastSubpath().AddSegment(new BezierCurve(controlPoints));
             currentPoint = fourthPoint;
@@ -177,7 +177,7 @@ namespace iTextSharp.Kernel.Geom {
         }
 
         /// <summary>Appends a rectangle to the current path as a complete subpath.</summary>
-        public virtual void Rectangle(iTextSharp.Kernel.Geom.Rectangle rect) {
+        public virtual void Rectangle(iText.Kernel.Geom.Rectangle rect) {
             Rectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
         }
 

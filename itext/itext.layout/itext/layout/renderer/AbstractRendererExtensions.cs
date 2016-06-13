@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace iTextSharp.Layout.Renderer
+namespace iText.Layout.Renderer
 {
     static class AbstractRendererExtensions
     {
@@ -8,7 +8,7 @@ namespace iTextSharp.Layout.Renderer
         /// <summary>Returns a property with a certain key, as a floating point value.</summary>
         /// <param name="property">
         /// an
-        /// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
+        /// <see cref="iText.Layout.Property.Property">enum value</see>
         /// </param>
         /// <returns>
         /// a
@@ -34,7 +34,7 @@ namespace iTextSharp.Layout.Renderer
         /// <summary>Returns a property with a certain key, as a floating point value.</summary>
         /// <param name="property">
         /// an
-        /// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
+        /// <see cref="iText.Layout.Property.Property">enum value</see>
         /// </param>
         /// <param name="defaultValue">default value to be returned if property is not found</param>
         /// <returns>
@@ -62,7 +62,7 @@ namespace iTextSharp.Layout.Renderer
         /// <summary>Returns a property with a certain key, as an integer value.</summary>
         /// <param name="property">
         /// an
-        /// <see cref="iTextSharp.Layout.Property.Property">enum value</see>
+        /// <see cref="iText.Layout.Property.Property">enum value</see>
         /// </param>
         /// <returns>
         /// a

@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Dictionary that stores signature build properties.</summary>
     /// <author>Kwinten Pisman</author>
     public class PdfSignatureBuildProperties : PdfObjectWrapper<PdfDictionary> {

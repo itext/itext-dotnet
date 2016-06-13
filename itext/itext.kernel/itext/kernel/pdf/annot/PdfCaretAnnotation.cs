@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfCaretAnnotation : PdfMarkupAnnotation {
         public PdfCaretAnnotation(Rectangle rect)
             : base(rect) {
@@ -58,8 +58,8 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return PdfName.Caret;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation SetSymbol(PdfString symbol) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.Sy, symbol);
+        public virtual iText.Kernel.Pdf.Annot.PdfCaretAnnotation SetSymbol(PdfString symbol) {
+            return (iText.Kernel.Pdf.Annot.PdfCaretAnnotation)Put(PdfName.Sy, symbol);
         }
 
         public virtual PdfString GetSymbol() {

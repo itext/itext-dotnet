@@ -14,7 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>This class implements a simple byte vector with access to the
     /// underlying array.</p>

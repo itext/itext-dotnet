@@ -19,9 +19,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>This tree structure stores the hyphenation patterns in an efficient
     /// way for fast lookup.
@@ -117,7 +117,7 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <summary>Read hyphenation patterns from an XML file.</summary>
         /// <param name="filename">the filename</param>
         /// <exception cref="HyphenationException">In case the parsing fails</exception>
-        /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         /// <exception cref="System.IO.FileNotFoundException"/>
         public virtual void LoadPatterns(String filename) {
             LoadPatterns(new FileStream(filename, FileMode.Open, FileAccess.Read), filename);
@@ -127,7 +127,7 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <param name="stream">the InputSource for the file</param>
         /// <param name="name">unique key representing country-language combination</param>
         /// <exception cref="HyphenationException">In case the parsing fails</exception>
-        /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public virtual void LoadPatterns(Stream stream, String name) {
             PatternParser pp = new PatternParser(this);
             ivalues = new TernaryTree();
@@ -300,12 +300,12 @@ namespace iTextSharp.Layout.Hyphenation {
         /// object representing
         /// the hyphenated word or null if word is not hyphenated.
         /// </returns>
-        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(String word, int remainCharCount, int pushCharCount
+        public virtual iText.Layout.Hyphenation.Hyphenation Hyphenate(String word, int remainCharCount, int pushCharCount
             ) {
             char[] w = word.ToCharArray();
             if (IsMultiPartWord(w, w.Length)) {
                 IList<char[]> words = SplitOnNonCharacters(w);
-                return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w), GetHyphPointsForWords(words, remainCharCount
+                return new iText.Layout.Hyphenation.Hyphenation(new String(w), GetHyphPointsForWords(words, remainCharCount
                     , pushCharCount));
             }
             else {
@@ -383,7 +383,7 @@ namespace iTextSharp.Layout.Hyphenation {
             int[] breaks = new int[0];
             for (int iNonLetterWord = 0; iNonLetterWord < nonLetterWords.Count; iNonLetterWord++) {
                 char[] nonLetterWord = nonLetterWords[iNonLetterWord];
-                iTextSharp.Layout.Hyphenation.Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord.Length, (iNonLetterWord
+                iText.Layout.Hyphenation.Hyphenation curHyph = Hyphenate(nonLetterWord, 0, nonLetterWord.Length, (iNonLetterWord
                      == 0) ? remainCharCount : 1, (iNonLetterWord == nonLetterWords.Count - 1) ? pushCharCount : 1);
                 if (curHyph == null) {
                     continue;
@@ -427,7 +427,7 @@ namespace iTextSharp.Layout.Hyphenation {
         /// object representing
         /// the hyphenated word or null if word is not hyphenated.
         /// </returns>
-        public virtual iTextSharp.Layout.Hyphenation.Hyphenation Hyphenate(char[] w, int offset, int len, int remainCharCount
+        public virtual iText.Layout.Hyphenation.Hyphenation Hyphenate(char[] w, int offset, int len, int remainCharCount
             , int pushCharCount) {
             int i;
             char[] word = new char[len + 3];
@@ -512,7 +512,7 @@ namespace iTextSharp.Layout.Hyphenation {
                 // trim result array
                 int[] res = new int[k];
                 System.Array.Copy(result, 0, res, 0, k);
-                return new iTextSharp.Layout.Hyphenation.Hyphenation(new String(w, offset, len), res);
+                return new iText.Layout.Hyphenation.Hyphenation(new String(w, offset, len), res);
             }
             else {
                 return null;

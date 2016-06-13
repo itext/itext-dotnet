@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     public class OutputStreamStandardEncryption : OutputStreamEncryption {
         protected internal ARCFOUREncryption arcfour;
 

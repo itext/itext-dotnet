@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// An implementation of the CrlClient that handles offline
     /// Certificate Revocation Lists.

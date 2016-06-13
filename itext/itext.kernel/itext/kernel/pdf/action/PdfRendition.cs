@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Filespec;
 
-namespace iTextSharp.Kernel.Pdf.Action {
+namespace iText.Kernel.Pdf.Action {
     public class PdfRendition : PdfObjectWrapper<PdfDictionary> {
         public PdfRendition(PdfDictionary pdfObject)
             : base(pdfObject) {

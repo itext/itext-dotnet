@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Kernel.Pdf {
-    public class PdfIndirectReference : PdfObject, IComparable<iTextSharp.Kernel.Pdf.PdfIndirectReference> {
+namespace iText.Kernel.Pdf {
+    public class PdfIndirectReference : PdfObject, IComparable<iText.Kernel.Pdf.PdfIndirectReference> {
         private const int LENGTH_OF_INDIRECTS_CHAIN = 31;
 
         /// <summary>Object number.</summary>
@@ -126,8 +126,8 @@ namespace iTextSharp.Kernel.Pdf {
             else {
                 PdfObject currentRefersTo = GetRefersTo(false);
                 for (int i = 0; i < LENGTH_OF_INDIRECTS_CHAIN; i++) {
-                    if (currentRefersTo is iTextSharp.Kernel.Pdf.PdfIndirectReference) {
-                        currentRefersTo = ((iTextSharp.Kernel.Pdf.PdfIndirectReference)currentRefersTo).GetRefersTo(false);
+                    if (currentRefersTo is iText.Kernel.Pdf.PdfIndirectReference) {
+                        currentRefersTo = ((iText.Kernel.Pdf.PdfIndirectReference)currentRefersTo).GetRefersTo(false);
                     }
                     else {
                         break;
@@ -164,7 +164,7 @@ namespace iTextSharp.Kernel.Pdf {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iTextSharp.Kernel.Pdf.PdfIndirectReference that = (iTextSharp.Kernel.Pdf.PdfIndirectReference)o;
+            iText.Kernel.Pdf.PdfIndirectReference that = (iText.Kernel.Pdf.PdfIndirectReference)o;
             return objNr == that.objNr && genNr == that.genNr;
         }
 
@@ -174,7 +174,7 @@ namespace iTextSharp.Kernel.Pdf {
             return result;
         }
 
-        public virtual int CompareTo(iTextSharp.Kernel.Pdf.PdfIndirectReference o) {
+        public virtual int CompareTo(iText.Kernel.Pdf.PdfIndirectReference o) {
             if (objNr == o.objNr) {
                 if (genNr == o.genNr) {
                     return 0;
@@ -270,7 +270,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Sets special states of current object.</summary>
         /// <param name="state">special flag of current object</param>
         protected internal override PdfObject SetState(short state) {
-            return (iTextSharp.Kernel.Pdf.PdfIndirectReference)base.SetState(state);
+            return (iText.Kernel.Pdf.PdfIndirectReference)base.SetState(state);
         }
 
         internal virtual void SetObjStreamNumber(int objectStreamNumber) {

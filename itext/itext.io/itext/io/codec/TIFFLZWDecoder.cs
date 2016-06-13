@@ -45,7 +45,7 @@
 */
 using System;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>A class for performing LZW decoding.</summary>
     public class TIFFLZWDecoder {
         internal byte[][] stringTable;
@@ -90,7 +90,7 @@ namespace iTextSharp.IO.Codec {
         /// <param name="h">The number of rows the compressed data contains.</param>
         public virtual byte[] Decode(byte[] data, byte[] uncompData, int h) {
             if (data[0] == (byte)0x00 && data[1] == (byte)0x01) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Tiff50StyleLzwCodesAreNotSupported);
+                throw new iText.IO.IOException(iText.IO.IOException.Tiff50StyleLzwCodesAreNotSupported);
             }
             InitializeStringTable();
             this.data = data;

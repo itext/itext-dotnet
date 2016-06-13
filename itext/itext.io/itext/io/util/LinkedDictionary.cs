@@ -48,7 +48,7 @@ using System.Collections;
  * address: sales@itextpdf.com
  */
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     public class LinkedDictionary <TKey, TValue> : IDictionary<TKey, TValue> {
 		
         private Dictionary<TKey, LinkedListNode<KeyValuePair<TKey,TValue>>> dic;

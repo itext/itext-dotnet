@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfWatermarkAnnotation : PdfAnnotation {
         public PdfWatermarkAnnotation(Rectangle rect)
             : base(rect) {
@@ -58,9 +58,8 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return PdfName.Watermark;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint fixedPrint) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint, fixedPrint.GetPdfObject
-                ());
+        public virtual iText.Kernel.Pdf.Annot.PdfWatermarkAnnotation SetFixedPrint(PdfFixedPrint fixedPrint) {
+            return (iText.Kernel.Pdf.Annot.PdfWatermarkAnnotation)Put(PdfName.FixedPrint, fixedPrint.GetPdfObject());
         }
 
         public virtual PdfDictionary GetFixedPrint() {

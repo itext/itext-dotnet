@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border {
+namespace iText.Layout.Border {
     public abstract class Border {
-        public static readonly iTextSharp.Layout.Border.Border NO_BORDER = null;
+        public static readonly iText.Layout.Border.Border NO_BORDER = null;
 
         public const int SOLID = 0;
 
@@ -66,7 +66,7 @@ namespace iTextSharp.Layout.Border {
 
         public const int _3D_RIDGE = 8;
 
-        protected internal iTextSharp.Kernel.Color.Color color;
+        protected internal iText.Kernel.Color.Color color;
 
         protected internal float width;
 
@@ -75,10 +75,10 @@ namespace iTextSharp.Layout.Border {
         private int hash;
 
         protected internal Border(float width)
-            : this(iTextSharp.Kernel.Color.Color.BLACK, width) {
+            : this(iText.Kernel.Color.Color.BLACK, width) {
         }
 
-        protected internal Border(iTextSharp.Kernel.Color.Color color, float width) {
+        protected internal Border(iText.Kernel.Color.Color color, float width) {
             this.color = color;
             this.width = width;
         }
@@ -119,7 +119,7 @@ namespace iTextSharp.Layout.Border {
 
         public abstract int GetBorderType();
 
-        public virtual iTextSharp.Kernel.Color.Color GetColor() {
+        public virtual iText.Kernel.Color.Color GetColor() {
             return color;
         }
 
@@ -131,8 +131,8 @@ namespace iTextSharp.Layout.Border {
             if (this == anObject) {
                 return true;
             }
-            if (anObject is iTextSharp.Layout.Border.Border) {
-                iTextSharp.Layout.Border.Border anotherBorder = (iTextSharp.Layout.Border.Border)anObject;
+            if (anObject is iText.Layout.Border.Border) {
+                iText.Layout.Border.Border anotherBorder = (iText.Layout.Border.Border)anObject;
                 if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() != GetColor() || anotherBorder
                     .GetWidth() != GetWidth()) {
                     return false;

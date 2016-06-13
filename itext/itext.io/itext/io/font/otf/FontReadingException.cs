@@ -43,7 +43,7 @@ Copyright (c) 1998-2016 iText Group NV
 */
 using System;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
     public class FontReadingException : System.IO.IOException {
         public FontReadingException(String message)

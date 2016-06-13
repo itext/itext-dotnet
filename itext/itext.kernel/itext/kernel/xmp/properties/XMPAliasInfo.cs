@@ -28,9 +28,9 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.XMP.Options;
+using iText.Kernel.XMP.Options;
 
-namespace iTextSharp.Kernel.XMP.Properties {
+namespace iText.Kernel.XMP.Properties {
     /// <summary>This interface is used to return info about an alias.</summary>
     /// <since>27.01.2006</since>
     public interface XMPAliasInfo {

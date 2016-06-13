@@ -42,17 +42,17 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Log;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Pdfa.Checker;
+using iText.IO;
+using iText.IO.Log;
+using iText.Kernel.Font;
+using iText.Kernel.Log;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.XMP;
+using iText.Pdfa.Checker;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     public class PdfADocument : PdfDocument {
         protected internal PdfAChecker checker;
 
@@ -215,7 +215,7 @@ namespace iTextSharp.Pdfa {
                 SetXmpMetadata(xmpMeta);
             }
             catch (XMPException e) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Pdfa.PdfADocument));
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
                 logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
@@ -268,7 +268,7 @@ namespace iTextSharp.Pdfa {
         }
 
         protected override Counter GetCounter() {
-            return CounterFactory.GetCounter(typeof(iTextSharp.Pdfa.PdfADocument));
+            return CounterFactory.GetCounter(typeof(iText.Pdfa.PdfADocument));
         }
 
         private static PdfVersion GetPdfVersionForPdfA(PdfAConformanceLevel conformanceLevel) {

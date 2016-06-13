@@ -1,19 +1,19 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class SimpleTextExtractionStrategyTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/SimpleTextExtractionStrategyTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/SimpleTextExtractionStrategyTest/";
 
         internal String TEXT1 = "TEXT1 TEXT1";
 

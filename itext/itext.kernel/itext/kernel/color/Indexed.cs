@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Kernel.Color {
-    public class Indexed : iTextSharp.Kernel.Color.Color {
+namespace iText.Kernel.Color {
+    public class Indexed : iText.Kernel.Color.Color {
         public Indexed(PdfColorSpace colorSpace)
             : this(colorSpace, 0) {
         }

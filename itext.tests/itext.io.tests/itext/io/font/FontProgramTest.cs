@@ -1,4 +1,4 @@
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class FontProgramTest {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
@@ -6,7 +6,7 @@ namespace iTextSharp.IO.Font {
             try {
                 FontProgramFactory.CreateFont("some-font.ttf");
             }
-            catch (iTextSharp.IO.IOException ex) {
+            catch (iText.IO.IOException ex) {
                 NUnit.Framework.Assert.AreEqual("font.file some-font.ttf not.found", ex.Message);
             }
         }

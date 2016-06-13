@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Layout.Property;
+using iText.IO.Font;
+using iText.IO.Font.Otf;
+using iText.IO.Log;
+using iText.IO.Util;
+using iText.Kernel.Font;
+using iText.Layout.Property;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     internal class TypographyUtils {
         private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
 
@@ -169,7 +169,7 @@ namespace iTextSharp.Layout.Renderer {
                         if (reorderedLine[i].glyph.HasValidUnicode()) {
                             int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getPairedBracket", new Type
                                 [] { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
-                            PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(iTextSharp.Layout.Property.Property.FONT);
+                            PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(iText.Layout.Property.Property.FONT);
                             //BidiBracketMap.getPairedBracket(reorderedLine.get(i).getUnicode())
                             reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
                         }

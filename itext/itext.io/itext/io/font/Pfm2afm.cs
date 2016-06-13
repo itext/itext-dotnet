@@ -44,10 +44,10 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     /// <summary>Converts a PFM file into an AFM file.</summary>
     public sealed class Pfm2afm {
         private RandomAccessFileOrArray input;
@@ -66,7 +66,7 @@ namespace iTextSharp.IO.Font {
         /// <param name="output">the AFM file</param>
         /// <exception cref="System.IO.IOException">on error</exception>
         public static void Convert(RandomAccessFileOrArray input, Stream output) {
-            iTextSharp.IO.Font.Pfm2afm p = new iTextSharp.IO.Font.Pfm2afm(input, output);
+            iText.IO.Font.Pfm2afm p = new iText.IO.Font.Pfm2afm(input, output);
             p.Openpfm();
             p.Putheader();
             p.Putchartab();
@@ -85,7 +85,7 @@ namespace iTextSharp.IO.Font {
                     break;
                 }
             }
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
+            return iText.IO.Util.JavaUtil.GetStringForBytes(b, 0, k, "ISO-8859-1");
         }
 
         /// <exception cref="System.IO.IOException"/>

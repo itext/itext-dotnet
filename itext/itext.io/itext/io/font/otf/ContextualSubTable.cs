@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     public abstract class ContextualSubTable {
         protected internal OpenTypeFontTableReader openReader;
 

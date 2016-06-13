@@ -1,19 +1,19 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
+using iText.Layout.Property;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/LocationTextExtractionStrategyTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/LocationTextExtractionStrategyTest/";
 
         public override ITextExtractionStrategy CreateRenderListenerForTest() {
             return new LocationTextExtractionStrategy();
@@ -153,7 +153,7 @@ namespace iTextSharp.Layout {
             document.Add(new Paragraph("B"));
             PdfFormXObject template = new PdfFormXObject(new Rectangle(20, 100));
             PdfCanvas canvas = new PdfCanvas(template, pdfDocument);
-            canvas.SetStrokeColor(iTextSharp.Kernel.Color.Color.GREEN).Rectangle(0, 0, template.GetWidth(), template.GetHeight
+            canvas.SetStrokeColor(iText.Kernel.Color.Color.GREEN).Rectangle(0, 0, template.GetWidth(), template.GetHeight
                 ()).Stroke();
             AffineTransform tx = new AffineTransform();
             tx.Translate(0, template.GetHeight());

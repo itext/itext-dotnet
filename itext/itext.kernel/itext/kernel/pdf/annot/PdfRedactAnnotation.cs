@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfRedactAnnotation : PdfMarkupAnnotation {
         public PdfRedactAnnotation(Rectangle rect)
             : base(rect) {
@@ -58,25 +58,24 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return PdfName.Redact;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, text);
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetOverlayText(PdfString text) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.OverlayText, text);
         }
 
         public virtual PdfString GetOverlayText() {
             return GetPdfObject().GetAsString(PdfName.OverlayText);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance(PdfStream stream
-            ) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetRedactRolloverAppearance(PdfStream stream) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.RO, stream);
         }
 
         public virtual PdfStream GetRedactRolloverAppearance() {
             return GetPdfObject().GetAsStream(PdfName.RO);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean repeat) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat);
+        public virtual iText.Kernel.Pdf.Annot.PdfRedactAnnotation SetRepeat(PdfBoolean repeat) {
+            return (iText.Kernel.Pdf.Annot.PdfRedactAnnotation)Put(PdfName.Repeat, repeat);
         }
 
         public virtual PdfBoolean GetRepeat() {

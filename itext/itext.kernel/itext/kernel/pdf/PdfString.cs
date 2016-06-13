@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Font;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     /// <summary>
     /// A
     /// <c>PdfString</c>
@@ -130,7 +130,7 @@ namespace iTextSharp.Kernel.Pdf {
             return hexWriting;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting) {
+        public virtual iText.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting) {
             if (value == null) {
                 GenerateValue();
                 content = null;
@@ -203,14 +203,14 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document);
+            return (iText.Kernel.Pdf.PdfString)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iTextSharp.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
+            return (iText.Kernel.Pdf.PdfString)base.MakeIndirect(document, reference);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -221,7 +221,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, true);
+            return (iText.Kernel.Pdf.PdfString)base.CopyTo(document, true);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -237,13 +237,12 @@ namespace iTextSharp.Kernel.Pdf {
         /// </param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iTextSharp.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
+            return (iText.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
         }
 
         public override String ToString() {
             if (value == null) {
-                return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent(content, hexWriting)
-                    );
+                return iText.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent(content, hexWriting));
             }
             else {
                 return GetValue();
@@ -264,7 +263,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <c>PdfString</c>
         /// .
         /// </summary>
-        protected internal virtual iTextSharp.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt) {
+        protected internal virtual iText.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt) {
             if (decrypt != null) {
                 System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value");
                 byte[] decodedContent = PdfTokenizer.DecodeStringContent(content, hexWriting);
@@ -321,12 +320,12 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         protected internal override PdfObject NewInstance() {
-            return new iTextSharp.Kernel.Pdf.PdfString();
+            return new iText.Kernel.Pdf.PdfString();
         }
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfString @string = (iTextSharp.Kernel.Pdf.PdfString)from;
+            iText.Kernel.Pdf.PdfString @string = (iText.Kernel.Pdf.PdfString)from;
             value = @string.value;
             hexWriting = @string.hexWriting;
         }

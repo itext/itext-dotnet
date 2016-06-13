@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.IO.Font.Otf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     /// <summary>Low-level API class for Type 3 fonts.</summary>
     /// <remarks>
     /// Low-level API class for Type 3 fonts.
@@ -57,9 +57,9 @@ namespace iTextSharp.Kernel.Font {
     /// maps character codes to the appropriate character names for the glyphs.
     /// <br /><br />
     /// To be able to be wrapped with this
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </remarks>
     public class PdfType3Font : PdfSimpleFont<Type3FontProgram> {

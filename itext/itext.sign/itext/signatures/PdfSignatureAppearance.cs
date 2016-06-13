@@ -44,17 +44,17 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 using Org.BouncyCastle.X509;
-using iTextSharp.Forms;
-using iTextSharp.Forms.Fields;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Layout.Element;
+using iText.Forms;
+using iText.Forms.Fields;
+using iText.IO.Image;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Provides convenient methods to make a signature appearance.</summary>
     /// <remarks>
     /// Provides convenient methods to make a signature appearance. Use it in conjunction with
@@ -183,7 +183,7 @@ namespace iTextSharp.Signatures {
         /// The page number of the signature field which
         /// this signature appearance is associated with.
         /// </param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetPageNumber(int pageNumber) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetPageNumber(int pageNumber) {
             this.page = pageNumber;
             return this;
         }
@@ -208,7 +208,7 @@ namespace iTextSharp.Signatures {
         /// The rectangle that represents the position and
         /// dimension of the signature field in the page.
         /// </param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetPageRect(Rectangle pageRect) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetPageRect(Rectangle pageRect) {
             this.pageRect = new Rectangle(pageRect);
             this.rect = new Rectangle(pageRect.GetWidth(), pageRect.GetHeight());
             return this;
@@ -242,7 +242,7 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the rendering mode for this signature.</summary>
         /// <param name="renderingMode">the rendering mode</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetRenderingMode(PdfSignatureAppearance.RenderingMode
+        public virtual iText.Signatures.PdfSignatureAppearance SetRenderingMode(PdfSignatureAppearance.RenderingMode
              renderingMode) {
             this.renderingMode = renderingMode;
             return this;
@@ -256,14 +256,14 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the signing reason.</summary>
         /// <param name="reason">signing reason.</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetReason(String reason) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetReason(String reason) {
             this.reason = reason;
             return this;
         }
 
         /// <summary>Sets the caption for the signing reason.</summary>
         /// <param name="reasonCaption">A new signing reason caption</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetReasonCaption(String reasonCaption) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetReasonCaption(String reasonCaption) {
             this.reasonCaption = reasonCaption;
             return this;
         }
@@ -276,14 +276,14 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the signing location.</summary>
         /// <param name="location">A new signing location</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetLocation(String location) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetLocation(String location) {
             this.location = location;
             return this;
         }
 
         /// <summary>Sets the caption for the signing location.</summary>
         /// <param name="locationCaption">A new signing location caption</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetLocationCaption(String locationCaption) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetLocationCaption(String locationCaption) {
             this.locationCaption = locationCaption;
             return this;
         }
@@ -296,7 +296,7 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the name of the application used to create the signature.</summary>
         /// <param name="signatureCreator">A new name of the application signing a document</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetSignatureCreator(String signatureCreator) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetSignatureCreator(String signatureCreator) {
             this.signatureCreator = signatureCreator;
             return this;
         }
@@ -309,7 +309,7 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the signing contact.</summary>
         /// <param name="contact">A new signing contact</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetContact(String contact) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetContact(String contact) {
             this.contact = contact;
             return this;
         }
@@ -320,8 +320,7 @@ namespace iTextSharp.Signatures {
         /// This certificate doesn't take part in the actual signing process.
         /// </remarks>
         /// <param name="signCertificate">the certificate</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetCertificate(X509Certificate signCertificate
-            ) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetCertificate(X509Certificate signCertificate) {
             this.signCertificate = signCertificate;
             return this;
         }
@@ -341,14 +340,13 @@ namespace iTextSharp.Signatures {
         /// <summary>Sets the Image object to render when Render is set to RenderingMode.GRAPHIC or RenderingMode.GRAPHIC_AND_DESCRIPTION.
         ///     </summary>
         /// <param name="signatureGraphic">image rendered. If null the mode is defaulted to RenderingMode.DESCRIPTION</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetSignatureGraphic(ImageData signatureGraphic
-            ) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetSignatureGraphic(ImageData signatureGraphic) {
             this.signatureGraphic = signatureGraphic;
             return this;
         }
 
         /// <summary>Indicates that the existing appearances needs to be reused as layer 0.</summary>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetReuseAppearance(bool reuseAppearance) {
             this.reuseAppearance = reuseAppearance;
             return this;
         }
@@ -362,7 +360,7 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the background image for the layer 2.</summary>
         /// <param name="image">the background image for the layer 2</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetImage(ImageData image) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetImage(ImageData image) {
             this.image = image;
             return this;
         }
@@ -381,7 +379,7 @@ namespace iTextSharp.Signatures {
         /// In any of the cases the image will always be centered. It's zero by default.
         /// </remarks>
         /// <param name="imageScale">the scaling to be applied to the background image</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetImageScale(float imageScale) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetImageScale(float imageScale) {
             this.imageScale = imageScale;
             return this;
         }
@@ -391,7 +389,7 @@ namespace iTextSharp.Signatures {
         /// the signature text identifying the signer. If null or not set
         /// a standard description will be used
         /// </param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetLayer2Text(String text) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetLayer2Text(String text) {
             layer2Text = text;
             return this;
         }
@@ -411,14 +409,14 @@ namespace iTextSharp.Signatures {
         /// <summary>Sets the n2 and n4 layer font.</summary>
         /// <remarks>Sets the n2 and n4 layer font. If the font size is zero, auto-fit will be used.</remarks>
         /// <param name="layer2Font">the n2 and n4 font</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetLayer2Font(PdfFont layer2Font) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetLayer2Font(PdfFont layer2Font) {
             this.layer2Font = layer2Font;
             return this;
         }
 
         /// <summary>Sets the n2 and n4 layer font size.</summary>
         /// <param name="fontSize">font size</param>
-        public virtual iTextSharp.Signatures.PdfSignatureAppearance SetLayer2FontSize(float fontSize) {
+        public virtual iText.Signatures.PdfSignatureAppearance SetLayer2FontSize(float fontSize) {
             this.layer2FontSize = fontSize;
             return this;
         }
@@ -548,7 +546,7 @@ namespace iTextSharp.Signatures {
                         canvas = new PdfCanvas(n2, document);
                         Paragraph paragraph = new Paragraph(signedBy).SetFont(font).SetFontSize(layer2FontSize).SetMargin(0).SetMultipliedLeading
                             (0.9f);
-                        new iTextSharp.Layout.Canvas(canvas, document, signatureRect).Add(paragraph);
+                        new iText.Layout.Canvas(canvas, document, signatureRect).Add(paragraph);
                         break;
                     }
 
@@ -602,7 +600,7 @@ namespace iTextSharp.Signatures {
                     canvas = new PdfCanvas(n2, document);
                     Paragraph paragraph_1 = new Paragraph(text).SetFont(font).SetFontSize(layer2FontSize).SetMargin(0).SetMultipliedLeading
                         (0.9f);
-                    new iTextSharp.Layout.Canvas(canvas, document, dataRect).Add(paragraph_1);
+                    new iText.Layout.Canvas(canvas, document, dataRect).Add(paragraph_1);
                 }
             }
             int rotation = document.GetPage(page).GetRotation();
@@ -670,14 +668,14 @@ namespace iTextSharp.Signatures {
 
         /// <summary>Sets the signature date.</summary>
         /// <param name="signDate">A new signature date</param>
-        protected internal virtual iTextSharp.Signatures.PdfSignatureAppearance SetSignDate(DateTime signDate) {
+        protected internal virtual iText.Signatures.PdfSignatureAppearance SetSignDate(DateTime signDate) {
             this.signDate = signDate;
             return this;
         }
 
         /// <summary>Set the field name of the appearance.</summary>
         /// <param name="fieldName">name of the field</param>
-        protected internal virtual iTextSharp.Signatures.PdfSignatureAppearance SetFieldName(String fieldName) {
+        protected internal virtual iText.Signatures.PdfSignatureAppearance SetFieldName(String fieldName) {
             this.fieldName = fieldName;
             return this;
         }

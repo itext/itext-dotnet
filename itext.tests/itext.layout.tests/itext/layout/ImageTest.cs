@@ -1,21 +1,21 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Image;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class ImageTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/ImageTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/ImageTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/ImageTest/";
+             + "/test/itext/layout/ImageTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -33,7 +33,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -56,7 +56,7 @@ namespace iTextSharp.Layout {
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
                 )));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
             p.Add(new Text("before image"));
             p.Add(image);
@@ -78,7 +78,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -101,7 +101,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             Paragraph p = new Paragraph();
             p.Add(new Text("before image"));
             p.Add(image);
@@ -124,7 +124,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -147,7 +147,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             doc.Add(new Paragraph(new Text("First Line")));
             Paragraph p = new Paragraph();
             p.Add(image);
@@ -170,8 +170,8 @@ namespace iTextSharp.Layout {
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
             Div div = new Div();
             div.Add(image);
             doc.Add(div);
@@ -191,8 +191,8 @@ namespace iTextSharp.Layout {
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
             Div div = new Div();
             div.Add(image);
             div.Add(image);
@@ -214,8 +214,8 @@ namespace iTextSharp.Layout {
             PdfWriter writer = new PdfWriter(fos);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
-            iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
-                 + "Desert.jpg"));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
             Table table = new Table(8);
             table.SetWidthPercent(100);
             for (int k = 0; k < rowCount; k++) {
@@ -251,8 +251,8 @@ namespace iTextSharp.Layout {
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             //Initialize document
             Document document = new Document(pdf);
-            iTextSharp.Layout.Element.Image img = new iTextSharp.Layout.Element.Image(ImageDataFactory.Create(sourceFolder
-                 + "itis.jpg"));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                ));
             img.SetAutoScale(true);
             Table table = new Table(4);
             table.SetWidthPercent(100);

@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Layer {
+namespace iText.Kernel.Pdf.Layer {
     /// <summary>
     /// An optional content group is a dictionary representing a collection of graphics
     /// that can be made visible or invisible dynamically by users of viewer applications.
@@ -57,9 +57,9 @@ namespace iTextSharp.Kernel.Pdf.Layer {
     /// In iText they are referenced as layers.
     /// <br /><br />
     /// To be able to be wrapped with this
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </remarks>
     public class PdfLayer : PdfObjectWrapper<PdfDictionary>, IPdfOCG {
@@ -72,13 +72,13 @@ namespace iTextSharp.Kernel.Pdf.Layer {
 
         protected internal bool locked = false;
 
-        protected internal iTextSharp.Kernel.Pdf.Layer.PdfLayer parent;
+        protected internal iText.Kernel.Pdf.Layer.PdfLayer parent;
 
-        protected internal IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> children;
+        protected internal IList<iText.Kernel.Pdf.Layer.PdfLayer> children;
 
         /// <summary>Creates a new layer by existing dictionary, which must be an indirect object.</summary>
         /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfLayer(PdfDictionary layerDictionary)
             : base(layerDictionary) {
             EnsureObjectIsAddedToDocument(layerDictionary);
@@ -87,7 +87,7 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// <summary>Creates a new layer by its name and document.</summary>
         /// <param name="name">the layer name</param>
         /// <param name="document">the PdfDocument which the layer belongs to</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfLayer(String name, PdfDocument document)
             : this(document) {
             SetName(name);
@@ -108,8 +108,8 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// <param name="title">the title text</param>
         /// <param name="document">the <CODE>PdfDocument</CODE></param>
         /// <returns>the title layer</returns>
-        public static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document) {
-            iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = CreateTitleSilent(title, document);
+        public static iText.Kernel.Pdf.Layer.PdfLayer CreateTitle(String title, PdfDocument document) {
+            iText.Kernel.Pdf.Layer.PdfLayer layer = CreateTitleSilent(title, document);
             document.GetCatalog().GetOCProperties(true).RegisterLayer(layer);
             return layer;
         }
@@ -127,28 +127,27 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// </remarks>
         /// <param name="document">the <CODE>PdfDocument</CODE></param>
         /// <param name="group">the radio group</param>
-        public static void AddOCGRadioGroup(PdfDocument document, IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> group
-            ) {
+        public static void AddOCGRadioGroup(PdfDocument document, IList<iText.Kernel.Pdf.Layer.PdfLayer> group) {
             document.GetCatalog().GetOCProperties(true).AddOCGRadioGroup(group);
         }
 
         /// <summary>Adds a child layer.</summary>
         /// <remarks>Adds a child layer. Nested layers can only have one parent.</remarks>
         /// <param name="childLayer">the child layer</param>
-        public virtual void AddChild(iTextSharp.Kernel.Pdf.Layer.PdfLayer childLayer) {
+        public virtual void AddChild(iText.Kernel.Pdf.Layer.PdfLayer childLayer) {
             if (childLayer.parent != null) {
                 throw new ArgumentException("Illegal argument: childLayer");
             }
             childLayer.parent = this;
             if (children == null) {
-                children = new List<iTextSharp.Kernel.Pdf.Layer.PdfLayer>();
+                children = new List<iText.Kernel.Pdf.Layer.PdfLayer>();
             }
             children.Add(childLayer);
         }
 
         /// <summary>Gets the parent of this layer, be it a title layer, or a usual one.</summary>
         /// <returns>the parent of the layer, or null if it has no parent</returns>
-        public virtual iTextSharp.Kernel.Pdf.Layer.PdfLayer GetParent() {
+        public virtual iText.Kernel.Pdf.Layer.PdfLayer GetParent() {
             return parent;
         }
 
@@ -225,18 +224,18 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// resultant colletion if no intents are currently specified.
         /// </remarks>
         /// <returns>the collection of intents.</returns>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual ICollection<PdfName> GetIntents() {
             PdfObject intent = GetPdfObject().Get(PdfName.Intent);
             if (intent is PdfName) {
-                return iTextSharp.IO.Util.JavaUtil.ArraysAsList((PdfName)intent);
+                return iText.IO.Util.JavaUtil.ArraysAsList((PdfName)intent);
             }
             else {
                 if (intent is PdfArray) {
                     return (ICollection<PdfName>)intent;
                 }
             }
-            return iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.View);
+            return iText.IO.Util.JavaUtil.ArraysAsList(PdfName.View);
         }
 
         /// <summary>Sets the intents of the layer.</summary>
@@ -434,7 +433,7 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// making it indirect first if necessary.
         /// </summary>
         /// <returns>the indirect reference to the object representing the layer</returns>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfIndirectReference GetIndirectReference() {
             GetPdfObject().MakeIndirect(GetDocument());
             return GetPdfObject().GetIndirectReference();
@@ -452,8 +451,8 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// use #addChild method instead.
         /// </remarks>
         /// <returns>the list of the current child layers, null if the layer has no children.</returns>
-        public virtual IList<iTextSharp.Kernel.Pdf.Layer.PdfLayer> GetChildren() {
-            return children == null ? null : new List<iTextSharp.Kernel.Pdf.Layer.PdfLayer>(children);
+        public virtual IList<iText.Kernel.Pdf.Layer.PdfLayer> GetChildren() {
+            return children == null ? null : new List<iText.Kernel.Pdf.Layer.PdfLayer>(children);
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
@@ -468,20 +467,20 @@ namespace iTextSharp.Kernel.Pdf.Layer {
         /// <param name="title">the title of the layer</param>
         /// <param name="document">the document this title layer belongs to</param>
         /// <returns>the created layer</returns>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
-        protected internal static iTextSharp.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument
-             document) {
+        /// <exception cref="iText.Kernel.PdfException"/>
+        protected internal static iText.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument document
+            ) {
             if (title == null) {
                 throw new ArgumentException("Invalid title argument");
             }
-            iTextSharp.Kernel.Pdf.Layer.PdfLayer layer = new iTextSharp.Kernel.Pdf.Layer.PdfLayer(document);
+            iText.Kernel.Pdf.Layer.PdfLayer layer = new iText.Kernel.Pdf.Layer.PdfLayer(document);
             layer.title = title;
             return layer;
         }
 
         /// <summary>Gets the /Usage dictionary, creating a new one if necessary.</summary>
         /// <returns>the /Usage dictionary</returns>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual PdfDictionary GetUsage() {
             PdfDictionary usage = GetPdfObject().GetAsDictionary(PdfName.Usage);
             if (usage == null) {

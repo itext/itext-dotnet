@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public abstract class PdfObjectWrapper<T>
         where T : PdfObject {
         private T pdfObject = null;
@@ -62,7 +62,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document, PdfIndirectReference
+        public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document, PdfIndirectReference
              reference) {
             GetPdfObject().MakeIndirect(document, reference);
             return this;
@@ -71,11 +71,11 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>Marks object behind wrapper to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document) {
+        public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> MakeIndirect(PdfDocument document) {
             return MakeIndirect(document, null);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfObjectWrapper<T> SetModified() {
+        public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> SetModified() {
             if (pdfObject != null) {
                 pdfObject.SetModified();
             }

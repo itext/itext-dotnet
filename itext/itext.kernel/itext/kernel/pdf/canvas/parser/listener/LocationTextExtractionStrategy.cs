@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
+namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     public class LocationTextExtractionStrategy : ITextExtractionStrategy {
         /// <summary>set to true for debugging</summary>
         private static bool DUMP_STATE = false;
@@ -100,8 +100,8 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
         /// </summary>
         /// <param name="useActualText">true to use /ActualText, false otherwise</param>
         /// <returns>this object</returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetUseActualText
-            (bool useActualText) {
+        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetUseActualText(bool
+             useActualText) {
             this.useActualText = useActualText;
             return this;
         }
@@ -447,15 +447,15 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
                     return 0;
                 }
                 int result;
-                result = iTextSharp.IO.Util.JavaUtil.IntegerCompare(OrientationMagnitude(), other.OrientationMagnitude());
+                result = iText.IO.Util.JavaUtil.IntegerCompare(OrientationMagnitude(), other.OrientationMagnitude());
                 if (result != 0) {
                     return result;
                 }
-                result = iTextSharp.IO.Util.JavaUtil.IntegerCompare(DistPerpendicular(), other.DistPerpendicular());
+                result = iText.IO.Util.JavaUtil.IntegerCompare(DistPerpendicular(), other.DistPerpendicular());
                 if (result != 0) {
                     return result;
                 }
-                return iTextSharp.IO.Util.JavaUtil.FloatCompare(DistParallelStart(), other.DistParallelStart());
+                return iText.IO.Util.JavaUtil.FloatCompare(DistParallelStart(), other.DistParallelStart());
             }
         }
     }

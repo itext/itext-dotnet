@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.Kernel;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.Kernel;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfPagesTest : ExtendedITextTest {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfPagesTest/";
+             + "/test/itext/kernel/pdf/PdfPagesTest/";
 
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfPagesTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfPagesTest/";
 
         internal static readonly PdfName PageNum = new PdfName("PageNum");
 

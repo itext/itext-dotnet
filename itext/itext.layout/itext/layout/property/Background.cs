@@ -41,20 +41,20 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property {
+namespace iText.Layout.Property {
     /// <summary>
     /// A specialized class holding configurable properties related to an
-    /// <see cref="iTextSharp.Layout.Element.IElement"/>
+    /// <see cref="iText.Layout.Element.IElement"/>
     /// 's background. This class is meant to be used as the value for the
     /// <see cref="Property.BACKGROUND"/>
     /// key in an
-    /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
+    /// <see cref="iText.Layout.IPropertyContainer"/>
     /// . Allows
     /// to define a background color, and positive or negative changes to the
     /// location of the edges of the background coloring.
     /// </summary>
     public class Background {
-        protected internal iTextSharp.Kernel.Color.Color color;
+        protected internal iText.Kernel.Color.Color color;
 
         protected internal float extraLeft;
 
@@ -66,7 +66,7 @@ namespace iTextSharp.Layout.Property {
 
         /// <summary>Creates a background with a specified color.</summary>
         /// <param name="color">the background color</param>
-        public Background(iTextSharp.Kernel.Color.Color color)
+        public Background(iText.Kernel.Color.Color color)
             : this(color, 0, 0, 0, 0) {
         }
 
@@ -84,8 +84,8 @@ namespace iTextSharp.Layout.Property {
         /// <param name="extraTop">extra coloring at the top</param>
         /// <param name="extraRight">extra coloring to the right side</param>
         /// <param name="extraBottom">extra coloring at the bottom</param>
-        public Background(iTextSharp.Kernel.Color.Color color, float extraLeft, float extraTop, float extraRight, 
-            float extraBottom) {
+        public Background(iText.Kernel.Color.Color color, float extraLeft, float extraTop, float extraRight, float
+             extraBottom) {
             this.color = color;
             this.extraLeft = extraLeft;
             this.extraRight = extraRight;
@@ -96,10 +96,10 @@ namespace iTextSharp.Layout.Property {
         /// <summary>Gets the background's color.</summary>
         /// <returns>
         /// a
-        /// <see cref="iTextSharp.Kernel.Color.Color"/>
+        /// <see cref="iText.Kernel.Color.Color"/>
         /// of any supported kind
         /// </returns>
-        public virtual iTextSharp.Kernel.Color.Color GetColor() {
+        public virtual iText.Kernel.Color.Color GetColor() {
             return color;
         }
 

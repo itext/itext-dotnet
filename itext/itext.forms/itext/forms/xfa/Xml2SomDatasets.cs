@@ -47,7 +47,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace iTextSharp.Forms.Xfa
+namespace iText.Forms.Xfa
 {
 	/// <summary>Processes the datasets section in the XFA form.</summary>
 	internal class Xml2SomDatasets : Xml2Som

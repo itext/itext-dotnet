@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-namespace iTextSharp.IO.Image
+namespace iText.IO.Image
 {
 	internal class DrawingImageFactory
 	{

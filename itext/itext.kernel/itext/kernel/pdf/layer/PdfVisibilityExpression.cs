@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Layer {
+namespace iText.Kernel.Pdf.Layer {
     /// <summary>
     /// An array specifying a visibility expression, used to compute visibility
     /// of content based on a set of optional content groups.
@@ -52,7 +52,7 @@ namespace iTextSharp.Kernel.Pdf.Layer {
     public class PdfVisibilityExpression : PdfObjectWrapper<PdfArray> {
         /// <summary>Constructs a new PdfVisibilityExpression instance by its raw PdfArray.</summary>
         /// <param name="visibilityExpressionArray">the array representing the visibility expression</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfVisibilityExpression(PdfArray visibilityExpressionArray)
             : base(visibilityExpressionArray) {
             PdfName @operator = visibilityExpressionArray.GetAsName(0);
@@ -82,7 +82,7 @@ namespace iTextSharp.Kernel.Pdf.Layer {
 
         /// <summary>Adds a new opeand to the current visibility expression.</summary>
         /// <param name="expression">the PdfVisibilityExpression instance operand to be added</param>
-        public virtual void AddOperand(iTextSharp.Kernel.Pdf.Layer.PdfVisibilityExpression expression) {
+        public virtual void AddOperand(iText.Kernel.Pdf.Layer.PdfVisibilityExpression expression) {
             GetPdfObject().Add(expression.GetPdfObject());
             GetPdfObject().SetModified();
         }

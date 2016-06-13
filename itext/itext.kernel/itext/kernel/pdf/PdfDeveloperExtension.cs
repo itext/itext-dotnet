@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     /// <summary>
     /// Beginning with BaseVersion 1.7, the extensions dictionary lets developers
     /// designate that a given document contains extensions to PDF.
@@ -61,15 +61,15 @@ namespace iTextSharp.Kernel.Pdf {
     /// </remarks>
     public class PdfDeveloperExtension {
         /// <summary>An instance of this class for Adobe 1.7 Extension level 3.</summary>
-        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ADOBE_1_7_EXTENSIONLEVEL3 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
+        public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ADOBE_1_7_EXTENSIONLEVEL3 = new iText.Kernel.Pdf.PdfDeveloperExtension
             (PdfName.ADBE, PdfName.Pdf_Version_1_7, 3);
 
         /// <summary>An instance of this class for ETSI 1.7 Extension level 2.</summary>
-        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL2 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
+        public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL2 = new iText.Kernel.Pdf.PdfDeveloperExtension
             (PdfName.ESIC, PdfName.Pdf_Version_1_7, 2);
 
         /// <summary>An instance of this class for ETSI 1.7 Extension level 5.</summary>
-        public static readonly iTextSharp.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL5 = new iTextSharp.Kernel.Pdf.PdfDeveloperExtension
+        public static readonly iText.Kernel.Pdf.PdfDeveloperExtension ESIC_1_7_EXTENSIONLEVEL5 = new iText.Kernel.Pdf.PdfDeveloperExtension
             (PdfName.ESIC, PdfName.Pdf_Version_1_7, 5);
 
         /// <summary>The prefix used in the Extensions dictionary added to the Catalog.</summary>

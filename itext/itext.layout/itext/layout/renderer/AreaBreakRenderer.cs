@@ -43,14 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Layout;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     /// <summary>
     /// Renderer object for the
-    /// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
+    /// <see cref="iText.Layout.Element.AreaBreak"/>
     /// layout element. Will terminate the
     /// current content area and initialize a new one.
     /// </summary>
@@ -60,7 +60,7 @@ namespace iTextSharp.Layout.Renderer {
         /// <summary>Creates an AreaBreakRenderer.</summary>
         /// <param name="areaBreak">
         /// the
-        /// <see cref="iTextSharp.Layout.Element.AreaBreak"/>
+        /// <see cref="iText.Layout.Element.AreaBreak"/>
         /// that will be rendered by this object
         /// </param>
         public AreaBreakRenderer(AreaBreak areaBreak) {

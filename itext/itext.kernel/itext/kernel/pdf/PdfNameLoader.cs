@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace iTextSharp.Kernel.Pdf
+namespace iText.Kernel.Pdf
 {
 	internal static class PdfNameLoader
 	{

@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
+using iText.Kernel.Geom;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
+namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     public class ClippingPathInfo : IEventData {
         private Path path;
 
@@ -58,7 +58,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>
         /// The
-        /// <see cref="iTextSharp.Kernel.Geom.Path"/>
+        /// <see cref="iText.Kernel.Geom.Path"/>
         /// which represents current clipping path.
         /// </returns>
         public virtual Path GetClippingPath() {

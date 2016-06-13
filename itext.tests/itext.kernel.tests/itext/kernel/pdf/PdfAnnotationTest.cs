@@ -1,24 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Filespec;
-using iTextSharp.Kernel.Pdf.Navigation;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Filespec;
+using iText.Kernel.Pdf.Navigation;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfAnnotationTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfAnnotationTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfAnnotationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfAnnotationTest/";
+             + "/test/itext/kernel/pdf/PdfAnnotationTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -488,8 +488,8 @@ namespace iTextSharp.Kernel.Pdf {
                 .HELVETICA), 16).ShowText("This is Printer Mark annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
-            canvas.SaveState().Circle(265, 795, 5).SetColor(iTextSharp.Kernel.Color.Color.GREEN, true).Fill().RestoreState
-                ();
+            canvas.SaveState().Circle(265, 795, 5).SetColor(iText.Kernel.Color.Color.GREEN, true).Fill().RestoreState(
+                );
             canvas.Release();
             PdfPrinterMarkAnnotation printer = new PdfPrinterMarkAnnotation(PageSize.A4, form);
             page1.AddAnnotation(printer);
@@ -517,8 +517,8 @@ namespace iTextSharp.Kernel.Pdf {
                 .HELVETICA), 16).ShowText("This is Trap Network annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
-            canvas.SaveState().Circle(272, 795, 5).SetColor(iTextSharp.Kernel.Color.Color.GREEN, true).Fill().RestoreState
-                ();
+            canvas.SaveState().Circle(272, 795, 5).SetColor(iText.Kernel.Color.Color.GREEN, true).Fill().RestoreState(
+                );
             canvas.Release();
             form.SetProcessColorModel(PdfName.DeviceN);
             PdfTrapNetworkAnnotation trap = new PdfTrapNetworkAnnotation(PageSize.A4, form);
@@ -835,7 +835,7 @@ namespace iTextSharp.Kernel.Pdf {
             watermark.SetFixedPrint(fixedPrint);
             PdfFormXObject form = new PdfFormXObject(new Rectangle(200, 200));
             PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
-            canvas.SaveState().Circle(100, 100, 50).SetColor(iTextSharp.Kernel.Color.Color.BLACK, true).Fill().RestoreState
+            canvas.SaveState().Circle(100, 100, 50).SetColor(iText.Kernel.Color.Color.BLACK, true).Fill().RestoreState
                 ();
             canvas.Release();
             watermark.SetNormalAppearance(form.GetPdfObject());
@@ -869,7 +869,7 @@ namespace iTextSharp.Kernel.Pdf {
             redact.SetDownAppearance(formD.GetPdfObject());
             PdfFormXObject formN = new PdfFormXObject(new Rectangle(179, 530, 122, 51));
             PdfCanvas canvasN = new PdfCanvas(formN, pdfDoc1);
-            canvasN.SetColor(iTextSharp.Kernel.Color.Color.RED, true).SetLineWidth(1.5f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
+            canvasN.SetColor(iText.Kernel.Color.Color.RED, true).SetLineWidth(1.5f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
                 .PROJECTING_SQUARE).Rectangle(180, 531, 120, 48).Stroke().Rectangle(181, 532, 118, 47).ClosePath();
             redact.SetNormalAppearance(formN.GetPdfObject());
             PdfFormXObject formR = new PdfFormXObject(new Rectangle(180, 531, 120, 49));

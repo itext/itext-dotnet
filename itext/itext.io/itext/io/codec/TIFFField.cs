@@ -45,7 +45,7 @@
 */
 using System;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>A class representing a field in a TIFF 6.0 Image File Directory.</summary>
     /// <remarks>
     /// A class representing a field in a TIFF 6.0 Image File Directory.
@@ -59,7 +59,7 @@ namespace iTextSharp.IO.Codec {
     /// be removed or changed in future releases of JAI.</b>
     /// </remarks>
     /// <seealso cref="TIFFDirectory"/>
-    public class TIFFField : IComparable<iTextSharp.IO.Codec.TIFFField> {
+    public class TIFFField : IComparable<iText.IO.Codec.TIFFField> {
         /// <summary>Flag for 8 bit unsigned integers.</summary>
         public const int TIFF_BYTE = 1;
 
@@ -551,7 +551,7 @@ namespace iTextSharp.IO.Codec {
         /// with <code>equals()</code>.</b>
         /// </remarks>
         /// <exception cref="System.ArgumentException">if the parameter is <code>null</code>.</exception>
-        public virtual int CompareTo(iTextSharp.IO.Codec.TIFFField o) {
+        public virtual int CompareTo(iText.IO.Codec.TIFFField o) {
             if (o == null) {
                 throw new ArgumentException();
             }

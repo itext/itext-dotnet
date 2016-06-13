@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     public class BadPasswordException : PdfException {
         public const String PdfReaderNotOpenedWithOwnerPassword = "PdfReader is not opened with owner password";
 

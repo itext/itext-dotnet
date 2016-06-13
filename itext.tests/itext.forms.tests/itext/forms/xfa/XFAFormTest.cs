@@ -1,15 +1,15 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Forms.Xfa {
+namespace iText.Forms.Xfa {
     public class XFAFormTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/xfa/XFAFormTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/xfa/XFAFormTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/forms/xfa/XFAFormTest/";
+             + "/test/itext/forms/xfa/XFAFormTest/";
 
         public static readonly String XML = sourceFolder + "xfa.xml";
 

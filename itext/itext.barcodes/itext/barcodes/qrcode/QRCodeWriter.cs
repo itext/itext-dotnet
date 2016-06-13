@@ -44,18 +44,18 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>This object renders a QR Code as a ByteMatrix 2D array of greyscale values.</summary>
     /// <author>dswitkin@google.com (Daniel Switkin)</author>
     public sealed class QRCodeWriter {
         private const int QUIET_ZONE_SIZE = 4;
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height) {
             return Encode(contents, width, height, null);
         }
 
-        /// <exception cref="iTextSharp.Barcodes.Qrcode.WriterException"/>
+        /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType, Object> hints
             ) {
             if (contents == null || contents.Length == 0) {

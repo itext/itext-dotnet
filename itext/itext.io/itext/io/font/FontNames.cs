@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class FontNames {
         protected internal const int BOLD_FLAG = 1;
 

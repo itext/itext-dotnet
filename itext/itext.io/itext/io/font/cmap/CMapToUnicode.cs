@@ -43,15 +43,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap {
+namespace iText.IO.Font.Cmap {
     /// <summary>This class represents a CMap file.</summary>
     /// <author>Ben Litchfield (ben@benlitchfield.com)</author>
     public class CMapToUnicode : AbstractCMap {
-        public static iTextSharp.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iTextSharp.IO.Font.Cmap.CMapToUnicode
+        public static iText.IO.Font.Cmap.CMapToUnicode EmptyCMapToUnicodeMap = new iText.IO.Font.Cmap.CMapToUnicode
             (true);
 
         private IDictionary<int, char[]> byteMappings;
@@ -65,8 +65,8 @@ namespace iTextSharp.IO.Font.Cmap {
             byteMappings = new Dictionary<int, char[]>();
         }
 
-        public static iTextSharp.IO.Font.Cmap.CMapToUnicode GetIdentity() {
-            iTextSharp.IO.Font.Cmap.CMapToUnicode uni = new iTextSharp.IO.Font.Cmap.CMapToUnicode();
+        public static iText.IO.Font.Cmap.CMapToUnicode GetIdentity() {
+            iText.IO.Font.Cmap.CMapToUnicode uni = new iText.IO.Font.Cmap.CMapToUnicode();
             for (int i = 0; i < 65537; i++) {
                 uni.AddChar(i, TextUtil.ConvertFromUtf32(i));
             }
@@ -162,7 +162,7 @@ namespace iTextSharp.IO.Font.Cmap {
                         byteMappings[(mark[0] << 8) + mark[1]] = dest;
                     }
                     else {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.Cmap.CMapToUnicode));
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));
                         logger.Warn(LogMessageConstant.TOUNICODE_CMAP_MORE_THAN_2_BYTES_NOT_SUPPORTED);
                     }
                 }

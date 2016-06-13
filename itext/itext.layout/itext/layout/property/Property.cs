@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property {
+namespace iText.Layout.Property {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
     /// elements.
@@ -49,7 +49,7 @@ namespace iTextSharp.Layout.Property {
     /// <remarks>
     /// An enum of property names that are used for graphical properties of layout
     /// elements. The
-    /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
+    /// <see cref="iText.Layout.IPropertyContainer"/>
     /// performs the same function as an
     /// <see cref="System.Collections.IDictionary{K, V}"/>
     /// , with the values of
@@ -225,7 +225,7 @@ namespace iTextSharp.Layout.Property {
 
         /// <summary>
         /// Some properties must be passed to
-        /// <see cref="iTextSharp.Layout.IPropertyContainer"/>
+        /// <see cref="iText.Layout.IPropertyContainer"/>
         /// objects that
         /// are lower in the document's hierarchy. Most inherited properties are
         /// related to textual operations. Indicates whether or not this type of property is inheritable.
@@ -236,31 +236,31 @@ namespace iTextSharp.Layout.Property {
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.BASE_DIRECTION] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.BOLD_SIMULATION] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.CHARACTER_SPACING] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FONT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FONT_COLOR] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FONT_KERNING] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FONT_SCRIPT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FONT_SIZE] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.FORCED_PLACEMENT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.HYPHENATION] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.ITALIC_SIMULATION] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.KEEP_TOGETHER] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.LIST_SYMBOL_POST_TEXT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.SPACING_RATIO] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.STROKE_COLOR] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.STROKE_WIDTH] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.TEXT_ALIGNMENT] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.TEXT_RISE] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.UNDERLINE] = true;
-            INHERITED_PROPERTIES[iTextSharp.Layout.Property.Property.WORD_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.BASE_DIRECTION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.BOLD_SIMULATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.CHARACTER_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FIRST_LINE_INDENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_COLOR] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_KERNING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_SCRIPT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_SIZE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.FORCED_PLACEMENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.HYPHENATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.ITALIC_SIMULATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.KEEP_TOGETHER] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.LIST_SYMBOL] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.SPACING_RATIO] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.SPLIT_CHARACTERS] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.STROKE_COLOR] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.STROKE_WIDTH] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.TEXT_ALIGNMENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.TEXT_RENDERING_MODE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.TEXT_RISE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.UNDERLINE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Property.Property.WORD_SPACING] = true;
         }
 
         public static bool IsPropertyInherited(int property) {

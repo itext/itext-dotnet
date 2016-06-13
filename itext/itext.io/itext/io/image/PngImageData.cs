@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public class PngImageData : RawImageData {
         protected internal PngImageData(byte[] bytes)
             : base(bytes, ImageType.PNG) {

@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.Collections;
 
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
     /// <summary>Interface for the <code>XMPMeta</code> iteration services.</summary>
     /// <remarks>
     /// Interface for the <code>XMPMeta</code> iteration services.

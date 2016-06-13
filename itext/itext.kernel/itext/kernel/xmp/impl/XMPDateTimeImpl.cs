@@ -29,9 +29,9 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 using System.Globalization;
-using iTextSharp.Kernel.XMP;
+using iText.Kernel.XMP;
 
-namespace iTextSharp.Kernel.XMP.Impl
+namespace iText.Kernel.XMP.Impl
 {
 	/// <summary>The implementation of <code>XMPDateTime</code>.</summary>
 	/// <remarks>
@@ -119,33 +119,33 @@ namespace iTextSharp.Kernel.XMP.Impl
 
 		/// <summary>Creates an <code>XMPDateTime</code>-instance from an ISO 8601 string.</summary>
 		/// <param name="strValue">an ISO 8601 string</param>
-		/// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the string is a non-conform ISO 8601 string, an exception is thrown
+		/// <exception cref="iText.Kernel.XMP.XMPException">If the string is a non-conform ISO 8601 string, an exception is thrown
 		/// 	</exception>
 		public XMPDateTimeImpl(String strValue)
 		{
 			ISO8601Converter.Parse(strValue, this);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetYear()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetYear()"/>
 		public virtual int GetYear()
 		{
 			return year;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetYear(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetYear(int)"/>
 		public virtual void SetYear(int year)
 		{
 			this.year = Math.Min(Math.Abs(year), 9999);
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetMonth()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetMonth()"/>
 		public virtual int GetMonth()
 		{
 			return month;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetMonth(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetMonth(int)"/>
 		public virtual void SetMonth(int month)
 		{
 			if (month < 1)
@@ -166,13 +166,13 @@ namespace iTextSharp.Kernel.XMP.Impl
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetDay()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetDay()"/>
 		public virtual int GetDay()
 		{
 			return day;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetDay(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetDay(int)"/>
 		public virtual void SetDay(int day)
 		{
 			if (day < 1)
@@ -193,52 +193,52 @@ namespace iTextSharp.Kernel.XMP.Impl
 			this.hasDate = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetHour()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetHour()"/>
 		public virtual int GetHour()
 		{
 			return hour;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetHour(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetHour(int)"/>
 		public virtual void SetHour(int hour)
 		{
 			this.hour = Math.Min(Math.Abs(hour), 23);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetMinute()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetMinute()"/>
 		public virtual int GetMinute()
 		{
 			return minute;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetMinute(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetMinute(int)"/>
 		public virtual void SetMinute(int minute)
 		{
 			this.minute = Math.Min(Math.Abs(minute), 59);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetSecond()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetSecond()"/>
 		public virtual int GetSecond()
 		{
 			return second;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetSecond(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetSecond(int)"/>
 		public virtual void SetSecond(int second)
 		{
 			this.second = Math.Min(Math.Abs(second), 59);
 			this.hasTime = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetNanoSecond()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetNanoSecond()"/>
 		public virtual int GetNanoSecond()
 		{
 			return nanoSeconds;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetNanoSecond(int)"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetNanoSecond(int)"/>
 		public virtual void SetNanoSecond(int nanoSecond)
 		{
 			this.nanoSeconds = nanoSecond;
@@ -257,13 +257,13 @@ namespace iTextSharp.Kernel.XMP.Impl
 			return Math.Sign(d);
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetTimeZone()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetTimeZone()"/>
 		public virtual TimeZone GetTimeZone()
 		{
 			return timeZone;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.SetTimeZone(Java.Util.TimeZone)"
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.SetTimeZone(Java.Util.TimeZone)"
 		/// 	/>
 		public virtual void SetTimeZone(TimeZone timeZone)
 		{
@@ -272,25 +272,25 @@ namespace iTextSharp.Kernel.XMP.Impl
 			this.hasTimeZone = true;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.HasDate()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.HasDate()"/>
 		public virtual bool HasDate()
 		{
 			return this.hasDate;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.HasTime()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.HasTime()"/>
 		public virtual bool HasTime()
 		{
 			return this.hasTime;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.HasTimeZone()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.HasTimeZone()"/>
 		public virtual bool HasTimeZone()
 		{
 			return this.hasTimeZone;
 		}
 
-		/// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetCalendar()"/>
+		/// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetCalendar()"/>
 		public virtual XMPCalendar GetCalendar()
 		{
 			TimeZone tz;
@@ -302,7 +302,7 @@ namespace iTextSharp.Kernel.XMP.Impl
 			return new XMPCalendar(new DateTime(year, month - 1, day, hour, minute, second, nanoSeconds / 1000000), tz);
 		}
 
-	    /// <seealso cref="iTextSharp.Kernel.XMP.XMPDateTime.GetISO8601String()"/>
+	    /// <seealso cref="iText.Kernel.XMP.XMPDateTime.GetISO8601String()"/>
 		public virtual String GetIso8601String()
 		{
 			return ISO8601Converter.Render(this);

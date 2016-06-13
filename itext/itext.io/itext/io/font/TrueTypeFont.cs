@@ -43,12 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO;
+using iText.IO.Font.Otf;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class TrueTypeFont : FontProgram {
         private OpenTypeParser fontParser;
 
@@ -161,7 +161,7 @@ namespace iTextSharp.IO.Font {
             }
             catch (System.IO.IOException e) {
                 fontStreamBytes = null;
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
             return fontStreamBytes;
         }
@@ -203,7 +203,7 @@ namespace iTextSharp.IO.Font {
                 return fontParser.GetSubset(glyphs, subset);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -319,7 +319,7 @@ namespace iTextSharp.IO.Font {
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
                 if (index >= glyphWidths.Length) {
-                    ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Font.TrueTypeFont));
+                    ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
                     LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName(), index));
                     continue;
                 }

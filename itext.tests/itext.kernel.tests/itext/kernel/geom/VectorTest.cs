@@ -1,6 +1,6 @@
-using iTextSharp.Test;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     public class VectorTest : ExtendedITextTest {
         [NUnit.Framework.Test]
         public virtual void TestCrossVector() {

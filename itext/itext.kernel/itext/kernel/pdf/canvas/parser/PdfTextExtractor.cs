@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     public sealed class PdfTextExtractor {
         private PdfTextExtractor() {
         }
@@ -65,7 +65,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         /// Extract text from a specified page using the default strategy.
         /// Node: the default strategy is subject to change. If using a specific strategy
         /// is important, please use
-        /// <see cref="GetTextFromPage(iTextSharp.Kernel.Pdf.PdfPage, iTextSharp.Kernel.Pdf.Canvas.Parser.Listener.ITextExtractionStrategy)
+        /// <see cref="GetTextFromPage(iText.Kernel.Pdf.PdfPage, iText.Kernel.Pdf.Canvas.Parser.Listener.ITextExtractionStrategy)
         ///     "/>
         /// .
         /// </remarks>

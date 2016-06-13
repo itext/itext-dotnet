@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection {
+namespace iText.Kernel.Pdf.Collection {
     public class PdfCollectionSort : PdfObjectWrapper<PdfDictionary> {
         public PdfCollectionSort(PdfDictionary pdfObject)
             : base(pdfObject) {
@@ -62,13 +62,13 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <param name="keys">the keys of the fields that will be used to sort entries</param>
         public PdfCollectionSort(String[] keys)
             : this(new PdfDictionary()) {
-            GetPdfObject().Put(PdfName.S, new PdfArray(iTextSharp.IO.Util.JavaUtil.ArraysAsList(keys), true));
+            GetPdfObject().Put(PdfName.S, new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(keys), true));
         }
 
         /// <summary>Defines the sort order of the field (ascending or descending).</summary>
         /// <param name="ascending">true is the default, use false for descending order</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool ascending) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool ascending) {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsName()) {
                 GetPdfObject().Put(PdfName.A, new PdfBoolean(ascending));
@@ -82,7 +82,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <summary>Defines the sort order of the field (ascending or descending).</summary>
         /// <param name="ascending">an array with every element corresponding with a name of a field.</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool[] ascending) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool[] ascending) {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsArray()) {
                 if (((PdfArray)obj).Size() != ascending.Length) {

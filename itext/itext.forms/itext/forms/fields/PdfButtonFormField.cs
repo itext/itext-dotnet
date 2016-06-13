@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.IO.Codec;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Forms.Fields {
+namespace iText.Forms.Fields {
     /// <summary>An interactive control on the screen that raises events and/or can retain data.</summary>
     public class PdfButtonFormField : PdfFormField {
         /// <summary>Button field flags</summary>
@@ -76,7 +76,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Returns <code>Btn</code>, the form type for choice form fields.</summary>
         /// <returns>
         /// the form type, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// </returns>
         public override PdfName GetFormType() {
             return PdfName.Btn;
@@ -108,8 +108,8 @@ namespace iTextSharp.Forms.Fields {
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadio(bool radio) {
-            return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIO, radio);
+        public virtual iText.Forms.Fields.PdfButtonFormField SetRadio(bool radio) {
+            return (iText.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIO, radio);
         }
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace iTextSharp.Forms.Fields {
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetToggleOff(bool toggleOff) {
-            return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_NO_TOGGLE_TO_OFF, !toggleOff);
+        public virtual iText.Forms.Fields.PdfButtonFormField SetToggleOff(bool toggleOff) {
+            return (iText.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_NO_TOGGLE_TO_OFF, !toggleOff);
         }
 
         /// <summary>If true, the field is a pushbutton that does not retain a permanent value.</summary>
@@ -152,8 +152,8 @@ namespace iTextSharp.Forms.Fields {
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetPushButton(bool pushButton) {
-            return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_PUSH_BUTTON, pushButton);
+        public virtual iText.Forms.Fields.PdfButtonFormField SetPushButton(bool pushButton) {
+            return (iText.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_PUSH_BUTTON, pushButton);
         }
 
         /// <summary>
@@ -188,18 +188,18 @@ namespace iTextSharp.Forms.Fields {
         /// current
         /// <see cref="PdfButtonFormField"/>
         /// </returns>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetRadiosInUnison(bool radiosInUnison) {
-            return (iTextSharp.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON, radiosInUnison);
+        public virtual iText.Forms.Fields.PdfButtonFormField SetRadiosInUnison(bool radiosInUnison) {
+            return (iText.Forms.Fields.PdfButtonFormField)SetFieldFlag(FF_RADIOS_IN_UNISON, radiosInUnison);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImage(String image) {
+        public virtual iText.Forms.Fields.PdfButtonFormField SetImage(String image) {
             Stream @is = new FileStream(image, FileMode.Open, FileAccess.Read);
             String str = System.Convert.ToBase64String(StreamUtil.InputStreamToArray(@is));
-            return (iTextSharp.Forms.Fields.PdfButtonFormField)SetValue(str);
+            return (iText.Forms.Fields.PdfButtonFormField)SetValue(str);
         }
 
-        public virtual iTextSharp.Forms.Fields.PdfButtonFormField SetImageAsForm(PdfFormXObject form) {
+        public virtual iText.Forms.Fields.PdfButtonFormField SetImageAsForm(PdfFormXObject form) {
             this.form = form;
             RegenerateField();
             return this;

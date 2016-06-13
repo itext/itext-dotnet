@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Source;
+using iText.IO.Source;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfNumber : PdfPrimitiveObject {
         private double value;
 
@@ -121,14 +121,14 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
+            return (iText.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iTextSharp.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
+            return (iText.Kernel.Pdf.PdfNumber)base.MakeIndirect(document, reference);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -139,7 +139,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, true);
+            return (iText.Kernel.Pdf.PdfNumber)base.CopyTo(document, true);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -155,25 +155,25 @@ namespace iTextSharp.Kernel.Pdf {
         /// </param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iTextSharp.Kernel.Pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
+            return (iText.Kernel.Pdf.PdfNumber)base.CopyTo(document, allowDuplicating);
         }
 
         public override String ToString() {
             if (content != null) {
-                return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content);
+                return iText.IO.Util.JavaUtil.GetStringForBytes(content);
             }
             else {
                 if (isDouble) {
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()));
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(GetValue()));
                 }
                 else {
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()));
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()));
                 }
             }
         }
 
         protected internal override PdfObject NewInstance() {
-            return new iTextSharp.Kernel.Pdf.PdfNumber();
+            return new iText.Kernel.Pdf.PdfNumber();
         }
 
         protected internal virtual bool IsDoubleNumber() {
@@ -191,7 +191,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         protected internal virtual void GenerateValue() {
             try {
-                value = System.Double.Parse(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(content), System.Globalization.CultureInfo.InvariantCulture
+                value = System.Double.Parse(iText.IO.Util.JavaUtil.GetStringForBytes(content), System.Globalization.CultureInfo.InvariantCulture
                     );
             }
             catch (FormatException) {
@@ -202,7 +202,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfNumber number = (iTextSharp.Kernel.Pdf.PdfNumber)from;
+            iText.Kernel.Pdf.PdfNumber number = (iText.Kernel.Pdf.PdfNumber)from;
             value = number.value;
             isDouble = number.isDouble;
         }

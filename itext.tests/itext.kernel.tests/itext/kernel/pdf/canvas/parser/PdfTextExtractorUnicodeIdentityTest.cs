@@ -1,13 +1,13 @@
 using System;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Filter;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Test;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser.Filter;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     public class PdfTextExtractorUnicodeIdentityTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/PdfTextExtractorUnicodeIdentityTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/PdfTextExtractorUnicodeIdentityTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

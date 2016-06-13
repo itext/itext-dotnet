@@ -41,15 +41,15 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
+namespace iText.Kernel.Pdf.Canvas.Draw {
     /// <summary>
     /// The
     /// <see cref="ILineDrawer"/>
     /// defines a drawing operation on a
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
     /// <p/>
     /// This interface allows to customize the 'empty' space in a
     /// <see cref="com.itextpdf.layout.element.Tabstop">TabStop</see>
@@ -78,10 +78,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Draw {
 
         /// <summary>Gets the color of the line</summary>
         /// <returns>color of the line</returns>
-        iTextSharp.Kernel.Color.Color GetColor();
+        iText.Kernel.Color.Color GetColor();
 
         /// <summary>Sets line color</summary>
         /// <param name="color">new line color</param>
-        void SetColor(iTextSharp.Kernel.Color.Color color);
+        void SetColor(iText.Kernel.Color.Color color);
     }
 }

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using Org.BouncyCastle.Tsp;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Interface you can implement and pass to TSAClientBouncyCastle in case
     /// you want to do something with the information returned

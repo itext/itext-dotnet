@@ -1,6 +1,6 @@
-using iTextSharp.IO.Font;
+using iText.IO.Font;
 
-namespace iTextSharp.IO {
+namespace iText.IO {
     public class AdobeGlyphListTest {
         [NUnit.Framework.Test]
         public virtual void TestGlyphListCount() {

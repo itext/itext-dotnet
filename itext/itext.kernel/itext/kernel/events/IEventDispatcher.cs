@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Events {
+namespace iText.Kernel.Events {
     /// <summary>Event dispatcher interface.</summary>
     public interface IEventDispatcher {
         /// <summary>Adds new event handler.</summary>

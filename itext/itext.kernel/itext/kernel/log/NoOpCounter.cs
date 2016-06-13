@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Log {
+namespace iText.Kernel.Log {
     /// <summary>Implementation of the Counter interface that doesn't do anything.</summary>
     public class NoOpCounter : Counter {
         public virtual Counter GetCounter(Type cls) {

@@ -42,20 +42,20 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Wmf;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Layout.Layout;
-using iTextSharp.Layout.Renderer;
+using iText.IO;
+using iText.IO.Image;
+using iText.IO.Log;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Wmf;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Layout;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     /// <summary>A layout element that represents an image for inclusion in the document model.</summary>
-    public class Image : AbstractElement<iTextSharp.Layout.Element.Image>, ILeafElement, IAccessibleElement {
+    public class Image : AbstractElement<iText.Layout.Element.Image>, ILeafElement, IAccessibleElement {
         protected internal PdfXObject xObject;
 
         protected internal PdfName role = PdfName.Figure;
@@ -70,7 +70,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="xObject">
         /// an internal
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// </param>
         public Image(PdfImageXObject xObject) {
             this.xObject = xObject;
@@ -84,7 +84,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="xObject">
         /// an internal
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// </param>
         public Image(PdfFormXObject xObject) {
             this.xObject = xObject;
@@ -98,7 +98,7 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="xObject">
         /// an internal
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// </param>
         /// <param name="width">a float value</param>
         public Image(PdfImageXObject xObject, float width) {
@@ -114,17 +114,17 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="xObject">
         /// an internal
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// </param>
         /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
         /// <param name="width">a float value</param>
         public Image(PdfImageXObject xObject, float x, float y, float width) {
             this.xObject = xObject;
-            SetProperty(iTextSharp.Layout.Property.Property.X, x);
-            SetProperty(iTextSharp.Layout.Property.Property.Y, y);
+            SetProperty(iText.Layout.Property.Property.X, x);
+            SetProperty(iText.Layout.Property.Property.Y, y);
             SetWidth(width);
-            SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
         }
 
         /// <summary>
@@ -135,15 +135,15 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="xObject">
         /// an internal
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
         /// </param>
         /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
         public Image(PdfImageXObject xObject, float x, float y) {
             this.xObject = xObject;
-            SetProperty(iTextSharp.Layout.Property.Property.X, x);
-            SetProperty(iTextSharp.Layout.Property.Property.Y, y);
-            SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(iText.Layout.Property.Property.X, x);
+            SetProperty(iText.Layout.Property.Property.Y, y);
+            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
         }
 
         /// <summary>
@@ -154,15 +154,15 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="xObject">
         /// an internal
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// </param>
         /// <param name="x">a float value representing the horizontal offset of the lower left corner of the form</param>
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the form</param>
         public Image(PdfFormXObject xObject, float x, float y) {
             this.xObject = xObject;
-            SetProperty(iTextSharp.Layout.Property.Property.X, x);
-            SetProperty(iTextSharp.Layout.Property.Property.Y, y);
-            SetProperty(iTextSharp.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(iText.Layout.Property.Property.X, x);
+            SetProperty(iText.Layout.Property.Property.Y, y);
+            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
         }
 
         /// <summary>
@@ -173,11 +173,11 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="img">
         /// an internal representation of the
-        /// <see cref="iTextSharp.IO.Image.ImageData">image resource</see>
+        /// <see cref="iText.IO.Image.ImageData">image resource</see>
         /// </param>
         public Image(ImageData img)
             : this(new PdfImageXObject(CheckImageType(img))) {
-            SetProperty(iTextSharp.Layout.Property.Property.FLUSH_ON_DRAW, true);
+            SetProperty(iText.Layout.Property.Property.FLUSH_ON_DRAW, true);
         }
 
         /// <summary>
@@ -188,13 +188,13 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="img">
         /// an internal representation of the
-        /// <see cref="iTextSharp.IO.Image.ImageData">image resource</see>
+        /// <see cref="iText.IO.Image.ImageData">image resource</see>
         /// </param>
         /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
         public Image(ImageData img, float x, float y)
             : this(new PdfImageXObject(CheckImageType(img)), x, y) {
-            SetProperty(iTextSharp.Layout.Property.Property.FLUSH_ON_DRAW, true);
+            SetProperty(iText.Layout.Property.Property.FLUSH_ON_DRAW, true);
         }
 
         /// <summary>
@@ -205,20 +205,20 @@ namespace iTextSharp.Layout.Element {
         /// </summary>
         /// <param name="img">
         /// an internal representation of the
-        /// <see cref="iTextSharp.IO.Image.ImageData">image resource</see>
+        /// <see cref="iText.IO.Image.ImageData">image resource</see>
         /// </param>
         /// <param name="x">a float value representing the horizontal offset of the lower left corner of the image</param>
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
         /// <param name="width">a float value</param>
         public Image(ImageData img, float x, float y, float width)
             : this(new PdfImageXObject(CheckImageType(img)), x, y, width) {
-            SetProperty(iTextSharp.Layout.Property.Property.FLUSH_ON_DRAW, true);
+            SetProperty(iText.Layout.Property.Property.FLUSH_ON_DRAW, true);
         }
 
         /// <summary>Gets the XObject contained in this image object</summary>
         /// <returns>
         /// a
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfXObject"/>
         /// </returns>
         public virtual PdfXObject GetXObject() {
             return xObject;
@@ -227,64 +227,64 @@ namespace iTextSharp.Layout.Element {
         /// <summary>Sets the rotation radAngle.</summary>
         /// <param name="radAngle">a value in radians</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image SetRotationAngle(double radAngle) {
-            SetProperty(iTextSharp.Layout.Property.Property.ROTATION_ANGLE, radAngle);
+        public virtual iText.Layout.Element.Image SetRotationAngle(double radAngle) {
+            SetProperty(iText.Layout.Property.Property.ROTATION_ANGLE, radAngle);
             return this;
         }
 
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>the left margin width, as a <code>float</code></returns>
         public virtual float? GetMarginLeft() {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_LEFT);
+            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_LEFT);
         }
 
         /// <summary>Sets the left margin width of the element.</summary>
         /// <param name="value">the new left margin width</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image SetMarginLeft(float value) {
-            SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, value);
+        public virtual iText.Layout.Element.Image SetMarginLeft(float value) {
+            SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, value);
             return this;
         }
 
         /// <summary>Gets the current right margin width of the element.</summary>
         /// <returns>the right margin width, as a <code>float</code></returns>
         public virtual float? GetMarginRight() {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_RIGHT);
+            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_RIGHT);
         }
 
         /// <summary>Sets the right margin width of the element.</summary>
         /// <param name="value">the new right margin width</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image SetMarginRight(float value) {
-            SetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT, value);
+        public virtual iText.Layout.Element.Image SetMarginRight(float value) {
+            SetProperty(iText.Layout.Property.Property.MARGIN_RIGHT, value);
             return this;
         }
 
         /// <summary>Gets the current top margin width of the element.</summary>
         /// <returns>the top margin width, as a <code>float</code></returns>
         public virtual float? GetMarginTop() {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_TOP);
+            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_TOP);
         }
 
         /// <summary>Sets the top margin width of the element.</summary>
         /// <param name="value">the new top margin width</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image SetMarginTop(float value) {
-            SetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP, value);
+        public virtual iText.Layout.Element.Image SetMarginTop(float value) {
+            SetProperty(iText.Layout.Property.Property.MARGIN_TOP, value);
             return this;
         }
 
         /// <summary>Gets the current bottom margin width of the element.</summary>
         /// <returns>the bottom margin width, as a <code>float</code></returns>
         public virtual float? GetMarginBottom() {
-            return this.GetProperty<float?>(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM);
+            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
         /// <param name="value">the new bottom margin width</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image SetMarginBottom(float value) {
-            SetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM, value);
+        public virtual iText.Layout.Element.Image SetMarginBottom(float value) {
+            SetProperty(iText.Layout.Property.Property.MARGIN_BOTTOM, value);
             return this;
         }
 
@@ -294,7 +294,7 @@ namespace iTextSharp.Layout.Element {
         /// <param name="marginBottom">the new margin bottom width</param>
         /// <param name="marginLeft">the new margin left width</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image SetMargins(float marginTop, float marginRight, float marginBottom
+        public virtual iText.Layout.Element.Image SetMargins(float marginTop, float marginRight, float marginBottom
             , float marginLeft) {
             return SetMarginTop(marginTop).SetMarginRight(marginRight).SetMarginBottom(marginBottom).SetMarginLeft(marginLeft
                 );
@@ -304,9 +304,9 @@ namespace iTextSharp.Layout.Element {
         /// <param name="horizontalScaling">the horizontal scaling coefficient. default value 1 = 100%</param>
         /// <param name="verticalScaling">the vertical scaling coefficient. default value 1 = 100%</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image Scale(float horizontalScaling, float verticalScaling) {
-            SetProperty(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling);
-            SetProperty(iTextSharp.Layout.Property.Property.VERTICAL_SCALING, verticalScaling);
+        public virtual iText.Layout.Element.Image Scale(float horizontalScaling, float verticalScaling) {
+            SetProperty(iText.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling);
+            SetProperty(iText.Layout.Property.Property.VERTICAL_SCALING, verticalScaling);
             return this;
         }
 
@@ -318,7 +318,7 @@ namespace iTextSharp.Layout.Element {
         /// <param name="fitWidth">the new maximum width of the image</param>
         /// <param name="fitHeight">the new maximum height of the image</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image ScaleToFit(float fitWidth, float fitHeight) {
+        public virtual iText.Layout.Element.Image ScaleToFit(float fitWidth, float fitHeight) {
             float horizontalScaling = fitWidth / xObject.GetWidth();
             float verticalScaling = fitHeight / xObject.GetHeight();
             return Scale(Math.Min(horizontalScaling, verticalScaling), Math.Min(horizontalScaling, verticalScaling));
@@ -332,7 +332,7 @@ namespace iTextSharp.Layout.Element {
         /// <param name="fitWidth">the new absolute width of the image</param>
         /// <param name="fitHeight">the new absolute height of the image</param>
         /// <returns>this element</returns>
-        public virtual iTextSharp.Layout.Element.Image ScaleAbsolute(float fitWidth, float fitHeight) {
+        public virtual iText.Layout.Element.Image ScaleAbsolute(float fitWidth, float fitHeight) {
             float horizontalScaling = fitWidth / xObject.GetWidth();
             float verticalScaling = fitHeight / xObject.GetHeight();
             return Scale(horizontalScaling, verticalScaling);
@@ -341,30 +341,29 @@ namespace iTextSharp.Layout.Element {
         /// <summary>Sets the autoscale property for both width and height.</summary>
         /// <param name="autoScale">whether or not to let the image resize automatically</param>
         /// <returns>this image</returns>
-        public virtual iTextSharp.Layout.Element.Image SetAutoScale(bool autoScale) {
-            if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH) && HasProperty(iTextSharp.Layout.Property.Property
-                .AUTO_SCALE_HEIGHT) && autoScale && ((bool)this.GetProperty<bool?>(iTextSharp.Layout.Property.Property
-                .AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT
-                ))) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Layout.Element.Image));
+        public virtual iText.Layout.Element.Image SetAutoScale(bool autoScale) {
+            if (HasProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH) && HasProperty(iText.Layout.Property.Property
+                .AUTO_SCALE_HEIGHT) && autoScale && ((bool)this.GetProperty<bool?>(iText.Layout.Property.Property.AUTO_SCALE_WIDTH
+                ) || (bool)this.GetProperty<bool?>(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT))) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Image));
                 logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
-            SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE, autoScale);
+            SetProperty(iText.Layout.Property.Property.AUTO_SCALE, autoScale);
             return this;
         }
 
         /// <summary>Sets the autoscale property for the height of the image.</summary>
         /// <param name="autoScale">whether or not to let the image height resize automatically</param>
         /// <returns>this image</returns>
-        public virtual iTextSharp.Layout.Element.Image SetAutoScaleHeight(bool autoScale) {
-            if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH) && autoScale && (bool)this.GetProperty
-                <bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH)) {
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT, false);
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE, true);
+        public virtual iText.Layout.Element.Image SetAutoScaleHeight(bool autoScale) {
+            if (HasProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH) && autoScale && (bool)this.GetProperty<bool?
+                >(iText.Layout.Property.Property.AUTO_SCALE_WIDTH)) {
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT, false);
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE, true);
             }
             else {
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, autoScale);
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, autoScale);
             }
             return this;
         }
@@ -372,15 +371,15 @@ namespace iTextSharp.Layout.Element {
         /// <summary>Sets the autoscale property for the width of the image.</summary>
         /// <param name="autoScale">whether or not to let the image width resize automatically</param>
         /// <returns>this image</returns>
-        public virtual iTextSharp.Layout.Element.Image SetAutoScaleWidth(bool autoScale) {
-            if (HasProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && (bool)this.GetProperty
-                <bool?>(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT)) {
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_HEIGHT, false);
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE, true);
+        public virtual iText.Layout.Element.Image SetAutoScaleWidth(bool autoScale) {
+            if (HasProperty(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && (bool)this.GetProperty<bool?
+                >(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT)) {
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT, false);
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE, true);
             }
             else {
-                SetProperty(iTextSharp.Layout.Property.Property.AUTO_SCALE_WIDTH, autoScale);
+                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, autoScale);
             }
             return this;
         }
@@ -389,15 +388,15 @@ namespace iTextSharp.Layout.Element {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element. Also has as a
         /// side effect that the Element's
-        /// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Property.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iTextSharp.Layout.Layout.LayoutPosition.FIXED">fixed</see>
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
         /// <param name="x">horizontal position on the page</param>
         /// <param name="y">vertical position on the page</param>
         /// <returns>this image.</returns>
-        public virtual iTextSharp.Layout.Element.Image SetFixedPosition(float x, float y) {
+        public virtual iText.Layout.Element.Image SetFixedPosition(float x, float y) {
             SetFixedPosition(x, y, GetWidth());
             return this;
         }
@@ -409,16 +408,16 @@ namespace iTextSharp.Layout.Element {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element, on a specific
         /// page. Also has as a side effect that the Element's
-        /// <see cref="iTextSharp.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Property.Property.POSITION"/>
         /// is changed to
-        /// <see cref="iTextSharp.Layout.Layout.LayoutPosition.FIXED">fixed</see>
+        /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
         /// </remarks>
         /// <param name="pageNumber">the page where the element must be positioned</param>
         /// <param name="x">horizontal position on the page</param>
         /// <param name="y">vertical position on the page</param>
         /// <returns>this Element.</returns>
-        public virtual iTextSharp.Layout.Element.Image SetFixedPosition(int pageNumber, float x, float y) {
+        public virtual iText.Layout.Element.Image SetFixedPosition(int pageNumber, float x, float y) {
             SetFixedPosition(pageNumber, x, y, GetWidth());
             return this;
         }
@@ -446,16 +445,16 @@ namespace iTextSharp.Layout.Element {
         /// <summary>Gets scaled width of the image.</summary>
         /// <returns>the current scaled width</returns>
         public virtual float GetImageScaledWidth() {
-            return null == this.GetProperty<float?>(iTextSharp.Layout.Property.Property.HORIZONTAL_SCALING) ? xObject.
-                GetWidth() : xObject.GetWidth() * (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.
-                HORIZONTAL_SCALING);
+            return null == this.GetProperty<float?>(iText.Layout.Property.Property.HORIZONTAL_SCALING) ? xObject.GetWidth
+                () : xObject.GetWidth() * (float)this.GetProperty<float?>(iText.Layout.Property.Property.HORIZONTAL_SCALING
+                );
         }
 
         /// <summary>Gets scaled height of the image.</summary>
         /// <returns>the current scaled height</returns>
         public virtual float GetImageScaledHeight() {
-            return null == this.GetProperty<float?>(iTextSharp.Layout.Property.Property.VERTICAL_SCALING) ? xObject.GetHeight
-                () : xObject.GetHeight() * (float)this.GetProperty<float?>(iTextSharp.Layout.Property.Property.VERTICAL_SCALING
+            return null == this.GetProperty<float?>(iText.Layout.Property.Property.VERTICAL_SCALING) ? xObject.GetHeight
+                () : xObject.GetHeight() * (float)this.GetProperty<float?>(iText.Layout.Property.Property.VERTICAL_SCALING
                 );
         }
 

@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Util;
+using iText.IO.Codec;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public sealed class ImageDataFactory {
         private static readonly byte[] gif = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
 
@@ -102,12 +102,11 @@ namespace iTextSharp.IO.Image {
         public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT, int parameters, byte
             [] data, int[] transparency) {
             if (transparency != null && transparency.Length != 2) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
-                    );
+                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
             }
             if (typeCCITT != RawImageData.CCITTG4 && typeCCITT != RawImageData.CCITTG3_1D && typeCCITT != RawImageData
                 .CCITTG3_2D) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
+                throw new iText.IO.IOException(iText.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
             }
             if (reverseBits) {
@@ -125,22 +124,21 @@ namespace iTextSharp.IO.Image {
         public static ImageData Create(int width, int height, int components, int bpc, byte[] data, int[] transparency
             ) {
             if (transparency != null && transparency.Length != components * 2) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
-                    );
+                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
             }
             if (components == 1 && bpc == 1) {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
-                return iTextSharp.IO.Image.ImageDataFactory.Create(width, height, false, RawImageData.CCITTG4, RawImageData
-                    .CCITT_BLACKIS1, g4, transparency);
+                return iText.IO.Image.ImageDataFactory.Create(width, height, false, RawImageData.CCITTG4, RawImageData.CCITT_BLACKIS1
+                    , g4, transparency);
             }
             RawImageData image = new RawImageData(data, ImageType.RAW);
             image.height = height;
             image.width = width;
             if (components != 1 && components != 3 && components != 4) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4);
+                throw new iText.IO.IOException(iText.IO.IOException.ComponentsMustBe1_3Or4);
             }
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8);
+                throw new iText.IO.IOException(iText.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
             image.colorSpace = components;
             image.bpc = bpc;
@@ -156,7 +154,7 @@ namespace iTextSharp.IO.Image {
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
         public static ImageData Create(System.Drawing.Image image, System.Drawing.Color color) {
-            return iTextSharp.IO.Image.ImageDataFactory.Create(image, color, false);
+            return iText.IO.Image.ImageDataFactory.Create(image, color, false);
         }
 
         /// <summary>Gets an instance of an Image from a java.awt.Image.</summary>
@@ -240,7 +238,7 @@ namespace iTextSharp.IO.Image {
             byte[] imageType = ReadImageType(bytes);
             if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(bytes);
-                iTextSharp.IO.Util.JavaUtil.Sort(frameNumbers);
+                iText.IO.Util.JavaUtil.Sort(frameNumbers);
                 GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
                 IList<ImageData> frames = new List<ImageData>();
                 foreach (int frame in frameNumbers) {
@@ -259,7 +257,7 @@ namespace iTextSharp.IO.Image {
             byte[] imageType = ReadImageType(url);
             if (ImageTypeIs(imageType, gif)) {
                 GifImageData image = new GifImageData(url);
-                iTextSharp.IO.Util.JavaUtil.Sort(frameNumbers);
+                iText.IO.Util.JavaUtil.Sort(frameNumbers);
                 GifImageHelper.ProcessImage(image, frameNumbers[frameNumbers.Length - 1] - 1);
                 IList<ImageData> frames = new List<ImageData>();
                 foreach (int frame in frameNumbers) {
@@ -455,7 +453,7 @@ namespace iTextSharp.IO.Image {
                     }
                 }
             }
-            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized);
+            throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
         private static ImageData CreateImageInstance(byte[] bytes, bool recoverImage) {
@@ -507,7 +505,7 @@ namespace iTextSharp.IO.Image {
                     }
                 }
             }
-            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageFormatCannotBeRecognized);
+            throw new iText.IO.IOException(iText.IO.IOException.ImageFormatCannotBeRecognized);
         }
 
         private static bool ImageTypeIs(byte[] imageType, byte[] compareWith) {
@@ -528,7 +526,7 @@ namespace iTextSharp.IO.Image {
                 return bytes;
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
             finally {
                 if (stream != null) {

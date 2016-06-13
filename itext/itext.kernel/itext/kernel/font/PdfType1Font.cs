@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.IO.Font.Cmap;
+using iText.IO.Font.Otf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     public class PdfType1Font : PdfSimpleFont<Type1Font> {
         internal PdfType1Font(Type1Font type1Font, String encoding, bool embedded)
             : base() {

@@ -45,7 +45,7 @@
 
 using System.IO;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
 	/// <summary>
 	/// Abstract class for reading filtered character streams.
 	/// The abstract class <code>FilterReader</code> itself

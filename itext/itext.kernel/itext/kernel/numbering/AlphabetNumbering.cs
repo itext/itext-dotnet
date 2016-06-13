@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Numbering {
+namespace iText.Kernel.Numbering {
     /// <summary>This is a general class for alphabet numbering.</summary>
     /// <remarks>
     /// This is a general class for alphabet numbering.

@@ -1,15 +1,15 @@
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class DestinationTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/DestinationTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/DestinationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/DestinationTest/";
+             + "/test/itext/layout/DestinationTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -25,7 +25,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text(String.Format("Page {0}", 10));
-            text.SetProperty(iTextSharp.Layout.Property.Property.DESTINATION, "p10");
+            text.SetProperty(iText.Layout.Property.Property.DESTINATION, "p10");
             doc.Add(new Paragraph(text).SetFixedPosition(1, 549, 742, 40));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

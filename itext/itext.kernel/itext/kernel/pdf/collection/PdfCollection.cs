@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection {
+namespace iText.Kernel.Pdf.Collection {
     public class PdfCollection : PdfObjectWrapper<PdfDictionary> {
         /// <summary>A type of initial view</summary>
         public const int DETAILS = 0;
@@ -67,7 +67,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <summary>Sets the Collection schema dictionary.</summary>
         /// <param name="schema">an overview of the collection fields</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema schema) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema schema) {
             GetPdfObject().Put(PdfName.Schema, schema.GetPdfObject());
             return this;
         }
@@ -82,7 +82,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// </summary>
         /// <param name="documentName">a string that identifies an entry in the EmbeddedFiles name tree</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(String documentName) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(String documentName) {
             GetPdfObject().Put(PdfName.D, new PdfString(documentName));
             return this;
         }
@@ -94,7 +94,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <summary>Sets the initial view.</summary>
         /// <param name="viewType"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetView(int viewType) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollection SetView(int viewType) {
             switch (viewType) {
                 default: {
                     GetPdfObject().Put(PdfName.View, PdfName.D);
@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <summary>Sets the Collection sort dictionary.</summary>
         /// <param name="sort"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort sort) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort sort) {
             GetPdfObject().Put(PdfName.Sort, sort.GetPdfObject());
             return this;
         }

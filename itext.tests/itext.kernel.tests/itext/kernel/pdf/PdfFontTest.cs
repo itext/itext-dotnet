@@ -1,27 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Font;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel.Color;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfFontTest : ExtendedITextTest {
         public const int PageCount = 1;
 
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfFontTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfFontTest/";
 
-        public static readonly String fontsFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/";
+        public static readonly String fontsFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/fonts/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfFontTest/";
+             + "/test/itext/kernel/pdf/PdfFontTest/";
 
         internal const String author = "Alexander Chingarev";
 
@@ -837,7 +837,7 @@ namespace iTextSharp.Kernel.Pdf {
                     ));
                 FontProgramFactory.CreateType1Font(null, pfb);
             }
-            catch (iTextSharp.IO.IOException e) {
+            catch (iText.IO.IOException e) {
                 message = e.Message;
             }
             NUnit.Framework.Assert.AreEqual("invalid.afm.or.pfm.font.file", message);
@@ -851,10 +851,10 @@ namespace iTextSharp.Kernel.Pdf {
             try {
                 FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.pfb", null);
             }
-            catch (iTextSharp.IO.IOException e) {
+            catch (iText.IO.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
+            NUnit.Framework.Assert.AreEqual(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
                 , message);
         }
 

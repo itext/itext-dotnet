@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Impl {
+namespace iText.Kernel.XMP.Impl {
     /// <since>09.11.2006</since>
     public class QName {
         /// <summary>XML namespace prefix</summary>

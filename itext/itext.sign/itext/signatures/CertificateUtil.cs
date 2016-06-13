@@ -48,7 +48,7 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// This class contains a series of static methods that
     /// allow you to retrieve information from a Certificate.
@@ -111,7 +111,7 @@ namespace iTextSharp.Signatures {
             if (url == null) {
                 return null;
             }
-            return SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(url)));
+            return SignUtils.ParseCrlFromStream(iText.IO.Util.UrlUtil.OpenStream(new Uri(url)));
         }
 
         // Online Certificate Status Protocol
@@ -200,7 +200,7 @@ namespace iTextSharp.Signatures {
         /// <exception cref="System.IO.IOException"/>
         private static String GetStringFromGeneralName(Asn1Object names) {
             Asn1TaggedObject taggedObject = (Asn1TaggedObject)names;
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
+            return iText.IO.Util.JavaUtil.GetStringForBytes(Asn1OctetString.GetInstance(taggedObject, false).GetOctets
                 (), "ISO-8859-1");
         }
     }

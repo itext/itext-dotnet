@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     /// <summary>LookupType 2: Multiple Substitution Subtable</summary>
     public class GsubLookupType2 : OpenTableLookup {
         private IDictionary<int, int[]> substMap;

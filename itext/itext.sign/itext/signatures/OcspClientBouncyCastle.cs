@@ -46,16 +46,16 @@ using System.IO;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>OcspClient implementation using BouncyCastle.</summary>
     /// <author>Paulo Soarees</author>
     public class OcspClientBouncyCastle : IOcspClient {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.OcspClientBouncyCastle
+        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.OcspClientBouncyCastle
             ));
 
         private readonly OCSPVerifier verifier;

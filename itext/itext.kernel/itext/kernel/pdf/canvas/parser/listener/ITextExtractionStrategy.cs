@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
+namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>
     /// This is a special interface for
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Filter.IEventFilter"/>
     /// that returns text as result of its work.
     /// </summary>
     public interface ITextExtractionStrategy : IEventListener {

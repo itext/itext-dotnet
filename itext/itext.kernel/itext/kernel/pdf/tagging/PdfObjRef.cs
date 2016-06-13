@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     public class PdfObjRef : PdfMcr {
         public PdfObjRef(PdfDictionary pdfObject, PdfStructElem parent)
             : base(pdfObject, parent) {

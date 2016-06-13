@@ -43,7 +43,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 
-namespace iTextSharp.Kernel.Pdf
+namespace iText.Kernel.Pdf
 {
 	public class CompressionConstants
 	{

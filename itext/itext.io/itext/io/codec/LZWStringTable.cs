@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.IO;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>General purpose LZW String Table.</summary>
     /// <remarks>
     /// General purpose LZW String Table.
@@ -258,8 +258,8 @@ namespace iTextSharp.IO.Codec {
         public virtual void Dump(StreamWriter output) {
             int i;
             for (i = 258; i < numStrings_; ++i) {
-                output.WriteLine(" strNxt_[" + i + "] = " + strNxt_[i] + " strChr_ " + iTextSharp.IO.Util.JavaUtil.IntegerToHexString
-                    (strChr_[i] & 0xFF) + " strLen_ " + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(strLen_[i]));
+                output.WriteLine(" strNxt_[" + i + "] = " + strNxt_[i] + " strChr_ " + iText.IO.Util.JavaUtil.IntegerToHexString
+                    (strChr_[i] & 0xFF) + " strLen_ " + iText.IO.Util.JavaUtil.IntegerToHexString(strLen_[i]));
             }
         }
     }

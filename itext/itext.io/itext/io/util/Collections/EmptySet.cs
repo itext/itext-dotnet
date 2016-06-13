@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace iTextSharp.IO.Util.Collections
+namespace iText.IO.Util.Collections
 {
     internal class EmptySet<T> : ISet<T> {
         public IEnumerator<T> GetEnumerator() {

@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Draw;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class TabsTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/TabTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/TabTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/TabTest/";
+             + "/test/itext/layout/TabTest/";
 
         private const String text0 = "The Po\u017Eega Valley is a geographic microregion\tof Croatia, located in central"
              + " Slavonia, enveloped by the Slavonian mountains. It consists of\tsouthern slopes of 984-metre (3,228 ft)"
@@ -186,7 +186,7 @@ namespace iTextSharp.Layout {
             Document doc = new Document(pdfDoc);
             //tabstops out of page bounds
             Paragraph p = new Paragraph();
-            p.SetFontColor(iTextSharp.Kernel.Color.Color.GREEN);
+            p.SetFontColor(iText.Kernel.Color.Color.GREEN);
             p.Add("left tab stop out of page bounds:");
             doc.Add(p);
             p = new Paragraph();
@@ -194,7 +194,7 @@ namespace iTextSharp.Layout {
             p.Add("text").Add(new Tab()).Add("some interesting text after left-tabstop");
             doc.Add(p);
             p = new Paragraph();
-            p.SetFontColor(iTextSharp.Kernel.Color.Color.GREEN);
+            p.SetFontColor(iText.Kernel.Color.Color.GREEN);
             p.Add("right tab stop out of page bounds:");
             doc.Add(p);
             p = new Paragraph();
@@ -203,7 +203,7 @@ namespace iTextSharp.Layout {
             doc.Add(p);
             //text out of page bounds
             p = new Paragraph();
-            p.SetFontColor(iTextSharp.Kernel.Color.Color.GREEN);
+            p.SetFontColor(iText.Kernel.Color.Color.GREEN);
             p.Add("text out of page bounds after left tab stop:");
             doc.Add(p);
             p = new Paragraph();
@@ -212,7 +212,7 @@ namespace iTextSharp.Layout {
             p.Add("text").Add(new Tab()).Add("someinterestingtextafterleft-tabstop");
             doc.Add(p);
             p = new Paragraph();
-            p.SetFontColor(iTextSharp.Kernel.Color.Color.GREEN);
+            p.SetFontColor(iText.Kernel.Color.Color.GREEN);
             p.Add("text out of page bounds after right tab stop:");
             doc.Add(p);
             p = new Paragraph();

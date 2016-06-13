@@ -41,11 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border {
+namespace iText.Layout.Border {
     /// <summary>Draws a solid border around the element it's set to.</summary>
-    public class SolidBorder : iTextSharp.Layout.Border.Border {
+    public class SolidBorder : iText.Layout.Border.Border {
         /// <summary>Creates a SolidBorder with the specified width and sets the color to black.</summary>
         /// <param name="width">width of the border</param>
         public SolidBorder(float width)
@@ -55,12 +55,12 @@ namespace iTextSharp.Layout.Border {
         /// <summary>Creates a SolidBorder with the specified width and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
-        public SolidBorder(iTextSharp.Kernel.Color.Color color, float width)
+        public SolidBorder(iText.Kernel.Color.Color color, float width)
             : base(color, width) {
         }
 
         public override int GetBorderType() {
-            return iTextSharp.Layout.Border.Border.SOLID;
+            return iText.Layout.Border.Border.SOLID;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore

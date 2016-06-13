@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf.Canvas.Draw;
-using iTextSharp.Layout.Property;
+using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Layout.Property;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     public class TabStop {
         private float tabPosition;
 

@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Util;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public abstract class FontProgram {
         public const int DEFAULT_WIDTH = 1000;
 
@@ -290,7 +290,7 @@ namespace iTextSharp.IO.Font {
 
         protected internal virtual void CheckFilePath(String path) {
             if (path != null && !FontConstants.BUILTIN_FONTS_14.Contains(path) && !FileUtil.FileExists(path)) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FontFile1NotFound).SetMessageParams(path);
+                throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(path);
             }
         }
 

@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     public class PdfA2AcroFormCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2AcroFormCheckTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/pdfa/PdfA2AcroFormCheckTest/";
+             + "/test/itext/pdfa/PdfA2AcroFormCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -20,7 +20,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck01() {
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
@@ -40,7 +40,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck02() {
@@ -59,7 +59,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck03() {
@@ -77,7 +77,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void AcroFormCheck04() {
             NUnit.Framework.Assert.That(() =>  {

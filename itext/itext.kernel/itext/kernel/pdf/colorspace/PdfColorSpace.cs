@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace {
+namespace iText.Kernel.Pdf.Colorspace {
     public abstract class PdfColorSpace : PdfObjectWrapper<PdfObject> {
-        public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        public static readonly ICollection<PdfName> directColorSpaces = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.DeviceGray, PdfName.DeviceRGB, PdfName.DeviceCMYK, PdfName.Pattern));
 
         protected internal PdfColorSpace(PdfObject pdfObject)
@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Pdf.Colorspace {
 
         public abstract int GetNumberOfComponents();
 
-        public static iTextSharp.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject pdfObject) {
+        public static iText.Kernel.Pdf.Colorspace.PdfColorSpace MakeColorSpace(PdfObject pdfObject) {
             if (pdfObject.IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
             }

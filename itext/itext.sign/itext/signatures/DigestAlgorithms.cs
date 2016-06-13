@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Class that contains a map with the different message digest algorithms.</summary>
     public class DigestAlgorithms {
         /// <summary>Algorithm available for signatures since PDF 1.3.</summary>

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Layout {
+namespace iText.Layout.Layout {
     public class LayoutContext {
         protected internal LayoutArea area;
 

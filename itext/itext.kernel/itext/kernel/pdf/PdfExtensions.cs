@@ -1,4 +1,4 @@
-﻿namespace iTextSharp.Kernel.Pdf {
+﻿namespace iText.Kernel.Pdf {
     public static class PdfExtensions {
         public static PdfDictionary MakeIndirect(this PdfDictionary dict, PdfDocument document) {
             return (PdfDictionary)dict.MakeIndirect(document);

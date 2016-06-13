@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using iTextSharp.IO.Log;
-using iTextSharp.Test;
+using iText.IO.Log;
+using iText.Test;
 
-namespace iTextSharp.Test
+namespace iText.Test
 {
     public class Log4NetLoggerFactory : ILoggerFactory
     {

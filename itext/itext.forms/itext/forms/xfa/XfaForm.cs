@@ -49,17 +49,17 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Layout;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Layout;
 
-namespace iTextSharp.Forms.Xfa
+namespace iText.Forms.Xfa
 {
 	/// <summary>Processes XFA forms.</summary>
 	public class XfaForm
 	{
-		private const String DEFAULT_XFA = "iTextSharp.Forms.Xfa.default.xml";
+		private const String DEFAULT_XFA = "iText.Forms.Xfa.default.xml";
 
 		private XElement templateNode;
 
@@ -107,10 +107,10 @@ namespace iTextSharp.Forms.Xfa
 
 		/// <summary>
 		/// A constructor from a
-		/// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
+		/// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
 		/// . It is assumed, but not
 		/// necessary for correct initialization, that the dictionary is actually a
-		/// <see cref="iTextSharp.Forms.PdfAcroForm"/>
+		/// <see cref="iText.Forms.PdfAcroForm"/>
 		/// . An entry in the dictionary with the <code>XFA</code>
 		/// key must contain correct XFA syntax. If the <code>XFA</code> key is
 		/// absent, then the constructor essentially does nothing.
@@ -145,7 +145,7 @@ namespace iTextSharp.Forms.Xfa
 		/// <param name="form">the data</param>
 		/// <param name="pdfDocument">pdfDocument</param>
 		/// <exception cref="System.IO.IOException">on IO error</exception>
-		public static void SetXfaForm(iTextSharp.Forms.Xfa.XfaForm form, PdfDocument pdfDocument
+		public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfDocument pdfDocument
 			)
 		{
 			PdfDictionary af = PdfAcroForm.GetAcroForm(pdfDocument, true).GetPdfObject();
@@ -265,7 +265,7 @@ namespace iTextSharp.Forms.Xfa
 				if (name != null)
 				{
 					name = Xml2Som.GetShortName(name);
-					return iTextSharp.Forms.Xfa.XfaForm.GetNodeText(FindDatasetsNode(name));
+					return iText.Forms.Xfa.XfaForm.GetNodeText(FindDatasetsNode(name));
 				}
 			}
 			return null;

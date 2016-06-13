@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Kernel {
+namespace iText.Kernel {
     internal static class KernelExtensions {
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
             return str.Substring(beginIndex, endIndex - beginIndex);

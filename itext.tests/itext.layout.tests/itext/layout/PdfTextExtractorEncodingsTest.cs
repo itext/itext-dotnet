@@ -1,15 +1,15 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class PdfTextExtractorEncodingsTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PdfTextExtractorEncodingsTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/PdfTextExtractorEncodingsTest/";
 
         /// <summary>Basic Latin characters, with Unicode values less than 128</summary>
         private const String TEXT1 = "AZaz09*!";

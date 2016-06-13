@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Barcodes.Dmcode {
+namespace iText.Barcodes.Dmcode {
     public sealed class ReedSolomon {
         private static readonly int[] log = new int[] { 0, 255, 1, 240, 2, 225, 241, 53, 3, 38, 226, 133, 242, 43, 
             54, 210, 4, 195, 39, 114, 227, 106, 134, 28, 243, 140, 44, 23, 55, 118, 211, 234, 5, 219, 196, 96, 40, 

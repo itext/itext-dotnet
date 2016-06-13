@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Font.Otf.Lookuptype6;
+using iText.IO.Font.Otf.Lookuptype6;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     /// <summary>LookupType 6: Chaining Contextual Substitution Subtable</summary>
     public class GsubLookupType6 : GsubLookupType5 {
         /// <exception cref="System.IO.IOException"/>

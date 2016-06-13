@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     public class LinkedHashSet<TKey> : ISet<TKey> {
         private readonly IDictionary<TKey, LinkedListNode<TKey>> _map = new Dictionary<TKey, LinkedListNode<TKey>>();
         private readonly LinkedList<TKey> _list = new LinkedList<TKey>();

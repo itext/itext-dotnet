@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Crypto;
+using iText.Kernel;
+using iText.Kernel.Crypto;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler {
+namespace iText.Kernel.Crypto.Securityhandler {
     public abstract class SecurityHandler {
         /// <summary>The global encryption key</summary>
         protected internal byte[] mkey = new byte[0];

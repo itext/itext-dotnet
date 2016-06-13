@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Source;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class CFFFont {
         internal static readonly String[] operatorNames = new String[] { "version", "Notice", "FullName", "FamilyName"
             , "Weight", "FontBBox", "BlueValues", "OtherBlues", "FamilyBlues", "FamilyOtherBlues", "StdHW", "StdVW"
@@ -134,7 +134,7 @@ namespace iTextSharp.IO.Font {
                 return (char)(i & 0xff);
             }
             catch (Exception e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -143,7 +143,7 @@ namespace iTextSharp.IO.Font {
                 return buf.ReadChar();
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -161,7 +161,7 @@ namespace iTextSharp.IO.Font {
                 buf.Seek(offset);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -170,7 +170,7 @@ namespace iTextSharp.IO.Font {
                 return buf.ReadShort();
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -179,7 +179,7 @@ namespace iTextSharp.IO.Font {
                 return buf.ReadInt();
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -188,7 +188,7 @@ namespace iTextSharp.IO.Font {
                 return (int)buf.GetPosition();
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
         }
 
@@ -413,7 +413,7 @@ namespace iTextSharp.IO.Font {
                     }
                 }
                 catch (System.IO.IOException e) {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.IoException, e);
+                    throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
                 }
             }
             //System.err.println("finished range emit");

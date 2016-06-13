@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfPopupAnnotation : PdfAnnotation {
         protected internal PdfAnnotation parent;
 
@@ -68,9 +68,9 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return parent;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation parent) {
+        public virtual iText.Kernel.Pdf.Annot.PdfPopupAnnotation SetParent(PdfAnnotation parent) {
             this.parent = parent;
-            return (iTextSharp.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent.GetPdfObject());
+            return (iText.Kernel.Pdf.Annot.PdfPopupAnnotation)Put(PdfName.Parent, parent.GetPdfObject());
         }
     }
 }

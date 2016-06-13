@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     public class HighlightItemsTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/HighlightItemsTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/HighlightItemsTest/";
 
-        private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itextsharp/kernel/parser/HighlightItemsTest/";
+        private static readonly String outputPath = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/parser/HighlightItemsTest/";
 
         [NUnit.Framework.SetUp]
         public virtual void SetUp() {
@@ -130,7 +130,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
                 IList<Rectangle> rectangles = myEventListener.GetRectangles();
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.GetPage(pageNum));
                 canvas.SetLineWidth(0.5f);
-                canvas.SetStrokeColor(iTextSharp.Kernel.Color.Color.RED);
+                canvas.SetStrokeColor(iText.Kernel.Color.Color.RED);
                 foreach (Rectangle rectangle in rectangles) {
                     canvas.Rectangle(rectangle);
                     canvas.Stroke();

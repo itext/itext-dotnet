@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Forms.Xfa {
+namespace iText.Forms.Xfa {
     /// <summary>A class to process "classic" fields.</summary>
     internal class AcroFieldsSearch : Xml2Som {
         private IDictionary<String, String> acroShort2LongName;

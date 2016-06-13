@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
+using iText.IO.Log;
+using iText.IO.Source;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     /// <summary>Representation of a stream as described in the PDF Specification.</summary>
     public class PdfStream : PdfDictionary {
         protected internal int compressionLevel;
@@ -72,7 +72,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
-        /// <exception cref="iTextSharp.Kernel.PdfException">on error.</exception>
+        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(byte[] bytes, int compressionLevel)
             : base() {
             // Output stream associated with PDF stream.
@@ -111,7 +111,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="inputStream">the data to write to this stream</param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
-        /// <exception cref="iTextSharp.Kernel.PdfException">on error.</exception>
+        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(PdfDocument doc, Stream inputStream, int compressionLevel)
             : base() {
             if (doc == null) {
@@ -141,7 +141,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </pre>
         /// </remarks>
         /// <param name="inputStream">the data to write to this stream</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException">on error.</exception>
+        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(PdfDocument doc, Stream inputStream)
             : this(doc, inputStream, CompressionConstants.UNDEFINED_COMPRESSION) {
         }
@@ -153,7 +153,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
-        /// <exception cref="iTextSharp.Kernel.PdfException">on error.</exception>
+        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(int compressionLevel)
             : this(null, compressionLevel) {
         }
@@ -219,7 +219,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Gets decoded stream bytes.</summary>
         /// <returns>byte[]</returns>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual byte[] GetBytes() {
             return GetBytes(true);
         }
@@ -241,8 +241,8 @@ namespace iTextSharp.Kernel.Pdf {
         /// <on>error.</on>
         public virtual byte[] GetBytes(bool decoded) {
             if (inputStream != null) {
-                LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Pdf.PdfStream)).Warn("PdfStream was created by InputStream."
-                     + "getBytes() always returns null in this case");
+                LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).Warn("PdfStream was created by InputStream." +
+                     "getBytes() always returns null in this case");
                 return null;
             }
             byte[] bytes = null;
@@ -341,14 +341,14 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfStream)base.MakeIndirect(document);
+            return (iText.Kernel.Pdf.PdfStream)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference reference) {
-            return (iTextSharp.Kernel.Pdf.PdfStream)base.MakeIndirect(document, reference);
+            return (iText.Kernel.Pdf.PdfStream)base.MakeIndirect(document, reference);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -359,7 +359,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <param name="document">document to copy object to.</param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document) {
-            return (iTextSharp.Kernel.Pdf.PdfStream)base.CopyTo(document, true);
+            return (iText.Kernel.Pdf.PdfStream)base.CopyTo(document, true);
         }
 
         /// <summary>Copies object to a specified document.</summary>
@@ -375,11 +375,11 @@ namespace iTextSharp.Kernel.Pdf {
         /// </param>
         /// <returns>copied object.</returns>
         public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
-            return (iTextSharp.Kernel.Pdf.PdfStream)base.CopyTo(document, allowDuplicating);
+            return (iText.Kernel.Pdf.PdfStream)base.CopyTo(document, allowDuplicating);
         }
 
         protected internal override PdfObject NewInstance() {
-            return new iTextSharp.Kernel.Pdf.PdfStream();
+            return new iText.Kernel.Pdf.PdfStream();
         }
 
         protected internal virtual long GetOffset() {
@@ -399,7 +399,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
-            iTextSharp.Kernel.Pdf.PdfStream stream = (iTextSharp.Kernel.Pdf.PdfStream)from;
+            iText.Kernel.Pdf.PdfStream stream = (iText.Kernel.Pdf.PdfStream)from;
             System.Diagnostics.Debug.Assert(inputStream == null, "Try to copy the PdfStream that has been just created."
                 );
             byte[] bytes = stream.GetBytes(false);

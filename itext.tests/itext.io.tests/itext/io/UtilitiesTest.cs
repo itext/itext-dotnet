@@ -1,6 +1,6 @@
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO {
+namespace iText.IO {
     public class UtilitiesTest {
         [NUnit.Framework.Test]
         public virtual void TestShortener() {

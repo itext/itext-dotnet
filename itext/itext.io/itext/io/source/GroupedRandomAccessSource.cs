@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     /// <summary>
     /// A RandomAccessSource that is based on a set of underlying sources,
     /// treating the sources as if they were a contiguous block of data.

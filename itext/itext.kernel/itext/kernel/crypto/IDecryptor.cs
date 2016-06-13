@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     public interface IDecryptor {
         byte[] Update(byte[] b, int off, int len);
 

@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     /// <summary>Internal helper class which is used to copy tag structure across documents.</summary>
     internal class StructureTreeCopier {
         private static IList<PdfName> ignoreKeysForCopy = new List<PdfName>();
@@ -73,7 +73,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// </summary>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument callingDocument
             ) {
             if (!destDocument.IsTagged()) {
@@ -98,7 +98,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public static void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
             , PdfDocument callingDocument) {
             if (!destDocument.IsTagged()) {
@@ -161,7 +161,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// <paramref name="destDocument"/>
         /// .
         /// </param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         private static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument 
             callingDocument, bool copyFromDestDocument) {
             CopyTo(destDocument, page2page, callingDocument, copyFromDestDocument, -1);
@@ -228,7 +228,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
                     // Link annotations could be not added to the toDocument, so we need to identify this case.
                     // When obj.copyTo is called, and annotation was already copied, we would get this already created copy.
                     // If it was already copied and added, /P key would be set. Otherwise /P won't be set.
-                    obj = obj.CopyTo(toDocument, iTextSharp.IO.Util.JavaUtil.ArraysAsList(PdfName.P), false);
+                    obj = obj.CopyTo(toDocument, iText.IO.Util.JavaUtil.ArraysAsList(PdfName.P), false);
                     copied.Put(PdfName.Obj, obj);
                 }
             }

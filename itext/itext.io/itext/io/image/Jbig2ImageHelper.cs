@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Source;
+using iText.IO.Codec;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     internal class Jbig2ImageHelper {
         private byte[] globals;
 
@@ -106,7 +106,7 @@ namespace iTextSharp.IO.Image {
                 image.data = p.GetData(true);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jbig2ImageException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.Jbig2ImageException, e);
             }
         }
     }

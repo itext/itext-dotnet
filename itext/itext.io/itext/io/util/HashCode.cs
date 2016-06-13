@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Util {
+namespace iText.IO.Util {
     /// <summary>
     /// This class is a convenience method to sequentially calculate hash code of the
     /// object based on the field values.
@@ -119,7 +119,7 @@ namespace iTextSharp.IO.Util {
         /// <param name="value">new element</param>
         /// <returns>combined hashCode</returns>
         public static int Combine(int hashCode, float value) {
-            int v = iTextSharp.IO.Util.JavaUtil.FloatToIntBits(value);
+            int v = iText.IO.Util.JavaUtil.FloatToIntBits(value);
             return Combine(hashCode, v);
         }
 
@@ -128,7 +128,7 @@ namespace iTextSharp.IO.Util {
         /// <param name="value">new element</param>
         /// <returns>combined hashCode</returns>
         public static int Combine(int hashCode, double value) {
-            long v = iTextSharp.IO.Util.JavaUtil.DoubleToLongBits(value);
+            long v = iText.IO.Util.JavaUtil.DoubleToLongBits(value);
             return Combine(hashCode, v);
         }
 

@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class Pdf3DAnnotation : PdfAnnotation {
         public Pdf3DAnnotation(Rectangle rect, PdfObject artwork)
             : base(rect) {
@@ -59,33 +59,33 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return PdfName._3D;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(PdfObject initialView) {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView);
+        public virtual iText.Kernel.Pdf.Annot.Pdf3DAnnotation SetDefaultInitialView(PdfObject initialView) {
+            return (iText.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DV, initialView);
         }
 
         public virtual PdfObject GetDefaultInitialView() {
             return GetPdfObject().Get(PdfName._3DV);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary(PdfDictionary activationDictionary
+        public virtual iText.Kernel.Pdf.Annot.Pdf3DAnnotation SetActivationDictionary(PdfDictionary activationDictionary
             ) {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary);
+            return (iText.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DA, activationDictionary);
         }
 
         public virtual PdfDictionary GetActivationDictionary() {
             return GetPdfObject().GetAsDictionary(PdfName._3DA);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive) {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean(interactive));
+        public virtual iText.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive) {
+            return (iText.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean(interactive));
         }
 
         public virtual PdfBoolean IsInteractive() {
             return GetPdfObject().GetAsBoolean(PdfName._3DI);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox) {
-            return (iTextSharp.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray(viewBox));
+        public virtual iText.Kernel.Pdf.Annot.Pdf3DAnnotation SetViewBox(Rectangle viewBox) {
+            return (iText.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DB, new PdfArray(viewBox));
         }
 
         public virtual Rectangle GetViewBox() {

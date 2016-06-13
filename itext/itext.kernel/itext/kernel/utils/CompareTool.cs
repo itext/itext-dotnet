@@ -51,17 +51,17 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Options;
+using iText.IO.Font;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
 using Path = System.IO.Path;
 
-namespace iTextSharp.Kernel.Utils
+namespace iText.Kernel.Utils
 {
 	public class CompareTool
 	{
@@ -124,14 +124,14 @@ namespace iTextSharp.Kernel.Utils
 			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(cmpDocument
 				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
 				().GetIndirectReference());
-			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.Metadata));
 			CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.
 				GetCatalog().GetPdfObject(), catalogPath, compareResult, ignoredCatalogEntries);
 			return compareResult;
 		}
 
-		public virtual iTextSharp.Kernel.Utils.CompareTool DisableCachedPagesComparison()
+		public virtual iText.Kernel.Utils.CompareTool DisableCachedPagesComparison()
 		{
 			this.useCachedPagesForComparison = false;
 			return this;
@@ -141,21 +141,21 @@ namespace iTextSharp.Kernel.Utils
 		/// 	</summary>
 		/// <param name="compareByContentMaxErrorCount">the errors count.</param>
 		/// <returns>Returns this.</returns>
-		public virtual iTextSharp.Kernel.Utils.CompareTool SetCompareByContentErrorsLimit
+		public virtual iText.Kernel.Utils.CompareTool SetCompareByContentErrorsLimit
 			(int compareByContentMaxErrorCount)
 		{
 			this.compareByContentErrorsLimit = compareByContentMaxErrorCount;
 			return this;
 		}
 
-		public virtual iTextSharp.Kernel.Utils.CompareTool SetGenerateCompareByContentXmlReport
+		public virtual iText.Kernel.Utils.CompareTool SetGenerateCompareByContentXmlReport
 			(bool generateCompareByContentXmlReport)
 		{
 			this.generateCompareByContentXmlReport = generateCompareByContentXmlReport;
 			return this;
 		}
 
-		public virtual iTextSharp.Kernel.Utils.CompareTool EnableEncryptionCompare()
+		public virtual iText.Kernel.Utils.CompareTool EnableEncryptionCompare()
 		{
 			this.encryptionCompareEnabled = true;
 			return this;
@@ -544,7 +544,7 @@ namespace iTextSharp.Kernel.Utils
 				{
 					continue;
 				}
-				System.Console.Out.Write("Comparing page " + iTextSharp.IO.Util.JavaUtil.IntegerToString
+				System.Console.Out.Write("Comparing page " + iText.IO.Util.JavaUtil.IntegerToString
 					(i + 1) + " (" + imageFiles[i] + ")...");
 				FileStream is1 = new FileStream(imageFiles[i], FileMode.Open, FileAccess.Read);
                 FileStream is2 = new FileStream(cmpImageFiles[i], FileMode.Open, FileAccess.Read);
@@ -559,11 +559,11 @@ namespace iTextSharp.Kernel.Utils
 					{
 						String currCompareParams = compareParams.Replace("<image1>", imageFiles[i])
                             .Replace("<image2>", cmpImageFiles[i]).Replace("<difference>"
-							, outPath + differenceImagePrefix + iTextSharp.IO.Util.JavaUtil.IntegerToString(
+							, outPath + differenceImagePrefix + iText.IO.Util.JavaUtil.IntegerToString(
 							i + 1) + ".png");
 						if (RunProcessAndWait(compareExec, currCompareParams))
 						{
-							differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + iTextSharp.IO.Util.JavaUtil.IntegerToString
+							differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + iText.IO.Util.JavaUtil.IntegerToString
 								(i + 1) + ".png for more details.";
 						}
 					}
@@ -795,7 +795,7 @@ namespace iTextSharp.Kernel.Utils
 			CompareTool.ObjectPath catalogPath = new CompareTool.ObjectPath(cmpDocument
 				.GetCatalog().GetPdfObject().GetIndirectReference(), outDocument.GetCatalog().GetPdfObject
 				().GetIndirectReference());
-			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+			ICollection<PdfName> ignoredCatalogEntries = new LinkedHashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.Pages, PdfName.Metadata));
 			CompareDictionariesExtended(outDocument.GetCatalog().GetPdfObject(), cmpDocument.
 				GetCatalog().GetPdfObject(), catalogPath, compareResult, ignoredCatalogEntries);
@@ -879,7 +879,7 @@ namespace iTextSharp.Kernel.Utils
 				compareResult.AddError(trailerPath, "Expected not encrypted document.");
 				return;
 			}
-			ICollection<PdfName> ignoredEncryptEntries = new LinkedHashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+			ICollection<PdfName> ignoredEncryptEntries = new LinkedHashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
 				(PdfName.O, PdfName.U, PdfName.OE, PdfName.UE, PdfName.Perms));
 			CompareTool.ObjectPath objectPath = new CompareTool.ObjectPath(outEncrypt.GetIndirectReference
 				(), cmpEncrypt.GetIndirectReference());
@@ -902,7 +902,7 @@ namespace iTextSharp.Kernel.Utils
 				{
 					return false;
 				}
-				if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(buffer1, buffer2))
+				if (!iText.IO.Util.JavaUtil.ArraysEquals(buffer1, buffer2))
 				{
 					return false;
 				}
@@ -1218,7 +1218,7 @@ namespace iTextSharp.Kernel.Utils
 			bool toDecode = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter));
 			byte[] outStreamBytes = outStream.GetBytes(toDecode);
 			byte[] cmpStreamBytes = cmpStream.GetBytes(toDecode);
-			if (iTextSharp.IO.Util.JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes))
+			if (iText.IO.Util.JavaUtil.ArraysEquals(outStreamBytes, cmpStreamBytes))
 			{
 				return CompareDictionariesExtended(outStream, cmpStream, currentPath, compareResult
 					);
@@ -1277,13 +1277,13 @@ namespace iTextSharp.Kernel.Utils
 				int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
 				int rOut = Math.Min(outStreamBytes.Length, firstDifferenceOffset + diffBytesAreaR
 					);
-				String cmpByte = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes
+				String cmpByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { cmpStreamBytes
 					[firstDifferenceOffset] });
-				String cmpByteNeighbours = iTextSharp.IO.Util.StringUtil.ReplaceAll(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
+				String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes
 					(cmpStreamBytes, lCmp, rCmp - lCmp), "\\r|\\n", " ");
-				String outByte = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes
+				String outByte = iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { outStreamBytes
 					[firstDifferenceOffset] });
-				String outBytesNeighbours = iTextSharp.IO.Util.StringUtil.ReplaceAll(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
+				String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(iText.IO.Util.JavaUtil.GetStringForBytes
 					(outStreamBytes, lOut, rOut - lOut), "\\r|\\n", " ");
 				errorMessage = String.Format("First bytes difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different bytes: {5}"
 					, System.Convert.ToInt32(firstDifferenceOffset).ToString(), cmpByte, cmpByteNeighbours
@@ -1383,7 +1383,7 @@ namespace iTextSharp.Kernel.Utils
 		private bool CompareStringsExtended(PdfString outString, PdfString cmpString, CompareTool.ObjectPath
 			 currentPath, CompareTool.CompareResult compareResult)
 		{
-			if (iTextSharp.IO.Util.JavaUtil.ArraysEquals(ConvertPdfStringToBytes(cmpString), 
+			if (iText.IO.Util.JavaUtil.ArraysEquals(ConvertPdfStringToBytes(cmpString), 
 				ConvertPdfStringToBytes(outString)))
 			{
 				return true;

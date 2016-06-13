@@ -41,16 +41,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border {
+namespace iText.Layout.Border {
     /// <summary>Creates a double border around the element it's set to.</summary>
     /// <remarks>
     /// Creates a double border around the element it's set to. The space between the two border lines has
     /// the same width as the two borders. If a background has been set on the element the color will show in
     /// between the two borders.
     /// </remarks>
-    public class DoubleBorder : iTextSharp.Layout.Border.Border {
+    public class DoubleBorder : iText.Layout.Border.Border {
         /// <summary>Creates a DoubleBorder with the specified width for both the two borders as the space in between them.
         ///     </summary>
         /// <remarks>
@@ -72,12 +72,12 @@ namespace iTextSharp.Layout.Border {
         /// be filled with the background color of the element, if a color has been set.
         /// </remarks>
         /// <param name="width">width of the borders and the space between them</param>
-        public DoubleBorder(iTextSharp.Kernel.Color.Color color, float width)
+        public DoubleBorder(iText.Kernel.Color.Color color, float width)
             : base(color, width) {
         }
 
         public override int GetBorderType() {
-            return iTextSharp.Layout.Border.Border.DOUBLE;
+            return iText.Layout.Border.Border.DOUBLE;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore

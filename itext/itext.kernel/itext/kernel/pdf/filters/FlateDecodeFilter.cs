@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.util.zlib;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filters {
+namespace iText.Kernel.Pdf.Filters {
     /// <summary>Handles FlateDecode filter.</summary>
     public class FlateDecodeFilter : IFilterHandler {
         public virtual byte[] Decode(byte[] b, PdfName filterName, PdfObject decodeParams, PdfDictionary streamDictionary

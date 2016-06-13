@@ -44,13 +44,13 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
-using iTextSharp.Layout.Property;
+using iText.IO.Util;
+using iText.Kernel.Geom;
+using iText.Layout.Element;
+using iText.Layout.Layout;
+using iText.Layout.Property;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class ParagraphRenderer : BlockRenderer {
         protected internal float previousDescent = 0;
 
@@ -63,16 +63,16 @@ namespace iTextSharp.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-            if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null) {
+            if (this.GetProperty<float?>(iText.Layout.Property.Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
             float[] margins = GetMargins();
             ApplyMargins(parentBBox, margins, false);
-            iTextSharp.Layout.Border.Border[] borders = GetBorders();
+            iText.Layout.Border.Border[] borders = GetBorders();
             ApplyBorderBox(parentBBox, borders, false);
             bool isPositioned = IsPositioned();
             if (isPositioned) {
-                float x = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.X);
+                float x = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.X);
                 float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
                 parentBBox.SetX(relativeX + x);
             }
@@ -104,30 +104,30 @@ namespace iTextSharp.Layout.Renderer {
                 anythingPlaced = true;
                 currentRenderer = null;
                 // TODO is this really needed??
-                SetProperty(iTextSharp.Layout.Property.Property.MARGIN_TOP, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.MARGIN_RIGHT, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.MARGIN_BOTTOM, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.MARGIN_LEFT, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.PADDING_TOP, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.PADDING_RIGHT, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.PADDING_BOTTOM, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.PADDING_LEFT, 0);
-                SetProperty(iTextSharp.Layout.Property.Property.BORDER, iTextSharp.Layout.Border.Border.NO_BORDER);
+                SetProperty(iText.Layout.Property.Property.MARGIN_TOP, 0);
+                SetProperty(iText.Layout.Property.Property.MARGIN_RIGHT, 0);
+                SetProperty(iText.Layout.Property.Property.MARGIN_BOTTOM, 0);
+                SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, 0);
+                SetProperty(iText.Layout.Property.Property.PADDING_TOP, 0);
+                SetProperty(iText.Layout.Property.Property.PADDING_RIGHT, 0);
+                SetProperty(iText.Layout.Property.Property.PADDING_BOTTOM, 0);
+                SetProperty(iText.Layout.Property.Property.PADDING_LEFT, 0);
+                SetProperty(iText.Layout.Property.Property.BORDER, iText.Layout.Border.Border.NO_BORDER);
                 margins = GetMargins();
                 borders = GetBorders();
                 paddings = GetPaddings();
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
-            Leading leading = this.GetProperty<Leading>(iTextSharp.Layout.Property.Property.LEADING);
+            Leading leading = this.GetProperty<Leading>(iText.Layout.Property.Property.LEADING);
             float leadingValue = 0;
             float lastLineHeight = 0;
             while (currentRenderer != null) {
-                currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_DEFAULT, this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
+                currentRenderer.SetProperty(iText.Layout.Property.Property.TAB_DEFAULT, this.GetPropertyAsFloat(iText.Layout.Property.Property
                     .TAB_DEFAULT));
-                currentRenderer.SetProperty(iTextSharp.Layout.Property.Property.TAB_STOPS, this.GetProperty<Object>(iTextSharp.Layout.Property.Property
+                currentRenderer.SetProperty(iText.Layout.Property.Property.TAB_STOPS, this.GetProperty<Object>(iText.Layout.Property.Property
                     .TAB_STOPS));
-                float lineIndent = anythingPlaced ? 0 : (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property
-                    .FIRST_LINE_INDENT);
+                float lineIndent = anythingPlaced ? 0 : (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.FIRST_LINE_INDENT
+                    );
                 float availableWidth = layoutBox.GetWidth() - lineIndent;
                 Rectangle childLayoutBox = new Rectangle(layoutBox.GetX() + lineIndent, layoutBox.GetY(), availableWidth, 
                     layoutBox.GetHeight());
@@ -142,7 +142,7 @@ namespace iTextSharp.Layout.Renderer {
                         processedRenderer = (LineRenderer)result.GetSplitRenderer();
                     }
                 }
-                TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(iTextSharp.Layout.Property.Property
+                TextAlignment? textAlignment = (TextAlignment?)this.GetProperty<TextAlignment?>(iText.Layout.Property.Property
                     .TEXT_ALIGNMENT, TextAlignment.LEFT);
                 if (result.GetStatus() == LayoutResult.PARTIAL && textAlignment == TextAlignment.JUSTIFIED && !result.IsSplitForcedByNewline
                     () || textAlignment == TextAlignment.JUSTIFIED_ALL) {
@@ -198,7 +198,7 @@ namespace iTextSharp.Layout.Renderer {
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                             ApplyMargins(occupiedArea.GetBBox(), margins, true);
-                            iTextSharp.Layout.Renderer.ParagraphRenderer[] split = Split();
+                            iText.Layout.Renderer.ParagraphRenderer[] split = Split();
                             split[0].lines = lines;
                             foreach (LineRenderer line in lines) {
                                 split[0].childRenderers.AddAll(line.GetChildRenderers());
@@ -213,8 +213,8 @@ namespace iTextSharp.Layout.Renderer {
                                 return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1]);
                             }
                             else {
-                                if (true.Equals(GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT))) {
-                                    parent.SetProperty(iTextSharp.Layout.Property.Property.FULL, true);
+                                if (true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.FORCED_PLACEMENT))) {
+                                    parent.SetProperty(iText.Layout.Property.Property.FULL, true);
                                     lines.Add(currentRenderer);
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, null, this);
                                 }
@@ -246,7 +246,7 @@ namespace iTextSharp.Layout.Renderer {
                 occupiedArea.GetBBox().MoveDown(moveDown);
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
-            float? blockHeight = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT);
+            float? blockHeight = this.GetPropertyAsFloat(iText.Layout.Property.Property.HEIGHT);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight()) {
                 occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float)
@@ -254,13 +254,13 @@ namespace iTextSharp.Layout.Renderer {
                 ApplyVerticalAlignment();
             }
             if (isPositioned) {
-                float y = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.Y);
+                float y = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.Y);
                 float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
                 Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
-            if (this.GetProperty<float?>(iTextSharp.Layout.Property.Property.ROTATION_ANGLE) != null) {
+            if (this.GetProperty<float?>(iText.Layout.Property.Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingHeight(layoutContext.GetArea())) {
                     if (!layoutContext.GetArea().IsEmptyArea()) {
@@ -272,41 +272,40 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iTextSharp.Layout.Renderer.ParagraphRenderer((Paragraph)modelElement);
+            return new iText.Layout.Renderer.ParagraphRenderer((Paragraph)modelElement);
         }
 
         public override T1 GetDefaultProperty<T1>(int property) {
-            if ((property == iTextSharp.Layout.Property.Property.MARGIN_TOP || property == iTextSharp.Layout.Property.Property
-                .MARGIN_BOTTOM) && parent is CellRenderer) {
+            if ((property == iText.Layout.Property.Property.MARGIN_TOP || property == iText.Layout.Property.Property.MARGIN_BOTTOM
+                ) && parent is CellRenderer) {
                 return (T1)(Object)0f;
             }
             return base.GetDefaultProperty<T1>(property);
         }
 
-        protected internal virtual iTextSharp.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
-            iTextSharp.Layout.Renderer.ParagraphRenderer overflowRenderer = (iTextSharp.Layout.Renderer.ParagraphRenderer
-                )GetNextRenderer();
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer
+                ();
             // Reset first line indent in case of overflow.
-            float firstLineIndent = (float)this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT
-                );
+            float firstLineIndent = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.FIRST_LINE_INDENT);
             if (firstLineIndent != 0) {
-                overflowRenderer.SetProperty(iTextSharp.Layout.Property.Property.FIRST_LINE_INDENT, 0);
+                overflowRenderer.SetProperty(iText.Layout.Property.Property.FIRST_LINE_INDENT, 0);
             }
             return overflowRenderer;
         }
 
-        protected internal virtual iTextSharp.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
-            return (iTextSharp.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
+            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
         }
 
-        protected internal virtual iTextSharp.Layout.Renderer.ParagraphRenderer[] Split() {
-            iTextSharp.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {
+            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
             splitRenderer.occupiedArea = occupiedArea.Clone();
             splitRenderer.parent = parent;
             splitRenderer.isLastRendererForModelElement = false;
-            iTextSharp.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
             overflowRenderer.parent = parent;
-            return new iTextSharp.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
+            return new iText.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
         }
 
         public override String ToString() {

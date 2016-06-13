@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.IO.Font.Otf;
+using iText.IO.Font.Otf;
 
-namespace iTextSharp.Layout.Splitting {
+namespace iText.Layout.Splitting {
     /// <summary>
     /// The default implementation of
     /// <seealso>ISplitCharacters interface</seealso>

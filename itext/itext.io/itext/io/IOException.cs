@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO {
+namespace iText.IO {
     public class IOException : Exception {
         public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit.samples.are.not.supported.for.horizontal.differencing.predictor";
 
@@ -268,7 +268,7 @@ namespace iTextSharp.IO {
             }
         }
 
-        public virtual iTextSharp.IO.IOException SetMessageParams(params Object[] messageParams) {
+        public virtual iText.IO.IOException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;

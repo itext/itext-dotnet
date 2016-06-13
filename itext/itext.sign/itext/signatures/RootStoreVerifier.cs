@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Verifies a certificate against a <code>KeyStore</code>
     /// containing trusted anchors.

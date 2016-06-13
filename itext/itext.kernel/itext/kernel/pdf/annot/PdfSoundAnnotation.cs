@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfSoundAnnotation : PdfMarkupAnnotation {
         public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
             : base(rect) {
@@ -65,7 +65,7 @@ namespace iTextSharp.Kernel.Pdf.Annot {
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)
             : base(rect) {
-            PdfStream sound = new PdfStream(document, iTextSharp.IO.Util.JavaUtil.CorrectWavFile(soundStream));
+            PdfStream sound = new PdfStream(document, iText.IO.Util.JavaUtil.CorrectWavFile(soundStream));
             sound.Put(PdfName.R, new PdfNumber(sampleRate));
             sound.Put(PdfName.E, encoding);
             sound.Put(PdfName.B, new PdfNumber(sampleSizeInBits));

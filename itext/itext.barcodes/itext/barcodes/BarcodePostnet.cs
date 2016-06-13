@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public class BarcodePostnet : Barcode1D {
         public static int TYPE_POSTNET = 1;
 
@@ -104,7 +104,7 @@ namespace iTextSharp.Barcodes {
             n = (width - x) / (bars.Length - 1);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
              textColor) {
             if (barColor != null) {
                 canvas.SetFillColor(barColor);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     internal static class BarcodesExtensions {
         public static byte[] GetBytes(this String str, String encoding) {
             return Encoding.GetEncoding(encoding).GetBytes(str);

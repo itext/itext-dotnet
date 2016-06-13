@@ -42,17 +42,17 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Renderer;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     /// <summary>
     /// This class is used for adding content directly onto a specified
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
     /// .
     /// <see cref="Canvas"/>
     /// does not know the concept of a page, so it can't reflow to a 'next'
@@ -61,14 +61,14 @@ namespace iTextSharp.Layout {
     /// This class effectively acts as a bridge between the high-level <em>layout</em>
     /// API and the low-level <em>kernel</em> API.
     /// </summary>
-    public class Canvas : RootElement<iTextSharp.Layout.Canvas> {
+    public class Canvas : RootElement<iText.Layout.Canvas> {
         protected internal PdfCanvas pdfCanvas;
 
         protected internal Rectangle rootArea;
 
         /// <summary>
         /// Is initialized and used only when Canvas element autotagging is enabled, see
-        /// <see cref="EnableAutoTagging(iTextSharp.Kernel.Pdf.PdfPage)"/>
+        /// <see cref="EnableAutoTagging(iText.Kernel.Pdf.PdfPage)"/>
         /// .
         /// It is also used to determine if autotagging is enabled.
         /// </summary>
@@ -96,7 +96,7 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Creates a new Canvas to manipulate a specific
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// .
         /// </summary>
         /// <param name="formXObject">the form</param>
@@ -107,7 +107,7 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Gets the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// for this canvas.
         /// </summary>
         /// <returns>the document that the resulting content stream will be written to</returns>
@@ -123,7 +123,7 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Gets the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// .
         /// </summary>
         /// <returns>the low-level content stream writer</returns>
@@ -133,7 +133,7 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Sets the
-        /// <see cref="iTextSharp.Layout.Renderer.IRenderer"/>
+        /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// for this Canvas.
         /// </summary>
         /// <param name="canvasRenderer">a renderer specific for canvas operations</param>

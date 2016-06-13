@@ -41,11 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
+namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Represents image data from a PDF</summary>
     public class ImageRenderInfo : IEventData {
         /// <summary>The coordinate transformation matrix that was in effect when the image was rendered</summary>
@@ -78,16 +78,16 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
         /// You can:
         /// <ul>
         /// <li>get image bytes with
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes(bool)"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetImageBytes(bool)"/>
         /// , these image bytes
         /// represent native image, i.e you can write these bytes to disk and get just an usual image;</li>
         /// <li>obtain PdfStream object which contains image dictionary with
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.GetPdfObject()"/>
         /// method;</li>
         /// <li>convert image to
         /// <see cref="Java.Awt.Image.BufferedImage"/>
         /// with
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject.GetBufferedImage()"/>
         /// ;</li>
         /// </ul>
         /// </remarks>

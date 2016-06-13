@@ -41,11 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
+namespace iText.Kernel.Pdf.Canvas.Parser.Data {
     /// <summary>Contains information relating to painting current path.</summary>
     public class PathRenderInfo : IEventData {
         /// <summary>End the path object without filling or stroking it.</summary>
@@ -88,17 +88,17 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
         /// </param>
         /// <param name="rule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
         /// <param name="isClip">True indicates that current path modifies the clipping path, false - if not.</param>
         /// <param name="clipRule">
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </param>
         /// <param name="gs">The graphics state.</param>
@@ -117,11 +117,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="NO_OP"/>
         /// then the rule is ignored,
         /// otherwise
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
         /// See
-        /// <see cref="PathRenderInfo(iTextSharp.Kernel.Geom.Path, int, int, bool, int, iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState)
+        /// <see cref="PathRenderInfo(iText.Kernel.Geom.Path, int, int, bool, int, iText.Kernel.Pdf.Canvas.CanvasGraphicsState)
         ///     "/>
         /// </summary>
         public PathRenderInfo(Path path, int operation, CanvasGraphicsState gs)
@@ -131,7 +131,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>
         /// The
-        /// <see cref="iTextSharp.Kernel.Geom.Path"/>
+        /// <see cref="iText.Kernel.Geom.Path"/>
         /// to be rendered.
         /// </returns>
         public virtual Path GetPath() {
@@ -153,9 +153,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </returns>
         public virtual int GetRule() {
@@ -169,9 +169,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>
         /// Either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// .
         /// </returns>
         public virtual int GetClippingRule() {
@@ -203,11 +203,11 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Data {
             return gs.GetDashPattern();
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetStrokeColor() {
+        public virtual iText.Kernel.Color.Color GetStrokeColor() {
             return gs.GetStrokeColor();
         }
 
-        public virtual iTextSharp.Kernel.Color.Color GetFillColor() {
+        public virtual iText.Kernel.Color.Color GetFillColor() {
             return gs.GetFillColor();
         }
     }

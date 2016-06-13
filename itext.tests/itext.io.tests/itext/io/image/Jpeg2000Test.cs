@@ -1,8 +1,8 @@
 using System;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public class Jpeg2000Test {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/io/image/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/io/image/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
@@ -11,8 +11,8 @@ namespace iTextSharp.IO.Image {
                 ImageData img = ImageDataFactory.Create(sourceFolder + "WP_20140410_001.JP2");
                 Jpeg2000ImageHelper.ProcessImage(img);
             }
-            catch (iTextSharp.IO.IOException e) {
-                NUnit.Framework.Assert.AreEqual(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0, e.Message);
+            catch (iText.IO.IOException e) {
+                NUnit.Framework.Assert.AreEqual(iText.IO.IOException.UnsupportedBoxSizeEqEq0, e.Message);
             }
         }
 

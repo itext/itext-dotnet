@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Otf;
+using iText.IO.Font;
+using iText.IO.Font.Otf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     public class Type3FontProgram : FontProgram {
         private readonly IDictionary<int, Type3Glyph> type3Glyphs = new Dictionary<int, Type3Glyph>();
 

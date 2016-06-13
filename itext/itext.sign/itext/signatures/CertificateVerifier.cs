@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Superclass for a series of certificate verifiers that will typically
     /// be used in a chain.
@@ -58,14 +58,14 @@ namespace iTextSharp.Signatures {
     /// </remarks>
     public class CertificateVerifier {
         /// <summary>The previous CertificateVerifier in the chain of verifiers.</summary>
-        protected internal iTextSharp.Signatures.CertificateVerifier verifier;
+        protected internal iText.Signatures.CertificateVerifier verifier;
 
         /// <summary>Indicates if going online to verify a certificate is allowed.</summary>
         protected internal bool onlineCheckingAllowed = true;
 
         /// <summary>Creates the final CertificateVerifier in a chain of verifiers.</summary>
         /// <param name="verifier">the previous verifier in the chain</param>
-        public CertificateVerifier(iTextSharp.Signatures.CertificateVerifier verifier) {
+        public CertificateVerifier(iText.Signatures.CertificateVerifier verifier) {
             this.verifier = verifier;
         }
 

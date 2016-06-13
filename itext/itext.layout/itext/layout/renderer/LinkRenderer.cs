@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Layout.Element;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Layout.Element;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class LinkRenderer : TextRenderer {
         public LinkRenderer(Link link)
             : this(link, link.GetText()) {
@@ -64,7 +64,7 @@ namespace iTextSharp.Layout.Renderer {
             }
             PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
             linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-            iTextSharp.Layout.Border.Border border = this.GetProperty<iTextSharp.Layout.Border.Border>(iTextSharp.Layout.Property.Property
+            iText.Layout.Border.Border border = this.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
                 .BORDER);
             if (border != null) {
                 linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
@@ -80,7 +80,7 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iTextSharp.Layout.Renderer.LinkRenderer((Link)modelElement, null);
+            return new iText.Layout.Renderer.LinkRenderer((Link)modelElement, null);
         }
     }
 }

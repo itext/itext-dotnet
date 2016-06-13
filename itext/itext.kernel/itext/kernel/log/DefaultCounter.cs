@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Codec;
-using iTextSharp.Kernel;
+using iText.IO.Codec;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Log {
+namespace iText.Kernel.Log {
     /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
     public class DefaultCounter : Counter {
         private volatile int count = 0;
@@ -89,9 +89,9 @@ namespace iTextSharp.Kernel.Log {
         private void PlusOne() {
             if (++count > repeat_level) {
                 if (Version.IsAGPLVersion() || Version.IsExpired()) {
-                    String message = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(message_1);
+                    String message = iText.IO.Util.JavaUtil.GetStringForBytes(message_1);
                     if (Version.IsExpired()) {
-                        message = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(message_2);
+                        message = iText.IO.Util.JavaUtil.GetStringForBytes(message_2);
                     }
                     level++;
                     if (level == 1) {

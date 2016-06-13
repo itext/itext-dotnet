@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     public class PdfEncryptionTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/PdfEncryptionTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/PdfEncryptionTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

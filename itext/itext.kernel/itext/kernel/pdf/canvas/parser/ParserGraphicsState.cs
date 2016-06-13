@@ -43,14 +43,14 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser.ClipperLib;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     /// <summary>
     /// Internal class which is essentially a
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.CanvasGraphicsState"/>
     /// which supports tracking of
     /// clipping path state and changes.
     /// </summary>
@@ -63,7 +63,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
-        internal ParserGraphicsState(iTextSharp.Kernel.Pdf.Canvas.Parser.ParserGraphicsState source)
+        internal ParserGraphicsState(iText.Kernel.Pdf.Canvas.Parser.ParserGraphicsState source)
             : base(source) {
             // NOTE: From the spec default value of this field should be the boundary of the entire imageable portion of the output page.
             if (source.clippingPath != null) {
@@ -103,9 +103,9 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         /// <param name="fillingRule">
         /// The filling rule which should be applied to the given path.
         /// It should be either
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.EVEN_ODD"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// </param>
         public virtual void Clip(Path path, int fillingRule) {
             if (clippingPath == null || clippingPath.IsEmpty()) {
@@ -128,7 +128,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
         /// <br/>
         /// <strong>Note:</strong> The returned clipping path is in the transformed user space, so
         /// if you want to get it in default user space, apply transformation matrix (
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.CanvasGraphicsState.GetCtm()"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.CanvasGraphicsState.GetCtm()"/>
         /// ).
         /// </remarks>
         /// <returns>The current clipping path.</returns>
@@ -160,7 +160,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
             IList<Point> segBasePts = segment.GetBasePoints();
             Point[] transformedPoints = TransformPoints(newCtm, segBasePts.ToArray(new Point[segBasePts.Count]));
             if (segment is BezierCurve) {
-                newSegment = new BezierCurve(iTextSharp.IO.Util.JavaUtil.ArraysAsList(transformedPoints));
+                newSegment = new BezierCurve(iText.IO.Util.JavaUtil.ArraysAsList(transformedPoints));
             }
             else {
                 newSegment = new Line(transformedPoints[0], transformedPoints[1]);

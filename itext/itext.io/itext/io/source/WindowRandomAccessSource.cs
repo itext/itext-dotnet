@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     /// <summary>
     /// A RandomAccessSource that wraps another RandomAccessSource and provides a window of it at a specific offset and over
     /// a specific length.

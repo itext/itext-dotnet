@@ -45,10 +45,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Geom;
+using iText.Kernel;
+using iText.Kernel.Geom;
 
-namespace iTextSharp.Kernel.Pdf
+namespace iText.Kernel.Pdf
 {
 	/// <summary>A representation of an array as described in the PDF specification.</summary>
 	/// <remarks>
@@ -83,7 +83,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <remarks>Create a new PdfArray. The array is filled with the items of the provided PdfArray.
 		/// 	</remarks>
 		/// <param name="arr">PdfArray containing items that will added to this PdfArray</param>
-		public PdfArray(iTextSharp.Kernel.Pdf.PdfArray arr)
+		public PdfArray(iText.Kernel.Pdf.PdfArray arr)
 			: this()
 		{
 			list.AddAll(arr.list);
@@ -253,7 +253,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// </param>
 		/// <seealso cref="System.Collections.IList{E}.AddAll(System.Collections.ICollection{E})
 		/// 	"/>
-		public virtual void AddAll(iTextSharp.Kernel.Pdf.PdfArray a)
+		public virtual void AddAll(iText.Kernel.Pdf.PdfArray a)
 		{
 			if (a != null)
 			{
@@ -336,7 +336,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>object itself.</returns>
 		public override PdfObject MakeIndirect(PdfDocument document)
 		{
-			return (iTextSharp.Kernel.Pdf.PdfArray)base.MakeIndirect(document);
+			return (iText.Kernel.Pdf.PdfArray)base.MakeIndirect(document);
 		}
 
 		/// <summary>Marks object to be saved as indirect.</summary>
@@ -345,7 +345,7 @@ namespace iTextSharp.Kernel.Pdf
 		public override PdfObject MakeIndirect(PdfDocument document, PdfIndirectReference
 			 reference)
 		{
-			return (iTextSharp.Kernel.Pdf.PdfArray)base.MakeIndirect(document, reference);
+			return (iText.Kernel.Pdf.PdfArray)base.MakeIndirect(document, reference);
 		}
 
 		/// <summary>Copies object to a specified document.</summary>
@@ -357,7 +357,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>copied object.</returns>
 		public override PdfObject CopyTo(PdfDocument document)
 		{
-			return (iTextSharp.Kernel.Pdf.PdfArray)base.CopyTo(document, true);
+			return (iText.Kernel.Pdf.PdfArray)base.CopyTo(document, true);
 		}
 
 		/// <summary>Copies object to a specified document.</summary>
@@ -374,7 +374,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// <returns>copied object.</returns>
 		public override PdfObject CopyTo(PdfDocument document, bool allowDuplicating)
 		{
-			return (iTextSharp.Kernel.Pdf.PdfArray)base.CopyTo(document, allowDuplicating);
+			return (iText.Kernel.Pdf.PdfArray)base.CopyTo(document, allowDuplicating);
 		}
 
 		public override String ToString()
@@ -395,7 +395,7 @@ namespace iTextSharp.Kernel.Pdf
 	    }
 
 	    /// <param name="asDirect">true is to extract direct object always.</param>
-		/// <exception cref="iTextSharp.Kernel.PdfException"/>
+		/// <exception cref="iText.Kernel.PdfException"/>
 		public virtual PdfObject Get(int index, bool asDirect)
 		{
 			if (!asDirect)
@@ -421,12 +421,12 @@ namespace iTextSharp.Kernel.Pdf
 		/// 	</remarks>
 		/// <param name="index">position of the element to be returned</param>
 		/// <returns>the element at the index as a PdfArray</returns>
-		public virtual iTextSharp.Kernel.Pdf.PdfArray GetAsArray(int index)
+		public virtual iText.Kernel.Pdf.PdfArray GetAsArray(int index)
 		{
 			PdfObject direct = Get(index, true);
 			if (direct != null && direct.GetObjectType() == PdfObject.ARRAY)
 			{
-				return (iTextSharp.Kernel.Pdf.PdfArray)direct;
+				return (iText.Kernel.Pdf.PdfArray)direct;
 			}
 			return null;
 		}
@@ -527,7 +527,7 @@ namespace iTextSharp.Kernel.Pdf
 		/// PdfNumbers, if not a PdfException will be thrown.
 		/// </remarks>
 		/// <returns>Rectangle of the first four values</returns>
-		/// <exception cref="iTextSharp.Kernel.PdfException">if one of the first values isn't a PdfNumber
+		/// <exception cref="iText.Kernel.PdfException">if one of the first values isn't a PdfNumber
 		/// 	</exception>
 		public virtual Rectangle ToRectangle()
 		{
@@ -547,14 +547,14 @@ namespace iTextSharp.Kernel.Pdf
 
 		protected internal override PdfObject NewInstance()
 		{
-			return new iTextSharp.Kernel.Pdf.PdfArray();
+			return new iText.Kernel.Pdf.PdfArray();
 		}
 
 		protected internal override void CopyContent(PdfObject from, PdfDocument document
 			)
 		{
 			base.CopyContent(from, document);
-			iTextSharp.Kernel.Pdf.PdfArray array = (iTextSharp.Kernel.Pdf.PdfArray)from;
+			iText.Kernel.Pdf.PdfArray array = (iText.Kernel.Pdf.PdfArray)from;
 			foreach (PdfObject entry in array.list)
 			{
 				Add(entry.ProcessCopying(document, false));

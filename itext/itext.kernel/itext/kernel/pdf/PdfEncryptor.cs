@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     /// <summary>
     /// This class takes any PDF and returns exactly the same but
     /// encrypted.

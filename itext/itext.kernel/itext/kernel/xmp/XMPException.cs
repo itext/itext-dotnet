@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
     /// <summary>This exception wraps all errors that occur in the XMP Toolkit.</summary>
     /// <since>16.02.2006</since>
     public class XMPException : Exception {

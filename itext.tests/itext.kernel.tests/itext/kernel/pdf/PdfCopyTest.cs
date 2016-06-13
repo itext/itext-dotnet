@@ -1,17 +1,17 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Source;
+using iText.Kernel.Utils;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfCopyTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfCopyTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfCopyTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfCopyTest/";
+             + "/test/itext/kernel/pdf/PdfCopyTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -102,7 +102,7 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 0; i_2 < 5; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2 + 1).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + (i_2 * 2 + 1).ToString() + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes
+                NUnit.Framework.Assert.AreEqual("%page " + (i_2 * 2 + 1).ToString() + "\n", iText.IO.Util.JavaUtil.GetStringForBytes
                     (bytes));
             }
             reader.Close();

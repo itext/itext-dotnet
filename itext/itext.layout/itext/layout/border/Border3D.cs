@@ -41,12 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.Kernel.Color;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Layout.Border {
+namespace iText.Layout.Border {
     /// <summary>Represents a border that is displayed using a 3D effect.</summary>
-    public abstract class Border3D : iTextSharp.Layout.Border.Border {
+    public abstract class Border3D : iText.Layout.Border.Border {
         private static readonly DeviceRgb GRAY = new DeviceRgb(212, 208, 200);
 
         /// <summary>Creates a Border3D instance with the specified width.</summary>
@@ -164,7 +164,7 @@ namespace iTextSharp.Layout.Border {
                 ();
         }
 
-        protected internal virtual iTextSharp.Kernel.Color.Color GetDarkerColor() {
+        protected internal virtual iText.Kernel.Color.Color GetDarkerColor() {
             if (color is DeviceRgb) {
                 return DeviceRgb.MakeDarker((DeviceRgb)color);
             }

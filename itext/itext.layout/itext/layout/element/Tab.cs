@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Layout.Renderer;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Element {
+namespace iText.Layout.Element {
     public class Tab : AbstractElement<Tab>, ILeafElement {
         protected internal override IRenderer MakeNewRenderer() {
             return new TabRenderer(this);

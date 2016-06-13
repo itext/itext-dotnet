@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using iTextSharp.IO.Log;
-using iTextSharp.Test.Attributes;
+using iText.IO.Log;
+using iText.Test.Attributes;
 using log4net;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace iTextSharp.Test
+namespace iText.Test
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute

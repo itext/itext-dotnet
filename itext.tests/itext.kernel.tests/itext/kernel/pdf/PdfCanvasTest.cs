@@ -1,29 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Wmf;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Kernel.Pdf.Extgstate;
-using iTextSharp.Kernel.Pdf.Function;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Font;
+using iText.IO.Image;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Color;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Wmf;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Function;
+using iText.Kernel.Utils;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfCanvasTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfCanvasTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfCanvasTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfCanvasTest/";
+             + "/test/itext/kernel/pdf/PdfCanvasTest/";
 
         /// <summary>Paths to images.</summary>
         public static readonly String[] RESOURCES = new String[] { "Desert.jpg", "bulb.gif", "0047478.jpg", "itext.png"
@@ -243,7 +243,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -280,7 +280,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -317,7 +317,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -391,7 +391,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -428,7 +428,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -465,7 +465,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -502,7 +502,7 @@ namespace iTextSharp.Kernel.Pdf {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
                 canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                    ), 72).ShowText(iTextSharp.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
+                    ), 72).ShowText(iText.IO.Util.JavaUtil.IntegerToString(i + 1)).EndText().RestoreState();
                 canvas.Rectangle(100, 500, 100, 100).Fill();
                 canvas.Release();
                 page.Flush();
@@ -936,19 +936,14 @@ namespace iTextSharp.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             PdfDeviceCs.Rgb rgb = new PdfDeviceCs.Rgb();
-            iTextSharp.Kernel.Color.Color red = iTextSharp.Kernel.Color.Color.MakeColor(rgb, new float[] { 1, 0, 0 });
-            iTextSharp.Kernel.Color.Color green = iTextSharp.Kernel.Color.Color.MakeColor(rgb, new float[] { 0, 1, 0 }
-                );
-            iTextSharp.Kernel.Color.Color blue = iTextSharp.Kernel.Color.Color.MakeColor(rgb, new float[] { 0, 0, 1 });
+            iText.Kernel.Color.Color red = iText.Kernel.Color.Color.MakeColor(rgb, new float[] { 1, 0, 0 });
+            iText.Kernel.Color.Color green = iText.Kernel.Color.Color.MakeColor(rgb, new float[] { 0, 1, 0 });
+            iText.Kernel.Color.Color blue = iText.Kernel.Color.Color.MakeColor(rgb, new float[] { 0, 0, 1 });
             PdfDeviceCs.Cmyk cmyk = new PdfDeviceCs.Cmyk();
-            iTextSharp.Kernel.Color.Color cyan = iTextSharp.Kernel.Color.Color.MakeColor(cmyk, new float[] { 1, 0, 0, 
-                0 });
-            iTextSharp.Kernel.Color.Color magenta = iTextSharp.Kernel.Color.Color.MakeColor(cmyk, new float[] { 0, 1, 
-                0, 0 });
-            iTextSharp.Kernel.Color.Color yellow = iTextSharp.Kernel.Color.Color.MakeColor(cmyk, new float[] { 0, 0, 1
-                , 0 });
-            iTextSharp.Kernel.Color.Color black = iTextSharp.Kernel.Color.Color.MakeColor(cmyk, new float[] { 0, 0, 0, 
-                1 });
+            iText.Kernel.Color.Color cyan = iText.Kernel.Color.Color.MakeColor(cmyk, new float[] { 1, 0, 0, 0 });
+            iText.Kernel.Color.Color magenta = iText.Kernel.Color.Color.MakeColor(cmyk, new float[] { 0, 1, 0, 0 });
+            iText.Kernel.Color.Color yellow = iText.Kernel.Color.Color.MakeColor(cmyk, new float[] { 0, 0, 1, 0 });
+            iText.Kernel.Color.Color black = iText.Kernel.Color.Color.MakeColor(cmyk, new float[] { 0, 0, 0, 1 });
             canvas.SetFillColor(red).Rectangle(50, 500, 50, 50).Fill();
             canvas.SetFillColor(green).Rectangle(150, 500, 50, 50).Fill();
             canvas.SetFillColor(blue).Rectangle(250, 500, 50, 50).Fill();
@@ -1069,7 +1064,7 @@ namespace iTextSharp.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument document = new PdfDocument(writer);
             PdfPage page = document.AddNewPage();
-            PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.DeviceRGB, 255, new PdfString(iTextSharp.IO.Util.JavaUtil.GetStringForBytes
+            PdfSpecialCs.Indexed indexed = new PdfSpecialCs.Indexed(PdfName.DeviceRGB, 255, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes
                 (bytes, "UTF-8")));
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SetFillColor(new Indexed(indexed, 85)).Rectangle(50, 500, 50, 50).Fill();
@@ -1272,7 +1267,7 @@ namespace iTextSharp.Kernel.Pdf {
                 ImageDataFactory.CreateGifFrame(baos.ToArray(), 3);
                 NUnit.Framework.Assert.Fail("IOException expected");
             }
-            catch (iTextSharp.IO.IOException) {
+            catch (iText.IO.IOException) {
             }
         }
 

@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Util;
+using iText.IO.Font.Cmap;
+using iText.IO.Font.Otf;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class CidFont : FontProgram {
         private int pdfFontFlags;
 
@@ -58,7 +58,7 @@ namespace iTextSharp.IO.Font {
             InitializeCidFontNameAndStyle(fontName);
             IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames.GetFontName());
             if (fontDesc == null) {
-                throw new iTextSharp.IO.IOException("no.such.predefined.font.1").SetMessageParams(fontName);
+                throw new iText.IO.IOException("no.such.predefined.font.1").SetMessageParams(fontName);
             }
             InitializeCidFontProperties(fontDesc);
         }

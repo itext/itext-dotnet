@@ -42,15 +42,15 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Util;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     /// <summary>
     /// To be able to be wrapped with this
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </summary>
     public class PdfStructTreeRoot : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
@@ -140,7 +140,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// </remarks>
         /// <param name="page">
         /// 
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfPage"/>
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
         /// for which to create parent tree entry. Typically this page is flushed after this call.
         /// </param>
         public virtual void CreateParentTreeEntryForPage(PdfPage page) {
@@ -195,7 +195,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// </summary>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page) {
             StructureTreeCopier.CopyTo(destDocument, page2page, GetDocument());
         }
@@ -213,7 +213,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
             ) {
             StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument());

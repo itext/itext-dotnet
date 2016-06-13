@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.Kernel.Font;
+using iText.Kernel.Font;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     /// <summary><CODE>PdfTextArray</CODE> defines an array with displacements and <CODE>PdfString</CODE>-objects.
     ///     </summary>
     /// <remarks>

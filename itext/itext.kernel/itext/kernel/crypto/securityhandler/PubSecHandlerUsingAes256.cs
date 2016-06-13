@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Crypto.Securityhandler {
+namespace iText.Kernel.Crypto.Securityhandler {
     public class PubSecHandlerUsingAes256 : PubSecHandlerUsingAes128 {
         public PubSecHandlerUsingAes256(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
             , bool encryptMetadata, bool embeddedFilesOnly)

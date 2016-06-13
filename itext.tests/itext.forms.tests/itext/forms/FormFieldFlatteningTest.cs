@@ -1,15 +1,15 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     public class FormFieldFlatteningTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/FormFieldFlatteningTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/FormFieldFlatteningTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/forms/FormFieldFlatteningTest/";
+             + "/test/itext/forms/FormFieldFlatteningTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfTextMarkupAnnotation : PdfMarkupAnnotation {
         /// <summary>Subtypes</summary>
         public static readonly PdfName MarkupHighlight = PdfName.Highlight;
@@ -65,24 +65,24 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             : base(pdfObject) {
         }
 
-        public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateHighLight(Rectangle rect, float[] 
-            quadPoints) {
-            return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupHighlight, quadPoints);
-        }
-
-        public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateUnderline(Rectangle rect, float[] 
-            quadPoints) {
-            return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupUnderline, quadPoints);
-        }
-
-        public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateStrikeout(Rectangle rect, float[] 
-            quadPoints) {
-            return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupStrikeout, quadPoints);
-        }
-
-        public static iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateSquiggly(Rectangle rect, float[] quadPoints
+        public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateHighLight(Rectangle rect, float[] quadPoints
             ) {
-            return new iTextSharp.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupSquiggly, quadPoints);
+            return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupHighlight, quadPoints);
+        }
+
+        public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateUnderline(Rectangle rect, float[] quadPoints
+            ) {
+            return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupUnderline, quadPoints);
+        }
+
+        public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateStrikeout(Rectangle rect, float[] quadPoints
+            ) {
+            return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupStrikeout, quadPoints);
+        }
+
+        public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateSquiggly(Rectangle rect, float[] quadPoints
+            ) {
+            return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupSquiggly, quadPoints);
         }
 
         public override PdfName GetSubtype() {

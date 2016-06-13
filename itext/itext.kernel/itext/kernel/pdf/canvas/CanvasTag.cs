@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Canvas {
+namespace iText.Kernel.Pdf.Canvas {
     /// <summary>This class represents a single tag on a single piece of marked content.</summary>
     /// <remarks>
     /// This class represents a single tag on a single piece of marked content.
@@ -92,7 +92,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas {
         /// </remarks>
         /// <param name="mcr">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Tagging.PdfMcr">Marked Content Reference</see>
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfMcr">Marked Content Reference</see>
         /// wrapper object
         /// </param>
         public CanvasTag(PdfMcr mcr)
@@ -135,7 +135,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas {
         /// current
         /// <see cref="CanvasTag"/>
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag SetProperties(PdfDictionary properties) {
+        public virtual iText.Kernel.Pdf.Canvas.CanvasTag SetProperties(PdfDictionary properties) {
             if (properties != null) {
                 this.properties = properties;
             }
@@ -153,7 +153,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas {
         /// current
         /// <see cref="CanvasTag"/>
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag AddProperty(PdfName name, PdfObject value) {
+        public virtual iText.Kernel.Pdf.Canvas.CanvasTag AddProperty(PdfName name, PdfObject value) {
             EnsurePropertiesInit();
             properties.Put(name, value);
             return this;
@@ -169,7 +169,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas {
         /// current
         /// <see cref="CanvasTag"/>
         /// </returns>
-        public virtual iTextSharp.Kernel.Pdf.Canvas.CanvasTag RemoveProperty(PdfName name) {
+        public virtual iText.Kernel.Pdf.Canvas.CanvasTag RemoveProperty(PdfName name) {
             if (properties != null) {
                 properties.Remove(name);
             }

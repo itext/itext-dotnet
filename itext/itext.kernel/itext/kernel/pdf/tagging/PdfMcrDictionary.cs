@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     public class PdfMcrDictionary : PdfMcr {
         public PdfMcrDictionary(PdfDictionary pdfObject, PdfStructElem parent)
             : base(pdfObject, parent) {

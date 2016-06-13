@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary><p>Implements Reed-Solomon encoding, as the name implies.</p></summary>
     /// <author>Sean Owen</author>
     /// <author>William Rucklidge</author>

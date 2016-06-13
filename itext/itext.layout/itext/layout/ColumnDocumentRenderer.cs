@@ -41,12 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Layout.Layout;
-using iTextSharp.Layout.Property;
-using iTextSharp.Layout.Renderer;
+using iText.Kernel.Geom;
+using iText.Layout.Layout;
+using iText.Layout.Property;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     /// <summary>This class is used for convenient multi-column Document Layouting</summary>
     public class ColumnDocumentRenderer : DocumentRenderer {
         protected internal Rectangle[] columns;

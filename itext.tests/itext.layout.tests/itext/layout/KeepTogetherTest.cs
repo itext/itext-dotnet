@@ -1,20 +1,20 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class KeepTogetherTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/KeepTogetherTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/KeepTogetherTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/KeepTogetherTest/";
+             + "/test/itext/layout/KeepTogetherTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

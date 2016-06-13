@@ -43,12 +43,12 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Color;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Colorspace;
+using iText.IO.Color;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace;
 
-namespace iTextSharp.Pdfa.Checker {
+namespace iText.Pdfa.Checker {
     public abstract class PdfAChecker {
         public const String ICC_COLOR_SPACE_RGB = "RGB ";
 
@@ -154,8 +154,8 @@ namespace iTextSharp.Pdfa.Checker {
 
         public abstract void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces);
 
-        public abstract void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool?
-             fill);
+        public abstract void CheckColor(iText.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool? fill
+            );
 
         public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
             , bool? fill);

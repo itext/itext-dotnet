@@ -1,12 +1,12 @@
 using System;
-using iTextSharp.Test;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Utils {
+namespace iText.Kernel.Utils {
     public class CompareToolTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/CompareToolTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/utils/CompareToolTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/utils/CompareToolTest/";
+             + "/test/itext/kernel/utils/CompareToolTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void SetUp() {

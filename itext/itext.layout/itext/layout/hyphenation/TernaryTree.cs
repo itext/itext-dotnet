@@ -17,7 +17,7 @@
 using System;
 using System.Collections;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <h2>Ternary Search Tree.</h2>
     /// <p>A ternary search tree is a hibrid between a binary tree and
@@ -105,7 +105,7 @@ namespace iTextSharp.Layout.Hyphenation {
             Init();
         }
 
-        internal TernaryTree(iTextSharp.Layout.Hyphenation.TernaryTree tt) {
+        internal TernaryTree(iText.Layout.Hyphenation.TernaryTree tt) {
             this.root = tt.root;
             this.freenode = tt.freenode;
             this.length = tt.length;
@@ -463,13 +463,13 @@ namespace iTextSharp.Layout.Hyphenation {
             // ok, compact kv array
             CharVector kx = new CharVector();
             kx.Alloc(1);
-            iTextSharp.Layout.Hyphenation.TernaryTree map = new iTextSharp.Layout.Hyphenation.TernaryTree();
+            iText.Layout.Hyphenation.TernaryTree map = new iText.Layout.Hyphenation.TernaryTree();
             Compact(kx, map, root);
             kv = kx;
             kv.TrimToSize();
         }
 
-        private void Compact(CharVector kx, iTextSharp.Layout.Hyphenation.TernaryTree map, char p) {
+        private void Compact(CharVector kx, iText.Layout.Hyphenation.TernaryTree map, char p) {
             int k;
             if (p == 0) {
                 return;

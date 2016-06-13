@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.IO.Font.Cmap {
+namespace iText.IO.Font.Cmap {
     public class CMapObject {
         protected internal const int STRING = 1;
 

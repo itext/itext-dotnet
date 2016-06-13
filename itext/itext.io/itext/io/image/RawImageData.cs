@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public class RawImageData : ImageData {
         /// <summary>Pure two-dimensional encoding (Group 4)</summary>
         public const int CCITTG4 = 0x100;

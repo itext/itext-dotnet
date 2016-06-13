@@ -1,19 +1,19 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Options;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Options;
+using iText.Layout.Element;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class XMPWriterTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/XMPWriterTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/XMPWriterTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/XMPWriterTest/";
+             + "/test/itext/layout/XMPWriterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -21,7 +21,7 @@ namespace iTextSharp.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void CreatePdfTest() {
             String fileName = "xmp_metadata.pdf";

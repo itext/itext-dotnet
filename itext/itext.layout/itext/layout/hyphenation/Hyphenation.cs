@@ -17,7 +17,7 @@
 using System;
 using System.Text;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p.This class represents a hyphenated word.&lt;/p>
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>

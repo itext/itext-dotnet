@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     /// <summary>A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().</summary>
     /// <remarks>
     /// A RandomAccessSource that is wraps another RandomAccessSource but does not propagate close().  This is useful when

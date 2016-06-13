@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     public class AesDecryptor : IDecryptor {
         private AESCipher cipher;
 

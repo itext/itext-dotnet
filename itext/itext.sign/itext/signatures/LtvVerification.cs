@@ -49,18 +49,18 @@ using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
-using iTextSharp.Forms;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Forms;
+using iText.IO.Font;
+using iText.IO.Log;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
     /// <author>Paulo Soares</author>
     public class LtvVerification {
-        private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.LtvVerification));
+        private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.LtvVerification));
 
         private PdfDocument document;
 
@@ -104,7 +104,7 @@ namespace iTextSharp.Signatures {
         /// </remarks>
         /// <param name="document">
         /// The
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to apply the validation to.
         /// </param>
         public LtvVerification(PdfDocument document) {
@@ -155,7 +155,7 @@ namespace iTextSharp.Signatures {
                         foreach (byte[] cim in cims) {
                             bool dup = false;
                             foreach (byte[] b in vd.crls) {
-                                if (iTextSharp.IO.Util.JavaUtil.ArraysEquals(b, cim)) {
+                                if (iText.IO.Util.JavaUtil.ArraysEquals(b, cim)) {
                                     dup = true;
                                     break;
                                 }

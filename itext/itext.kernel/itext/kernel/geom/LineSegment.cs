@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.Geom {
+namespace iText.Kernel.Geom {
     /// <summary>Represents a line segment in a particular coordinate system.</summary>
     /// <remarks>Represents a line segment in a particular coordinate system.  This class is immutable.</remarks>
     public class LineSegment {
@@ -95,16 +95,16 @@ namespace iTextSharp.Kernel.Geom {
         /// <summary>Transforms the segment by the specified matrix</summary>
         /// <param name="m">the matrix for the transformation</param>
         /// <returns>the transformed segment</returns>
-        public virtual iTextSharp.Kernel.Geom.LineSegment TransformBy(Matrix m) {
+        public virtual iText.Kernel.Geom.LineSegment TransformBy(Matrix m) {
             Vector newStart = startPoint.Cross(m);
             Vector newEnd = endPoint.Cross(m);
-            return new iTextSharp.Kernel.Geom.LineSegment(newStart, newEnd);
+            return new iText.Kernel.Geom.LineSegment(newStart, newEnd);
         }
 
         /// <summary>Checks if a segment contains another segment in itself</summary>
         /// <param name="other">a segment to be checked</param>
         /// <returns>true if this segment contains other one, false otherwise</returns>
-        public virtual bool ContainsSegment(iTextSharp.Kernel.Geom.LineSegment other) {
+        public virtual bool ContainsSegment(iText.Kernel.Geom.LineSegment other) {
             return other != null && ContainsPoint(other.startPoint) && ContainsPoint(other.endPoint);
         }
 

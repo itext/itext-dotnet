@@ -28,15 +28,15 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.XMP;
+using iText.Kernel.XMP;
 
-namespace iTextSharp.Kernel.XMP.Options {
+namespace iText.Kernel.XMP.Options {
     /// <summary>
     /// The property flags are used when properties are fetched from the <code>XMPMeta</code>-object
     /// and provide more detailed information about the property.
     /// </summary>
     /// <since>03.07.2006</since>
-    public sealed class PropertyOptions : iTextSharp.Kernel.XMP.Options.Options {
+    public sealed class PropertyOptions : iText.Kernel.XMP.Options.Options {
         public const int NO_OPTIONS = 0x00000000;
 
         public const int URI = 0x00000002;
@@ -74,7 +74,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <summary>Intialization constructor</summary>
         /// <param name="options">the initialization options</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If the options are not valid</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">If the options are not valid</exception>
         public PropertyOptions(int options)
             : base(options) {
         }
@@ -90,7 +90,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetURI(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetURI(bool value) {
             SetOption(URI, value);
             return this;
         }
@@ -106,7 +106,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasQualifiers(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetHasQualifiers(bool value) {
             SetOption(HAS_QUALIFIERS, value);
             return this;
         }
@@ -123,7 +123,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetQualifier(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetQualifier(bool value) {
             SetOption(QUALIFIER, value);
             return this;
         }
@@ -135,7 +135,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasLanguage(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetHasLanguage(bool value) {
             SetOption(HAS_LANGUAGE, value);
             return this;
         }
@@ -147,7 +147,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetHasType(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetHasType(bool value) {
             SetOption(HAS_TYPE, value);
             return this;
         }
@@ -159,7 +159,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetStruct(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetStruct(bool value) {
             SetOption(STRUCT, value);
             return this;
         }
@@ -174,7 +174,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArray(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetArray(bool value) {
             SetOption(ARRAY, value);
             return this;
         }
@@ -189,7 +189,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayOrdered(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetArrayOrdered(bool value) {
             SetOption(ARRAY_ORDERED, value);
             return this;
         }
@@ -204,7 +204,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAlternate(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetArrayAlternate(bool value) {
             SetOption(ARRAY_ALTERNATE, value);
             return this;
         }
@@ -220,7 +220,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the value to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetArrayAltText(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetArrayAltText(bool value) {
             SetOption(ARRAY_ALT_TEXT, value);
             return this;
         }
@@ -232,7 +232,7 @@ namespace iTextSharp.Kernel.XMP.Options {
 
         /// <param name="value">the option DELETE_EXISTING to set</param>
         /// <returns>Returns this to enable cascaded options.</returns>
-        public iTextSharp.Kernel.XMP.Options.PropertyOptions SetSchemaNode(bool value) {
+        public iText.Kernel.XMP.Options.PropertyOptions SetSchemaNode(bool value) {
             SetOption(SCHEMA_NODE, value);
             return this;
         }
@@ -251,7 +251,7 @@ namespace iTextSharp.Kernel.XMP.Options {
         /// <summary>Compares two options set for array compatibility.</summary>
         /// <param name="options">other options</param>
         /// <returns>Returns true if the array options of the sets are equal.</returns>
-        public bool EqualArrayTypes(iTextSharp.Kernel.XMP.Options.PropertyOptions options) {
+        public bool EqualArrayTypes(iText.Kernel.XMP.Options.PropertyOptions options) {
             return IsArray() == options.IsArray() && IsArrayOrdered() == options.IsArrayOrdered() && IsArrayAlternate(
                 ) == options.IsArrayAlternate() && IsArrayAltText() == options.IsArrayAltText();
         }
@@ -262,8 +262,8 @@ namespace iTextSharp.Kernel.XMP.Options {
         /// If the other options set is null, this objects stays the same.
         /// </remarks>
         /// <param name="options">other options</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">If illegal options are provided</exception>
-        public void MergeWith(iTextSharp.Kernel.XMP.Options.PropertyOptions options) {
+        /// <exception cref="iText.Kernel.XMP.XMPException">If illegal options are provided</exception>
+        public void MergeWith(iText.Kernel.XMP.Options.PropertyOptions options) {
             if (options != null) {
                 SetOptions(GetOptions() | options.GetOptions());
             }
@@ -338,7 +338,7 @@ namespace iTextSharp.Kernel.XMP.Options {
         /// and URI cannot be a struct.
         /// </summary>
         /// <param name="options">the bitmask to check.</param>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
+        /// <exception cref="iText.Kernel.XMP.XMPException">Thrown if the options are not consistent.</exception>
         protected internal override void AssertConsistency(int options) {
             if ((options & STRUCT) > 0 && (options & ARRAY) > 0) {
                 throw new XMPException("IsStruct and IsArray options are mutually exclusive", XMPError.BADOPTIONS);

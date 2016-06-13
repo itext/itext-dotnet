@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Net;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Source
+namespace iText.IO.Source
 {
 	/// <summary>
 	/// Factory to create

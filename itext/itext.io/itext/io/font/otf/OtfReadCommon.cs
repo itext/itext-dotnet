@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     public class OtfReadCommon {
         /// <exception cref="System.IO.IOException"/>
         public static int[] ReadUShortArray(RandomAccessFileOrArray rf, int size, int location) {

@@ -1,20 +1,20 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Border;
-using iTextSharp.Layout.Element;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Border;
+using iText.Layout.Element;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class DefaultLayoutTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/DefaultLayoutTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/DefaultLayoutTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/DefaultLayoutTest/";
+             + "/test/itext/layout/DefaultLayoutTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -45,9 +45,9 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
-            document.Add(new Paragraph(new Text(str).SetBackgroundColor(iTextSharp.Kernel.Color.Color.RED)).SetBackgroundColor
-                (iTextSharp.Kernel.Color.Color.GREEN)).Add(new Paragraph(str)).Add(new AreaBreak(PageSize.Default)).Add
-                (new Paragraph(str));
+            document.Add(new Paragraph(new Text(str).SetBackgroundColor(iText.Kernel.Color.Color.RED)).SetBackgroundColor
+                (iText.Kernel.Color.Color.GREEN)).Add(new Paragraph(str)).Add(new AreaBreak(PageSize.Default)).Add(new 
+                Paragraph(str));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -64,8 +64,8 @@ namespace iTextSharp.Layout {
             Document document = new Document(pdfDocument);
             // the next 3 lines should not cause any effect
             document.Add(new Paragraph());
-            document.Add(new Paragraph().SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN));
-            document.Add(new Paragraph().SetBorder(new SolidBorder(iTextSharp.Kernel.Color.Color.BLUE, 3)));
+            document.Add(new Paragraph().SetBackgroundColor(iText.Kernel.Color.Color.GREEN));
+            document.Add(new Paragraph().SetBorder(new SolidBorder(iText.Kernel.Color.Color.BLUE, 3)));
             document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right?"));
             document.Add(new Paragraph().SetHeight(50));
             document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right?"));

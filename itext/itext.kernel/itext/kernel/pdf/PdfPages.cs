@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     internal class PdfPages : PdfObjectWrapper<PdfDictionary> {
         private int from;
 
@@ -49,9 +49,9 @@ namespace iTextSharp.Kernel.Pdf {
 
         private readonly PdfArray kids;
 
-        private readonly iTextSharp.Kernel.Pdf.PdfPages parent;
+        private readonly iText.Kernel.Pdf.PdfPages parent;
 
-        public PdfPages(int from, PdfDocument pdfDocument, iTextSharp.Kernel.Pdf.PdfPages parent)
+        public PdfPages(int from, PdfDocument pdfDocument, iText.Kernel.Pdf.PdfPages parent)
             : base(new PdfDictionary()) {
             if (pdfDocument.GetWriter() != null) {
                 GetPdfObject().MakeIndirect(pdfDocument);
@@ -70,7 +70,7 @@ namespace iTextSharp.Kernel.Pdf {
             : this(from, pdfDocument, null) {
         }
 
-        public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iTextSharp.Kernel.Pdf.PdfPages parent)
+        public PdfPages(int from, int maxCount, PdfDictionary pdfObject, iText.Kernel.Pdf.PdfPages parent)
             : base(pdfObject) {
             SetForbidRelease();
             this.from = from;
@@ -115,7 +115,7 @@ namespace iTextSharp.Kernel.Pdf {
             return true;
         }
 
-        public virtual void AddPages(iTextSharp.Kernel.Pdf.PdfPages pdfPages) {
+        public virtual void AddPages(iText.Kernel.Pdf.PdfPages pdfPages) {
             kids.Add(pdfPages.GetPdfObject());
             count.SetValue(count.IntValue() + pdfPages.GetCount());
             pdfPages.GetPdfObject().Put(PdfName.Parent, GetPdfObject());
@@ -154,7 +154,7 @@ namespace iTextSharp.Kernel.Pdf {
             return GetPdfObject().GetAsArray(PdfName.Kids);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfPages GetParent() {
+        public virtual iText.Kernel.Pdf.PdfPages GetParent() {
             return parent;
         }
 

@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Pdf.Tagutils {
+namespace iText.Kernel.Pdf.Tagutils {
     public class TagReference {
         protected internal TagTreePointer tagPointer;
 
@@ -71,7 +71,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
             return tagPointer.CreateNextMcidForStructElem(referencedTag, insertIndex);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name, PdfObject value) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagReference AddProperty(PdfName name, PdfObject value) {
             if (properties == null) {
                 properties = new PdfDictionary();
             }
@@ -79,7 +79,7 @@ namespace iTextSharp.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName name) {
+        public virtual iText.Kernel.Pdf.Tagutils.TagReference RemoveProperty(PdfName name) {
             if (properties != null) {
                 properties.Remove(name);
             }

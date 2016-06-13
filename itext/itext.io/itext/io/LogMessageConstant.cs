@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.IO {
+namespace iText.IO {
     /// <summary>Class containing constants to be used in logging.</summary>
     public sealed class LogMessageConstant {
         /// <summary>Log message.</summary>

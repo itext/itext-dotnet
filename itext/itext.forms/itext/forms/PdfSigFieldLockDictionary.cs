@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     /// <summary>A signature field lock dictionary.</summary>
     /// <remarks>
     /// A signature field lock dictionary. Specifies a set of form
@@ -91,7 +91,7 @@ namespace iTextSharp.Forms {
         /// <see cref="PdfSigFieldLockDictionary"/>
         /// object.
         /// </returns>
-        public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(PdfSigFieldLockDictionary.LockPermissions
+        public virtual iText.Forms.PdfSigFieldLockDictionary SetDocumentPermissions(PdfSigFieldLockDictionary.LockPermissions
              permissions) {
             GetPdfObject().Put(PdfName.P, GetLockPermission(permissions));
             return this;
@@ -108,8 +108,8 @@ namespace iTextSharp.Forms {
         /// <see cref="PdfSigFieldLockDictionary"/>
         /// object.
         /// </returns>
-        public virtual iTextSharp.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction
-             action, params String[] fields) {
+        public virtual iText.Forms.PdfSigFieldLockDictionary SetFieldLock(PdfSigFieldLockDictionary.LockAction action
+            , params String[] fields) {
             PdfArray fieldsArray = new PdfArray();
             foreach (String field in fields) {
                 fieldsArray.Add(new PdfString(field));

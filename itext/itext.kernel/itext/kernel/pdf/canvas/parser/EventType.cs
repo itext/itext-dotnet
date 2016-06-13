@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser {
+namespace iText.Kernel.Pdf.Canvas.Parser {
     /// <summary>Specifies different types of events where a callback should be notified.</summary>
     public enum EventType {
         BEGIN_TEXT,

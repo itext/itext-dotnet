@@ -1,18 +1,18 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Util;
+using iText.IO.Font;
+using iText.IO.Util;
 using NUnit.Framework;
 
-namespace iTextSharp.Test {
+namespace iText.Test {
     public abstract class ITextTest {
         //protected readonly ILogger LOGGER = LoggerFactory.GetLogger(gett);
 
         [OneTimeSetUp]
         public static void SetUpFixture() {
-            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itextsharp.hyph.dll");
-            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itextsharp.font_asian.dll");
+            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itext.hyph.dll");
+            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itext.font_asian.dll");
         }
 
         public static void CreateDestinationFolder(String path) {

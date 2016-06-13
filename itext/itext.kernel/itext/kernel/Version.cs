@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Reflection;
 
-namespace iTextSharp.Kernel
+namespace iText.Kernel
 {
 	/// <summary>This class contains version information about iText.</summary>
 	/// <remarks>
@@ -105,7 +105,7 @@ namespace iTextSharp.Kernel
 				{
 					try
 					{
-                        Type klass = System.Type.GetType("iTextSharp.license.LicenseKey, itextsharp.LicenseKey");
+                        Type klass = System.Type.GetType("iText.license.LicenseKey, itext.LicenseKey");
 						MethodInfo m = klass.GetMethod("GetLicenseeInfo");
 						String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
 						if (info[3] != null && info[3].Trim().Length > 0)

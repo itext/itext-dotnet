@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.Kernel.Pdf;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Kernel.Utils {
+namespace iText.Kernel.Utils {
     public class PdfSplitterTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/utils/PdfSplitterTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/utils/PdfSplitterTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/utils/PdfSplitterTest/";
+             + "/test/itext/kernel/utils/PdfSplitterTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -25,7 +25,7 @@ namespace iTextSharp.Kernel.Utils {
         public virtual void SplitDocumentTest01() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            IList<int> pageNumbers = iTextSharp.IO.Util.JavaUtil.ArraysAsList(30, 100);
+            IList<int> pageNumbers = iText.IO.Util.JavaUtil.ArraysAsList(30, 100);
             IList<PdfDocument> splitDocuments = new _PdfSplitter_44(inputPdfDoc).SplitByPageNumbers(pageNumbers);
             foreach (PdfDocument doc in splitDocuments) {
                 doc.Close();
@@ -111,7 +111,7 @@ namespace iTextSharp.Kernel.Utils {
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
             PageRange pageRange1 = new PageRange().AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence(1, 2);
             PageRange pageRange2 = new PageRange().AddSinglePage(99).AddSinglePage(98).AddPageSequence(70, 99);
-            IList<PdfDocument> splitDocuments = new _PdfSplitter_113(inputPdfDoc).ExtractPageRanges(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_113(inputPdfDoc).ExtractPageRanges(iText.IO.Util.JavaUtil.ArraysAsList
                 (pageRange1, pageRange2));
             foreach (PdfDocument pdfDocument in splitDocuments) {
                 pdfDocument.Close();

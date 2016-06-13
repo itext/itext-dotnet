@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
+using iText.IO.Font;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
+namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A Meta Font.</summary>
     public class MetaFont : MetaObject {
         internal static readonly String[] fontNames = new String[] { "Courier", "Courier-Bold", "Courier-Oblique", 
@@ -141,10 +141,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
                 name[k] = (byte)c;
             }
             try {
-                faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
+                faceName = iText.IO.Util.JavaUtil.GetStringForBytes(name, 0, k, "Cp1252");
             }
             catch (ArgumentException) {
-                faceName = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
+                faceName = iText.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
             }
             faceName = faceName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
         }

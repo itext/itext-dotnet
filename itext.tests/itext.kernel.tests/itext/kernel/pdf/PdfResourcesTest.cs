@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Pdf.Extgstate;
+using iText.IO.Source;
+using iText.Kernel.Pdf.Extgstate;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfResourcesTest {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]

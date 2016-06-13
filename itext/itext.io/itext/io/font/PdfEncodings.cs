@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class PdfEncodings {
         /// <summary>The Unicode encoding with horizontal writing.</summary>
         public const String IDENTITY_H = "Identity-H";
@@ -270,7 +270,7 @@ namespace iTextSharp.IO.Font {
                 return EncodingUtil.ConvertToBytes(text.ToCharArray(), encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
+                throw new iText.IO.IOException(iText.IO.IOException.PdfEncodings, e);
             }
         }
 
@@ -325,7 +325,7 @@ namespace iTextSharp.IO.Font {
                 return EncodingUtil.ConvertToBytes(new char[] { ch }, encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
+                throw new iText.IO.IOException(iText.IO.IOException.PdfEncodings, e);
             }
         }
 
@@ -383,7 +383,7 @@ namespace iTextSharp.IO.Font {
                 return EncodingUtil.ConvertToString(bytes, encoding);
             }
             catch (ArgumentException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfEncodings, e);
+                throw new iText.IO.IOException(iText.IO.IOException.PdfEncodings, e);
             }
         }
 

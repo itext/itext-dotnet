@@ -42,12 +42,12 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Source;
+using iText.IO;
+using iText.IO.Codec;
+using iText.IO.Log;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public class Jbig2ImageData : ImageData {
         private int page;
 
@@ -87,7 +87,7 @@ namespace iTextSharp.IO.Image {
                 return sr.NumberOfPages();
             }
             catch (Exception e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jbig2ImageException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.Jbig2ImageException, e);
             }
         }
 

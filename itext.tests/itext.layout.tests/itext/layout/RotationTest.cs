@@ -1,22 +1,22 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Border;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Layout.Border;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class RotationTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/RotationTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/RotationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/RotationTest/";
+             + "/test/itext/layout/RotationTest/";
 
         public const String cmpPrefix = "cmp_";
 
@@ -116,7 +116,7 @@ namespace iTextSharp.Layout {
             float x = 50;
             float y = 380;
             float width = 100;
-            document.Add(new Paragraph(simpleText).SetRotationAngle(-(Math.PI / 4)).SetBackgroundColor(iTextSharp.Kernel.Color.Color
+            document.Add(new Paragraph(simpleText).SetRotationAngle(-(Math.PI / 4)).SetBackgroundColor(iText.Kernel.Color.Color
                 .RED).SetFixedPosition(x, y, width));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetFirstPage());
             DrawCross(canvas, x, y);
@@ -137,8 +137,7 @@ namespace iTextSharp.Layout {
             for (int i = 0; i < 7; ++i) {
                 p.Add(para2Text);
             }
-            document.Add(p.SetRotationAngle((68 * Math.PI / 180)).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLUE
-                ));
+            document.Add(p.SetRotationAngle((68 * Math.PI / 180)).SetBackgroundColor(iText.Kernel.Color.Color.BLUE));
             document.Add(new Paragraph("text line text line text line text line text line text line text line text line text line text line text line text line text line"
                 ));
             document.Close();
@@ -156,8 +155,8 @@ namespace iTextSharp.Layout {
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph(para2Text).SetRotationAngle((Math.PI / 12)));
-            document.Add(new Paragraph(new Text(para2Text).SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN)).SetRotationAngle
-                ((-Math.PI / 12)).SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLUE));
+            document.Add(new Paragraph(new Text(para2Text).SetBackgroundColor(iText.Kernel.Color.Color.GREEN)).SetRotationAngle
+                ((-Math.PI / 12)).SetBackgroundColor(iText.Kernel.Color.Color.BLUE));
             document.Add(new Paragraph(para3Text));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -173,7 +172,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
-            document.Add(new Paragraph(para2Text).SetRotationAngle((Math.PI / 6)).SetBackgroundColor(iTextSharp.Kernel.Color.Color
+            document.Add(new Paragraph(para2Text).SetRotationAngle((Math.PI / 6)).SetBackgroundColor(iText.Kernel.Color.Color
                 .RED));
             document.Add(new Paragraph(para2Text).SetRotationAngle((-Math.PI / 3)));
             document.Add(new Paragraph(para3Text));
@@ -191,7 +190,7 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
-            document.Add(new Paragraph("short text string").SetRotationAngle((Math.PI / 6)).SetBackgroundColor(iTextSharp.Kernel.Color.Color
+            document.Add(new Paragraph("short text string").SetRotationAngle((Math.PI / 6)).SetBackgroundColor(iText.Kernel.Color.Color
                 .RED));
             document.Add(new Paragraph(para3Text));
             document.Close();
@@ -302,9 +301,9 @@ namespace iTextSharp.Layout {
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            Div div = new Div().SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN);
-            div.Add(new Paragraph(para1Text).SetBackgroundColor(iTextSharp.Kernel.Color.Color.RED)).SetRotationAngle(Math
-                .PI / 4);
+            Div div = new Div().SetBackgroundColor(iText.Kernel.Color.Color.GREEN);
+            div.Add(new Paragraph(para1Text).SetBackgroundColor(iText.Kernel.Color.Color.RED)).SetRotationAngle(Math.PI
+                 / 4);
             doc.Add(div);
             div = new Div();
             div.Add(new Paragraph(para1Text)).SetRotationAngle(Math.PI / 2);
@@ -350,8 +349,8 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
-            List list = new List().SetRotationAngle(3 * Math.PI / 4).SetBackgroundColor(iTextSharp.Kernel.Color.Color.
-                GREEN);
+            List list = new List().SetRotationAngle(3 * Math.PI / 4).SetBackgroundColor(iText.Kernel.Color.Color.GREEN
+                );
             list.Add(new ListItem("text of first list item"));
             list.Add("text of second list item");
             list.Add("text of third list item");
@@ -375,8 +374,7 @@ namespace iTextSharp.Layout {
             doc.Add(new Paragraph(para1Text));
             doc.Add(new Paragraph(para1Text));
             doc.Add(new Paragraph(para1Text));
-            List list = new List().SetRotationAngle(Math.PI / 2).SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN
-                );
+            List list = new List().SetRotationAngle(Math.PI / 2).SetBackgroundColor(iText.Kernel.Color.Color.GREEN);
             String itemText = "list item text long item txt list item text long item txt list item text long item txt list item text long item txt list item text long item txt END";
             for (int i = 0; i < 10; ++i) {
                 list.Add(itemText);
@@ -420,9 +418,9 @@ namespace iTextSharp.Layout {
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            doc.Add(new Div().SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN).SetHeight(300).SetWidth(300).Add
-                (new Div().SetBackgroundColor(iTextSharp.Kernel.Color.Color.RED).SetHeight(100).SetWidth(100).SetRotationAngle
-                (Math.PI / 4)).SetRotationAngle(Math.PI / 8));
+            doc.Add(new Div().SetBackgroundColor(iText.Kernel.Color.Color.GREEN).SetHeight(300).SetWidth(300).Add(new 
+                Div().SetBackgroundColor(iText.Kernel.Color.Color.RED).SetHeight(100).SetWidth(100).SetRotationAngle(Math
+                .PI / 4)).SetRotationAngle(Math.PI / 8));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -440,9 +438,9 @@ namespace iTextSharp.Layout {
             Document doc = new Document(pdfDoc);
             String longText = para1Text + para2Text + para3Text;
             String extremeLongText = longText + longText + longText;
-            doc.Add(new Div().SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN).SetHeight(300).SetWidth(300).Add
-                (new Div().SetBackgroundColor(iTextSharp.Kernel.Color.Color.RED).SetWidth(30).SetRotationAngle(5 * Math
-                .PI / 16).Add(new Paragraph(extremeLongText))).Add(new Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk"
+            doc.Add(new Div().SetBackgroundColor(iText.Kernel.Color.Color.GREEN).SetHeight(300).SetWidth(300).Add(new 
+                Div().SetBackgroundColor(iText.Kernel.Color.Color.RED).SetWidth(30).SetRotationAngle(5 * Math.PI / 16)
+                .Add(new Paragraph(extremeLongText))).Add(new Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk"
                 )).Add(new Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk")).SetRotationAngle(Math.PI / 8)
                 );
             doc.Close();

@@ -28,9 +28,9 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.XMP.Options;
+using iText.Kernel.XMP.Options;
 
-namespace iTextSharp.Kernel.XMP.Properties {
+namespace iText.Kernel.XMP.Properties {
     /// <summary>This interface is used to return a text property together with its and options.</summary>
     /// <since>23.01.2006</since>
     public interface XMPProperty {
@@ -42,7 +42,7 @@ namespace iTextSharp.Kernel.XMP.Properties {
 
         /// <summary>
         /// Only set by
-        /// <see cref="iTextSharp.Kernel.XMP.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
+        /// <see cref="iText.Kernel.XMP.XMPMeta.GetLocalizedText(System.String, System.String, System.String, System.String)
         ///     "/>
         /// .
         /// </summary>

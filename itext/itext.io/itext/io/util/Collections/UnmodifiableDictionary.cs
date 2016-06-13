@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace iTextSharp.IO.Util.Collections
+namespace iText.IO.Util.Collections
 {
     internal class UnmodifiableDictionary<TKey, TValue> : IDictionary<TKey, TValue> {
         private IDictionary<TKey, TValue> _dict;

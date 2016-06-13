@@ -1,10 +1,10 @@
 using System;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Test;
+using iText.Kernel.Pdf.Xobject;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfImageXObjectTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/parser/PdfImageXObjectTest/";
+        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/PdfImageXObjectTest/";
 
         /// <exception cref="System.Exception"/>
         private void TestFile(String filename, int page, String objectid) {

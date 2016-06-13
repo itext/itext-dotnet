@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Layout.Property {
+namespace iText.Layout.Property {
     /// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
     public class UnitValue {
         public const int POINT = 1;
@@ -75,8 +75,8 @@ namespace iTextSharp.Layout.Property {
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iTextSharp.Layout.Property.UnitValue CreatePointValue(float value) {
-            return new iTextSharp.Layout.Property.UnitValue(POINT, value);
+        public static iText.Layout.Property.UnitValue CreatePointValue(float value) {
+            return new iText.Layout.Property.UnitValue(POINT, value);
         }
 
         /// <summary>Creates a UnitValue PERCENT object with a specified value.</summary>
@@ -87,8 +87,8 @@ namespace iTextSharp.Layout.Property {
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iTextSharp.Layout.Property.UnitValue CreatePercentValue(float value) {
-            return new iTextSharp.Layout.Property.UnitValue(PERCENT, value);
+        public static iText.Layout.Property.UnitValue CreatePercentValue(float value) {
+            return new iText.Layout.Property.UnitValue(PERCENT, value);
         }
 
         public virtual int GetUnitType() {
@@ -116,18 +116,18 @@ namespace iTextSharp.Layout.Property {
         }
 
         public override bool Equals(Object obj) {
-            if (!(obj is iTextSharp.Layout.Property.UnitValue)) {
+            if (!(obj is iText.Layout.Property.UnitValue)) {
                 return false;
             }
-            iTextSharp.Layout.Property.UnitValue other = (iTextSharp.Layout.Property.UnitValue)obj;
-            return iTextSharp.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 && iTextSharp.IO.Util.JavaUtil.FloatCompare
+            iText.Layout.Property.UnitValue other = (iText.Layout.Property.UnitValue)obj;
+            return iText.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 && iText.IO.Util.JavaUtil.FloatCompare
                 (value, other.value) == 0;
         }
 
         public override int GetHashCode() {
             int hash = 7;
             hash = 71 * hash + this.unitType;
-            hash = 71 * hash + iTextSharp.IO.Util.JavaUtil.FloatToIntBits(this.value);
+            hash = 71 * hash + iText.IO.Util.JavaUtil.FloatToIntBits(this.value);
             return hash;
         }
     }

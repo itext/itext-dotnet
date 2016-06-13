@@ -1,9 +1,9 @@
 ﻿using System;
 using log4net;
 using log4net.Core;
-using ILogger = iTextSharp.IO.Log.ILogger;
+using ILogger = iText.IO.Log.ILogger;
 
-namespace iTextSharp.Test {
+namespace iText.Test {
     public class Log4NetLogger : ILogger {
 
         private ILog iLog;

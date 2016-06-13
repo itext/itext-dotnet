@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Color;
+using iText.IO.Util;
+using iText.Kernel.Color;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
+namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Helper class to read nt, short, words, etc.</summary>
     /// <remarks>Helper class to read nt, short, words, etc. from an InputStream.</remarks>
     public class InputMeta {
@@ -121,12 +121,12 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>
         /// Read the next
-        /// <see cref="iTextSharp.Kernel.Color.Color"/>
+        /// <see cref="iText.Kernel.Color.Color"/>
         /// from the InputStream. This reads 4 bytes.
         /// </summary>
         /// <returns>the next Color</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual iTextSharp.Kernel.Color.Color ReadColor() {
+        public virtual iText.Kernel.Color.Color ReadColor() {
             int red = ReadByte();
             int green = ReadByte();
             int blue = ReadByte();

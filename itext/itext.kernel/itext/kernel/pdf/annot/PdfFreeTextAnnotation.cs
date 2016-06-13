@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Annot {
+namespace iText.Kernel.Pdf.Annot {
     public class PdfFreeTextAnnotation : PdfMarkupAnnotation {
         /// <summary>Text justification options.</summary>
         public const int LEFT_JUSTIFIED = 0;
@@ -71,30 +71,29 @@ namespace iTextSharp.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsString(PdfName.DS);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString(PdfString defaultStyleString
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetDefaultStyleString(PdfString defaultStyleString
             ) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString);
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.DS, defaultStyleString);
         }
 
         public virtual PdfArray GetCalloutLine() {
             return GetPdfObject().GetAsArray(PdfName.CL);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(float[] calloutLine) {
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(float[] calloutLine) {
             return SetCalloutLine(new PdfArray(calloutLine));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(PdfArray calloutLine) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.CL, calloutLine);
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetCalloutLine(PdfArray calloutLine) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.CL, calloutLine);
         }
 
         public virtual PdfName GetLineEndingStyle() {
             return GetPdfObject().GetAsName(PdfName.LE);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetLineEndingStyle(PdfName lineEndingStyle
-            ) {
-            return (iTextSharp.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle);
+        public virtual iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation SetLineEndingStyle(PdfName lineEndingStyle) {
+            return (iText.Kernel.Pdf.Annot.PdfFreeTextAnnotation)Put(PdfName.LE, lineEndingStyle);
         }
     }
 }

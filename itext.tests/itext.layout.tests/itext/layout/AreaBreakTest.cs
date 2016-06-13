@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class AreaBreakTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/AreaBreakTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/AreaBreakTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/AreaBreakTest/";
+             + "/test/itext/layout/AreaBreakTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

@@ -21,7 +21,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>A SAX document handler to read and parse hyphenation patterns
     /// from a XML file.</p>
@@ -50,7 +50,7 @@ namespace iTextSharp.Layout.Hyphenation {
 
         /// <summary>Construct a pattern parser.</summary>
         /// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-        /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         private PatternParser() {
             token = new StringBuilder();
             hyphenChar = '-';
@@ -59,7 +59,7 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <summary>Construct a pattern parser.</summary>
         /// <param name="consumer">a pattern consumer</param>
         /// <exception cref="HyphenationException">if a hyphenation exception is raised</exception>
-        /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public PatternParser(IPatternConsumer consumer)
             : this() {
             // default
@@ -69,7 +69,7 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <summary>Parses a hyphenation pattern file.</summary>
         /// <param name="filename">the filename</param>
         /// <exception cref="HyphenationException">In case of an exception while parsing</exception>
-        /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         /// <exception cref="System.IO.FileNotFoundException"/>
         public virtual void Parse(String filename) {
             Parse(new FileStream(filename, FileMode.Open), filename);
@@ -79,7 +79,7 @@ namespace iTextSharp.Layout.Hyphenation {
         /// <param name="stream">the InputStream for the file</param>
         /// <param name="name">unique key representing country-language combination</param>
         /// <exception cref="HyphenationException">In case of an exception while parsing</exception>
-        /// <exception cref="iTextSharp.Layout.Hyphenation.HyphenationException"/>
+        /// <exception cref="iText.Layout.Hyphenation.HyphenationException"/>
         public virtual void Parse(Stream stream, String name) {
             XmlReaderSettings settings = new XmlReaderSettings {DtdProcessing = DtdProcessing.Ignore};
             XmlReader reader = XmlReader.Create(stream, settings);

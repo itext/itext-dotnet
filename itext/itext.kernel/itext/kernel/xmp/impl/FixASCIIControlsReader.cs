@@ -28,9 +28,9 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System.IO;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.Kernel.XMP.Impl {
+namespace iText.Kernel.XMP.Impl {
     /// <since>22.08.2006</since>
     public class FixASCIIControlsReader : PushbackReader {
         private const int STATE_START = 0;
@@ -57,7 +57,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
         private int digits = 0;
 
         /// <summary>The look-ahead size is 6 at maximum (&amp;#xAB;)</summary>
-        /// <seealso cref="iTextSharp.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
+        /// <seealso cref="iText.IO.Util.PushbackReader.PushbackReader(System.IO.TextReader, int)"/>
         /// <param name="input">a Reader</param>
         public FixASCIIControlsReader(TextReader input)
             : base(input, BUFFER_SIZE) {
@@ -137,7 +137,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
                     }
                     else {
                         if ('0' <= ch && ch <= '9') {
-                            control = iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
+                            control = iText.IO.Util.JavaUtil.CharacterDigit(ch, 10);
                             digits = 1;
                             state = STATE_DIG1;
                         }
@@ -150,7 +150,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
                 case STATE_DIG1: {
                     if ('0' <= ch && ch <= '9') {
-                        control = control * 10 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 10);
+                        control = control * 10 + iText.IO.Util.JavaUtil.CharacterDigit(ch, 10);
                         digits++;
                         if (digits <= 5) {
                             state = STATE_DIG1;
@@ -174,7 +174,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
                 case STATE_HEX: {
                     if (('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f') || ('A' <= ch && ch <= 'F')) {
-                        control = control * 16 + iTextSharp.IO.Util.JavaUtil.CharacterDigit(ch, 16);
+                        control = control * 16 + iText.IO.Util.JavaUtil.CharacterDigit(ch, 16);
                         digits++;
                         if (digits <= 4) {
                             state = STATE_HEX;

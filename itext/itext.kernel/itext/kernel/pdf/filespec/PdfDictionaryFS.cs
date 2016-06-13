@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Filespec {
+namespace iText.Kernel.Pdf.Filespec {
     public class PdfDictionaryFS : PdfFileSpec {
         public PdfDictionaryFS(PdfDictionary pdfObject)
             : base(pdfObject) {

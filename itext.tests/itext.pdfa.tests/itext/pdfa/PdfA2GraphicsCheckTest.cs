@@ -1,23 +1,23 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Kernel.Pdf.Extgstate;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.IO.Image;
+using iText.Kernel.Color;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Pdfa {
+namespace iText.Pdfa {
     public class PdfA2GraphicsCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/pdfa/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2GraphicsCheckTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/pdfa/PdfA2GraphicsCheckTest/";
+             + "/test/itext/pdfa/PdfA2GraphicsCheckTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -25,7 +25,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -53,7 +53,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest2() {
@@ -73,14 +73,14 @@ namespace iTextSharp.Pdfa {
             String shortText = "text";
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
             canvas.SetFontAndSize(font, 12);
-            canvas.SetFillColor(iTextSharp.Kernel.Color.Color.RED).BeginText().ShowText(shortText).EndText();
+            canvas.SetFillColor(iText.Kernel.Color.Color.RED).BeginText().ShowText(shortText).EndText();
             canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {
@@ -102,7 +102,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest4() {
@@ -114,7 +114,7 @@ namespace iTextSharp.Pdfa {
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            canvas.SetFillColor(iTextSharp.Kernel.Color.Color.BLUE);
+            canvas.SetFillColor(iText.Kernel.Color.Color.BLUE);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
             canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
             canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
@@ -130,7 +130,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest5() {
             NUnit.Framework.Assert.That(() =>  {
@@ -144,7 +144,7 @@ namespace iTextSharp.Pdfa {
                 PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
                 canvas.SetFontAndSize(font, 12);
                 canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
-                canvas.SetFillColor(iTextSharp.Kernel.Color.Color.RED).BeginText().ShowText(shortText).EndText();
+                canvas.SetFillColor(iText.Kernel.Color.Color.RED).BeginText().ShowText(shortText).EndText();
                 canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
                 canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
                 canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.FILL);
@@ -156,7 +156,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest6() {
@@ -172,7 +172,7 @@ namespace iTextSharp.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
             canvas.SetFontAndSize(font, 12);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-            canvas.SetFillColor(iTextSharp.Kernel.Color.Color.RED);
+            canvas.SetFillColor(iText.Kernel.Color.Color.RED);
             canvas.BeginText().ShowText(shortText).EndText();
             canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
             doc.Close();
@@ -180,7 +180,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ColorCheckTest7() {
@@ -206,7 +206,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -226,7 +226,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void EgsCheckTest2() {
             NUnit.Framework.Assert.That(() =>  {
@@ -249,7 +249,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest1() {
@@ -269,7 +269,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest2() {
@@ -289,7 +289,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="Java.Net.MalformedURLException"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest3() {
@@ -320,7 +320,7 @@ namespace iTextSharp.Pdfa {
         /// can omit ColorSpace entry if color space is defined implicitly in the image itself.
         /// </remarks>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ImageCheckTest4() {
@@ -349,7 +349,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest1() {
             NUnit.Framework.Assert.That(() =>  {
@@ -373,7 +373,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest2() {
@@ -400,7 +400,7 @@ namespace iTextSharp.Pdfa {
         }
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void TransparencyCheckTest3() {
             NUnit.Framework.Assert.That(() =>  {

@@ -44,10 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Text;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     internal class Type1Parser {
         private const String AFM_HEADER = "StartFontMetrics";
 
@@ -88,7 +88,7 @@ namespace iTextSharp.IO.Font {
                     String resourcePath = FontConstants.AFM_RESOURCE_PATH + afmPath + ".afm";
                     resource = ResourceUtil.GetResourceStream(resourcePath);
                     if (resource == null) {
-                        throw new iTextSharp.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath);
+                        throw new iText.IO.IOException("1.not.found.as.resource").SetMessageParams(resourcePath);
                     }
                     MemoryStream stream = new MemoryStream();
                     int read;
@@ -122,8 +122,7 @@ namespace iTextSharp.IO.Font {
                             return new RandomAccessFileOrArray(sourceFactory.CreateSource(ba.ToArray()));
                         }
                         else {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams(
-                                afmPath);
+                            throw new iText.IO.IOException(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile).SetMessageParams(afmPath);
                         }
                     }
                 }
@@ -139,7 +138,7 @@ namespace iTextSharp.IO.Font {
                                 Pfm2afm.Convert(rf, ba);
                             }
                             catch (Exception) {
-                                throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
+                                throw new iText.IO.IOException("invalid.afm.or.pfm.font.file");
                             }
                             finally {
                                 rf.Close();
@@ -148,7 +147,7 @@ namespace iTextSharp.IO.Font {
                         }
                     }
                     else {
-                        throw new iTextSharp.IO.IOException("invalid.afm.or.pfm.font.file");
+                        throw new iText.IO.IOException("invalid.afm.or.pfm.font.file");
                     }
                 }
             }

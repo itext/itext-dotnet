@@ -45,7 +45,7 @@
 */
 using System;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>Class that can decompress TIFF files.</summary>
     public class TIFFFaxDecompressor {
         /// <summary>The logical order of bits within a byte.</summary>
@@ -526,8 +526,7 @@ namespace iTextSharp.IO.Codec {
                             DecodeT6();
                         }
                         else {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.UnknownCompressionType1).SetMessageParams(compression
-                                );
+                            throw new iText.IO.IOException(iText.IO.IOException.UnknownCompressionType1).SetMessageParams(compression);
                         }
                     }
                 }

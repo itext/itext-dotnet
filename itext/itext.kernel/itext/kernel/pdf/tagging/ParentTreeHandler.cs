@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     /// <summary>
     /// Internal helper class which is used to effectively build parent tree and also find marked content references:
     /// for specified page, by MCID or by struct parent index.
@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// </remarks>
         /// <param name="page">
         /// 
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfPage"/>
+        /// <see cref="iText.Kernel.Pdf.PdfPage"/>
         /// for which to create parent tree entry. Typically this page is flushed after this call.
         /// </param>
         public virtual void CreateParentTreeEntryForPage(PdfPage page) {

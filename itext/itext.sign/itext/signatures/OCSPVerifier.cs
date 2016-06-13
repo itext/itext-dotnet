@@ -48,17 +48,17 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Class that allows you to verify a certificate against
     /// one or more OCSP responses.
     /// </summary>
     public class OCSPVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.OCSPVerifier
+        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.OCSPVerifier
             ));
 
         protected internal const String id_kp_OCSPSigning = "1.3.6.1.5.5.7.3.9";

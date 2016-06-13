@@ -1,18 +1,18 @@
 using System;
 using System.IO;
-using iTextSharp.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
-using iTextSharp.Test.Attributes;
+using iText.IO;
+using iText.IO.Source;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
+using iText.Test.Attributes;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     public class PdfFormCopyTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/PdfFormFieldsCopyTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/PdfFormFieldsCopyTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/forms/PdfFormFieldsCopyTest/";
+             + "/test/itext/forms/PdfFormFieldsCopyTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

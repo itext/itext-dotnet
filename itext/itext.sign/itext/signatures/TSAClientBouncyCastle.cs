@@ -48,12 +48,12 @@ using Org.BouncyCastle.Asn1.Cmp;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Tsp;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
+using iText.IO.Codec;
+using iText.IO.Log;
+using iText.IO.Util;
+using iText.Kernel;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Time Stamp Authority Client interface implementation using Bouncy Castle
     /// org.bouncycastle.tsp package.
@@ -68,7 +68,7 @@ namespace iTextSharp.Signatures {
     /// </remarks>
     public class TSAClientBouncyCastle : ITSAClient {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.TSAClientBouncyCastle
+        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle
             ));
 
         /// <summary>URL of the Time Stamp Authority</summary>
@@ -220,7 +220,7 @@ namespace iTextSharp.Signatures {
             byte[] respBytes = baos.ToArray();
             if (response.encoding != null && response.encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
                 ).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
-                respBytes = System.Convert.FromBase64String(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"
+                respBytes = System.Convert.FromBase64String(iText.IO.Util.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"
                     ));
             }
             return respBytes;

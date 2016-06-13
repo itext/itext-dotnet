@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
-using iTextSharp.IO.Log;
-using iTextSharp.Layout.Layout;
+using iText.IO;
+using iText.IO.Log;
+using iText.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public abstract class RootRenderer : AbstractRenderer {
         protected internal bool immediateFlush = true;
 
@@ -97,10 +97,10 @@ namespace iTextSharp.Layout.Renderer {
                             }
                             else {
                                 if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer)) {
-                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(iTextSharp.Layout.Property.Property
+                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(iText.Layout.Property.Property
                                         .KEEP_TOGETHER))) {
-                                        result.GetOverflowRenderer().GetModelElement().SetProperty(iTextSharp.Layout.Property.Property.KEEP_TOGETHER
-                                            , false);
+                                        result.GetOverflowRenderer().GetModelElement().SetProperty(iText.Layout.Property.Property.KEEP_TOGETHER, false
+                                            );
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                                         logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                                             ));
@@ -112,7 +112,7 @@ namespace iTextSharp.Layout.Renderer {
                                         storedArea = currentArea;
                                     }
                                     else {
-                                        result.GetOverflowRenderer().SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT, true);
+                                        result.GetOverflowRenderer().SetProperty(iText.Layout.Property.Property.FORCED_PLACEMENT, true);
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                                         logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                     }
@@ -148,7 +148,7 @@ namespace iTextSharp.Layout.Renderer {
             }
             else {
                 if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count - 1] == renderer) {
-                    int? positionedPageNumber = renderer.GetProperty<int?>(iTextSharp.Layout.Property.Property.PAGE_NUMBER);
+                    int? positionedPageNumber = renderer.GetProperty<int?>(iText.Layout.Property.Property.PAGE_NUMBER);
                     if (positionedPageNumber == null) {
                         positionedPageNumber = currentPageNumber;
                     }

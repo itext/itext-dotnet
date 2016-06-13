@@ -1,21 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Tagging;
-using iTextSharp.Kernel.Pdf.Tagutils;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.IO.Font;
+using iText.Kernel;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Tagging;
+using iText.Kernel.Pdf.Tagutils;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class TagTreePointerTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/TagTreePointerTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/TagTreePointerTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/TagTreePointerTest/";
+             + "/test/itext/kernel/pdf/TagTreePointerTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

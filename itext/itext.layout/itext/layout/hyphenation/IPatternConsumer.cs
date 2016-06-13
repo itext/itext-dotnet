@@ -17,7 +17,7 @@
 using System;
 using System.Collections;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>This interface is used to connect the XML pattern file parser to
     /// the hyphenation tree.</p>

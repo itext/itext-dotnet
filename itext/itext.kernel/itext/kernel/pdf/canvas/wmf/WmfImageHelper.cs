@@ -43,18 +43,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.IO.Image;
+using iText.Kernel;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
+namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Helper class for the WmfImage implementation.</summary>
     /// <remarks>
     /// Helper class for the WmfImage implementation. Assists in the creation of a
-    /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
+    /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
     /// .
     /// </remarks>
     public class WmfImageHelper {
@@ -83,13 +83,13 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
         }
 
         /// <summary>This method checks if the image is a valid WMF and processes some parameters.</summary>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         private void ProcessParameters() {
             Stream @is = null;
             try {
                 String errorID;
                 if (wmf.GetData() == null) {
-                    @is = iTextSharp.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
+                    @is = iText.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
                     errorID = wmf.GetUrl().ToString();
                 }
                 else {
@@ -137,7 +137,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
             Stream @is = null;
             try {
                 if (wmf.GetData() == null) {
-                    @is = iTextSharp.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
+                    @is = iText.IO.Util.UrlUtil.OpenStream(wmf.GetUrl());
                 }
                 else {
                     @is = new MemoryStream(wmf.GetData());

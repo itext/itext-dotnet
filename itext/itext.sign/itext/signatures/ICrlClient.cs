@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Interface that needs to be implemented if you want to embed
     /// Certificate Revocation Lists (CRL) into your PDF.

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary><p>See ISO 18004:2006, 6.4.1, Tables 2 and 3.</summary>
     /// <remarks>
     /// <p>See ISO 18004:2006, 6.4.1, Tables 2 and 3. This enum encapsulates the various modes in which
@@ -51,32 +51,31 @@ namespace iTextSharp.Barcodes.Qrcode {
     /// </remarks>
     /// <author>Sean Owen</author>
     internal sealed class Mode {
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode TERMINATOR = new iTextSharp.Barcodes.Qrcode.Mode(new 
-            int[] { 0, 0, 0 }, 0x00, "TERMINATOR");
+        public static readonly iText.Barcodes.Qrcode.Mode TERMINATOR = new iText.Barcodes.Qrcode.Mode(new int[] { 
+            0, 0, 0 }, 0x00, "TERMINATOR");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode NUMERIC = new iTextSharp.Barcodes.Qrcode.Mode(new int
-            [] { 10, 12, 14 }, 0x01, "NUMERIC");
+        public static readonly iText.Barcodes.Qrcode.Mode NUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] { 10, 
+            12, 14 }, 0x01, "NUMERIC");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode ALPHANUMERIC = new iTextSharp.Barcodes.Qrcode.Mode(
-            new int[] { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
+        public static readonly iText.Barcodes.Qrcode.Mode ALPHANUMERIC = new iText.Barcodes.Qrcode.Mode(new int[] 
+            { 9, 11, 13 }, 0x02, "ALPHANUMERIC");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iTextSharp.Barcodes.Qrcode.Mode
-            (new int[] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
+        public static readonly iText.Barcodes.Qrcode.Mode STRUCTURED_APPEND = new iText.Barcodes.Qrcode.Mode(new int
+            [] { 0, 0, 0 }, 0x03, "STRUCTURED_APPEND");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode BYTE = new iTextSharp.Barcodes.Qrcode.Mode(new int[
-            ] { 8, 16, 16 }, 0x04, "BYTE");
+        public static readonly iText.Barcodes.Qrcode.Mode BYTE = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 16, 
+            16 }, 0x04, "BYTE");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode ECI = new iTextSharp.Barcodes.Qrcode.Mode(null, 0x07
-            , "ECI");
+        public static readonly iText.Barcodes.Qrcode.Mode ECI = new iText.Barcodes.Qrcode.Mode(null, 0x07, "ECI");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode KANJI = new iTextSharp.Barcodes.Qrcode.Mode(new int
-            [] { 8, 10, 12 }, 0x08, "KANJI");
+        public static readonly iText.Barcodes.Qrcode.Mode KANJI = new iText.Barcodes.Qrcode.Mode(new int[] { 8, 10
+            , 12 }, 0x08, "KANJI");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode FNC1_FIRST_POSITION = new iTextSharp.Barcodes.Qrcode.Mode
-            (null, 0x05, "FNC1_FIRST_POSITION");
+        public static readonly iText.Barcodes.Qrcode.Mode FNC1_FIRST_POSITION = new iText.Barcodes.Qrcode.Mode(null
+            , 0x05, "FNC1_FIRST_POSITION");
 
-        public static readonly iTextSharp.Barcodes.Qrcode.Mode FNC1_SECOND_POSITION = new iTextSharp.Barcodes.Qrcode.Mode
-            (null, 0x09, "FNC1_SECOND_POSITION");
+        public static readonly iText.Barcodes.Qrcode.Mode FNC1_SECOND_POSITION = new iText.Barcodes.Qrcode.Mode(null
+            , 0x09, "FNC1_SECOND_POSITION");
 
         private readonly int[] characterCountBitsForVersions;
 
@@ -100,7 +99,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// encoded by these bits
         /// </returns>
         /// <exception cref="System.ArgumentException">if bits do not correspond to a known mode</exception>
-        public static iTextSharp.Barcodes.Qrcode.Mode ForBits(int bits) {
+        public static iText.Barcodes.Qrcode.Mode ForBits(int bits) {
             switch (bits) {
                 case 0x0: {
                     return TERMINATOR;

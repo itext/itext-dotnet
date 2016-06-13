@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Layout {
+namespace iText.Layout.Layout {
     /// <summary>We use a simplified version of CSS positioning.</summary>
     /// <remarks>
     /// We use a simplified version of CSS positioning.

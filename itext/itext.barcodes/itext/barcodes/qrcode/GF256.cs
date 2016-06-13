@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>
     /// <p>This class contains utility methods for performing mathematical operations over
     /// the Galois Field GF(256).
@@ -57,11 +57,10 @@ namespace iTextSharp.Barcodes.Qrcode {
     /// </remarks>
     /// <author>Sean Owen</author>
     internal sealed class GF256 {
-        public static readonly iTextSharp.Barcodes.Qrcode.GF256 QR_CODE_FIELD = new iTextSharp.Barcodes.Qrcode.GF256
-            (0x011D);
+        public static readonly iText.Barcodes.Qrcode.GF256 QR_CODE_FIELD = new iText.Barcodes.Qrcode.GF256(0x011D);
 
-        public static readonly iTextSharp.Barcodes.Qrcode.GF256 DATA_MATRIX_FIELD = new iTextSharp.Barcodes.Qrcode.GF256
-            (0x012D);
+        public static readonly iText.Barcodes.Qrcode.GF256 DATA_MATRIX_FIELD = new iText.Barcodes.Qrcode.GF256(0x012D
+            );
 
         private readonly int[] expTable;
 

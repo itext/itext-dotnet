@@ -47,7 +47,7 @@ using System.Text;
 using System.Globalization;
 
 
-namespace iTextSharp.Kernel.Pdf
+namespace iText.Kernel.Pdf
 {
 	/// <summary>
 	/// <c>PdfDate</c>

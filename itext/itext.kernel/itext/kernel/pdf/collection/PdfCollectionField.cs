@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection {
+namespace iText.Kernel.Pdf.Collection {
     public class PdfCollectionField : PdfObjectWrapper<PdfDictionary> {
         /// <summary>A possible type of collection field.</summary>
         public const int TEXT = 0;
@@ -173,7 +173,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <remarks>The relative order of the field name. Fields are sorted in ascending order.</remarks>
         /// <param name="order">a number indicating the order of the field</param>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetOrder(int order) {
             GetPdfObject().Put(PdfName.O, new PdfNumber(order));
             return this;
         }
@@ -185,7 +185,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <summary>Sets the initial visibility of the field.</summary>
         /// <param name="visible"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible) {
             GetPdfObject().Put(PdfName.V, new PdfBoolean(visible));
             return this;
         }
@@ -197,7 +197,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <summary>Indication if the field value should be editable in the viewer.</summary>
         /// <param name="editable"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable) {
             GetPdfObject().Put(PdfName.E, new PdfBoolean(editable));
             return this;
         }

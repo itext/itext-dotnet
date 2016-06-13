@@ -45,7 +45,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     public class RandomAccessFileOrArray {
         /// <summary>When true the file access is not done through a memory mapped file.</summary>
         /// <remarks>
@@ -72,8 +72,8 @@ namespace iTextSharp.IO.Source {
         /// Closing this object will have adverse effect on the view.
         /// </remarks>
         /// <returns>the new view</returns>
-        public virtual iTextSharp.IO.Source.RandomAccessFileOrArray CreateView() {
-            return new iTextSharp.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource(byteSource));
+        public virtual iText.IO.Source.RandomAccessFileOrArray CreateView() {
+            return new iText.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource(byteSource));
         }
 
         public virtual IRandomAccessSource CreateSourceView() {
@@ -538,22 +538,22 @@ namespace iTextSharp.IO.Source {
 
         /// <exception cref="System.IO.IOException"/>
         public virtual float ReadFloat() {
-            return iTextSharp.IO.Util.JavaUtil.IntBitsToFloat(ReadInt());
+            return iText.IO.Util.JavaUtil.IntBitsToFloat(ReadInt());
         }
 
         /// <exception cref="System.IO.IOException"/>
         public float ReadFloatLE() {
-            return iTextSharp.IO.Util.JavaUtil.IntBitsToFloat(ReadIntLE());
+            return iText.IO.Util.JavaUtil.IntBitsToFloat(ReadIntLE());
         }
 
         /// <exception cref="System.IO.IOException"/>
         public virtual double ReadDouble() {
-            return iTextSharp.IO.Util.JavaUtil.LongBitsToDouble(ReadLong());
+            return iText.IO.Util.JavaUtil.LongBitsToDouble(ReadLong());
         }
 
         /// <exception cref="System.IO.IOException"/>
         public double ReadDoubleLE() {
-            return iTextSharp.IO.Util.JavaUtil.LongBitsToDouble(ReadLongLE());
+            return iText.IO.Util.JavaUtil.LongBitsToDouble(ReadLongLE());
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -607,7 +607,7 @@ namespace iTextSharp.IO.Source {
         public virtual String ReadString(int length, String encoding) {
             byte[] buf = new byte[length];
             ReadFully(buf);
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(buf, encoding);
+            return iText.IO.Util.JavaUtil.GetStringForBytes(buf, encoding);
         }
     }
 }

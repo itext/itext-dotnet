@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     public class PdfTokenizer {
         public enum TokenType {
             Number,
@@ -186,7 +186,7 @@ namespace iTextSharp.IO.Source {
         }
 
         public virtual String GetStringValue() {
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
+            return iText.IO.Util.JavaUtil.GetStringForBytes(outBuf.GetInternalBuffer(), 0, outBuf.Size());
         }
 
         public virtual byte[] GetDecodedStringContent() {
@@ -230,7 +230,7 @@ namespace iTextSharp.IO.Source {
             if (idx < 0) {
                 idx = str.IndexOf("%FDF-");
                 if (idx < 0) {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, this);
+                    throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
                 }
             }
             return idx;
@@ -242,7 +242,7 @@ namespace iTextSharp.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%PDF-");
             if (idx != 0) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfHeaderNotFound, this);
+                throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
             }
             return str.JSubstring(idx + 1, idx + 8);
         }
@@ -253,7 +253,7 @@ namespace iTextSharp.IO.Source {
             String str = ReadString(1024);
             int idx = str.IndexOf("%FDF-");
             if (idx != 0) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.FdfStartxrefNotFound, this);
+                throw new iText.IO.IOException(iText.IO.IOException.FdfStartxrefNotFound, this);
             }
         }
 
@@ -275,7 +275,7 @@ namespace iTextSharp.IO.Source {
                 pos = pos - arrLength + 9;
             }
             // 9 = "startxref".length()
-            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PdfStartxrefNotFound, this);
+            throw new iText.IO.IOException(iText.IO.IOException.PdfStartxrefNotFound, this);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -316,16 +316,16 @@ namespace iTextSharp.IO.Source {
                             if (TokenValueEqualsTo(R)) {
                                 System.Diagnostics.Debug.Assert(n2 != null);
                                 type = PdfTokenizer.TokenType.Ref;
-                                reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                reference = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                generation = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
                                 return;
                             }
                             else {
                                 if (TokenValueEqualsTo(Obj)) {
                                     System.Diagnostics.Debug.Assert(n2 != null);
                                     type = PdfTokenizer.TokenType.Obj;
-                                    reference = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n1));
-                                    generation = System.Convert.ToInt32(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(n2));
+                                    reference = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n1));
+                                    generation = System.Convert.ToInt32(iText.IO.Util.JavaUtil.GetStringForBytes(n2));
                                     return;
                                 }
                             }
@@ -385,7 +385,7 @@ namespace iTextSharp.IO.Source {
                 case '>': {
                     ch = file.Read();
                     if (ch != '>') {
-                        ThrowError(iTextSharp.IO.IOException.GtNotExpected);
+                        ThrowError(iText.IO.IOException.GtNotExpected);
                     }
                     type = PdfTokenizer.TokenType.EndDic;
                     break;
@@ -427,7 +427,7 @@ namespace iTextSharp.IO.Source {
                         v1 = file.Read();
                     }
                     if (v1 < 0 || v2 < 0) {
-                        ThrowError(iTextSharp.IO.IOException.ErrorReadingString);
+                        ThrowError(iText.IO.IOException.ErrorReadingString);
                     }
                     break;
                 }
@@ -473,7 +473,7 @@ namespace iTextSharp.IO.Source {
                         outBuf.Append(ch);
                     }
                     if (ch == -1) {
-                        ThrowError(iTextSharp.IO.IOException.ErrorReadingString);
+                        ThrowError(iText.IO.IOException.ErrorReadingString);
                     }
                     break;
                 }
@@ -738,12 +738,12 @@ namespace iTextSharp.IO.Source {
         /// </wrap>
         public virtual void ThrowError(String error, params Object[] messageParams) {
             try {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1, new iTextSharp.IO.IOException
-                    (error).SetMessageParams(messageParams)).SetMessageParams(file.GetPosition());
+                throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
+                    (messageParams)).SetMessageParams(file.GetPosition());
             }
             catch (System.IO.IOException) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorAtFilePointer1, new iTextSharp.IO.IOException
-                    (error).SetMessageParams(messageParams)).SetMessageParams(error, "no position");
+                throw new iText.IO.IOException(iText.IO.IOException.ErrorAtFilePointer1, new iText.IO.IOException(error).SetMessageParams
+                    (messageParams)).SetMessageParams(error, "no position");
             }
         }
 
@@ -881,7 +881,7 @@ namespace iTextSharp.IO.Source {
         /// <summary>Check whether line starts with object declaration.</summary>
         /// <param name="lineTokenizer">tokenizer, built by single line.</param>
         /// <returns>object number and generation if check is successful, otherwise - null.</returns>
-        public static int[] CheckObjectStart(iTextSharp.IO.Source.PdfTokenizer lineTokenizer) {
+        public static int[] CheckObjectStart(iText.IO.Source.PdfTokenizer lineTokenizer) {
             try {
                 lineTokenizer.Seek(0);
                 if (!lineTokenizer.NextToken() || lineTokenizer.GetTokenType() != PdfTokenizer.TokenType.Number) {
@@ -895,7 +895,7 @@ namespace iTextSharp.IO.Source {
                 if (!lineTokenizer.NextToken()) {
                     return null;
                 }
-                if (!iTextSharp.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent())) {
+                if (!iText.IO.Util.JavaUtil.ArraysEquals(Obj, lineTokenizer.GetByteContent())) {
                     return null;
                 }
                 return new int[] { num, gen };

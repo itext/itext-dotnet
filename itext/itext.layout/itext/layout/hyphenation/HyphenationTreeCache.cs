@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary><p>This is a cache for HyphenationTree instances.</p></summary>
     public class HyphenationTreeCache {
         /// <summary>Contains the cached hyphenation trees</summary>

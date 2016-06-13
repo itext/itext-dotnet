@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Layout.Property {
+namespace iText.Layout.Property {
     /// <summary>A specialized enum containing alignment properties for list symbols.</summary>
     public enum ListSymbolAlignment {
         RIGHT,

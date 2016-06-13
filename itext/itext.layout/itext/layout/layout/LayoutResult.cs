@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Renderer;
+using iText.Layout.Element;
+using iText.Layout.Renderer;
 
-namespace iTextSharp.Layout.Layout {
+namespace iText.Layout.Layout {
     public class LayoutResult {
         public const int FULL = 1;
 
@@ -99,7 +99,7 @@ namespace iTextSharp.Layout.Layout {
             return areaBreak;
         }
 
-        public virtual iTextSharp.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak) {
+        public virtual iText.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak) {
             this.areaBreak = areaBreak;
             return this;
         }

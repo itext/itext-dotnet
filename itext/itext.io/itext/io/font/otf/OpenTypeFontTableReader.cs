@@ -43,10 +43,10 @@ Copyright (c) 1998-2016 iText Group NV
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     /// <author><a href="mailto:paawak@gmail.com">Palash Ray</a></author>
     public abstract class OpenTypeFontTableReader {
         protected internal readonly RandomAccessFileOrArray rf;
@@ -231,7 +231,7 @@ namespace iTextSharp.IO.Font.Otf {
         /// method.
         /// </remarks>
         /// <exception cref="FontReadingException"/>
-        /// <exception cref="iTextSharp.IO.Font.Otf.FontReadingException"/>
+        /// <exception cref="iText.IO.Font.Otf.FontReadingException"/>
         internal void StartReadingTable() {
             try {
                 rf.Seek(tableLocation);

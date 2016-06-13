@@ -42,34 +42,34 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Kernel.XMP.Properties;
+using iText.Kernel.XMP;
+using iText.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     /// <summary>Enumeration of all the PDF/A conformance levels.</summary>
     public class PdfAConformanceLevel {
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_1A = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_1A = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("1", "A");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_1B = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_1B = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("1", "B");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_2A = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_2A = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("2", "A");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_2B = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_2B = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("2", "B");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_2U = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_2U = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("2", "U");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_3A = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_3A = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("3", "A");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_3B = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_3B = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("3", "B");
 
-        public static readonly iTextSharp.Kernel.Pdf.PdfAConformanceLevel PDF_A_3U = new iTextSharp.Kernel.Pdf.PdfAConformanceLevel
+        public static readonly iText.Kernel.Pdf.PdfAConformanceLevel PDF_A_3U = new iText.Kernel.Pdf.PdfAConformanceLevel
             ("3", "U");
 
         private String conformance;
@@ -89,8 +89,7 @@ namespace iTextSharp.Kernel.Pdf {
             return part;
         }
 
-        public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(String part, String conformance
-            ) {
+        public static iText.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(String part, String conformance) {
             String lowLetter = conformance.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
             bool aLevel = lowLetter.Equals("A");
             bool bLevel = lowLetter.Equals("B");
@@ -98,36 +97,36 @@ namespace iTextSharp.Kernel.Pdf {
             switch (part) {
                 case "1": {
                     if (aLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_1A;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_1A;
                     }
                     if (bLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_1B;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_1B;
                     }
                     break;
                 }
 
                 case "2": {
                     if (aLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_2A;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_2A;
                     }
                     if (bLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_2B;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_2B;
                     }
                     if (uLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_2U;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_2U;
                     }
                     break;
                 }
 
                 case "3": {
                     if (aLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_3A;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_3A;
                     }
                     if (bLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_3B;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_3B;
                     }
                     if (uLevel) {
-                        return iTextSharp.Kernel.Pdf.PdfAConformanceLevel.PDF_A_3U;
+                        return iText.Kernel.Pdf.PdfAConformanceLevel.PDF_A_3U;
                     }
                     break;
                 }
@@ -135,7 +134,7 @@ namespace iTextSharp.Kernel.Pdf {
             return null;
         }
 
-        public static iTextSharp.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(XMPMeta meta) {
+        public static iText.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(XMPMeta meta) {
             XMPProperty conformanceXmpProperty = null;
             XMPProperty partXmpProperty = null;
             try {

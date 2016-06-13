@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Kernel.Pdf.Function;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Function;
 
-namespace iTextSharp.Kernel.Color {
-    public class Separation : iTextSharp.Kernel.Color.Color {
+namespace iText.Kernel.Color {
+    public class Separation : iText.Kernel.Color.Color {
         public Separation(PdfSpecialCs.Separation cs)
             : this(cs, 1f) {
         }

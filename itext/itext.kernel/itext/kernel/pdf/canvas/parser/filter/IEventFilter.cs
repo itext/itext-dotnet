@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Filter {
+namespace iText.Kernel.Pdf.Canvas.Parser.Filter {
     /// <summary>This is an interface which helps to filter events.</summary>
     public interface IEventFilter {
         /// <summary>

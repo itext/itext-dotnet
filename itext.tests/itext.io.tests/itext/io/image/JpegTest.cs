@@ -1,8 +1,8 @@
 using System;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public class JpegTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/io/image/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/io/image/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

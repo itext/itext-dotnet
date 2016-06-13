@@ -44,7 +44,7 @@ Copyright (c) 1998-2016 iText Group NV
 using System;
 using Org.BouncyCastle.Crypto;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Implementation of the
     /// <see cref="IExternalSignature"/>

@@ -16,7 +16,7 @@
 */
 using System;
 
-namespace iTextSharp.Layout.Hyphenation {
+namespace iText.Layout.Hyphenation {
     /// <summary>
     /// <p>An hyphenation exception.</p>
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>

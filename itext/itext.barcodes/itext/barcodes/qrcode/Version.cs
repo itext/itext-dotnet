@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary>See ISO 18004:2006 Annex D</summary>
     /// <author>Sean Owen</author>
     internal sealed class Version {
@@ -57,7 +57,7 @@ namespace iTextSharp.Barcodes.Qrcode {
             , 0x18EC4, 0x191E1, 0x1AFAB, 0x1B08E, 0x1CC1A, 0x1D33F, 0x1ED75, 0x1F250, 0x209D5, 0x216F0, 0x228BA, 0x2379F
             , 0x24B0B, 0x2542E, 0x26A64, 0x27541, 0x28C69 };
 
-        private static readonly iTextSharp.Barcodes.Qrcode.Version[] VERSIONS = BuildVersions();
+        private static readonly iText.Barcodes.Qrcode.Version[] VERSIONS = BuildVersions();
 
         private readonly int versionNumber;
 
@@ -109,7 +109,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// <see cref="Version"/>
         /// for a QR Code of that dimension
         /// </returns>
-        public static iTextSharp.Barcodes.Qrcode.Version GetProvisionalVersionForDimension(int dimension) {
+        public static iText.Barcodes.Qrcode.Version GetProvisionalVersionForDimension(int dimension) {
             if (dimension % 4 != 1) {
                 throw new ArgumentException();
             }
@@ -121,14 +121,14 @@ namespace iTextSharp.Barcodes.Qrcode {
             }
         }
 
-        public static iTextSharp.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber) {
+        public static iText.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber) {
             if (versionNumber < 1 || versionNumber > 40) {
                 throw new ArgumentException();
             }
             return VERSIONS[versionNumber - 1];
         }
 
-        internal static iTextSharp.Barcodes.Qrcode.Version DecodeVersionInformation(int versionBits) {
+        internal static iText.Barcodes.Qrcode.Version DecodeVersionInformation(int versionBits) {
             int bestDifference = int.MaxValue;
             int bestVersion = 0;
             for (int i = 0; i < VERSION_DECODE_INFO.Length; i++) {
@@ -258,7 +258,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         }
 
         public override String ToString() {
-            return iTextSharp.IO.Util.JavaUtil.IntegerToString(versionNumber);
+            return iText.IO.Util.JavaUtil.IntegerToString(versionNumber);
         }
 
         /// <summary>See ISO 18004:2006 6.5.1 Table 9</summary>

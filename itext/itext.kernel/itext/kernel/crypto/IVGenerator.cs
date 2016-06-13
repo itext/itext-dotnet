@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     /// <summary>An initialization vector generator for a CBC block encryption.</summary>
     /// <remarks>An initialization vector generator for a CBC block encryption. It's a random generator based on ARCFOUR.
     ///     </remarks>

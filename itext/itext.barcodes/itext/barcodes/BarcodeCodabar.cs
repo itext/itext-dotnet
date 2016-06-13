@@ -42,14 +42,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
+using iText.IO.Font;
+using iText.Kernel;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
 
-namespace iTextSharp.Barcodes {
+namespace iText.Barcodes {
     public class BarcodeCodabar : Barcode1D {
         /// <summary>The index chars to <CODE>BARS</CODE>.</summary>
         private const String CHARS = "0123456789-$:/.+ABCD";
@@ -228,7 +228,7 @@ namespace iTextSharp.Barcodes {
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iTextSharp.Kernel.Color.Color barColor, iTextSharp.Kernel.Color.Color
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
              textColor) {
             String fullCode = code;
             if (generateChecksum && checksumText) {

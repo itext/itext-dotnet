@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
     /// <summary>Class that contains several constants.</summary>
     public class PdfConst {
         /// <summary>External Contributors to the resource (other than the authors).</summary>

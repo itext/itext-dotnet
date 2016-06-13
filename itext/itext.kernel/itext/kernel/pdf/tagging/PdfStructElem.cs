@@ -43,16 +43,16 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     /// <summary>
     /// To be able to be wrapped with this
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </summary>
     public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
@@ -172,7 +172,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
         /// The attributes dictionary will be stored inside element.
         /// </param>
         /// <returns>attributes dictionary.</returns>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfObject GetAttributes(bool createNewIfNull) {
             PdfObject attributes = GetPdfObject().Get(PdfName.A);
             if (attributes == null && createNewIfNull) {
@@ -226,12 +226,11 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
             GetPdfObject().Put(PdfName.S, role);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem AddKid(iTextSharp.Kernel.Pdf.Tagging.PdfStructElem
-             kid) {
+        public virtual iText.Kernel.Pdf.Tagging.PdfStructElem AddKid(iText.Kernel.Pdf.Tagging.PdfStructElem kid) {
             return AddKid(-1, kid);
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem AddKid(int index, iTextSharp.Kernel.Pdf.Tagging.PdfStructElem
+        public virtual iText.Kernel.Pdf.Tagging.PdfStructElem AddKid(int index, iText.Kernel.Pdf.Tagging.PdfStructElem
              kid) {
             if (GetStructElementType() == InlineLevel || GetStructElementType() == Illustration) {
                 throw new PdfException(PdfException.InlineLevelOrIllustrationElementCannotContainKids, GetPdfObject());
@@ -280,8 +279,8 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
                 return RemoveKidObject(mcr.GetPdfObject());
             }
             else {
-                if (kid is iTextSharp.Kernel.Pdf.Tagging.PdfStructElem) {
-                    return RemoveKidObject(((iTextSharp.Kernel.Pdf.Tagging.PdfStructElem)kid).GetPdfObject());
+                if (kid is iText.Kernel.Pdf.Tagging.PdfStructElem) {
+                    return RemoveKidObject(((iText.Kernel.Pdf.Tagging.PdfStructElem)kid).GetPdfObject());
                 }
             }
             return -1;
@@ -294,7 +293,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
                 return null;
             }
             if (IsStructElem(parent)) {
-                return new iTextSharp.Kernel.Pdf.Tagging.PdfStructElem(parent);
+                return new iText.Kernel.Pdf.Tagging.PdfStructElem(parent);
             }
             else {
                 PdfName type = parent.GetAsName(PdfName.Type);
@@ -364,7 +363,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
             }
         }
 
-        public virtual iTextSharp.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject value) {
+        public virtual iText.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
@@ -440,7 +439,7 @@ namespace iTextSharp.Kernel.Pdf.Tagging {
                 case PdfObject.DICTIONARY: {
                     PdfDictionary d = (PdfDictionary)obj;
                     if (IsStructElem(d)) {
-                        elem = new iTextSharp.Kernel.Pdf.Tagging.PdfStructElem(d);
+                        elem = new iText.Kernel.Pdf.Tagging.PdfStructElem(d);
                     }
                     else {
                         if (PdfName.MCR.Equals(d.GetAsName(PdfName.Type))) {

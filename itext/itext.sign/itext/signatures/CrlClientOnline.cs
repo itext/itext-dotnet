@@ -46,9 +46,9 @@ using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.X509;
-using iTextSharp.IO.Log;
+using iText.IO.Log;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// An implementation of the CrlClient that fetches the CRL bytes
     /// from an URL.
@@ -56,8 +56,7 @@ namespace iTextSharp.Signatures {
     /// <author>Paulo Soares</author>
     public class CrlClientOnline : ICrlClient {
         /// <summary>The Logger instance.</summary>
-        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.CrlClientOnline
-            ));
+        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.CrlClientOnline));
 
         /// <summary>The URLs of the CRLs.</summary>
         protected internal IList<Uri> urls = new List<Uri>();

@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Collection {
+namespace iText.Kernel.Pdf.Collection {
     public class PdfCollectionItem : PdfObjectWrapper<PdfDictionary> {
         private PdfCollectionSchema schema;
 
@@ -58,7 +58,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <param name="key"/>
         /// <param name="value"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String key, String value) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String key, String value) {
             PdfCollectionField field = schema.GetField(key);
             GetPdfObject().Put(new PdfName(key), field.GetValue(value));
             return this;
@@ -90,7 +90,7 @@ namespace iTextSharp.Kernel.Pdf.Collection {
         /// <param name="key"/>
         /// <param name="prefix"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String key, String prefix) {
+        public virtual iText.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String key, String prefix) {
             PdfName fieldName = new PdfName(key);
             PdfObject obj = GetPdfObject().Get(fieldName);
             if (obj == null) {

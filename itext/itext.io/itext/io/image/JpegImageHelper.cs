@@ -44,11 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Color;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
+using iText.IO.Color;
+using iText.IO.Log;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     internal class JpegImageHelper {
         /// <summary>This is a type of marker.</summary>
         private const int NOT_A_MARKER = -1;
@@ -110,7 +110,7 @@ namespace iTextSharp.IO.Image {
                 ProcessParameters(jpegStream, errorID, image);
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.JpegImageException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.JpegImageException, e);
             }
             finally {
                 if (jpegStream != null) {
@@ -137,20 +137,19 @@ namespace iTextSharp.IO.Image {
         }
 
         /// <summary>This method checks if the image is a valid JPEG and processes some parameters.</summary>
-        /// <exception cref="iTextSharp.IO.IOException"/>
+        /// <exception cref="iText.IO.IOException"/>
         /// <exception cref="System.IO.IOException"/>
         private static void ProcessParameters(Stream jpegStream, String errorID, ImageData image) {
             byte[][] icc = null;
             if (jpegStream.Read() != 0xFF || jpegStream.Read() != 0xD8) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1IsNotAValidJpegFile).SetMessageParams(errorID
-                    );
+                throw new iText.IO.IOException(iText.IO.IOException._1IsNotAValidJpegFile).SetMessageParams(errorID);
             }
             bool firstPass = true;
             int len;
             while (true) {
                 int v = jpegStream.Read();
                 if (v < 0) {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.PrematureEofWhileReadingJpg);
+                    throw new iText.IO.IOException(iText.IO.IOException.PrematureEofWhileReadingJpg);
                 }
                 if (v == 0xFF) {
                     int marker = jpegStream.Read();
@@ -164,8 +163,7 @@ namespace iTextSharp.IO.Image {
                         byte[] bcomp = new byte[JFIF_ID.Length];
                         int r = jpegStream.Read(bcomp);
                         if (r != bcomp.Length) {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1CorruptedJfifMarker).SetMessageParams(errorID
-                                );
+                            throw new iText.IO.IOException(iText.IO.IOException._1CorruptedJfifMarker).SetMessageParams(errorID);
                         }
                         bool found = true;
                         for (int k = 0; k < bcomp.Length; ++k) {
@@ -200,7 +198,7 @@ namespace iTextSharp.IO.Image {
                             byteappe[k] = (byte)jpegStream.Read();
                         }
                         if (byteappe.Length >= 12) {
-                            String appe = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1");
+                            String appe = iText.IO.Util.JavaUtil.GetStringForBytes(byteappe, 0, 5, "ISO-8859-1");
                             if (appe.Equals("Adobe")) {
                                 image.SetInverted(true);
                             }
@@ -214,7 +212,7 @@ namespace iTextSharp.IO.Image {
                             byteapp2[k] = (byte)jpegStream.Read();
                         }
                         if (byteapp2.Length >= 14) {
-                            String app2 = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1");
+                            String app2 = iText.IO.Util.JavaUtil.GetStringForBytes(byteapp2, 0, 11, "ISO-8859-1");
                             if (app2.Equals("ICC_PROFILE")) {
                                 int order = byteapp2[12] & 0xff;
                                 int count = byteapp2[13] & 0xff;
@@ -319,8 +317,7 @@ namespace iTextSharp.IO.Image {
                     if (markertype == VALID_MARKER) {
                         StreamUtil.Skip(jpegStream, 2);
                         if (jpegStream.Read() != 0x08) {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1MustHave8BitsPerComponent).SetMessageParams
-                                (errorID);
+                            throw new iText.IO.IOException(iText.IO.IOException._1MustHave8BitsPerComponent).SetMessageParams(errorID);
                         }
                         image.SetHeight(GetShort(jpegStream));
                         image.SetWidth(GetShort(jpegStream));
@@ -330,8 +327,8 @@ namespace iTextSharp.IO.Image {
                     }
                     else {
                         if (markertype == UNSUPPORTED_MARKER) {
-                            throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID
-                                , iTextSharp.IO.Util.JavaUtil.IntegerToString(marker));
+                            throw new iText.IO.IOException(iText.IO.IOException._1UnsupportedJpegMarker2).SetMessageParams(errorID, iText.IO.Util.JavaUtil.IntegerToString
+                                (marker));
                         }
                         else {
                             if (markertype != NOPARAM_MARKER) {

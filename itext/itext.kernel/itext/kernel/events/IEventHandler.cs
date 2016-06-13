@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Events {
+namespace iText.Kernel.Events {
     /// <summary>Interface for handling events.</summary>
     /// <remarks>
     /// Interface for handling events. EventHandlers are added to the

@@ -44,15 +44,15 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
+using iText.IO.Font;
+using iText.IO.Image;
+using iText.Kernel;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
+namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>A class to process WMF files.</summary>
     /// <remarks>
     /// A class to process WMF files. Used internally by
@@ -574,10 +574,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
                         }
                         String s;
                         try {
-                            s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
                         catch (ArgumentException) {
-                            s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
+                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         OutputText(x, y, flag, x1, y1, x2, y2, s);
                         break;
@@ -596,10 +596,10 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
                         }
                         String s;
                         try {
-                            s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
+                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k, "Cp1252");
                         }
                         catch (ArgumentException) {
-                            s = iTextSharp.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
+                            s = iText.IO.Util.JavaUtil.GetStringForBytes(text, 0, k);
                         }
                         count = count + 1 & 0xfffe;
                         @in.Skip(count - k);
@@ -635,7 +635,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
                     }
 
                     case META_SETPIXEL: {
-                        iTextSharp.Kernel.Color.Color color = @in.ReadColor();
+                        iText.Kernel.Color.Color color = @in.ReadColor();
                         int y = @in.ReadShort();
                         int x = @in.ReadShort();
                         cb.SaveState();
@@ -743,7 +743,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
                     ty = -ury;
                 }
             }
-            iTextSharp.Kernel.Color.Color textColor;
+            iText.Kernel.Color.Color textColor;
             if (state.GetBackgroundMode() == MetaState.OPAQUE) {
                 textColor = state.GetCurrentBackgroundColor();
                 cb.SetFillColor(textColor);
@@ -845,7 +845,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
             Stream imgIn;
             byte[] data;
             if (image.GetData() == null) {
-                imgIn = iTextSharp.IO.Util.UrlUtil.OpenStream(image.GetUrl());
+                imgIn = iText.IO.Util.UrlUtil.OpenStream(image.GetUrl());
                 MemoryStream @out = new MemoryStream();
                 int b = 0;
                 while ((b = imgIn.Read()) != -1) {

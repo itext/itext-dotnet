@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Properties {
+namespace iText.Kernel.XMP.Properties {
     /// <summary>This interface is used to return a property together with its path and namespace.</summary>
     /// <remarks>
     /// This interface is used to return a property together with its path and namespace.

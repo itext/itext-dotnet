@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     internal sealed class Jpeg2000ImageHelper {
         private class Jpeg2000Box {
             internal int length;
@@ -106,14 +106,14 @@ namespace iTextSharp.IO.Image {
                     jp2.parameters.isJp2 = true;
                     box.type = Cio_read(4, jpeg2000Stream);
                     if (JP2_JP != box.type) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ExpectedJpMarker);
+                        throw new iText.IO.IOException(iText.IO.IOException.ExpectedJpMarker);
                     }
                     if (0x0d0a870a != Cio_read(4, jpeg2000Stream)) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ErrorWithJpMarker);
+                        throw new iText.IO.IOException(iText.IO.IOException.ErrorWithJpMarker);
                     }
                     Jp2_read_boxhdr(box, jpeg2000Stream);
                     if (JP2_FTYP != box.type) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ExpectedFtypMarker);
+                        throw new iText.IO.IOException(iText.IO.IOException.ExpectedFtypMarker);
                     }
                     StreamUtil.Skip(jpeg2000Stream, 8);
                     for (int i = 4; i < box.length / 4; ++i) {
@@ -125,7 +125,7 @@ namespace iTextSharp.IO.Image {
                     do {
                         if (JP2_JP2H != box.type) {
                             if (box.type == JP2_JP2C) {
-                                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ExpectedJp2hMarker);
+                                throw new iText.IO.IOException(iText.IO.IOException.ExpectedJp2hMarker);
                             }
                             StreamUtil.Skip(jpeg2000Stream, box.length - 8);
                             Jp2_read_boxhdr(box, jpeg2000Stream);
@@ -134,7 +134,7 @@ namespace iTextSharp.IO.Image {
                     while (JP2_JP2H != box.type);
                     Jp2_read_boxhdr(box, jpeg2000Stream);
                     if (JP2_IHDR != box.type) {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ExpectedIhdrMarker);
+                        throw new iText.IO.IOException(iText.IO.IOException.ExpectedIhdrMarker);
                     }
                     jp2.SetHeight(Cio_read(4, jpeg2000Stream));
                     jp2.SetWidth(Cio_read(4, jpeg2000Stream));
@@ -178,12 +178,12 @@ namespace iTextSharp.IO.Image {
                         jp2.SetWidth(x1 - x0);
                     }
                     else {
-                        throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.InvalidJpeg2000File);
+                        throw new iText.IO.IOException(iText.IO.IOException.InvalidJpeg2000File);
                     }
                 }
             }
             catch (System.IO.IOException e) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.Jpeg2000ImageException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.Jpeg2000ImageException, e);
             }
         }
 
@@ -217,11 +217,11 @@ namespace iTextSharp.IO.Image {
             box.type = Cio_read(4, jpeg2000Stream);
             if (box.length == 1) {
                 if (Cio_read(4, jpeg2000Stream) != 0) {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CannotHandleBoxSizesHigherThan2_32);
+                    throw new iText.IO.IOException(iText.IO.IOException.CannotHandleBoxSizesHigherThan2_32);
                 }
                 box.length = Cio_read(4, jpeg2000Stream);
                 if (box.length == 0) {
-                    throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.UnsupportedBoxSizeEqEq0);
+                    throw new iText.IO.IOException(iText.IO.IOException.UnsupportedBoxSizeEqEq0);
                 }
             }
             else {

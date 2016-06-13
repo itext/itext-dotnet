@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Tagging {
+namespace iText.Kernel.Pdf.Tagging {
     /// <summary>Represents Marked Content Reference (MCR) object wrapper.</summary>
     public abstract class PdfMcr : PdfObjectWrapper<PdfObject>, IPdfStructElem {
         protected internal PdfStructElem parent;

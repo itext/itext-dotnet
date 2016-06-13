@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary><p>See ISO 18004:2006, 6.5.1.</summary>
     /// <remarks>
     /// <p>See ISO 18004:2006, 6.5.1. This enum encapsulates the four error correction levels
@@ -52,22 +52,22 @@ namespace iTextSharp.Barcodes.Qrcode {
     /// <author>Sean Owen</author>
     public sealed class ErrorCorrectionLevel {
         /// <summary>L = ~7% correction</summary>
-        public static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel L = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
+        public static readonly iText.Barcodes.Qrcode.ErrorCorrectionLevel L = new iText.Barcodes.Qrcode.ErrorCorrectionLevel
             (0, 0x01, "L");
 
         /// <summary>M = ~15% correction</summary>
-        public static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel M = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
+        public static readonly iText.Barcodes.Qrcode.ErrorCorrectionLevel M = new iText.Barcodes.Qrcode.ErrorCorrectionLevel
             (1, 0x00, "M");
 
         /// <summary>Q = ~25% correction</summary>
-        public static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel Q = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
+        public static readonly iText.Barcodes.Qrcode.ErrorCorrectionLevel Q = new iText.Barcodes.Qrcode.ErrorCorrectionLevel
             (2, 0x03, "Q");
 
         /// <summary>H = ~30% correction</summary>
-        public static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel H = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
+        public static readonly iText.Barcodes.Qrcode.ErrorCorrectionLevel H = new iText.Barcodes.Qrcode.ErrorCorrectionLevel
             (3, 0x02, "H");
 
-        private static readonly iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel[] FOR_BITS = new iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel
+        private static readonly iText.Barcodes.Qrcode.ErrorCorrectionLevel[] FOR_BITS = new iText.Barcodes.Qrcode.ErrorCorrectionLevel
             [] { M, L, H, Q };
 
         private readonly int ordinal;
@@ -106,7 +106,7 @@ namespace iTextSharp.Barcodes.Qrcode {
         /// <see cref="ErrorCorrectionLevel"/>
         /// representing the encoded error correction level
         /// </returns>
-        public static iTextSharp.Barcodes.Qrcode.ErrorCorrectionLevel ForBits(int bits) {
+        public static iText.Barcodes.Qrcode.ErrorCorrectionLevel ForBits(int bits) {
             if (bits < 0 || bits >= FOR_BITS.Length) {
                 throw new ArgumentException();
             }

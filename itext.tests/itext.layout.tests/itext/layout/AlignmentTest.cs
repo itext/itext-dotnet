@@ -1,22 +1,22 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Border;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
+using iText.IO.Image;
+using iText.IO.Util;
+using iText.Kernel.Color;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Layout.Border;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class AlignmentTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/AlignmentTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/AlignmentTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/AlignmentTest/";
+             + "/test/itext/layout/AlignmentTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -69,7 +69,7 @@ namespace iTextSharp.Layout {
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
                 paragraph.Add(new Text("Hello World! Hello People! " + "Hello Sky! Hello Sun! Hello Moon! Hello Stars!").SetBorder
-                    (new SolidBorder(iTextSharp.Kernel.Color.Color.GREEN, 0.1f))).SetMultipliedLeading(1);
+                    (new SolidBorder(iText.Kernel.Color.Color.GREEN, 0.1f))).SetMultipliedLeading(1);
             }
             document.Add(paragraph);
             document.Close();
@@ -152,10 +152,9 @@ namespace iTextSharp.Layout {
             }
             list.SetWidth(250);
             list.SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            list.SetBackgroundColor(iTextSharp.Kernel.Color.Color.GREEN);
+            list.SetBackgroundColor(iText.Kernel.Color.Color.GREEN);
             document.Add(list);
-            list.SetHorizontalAlignment(HorizontalAlignment.RIGHT).SetBackgroundColor(iTextSharp.Kernel.Color.Color.RED
-                );
+            list.SetHorizontalAlignment(HorizontalAlignment.RIGHT).SetBackgroundColor(iText.Kernel.Color.Color.RED);
             list.SetTextAlignment(TextAlignment.CENTER);
             document.Add(list);
             document.Close();
@@ -174,12 +173,12 @@ namespace iTextSharp.Layout {
             Div div = new Div();
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
                 )));
-            iTextSharp.Layout.Element.Image image1 = new iTextSharp.Layout.Element.Image(xObject, 100).SetHorizontalAlignment
-                (HorizontalAlignment.RIGHT);
-            iTextSharp.Layout.Element.Image image2 = new iTextSharp.Layout.Element.Image(xObject, 100).SetHorizontalAlignment
-                (HorizontalAlignment.CENTER);
-            iTextSharp.Layout.Element.Image image3 = new iTextSharp.Layout.Element.Image(xObject, 100).SetHorizontalAlignment
-                (HorizontalAlignment.LEFT);
+            iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
+                .RIGHT);
+            iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
+                .CENTER);
+            iText.Layout.Element.Image image3 = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
+                .LEFT);
             div.Add(image1).Add(image2).Add(image3);
             document.Add(div);
             document.Close();
@@ -199,8 +198,8 @@ namespace iTextSharp.Layout {
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
                 )));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100).SetHorizontalAlignment
-                (HorizontalAlignment.RIGHT);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100).SetHorizontalAlignment(HorizontalAlignment
+                .RIGHT);
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font;
-using iTextSharp.Kernel.Pdf;
+using iText.IO.Font;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>A dictionary that stores the name of the application that signs the PDF.</summary>
     public class PdfSignatureAppDictionary : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Creates a new PdfSignatureAppDictionary</summary>

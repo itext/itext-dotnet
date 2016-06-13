@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfViewerPreferences : PdfObjectWrapper<PdfDictionary> {
         public enum PdfViewerPreferencesConstants {
             USE_NONE,
@@ -77,42 +77,42 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>This method sets HideToolBar flag to true or false</summary>
         /// <param name="hideToolbar"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideToolbar(bool hideToolbar) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideToolbar(bool hideToolbar) {
             return Put(PdfName.HideToolbar, new PdfBoolean(hideToolbar));
         }
 
         /// <summary>This method sets HideMenuBar flag to true or false</summary>
         /// <param name="hideMenubar"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideMenubar(bool hideMenubar) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideMenubar(bool hideMenubar) {
             return Put(PdfName.HideMenubar, new PdfBoolean(hideMenubar));
         }
 
         /// <summary>This method sets HideWindowUI flag to true or false</summary>
         /// <param name="hideWindowUI"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetHideWindowUI(bool hideWindowUI) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideWindowUI(bool hideWindowUI) {
             return Put(PdfName.HideWindowUI, new PdfBoolean(hideWindowUI));
         }
 
         /// <summary>This method sets FitWindow flag to true or false</summary>
         /// <param name="fitWindow"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetFitWindow(bool fitWindow) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetFitWindow(bool fitWindow) {
             return Put(PdfName.FitWindow, new PdfBoolean(fitWindow));
         }
 
         /// <summary>This method sets CenterWindow flag to true or false</summary>
         /// <param name="centerWindow"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetCenterWindow(bool centerWindow) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetCenterWindow(bool centerWindow) {
             return Put(PdfName.CenterWindow, new PdfBoolean(centerWindow));
         }
 
         /// <summary>This method sets DisplayDocTitle flag to true or false</summary>
         /// <param name="displayDocTitle"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDisplayDocTitle(bool displayDocTitle) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDisplayDocTitle(bool displayDocTitle) {
             return Put(PdfName.DisplayDocTitle, new PdfBoolean(displayDocTitle));
         }
 
@@ -123,7 +123,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </remarks>
         /// <param name="nonFullScreenPageMode"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetNonFullScreenPageMode(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetNonFullScreenPageMode(PdfViewerPreferences.PdfViewerPreferencesConstants
              nonFullScreenPageMode) {
             switch (nonFullScreenPageMode) {
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.USE_NONE: {
@@ -156,7 +156,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>This method sets predominant reading order of text.</summary>
         /// <param name="direction"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDirection(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDirection(PdfViewerPreferences.PdfViewerPreferencesConstants
              direction) {
             switch (direction) {
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.LEFT_TO_RIGHT: {
@@ -182,7 +182,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="pageBoundary"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetViewArea(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetViewArea(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_AREA, pageBoundary);
         }
@@ -193,7 +193,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="pageBoundary"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetViewClip(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetViewClip(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP, pageBoundary);
         }
@@ -204,7 +204,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="pageBoundary"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintArea(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintArea(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA, pageBoundary);
         }
@@ -215,7 +215,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </summary>
         /// <param name="pageBoundary"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintClip(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintClip(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP, pageBoundary);
         }
@@ -230,7 +230,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </remarks>
         /// <param name="printScaling"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintScaling(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintScaling(PdfViewerPreferences.PdfViewerPreferencesConstants
              printScaling) {
             switch (printScaling) {
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.NONE: {
@@ -258,7 +258,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// </remarks>
         /// <param name="duplex"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetDuplex(PdfViewerPreferences.PdfViewerPreferencesConstants
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDuplex(PdfViewerPreferences.PdfViewerPreferencesConstants
              duplex) {
             switch (duplex) {
                 case PdfViewerPreferences.PdfViewerPreferencesConstants.SIMPLEX: {
@@ -286,7 +286,7 @@ namespace iTextSharp.Kernel.Pdf {
         /// <summary>This method sets PickTrayByPDFSize flag to true or false.</summary>
         /// <param name="pickTrayByPdfSize"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPickTrayByPDFSize(bool pickTrayByPdfSize) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPickTrayByPDFSize(bool pickTrayByPdfSize) {
             return Put(PdfName.PickTrayByPDFSize, new PdfBoolean(pickTrayByPdfSize));
         }
 
@@ -294,7 +294,7 @@ namespace iTextSharp.Kernel.Pdf {
         ///     </summary>
         /// <param name="printPageRange"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPrintPageRange(int[] printPageRange) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintPageRange(int[] printPageRange) {
             return Put(PdfName.PrintPageRange, new PdfArray(printPageRange));
         }
 
@@ -302,11 +302,11 @@ namespace iTextSharp.Kernel.Pdf {
         ///     </summary>
         /// <param name="numCopies"/>
         /// <returns/>
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences SetNumCopies(int numCopies) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences SetNumCopies(int numCopies) {
             return Put(PdfName.NumCopies, new PdfNumber(numCopies));
         }
 
-        public virtual iTextSharp.Kernel.Pdf.PdfViewerPreferences Put(PdfName key, PdfObject value) {
+        public virtual iText.Kernel.Pdf.PdfViewerPreferences Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
@@ -315,7 +315,7 @@ namespace iTextSharp.Kernel.Pdf {
             return false;
         }
 
-        private iTextSharp.Kernel.Pdf.PdfViewerPreferences SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants
+        private iText.Kernel.Pdf.PdfViewerPreferences SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants
              viewerPreferenceType, PdfViewerPreferences.PdfViewerPreferencesConstants pageBoundary) {
             PdfName type = null;
             switch (viewerPreferenceType) {

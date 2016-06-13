@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Layout;
-using iTextSharp.Layout.Layout;
+using iText.Layout;
+using iText.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     /// <summary>
     /// A renderer object is responsible for drawing a corresponding layout object on
     /// a document or canvas.
@@ -54,7 +54,7 @@ namespace iTextSharp.Layout.Renderer {
     /// A renderer object is responsible for drawing a corresponding layout object on
     /// a document or canvas. Every layout object has a renderer, by default one of
     /// the corresponding type, e.g. you can ask an
-    /// <see cref="iTextSharp.Layout.Element.Image"/>
+    /// <see cref="iText.Layout.Element.Image"/>
     /// for its
     /// <see cref="ImageRenderer"/>
     /// .
@@ -69,14 +69,14 @@ namespace iTextSharp.Layout.Renderer {
         /// <summary>
         /// This method simulates positioning of the renderer, including all of its children, and returns
         /// the
-        /// <see cref="iTextSharp.Layout.Layout.LayoutResult"/>
+        /// <see cref="iText.Layout.Layout.LayoutResult"/>
         /// , representing the layout result, including occupied area, status, i.e.
         /// if there was enough place to fit the renderer subtree, etc.
-        /// <see cref="iTextSharp.Layout.Layout.LayoutResult"/>
+        /// <see cref="iText.Layout.Layout.LayoutResult"/>
         /// can be extended to return custom layout results for custom elements, e.g.
         /// <see cref="TextRenderer"/>
         /// uses
-        /// <see cref="iTextSharp.Layout.Layout.TextLayoutResult"/>
+        /// <see cref="iText.Layout.Layout.TextLayoutResult"/>
         /// as its result.
         /// This method can be called standalone to learn how much area the renderer subtree needs, or can be called
         /// before
@@ -91,15 +91,15 @@ namespace iTextSharp.Layout.Renderer {
         /// <remarks>
         /// Flushes the renderer subtree contents, i.e. draws itself on canvas,
         /// adds necessary objects to the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// etc.
         /// </remarks>
         /// <param name="drawContext">
         /// contains the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to which the renderer subtree if flushed,
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// on which the renderer subtree is drawn and other additional parameters
         /// needed to perform drawing
         /// </param>
@@ -107,12 +107,12 @@ namespace iTextSharp.Layout.Renderer {
 
         /// <summary>
         /// Gets the resultant occupied area after the last call to the
-        /// <see cref="Layout(iTextSharp.Layout.Layout.LayoutContext)"/>
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
         /// method.
         /// </summary>
         /// <returns>
         /// 
-        /// <see cref="iTextSharp.Layout.Layout.LayoutArea"/>
+        /// <see cref="iText.Layout.Layout.LayoutArea"/>
         /// instance
         /// </returns>
         LayoutArea GetOccupiedArea();
@@ -144,7 +144,7 @@ namespace iTextSharp.Layout.Renderer {
         /// <summary>Gets the model element associated with this renderer.</summary>
         /// <returns>
         /// the model element, as a
-        /// <see cref="iTextSharp.Layout.IPropertyContainer">container of properties</see>
+        /// <see cref="iText.Layout.IPropertyContainer">container of properties</see>
         /// </returns>
         IPropertyContainer GetModelElement();
 
@@ -179,7 +179,7 @@ namespace iTextSharp.Layout.Renderer {
 
         /// <summary>
         /// Gets a new instance of this class to be used as a next renderer, after this renderer is used, if
-        /// <see cref="Layout(iTextSharp.Layout.Layout.LayoutContext)"/>
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
         /// is called more than once.
         /// </summary>
         /// <returns>new renderer instance</returns>

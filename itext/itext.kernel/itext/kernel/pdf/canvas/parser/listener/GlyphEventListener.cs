@@ -42,18 +42,18 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Listener {
+namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
     /// <summary>
     /// This class expands each
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
     /// for
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.EventType.RENDER_TEXT"/>
     /// event types into
     /// multiple
-    /// <see cref="iTextSharp.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
+    /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo"/>
     /// instances for each glyph occurred.
     /// </summary>
     public class GlyphEventListener : IEventListener {

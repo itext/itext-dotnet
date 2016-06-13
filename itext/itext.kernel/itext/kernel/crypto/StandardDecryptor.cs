@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Kernel.Crypto {
+namespace iText.Kernel.Crypto {
     public class StandardDecryptor : IDecryptor {
         protected internal ARCFOUREncryption arcfour;
 

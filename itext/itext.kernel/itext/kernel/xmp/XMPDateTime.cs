@@ -30,7 +30,7 @@
 using System;
 using System.Globalization;
 
-namespace iTextSharp.Kernel.XMP
+namespace iText.Kernel.XMP
 {
 	/// <summary>
 	/// The <code>XMPDateTime</code>-class represents a point in time up to a resolution of nano

@@ -7,10 +7,10 @@
 // of the Adobe license agreement accompanying it.
 // =================================================================================================
 using System;
-using iTextSharp.Kernel.XMP.Impl;
-using iTextSharp.Kernel.XMP.Options;
+using iText.Kernel.XMP.Impl;
+using iText.Kernel.XMP.Options;
 
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
     /// <summary>Utility methods for XMP.</summary>
     /// <remarks>
     /// Utility methods for XMP. I included only those that are different from the
@@ -46,7 +46,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="allowCommas">Option flag to control the catenation.</param>
         /// <returns>Returns the string containing the catenated array items.</returns>
         /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static String CatenateArrayItems(XMPMeta xmp, String schemaNS, String arrayName, String separator, 
             String quotes, bool allowCommas) {
             return XMPUtilsImpl.CatenateArrayItems(xmp, schemaNS, arrayName, separator, quotes, allowCommas);
@@ -67,7 +67,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="arrayOptions">Option flags to control the separation.</param>
         /// <param name="preserveCommas">Flag if commas shall be preserved</param>
         /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void SeparateArrayItems(XMPMeta xmp, String schemaNS, String arrayName, String catedStr, PropertyOptions
              arrayOptions, bool preserveCommas) {
             XMPUtilsImpl.SeparateArrayItems(xmp, schemaNS, arrayName, catedStr, arrayOptions, preserveCommas);
@@ -113,7 +113,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <em>Note:</em> Currently not supported.
         /// </param>
         /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void RemoveProperties(XMPMeta xmp, String schemaNS, String propName, bool doAllProperties, bool
              includeAliases) {
             XMPUtilsImpl.RemoveProperties(xmp, schemaNS, propName, doAllProperties, includeAliases);
@@ -125,7 +125,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="doAllProperties">Do internal properties in addition to external properties.</param>
         /// <param name="replaceOldValues">Replace the values of existing properties.</param>
         /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties, bool replaceOldValues
             ) {
             AppendProperties(source, dest, doAllProperties, replaceOldValues, false);
@@ -202,7 +202,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="replaceOldValues">Replace the values of existing properties.</param>
         /// <param name="deleteEmptyValues">Delete destination values if source property is empty.</param>
         /// <exception cref="XMPException">Forwards the Exceptions from the metadata processing</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static void AppendProperties(XMPMeta source, XMPMeta dest, bool doAllProperties, bool replaceOldValues
             , bool deleteEmptyValues) {
             XMPUtilsImpl.AppendProperties(source, dest, doAllProperties, replaceOldValues, deleteEmptyValues);
@@ -225,7 +225,7 @@ namespace iTextSharp.Kernel.XMP {
         /// </ul>
         /// </returns>
         /// <exception cref="XMPException">If an empty string is passed.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static bool ConvertToBoolean(String value) {
             if (value == null || value.Length == 0) {
                 throw new XMPException("Empty convert-string", XMPError.BADVALUE);
@@ -261,7 +261,7 @@ namespace iTextSharp.Kernel.XMP {
         /// If the <code>rawValue</code> is <code>null</code> or empty or the
         /// conversion fails.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static int ConvertToInteger(String rawValue) {
             try {
                 if (rawValue == null || rawValue.Length == 0) {
@@ -293,7 +293,7 @@ namespace iTextSharp.Kernel.XMP {
         /// If the <code>rawValue</code> is <code>null</code> or empty or the
         /// conversion fails.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static long ConvertToLong(String rawValue) {
             try {
                 if (rawValue == null || rawValue.Length == 0) {
@@ -325,7 +325,7 @@ namespace iTextSharp.Kernel.XMP {
         /// If the <code>rawValue</code> is <code>null</code> or empty or the
         /// conversion fails.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static double ConvertToDouble(String rawValue) {
             try {
                 if (rawValue == null || rawValue.Length == 0) {
@@ -354,7 +354,7 @@ namespace iTextSharp.Kernel.XMP {
         /// If the <code>rawValue</code> is <code>null</code> or empty or the
         /// conversion fails.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static XMPDateTime ConvertToDate(String rawValue) {
             if (rawValue == null || rawValue.Length == 0) {
                 throw new XMPException("Empty convert-string", XMPError.BADVALUE);
@@ -375,14 +375,14 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="buffer">the byte array to be converted</param>
         /// <returns>Returns the base64 string.</returns>
         public static String EncodeBase64(byte[] buffer) {
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(Base64.Encode(buffer));
+            return iText.IO.Util.JavaUtil.GetStringForBytes(Base64.Encode(buffer));
         }
 
         /// <summary>Decode from Base64 encoded string to raw data.</summary>
         /// <param name="base64String">a base64 encoded string</param>
         /// <returns>Returns a byte array containg the decoded string.</returns>
         /// <exception cref="XMPException">Thrown if the given string is not property base64 encoded</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public static byte[] DecodeBase64(String base64String) {
             try {
                 return Base64.Decode(base64String.GetBytes());

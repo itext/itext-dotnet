@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
 	/// <summary>
 	/// An input stream that uses a
 	/// <see cref="RandomAccessSource"/>

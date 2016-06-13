@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
+using iText.IO.Image;
+using iText.IO.Util;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
+namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Image implementation for WMF, Windows Metafile.</summary>
     public class WmfImageData : ImageData {
         private static readonly byte[] wmf = new byte[] { (byte)0xD7, (byte)0xCD };
@@ -91,7 +91,7 @@ namespace iTextSharp.Kernel.Pdf.Canvas.Wmf {
         private static byte[] ReadImageType(Uri source) {
             Stream @is = null;
             try {
-                @is = iTextSharp.IO.Util.UrlUtil.OpenStream(source);
+                @is = iText.IO.Util.UrlUtil.OpenStream(source);
                 byte[] bytes = new byte[8];
                 @is.Read(bytes);
                 return bytes;

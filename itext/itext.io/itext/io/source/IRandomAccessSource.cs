@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Source {
+namespace iText.IO.Source {
     /// <summary>Represents an abstract source that bytes can be read from.</summary>
     /// <remarks>
     /// Represents an abstract source that bytes can be read from.  This class forms the foundation for all byte input in iText.

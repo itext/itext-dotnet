@@ -45,16 +45,16 @@ using System;
 using System.Collections.Generic;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iTextSharp.IO.Log;
+using iText.IO.Log;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>
     /// Class that allows you to verify a certificate against
     /// one or more Certificate Revocation Lists.
     /// </summary>
     public class CRLVerifier : RootStoreVerifier {
         /// <summary>The Logger instance</summary>
-        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iTextSharp.Signatures.CRLVerifier
+        protected internal static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.CRLVerifier
             ));
 
         /// <summary>The list of CRLs to check for revocation date.</summary>
@@ -156,7 +156,7 @@ namespace iTextSharp.Signatures {
                     return null;
                 }
                 LOGGER.Info("Getting CRL from " + crlurl);
-                return (X509Crl)SignUtils.ParseCrlFromStream(iTextSharp.IO.Util.UrlUtil.OpenStream(new Uri(crlurl)));
+                return (X509Crl)SignUtils.ParseCrlFromStream(iText.IO.Util.UrlUtil.OpenStream(new Uri(crlurl)));
             }
             catch (System.IO.IOException) {
                 return null;

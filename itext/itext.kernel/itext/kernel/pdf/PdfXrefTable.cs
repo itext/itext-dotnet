@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
         private const int INITIAL_CAPACITY = 32;
 
@@ -148,7 +148,7 @@ namespace iTextSharp.Kernel.Pdf {
 
         /// <summary>Writes cross reference table and trailer to PDF.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();
@@ -241,7 +241,7 @@ namespace iTextSharp.Kernel.Pdf {
                     xrefStream.Put(PdfName.Prev, lastXref);
                 }
                 xrefStream.Put(PdfName.Index, index);
-                iTextSharp.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
+                iText.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
                 for (int k = 0; k < sections.Count; k += 2) {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
@@ -275,7 +275,7 @@ namespace iTextSharp.Kernel.Pdf {
             }
             else {
                 writer.WriteString("xref\n");
-                iTextSharp.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
+                iText.Kernel.Pdf.PdfXrefTable xrefTable = document.GetXref();
                 for (int k = 0; k < sections.Count; k += 2) {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];

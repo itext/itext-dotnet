@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <author>satorux@google.com (Satoru Takabayashi) - creator</author>
     /// <author>dswitkin@google.com (Daniel Switkin) - ported from C++</author>
     internal sealed class QRCode {

@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.Forms.Fields;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Test;
+using iText.Forms.Fields;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     public class PdfFormFieldTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/forms/PdfFormFieldTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/PdfFormFieldTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/forms/PdfFormFieldTest/";
+             + "/test/itext/forms/PdfFormFieldTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {

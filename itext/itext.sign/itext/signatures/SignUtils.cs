@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
@@ -19,7 +19,7 @@ using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
 
-namespace iTextSharp.Signatures
+namespace iText.Signatures
 {
 	internal static class SignUtils
 	{

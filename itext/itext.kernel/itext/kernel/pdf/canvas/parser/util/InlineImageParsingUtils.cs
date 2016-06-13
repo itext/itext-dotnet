@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Filters;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Filters;
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.Util {
+namespace iText.Kernel.Pdf.Canvas.Parser.Util {
     /// <summary>Utility methods to help with processing of inline images</summary>
     public sealed class InlineImageParsingUtils {
         private InlineImageParsingUtils() {

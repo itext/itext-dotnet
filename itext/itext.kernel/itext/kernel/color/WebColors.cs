@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
+using iText.IO.Util;
+using iText.Kernel;
 
-namespace iTextSharp.Kernel.Color {
+namespace iText.Kernel.Color {
     /// <summary>
     /// This class is a HashMap that contains the names of colors as a key and the
     /// corresponding BaseColor as value.

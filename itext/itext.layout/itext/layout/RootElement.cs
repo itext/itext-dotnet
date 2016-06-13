@@ -43,15 +43,15 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Layout.Renderer;
-using iTextSharp.Layout.Splitting;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Layout.Renderer;
+using iText.Layout.Splitting;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
     /// 
     public abstract class RootElement<T> : ElementPropertyContainer<T>
@@ -75,7 +75,7 @@ namespace iTextSharp.Layout {
         /// <remarks>Adds an element to the root. The element is immediately placed in the contents.</remarks>
         /// <param name="element">an element with spacial margins, tabbing, and alignment</param>
         /// <returns>this element</returns>
-        /// <seealso cref="iTextSharp.Layout.Element.BlockElement{T}"/>
+        /// <seealso cref="iText.Layout.Element.BlockElement{T}"/>
         public virtual T Add<T2>(BlockElement<T2> element)
             where T2 : IElement {
             childElements.Add(element);
@@ -87,7 +87,7 @@ namespace iTextSharp.Layout {
         /// <remarks>Adds an image to the root. The element is immediately placed in the contents.</remarks>
         /// <param name="image">a graphical image element</param>
         /// <returns>this element</returns>
-        /// <seealso cref="iTextSharp.Layout.Element.Image"/>
+        /// <seealso cref="iText.Layout.Element.Image"/>
         public virtual T Add(Image image) {
             childElements.Add(image);
             EnsureRootRendererNotNull().AddChild(image.CreateRendererSubTree());
@@ -113,33 +113,33 @@ namespace iTextSharp.Layout {
         public override T1 GetDefaultProperty<T1>(int property) {
             try {
                 switch (property) {
-                    case iTextSharp.Layout.Property.Property.FONT: {
+                    case iText.Layout.Property.Property.FONT: {
                         if (defaultFont == null) {
                             defaultFont = PdfFontFactory.CreateFont();
                         }
                         return (T1)(Object)defaultFont;
                     }
 
-                    case iTextSharp.Layout.Property.Property.SPLIT_CHARACTERS: {
+                    case iText.Layout.Property.Property.SPLIT_CHARACTERS: {
                         if (defaultSplitCharacters == null) {
                             defaultSplitCharacters = new DefaultSplitCharacters();
                         }
                         return (T1)(Object)defaultSplitCharacters;
                     }
 
-                    case iTextSharp.Layout.Property.Property.FONT_SIZE: {
+                    case iText.Layout.Property.Property.FONT_SIZE: {
                         return (T1)(Object)12;
                     }
 
-                    case iTextSharp.Layout.Property.Property.TEXT_RENDERING_MODE: {
+                    case iText.Layout.Property.Property.TEXT_RENDERING_MODE: {
                         return (T1)(Object)PdfCanvasConstants.TextRenderingMode.FILL;
                     }
 
-                    case iTextSharp.Layout.Property.Property.TEXT_RISE: {
+                    case iText.Layout.Property.Property.TEXT_RISE: {
                         return (T1)(Object)0f;
                     }
 
-                    case iTextSharp.Layout.Property.Property.SPACING_RATIO: {
+                    case iText.Layout.Property.Property.SPACING_RATIO: {
                         return (T1)(Object)0.75f;
                     }
 
@@ -163,16 +163,16 @@ namespace iTextSharp.Layout {
 
         /// <summary>
         /// Gets the rootRenderer attribute, a specialized
-        /// <see cref="iTextSharp.Layout.Renderer.IRenderer"/>
+        /// <see cref="iText.Layout.Renderer.IRenderer"/>
         /// that
         /// acts as the root object that other
-        /// <see cref="iTextSharp.Layout.Renderer.IRenderer">renderers</see>
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderers</see>
         /// descend
         /// from.
         /// </summary>
         /// <returns>
         /// the
-        /// <see cref="iTextSharp.Layout.Renderer.RootRenderer"/>
+        /// <see cref="iText.Layout.Renderer.RootRenderer"/>
         /// attribute
         /// </returns>
         public virtual RootRenderer GetRenderer() {
@@ -275,8 +275,8 @@ namespace iTextSharp.Layout {
             if (angle != 0) {
                 div.SetRotationAngle(angle);
             }
-            div.SetProperty(iTextSharp.Layout.Property.Property.ROTATION_POINT_X, x);
-            div.SetProperty(iTextSharp.Layout.Property.Property.ROTATION_POINT_Y, y);
+            div.SetProperty(iText.Layout.Property.Property.ROTATION_POINT_X, x);
+            div.SetProperty(iText.Layout.Property.Property.ROTATION_POINT_Y, y);
             float divWidth = AbstractRenderer.INF;
             float divHeight = AbstractRenderer.INF;
             float divX = x;
@@ -303,7 +303,7 @@ namespace iTextSharp.Layout {
                 pageNumber = 1;
             }
             div.SetFixedPosition(pageNumber, divX, divY, divWidth).SetHeight(divHeight);
-            if (p.GetProperty<Leading>(iTextSharp.Layout.Property.Property.LEADING) == null) {
+            if (p.GetProperty<Leading>(iText.Layout.Property.Property.LEADING) == null) {
                 p.SetMultipliedLeading(1);
             }
             div.Add(p.SetMargins(0, 0, 0, 0));

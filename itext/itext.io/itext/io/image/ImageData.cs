@@ -43,13 +43,13 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO;
-using iTextSharp.IO.Color;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO;
+using iText.IO.Color;
+using iText.IO.Log;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public abstract class ImageData {
         protected internal Uri url;
 
@@ -89,7 +89,7 @@ namespace iTextSharp.IO.Image {
 
         protected internal bool mask = false;
 
-        protected internal iTextSharp.IO.Image.ImageData imageMask;
+        protected internal iText.IO.Image.ImageData imageMask;
 
         protected internal bool interpolation;
 
@@ -213,16 +213,16 @@ namespace iTextSharp.IO.Image {
             return mask;
         }
 
-        public virtual iTextSharp.IO.Image.ImageData GetImageMask() {
+        public virtual iText.IO.Image.ImageData GetImageMask() {
             return imageMask;
         }
 
-        public virtual void SetImageMask(iTextSharp.IO.Image.ImageData imageMask) {
+        public virtual void SetImageMask(iText.IO.Image.ImageData imageMask) {
             if (this.mask) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskCannotContainAnotherImageMask);
+                throw new iText.IO.IOException(iText.IO.IOException.ImageMaskCannotContainAnotherImageMask);
             }
             if (!imageMask.mask) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask);
+                throw new iText.IO.IOException(iText.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask);
             }
             this.imageMask = imageMask;
         }
@@ -233,7 +233,7 @@ namespace iTextSharp.IO.Image {
 
         public virtual void MakeMask() {
             if (!CanBeMask()) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ImageCanNotBeAnImageMask);
+                throw new iText.IO.IOException(iText.IO.IOException.ImageCanNotBeAnImageMask);
             }
             mask = true;
         }
@@ -309,7 +309,7 @@ namespace iTextSharp.IO.Image {
         /// <summary>Checks if image can be inline</summary>
         /// <returns>if the image can be inline</returns>
         public virtual bool CanImageBeInline() {
-            ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.IO.Image.ImageData));
+            ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Image.ImageData));
             if (imageSize > 4096) {
                 logger.Warn(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
                 return false;

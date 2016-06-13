@@ -43,32 +43,32 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Codec;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Image;
-using iTextSharp.IO.Source;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Font;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Action;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
+using iText.IO.Codec;
+using iText.IO.Font;
+using iText.IO.Image;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Color;
+using iText.Kernel.Font;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Element;
+using iText.Layout.Property;
 
-namespace iTextSharp.Forms.Fields {
+namespace iText.Forms.Fields {
     /// <summary>
     /// This class represents a single field or field group in an
-    /// <see cref="iTextSharp.Forms.PdfAcroForm">AcroForm</see>
+    /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>
     /// .
     /// <br /><br />
     /// To be able to be wrapped with this
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObjectWrapper{T}"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
     /// the
-    /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
+    /// <see cref="iText.Kernel.Pdf.PdfObject"/>
     /// must be indirect.
     /// </summary>
     public class PdfFormField : PdfObjectWrapper<PdfDictionary> {
@@ -136,15 +136,15 @@ namespace iTextSharp.Forms.Fields {
 
         protected internal int fontSize;
 
-        protected internal iTextSharp.Kernel.Color.Color color;
+        protected internal iText.Kernel.Color.Color color;
 
         protected internal int checkType;
 
         protected internal float borderWidth = 1;
 
-        protected internal iTextSharp.Kernel.Color.Color backgroundColor;
+        protected internal iText.Kernel.Color.Color backgroundColor;
 
-        protected internal iTextSharp.Kernel.Color.Color borderColor = iTextSharp.Kernel.Color.Color.BLACK;
+        protected internal iText.Kernel.Color.Color borderColor = iText.Kernel.Color.Color.BLACK;
 
         protected internal int rotation = 0;
 
@@ -177,10 +177,10 @@ namespace iTextSharp.Forms.Fields {
 
         /// <summary>
         /// Creates a form field as a wrapper object around a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// .
         /// This
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// must be an indirect object.
         /// </summary>
         /// <param name="pdfObject">the dictionary to be wrapped, must have an indirect reference.</param>
@@ -205,7 +205,7 @@ namespace iTextSharp.Forms.Fields {
 
         /// <summary>
         /// Creates a form field as a parent of a
-        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
         /// .
         /// </summary>
         /// <param name="widget">
@@ -236,15 +236,15 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the field in
         /// </param>
         /// <returns>
         /// a new
         /// <see cref="PdfFormField"/>
         /// </returns>
-        public static iTextSharp.Forms.Fields.PdfFormField CreateEmptyField(PdfDocument doc) {
-            return new iTextSharp.Forms.Fields.PdfFormField(doc);
+        public static iText.Forms.Fields.PdfFormField CreateEmptyField(PdfDocument doc) {
+            return new iText.Forms.Fields.PdfFormField(doc);
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the button field in
         /// </param>
         /// <param name="rect">the location on the page for the button</param>
@@ -283,7 +283,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the button field in
         /// </param>
         /// <param name="flags">
@@ -308,7 +308,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <returns>
@@ -326,7 +326,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -344,12 +344,12 @@ namespace iTextSharp.Forms.Fields {
         /// <see cref="PdfTextFormField">text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
-        /// <see cref="iTextSharp.Forms.PdfAcroForm.GetDefaultResources()"/>
+        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>
         /// .
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -367,12 +367,12 @@ namespace iTextSharp.Forms.Fields {
         /// <see cref="PdfTextFormField">text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
-        /// <see cref="iTextSharp.Forms.PdfAcroForm.GetDefaultResources()"/>
+        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>
         /// .
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -399,7 +399,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -407,7 +407,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">the initial value</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <returns>
@@ -427,7 +427,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -435,7 +435,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">the initial value</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <param name="multiline">true for multiline text field</param>
@@ -463,7 +463,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -471,7 +471,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">the initial value</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <returns>
@@ -488,12 +488,12 @@ namespace iTextSharp.Forms.Fields {
         /// <see cref="PdfTextFormField">multiline text form field</see>
         /// with an initial
         /// value, and the form's default font specified in
-        /// <see cref="iTextSharp.Forms.PdfAcroForm.GetDefaultResources()"/>
+        /// <see cref="iText.Forms.PdfAcroForm.GetDefaultResources()"/>
         /// .
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the text field in
         /// </param>
         /// <param name="rect">the location on the page for the text field</param>
@@ -520,7 +520,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the choice field in
         /// </param>
         /// <param name="flags">
@@ -546,7 +546,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the choice field in
         /// </param>
         /// <param name="rect">the location on the page for the choice field</param>
@@ -574,7 +574,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the choice field in
         /// </param>
         /// <param name="rect">the location on the page for the choice field</param>
@@ -582,7 +582,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">the initial value</param>
         /// <param name="options">
         /// an array of
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// objects that each represent
         /// the 'on' state of one of the choices.
         /// </param>
@@ -614,7 +614,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the choice field in
         /// </param>
         /// <param name="rect">the location on the page for the choice field</param>
@@ -622,12 +622,12 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">the initial value</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <param name="options">
         /// an array of
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// objects that each represent
         /// the 'on' state of one of the choices.
         /// </param>
@@ -643,7 +643,7 @@ namespace iTextSharp.Forms.Fields {
         public static PdfChoiceFormField CreateChoice(PdfDocument doc, Rectangle rect, String name, String value, 
             PdfFont font, int fontSize, PdfArray options, int flags) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
-            iTextSharp.Forms.Fields.PdfFormField field = new PdfChoiceFormField(annot, doc);
+            iText.Forms.Fields.PdfFormField field = new PdfChoiceFormField(annot, doc);
             field.font = font;
             field.fontSize = fontSize;
             field.Put(PdfName.Opt, options);
@@ -667,7 +667,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the signature field in
         /// </param>
         /// <returns>
@@ -685,7 +685,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the signature field in
         /// </param>
         /// <param name="rect">the location on the page for the signature field</param>
@@ -705,7 +705,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="name">the name of the form field</param>
@@ -728,7 +728,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -738,11 +738,11 @@ namespace iTextSharp.Forms.Fields {
         /// a new
         /// <see cref="PdfFormField"/>
         /// </returns>
-        /// <seealso cref="CreateRadioGroup(iTextSharp.Kernel.Pdf.PdfDocument, System.String, System.String)"/>
-        public static iTextSharp.Forms.Fields.PdfFormField CreateRadioButton(PdfDocument doc, Rectangle rect, PdfButtonFormField
+        /// <seealso cref="CreateRadioGroup(iText.Kernel.Pdf.PdfDocument, System.String, System.String)"/>
+        public static iText.Forms.Fields.PdfFormField CreateRadioButton(PdfDocument doc, Rectangle rect, PdfButtonFormField
              radioGroup, String value) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
-            iTextSharp.Forms.Fields.PdfFormField radio = new PdfButtonFormField(annot, doc);
+            iText.Forms.Fields.PdfFormField radio = new PdfButtonFormField(annot, doc);
             String name = radioGroup.GetValue().ToString().Substring(1);
             if (name.Equals(value)) {
                 annot.SetAppearanceState(new PdfName(value));
@@ -762,7 +762,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -770,7 +770,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">the initial value</param>
         /// <param name="pdfAConformanceLevel">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// of the document.
         /// <c/>
         /// null if it's no PDF/A document
@@ -779,11 +779,11 @@ namespace iTextSharp.Forms.Fields {
         /// a new
         /// <see cref="PdfFormField"/>
         /// </returns>
-        /// <seealso cref="CreateRadioGroup(iTextSharp.Kernel.Pdf.PdfDocument, System.String, System.String)"/>
-        public static iTextSharp.Forms.Fields.PdfFormField CreateRadioButton(PdfDocument doc, Rectangle rect, PdfButtonFormField
+        /// <seealso cref="CreateRadioGroup(iText.Kernel.Pdf.PdfDocument, System.String, System.String)"/>
+        public static iText.Forms.Fields.PdfFormField CreateRadioButton(PdfDocument doc, Rectangle rect, PdfButtonFormField
              radioGroup, String value, PdfAConformanceLevel pdfAConformanceLevel) {
             PdfWidgetAnnotation annot = new PdfWidgetAnnotation(rect);
-            iTextSharp.Forms.Fields.PdfFormField radio = new PdfButtonFormField(annot, doc);
+            iText.Forms.Fields.PdfFormField radio = new PdfButtonFormField(annot, doc);
             radio.pdfAConformanceLevel = pdfAConformanceLevel;
             annot.SetFlag(PdfAnnotation.PRINT);
             String name = radioGroup.GetValue().ToString().Substring(1);
@@ -810,7 +810,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -840,7 +840,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -848,7 +848,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="caption">the text to display on the button</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <returns>
@@ -881,7 +881,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -903,7 +903,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -926,7 +926,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the radio group in
         /// </param>
         /// <param name="rect">the location on the page for the field</param>
@@ -935,7 +935,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="checkType">the type of checkbox graphic to use.</param>
         /// <param name="pdfAConformanceLevel">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// of the document.
         /// <c/>
         /// null if it's no PDF/A document
@@ -990,7 +990,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the combobox in
         /// </param>
         /// <param name="rect">the location on the page for the combobox</param>
@@ -1018,7 +1018,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the combobox in
         /// </param>
         /// <param name="rect">the location on the page for the combobox</param>
@@ -1043,7 +1043,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the choice field in
         /// </param>
         /// <param name="rect">the location on the page for the choice field</param>
@@ -1071,7 +1071,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="doc">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the list field in
         /// </param>
         /// <param name="rect">the location on the page for the list field</param>
@@ -1096,15 +1096,15 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="pdfObject">
         /// assumed to be either a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// , or a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfIndirectReference"/>
+        /// <see cref="iText.Kernel.Pdf.PdfIndirectReference"/>
         /// to a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDictionary"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// </param>
         /// <param name="document">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfDocument"/>
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
         /// to create the field in
         /// </param>
         /// <returns>
@@ -1113,9 +1113,8 @@ namespace iTextSharp.Forms.Fields {
         /// , or <code>null</code> if
         /// <code>pdfObject</code> does not contain a <code>FT</code> entry
         /// </returns>
-        public static iTextSharp.Forms.Fields.PdfFormField MakeFormField(PdfObject pdfObject, PdfDocument document
-            ) {
-            iTextSharp.Forms.Fields.PdfFormField field = null;
+        public static iText.Forms.Fields.PdfFormField MakeFormField(PdfObject pdfObject, PdfDocument document) {
+            iText.Forms.Fields.PdfFormField field = null;
             if (pdfObject.IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
             }
@@ -1138,7 +1137,7 @@ namespace iTextSharp.Forms.Fields {
                                 field = new PdfSignatureFormField(dictionary);
                             }
                             else {
-                                field = new iTextSharp.Forms.Fields.PdfFormField(dictionary);
+                                field = new iText.Forms.Fields.PdfFormField(dictionary);
                             }
                         }
                     }
@@ -1160,7 +1159,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <returns>
         /// the form type, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfName"/>
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// </returns>
         public virtual PdfName GetFormType() {
             return GetTypeFromParent(GetPdfObject());
@@ -1169,7 +1168,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets a value to the field and generating field appearance if needed.</summary>
         /// <param name="value">of the field</param>
         /// <returns>the field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetValue(String value) {
+        public virtual iText.Forms.Fields.PdfFormField SetValue(String value) {
             PdfName ft = GetFormType();
             if (ft == null || !ft.Equals(PdfName.Btn)) {
                 PdfArray kids = GetKids();
@@ -1179,7 +1178,7 @@ namespace iTextSharp.Forms.Fields {
                         if (kid.IsIndirectReference()) {
                             kid = ((PdfIndirectReference)kid).GetRefersTo();
                         }
-                        iTextSharp.Forms.Fields.PdfFormField field = new iTextSharp.Forms.Fields.PdfFormField((PdfDictionary)kid);
+                        iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                         field.font = font;
                         field.fontSize = fontSize;
                         field.SetValue(value);
@@ -1194,7 +1193,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="generateAppearance">set this flat to false if you want to keep the appearance of the field generated before
         ///     </param>
         /// <returns>the field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetValue(String value, bool generateAppearance) {
+        public virtual iText.Forms.Fields.PdfFormField SetValue(String value, bool generateAppearance) {
             PdfName formType = GetFormType();
             if (PdfName.Tx.Equals(formType) || PdfName.Ch.Equals(formType)) {
                 Put(PdfName.V, new PdfString(value, PdfEncodings.UNICODE_BIG));
@@ -1238,11 +1237,11 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="value">text value</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetValue(String value, PdfFont font, int fontSize) {
+        public virtual iText.Forms.Fields.PdfFormField SetValue(String value, PdfFont font, int fontSize) {
             PdfName formType = GetFormType();
             if (!formType.Equals(PdfName.Tx) && !formType.Equals(PdfName.Ch)) {
                 return SetValue(value);
@@ -1283,7 +1282,7 @@ namespace iTextSharp.Forms.Fields {
         /// the <CODE>value</CODE> parameter will be used
         /// </param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetValue(String value, String display) {
+        public virtual iText.Forms.Fields.PdfFormField SetValue(String value, String display) {
             if (display == null) {
                 return SetValue(value);
             }
@@ -1315,7 +1314,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="parent">another form field that this field belongs to, usually a group field</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetParent(iTextSharp.Forms.Fields.PdfFormField parent) {
+        public virtual iText.Forms.Fields.PdfFormField SetParent(iText.Forms.Fields.PdfFormField parent) {
             return Put(PdfName.Parent, parent.GetPdfObject());
         }
 
@@ -1328,7 +1327,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Gets the kids of this object.</summary>
         /// <returns>
         /// contents of the dictionary's <code>Kids</code> property, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// </returns>
         public virtual PdfArray GetKids() {
             return GetPdfObject().GetAsArray(PdfName.Kids);
@@ -1345,7 +1344,7 @@ namespace iTextSharp.Forms.Fields {
         /// entry for the field's <code>Kids</code> array property
         /// </param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField AddKid(iTextSharp.Forms.Fields.PdfFormField kid) {
+        public virtual iText.Forms.Fields.PdfFormField AddKid(iText.Forms.Fields.PdfFormField kid) {
             kid.SetParent(this);
             PdfArray kids = GetKids();
             if (kids == null) {
@@ -1357,16 +1356,16 @@ namespace iTextSharp.Forms.Fields {
 
         /// <summary>
         /// Adds a new kid to the <code>Kids</code> array property from a
-        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
         /// . Also sets the kid's <code>Parent</code> property to this object.
         /// </summary>
         /// <param name="kid">
         /// a new
-        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
         /// entry for the field's <code>Kids</code> array property
         /// </param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField AddKid(PdfWidgetAnnotation kid) {
+        public virtual iText.Forms.Fields.PdfFormField AddKid(PdfWidgetAnnotation kid) {
             kid.SetParent(GetPdfObject());
             PdfArray kids = GetKids();
             if (kids == null) {
@@ -1379,21 +1378,21 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Changes the name of the field to the specified value.</summary>
         /// <param name="name">the new field name, as a String</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetFieldName(String name) {
+        public virtual iText.Forms.Fields.PdfFormField SetFieldName(String name) {
             return Put(PdfName.T, new PdfString(name));
         }
 
         /// <summary>Gets the current field name.</summary>
         /// <returns>
         /// the current field name, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// </returns>
         public virtual PdfString GetFieldName() {
             String parentName = "";
             PdfDictionary parent = GetParent();
             if (parent != null) {
-                iTextSharp.Forms.Fields.PdfFormField parentField = iTextSharp.Forms.Fields.PdfFormField.MakeFormField(GetParent
-                    (), GetDocument());
+                iText.Forms.Fields.PdfFormField parentField = iText.Forms.Fields.PdfFormField.MakeFormField(GetParent(), GetDocument
+                    ());
                 PdfString pName = parentField.GetFieldName();
                 if (pName != null) {
                     parentName = pName.ToUnicodeString() + ".";
@@ -1413,7 +1412,7 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <param name="name">the new alternate name, as a String</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetAlternativeName(String name) {
+        public virtual iText.Forms.Fields.PdfFormField SetAlternativeName(String name) {
             return Put(PdfName.TU, new PdfString(name));
         }
 
@@ -1424,7 +1423,7 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <returns>
         /// the current alternate name, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// </returns>
         public virtual PdfString GetAlternativeName() {
             return GetPdfObject().GetAsString(PdfName.TU);
@@ -1437,7 +1436,7 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <param name="name">the new alternate name, as a String</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetMappingName(String name) {
+        public virtual iText.Forms.Fields.PdfFormField SetMappingName(String name) {
             return Put(PdfName.TM, new PdfString(name));
         }
 
@@ -1448,7 +1447,7 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <returns>
         /// the current mapping name, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// </returns>
         public virtual PdfString GetMappingName() {
             return GetPdfObject().GetAsString(PdfName.TM);
@@ -1477,7 +1476,7 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <param name="flag">an <code>int</code> interpreted as a series of a binary flags</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetFieldFlag(int flag) {
+        public virtual iText.Forms.Fields.PdfFormField SetFieldFlag(int flag) {
             return SetFieldFlag(flag, true);
         }
 
@@ -1495,7 +1494,7 @@ namespace iTextSharp.Forms.Fields {
         /// removes the flag(s).
         /// </param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetFieldFlag(int flag, bool value) {
+        public virtual iText.Forms.Fields.PdfFormField SetFieldFlag(int flag, bool value) {
             int flags = GetFieldFlags();
             if (value) {
                 flags |= flag;
@@ -1533,7 +1532,7 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <param name="flags">an <code>int</code> interpreted as a series of a binary flags</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetFieldFlags(int flags) {
+        public virtual iText.Forms.Fields.PdfFormField SetFieldFlags(int flags) {
             return Put(PdfName.Ff, new PdfNumber(flags));
         }
 
@@ -1547,7 +1546,7 @@ namespace iTextSharp.Forms.Fields {
             else {
                 PdfDictionary parent = GetParent();
                 if (parent != null) {
-                    return new iTextSharp.Forms.Fields.PdfFormField(parent).GetFieldFlags();
+                    return new iText.Forms.Fields.PdfFormField(parent).GetFieldFlags();
                 }
                 else {
                     return 0;
@@ -1558,7 +1557,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Gets the current value contained in the form field.</summary>
         /// <returns>
         /// the current value, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfObject"/>
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
         /// </returns>
         public virtual PdfObject GetValue() {
             return GetPdfObject().Get(PdfName.V);
@@ -1576,7 +1575,7 @@ namespace iTextSharp.Forms.Fields {
             }
             else {
                 if (value is PdfStream) {
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes());
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(((PdfStream)value).GetBytes());
                 }
                 else {
                     if (value is PdfName) {
@@ -1597,7 +1596,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets the default fallback value for the form field.</summary>
         /// <param name="value">the default value</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetDefaultValue(PdfObject value) {
+        public virtual iText.Forms.Fields.PdfFormField SetDefaultValue(PdfObject value) {
             return Put(PdfName.DV, value);
         }
 
@@ -1611,7 +1610,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="key">the dictionary key to use for storing the action</param>
         /// <param name="action">the action</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetAdditionalAction(PdfName key, PdfAction action) {
+        public virtual iText.Forms.Fields.PdfFormField SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
@@ -1626,12 +1625,12 @@ namespace iTextSharp.Forms.Fields {
         /// <remarks>Sets options for the form field. Only to be used for checkboxes and radio buttons.</remarks>
         /// <param name="options">
         /// an array of
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// objects that each represent
         /// the 'on' state of one of the choices.
         /// </param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetOptions(PdfArray options) {
+        public virtual iText.Forms.Fields.PdfFormField SetOptions(PdfArray options) {
             return Put(PdfName.Opt, options);
         }
 
@@ -1642,9 +1641,9 @@ namespace iTextSharp.Forms.Fields {
         /// </remarks>
         /// <returns>
         /// the options, as an
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfArray"/>
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
         /// of
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// objects
         /// </returns>
         public virtual PdfArray GetOptions() {
@@ -1653,14 +1652,14 @@ namespace iTextSharp.Forms.Fields {
 
         /// <summary>
         /// Gets all
-        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
         /// that this form field and its
         /// <see cref="GetKids()">kids</see>
         /// refer to.
         /// </summary>
         /// <returns>
         /// a list of
-        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation"/>
         /// </returns>
         public virtual IList<PdfWidgetAnnotation> GetWidgets() {
             IList<PdfWidgetAnnotation> widgets = new List<PdfWidgetAnnotation>();
@@ -1690,7 +1689,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <returns>
         /// the default appearance graphics, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// </returns>
         public virtual PdfString GetDefaultAppearance() {
             return GetPdfObject().GetAsString(PdfName.DA);
@@ -1702,7 +1701,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="defaultAppearance">a valid sequence of PDF content stream syntax</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
+        public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
             byte[] b = defaultAppearance.GetBytes();
             int len = b.Length;
             for (int k = 0; k < len; ++k) {
@@ -1710,7 +1709,7 @@ namespace iTextSharp.Forms.Fields {
                     b[k] = 32;
                 }
             }
-            GetPdfObject().Put(PdfName.DA, new PdfString(iTextSharp.IO.Util.JavaUtil.GetStringForBytes(b)));
+            GetPdfObject().Put(PdfName.DA, new PdfString(iText.IO.Util.JavaUtil.GetStringForBytes(b)));
             return this;
         }
 
@@ -1733,7 +1732,7 @@ namespace iTextSharp.Forms.Fields {
         /// </summary>
         /// <param name="justification">the value to set the justification attribute to</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetJustification(int justification) {
+        public virtual iText.Forms.Fields.PdfFormField SetJustification(int justification) {
             GetPdfObject().Put(PdfName.Q, new PdfNumber(justification));
             RegenerateField();
             return this;
@@ -1742,7 +1741,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Gets a default style string, as described in "Rich Text Strings" section of Pdf spec.</summary>
         /// <returns>
         /// the default style, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// </returns>
         public virtual PdfString GetDefaultStyle() {
             return GetPdfObject().GetAsString(PdfName.DS);
@@ -1751,7 +1750,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets a default style string, as described in "Rich Text Strings" section of Pdf spec.</summary>
         /// <param name="defaultStyleString">a new default style for the form field</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetDefaultStyle(PdfString defaultStyleString) {
+        public virtual iText.Forms.Fields.PdfFormField SetDefaultStyle(PdfString defaultStyleString) {
             GetPdfObject().Put(PdfName.DS, defaultStyleString);
             return this;
         }
@@ -1760,9 +1759,9 @@ namespace iTextSharp.Forms.Fields {
         /// <remarks>
         /// Gets a rich text string, as described in "Rich Text Strings" section of Pdf spec.
         /// May be either
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfStream"/>
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// .
         /// </remarks>
         /// <returns>the current rich text value</returns>
@@ -1774,14 +1773,14 @@ namespace iTextSharp.Forms.Fields {
         /// <remarks>
         /// Sets a rich text string, as described in "Rich Text Strings" section of Pdf spec.
         /// May be either
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfStream"/>
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// or
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfString"/>
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// .
         /// </remarks>
         /// <param name="richText">a new rich text value</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetRichText(PdfObject richText) {
+        public virtual iText.Forms.Fields.PdfFormField SetRichText(PdfObject richText) {
             GetPdfObject().Put(PdfName.RV, richText);
             return this;
         }
@@ -1789,7 +1788,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Gets the current font of the form field.</summary>
         /// <returns>
         /// the current
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont">font</see>
+        /// <see cref="iText.Kernel.Font.PdfFont">font</see>
         /// </returns>
         public virtual PdfFont GetFont() {
             return font;
@@ -1839,7 +1838,7 @@ namespace iTextSharp.Forms.Fields {
         /// the field appearance after setting the new value.
         /// </remarks>
         /// <param name="backgroundColor">the new color to be set</param>
-        public virtual void SetBackgroundColor(iTextSharp.Kernel.Color.Color backgroundColor) {
+        public virtual void SetBackgroundColor(iText.Kernel.Color.Color backgroundColor) {
             this.backgroundColor = backgroundColor;
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
@@ -1877,12 +1876,12 @@ namespace iTextSharp.Forms.Fields {
 
         /// <summary>
         /// Sets the action on all
-        /// <see cref="iTextSharp.Kernel.Pdf.Annot.PdfWidgetAnnotation">widgets</see>
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfWidgetAnnotation">widgets</see>
         /// of this form field.
         /// </summary>
         /// <param name="action">the action</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetAction(PdfAction action) {
+        public virtual iText.Forms.Fields.PdfFormField SetAction(PdfAction action) {
             IList<PdfWidgetAnnotation> widgets = GetWidgets();
             if (widgets != null) {
                 foreach (PdfWidgetAnnotation widget in widgets) {
@@ -1919,7 +1918,7 @@ namespace iTextSharp.Forms.Fields {
 
         /// <param name="visibility"/>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetVisibility(int visibility) {
+        public virtual iText.Forms.Fields.PdfFormField SetVisibility(int visibility) {
             switch (visibility) {
                 case HIDDEN: {
                     GetPdfObject().Put(PdfName.F, new PdfNumber(PdfAnnotation.PRINT | PdfAnnotation.HIDDEN));
@@ -2067,7 +2066,7 @@ namespace iTextSharp.Forms.Fields {
                                 if (kid.IsIndirectReference()) {
                                     kid = ((PdfIndirectReference)kid).GetRefersTo();
                                 }
-                                iTextSharp.Forms.Fields.PdfFormField field = new iTextSharp.Forms.Fields.PdfFormField((PdfDictionary)kid);
+                                iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                                 PdfWidgetAnnotation widget = field.GetWidgets()[0];
                                 PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);
                                 String state;
@@ -2135,7 +2134,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets the Border Color.</summary>
         /// <param name="color">the new value for the Border Color</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetBorderColor(iTextSharp.Kernel.Color.Color color) {
+        public virtual iText.Forms.Fields.PdfFormField SetBorderColor(iText.Kernel.Color.Color color) {
             borderColor = color;
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
@@ -2149,7 +2148,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets the text color.</summary>
         /// <param name="color">the new value for the Color</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetColor(iTextSharp.Kernel.Color.Color color) {
+        public virtual iText.Forms.Fields.PdfFormField SetColor(iText.Kernel.Color.Color color) {
             this.color = color;
             RegenerateField();
             return this;
@@ -2158,7 +2157,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets the ReadOnly flag, specifying whether or not the field can be changed.</summary>
         /// <param name="readOnly">if <code>true</code>, then the field cannot be changed.</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetReadOnly(bool readOnly) {
+        public virtual iText.Forms.Fields.PdfFormField SetReadOnly(bool readOnly) {
             return SetFieldFlag(FF_READ_ONLY, readOnly);
         }
 
@@ -2171,7 +2170,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets the Required flag, specifying whether or not the field must be filled in.</summary>
         /// <param name="required">if <code>true</code>, then the field must be filled in.</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetRequired(bool required) {
+        public virtual iText.Forms.Fields.PdfFormField SetRequired(bool required) {
             return SetFieldFlag(FF_REQUIRED, required);
         }
 
@@ -2184,7 +2183,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Sets the NoExport flag, specifying whether or not exporting is forbidden.</summary>
         /// <param name="noExport">if <code>true</code>, then exporting is <em>forbidden</em></param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetNoExport(bool noExport) {
+        public virtual iText.Forms.Fields.PdfFormField SetNoExport(bool noExport) {
             return SetFieldFlag(FF_NO_EXPORT, noExport);
         }
 
@@ -2197,7 +2196,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Specifies on which page the form field's widget must be shown.</summary>
         /// <param name="pageNum">the page number</param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetPage(int pageNum) {
+        public virtual iText.Forms.Fields.PdfFormField SetPage(int pageNum) {
             if (GetWidgets().Count > 0) {
                 PdfAnnotation annot = GetWidgets()[0];
                 if (annot != null) {
@@ -2254,7 +2253,7 @@ namespace iTextSharp.Forms.Fields {
                     else {
                         kidDic = (PdfDictionary)kid;
                     }
-                    iTextSharp.Forms.Fields.PdfFormField fld = new iTextSharp.Forms.Fields.PdfFormField(kidDic);
+                    iText.Forms.Fields.PdfFormField fld = new iText.Forms.Fields.PdfFormField(kidDic);
                     String[] states = fld.GetAppearanceStates();
                     foreach (String state in states) {
                         names.Add(state);
@@ -2280,10 +2279,10 @@ namespace iTextSharp.Forms.Fields {
         /// </param>
         /// <param name="appearanceStream">
         /// the appearance instructions, as a
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfStream"/>
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
         /// </param>
         /// <returns>the edited field</returns>
-        public virtual iTextSharp.Forms.Fields.PdfFormField SetAppearance(PdfName appearanceType, String appearanceState
+        public virtual iText.Forms.Fields.PdfFormField SetAppearance(PdfName appearanceType, String appearanceState
             , PdfStream appearanceStream) {
             PdfWidgetAnnotation widget = GetWidgets()[0];
             PdfDictionary dic;
@@ -2306,7 +2305,7 @@ namespace iTextSharp.Forms.Fields {
             return this;
         }
 
-        public virtual iTextSharp.Forms.Fields.PdfFormField Put(PdfName key, PdfObject value) {
+        public virtual iText.Forms.Fields.PdfFormField Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
@@ -2315,7 +2314,7 @@ namespace iTextSharp.Forms.Fields {
         /// <remarks>
         /// Releases underlying pdf object and other pdf entities used by wrapper.
         /// This method should be called instead of direct call to
-        /// <see cref="iTextSharp.Kernel.Pdf.PdfObject.Release()"/>
+        /// <see cref="iText.Kernel.Pdf.PdfObject.Release()"/>
         /// if the wrapper is used.
         /// </remarks>
         public virtual void Release() {
@@ -2366,7 +2365,7 @@ namespace iTextSharp.Forms.Fields {
             PdfStream stream = new PdfStream();
             PdfCanvas canvas = new PdfCanvas(stream, res, GetDocument());
             canvas.SetFontAndSize(font, fontSize).ResetFillColorRgb();
-            return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
+            return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -2395,7 +2394,7 @@ namespace iTextSharp.Forms.Fields {
                         fontAndSize[1] = dab[DA_SIZE];
                     }
                     if (color == null) {
-                        color = (iTextSharp.Kernel.Color.Color)dab[DA_COLOR];
+                        color = (iText.Kernel.Color.Color)dab[DA_COLOR];
                     }
                 }
                 else {
@@ -2495,13 +2494,13 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="rect">the location on the page for the list field</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <param name="value">the initial value</param>
         /// <returns>
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject">Form XObject</see>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject">Form XObject</see>
         /// that was drawn
         /// </returns>
         protected internal virtual void DrawTextAppearance(Rectangle rect, PdfFont font, int fontSize, String value
@@ -2539,8 +2538,8 @@ namespace iTextSharp.Forms.Fields {
                     x = rect.GetWidth() / 2;
                 }
             }
-            new iTextSharp.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 0, 2 * height)).ShowTextAligned
-                (paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+            new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 0, 2 * height)).ShowTextAligned(paragraph
+                , x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
@@ -2549,7 +2548,7 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="rect">the location on the page for the list field</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <param name="value">the initial value</param>
@@ -2564,16 +2563,16 @@ namespace iTextSharp.Forms.Fields {
             IList<String> strings = font.SplitString(value, fontSize, width - 6);
             DrawBorder(canvas, appearance, width, height);
             canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - 6, height - 6).Clip().NewPath();
-            iTextSharp.Layout.Canvas modelCanvas = new iTextSharp.Layout.Canvas(canvas, GetDocument(), new Rectangle(3
-                , 0, Math.Max(0, width - 6), Math.Max(0, height - 2)));
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(3, 0, Math.
+                Max(0, width - 6), Math.Max(0, height - 2)));
             for (int index = 0; index < strings.Count; index++) {
-                bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(iTextSharp.Layout.Property.Property.FULL);
+                bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(iText.Layout.Property.Property.FULL);
                 if (true.Equals(isFull)) {
                     break;
                 }
                 Paragraph paragraph = new Paragraph(strings[index]).SetFont(font).SetFontSize(fontSize).SetMargins(0, 0, 0
                     , 0).SetMultipliedLeading(1);
-                paragraph.SetProperty(iTextSharp.Layout.Property.Property.FORCED_PLACEMENT, true);
+                paragraph.SetProperty(iText.Layout.Property.Property.FORCED_PLACEMENT, true);
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }
@@ -2585,7 +2584,7 @@ namespace iTextSharp.Forms.Fields {
                         }
                         if (((PdfNumber)ind).GetValue() == index) {
                             paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
-                            paragraph.SetFontColor(iTextSharp.Kernel.Color.Color.LIGHT_GRAY);
+                            paragraph.SetFontColor(iText.Kernel.Color.Color.LIGHT_GRAY);
                         }
                     }
                 }
@@ -2598,7 +2597,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Draws a border using the borderWidth and borderColor of the form field.</summary>
         /// <param name="canvas">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// on which to draw
         /// </param>
         /// <param name="width">the width of the rectangle to draw</param>
@@ -2610,7 +2609,7 @@ namespace iTextSharp.Forms.Fields {
                 borderWidth = 0;
             }
             if (borderColor == null) {
-                borderColor = iTextSharp.Kernel.Color.Color.BLACK;
+                borderColor = iText.Kernel.Color.Color.BLACK;
             }
             if (backgroundColor != null) {
                 canvas.SetFillColor(backgroundColor).Rectangle(borderWidth / 2, borderWidth / 2, width - borderWidth, height
@@ -2671,7 +2670,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Draws a radio button.</summary>
         /// <param name="canvas">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// on which to draw
         /// </param>
         /// <param name="width">the width of the radio button to draw</param>
@@ -2769,12 +2768,12 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="text">the text to display on the button</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         /// <returns>
         /// a new
-        /// <see cref="iTextSharp.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
         /// </returns>
         protected internal virtual PdfFormXObject DrawPushButtonAppearance(float width, float height, String text, 
             PdfFont font, int fontSize) {
@@ -2782,7 +2781,7 @@ namespace iTextSharp.Forms.Fields {
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             if (backgroundColor == null) {
-                backgroundColor = iTextSharp.Kernel.Color.Color.LIGHT_GRAY;
+                backgroundColor = iText.Kernel.Color.Color.LIGHT_GRAY;
             }
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
@@ -2810,7 +2809,7 @@ namespace iTextSharp.Forms.Fields {
         /// <summary>Performs the low-level drawing operations to draw a button object.</summary>
         /// <param name="canvas">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// of the page to draw on.
         /// </param>
         /// <param name="x">the x coordinate of the lower left corner of the button rectangle</param>
@@ -2820,24 +2819,24 @@ namespace iTextSharp.Forms.Fields {
         /// <param name="text">the text to display on the button</param>
         /// <param name="font">
         /// a
-        /// <see cref="iTextSharp.Kernel.Font.PdfFont"/>
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </param>
         /// <param name="fontSize">a positive integer</param>
         protected internal virtual void DrawButton(PdfCanvas canvas, float x, float y, float width, float height, 
             String text, PdfFont font, int fontSize) {
             if (color == null) {
-                color = iTextSharp.Kernel.Color.Color.BLACK;
+                color = iText.Kernel.Color.Color.BLACK;
             }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);
-            new iTextSharp.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, width, 2 * height)).ShowTextAligned
+            new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, width, 2 * height)).ShowTextAligned
                 (paragraph, width / 2, height / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE);
         }
 
         /// <summary>Performs the low-level drawing operations to draw a checkbox object.</summary>
         /// <param name="canvas">
         /// the
-        /// <see cref="iTextSharp.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
         /// of the page to draw on.
         /// </param>
         /// <param name="width">the width of the button</param>

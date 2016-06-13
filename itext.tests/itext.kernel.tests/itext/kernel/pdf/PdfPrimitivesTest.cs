@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
-using iTextSharp.Test;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfPrimitivesTest : ExtendedITextTest {
         internal static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfPrimitivesTest/";
+             + "/test/itext/kernel/pdf/PdfPrimitivesTest/";
 
         internal static readonly PdfName TestArray = new PdfName("TestArray");
 

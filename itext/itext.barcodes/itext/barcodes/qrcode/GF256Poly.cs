@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Text;
 
-namespace iTextSharp.Barcodes.Qrcode {
+namespace iText.Barcodes.Qrcode {
     /// <summary><p>Represents a polynomial whose coefficients are elements of GF(256).</summary>
     /// <remarks>
     /// <p>Represents a polynomial whose coefficients are elements of GF(256).
@@ -139,7 +139,7 @@ namespace iTextSharp.Barcodes.Qrcode {
             return result_1;
         }
 
-        internal iTextSharp.Barcodes.Qrcode.GF256Poly AddOrSubtract(iTextSharp.Barcodes.Qrcode.GF256Poly other) {
+        internal iText.Barcodes.Qrcode.GF256Poly AddOrSubtract(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
             }
@@ -163,10 +163,10 @@ namespace iTextSharp.Barcodes.Qrcode {
             for (int i = lengthDiff; i < largerCoefficients.Length; i++) {
                 sumDiff[i] = GF256.AddOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
             }
-            return new iTextSharp.Barcodes.Qrcode.GF256Poly(field, sumDiff);
+            return new iText.Barcodes.Qrcode.GF256Poly(field, sumDiff);
         }
 
-        internal iTextSharp.Barcodes.Qrcode.GF256Poly Multiply(iTextSharp.Barcodes.Qrcode.GF256Poly other) {
+        internal iText.Barcodes.Qrcode.GF256Poly Multiply(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
             }
@@ -184,10 +184,10 @@ namespace iTextSharp.Barcodes.Qrcode {
                     product[i + j] = GF256.AddOrSubtract(product[i + j], field.Multiply(aCoeff, bCoefficients[j]));
                 }
             }
-            return new iTextSharp.Barcodes.Qrcode.GF256Poly(field, product);
+            return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
 
-        internal iTextSharp.Barcodes.Qrcode.GF256Poly Multiply(int scalar) {
+        internal iText.Barcodes.Qrcode.GF256Poly Multiply(int scalar) {
             if (scalar == 0) {
                 return field.GetZero();
             }
@@ -199,10 +199,10 @@ namespace iTextSharp.Barcodes.Qrcode {
             for (int i = 0; i < size; i++) {
                 product[i] = field.Multiply(coefficients[i], scalar);
             }
-            return new iTextSharp.Barcodes.Qrcode.GF256Poly(field, product);
+            return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
 
-        internal iTextSharp.Barcodes.Qrcode.GF256Poly MultiplyByMonomial(int degree, int coefficient) {
+        internal iText.Barcodes.Qrcode.GF256Poly MultiplyByMonomial(int degree, int coefficient) {
             if (degree < 0) {
                 throw new ArgumentException();
             }
@@ -214,29 +214,29 @@ namespace iTextSharp.Barcodes.Qrcode {
             for (int i = 0; i < size; i++) {
                 product[i] = field.Multiply(coefficients[i], coefficient);
             }
-            return new iTextSharp.Barcodes.Qrcode.GF256Poly(field, product);
+            return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
 
-        internal iTextSharp.Barcodes.Qrcode.GF256Poly[] Divide(iTextSharp.Barcodes.Qrcode.GF256Poly other) {
+        internal iText.Barcodes.Qrcode.GF256Poly[] Divide(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
             }
             if (other.IsZero()) {
                 throw new ArgumentException("Divide by 0");
             }
-            iTextSharp.Barcodes.Qrcode.GF256Poly quotient = field.GetZero();
-            iTextSharp.Barcodes.Qrcode.GF256Poly remainder = this;
+            iText.Barcodes.Qrcode.GF256Poly quotient = field.GetZero();
+            iText.Barcodes.Qrcode.GF256Poly remainder = this;
             int denominatorLeadingTerm = other.GetCoefficient(other.GetDegree());
             int inverseDenominatorLeadingTerm = field.Inverse(denominatorLeadingTerm);
             while (remainder.GetDegree() >= other.GetDegree() && !remainder.IsZero()) {
                 int degreeDifference = remainder.GetDegree() - other.GetDegree();
                 int scale = field.Multiply(remainder.GetCoefficient(remainder.GetDegree()), inverseDenominatorLeadingTerm);
-                iTextSharp.Barcodes.Qrcode.GF256Poly term = other.MultiplyByMonomial(degreeDifference, scale);
-                iTextSharp.Barcodes.Qrcode.GF256Poly iterationQuotient = field.BuildMonomial(degreeDifference, scale);
+                iText.Barcodes.Qrcode.GF256Poly term = other.MultiplyByMonomial(degreeDifference, scale);
+                iText.Barcodes.Qrcode.GF256Poly iterationQuotient = field.BuildMonomial(degreeDifference, scale);
                 quotient = quotient.AddOrSubtract(iterationQuotient);
                 remainder = remainder.AddOrSubtract(term);
             }
-            return new iTextSharp.Barcodes.Qrcode.GF256Poly[] { quotient, remainder };
+            return new iText.Barcodes.Qrcode.GF256Poly[] { quotient, remainder };
         }
 
         public override String ToString() {

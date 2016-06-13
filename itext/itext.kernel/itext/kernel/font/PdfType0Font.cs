@@ -45,16 +45,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using iTextSharp.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Font.Otf;
-using iTextSharp.IO.Log;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
+using iText.IO;
+using iText.IO.Font;
+using iText.IO.Font.Cmap;
+using iText.IO.Font.Otf;
+using iText.IO.Log;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Font {
+namespace iText.Kernel.Font {
     public class PdfType0Font : PdfFont {
         private static readonly byte[] rotbits = new byte[] { (byte)0x80, (byte)0x40, (byte)0x20, (byte)0x10, (byte
             )0x08, (byte)0x04, (byte)0x02, (byte)0x01 };
@@ -132,7 +132,7 @@ namespace iTextSharp.Kernel.Font {
                     toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(uniMap);
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iTextSharp.Kernel.Font.PdfType0Font));
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
                         logger.Error(String.Format(LogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
@@ -432,7 +432,7 @@ namespace iTextSharp.Kernel.Font {
                 GetPdfObject().Put(PdfName.Encoding, new PdfName(cmapEncoding.GetCmapName()));
                 PdfDictionary fontDescriptor = GetFontDescriptor(name);
                 int[][] metrics = longTag.Values.ToArray(new int[0][]);
-                iTextSharp.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
+                iText.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
@@ -444,7 +444,7 @@ namespace iTextSharp.Kernel.Font {
                     TrueTypeFont ttf = (TrueTypeFont)GetFontProgram();
                     AddRangeUni(ttf, longTag, true);
                     int[][] metrics = longTag.Values.ToArray(new int[0][]);
-                    iTextSharp.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
+                    iText.IO.Util.JavaUtil.Sort(metrics, new PdfType0Font.MetricComparator());
                     PdfStream fontStream;
                     String fontName = ttf.GetFontNames().GetFontName();
                     if (subset) {
@@ -611,7 +611,7 @@ namespace iTextSharp.Kernel.Font {
 
         //TODO optimize memory ussage
         private static String ToHex4(char ch) {
-            String s = "0000" + iTextSharp.IO.Util.JavaUtil.IntegerToHexString(ch);
+            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
             return s.Substring(s.Length - 4);
         }
 
@@ -695,7 +695,7 @@ namespace iTextSharp.Kernel.Font {
             public virtual int Compare(int[] o1, int[] o2) {
                 int m1 = o1[0];
                 int m2 = o2[0];
-                return iTextSharp.IO.Util.JavaUtil.IntegerCompare(m1, m2);
+                return iText.IO.Util.JavaUtil.IntegerCompare(m1, m2);
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
-namespace iTextSharp.Forms {
+namespace iText.Forms {
     internal static class FormsExtensions {
         public static void AddAll<T>(this ICollection<T> t, IEnumerable<T> newItems) {
             foreach (T item in newItems) {

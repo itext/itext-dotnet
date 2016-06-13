@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.Barcodes.Dmcode {
+namespace iText.Barcodes.Dmcode {
     public class DmParams {
         public DmParams(int height, int width, int heightSection, int widthSection, int dataSize, int dataBlock, int
              errorBlock) {

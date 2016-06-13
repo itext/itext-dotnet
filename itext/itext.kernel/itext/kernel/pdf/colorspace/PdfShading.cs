@@ -42,11 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Function;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Function;
 
-namespace iTextSharp.Kernel.Pdf.Colorspace {
+namespace iText.Kernel.Pdf.Colorspace {
     public abstract class PdfShading : PdfObjectWrapper<PdfDictionary> {
         private class ShadingType {
             public const int FUNCTION_BASED = 1;

@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iTextSharp.IO.Font.Otf {
+namespace iText.IO.Font.Otf {
     public class OtfMarkRecord {
         public int markClass;
 

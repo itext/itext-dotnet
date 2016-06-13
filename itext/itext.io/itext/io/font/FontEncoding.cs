@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Util;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class FontEncoding {
         private static readonly byte[] emptyBytes = new byte[0];
 
@@ -81,8 +81,8 @@ namespace iTextSharp.IO.Font {
             fontSpecific = false;
         }
 
-        public static iTextSharp.IO.Font.FontEncoding CreateFontEncoding(String baseEncoding) {
-            iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
+        public static iText.IO.Font.FontEncoding CreateFontEncoding(String baseEncoding) {
+            iText.IO.Font.FontEncoding encoding = new iText.IO.Font.FontEncoding();
             encoding.baseEncoding = NormalizeEncoding(baseEncoding);
             if (encoding.baseEncoding.StartsWith("#")) {
                 encoding.FillCustomEncoding();
@@ -93,8 +93,8 @@ namespace iTextSharp.IO.Font {
             return encoding;
         }
 
-        public static iTextSharp.IO.Font.FontEncoding CreateEmptyFontEncoding() {
-            iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
+        public static iText.IO.Font.FontEncoding CreateEmptyFontEncoding() {
+            iText.IO.Font.FontEncoding encoding = new iText.IO.Font.FontEncoding();
             encoding.baseEncoding = null;
             encoding.fontSpecific = false;
             encoding.differences = new String[256];
@@ -105,8 +105,8 @@ namespace iTextSharp.IO.Font {
         }
 
         /// <summary>This encoding will base on font encoding (FontSpecific encoding in Type 1 terminology)</summary>
-        public static iTextSharp.IO.Font.FontEncoding CreateFontSpecificEncoding() {
-            iTextSharp.IO.Font.FontEncoding encoding = new iTextSharp.IO.Font.FontEncoding();
+        public static iText.IO.Font.FontEncoding CreateFontSpecificEncoding() {
+            iText.IO.Font.FontEncoding encoding = new iText.IO.Font.FontEncoding();
             encoding.fontSpecific = true;
             for (int ch = 0; ch < 256; ch++) {
                 encoding.unicodeToCode.Put(ch, ch);

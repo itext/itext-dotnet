@@ -1,16 +1,16 @@
 using System;
 using System.IO;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel.XMP;
-using iTextSharp.Test;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel.XMP;
+using iText.Test;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfStampingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/kernel/pdf/PdfStampingTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfStampingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/kernel/pdf/PdfStampingTest/";
+             + "/test/itext/kernel/pdf/PdfStampingTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -55,7 +55,7 @@ namespace iTextSharp.Kernel.Pdf {
             PdfString creator = info.GetAsString(PdfName.Creator);
             NUnit.Framework.Assert.AreEqual("iText 7", creator.ToString());
             byte[] bytes = document.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%Hello World\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             String date = document.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
             double diff = DateTimeUtil.GetUtcMillisFromEpoch(null) - DateTimeUtil.GetUtcMillisFromEpoch(cl);
@@ -98,9 +98,9 @@ namespace iTextSharp.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -138,9 +138,9 @@ namespace iTextSharp.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -183,8 +183,7 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             }
             reader.Close();
         }
@@ -228,8 +227,7 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             }
             reader.Close();
         }
@@ -268,9 +266,9 @@ namespace iTextSharp.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -308,9 +306,9 @@ namespace iTextSharp.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -349,8 +347,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -390,8 +388,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -431,8 +429,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -472,8 +470,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -519,8 +517,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_3 = 1; i_3 <= pdfDocument.GetNumberOfPages(); i_3++) {
                 byte[] bytes = pdfDocument.GetPage(i_3).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_3 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_3);
+                NUnit.Framework.Assert.AreEqual("%page " + i_3 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_3);
             }
             reader.Close();
         }
@@ -570,8 +568,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_4 = 1; i_4 <= pageCount; i_4++) {
                 byte[] bytes = pdfDocument.GetPage(i_4).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_4 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_4);
+                NUnit.Framework.Assert.AreEqual("%page " + i_4 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_4);
             }
             reader.Close();
         }
@@ -605,8 +603,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -678,7 +676,7 @@ namespace iTextSharp.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void StampingXmp1() {
             String filename1 = destinationFolder + "stampingXmp1_1.pdf";
@@ -716,14 +714,14 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
         public virtual void StampingXmp2() {
             String filename1 = destinationFolder + "stampingXmp2_1.pdf";
@@ -761,8 +759,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -806,7 +804,7 @@ namespace iTextSharp.Kernel.Pdf {
             PdfString creator = info.GetAsString(PdfName.Creator);
             NUnit.Framework.Assert.AreEqual("iText 7", creator.ToString());
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%Hello World\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%Hello World\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             String date = pdfDocument.GetDocumentInfo().GetPdfObject().GetAsString(PdfName.ModDate).GetValue();
             DateTime cl = PdfDate.Decode(date);
             double diff = DateTimeUtil.GetUtcMillisFromEpoch(null) - DateTimeUtil.GetUtcMillisFromEpoch(cl);
@@ -850,9 +848,9 @@ namespace iTextSharp.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -890,9 +888,9 @@ namespace iTextSharp.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 1\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 1\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual("%page 2\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes));
+            NUnit.Framework.Assert.AreEqual("%page 2\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             reader.Close();
         }
 
@@ -935,8 +933,7 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             }
             reader.Close();
         }
@@ -980,8 +977,7 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
             for (int i_2 = 1; i_2 < pdfDocument.GetNumberOfPages(); i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ));
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes));
             }
             reader.Close();
         }
@@ -1020,8 +1016,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -1061,8 +1057,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -1102,8 +1098,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }
@@ -1143,8 +1139,8 @@ namespace iTextSharp.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             for (int i_2 = 1; i_2 <= pageCount; i_2++) {
                 byte[] bytes = pdfDocument.GetPage(i_2).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iTextSharp.IO.Util.JavaUtil.GetStringForBytes(bytes
-                    ), "Page content at page " + i_2);
+                NUnit.Framework.Assert.AreEqual("%page " + i_2 + "\n", iText.IO.Util.JavaUtil.GetStringForBytes(bytes), "Page content at page "
+                     + i_2);
             }
             reader.Close();
         }

@@ -44,7 +44,7 @@
  */
 using System;
 
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
 	
     public class XMPCalendar {
         private DateTime dateTime;

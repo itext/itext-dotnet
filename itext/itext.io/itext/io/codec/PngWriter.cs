@@ -42,9 +42,9 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.IO;
-using iTextSharp.IO.Source;
+using iText.IO.Source;
 
-namespace iTextSharp.IO.Codec {
+namespace iText.IO.Codec {
     /// <summary>Writes a PNG image.</summary>
     public class PngWriter {
         private static readonly byte[] PNG_SIGNTURE = new byte[] { (byte)137, 80, 78, 71, 13, 10, 26, 10 };

@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Navigation {
+namespace iText.Kernel.Pdf.Navigation {
     public abstract class PdfDestination : PdfObjectWrapper<PdfObject> {
         protected internal PdfDestination(PdfObject pdfObject)
             : base(pdfObject) {
@@ -53,10 +53,10 @@ namespace iTextSharp.Kernel.Pdf.Navigation {
 
         public abstract PdfObject GetDestinationPage(IDictionary<String, PdfObject> names);
 
-        public abstract iTextSharp.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination(IDictionary<Object
-            , PdfObject> names);
+        public abstract iText.Kernel.Pdf.Navigation.PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject
+            > names);
 
-        public static iTextSharp.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject) {
+        public static iText.Kernel.Pdf.Navigation.PdfDestination MakeDestination(PdfObject pdfObject) {
             if (pdfObject.GetObjectType() == PdfObject.STRING) {
                 return new PdfStringDestination((PdfString)pdfObject);
             }

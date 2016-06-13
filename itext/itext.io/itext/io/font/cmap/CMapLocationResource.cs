@@ -43,11 +43,11 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iTextSharp.IO.Font;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
+using iText.IO.Font;
+using iText.IO.Source;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font.Cmap {
+namespace iText.IO.Font.Cmap {
     /// <author>psoares</author>
     public class CMapLocationResource : ICMapLocation {
         /// <exception cref="System.IO.IOException"/>
@@ -55,8 +55,7 @@ namespace iTextSharp.IO.Font.Cmap {
             String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);
             if (inp == null) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TheCmap1WasNotFound).SetMessageParams(fullName
-                    );
+                throw new iText.IO.IOException(iText.IO.IOException.TheCmap1WasNotFound).SetMessageParams(fullName);
             }
             return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(inp)));
         }

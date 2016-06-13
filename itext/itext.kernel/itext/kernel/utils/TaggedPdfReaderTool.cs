@@ -45,14 +45,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas.Parser;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Data;
-using iTextSharp.Kernel.Pdf.Canvas.Parser.Listener;
-using iTextSharp.Kernel.Pdf.Tagging;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Data;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Tagging;
 
-namespace iTextSharp.Kernel.Utils {
+namespace iText.Kernel.Utils {
     /// <summary>Converts a tagged PDF document into an XML file.</summary>
     public class TaggedPdfReaderTool {
         protected internal PdfDocument document;
@@ -94,7 +94,7 @@ namespace iTextSharp.Kernel.Utils {
             @out.Close();
         }
 
-        public virtual iTextSharp.Kernel.Utils.TaggedPdfReaderTool SetRootTag(String rootTagName) {
+        public virtual iText.Kernel.Utils.TaggedPdfReaderTool SetRootTag(String rootTagName) {
             this.rootTag = rootTagName;
             return this;
         }
@@ -123,7 +123,7 @@ namespace iTextSharp.Kernel.Utils {
                 PdfString alt = (structElemKid).GetAlt();
                 if (alt != null) {
                     @out.Write("<alt><![CDATA[");
-                    @out.Write(iTextSharp.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
+                    @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
                     @out.Write("]]></alt>" + Environment.NewLine);
                 }
                 InspectKids(structElemKid.GetKids());

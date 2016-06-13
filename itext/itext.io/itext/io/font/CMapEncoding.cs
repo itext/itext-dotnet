@@ -42,10 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iTextSharp.IO.Font.Cmap;
-using iTextSharp.IO.Util;
+using iText.IO.Font.Cmap;
+using iText.IO.Util;
 
-namespace iTextSharp.IO.Font {
+namespace iText.IO.Font {
     public class CMapEncoding {
         private String cmap;
 

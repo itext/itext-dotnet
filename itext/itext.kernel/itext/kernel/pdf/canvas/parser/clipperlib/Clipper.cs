@@ -55,7 +55,7 @@ using System.Collections.Generic;
 //using System.IO;            //debugging with streamReader & StreamWriter
 //using System.Windows.Forms; //debugging to clipboard
 
-namespace iTextSharp.Kernel.Pdf.Canvas.Parser.ClipperLib {
+namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
 
 #if use_int32
   using cInt = Int32;

@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iTextSharp.IO.Image;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Xobject;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
+using iText.IO.Image;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
+using iText.Kernel.Utils;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class ListTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/ListTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/ListTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/ListTest/";
+             + "/test/itext/layout/ListTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -175,9 +175,9 @@ namespace iTextSharp.Layout {
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
-            iTextSharp.Layout.Element.Image image = new iTextSharp.Layout.Element.Image(xObject, 100);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             list.Add(new ListItem()).Add(new ListItem(image)).Add(new ListItem()).Add("123").Add((ListItem)new ListItem
-                ().Add(new Div().SetHeight(70).SetBackgroundColor(iTextSharp.Kernel.Color.Color.RED)));
+                ().Add(new Div().SetHeight(70).SetBackgroundColor(iText.Kernel.Color.Color.RED)));
             document.Add(list);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

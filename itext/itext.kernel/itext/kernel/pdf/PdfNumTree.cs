@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 
-namespace iTextSharp.Kernel.Pdf {
+namespace iText.Kernel.Pdf {
     public class PdfNumTree {
         private const int NODE_SIZE = 40;
 
@@ -91,7 +91,7 @@ namespace iTextSharp.Kernel.Pdf {
         public virtual PdfDictionary BuildTree() {
             int?[] numbers = new int?[items.Count];
             numbers = items.Keys.ToArray(numbers);
-            iTextSharp.IO.Util.JavaUtil.Sort(numbers);
+            iText.IO.Util.JavaUtil.Sort(numbers);
             if (numbers.Length <= NODE_SIZE) {
                 PdfDictionary dic = new PdfDictionary();
                 PdfArray ar = new PdfArray();

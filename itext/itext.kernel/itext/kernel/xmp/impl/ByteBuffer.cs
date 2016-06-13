@@ -30,7 +30,7 @@
 using System;
 using System.IO;
 
-namespace iTextSharp.Kernel.XMP.Impl {
+namespace iText.Kernel.XMP.Impl {
     /// <summary>Byte buffer container including length of valid data.</summary>
     /// <since>11.10.2006</since>
     public class ByteBuffer {
@@ -162,7 +162,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
 
         /// <summary>Append another buffer to this buffer.</summary>
         /// <param name="anotherBuffer">another <code>ByteBuffer</code></param>
-        public virtual void Append(iTextSharp.Kernel.XMP.Impl.ByteBuffer anotherBuffer) {
+        public virtual void Append(iText.Kernel.XMP.Impl.ByteBuffer anotherBuffer) {
             Append(anotherBuffer.buffer, 0, anotherBuffer.length);
         }
 

@@ -28,10 +28,10 @@
 //
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
-using iTextSharp.Kernel.XMP.Options;
-using iTextSharp.Kernel.XMP.Properties;
+using iText.Kernel.XMP.Options;
+using iText.Kernel.XMP.Properties;
 
-namespace iTextSharp.Kernel.XMP {
+namespace iText.Kernel.XMP {
     /// <summary>This class represents the set of XMP metadata as a DOM representation.</summary>
     /// <remarks>
     /// This class represents the set of XMP metadata as a DOM representation. It has methods to read and
@@ -59,7 +59,7 @@ namespace iTextSharp.Kernel.XMP {
         /// nodes do not have values.
         /// <p>
         /// See
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions"/>
         /// for detailed information about the options.
         /// <p>
         /// This is the simplest property getter, mainly for top level simple properties or after using
@@ -83,7 +83,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <code>null</code> if the property does not exist.
         /// </returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetProperty(String schemaNS, String propName);
 
         /// <summary>Provides access to items within an array.</summary>
@@ -109,7 +109,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <code>null</code> if the property does not exist.
         /// </returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetArrayItem(String schemaNS, String arrayName, int itemIndex);
 
         /// <summary>Returns the number of items in the array.</summary>
@@ -121,7 +121,7 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <returns>Returns the number of items in the array.</returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         int CountArrayItems(String schemaNS, String arrayName);
 
         /// <summary>Provides access to fields within a nested structure.</summary>
@@ -155,7 +155,7 @@ namespace iTextSharp.Kernel.XMP {
         /// structs do not have values.
         /// </returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetStructField(String schemaNS, String structName, String fieldNS, String fieldName);
 
         /// <summary>Provides access to a qualifier attached to a property.</summary>
@@ -197,7 +197,7 @@ namespace iTextSharp.Kernel.XMP {
         /// structs do not have values).
         /// </returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetQualifier(String schemaNS, String propName, String qualNS, String qualName);
 
         // ---------------------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ namespace iTextSharp.Kernel.XMP {
         /// implicitly creates the named array if necessary.
         /// <p>
         /// See
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions"/>
         /// for detailed information about the options.
         /// <p>
         /// This is the simplest property setter, mainly for top level simple properties or after using
@@ -241,16 +241,16 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">Option flags describing the property. See the earlier description.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetProperty(String schemaNS, String propName, Object propValue, PropertyOptions options);
 
-        /// <seealso cref="SetProperty(System.String, System.String, System.Object, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetProperty(System.String, System.String, System.Object, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the value for the property</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetProperty(String schemaNS, String propName, Object propValue);
 
         /// <summary>Replaces an item within an array.</summary>
@@ -279,18 +279,18 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">the set options for the item.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue, PropertyOptions options
             );
 
-        /// <seealso cref="SetArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetArrayItem(System.String, System.String, int, System.String, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI</param>
         /// <param name="arrayName">The name of the array</param>
         /// <param name="itemIndex">The index to insert the new item</param>
         /// <param name="itemValue">the new value of the array item</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue);
 
         /// <summary>Inserts an item into an array previous to the given index.</summary>
@@ -316,18 +316,18 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">the set options that decide about the kind of the node.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void InsertArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue, PropertyOptions options
             );
 
-        /// <seealso cref="InsertArrayItem(System.String, System.String, int, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="InsertArrayItem(System.String, System.String, int, System.String, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the array</param>
         /// <param name="arrayName">The name of the array</param>
         /// <param name="itemIndex">The index to insert the new item</param>
         /// <param name="itemValue">the value of the array item</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void InsertArrayItem(String schemaNS, String arrayName, int itemIndex, String itemValue);
 
         /// <summary>Simplifies the construction of an array by not requiring that you pre-create an empty array.</summary>
@@ -347,16 +347,16 @@ namespace iTextSharp.Kernel.XMP {
         /// Option flags describing the array form. The only valid options are
         /// <ul>
         /// <li>
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions.ARRAY"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY"/>
         /// ,
         /// <li>
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions.ARRAY_ORDERED"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ORDERED"/>
         /// ,
         /// <li>
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions.ARRAY_ALTERNATE"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALTERNATE"/>
         /// or
         /// <li>
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions.ARRAY_ALT_TEXT"/>
         /// .
         /// </ul>
         /// <em>Note:</em> the array options only need to be provided if the array is not
@@ -367,21 +367,21 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="itemValue">the value of the array item. Has the same usage as propValue in getProperty.</param>
         /// <param name="itemOptions">
         /// Option flags describing the item to append (
-        /// <see cref="iTextSharp.Kernel.XMP.Options.PropertyOptions"/>
+        /// <see cref="iText.Kernel.XMP.Options.PropertyOptions"/>
         /// )
         /// </param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void AppendArrayItem(String schemaNS, String arrayName, PropertyOptions arrayOptions, String itemValue, PropertyOptions
              itemOptions);
 
-        /// <seealso cref="AppendArrayItem(System.String, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="AppendArrayItem(System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions, System.String, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the array</param>
         /// <param name="arrayName">The name of the array</param>
         /// <param name="itemValue">the value of the array item</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void AppendArrayItem(String schemaNS, String arrayName, String itemValue);
 
         /// <summary>Provides access to fields within a nested structure.</summary>
@@ -411,11 +411,11 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">Option flags describing the field. See the earlier description.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetStructField(String schemaNS, String structName, String fieldNS, String fieldName, String fieldValue
             , PropertyOptions options);
 
-        /// <seealso cref="SetStructField(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetStructField(System.String, System.String, System.String, System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the struct</param>
         /// <param name="structName">The name of the struct</param>
@@ -423,7 +423,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="fieldName">The name of the field</param>
         /// <param name="fieldValue">the value of the field</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetStructField(String schemaNS, String structName, String fieldNS, String fieldName, String fieldValue
             );
 
@@ -459,11 +459,11 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">Option flags describing the qualifier. See the earlier description.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetQualifier(String schemaNS, String propName, String qualNS, String qualName, String qualValue, PropertyOptions
              options);
 
-        /// <seealso cref="SetQualifier(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetQualifier(System.String, System.String, System.String, System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the struct</param>
         /// <param name="propName">The name of the property to which the qualifier is attached</param>
@@ -471,7 +471,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="qualName">The name of the qualifier</param>
         /// <param name="qualValue">the value of the qualifier</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetQualifier(String schemaNS, String propName, String qualNS, String qualName, String qualValue);
 
         // ---------------------------------------------------------------------------------------------
@@ -706,7 +706,7 @@ namespace iTextSharp.Kernel.XMP {
         /// does not exist.
         /// </returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPProperty GetLocalizedText(String schemaNS, String altTextName, String genericLang, String specificLang);
 
         /// <summary>Modifies the value of a selected item in an alt-text array.</summary>
@@ -752,11 +752,11 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">Option flags, none are defined at present.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetLocalizedText(String schemaNS, String altTextName, String genericLang, String specificLang, String
              itemValue, PropertyOptions options);
 
-        /// <seealso cref="SetLocalizedText(System.String, System.String, System.String, System.String, System.String, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetLocalizedText(System.String, System.String, System.String, System.String, System.String, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the alt-text array</param>
         /// <param name="altTextName">The name of the alt-text array</param>
@@ -764,7 +764,7 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="specificLang">The name of the specific language</param>
         /// <param name="itemValue">the new value for the appropriate array item</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetLocalizedText(String schemaNS, String altTextName, String genericLang, String specificLang, String
              itemValue);
 
@@ -796,7 +796,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         bool? GetPropertyBoolean(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -816,7 +816,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         int? GetPropertyInteger(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -836,7 +836,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         long? GetPropertyLong(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -856,7 +856,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         double? GetPropertyDouble(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -876,7 +876,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPDateTime GetPropertyDate(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -896,7 +896,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         DateTime GetPropertyCalendar(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -916,7 +916,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         byte[] GetPropertyBase64(String schemaNS, String propName);
 
         /// <summary>Convenience method to retrieve the literal value of a property.</summary>
@@ -941,7 +941,7 @@ namespace iTextSharp.Kernel.XMP {
         /// Wraps all exceptions that may occur,
         /// especially conversion errors.
         /// </exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         String GetPropertyString(String schemaNS, String propName);
 
         /// <summary>Convenience method to set a property to a literal <code>boolean</code> value.</summary>
@@ -956,16 +956,16 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the literal property value as <code>boolean</code>.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBoolean(String schemaNS, String propName, bool propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyBoolean(System.String, System.String, bool, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyBoolean(System.String, System.String, bool, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the literal property value as <code>boolean</code></param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBoolean(String schemaNS, String propName, bool propValue);
 
         /// <summary>Convenience method to set a property to a literal <code>int</code> value.</summary>
@@ -980,16 +980,16 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the literal property value as <code>int</code>.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyInteger(String schemaNS, String propName, int propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyInteger(System.String, System.String, int, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyInteger(System.String, System.String, int, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the literal property value as <code>int</code></param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyInteger(String schemaNS, String propName, int propValue);
 
         /// <summary>Convenience method to set a property to a literal <code>long</code> value.</summary>
@@ -1004,16 +1004,16 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the literal property value as <code>long</code>.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyLong(String schemaNS, String propName, long propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyLong(System.String, System.String, long, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyLong(System.String, System.String, long, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the literal property value as <code>long</code></param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyLong(String schemaNS, String propName, long propValue);
 
         /// <summary>Convenience method to set a property to a literal <code>double</code> value.</summary>
@@ -1028,16 +1028,16 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the literal property value as <code>double</code>.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyDouble(String schemaNS, String propName, double propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyDouble(System.String, System.String, double, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyDouble(System.String, System.String, double, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the literal property value as <code>double</code></param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyDouble(String schemaNS, String propName, double propValue);
 
         /// <summary>
@@ -1055,16 +1055,16 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the property value as <code>XMPDateTime</code>.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyDate(String schemaNS, String propName, XMPDateTime propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyDate(System.String, System.String, XMPDateTime, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyDate(System.String, System.String, XMPDateTime, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the property value as <code>XMPDateTime</code></param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyDate(String schemaNS, String propName, XMPDateTime propValue);
 
         /// <summary>
@@ -1082,16 +1082,16 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the property value as Java <code>Calendar</code>.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyCalendar(System.String, System.String, System.DateTime, iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyCalendar(System.String, System.String, System.DateTime, iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the property value as <code>Calendar</code></param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyCalendar(String schemaNS, String propName, DateTime propValue);
 
         /// <summary>
@@ -1109,31 +1109,31 @@ namespace iTextSharp.Kernel.XMP {
         /// <param name="propValue">the literal property value as byte array.</param>
         /// <param name="options">options of the property to set (optional).</param>
         /// <exception cref="XMPException">Wraps all exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBase64(String schemaNS, String propName, byte[] propValue, PropertyOptions options);
 
-        /// <seealso cref="SetPropertyBase64(System.String, System.String, byte[], iTextSharp.Kernel.XMP.Options.PropertyOptions)
+        /// <seealso cref="SetPropertyBase64(System.String, System.String, byte[], iText.Kernel.XMP.Options.PropertyOptions)
         ///     "/>
         /// <param name="schemaNS">The namespace URI for the property</param>
         /// <param name="propName">The name of the property</param>
         /// <param name="propValue">the literal property value as byte array</param>
         /// <exception cref="XMPException">Wraps all exceptions</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void SetPropertyBase64(String schemaNS, String propName, byte[] propValue);
 
         /// <summary>Constructs an iterator for the properties within this XMP object.</summary>
         /// <returns>Returns an <code>XMPIterator</code>.</returns>
-        /// <seealso cref="Iterator(System.String, System.String, iTextSharp.Kernel.XMP.Options.IteratorOptions)"/>
+        /// <seealso cref="Iterator(System.String, System.String, iText.Kernel.XMP.Options.IteratorOptions)"/>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPIterator Iterator();
 
         /// <summary>Constructs an iterator for the properties within this XMP object using some options.</summary>
         /// <param name="options">Option flags to control the iteration.</param>
         /// <returns>Returns an <code>XMPIterator</code>.</returns>
-        /// <seealso cref="Iterator(System.String, System.String, iTextSharp.Kernel.XMP.Options.IteratorOptions)"/>
+        /// <seealso cref="Iterator(System.String, System.String, iText.Kernel.XMP.Options.IteratorOptions)"/>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPIterator Iterator(IteratorOptions options);
 
         /// <summary>Construct an iterator for the properties within an XMP object.</summary>
@@ -1152,7 +1152,7 @@ namespace iTextSharp.Kernel.XMP {
         /// </param>
         /// <param name="options">
         /// Option flags to control the iteration. See
-        /// <see cref="iTextSharp.Kernel.XMP.Options.IteratorOptions"/>
+        /// <see cref="iText.Kernel.XMP.Options.IteratorOptions"/>
         /// for
         /// details.
         /// </param>
@@ -1161,7 +1161,7 @@ namespace iTextSharp.Kernel.XMP {
         /// considering the given options.
         /// </returns>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         XMPIterator Iterator(String schemaNS, String propName, IteratorOptions options);
 
         /// <summary>
@@ -1209,14 +1209,14 @@ namespace iTextSharp.Kernel.XMP {
         /// <remarks>
         /// Perform the normalization as a separate parsing step.
         /// Normally it is done during parsing, unless the parsing option
-        /// <see cref="iTextSharp.Kernel.XMP.Options.ParseOptions.OMIT_NORMALIZATION"/>
+        /// <see cref="iText.Kernel.XMP.Options.ParseOptions.OMIT_NORMALIZATION"/>
         /// is set to <code>true</code>.
         /// <em>Note:</em> It does no harm to call this method to an already normalized xmp object.
         /// It was a PDF/A requirement to get hand on the unnormalized <code>XMPMeta</code> object.
         /// </remarks>
         /// <param name="options">optional parsing options.</param>
         /// <exception cref="XMPException">Wraps all errors and exceptions that may occur.</exception>
-        /// <exception cref="iTextSharp.Kernel.XMP.XMPException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
         void Normalize(ParseOptions options);
 
         /// <summary>Renders this node and the tree unter this node in a human readable form.</summary>

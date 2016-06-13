@@ -43,30 +43,30 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Log;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Colorspace;
-using iTextSharp.Pdfa;
+using iText.IO.Log;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Colorspace;
+using iText.Pdfa;
 
-namespace iTextSharp.Pdfa.Checker {
+namespace iText.Pdfa.Checker {
     public class PdfA1Checker : PdfAChecker {
-        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));
 
-        protected internal static readonly ICollection<PdfName> contentAnnotations = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> contentAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Text, PdfName.FreeText, PdfName.Line, PdfName.Square, PdfName.Circle, PdfName.Stamp, PdfName.
             Ink, PdfName.Popup));
 
-        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> forbiddenActions = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Launch, PdfName.Sound, PdfName.Movie, PdfName.ResetForm, PdfName.ImportData, PdfName.JavaScript
             , PdfName.Hide));
 
-        protected internal static readonly ICollection<PdfName> allowedNamedActions = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedNamedActions = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.NextPage, PdfName.PrevPage, PdfName.FirstPage, PdfName.LastPage));
 
-        protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(iTextSharp.IO.Util.JavaUtil.ArraysAsList
+        protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric, PdfName.Perceptual, PdfName.Saturation));
 
         public PdfA1Checker(PdfAConformanceLevel conformanceLevel)
@@ -75,7 +75,7 @@ namespace iTextSharp.Pdfa.Checker {
 
         public override void CheckCanvasStack(char stackOperation) {
             if ('q' == stackOperation) {
-                if (++gsStackDepth > iTextSharp.Pdfa.Checker.PdfA1Checker.maxGsStackDepth) {
+                if (++gsStackDepth > iText.Pdfa.Checker.PdfA1Checker.maxGsStackDepth) {
                     throw new PdfAConformanceException(PdfAConformanceException.GraphicStateStackDepthIsGreaterThan28);
                 }
             }
@@ -106,8 +106,8 @@ namespace iTextSharp.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(iTextSharp.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool?
-             fill) {
+        public override void CheckColor(iText.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool? fill
+            ) {
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 

@@ -47,16 +47,16 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
-using iTextSharp.Forms;
-using iTextSharp.Forms.Fields;
-using iTextSharp.IO.Source;
-using iTextSharp.IO.Util;
-using iTextSharp.Kernel;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Annot;
+using iText.Forms;
+using iText.Forms.Fields;
+using iText.IO.Source;
+using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Annot;
 
-namespace iTextSharp.Signatures {
+namespace iText.Signatures {
     /// <summary>Takes care of the cryptographic options and appearances that form a signature.</summary>
     public class PdfSigner {
         /// <summary>Enum containing the Cryptographic Standards.</summary>
@@ -739,7 +739,7 @@ namespace iTextSharp.Signatures {
                 range[idx++] = n;
                 range[idx++] = lit1.GetBytesCount() + n;
             }
-            iTextSharp.IO.Util.JavaUtil.Sort(range, 1, range.Length - 1);
+            iText.IO.Util.JavaUtil.Sort(range, 1, range.Length - 1);
             for (int k = 3; k < range.Length - 2; k += 2) {
                 range[k] -= range[k - 1];
             }
@@ -794,7 +794,7 @@ namespace iTextSharp.Signatures {
         /// ,
         /// <see cref="GetRangeStream()"/>
         /// and
-        /// <see cref="Close(iTextSharp.Kernel.Pdf.PdfDictionary)"/>
+        /// <see cref="Close(iText.Kernel.Pdf.PdfDictionary)"/>
         /// .
         /// </remarks>
         /// <returns>

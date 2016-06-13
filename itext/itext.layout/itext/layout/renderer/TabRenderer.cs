@@ -41,13 +41,13 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Pdf.Canvas.Draw;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Layout;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Layout.Element;
+using iText.Layout.Layout;
 
-namespace iTextSharp.Layout.Renderer {
+namespace iText.Layout.Renderer {
     public class TabRenderer : AbstractRenderer {
         public TabRenderer(Tab tab)
             : base(tab) {
@@ -56,14 +56,14 @@ namespace iTextSharp.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea();
             float? width = RetrieveWidth(area.GetBBox().GetWidth());
-            float? height = this.GetPropertyAsFloat(iTextSharp.Layout.Property.Property.HEIGHT);
+            float? height = this.GetPropertyAsFloat(iText.Layout.Property.Property.HEIGHT);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().GetX(), area.GetBBox().GetY
                 () + area.GetBBox().GetHeight(), (float)width, (float)height));
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 
         public override void Draw(DrawContext drawContext) {
-            ILineDrawer leader = this.GetProperty<ILineDrawer>(iTextSharp.Layout.Property.Property.TAB_LEADER);
+            ILineDrawer leader = this.GetProperty<ILineDrawer>(iText.Layout.Property.Property.TAB_LEADER);
             if (leader == null) {
                 return;
             }
@@ -78,7 +78,7 @@ namespace iTextSharp.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iTextSharp.Layout.Renderer.TabRenderer((Tab)modelElement);
+            return new iText.Layout.Renderer.TabRenderer((Tab)modelElement);
         }
     }
 }

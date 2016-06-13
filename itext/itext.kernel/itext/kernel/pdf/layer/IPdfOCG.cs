@@ -41,9 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iTextSharp.Kernel.Pdf;
+using iText.Kernel.Pdf;
 
-namespace iTextSharp.Kernel.Pdf.Layer {
+namespace iText.Kernel.Pdf.Layer {
     /// <summary>The interface generalizing the layer types (PdfLayer, PdfLayerMembership).</summary>
     public interface IPdfOCG {
         /// <summary>Gets the object representing the layer.</summary>

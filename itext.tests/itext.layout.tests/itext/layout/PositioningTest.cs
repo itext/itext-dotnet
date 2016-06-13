@@ -1,21 +1,21 @@
 using System;
 using System.IO;
-using iTextSharp.Kernel.Color;
-using iTextSharp.Kernel.Geom;
-using iTextSharp.Kernel.Pdf;
-using iTextSharp.Kernel.Pdf.Canvas;
-using iTextSharp.Kernel.Utils;
-using iTextSharp.Layout.Border;
-using iTextSharp.Layout.Element;
-using iTextSharp.Layout.Property;
-using iTextSharp.Test;
+using iText.Kernel.Color;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Utils;
+using iText.Layout.Border;
+using iText.Layout.Element;
+using iText.Layout.Property;
+using iText.Test;
 
-namespace iTextSharp.Layout {
+namespace iText.Layout {
     public class PositioningTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itextsharp/layout/PositioningTest/";
+        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/PositioningTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itextsharp/layout/PositioningTest/";
+             + "/test/itext/layout/PositioningTest/";
 
         [NUnit.Framework.TestFixtureSetUp]
         public static void BeforeClass() {
@@ -66,7 +66,7 @@ namespace iTextSharp.Layout {
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
-            List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(iTextSharp.Kernel.Color.Color
+            List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(iText.Kernel.Color.Color
                 .BLUE).SetHeight(100);
             list.Add("Hello").Add("World").Add("!!!");
             document.Add(list);
@@ -84,10 +84,10 @@ namespace iTextSharp.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
-            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(iTextSharp.Kernel.Color.Color.BLACK).Rectangle
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(iText.Kernel.Color.Color.BLACK).Rectangle
                 (300, 300, 100, 100).Fill().Release();
-            Paragraph p = new Paragraph("Hello").SetBackgroundColor(iTextSharp.Kernel.Color.Color.BLUE).SetHeight(100)
-                .SetFixedPosition(1, 300, 300, 100);
+            Paragraph p = new Paragraph("Hello").SetBackgroundColor(iText.Kernel.Color.Color.BLUE).SetHeight(100).SetFixedPosition
+                (1, 300, 300, 100);
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

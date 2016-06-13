@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace iTextSharp.Test.Attributes
+namespace iText.Test.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class LogMessageAttribute : Attribute

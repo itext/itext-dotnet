@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iTextSharp.IO.Codec;
+using iText.IO.Codec;
 
-namespace iTextSharp.IO.Image {
+namespace iText.IO.Image {
     public sealed class RawImageHelper {
         public static void UpdateImageAttributes(RawImageData image, IDictionary<String, Object> additional) {
             if (!image.IsRawImage()) {
@@ -123,16 +123,16 @@ namespace iTextSharp.IO.Image {
         /// <param name="components">1,3 or 4 for GrayScale, RGB and CMYK</param>
         /// <param name="bpc">bits per component. Must be 1,2,4 or 8</param>
         /// <param name="data">the image data</param>
-        /// <exception cref="iTextSharp.IO.IOException">on error</exception>
+        /// <exception cref="iText.IO.IOException">on error</exception>
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, int components
             , int bpc, byte[] data) {
             image.SetHeight(height);
             image.SetWidth(width);
             if (components != 1 && components != 3 && components != 4) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.ComponentsMustBe1_3Or4);
+                throw new iText.IO.IOException(iText.IO.IOException.ComponentsMustBe1_3Or4);
             }
             if (bpc != 1 && bpc != 2 && bpc != 4 && bpc != 8) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.BitsPerComponentMustBe1_2_4or8);
+                throw new iText.IO.IOException(iText.IO.IOException.BitsPerComponentMustBe1_2_4or8);
             }
             image.SetColorSpace(components);
             image.SetBpc(bpc);
@@ -142,8 +142,7 @@ namespace iTextSharp.IO.Image {
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, int components
             , int bpc, byte[] data, int[] transparency) {
             if (transparency != null && transparency.Length != components * 2) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
-                    );
+                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
             }
             if (components == 1 && bpc == 1) {
                 byte[] g4 = CCITTG4Encoder.Compress(data, width, height);
@@ -159,8 +158,7 @@ namespace iTextSharp.IO.Image {
         protected internal static void UpdateRawImageParameters(RawImageData image, int width, int height, bool reverseBits
             , int typeCCITT, int parameters, byte[] data, int[] transparency) {
             if (transparency != null && transparency.Length != 2) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages
-                    );
+                throw new iText.IO.IOException(iText.IO.IOException.TransparencyLengthMustBeEqualTo2WithCcittImages);
             }
             UpdateCcittImageParameters(image, width, height, reverseBits, typeCCITT, parameters, data);
             image.SetTransparency(transparency);
@@ -170,7 +168,7 @@ namespace iTextSharp.IO.Image {
             reverseBits, int typeCcitt, int parameters, byte[] data) {
             if (typeCcitt != RawImageData.CCITTG4 && typeCcitt != RawImageData.CCITTG3_1D && typeCcitt != RawImageData
                 .CCITTG3_2D) {
-                throw new iTextSharp.IO.IOException(iTextSharp.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
+                throw new iText.IO.IOException(iText.IO.IOException.CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d
                     );
             }
             if (reverseBits) {

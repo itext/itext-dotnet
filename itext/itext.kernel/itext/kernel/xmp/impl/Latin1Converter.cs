@@ -29,7 +29,7 @@
 //        http://www.adobe.com/devnet/xmp/library/eula-xmp-library-java.html
 using System;
 
-namespace iTextSharp.Kernel.XMP.Impl {
+namespace iText.Kernel.XMP.Impl {
     /// <since>12.10.2006</since>
     public class Latin1Converter {
         private const int STATE_START = 0;
@@ -172,7 +172,7 @@ namespace iTextSharp.Kernel.XMP.Impl {
                     }
                     // space for undefined 
                     // interpret byte as Windows Cp1252 char
-                    return iTextSharp.IO.Util.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252").GetBytes("UTF-8");
+                    return iText.IO.Util.JavaUtil.GetStringForBytes(new byte[] { ch }, "cp1252").GetBytes("UTF-8");
                 }
             }
             catch (ArgumentException) {
