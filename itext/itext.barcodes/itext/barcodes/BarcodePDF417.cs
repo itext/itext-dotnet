@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.IO.Font;
 using iText.Kernel;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -544,12 +545,12 @@ namespace iText.Barcodes {
             return new Rectangle(0, 0, bitColumns, codeRows);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground) {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE);
         }
 
-        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground, float moduleWidth
-            , float moduleHeight) {
+        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleWidth, float moduleHeight
+            ) {
             PaintCode();
             int stride = (bitColumns + 7) / 8;
             if (foreground != null) {
@@ -732,8 +733,7 @@ namespace iText.Barcodes {
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <returns>the XObject.</returns>
-        public override PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, PdfDocument document
-            ) {
+        public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, DEFAULT_MODULE_SIZE, document);
         }
 
@@ -742,8 +742,8 @@ namespace iText.Barcodes {
         /// <param name="moduleWidth">the width of the pixels.</param>
         /// <param name="moduleHeight">the height of the pixels.</param>
         /// <returns>the XObject.</returns>
-        public virtual PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, float moduleWidth, float
-             moduleHeight, PdfDocument document) {
+        public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleWidth, float moduleHeight, PdfDocument
+             document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleWidth, moduleHeight);
             xObject.SetBBox(new PdfArray(rect));

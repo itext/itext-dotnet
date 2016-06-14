@@ -41,45 +41,48 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System.IO;
-using iText.Kernel;
+using System;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class IccBased : iText.Kernel.Color.Color {
-        public IccBased(PdfCieBasedCs.IccBased cs)
-            : this(cs, new float[cs.GetNumberOfComponents()]) {
+namespace iText.Kernel.Colors {
+    public class DeviceRgb : Color {
+        public DeviceRgb(int r, int g, int b)
+            : this(r / 255f, g / 255f, b / 255f) {
         }
 
-        public IccBased(PdfCieBasedCs.IccBased cs, float[] value)
-            : base(cs, value) {
+        public DeviceRgb(float r, float g, float b)
+            : base(new PdfDeviceCs.Rgb(), new float[] { r, g, b }) {
         }
 
-        /// <summary>Creates IccBased color.</summary>
-        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        public IccBased(Stream iccStream)
-            : this(new PdfCieBasedCs.IccBased(iccStream), null) {
-            // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
-            colorValue = new float[GetNumberOfComponents()];
-            for (int i = 0; i < GetNumberOfComponents(); i++) {
-                colorValue[i] = 0f;
+        public DeviceRgb()
+            : this(0f, 0f, 0f) {
+        }
+
+        public static iText.Kernel.Colors.DeviceRgb MakeLighter(iText.Kernel.Colors.DeviceRgb rgbColor) {
+            float r = rgbColor.GetColorValue()[0];
+            float g = rgbColor.GetColorValue()[1];
+            float b = rgbColor.GetColorValue()[2];
+            float v = Math.Max(r, Math.Max(g, b));
+            if (v == 0f) {
+                return new iText.Kernel.Colors.DeviceRgb(0x54, 0x54, 0x54);
             }
+            float multiplier = Math.Min(1f, v + 0.33f) / v;
+            r = multiplier * r;
+            g = multiplier * g;
+            b = multiplier * b;
+            return new iText.Kernel.Colors.DeviceRgb(r, g, b);
         }
 
-        /// <summary>Creates IccBased color.</summary>
-        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
-        /// <param name="value">color value.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
-        public IccBased(Stream iccStream, float[] value)
-            : this(new PdfCieBasedCs.IccBased(iccStream), value) {
-        }
-
-        public IccBased(Stream iccStream, float[] range, float[] value)
-            : this(new PdfCieBasedCs.IccBased(iccStream, range), value) {
-            if (GetNumberOfComponents() * 2 != range.Length) {
-                throw new PdfException(PdfException.InvalidRangeArray, this);
-            }
+        public static iText.Kernel.Colors.DeviceRgb MakeDarker(iText.Kernel.Colors.DeviceRgb rgbColor) {
+            float r = rgbColor.GetColorValue()[0];
+            float g = rgbColor.GetColorValue()[1];
+            float b = rgbColor.GetColorValue()[2];
+            float v = Math.Max(r, Math.Max(g, b));
+            float multiplier = Math.Max(0f, (v - 0.33f) / v);
+            r = multiplier * r;
+            g = multiplier * g;
+            b = multiplier * b;
+            return new iText.Kernel.Colors.DeviceRgb(r, g, b);
         }
     }
 }

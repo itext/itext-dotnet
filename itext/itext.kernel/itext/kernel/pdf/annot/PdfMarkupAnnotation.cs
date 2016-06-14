@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -166,7 +166,7 @@ namespace iText.Kernel.Pdf.Annot {
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.BE, borderEffect);
         }
 
-        public virtual iText.Kernel.Color.Color GetInteriorColor() {
+        public virtual Color GetInteriorColor() {
             PdfArray color = GetPdfObject().GetAsArray(PdfName.IC);
             if (color == null) {
                 return null;

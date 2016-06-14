@@ -41,22 +41,25 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf.Colorspace;
-using iText.Kernel.Pdf.Function;
 
-namespace iText.Kernel.Color {
-    public class Separation : iText.Kernel.Color.Color {
-        public Separation(PdfSpecialCs.Separation cs)
-            : this(cs, 1f) {
+namespace iText.Kernel.Colors {
+    public class Lab : Color {
+        public Lab(PdfCieBasedCs.Lab cs)
+            : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
-        public Separation(PdfSpecialCs.Separation cs, float value)
-            : base(cs, new float[] { value }) {
+        public Lab(PdfCieBasedCs.Lab cs, float[] value)
+            : base(cs, value) {
         }
 
-        public Separation(String name, PdfColorSpace alternateCs, PdfFunction tintTransform, float value)
-            : this(new PdfSpecialCs.Separation(name, alternateCs, tintTransform), value) {
+        public Lab(float[] whitePoint, float[] value)
+            : base(new PdfCieBasedCs.Lab(whitePoint), value) {
         }
+
+        public Lab(float[] whitePoint, float[] blackPoint, float[] range, float[] value)
+            : this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value) {
+        }
+        // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
     }
 }

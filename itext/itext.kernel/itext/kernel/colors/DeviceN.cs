@@ -46,8 +46,8 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Function;
 
-namespace iText.Kernel.Color {
-    public class DeviceN : iText.Kernel.Color.Color {
+namespace iText.Kernel.Colors {
+    public class DeviceN : Color {
         public DeviceN(PdfSpecialCs.DeviceN cs)
             : this(cs, GetDefaultColorants(cs.GetNumberOfComponents())) {
         }

@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO.Source;
 
-namespace iText.IO.Color {
+namespace iText.IO.Colors {
     public class IccProfile {
         protected internal byte[] data;
 
@@ -57,11 +57,11 @@ namespace iText.IO.Color {
         protected internal IccProfile() {
         }
 
-        public static iText.IO.Color.IccProfile GetInstance(byte[] data, int numComponents) {
+        public static iText.IO.Colors.IccProfile GetInstance(byte[] data, int numComponents) {
             if (data.Length < 128 || data[36] != 0x61 || data[37] != 0x63 || data[38] != 0x73 || data[39] != 0x70) {
                 throw new iText.IO.IOException(iText.IO.IOException.InvalidIccProfile);
             }
-            iText.IO.Color.IccProfile icc = new iText.IO.Color.IccProfile();
+            iText.IO.Colors.IccProfile icc = new iText.IO.Colors.IccProfile();
             icc.data = data;
             int? cs;
             cs = GetIccNumberOfComponents(data);
@@ -75,14 +75,14 @@ namespace iText.IO.Color {
             return icc;
         }
 
-        public static iText.IO.Color.IccProfile GetInstance(byte[] data) {
+        public static iText.IO.Colors.IccProfile GetInstance(byte[] data) {
             int? cs;
             cs = GetIccNumberOfComponents(data);
             int numComponents = cs == null ? 0 : (int)cs;
             return GetInstance(data, numComponents);
         }
 
-        public static iText.IO.Color.IccProfile GetInstance(RandomAccessFileOrArray file) {
+        public static iText.IO.Colors.IccProfile GetInstance(RandomAccessFileOrArray file) {
             try {
                 byte[] head = new byte[128];
                 int remain = head.Length;
@@ -118,7 +118,7 @@ namespace iText.IO.Color {
             }
         }
 
-        public static iText.IO.Color.IccProfile GetInstance(Stream stream) {
+        public static iText.IO.Colors.IccProfile GetInstance(Stream stream) {
             RandomAccessFileOrArray raf;
             try {
                 raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(stream));
@@ -129,7 +129,7 @@ namespace iText.IO.Color {
             return GetInstance(raf);
         }
 
-        public static iText.IO.Color.IccProfile GetInstance(String filename) {
+        public static iText.IO.Colors.IccProfile GetInstance(String filename) {
             RandomAccessFileOrArray raf;
             try {
                 raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(filename));

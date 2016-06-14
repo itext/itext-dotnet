@@ -49,7 +49,7 @@ using iText.IO.Image;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -1241,14 +1241,14 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>Changes the current color for filling paths.</summary>
         /// <param name="color">fill color.</param>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetFillColor(iText.Kernel.Color.Color color) {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetFillColor(Color color) {
             return SetColor(color, true);
         }
 
         /// <summary>Changes the current color for stroking paths.</summary>
         /// <param name="color">stroke color.</param>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColor(iText.Kernel.Color.Color color) {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetStrokeColor(Color color) {
             return SetColor(color, false);
         }
 
@@ -1256,7 +1256,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="color">the new color.</param>
         /// <param name="fill">set fill color (<code>true</code>) or stroke color (<code>false</code>)</param>
         /// <returns>current canvas.</returns>
-        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetColor(iText.Kernel.Color.Color color, bool fill) {
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetColor(Color color, bool fill) {
             if (color is PatternColor) {
                 return SetColor(color.GetColorSpace(), color.GetColorValue(), ((PatternColor)color).GetPattern(), fill);
             }
@@ -1286,8 +1286,8 @@ namespace iText.Kernel.Pdf.Canvas {
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetColor(PdfColorSpace colorSpace, float[] colorValue, PdfPattern
              pattern, bool fill) {
             bool setColorValueOnly = false;
-            iText.Kernel.Color.Color oldColor = fill ? currentGs.GetFillColor() : currentGs.GetStrokeColor();
-            iText.Kernel.Color.Color newColor = CreateColor(colorSpace, colorValue, pattern);
+            Color oldColor = fill ? currentGs.GetFillColor() : currentGs.GetStrokeColor();
+            Color newColor = CreateColor(colorSpace, colorValue, pattern);
             if (oldColor.Equals(newColor)) {
                 return this;
             }
@@ -2180,8 +2180,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 ();
         }
 
-        private iText.Kernel.Color.Color CreateColor(PdfColorSpace colorSpace, float[] colorValue, PdfPattern pattern
-            ) {
+        private Color CreateColor(PdfColorSpace colorSpace, float[] colorValue, PdfPattern pattern) {
             if (colorSpace is PdfSpecialCs.UncoloredTilingPattern) {
                 return new PatternColor((PdfPattern.Tiling)pattern, ((PdfSpecialCs.UncoloredTilingPattern)colorSpace).GetUnderlyingColorSpace
                     (), colorValue);
@@ -2191,7 +2190,7 @@ namespace iText.Kernel.Pdf.Canvas {
                     return new PatternColor(pattern);
                 }
             }
-            return iText.Kernel.Color.Color.MakeColor(colorSpace, colorValue);
+            return Color.MakeColor(colorSpace, colorValue);
         }
 
         private PdfArray GetDashPatternArray(float phase) {

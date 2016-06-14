@@ -41,24 +41,22 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Function;
 
-namespace iText.Kernel.Color {
-    public class CalGray : iText.Kernel.Color.Color {
-        public CalGray(PdfCieBasedCs.CalGray cs)
-            : this(cs, 0f) {
+namespace iText.Kernel.Colors {
+    public class Separation : Color {
+        public Separation(PdfSpecialCs.Separation cs)
+            : this(cs, 1f) {
         }
 
-        public CalGray(PdfCieBasedCs.CalGray cs, float value)
+        public Separation(PdfSpecialCs.Separation cs, float value)
             : base(cs, new float[] { value }) {
         }
 
-        public CalGray(float[] whitePoint, float value)
-            : base(new PdfCieBasedCs.CalGray(whitePoint), new float[] { value }) {
-        }
-
-        public CalGray(float[] whitePoint, float[] blackPoint, float gamma, float value)
-            : this(new PdfCieBasedCs.CalGray(whitePoint, blackPoint, gamma), value) {
+        public Separation(String name, PdfColorSpace alternateCs, PdfFunction tintTransform, float value)
+            : this(new PdfSpecialCs.Separation(name, alternateCs, tintTransform), value) {
         }
     }
 }

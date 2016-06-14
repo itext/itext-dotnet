@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Barcodes.Dmcode;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -146,12 +147,11 @@ namespace iText.Barcodes {
             return new Rectangle(0, 0, width + 2 * ws, height + 2 * ws);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground) {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground) {
             return PlaceBarcode(canvas, foreground, DEFAULT_MODULE_SIZE);
         }
 
-        public override PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, PdfDocument document
-            ) {
+        public override PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document) {
             return CreateFormXObject(foreground, DEFAULT_MODULE_SIZE, document);
         }
 
@@ -159,16 +159,14 @@ namespace iText.Barcodes {
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <param name="moduleSide">the side (width and height) of the pixels.</param>
         /// <returns>the XObject.</returns>
-        public virtual PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, float moduleSide, PdfDocument
-             document) {
+        public virtual PdfFormXObject CreateFormXObject(Color foreground, float moduleSide, PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), foreground, moduleSide);
             xObject.SetBBox(new PdfArray(rect));
             return xObject;
         }
 
-        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground, float moduleSide
-            ) {
+        public virtual Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground, float moduleSide) {
             if (image == null) {
                 return null;
             }

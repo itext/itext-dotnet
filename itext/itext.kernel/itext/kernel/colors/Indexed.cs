@@ -41,48 +41,16 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class DeviceRgb : iText.Kernel.Color.Color {
-        public DeviceRgb(int r, int g, int b)
-            : this(r / 255f, g / 255f, b / 255f) {
+namespace iText.Kernel.Colors {
+    public class Indexed : Color {
+        public Indexed(PdfColorSpace colorSpace)
+            : this(colorSpace, 0) {
         }
 
-        public DeviceRgb(float r, float g, float b)
-            : base(new PdfDeviceCs.Rgb(), new float[] { r, g, b }) {
-        }
-
-        public DeviceRgb()
-            : this(0f, 0f, 0f) {
-        }
-
-        public static iText.Kernel.Color.DeviceRgb MakeLighter(iText.Kernel.Color.DeviceRgb rgbColor) {
-            float r = rgbColor.GetColorValue()[0];
-            float g = rgbColor.GetColorValue()[1];
-            float b = rgbColor.GetColorValue()[2];
-            float v = Math.Max(r, Math.Max(g, b));
-            if (v == 0f) {
-                return new iText.Kernel.Color.DeviceRgb(0x54, 0x54, 0x54);
-            }
-            float multiplier = Math.Min(1f, v + 0.33f) / v;
-            r = multiplier * r;
-            g = multiplier * g;
-            b = multiplier * b;
-            return new iText.Kernel.Color.DeviceRgb(r, g, b);
-        }
-
-        public static iText.Kernel.Color.DeviceRgb MakeDarker(iText.Kernel.Color.DeviceRgb rgbColor) {
-            float r = rgbColor.GetColorValue()[0];
-            float g = rgbColor.GetColorValue()[1];
-            float b = rgbColor.GetColorValue()[2];
-            float v = Math.Max(r, Math.Max(g, b));
-            float multiplier = Math.Max(0f, (v - 0.33f) / v);
-            r = multiplier * r;
-            g = multiplier * g;
-            b = multiplier * b;
-            return new iText.Kernel.Color.DeviceRgb(r, g, b);
+        public Indexed(PdfColorSpace colorSpace, int colorValue)
+            : base(colorSpace, new float[] { colorValue }) {
         }
     }
 }

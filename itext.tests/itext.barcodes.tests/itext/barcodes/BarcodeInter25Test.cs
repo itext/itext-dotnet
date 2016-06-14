@@ -1,4 +1,5 @@
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -30,7 +31,7 @@ namespace iText.Barcodes {
             barcode.SetGenerateChecksum(true);
             barcode.SetCode("41-1200076041-001");
             barcode.SetTextAlignment(Barcode1D.ALIGN_CENTER);
-            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.BLUE, iText.Kernel.Color.Color.GREEN);
+            barcode.PlaceBarcode(canvas, Color.BLUE, Color.GREEN);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

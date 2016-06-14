@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -66,7 +66,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
-            List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(iText.Kernel.Color.Color
+            List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(Color
                 .BLUE).SetHeight(100);
             list.Add("Hello").Add("World").Add("!!!");
             document.Add(list);
@@ -84,10 +84,10 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
-            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(iText.Kernel.Color.Color.BLACK).Rectangle
-                (300, 300, 100, 100).Fill().Release();
-            Paragraph p = new Paragraph("Hello").SetBackgroundColor(iText.Kernel.Color.Color.BLUE).SetHeight(100).SetFixedPosition
-                (1, 300, 300, 100);
+            new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(Color.BLACK).Rectangle(300, 300, 100, 100
+                ).Fill().Release();
+            Paragraph p = new Paragraph("Hello").SetBackgroundColor(Color.BLUE).SetHeight(100).SetFixedPosition(1, 300
+                , 300, 100);
             document.Add(p);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

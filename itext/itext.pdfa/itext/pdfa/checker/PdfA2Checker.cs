@@ -43,9 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Color;
+using iText.IO.Colors;
 using iText.IO.Image;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -110,8 +110,7 @@ namespace iText.Pdfa.Checker {
             CheckImage(inlineImage, currentColorSpaces);
         }
 
-        public override void CheckColor(iText.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool? fill
-            ) {
+        public override void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill) {
             if (color is PatternColor) {
                 PdfPattern pattern = ((PatternColor)color).GetPattern();
                 if (pattern is PdfPattern.Shading) {

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Border {
@@ -72,7 +73,7 @@ namespace iText.Layout.Border {
         /// be filled with the background color of the element, if a color has been set.
         /// </remarks>
         /// <param name="width">width of the borders and the space between them</param>
-        public DoubleBorder(iText.Kernel.Color.Color color, float width)
+        public DoubleBorder(Color color, float width)
             : base(color, width) {
         }
 

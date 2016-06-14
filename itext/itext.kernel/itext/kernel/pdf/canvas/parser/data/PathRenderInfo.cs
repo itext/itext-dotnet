@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -203,11 +204,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return gs.GetDashPattern();
         }
 
-        public virtual iText.Kernel.Color.Color GetStrokeColor() {
+        public virtual Color GetStrokeColor() {
             return gs.GetStrokeColor();
         }
 
-        public virtual iText.Kernel.Color.Color GetFillColor() {
+        public virtual Color GetFillColor() {
             return gs.GetFillColor();
         }
     }

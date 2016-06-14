@@ -41,44 +41,56 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class DeviceCmyk : iText.Kernel.Color.Color {
-        public static readonly iText.Kernel.Color.DeviceCmyk CYAN = new iText.Kernel.Color.DeviceCmyk(100, 0, 0, 0
-            );
+namespace iText.Kernel.Colors {
+    public class PatternColor : Color {
+        private PdfPattern pattern;
 
-        public static readonly iText.Kernel.Color.DeviceCmyk MAGENTA = new iText.Kernel.Color.DeviceCmyk(0, 100, 0
-            , 0);
+        private Color underlyingColor;
 
-        public static readonly iText.Kernel.Color.DeviceCmyk YELLOW = new iText.Kernel.Color.DeviceCmyk(0, 0, 100, 
-            0);
-
-        public static readonly iText.Kernel.Color.DeviceCmyk BLACK = new iText.Kernel.Color.DeviceCmyk(0, 0, 0, 100
-            );
-
-        public DeviceCmyk()
-            : this(0f, 0f, 0f, 1f) {
+        public PatternColor(PdfPattern coloredPattern)
+            : base(new PdfSpecialCs.Pattern(), null) {
+            // The underlying color for uncolored patterns. Will be null for colored ones.
+            this.pattern = coloredPattern;
         }
 
-        public DeviceCmyk(int c, int m, int y, int k)
-            : this(c / 100f, m / 100f, y / 100f, k / 100f) {
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, Color color)
+            : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue()) {
         }
 
-        public DeviceCmyk(float c, float m, float y, float k)
-            : base(new PdfDeviceCs.Cmyk(), new float[] { c, m, y, k }) {
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS, float[] colorValue)
+            : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue) {
+            if (underlyingCS is PdfSpecialCs.Pattern) {
+                throw new ArgumentException("underlyingCS");
+            }
+            this.pattern = uncoloredPattern;
+            this.underlyingColor = Color.MakeColor(underlyingCS, colorValue);
         }
 
-        public static iText.Kernel.Color.DeviceCmyk MakeLighter(iText.Kernel.Color.DeviceCmyk cmykColor) {
-            DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
-            DeviceRgb lighterRgb = DeviceRgb.MakeLighter((rgbEquivalent));
-            return ConvertRgbToCmyk(lighterRgb);
+        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
+            , float[] colorValue)
+            : base(uncoloredTilingCS, colorValue) {
+            this.pattern = uncoloredPattern;
+            this.underlyingColor = Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(), colorValue);
         }
 
-        public static iText.Kernel.Color.DeviceCmyk MakeDarker(iText.Kernel.Color.DeviceCmyk cmykColor) {
-            DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
-            DeviceRgb darkerRgb = DeviceRgb.MakeDarker(rgbEquivalent);
-            return ConvertRgbToCmyk(darkerRgb);
+        public virtual PdfPattern GetPattern() {
+            return pattern;
+        }
+
+        public virtual void SetPattern(PdfPattern pattern) {
+            this.pattern = pattern;
+        }
+
+        public override bool Equals(Object o) {
+            if (!base.Equals(o)) {
+                return false;
+            }
+            iText.Kernel.Colors.PatternColor color = (iText.Kernel.Colors.PatternColor)o;
+            return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor.Equals(color.underlyingColor
+                ) : color.underlyingColor == null);
         }
     }
 }

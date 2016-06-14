@@ -5,7 +5,7 @@ using iText.IO;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;

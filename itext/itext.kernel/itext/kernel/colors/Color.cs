@@ -45,33 +45,33 @@ using System;
 using iText.Kernel;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
+namespace iText.Kernel.Colors {
     public class Color {
-        public static readonly iText.Kernel.Color.Color BLACK = new DeviceRgb(0, 0, 0);
+        public static readonly iText.Kernel.Colors.Color BLACK = new DeviceRgb(0, 0, 0);
 
-        public static readonly iText.Kernel.Color.Color BLUE = new DeviceRgb(0, 0, 255);
+        public static readonly iText.Kernel.Colors.Color BLUE = new DeviceRgb(0, 0, 255);
 
-        public static readonly iText.Kernel.Color.Color CYAN = new DeviceRgb(0, 255, 255);
+        public static readonly iText.Kernel.Colors.Color CYAN = new DeviceRgb(0, 255, 255);
 
-        public static readonly iText.Kernel.Color.Color DARK_GRAY = new DeviceRgb(64, 64, 64);
+        public static readonly iText.Kernel.Colors.Color DARK_GRAY = new DeviceRgb(64, 64, 64);
 
-        public static readonly iText.Kernel.Color.Color GRAY = new DeviceRgb(128, 128, 128);
+        public static readonly iText.Kernel.Colors.Color GRAY = new DeviceRgb(128, 128, 128);
 
-        public static readonly iText.Kernel.Color.Color GREEN = new DeviceRgb(0, 255, 0);
+        public static readonly iText.Kernel.Colors.Color GREEN = new DeviceRgb(0, 255, 0);
 
-        public static readonly iText.Kernel.Color.Color LIGHT_GRAY = new DeviceRgb(192, 192, 192);
+        public static readonly iText.Kernel.Colors.Color LIGHT_GRAY = new DeviceRgb(192, 192, 192);
 
-        public static readonly iText.Kernel.Color.Color MAGENTA = new DeviceRgb(255, 0, 255);
+        public static readonly iText.Kernel.Colors.Color MAGENTA = new DeviceRgb(255, 0, 255);
 
-        public static readonly iText.Kernel.Color.Color ORANGE = new DeviceRgb(255, 200, 0);
+        public static readonly iText.Kernel.Colors.Color ORANGE = new DeviceRgb(255, 200, 0);
 
-        public static readonly iText.Kernel.Color.Color PINK = new DeviceRgb(255, 175, 175);
+        public static readonly iText.Kernel.Colors.Color PINK = new DeviceRgb(255, 175, 175);
 
-        public static readonly iText.Kernel.Color.Color RED = new DeviceRgb(255, 0, 0);
+        public static readonly iText.Kernel.Colors.Color RED = new DeviceRgb(255, 0, 0);
 
-        public static readonly iText.Kernel.Color.Color WHITE = new DeviceRgb(255, 255, 255);
+        public static readonly iText.Kernel.Colors.Color WHITE = new DeviceRgb(255, 255, 255);
 
-        public static readonly iText.Kernel.Color.Color YELLOW = new DeviceRgb(255, 255, 0);
+        public static readonly iText.Kernel.Colors.Color YELLOW = new DeviceRgb(255, 255, 0);
 
         protected internal PdfColorSpace colorSpace;
 
@@ -87,12 +87,12 @@ namespace iText.Kernel.Color {
             }
         }
 
-        public static iText.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace) {
+        public static iText.Kernel.Colors.Color MakeColor(PdfColorSpace colorSpace) {
             return MakeColor(colorSpace, null);
         }
 
-        public static iText.Kernel.Color.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue) {
-            iText.Kernel.Color.Color c = null;
+        public static iText.Kernel.Colors.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue) {
+            iText.Kernel.Colors.Color c = null;
             bool unknownColorSpace = false;
             if (colorSpace is PdfDeviceCs) {
                 if (colorSpace is PdfDeviceCs.Gray) {
@@ -165,7 +165,7 @@ namespace iText.Kernel.Color {
                     }
                     else {
                         if (colorSpace is PdfSpecialCs.Pattern) {
-                            c = new iText.Kernel.Color.Color(colorSpace, colorValue);
+                            c = new iText.Kernel.Colors.Color(colorSpace, colorValue);
                         }
                         else {
                             // TODO review this. at least log a warning
@@ -228,7 +228,7 @@ namespace iText.Kernel.Color {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            iText.Kernel.Color.Color color = (iText.Kernel.Color.Color)o;
+            iText.Kernel.Colors.Color color = (iText.Kernel.Colors.Color)o;
             return (colorSpace != null ? colorSpace.GetPdfObject().Equals(color.colorSpace.GetPdfObject()) : color.colorSpace
                  == null) && iText.IO.Util.JavaUtil.ArraysEquals(colorValue, color.colorValue);
         }

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
@@ -78,10 +79,10 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
 
         /// <summary>Gets the color of the line</summary>
         /// <returns>color of the line</returns>
-        iText.Kernel.Color.Color GetColor();
+        Color GetColor();
 
         /// <summary>Sets line color</summary>
         /// <param name="color">new line color</param>
-        void SetColor(iText.Kernel.Color.Color color);
+        void SetColor(Color color);
     }
 }

@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -63,9 +63,9 @@ namespace iText.Kernel.Pdf.Canvas {
         /// </remarks>
         private Matrix ctm = new Matrix();
 
-        private iText.Kernel.Color.Color strokeColor = DeviceGray.BLACK;
+        private Color strokeColor = DeviceGray.BLACK;
 
-        private iText.Kernel.Color.Color fillColor = DeviceGray.BLACK;
+        private Color fillColor = DeviceGray.BLACK;
 
         private float charSpacing = 0f;
 
@@ -181,19 +181,19 @@ namespace iText.Kernel.Pdf.Canvas {
             ctm = newCtm.Multiply(ctm);
         }
 
-        public virtual iText.Kernel.Color.Color GetFillColor() {
+        public virtual Color GetFillColor() {
             return fillColor;
         }
 
-        public virtual void SetFillColor(iText.Kernel.Color.Color fillColor) {
+        public virtual void SetFillColor(Color fillColor) {
             this.fillColor = fillColor;
         }
 
-        public virtual iText.Kernel.Color.Color GetStrokeColor() {
+        public virtual Color GetStrokeColor() {
             return strokeColor;
         }
 
-        public virtual void SetStrokeColor(iText.Kernel.Color.Color strokeColor) {
+        public virtual void SetStrokeColor(Color strokeColor) {
             this.strokeColor = strokeColor;
         }
 

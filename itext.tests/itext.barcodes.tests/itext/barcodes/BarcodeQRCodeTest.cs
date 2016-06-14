@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using iText.Barcodes.Qrcode;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -31,7 +32,7 @@ namespace iText.Barcodes {
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints[EncodeHintType.ERROR_CORRECTION] = ErrorCorrectionLevel.L;
             BarcodeQRCode barcode = new BarcodeQRCode("some specific text 239214 hello world");
-            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.GRAY, 12);
+            barcode.PlaceBarcode(canvas, Color.GRAY, 12);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -50,7 +51,7 @@ namespace iText.Barcodes {
             IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
             hints[EncodeHintType.CHARACTER_SET] = "UTF-8";
             BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
-            barcode1.PlaceBarcode(canvas, iText.Kernel.Color.Color.GRAY, 12);
+            barcode1.PlaceBarcode(canvas, Color.GRAY, 12);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

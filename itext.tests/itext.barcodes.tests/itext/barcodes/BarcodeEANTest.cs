@@ -1,4 +1,5 @@
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -30,7 +31,7 @@ namespace iText.Barcodes {
             barcode.SetCodeType(BarcodeEAN.EAN13);
             barcode.SetCode("9781935182610");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.BLACK, iText.Kernel.Color.Color.BLACK);
+            barcode.PlaceBarcode(canvas, Color.BLACK, Color.BLACK);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -50,7 +51,7 @@ namespace iText.Barcodes {
             barcode.SetCodeType(BarcodeEAN.EAN8);
             barcode.SetCode("97819351");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.BLACK, iText.Kernel.Color.Color.BLACK);
+            barcode.PlaceBarcode(canvas, Color.BLACK, Color.BLACK);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -74,7 +75,7 @@ namespace iText.Barcodes {
             codeSUPP.SetCode("55999");
             codeSUPP.SetBaseline(-2);
             BarcodeEANSUPP eanSupp = new BarcodeEANSUPP(codeEAN, codeSUPP);
-            eanSupp.PlaceBarcode(canvas, null, iText.Kernel.Color.Color.BLUE);
+            eanSupp.PlaceBarcode(canvas, null, Color.BLUE);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

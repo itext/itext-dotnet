@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Border {
@@ -60,7 +61,7 @@ namespace iText.Layout.Border {
         /// <summary>Creates a DashedBorder with the specified width and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
-        public DashedBorder(iText.Kernel.Color.Color color, float width)
+        public DashedBorder(Color color, float width)
             : base(color, width) {
         }
 

@@ -47,6 +47,7 @@ using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -559,7 +560,7 @@ namespace iText.Layout.Renderer
 				PdfFont font = GetPropertyAsFont(iText.Layout.Property.Property.FONT);
 				float fontSize = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
 					.FONT_SIZE);
-				iText.Kernel.Color.Color fontColor = GetPropertyAsColor(iText.Layout.Property.Property
+				Color fontColor = GetPropertyAsColor(iText.Layout.Property.Property
 					.FONT_COLOR);
 				int? textRenderingMode = this.GetProperty<int?>(iText.Layout.Property.Property
 					.TEXT_RENDERING_MODE);
@@ -627,7 +628,7 @@ namespace iText.Layout.Renderer
 					{
 						canvas.SetLineWidth((float)strokeWidth);
 					}
-					iText.Kernel.Color.Color strokeColor = GetPropertyAsColor(iText.Layout.Property.Property
+					Color strokeColor = GetPropertyAsColor(iText.Layout.Property.Property
 						.STROKE_COLOR);
 					if (strokeColor == null)
 					{
@@ -1036,10 +1037,9 @@ namespace iText.Layout.Renderer
 				 };
 		}
 
-		protected internal virtual void DrawSingleUnderline(Underline underline, iText.Kernel.Color.Color
-			 fontStrokeColor, PdfCanvas canvas, float fontSize, float italicAngleTan)
-		{
-			iText.Kernel.Color.Color underlineColor = underline.GetColor() != null ? underline
+		protected internal virtual void DrawSingleUnderline(Underline underline, Color fontStrokeColor, 
+            PdfCanvas canvas, float fontSize, float italicAngleTan) {
+			Color underlineColor = underline.GetColor() != null ? underline
 				.GetColor() : fontStrokeColor;
 			canvas.SaveState();
 			if (underlineColor != null)

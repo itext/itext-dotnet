@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -293,12 +294,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <returns>the current fill color.</returns>
-        public virtual iText.Kernel.Color.Color GetFillColor() {
+        public virtual Color GetFillColor() {
             return gs.GetFillColor();
         }
 
         /// <returns>the current stroke color.</returns>
-        public virtual iText.Kernel.Color.Color GetStrokeColor() {
+        public virtual Color GetStrokeColor() {
             return gs.GetStrokeColor();
         }
 

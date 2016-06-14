@@ -1,5 +1,6 @@
 using System;
 using iText.IO.Source;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
@@ -30,7 +31,7 @@ namespace iText.Barcodes {
             Barcode1D barcode = new Barcode39(document);
             barcode.SetCode("9781935182610");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.BLACK, iText.Kernel.Color.Color.BLACK);
+            barcode.PlaceBarcode(canvas, Color.BLACK, Color.BLACK);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
@@ -49,7 +50,7 @@ namespace iText.Barcodes {
             Barcode1D barcode = new Barcode39(document);
             barcode.SetCode("9781935182610");
             barcode.SetTextAlignment(Barcode1D.ALIGN_LEFT);
-            barcode.PlaceBarcode(canvas, iText.Kernel.Color.Color.BLACK, iText.Kernel.Color.Color.BLACK);
+            barcode.PlaceBarcode(canvas, Color.BLACK, Color.BLACK);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));

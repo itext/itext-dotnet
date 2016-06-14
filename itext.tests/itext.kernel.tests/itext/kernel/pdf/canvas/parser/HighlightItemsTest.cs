@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -130,7 +131,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 IList<Rectangle> rectangles = myEventListener.GetRectangles();
                 PdfCanvas canvas = new PdfCanvas(pdfDocument.GetPage(pageNum));
                 canvas.SetLineWidth(0.5f);
-                canvas.SetStrokeColor(iText.Kernel.Color.Color.RED);
+                canvas.SetStrokeColor(Color.RED);
                 foreach (Rectangle rectangle in rectangles) {
                     canvas.Rectangle(rectangle);
                     canvas.Stroke();

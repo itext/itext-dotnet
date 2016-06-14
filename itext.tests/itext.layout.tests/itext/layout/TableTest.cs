@@ -3,6 +3,7 @@ using System.IO;
 using iText.IO;
 using iText.IO.Image;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
@@ -468,8 +469,8 @@ namespace iText.Layout {
                  + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + longTextContent
                 ))).AddCell(new Cell().Add(new Paragraph("cell 1, 2\n" + middleTextContent)).SetBorder(new SolidBorder
-                (iText.Kernel.Color.Color.RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent
-                 + middleTextContent))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
+                (Color.RED, 2))).AddCell(new Cell().Add(new Paragraph("cell 2, 1\n" + middleTextContent + middleTextContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 2, 2\n" + longTextContent)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -840,8 +841,7 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
             }
             Table t = new Table(1);
-            t.AddCell(new Cell().SetBorder(new SolidBorder(iText.Kernel.Color.Color.RED, 1)).SetPaddings(3, 3, 3, 3).Add
-                (table));
+            t.AddCell(new Cell().SetBorder(new SolidBorder(Color.RED, 1)).SetPaddings(3, 3, 3, 3).Add(table));
             doc.Add(t);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

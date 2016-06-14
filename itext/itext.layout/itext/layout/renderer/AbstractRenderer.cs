@@ -47,6 +47,7 @@ using System.Text;
 using iText.IO;
 using iText.IO.Log;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -265,11 +266,11 @@ namespace iText.Layout.Renderer
 		/// </param>
 		/// <returns>
 		/// a
-		/// <see cref="iText.Kernel.Color.Color"/>
+		//Color="Color.Color"/>
 		/// </returns>
-		public virtual iText.Kernel.Color.Color GetPropertyAsColor(int property)
+		public virtual Color GetPropertyAsColor(int property)
 		{
-			return this.GetProperty<iText.Kernel.Color.Color>(property);
+			return this.GetProperty<Color>(property);
 		}
 
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.IO.Font;
 using iText.Kernel;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -577,8 +578,7 @@ namespace iText.Barcodes {
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
-             textColor) {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             Rectangle rect = GetBarcodeSize();
             float barStartX = 0;
             float barStartY = 0;

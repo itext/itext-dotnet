@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -70,7 +71,7 @@ namespace iText.Barcodes {
         /// <param name="canvas">the <CODE>PdfCanvas</CODE> where the barcode will be placed</param>
         /// <param name="foreground">the foreground color. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color foreground);
+        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, Color foreground);
 
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <remarks>
@@ -85,7 +86,6 @@ namespace iText.Barcodes {
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <param name="foreground">the color of the pixels. It can be <CODE>null</CODE></param>
         /// <returns>the XObject.</returns>
-        public abstract PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color foreground, PdfDocument document
-            );
+        public abstract PdfFormXObject CreateFormXObject(Color foreground, PdfDocument document);
     }
 }

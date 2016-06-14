@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Source;
 using iText.Kernel;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -753,8 +753,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Gets a color based on a list of operands and Color space.</summary>
-        private static iText.Kernel.Color.Color GetColor(PdfColorSpace pdfColorSpace, IList<PdfObject> operands, PdfResources
-             resources) {
+        private static Color GetColor(PdfColorSpace pdfColorSpace, IList<PdfObject> operands, PdfResources resources
+            ) {
             PdfObject pdfObject;
             if (pdfColorSpace.GetPdfObject().IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfColorSpace.GetPdfObject()).GetRefersTo();
@@ -831,7 +831,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Gets a color based on a list of operands.</summary>
-        private static iText.Kernel.Color.Color GetColor(int nOperands, IList<PdfObject> operands) {
+        private static Color GetColor(int nOperands, IList<PdfObject> operands) {
             float[] c = new float[nOperands];
             for (int i = 0; i < nOperands; i++) {
                 c[i] = ((PdfNumber)operands[i]).FloatValue();
@@ -916,7 +916,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private class SetColorSpaceFillOperator : IContentOperator {
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfColorSpace pdfColorSpace = DetermineColorSpace((PdfName)operands[0], processor);
-                processor.GetGraphicsState().SetFillColor(iText.Kernel.Color.Color.MakeColor(pdfColorSpace));
+                processor.GetGraphicsState().SetFillColor(Color.MakeColor(pdfColorSpace));
             }
 
             internal static PdfColorSpace DetermineColorSpace(PdfName colorSpace, PdfCanvasProcessor processor) {
@@ -938,7 +938,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             public virtual void Invoke(PdfCanvasProcessor processor, PdfLiteral @operator, IList<PdfObject> operands) {
                 PdfColorSpace pdfColorSpace = PdfCanvasProcessor.SetColorSpaceFillOperator.DetermineColorSpace((PdfName)operands
                     [0], processor);
-                processor.GetGraphicsState().SetStrokeColor(iText.Kernel.Color.Color.MakeColor(pdfColorSpace));
+                processor.GetGraphicsState().SetStrokeColor(Color.MakeColor(pdfColorSpace));
             }
         }
 

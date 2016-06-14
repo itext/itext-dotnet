@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
@@ -54,7 +55,7 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
     public class DashedLine : ILineDrawer {
         private float lineWidth = 1;
 
-        private iText.Kernel.Color.Color color = iText.Kernel.Color.Color.BLACK;
+        private Color color = Color.BLACK;
 
         public DashedLine() {
         }
@@ -87,11 +88,11 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
             this.lineWidth = lineWidth;
         }
 
-        public virtual iText.Kernel.Color.Color GetColor() {
+        public virtual Color GetColor() {
             return color;
         }
 
-        public virtual void SetColor(iText.Kernel.Color.Color color) {
+        public virtual void SetColor(Color color) {
             this.color = color;
         }
     }

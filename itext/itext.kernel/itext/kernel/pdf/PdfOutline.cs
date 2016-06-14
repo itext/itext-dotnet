@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Navigation;
 
@@ -99,7 +100,7 @@ namespace iText.Kernel.Pdf {
             this.content.Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
         }
 
-        public virtual void SetColor(iText.Kernel.Color.Color color) {
+        public virtual void SetColor(Color color) {
             content.Put(PdfName.C, new PdfArray(color.GetColorValue()));
         }
 

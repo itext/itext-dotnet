@@ -41,24 +41,38 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class CalRgb : iText.Kernel.Color.Color {
-        public CalRgb(PdfCieBasedCs.CalRgb cs)
-            : this(cs, new float[cs.GetNumberOfComponents()]) {
+namespace iText.Kernel.Colors {
+    public class DeviceGray : Color {
+        public static readonly iText.Kernel.Colors.DeviceGray WHITE = new iText.Kernel.Colors.DeviceGray(1f);
+
+        public static readonly iText.Kernel.Colors.DeviceGray GRAY = new iText.Kernel.Colors.DeviceGray(.5f);
+
+        public static readonly iText.Kernel.Colors.DeviceGray BLACK = new iText.Kernel.Colors.DeviceGray();
+
+        public DeviceGray(float value)
+            : base(new PdfDeviceCs.Gray(), new float[] { value }) {
         }
 
-        public CalRgb(PdfCieBasedCs.CalRgb cs, float[] value)
-            : base(cs, value) {
+        public DeviceGray()
+            : this(0f) {
         }
 
-        public CalRgb(float[] whitePoint, float[] value)
-            : base(new PdfCieBasedCs.CalRgb(whitePoint), value) {
+        public static iText.Kernel.Colors.DeviceGray MakeLighter(iText.Kernel.Colors.DeviceGray grayColor) {
+            float v = grayColor.GetColorValue()[0];
+            if (v == 0f) {
+                return new iText.Kernel.Colors.DeviceGray(0.3f);
+            }
+            float multiplier = Math.Min(1f, v + 0.33f) / v;
+            return new iText.Kernel.Colors.DeviceGray(v * multiplier);
         }
 
-        public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix, float[] value)
-            : this(new PdfCieBasedCs.CalRgb(whitePoint, blackPoint, gamma, matrix), value) {
+        public static iText.Kernel.Colors.DeviceGray MakeDarker(iText.Kernel.Colors.DeviceGray grayColor) {
+            float v = grayColor.GetColorValue()[0];
+            float multiplier = Math.Max(0f, (v - 0.33f) / v);
+            return new iText.Kernel.Colors.DeviceGray(v * multiplier);
         }
     }
 }

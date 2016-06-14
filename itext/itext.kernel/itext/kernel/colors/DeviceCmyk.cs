@@ -41,57 +41,44 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class PatternColor : iText.Kernel.Color.Color {
-        private PdfPattern pattern;
+namespace iText.Kernel.Colors {
+    public class DeviceCmyk : Color {
+        public static readonly iText.Kernel.Colors.DeviceCmyk CYAN = new iText.Kernel.Colors.DeviceCmyk(100, 0, 0, 
+            0);
 
-        private iText.Kernel.Color.Color underlyingColor;
+        public static readonly iText.Kernel.Colors.DeviceCmyk MAGENTA = new iText.Kernel.Colors.DeviceCmyk(0, 100, 
+            0, 0);
 
-        public PatternColor(PdfPattern coloredPattern)
-            : base(new PdfSpecialCs.Pattern(), null) {
-            // The underlying color for uncolored patterns. Will be null for colored ones.
-            this.pattern = coloredPattern;
+        public static readonly iText.Kernel.Colors.DeviceCmyk YELLOW = new iText.Kernel.Colors.DeviceCmyk(0, 0, 100
+            , 0);
+
+        public static readonly iText.Kernel.Colors.DeviceCmyk BLACK = new iText.Kernel.Colors.DeviceCmyk(0, 0, 0, 
+            100);
+
+        public DeviceCmyk()
+            : this(0f, 0f, 0f, 1f) {
         }
 
-        public PatternColor(PdfPattern.Tiling uncoloredPattern, iText.Kernel.Color.Color color)
-            : this(uncoloredPattern, color.GetColorSpace(), color.GetColorValue()) {
+        public DeviceCmyk(int c, int m, int y, int k)
+            : this(c / 100f, m / 100f, y / 100f, k / 100f) {
         }
 
-        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfColorSpace underlyingCS, float[] colorValue)
-            : base(new PdfSpecialCs.UncoloredTilingPattern(underlyingCS), colorValue) {
-            if (underlyingCS is PdfSpecialCs.Pattern) {
-                throw new ArgumentException("underlyingCS");
-            }
-            this.pattern = uncoloredPattern;
-            this.underlyingColor = iText.Kernel.Color.Color.MakeColor(underlyingCS, colorValue);
+        public DeviceCmyk(float c, float m, float y, float k)
+            : base(new PdfDeviceCs.Cmyk(), new float[] { c, m, y, k }) {
         }
 
-        public PatternColor(PdfPattern.Tiling uncoloredPattern, PdfSpecialCs.UncoloredTilingPattern uncoloredTilingCS
-            , float[] colorValue)
-            : base(uncoloredTilingCS, colorValue) {
-            this.pattern = uncoloredPattern;
-            this.underlyingColor = iText.Kernel.Color.Color.MakeColor(uncoloredTilingCS.GetUnderlyingColorSpace(), colorValue
-                );
+        public static iText.Kernel.Colors.DeviceCmyk MakeLighter(iText.Kernel.Colors.DeviceCmyk cmykColor) {
+            DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
+            DeviceRgb lighterRgb = DeviceRgb.MakeLighter((rgbEquivalent));
+            return ConvertRgbToCmyk(lighterRgb);
         }
 
-        public virtual PdfPattern GetPattern() {
-            return pattern;
-        }
-
-        public virtual void SetPattern(PdfPattern pattern) {
-            this.pattern = pattern;
-        }
-
-        public override bool Equals(Object o) {
-            if (!base.Equals(o)) {
-                return false;
-            }
-            iText.Kernel.Color.PatternColor color = (iText.Kernel.Color.PatternColor)o;
-            return pattern.Equals(color.pattern) && (underlyingColor != null ? underlyingColor.Equals(color.underlyingColor
-                ) : color.underlyingColor == null);
+        public static iText.Kernel.Colors.DeviceCmyk MakeDarker(iText.Kernel.Colors.DeviceCmyk cmykColor) {
+            DeviceRgb rgbEquivalent = ConvertCmykToRgb(cmykColor);
+            DeviceRgb darkerRgb = DeviceRgb.MakeDarker(rgbEquivalent);
+            return ConvertRgbToCmyk(darkerRgb);
         }
     }
 }

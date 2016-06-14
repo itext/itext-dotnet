@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;

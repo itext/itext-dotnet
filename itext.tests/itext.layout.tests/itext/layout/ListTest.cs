@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using iText.IO.Image;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
@@ -177,7 +178,7 @@ namespace iText.Layout {
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             list.Add(new ListItem()).Add(new ListItem(image)).Add(new ListItem()).Add("123").Add((ListItem)new ListItem
-                ().Add(new Div().SetHeight(70).SetBackgroundColor(iText.Kernel.Color.Color.RED)));
+                ().Add(new Div().SetHeight(70).SetBackgroundColor(Color.RED)));
             document.Add(list);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

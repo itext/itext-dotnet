@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using iText.IO.Font;
 using iText.IO.Image;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -103,7 +103,7 @@ namespace iText.Layout {
             table.AddCell(image);
             table.AddCell(CreateParagraph2());
             table.AddCell(image);
-            table.AddCell(new Paragraph("abcdefghijklkmnopqrstuvwxyz").SetFontColor(iText.Kernel.Color.Color.GREEN));
+            table.AddCell(new Paragraph("abcdefghijklkmnopqrstuvwxyz").SetFontColor(Color.GREEN));
             table.AddCell("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"

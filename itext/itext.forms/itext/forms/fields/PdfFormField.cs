@@ -48,7 +48,7 @@ using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Source;
 using iText.Kernel;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -136,15 +136,15 @@ namespace iText.Forms.Fields {
 
         protected internal int fontSize;
 
-        protected internal iText.Kernel.Color.Color color;
+        protected internal Color color;
 
         protected internal int checkType;
 
         protected internal float borderWidth = 1;
 
-        protected internal iText.Kernel.Color.Color backgroundColor;
+        protected internal Color backgroundColor;
 
-        protected internal iText.Kernel.Color.Color borderColor = iText.Kernel.Color.Color.BLACK;
+        protected internal Color borderColor = Color.BLACK;
 
         protected internal int rotation = 0;
 
@@ -1838,7 +1838,7 @@ namespace iText.Forms.Fields {
         /// the field appearance after setting the new value.
         /// </remarks>
         /// <param name="backgroundColor">the new color to be set</param>
-        public virtual void SetBackgroundColor(iText.Kernel.Color.Color backgroundColor) {
+        public virtual void SetBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
@@ -2134,7 +2134,7 @@ namespace iText.Forms.Fields {
         /// <summary>Sets the Border Color.</summary>
         /// <param name="color">the new value for the Border Color</param>
         /// <returns>the edited field</returns>
-        public virtual iText.Forms.Fields.PdfFormField SetBorderColor(iText.Kernel.Color.Color color) {
+        public virtual iText.Forms.Fields.PdfFormField SetBorderColor(Color color) {
             borderColor = color;
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
@@ -2148,7 +2148,7 @@ namespace iText.Forms.Fields {
         /// <summary>Sets the text color.</summary>
         /// <param name="color">the new value for the Color</param>
         /// <returns>the edited field</returns>
-        public virtual iText.Forms.Fields.PdfFormField SetColor(iText.Kernel.Color.Color color) {
+        public virtual iText.Forms.Fields.PdfFormField SetColor(Color color) {
             this.color = color;
             RegenerateField();
             return this;
@@ -2394,7 +2394,7 @@ namespace iText.Forms.Fields {
                         fontAndSize[1] = dab[DA_SIZE];
                     }
                     if (color == null) {
-                        color = (iText.Kernel.Color.Color)dab[DA_COLOR];
+                        color = (Color)dab[DA_COLOR];
                     }
                 }
                 else {
@@ -2584,7 +2584,7 @@ namespace iText.Forms.Fields {
                         }
                         if (((PdfNumber)ind).GetValue() == index) {
                             paragraph.SetBackgroundColor(new DeviceRgb(10, 36, 106));
-                            paragraph.SetFontColor(iText.Kernel.Color.Color.LIGHT_GRAY);
+                            paragraph.SetFontColor(Color.LIGHT_GRAY);
                         }
                     }
                 }
@@ -2609,7 +2609,7 @@ namespace iText.Forms.Fields {
                 borderWidth = 0;
             }
             if (borderColor == null) {
-                borderColor = iText.Kernel.Color.Color.BLACK;
+                borderColor = Color.BLACK;
             }
             if (backgroundColor != null) {
                 canvas.SetFillColor(backgroundColor).Rectangle(borderWidth / 2, borderWidth / 2, width - borderWidth, height
@@ -2781,7 +2781,7 @@ namespace iText.Forms.Fields {
             PdfCanvas canvas = new PdfCanvas(stream, new PdfResources(), GetDocument());
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
             if (backgroundColor == null) {
-                backgroundColor = iText.Kernel.Color.Color.LIGHT_GRAY;
+                backgroundColor = Color.LIGHT_GRAY;
             }
             DrawBorder(canvas, xObject, width, height);
             if (img != null) {
@@ -2825,7 +2825,7 @@ namespace iText.Forms.Fields {
         protected internal virtual void DrawButton(PdfCanvas canvas, float x, float y, float width, float height, 
             String text, PdfFont font, int fontSize) {
             if (color == null) {
-                color = iText.Kernel.Color.Color.BLACK;
+                color = Color.BLACK;
             }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);

@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel;
 
-namespace iText.Kernel.Color {
+namespace iText.Kernel.Colors {
     /// <summary>
     /// This class is a HashMap that contains the names of colors as a key and the
     /// corresponding BaseColor as value.

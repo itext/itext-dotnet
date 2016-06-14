@@ -43,7 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Color;
+using iText.IO.Colors;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
@@ -154,8 +155,7 @@ namespace iText.Pdfa.Checker {
 
         public abstract void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces);
 
-        public abstract void CheckColor(iText.Kernel.Color.Color color, PdfDictionary currentColorSpaces, bool? fill
-            );
+        public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill);
 
         public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
             , bool? fill);

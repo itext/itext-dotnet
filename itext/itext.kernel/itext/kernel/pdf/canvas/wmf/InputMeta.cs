@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System.IO;
 using iText.IO.Util;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>Helper class to read nt, short, words, etc.</summary>
@@ -121,12 +121,12 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>
         /// Read the next
-        /// <see cref="iText.Kernel.Color.Color"/>
+        /// <see cref="iText.Kernel.Colors.Color"/>
         /// from the InputStream. This reads 4 bytes.
         /// </summary>
         /// <returns>the next Color</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual iText.Kernel.Color.Color ReadColor() {
+        public virtual Color ReadColor() {
             int red = ReadByte();
             int green = ReadByte();
             int blue = ReadByte();

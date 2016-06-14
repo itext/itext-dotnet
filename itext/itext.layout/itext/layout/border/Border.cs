@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Border {
@@ -66,7 +67,7 @@ namespace iText.Layout.Border {
 
         public const int _3D_RIDGE = 8;
 
-        protected internal iText.Kernel.Color.Color color;
+        protected internal Color color;
 
         protected internal float width;
 
@@ -75,10 +76,10 @@ namespace iText.Layout.Border {
         private int hash;
 
         protected internal Border(float width)
-            : this(iText.Kernel.Color.Color.BLACK, width) {
+            : this(Color.BLACK, width) {
         }
 
-        protected internal Border(iText.Kernel.Color.Color color, float width) {
+        protected internal Border(Color color, float width) {
             this.color = color;
             this.width = width;
         }
@@ -119,7 +120,7 @@ namespace iText.Layout.Border {
 
         public abstract int GetBorderType();
 
-        public virtual iText.Kernel.Color.Color GetColor() {
+        public virtual Color GetColor() {
             return color;
         }
 

@@ -47,6 +47,7 @@ using System.IO;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -635,7 +636,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                     }
 
                     case META_SETPIXEL: {
-                        iText.Kernel.Color.Color color = @in.ReadColor();
+                        Color color = @in.ReadColor();
                         int y = @in.ReadShort();
                         int x = @in.ReadShort();
                         cb.SaveState();
@@ -743,7 +744,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                     ty = -ury;
                 }
             }
-            iText.Kernel.Color.Color textColor;
+            Color textColor;
             if (state.GetBackgroundMode() == MetaState.OPAQUE) {
                 textColor = state.GetCurrentBackgroundColor();
                 cb.SetFillColor(textColor);

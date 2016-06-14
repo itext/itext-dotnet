@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Border {
@@ -164,7 +164,7 @@ namespace iText.Layout.Border {
                 ();
         }
 
-        protected internal virtual iText.Kernel.Color.Color GetDarkerColor() {
+        protected internal virtual Color GetDarkerColor() {
             if (color is DeviceRgb) {
                 return DeviceRgb.MakeDarker((DeviceRgb)color);
             }

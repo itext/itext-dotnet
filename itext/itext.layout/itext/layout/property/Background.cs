@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Colors;
+
 namespace iText.Layout.Property {
     /// <summary>
     /// A specialized class holding configurable properties related to an
@@ -54,7 +56,7 @@ namespace iText.Layout.Property {
     /// location of the edges of the background coloring.
     /// </summary>
     public class Background {
-        protected internal iText.Kernel.Color.Color color;
+        protected internal Color color;
 
         protected internal float extraLeft;
 
@@ -66,7 +68,7 @@ namespace iText.Layout.Property {
 
         /// <summary>Creates a background with a specified color.</summary>
         /// <param name="color">the background color</param>
-        public Background(iText.Kernel.Color.Color color)
+        public Background(Color color)
             : this(color, 0, 0, 0, 0) {
         }
 
@@ -84,8 +86,7 @@ namespace iText.Layout.Property {
         /// <param name="extraTop">extra coloring at the top</param>
         /// <param name="extraRight">extra coloring to the right side</param>
         /// <param name="extraBottom">extra coloring at the bottom</param>
-        public Background(iText.Kernel.Color.Color color, float extraLeft, float extraTop, float extraRight, float
-             extraBottom) {
+        public Background(Color color, float extraLeft, float extraTop, float extraRight, float extraBottom) {
             this.color = color;
             this.extraLeft = extraLeft;
             this.extraRight = extraRight;
@@ -96,10 +97,10 @@ namespace iText.Layout.Property {
         /// <summary>Gets the background's color.</summary>
         /// <returns>
         /// a
-        /// <see cref="iText.Kernel.Color.Color"/>
+        /// <see cref="iText.Kernel.Colors.Color"/>
         /// of any supported kind
         /// </returns>
-        public virtual iText.Kernel.Color.Color GetColor() {
+        public virtual Color GetColor() {
             return color;
         }
 

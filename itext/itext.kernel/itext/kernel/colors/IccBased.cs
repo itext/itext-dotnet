@@ -41,25 +41,45 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System.IO;
+using iText.Kernel;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class Lab : iText.Kernel.Color.Color {
-        public Lab(PdfCieBasedCs.Lab cs)
+namespace iText.Kernel.Colors {
+    public class IccBased : Color {
+        public IccBased(PdfCieBasedCs.IccBased cs)
             : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
-        public Lab(PdfCieBasedCs.Lab cs, float[] value)
+        public IccBased(PdfCieBasedCs.IccBased cs, float[] value)
             : base(cs, value) {
         }
 
-        public Lab(float[] whitePoint, float[] value)
-            : base(new PdfCieBasedCs.Lab(whitePoint), value) {
+        /// <summary>Creates IccBased color.</summary>
+        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        public IccBased(Stream iccStream)
+            : this(new PdfCieBasedCs.IccBased(iccStream), null) {
+            // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
+            colorValue = new float[GetNumberOfComponents()];
+            for (int i = 0; i < GetNumberOfComponents(); i++) {
+                colorValue[i] = 0f;
+            }
         }
 
-        public Lab(float[] whitePoint, float[] blackPoint, float[] range, float[] value)
-            : this(new PdfCieBasedCs.Lab(whitePoint, blackPoint, range), value) {
+        /// <summary>Creates IccBased color.</summary>
+        /// <param name="iccStream">ICC profile stream. User is responsible for closing the stream.</param>
+        /// <param name="value">color value.</param>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        public IccBased(Stream iccStream, float[] value)
+            : this(new PdfCieBasedCs.IccBased(iccStream), value) {
         }
-        // TODO if zero if outside of the Range, default value should be the nearest to the zero valid value
+
+        public IccBased(Stream iccStream, float[] range, float[] value)
+            : this(new PdfCieBasedCs.IccBased(iccStream, range), value) {
+            if (GetNumberOfComponents() * 2 != range.Length) {
+                throw new PdfException(PdfException.InvalidRangeArray, this);
+            }
+        }
     }
 }

@@ -43,14 +43,22 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class Indexed : iText.Kernel.Color.Color {
-        public Indexed(PdfColorSpace colorSpace)
-            : this(colorSpace, 0) {
+namespace iText.Kernel.Colors {
+    public class CalGray : Color {
+        public CalGray(PdfCieBasedCs.CalGray cs)
+            : this(cs, 0f) {
         }
 
-        public Indexed(PdfColorSpace colorSpace, int colorValue)
-            : base(colorSpace, new float[] { colorValue }) {
+        public CalGray(PdfCieBasedCs.CalGray cs, float value)
+            : base(cs, new float[] { value }) {
+        }
+
+        public CalGray(float[] whitePoint, float value)
+            : base(new PdfCieBasedCs.CalGray(whitePoint), new float[] { value }) {
+        }
+
+        public CalGray(float[] whitePoint, float[] blackPoint, float gamma, float value)
+            : this(new PdfCieBasedCs.CalGray(whitePoint, blackPoint, gamma), value) {
         }
     }
 }

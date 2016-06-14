@@ -45,6 +45,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Hyphenation;
@@ -304,11 +305,11 @@ namespace iText.Layout {
         /// <summary>Sets the font color of this Element.</summary>
         /// <param name="fontColor">
         /// a
-        /// <see cref="iText.Kernel.Color.Color"/>
+        /// <see cref="iText.Kernel.Colors.Color"/>
         /// for the text in this Element.
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetFontColor(iText.Kernel.Color.Color fontColor) {
+        public virtual T SetFontColor(Color fontColor) {
             SetProperty(iText.Layout.Property.Property.FONT_COLOR, fontColor);
             return (T)(Object)this;
         }
@@ -372,7 +373,7 @@ namespace iText.Layout {
         /// <summary>Specifies a background color for the Element.</summary>
         /// <param name="backgroundColor">the background color</param>
         /// <returns>this Element.</returns>
-        public virtual T SetBackgroundColor(iText.Kernel.Color.Color backgroundColor) {
+        public virtual T SetBackgroundColor(Color backgroundColor) {
             return SetBackgroundColor(backgroundColor, 0, 0, 0, 0);
         }
 
@@ -386,8 +387,8 @@ namespace iText.Layout {
         /// <param name="extraRight">extra coloring to the right side</param>
         /// <param name="extraBottom">extra coloring at the bottom</param>
         /// <returns>this Element.</returns>
-        public virtual T SetBackgroundColor(iText.Kernel.Color.Color backgroundColor, float extraLeft, float extraTop
-            , float extraRight, float extraBottom) {
+        public virtual T SetBackgroundColor(Color backgroundColor, float extraLeft, float extraTop, float extraRight
+            , float extraBottom) {
             SetProperty(iText.Layout.Property.Property.BACKGROUND, new Background(backgroundColor, extraLeft, extraTop
                 , extraRight, extraBottom));
             return (T)(Object)this;
@@ -503,8 +504,8 @@ namespace iText.Layout {
         /// The stroke color is the color of the outlines or edges of a shape.
         /// </remarks>
         /// <returns>the current stroke color</returns>
-        public virtual iText.Kernel.Color.Color GetStrokeColor() {
-            return this.GetProperty<iText.Kernel.Color.Color>(iText.Layout.Property.Property.STROKE_COLOR);
+        public virtual Color GetStrokeColor() {
+            return this.GetProperty<Color>(iText.Layout.Property.Property.STROKE_COLOR);
         }
 
         /// <summary>Sets the stroke color for the current element.</summary>
@@ -514,7 +515,7 @@ namespace iText.Layout {
         /// </remarks>
         /// <param name="strokeColor">a new stroke color</param>
         /// <returns>this Element.</returns>
-        public virtual T SetStrokeColor(iText.Kernel.Color.Color strokeColor) {
+        public virtual T SetStrokeColor(Color strokeColor) {
             SetProperty(iText.Layout.Property.Property.STROKE_COLOR, strokeColor);
             return (T)(Object)this;
         }
@@ -567,7 +568,7 @@ namespace iText.Layout {
         /// <remarks>
         /// Sets default line-through attributes for text.
         /// See
-        /// <see cref="ElementPropertyContainer{T}.SetUnderline(iText.Kernel.Color.Color, float, float, float, float, int)
+        /// <see cref="ElementPropertyContainer{T}.SetUnderline(iText.Kernel.Colors.Color, float, float, float, float, int)
         ///     "/>
         /// for more fine tuning.
         /// </remarks>
@@ -626,8 +627,8 @@ namespace iText.Layout {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
         /// </param>
         /// <returns>this element</returns>
-        public virtual T SetUnderline(iText.Kernel.Color.Color color, float thickness, float thicknessMul, float yPosition
-            , float yPositionMul, int lineCapStyle) {
+        public virtual T SetUnderline(Color color, float thickness, float thicknessMul, float yPosition, float yPositionMul
+            , int lineCapStyle) {
             Underline newUnderline = new Underline(color, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
                 );
             Object currentProperty = this.GetProperty<Object>(iText.Layout.Property.Property.UNDERLINE);

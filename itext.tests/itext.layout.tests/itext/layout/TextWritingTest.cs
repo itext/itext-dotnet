@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using iText.IO.Font;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -33,8 +33,8 @@ namespace iText.Layout {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++) {
                 Paragraph p = new Paragraph().Add("country").Add(" ");
-                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(iText.Kernel.Color.Color
-                    .WHITE).SetBackgroundColor(iText.Kernel.Color.Color.BLACK, 0, 0, 0, 0);
+                Text id = new Text("id").SetTextRise(6).SetFont(font).SetFontSize(6).SetFontColor(Color.WHITE).SetBackgroundColor
+                    (Color.BLACK, 0, 0, 0, 0);
                 p.Add(id);
                 document.Add(p);
             }
@@ -52,14 +52,14 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(iText.Kernel.Color.Color.RED).SetStrokeWidth(0.1f);
+                .FILL_STROKE).SetStrokeColor(Color.RED).SetStrokeWidth(0.1f);
             document.Add(new Paragraph().Add(text1));
             Text text2 = new Text("This is a stroke-only text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .STROKE).SetStrokeColor(iText.Kernel.Color.Color.GREEN).SetStrokeWidth(0.3f);
+                .STROKE).SetStrokeColor(Color.GREEN).SetStrokeWidth(0.3f);
             document.Add(new Paragraph(text2));
             Text text3 = new Text("This is a colorful text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
-                .FILL_STROKE).SetStrokeColor(iText.Kernel.Color.Color.BLUE).SetStrokeWidth(0.3f).SetFontColor(iText.Kernel.Color.Color
-                .GREEN).SetFontSize(20);
+                .FILL_STROKE).SetStrokeColor(Color.BLUE).SetStrokeWidth(0.3f).SetFontColor(Color.GREEN).SetFontSize(20
+                );
             document.Add(new Paragraph(text3));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -179,13 +179,13 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());
-            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(iText.Kernel.Color.Color
-                .GREEN)).SetBold());
-            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(iText.Kernel.Color.Color
-                .GREEN)).SetItalic());
+            document.Add(new Paragraph(new Text("I'm a bold simulation font").SetBackgroundColor(Color.GREEN)).SetBold
+                ());
+            document.Add(new Paragraph(new Text("I'm an italic simulation font").SetBackgroundColor(Color.GREEN)).SetItalic
+                ());
             document.Add(new Paragraph(new Text("I'm a super bold italic underlined linethrough piece of text and no one can be better than me, even if "
-                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(iText.Kernel.Color.Color
-                .GREEN)).SetItalic().SetBold().SetUnderline().SetLineThrough());
+                 + "such a long description will cause me to occupy two lines").SetBackgroundColor(Color.GREEN)).SetItalic
+                ().SetBold().SetUnderline().SetLineThrough());
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

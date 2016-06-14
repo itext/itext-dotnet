@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
@@ -134,8 +134,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyCommonLayoutAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
-            iText.Kernel.Color.Color backgroundColor = renderer.GetPropertyAsColor(iText.Layout.Property.Property.BACKGROUND
-                );
+            Color backgroundColor = renderer.GetPropertyAsColor(iText.Layout.Property.Property.BACKGROUND);
             if (backgroundColor != null && backgroundColor is DeviceRgb) {
                 attributes.Put(PdfName.BackgroundColor, new PdfArray(backgroundColor.GetColorValue()));
             }
@@ -146,7 +145,7 @@ namespace iText.Layout.Renderer {
                 ApplyBorderAttributes(renderer, attributes);
             }
             ApplyPaddingAttribute(renderer, attributes);
-            iText.Kernel.Color.Color color = renderer.GetPropertyAsColor(iText.Layout.Property.Property.FONT_COLOR);
+            Color color = renderer.GetPropertyAsColor(iText.Layout.Property.Property.FONT_COLOR);
             if (color != null && color is DeviceRgb) {
                 attributes.Put(PdfName.Color, new PdfArray(color.GetColorValue()));
             }
@@ -301,7 +300,7 @@ namespace iText.Layout.Renderer {
             if (generalBorderProperties) {
                 iText.Layout.Border.Border generalBorder = renderer.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
                     .BORDER);
-                iText.Kernel.Color.Color generalBorderColor = generalBorder.GetColor();
+                Color generalBorderColor = generalBorder.GetColor();
                 int borderType = generalBorder.GetBorderType();
                 float borderWidth = generalBorder.GetWidth();
                 if (generalBorderColor is DeviceRgb) {

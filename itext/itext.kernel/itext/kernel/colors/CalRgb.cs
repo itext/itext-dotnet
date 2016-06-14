@@ -41,38 +41,24 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Pdf.Colorspace;
 
-namespace iText.Kernel.Color {
-    public class DeviceGray : iText.Kernel.Color.Color {
-        public static readonly iText.Kernel.Color.DeviceGray WHITE = new iText.Kernel.Color.DeviceGray(1f);
-
-        public static readonly iText.Kernel.Color.DeviceGray GRAY = new iText.Kernel.Color.DeviceGray(.5f);
-
-        public static readonly iText.Kernel.Color.DeviceGray BLACK = new iText.Kernel.Color.DeviceGray();
-
-        public DeviceGray(float value)
-            : base(new PdfDeviceCs.Gray(), new float[] { value }) {
+namespace iText.Kernel.Colors {
+    public class CalRgb : Color {
+        public CalRgb(PdfCieBasedCs.CalRgb cs)
+            : this(cs, new float[cs.GetNumberOfComponents()]) {
         }
 
-        public DeviceGray()
-            : this(0f) {
+        public CalRgb(PdfCieBasedCs.CalRgb cs, float[] value)
+            : base(cs, value) {
         }
 
-        public static iText.Kernel.Color.DeviceGray MakeLighter(iText.Kernel.Color.DeviceGray grayColor) {
-            float v = grayColor.GetColorValue()[0];
-            if (v == 0f) {
-                return new iText.Kernel.Color.DeviceGray(0.3f);
-            }
-            float multiplier = Math.Min(1f, v + 0.33f) / v;
-            return new iText.Kernel.Color.DeviceGray(v * multiplier);
+        public CalRgb(float[] whitePoint, float[] value)
+            : base(new PdfCieBasedCs.CalRgb(whitePoint), value) {
         }
 
-        public static iText.Kernel.Color.DeviceGray MakeDarker(iText.Kernel.Color.DeviceGray grayColor) {
-            float v = grayColor.GetColorValue()[0];
-            float multiplier = Math.Max(0f, (v - 0.33f) / v);
-            return new iText.Kernel.Color.DeviceGray(v * multiplier);
+        public CalRgb(float[] whitePoint, float[] blackPoint, float[] gamma, float[] matrix, float[] value)
+            : this(new PdfCieBasedCs.CalRgb(whitePoint, blackPoint, gamma, matrix), value) {
         }
     }
 }

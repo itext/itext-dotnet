@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 
 namespace iText.Kernel.Pdf.Canvas.Wmf {
     /// <summary>
@@ -75,7 +75,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         internal int hatch;
 
-        internal iText.Kernel.Color.Color color = DeviceRgb.WHITE;
+        internal Color color = DeviceRgb.WHITE;
 
         /// <summary>Creates a MetaBrush object.</summary>
         public MetaBrush()
@@ -105,7 +105,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Get the color of the MetaBrush.</summary>
         /// <returns>color of the brush</returns>
-        public virtual iText.Kernel.Color.Color GetColor() {
+        public virtual Color GetColor() {
             return color;
         }
     }

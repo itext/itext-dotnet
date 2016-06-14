@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Font;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -357,8 +358,7 @@ namespace iText.Barcodes {
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the dimensions the barcode occupies</returns>
-        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
-             textColor);
+        public abstract Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor);
 
         /// <summary>Gets the amount of ink spreading.</summary>
         /// <returns>the ink spreading</returns>
@@ -396,7 +396,7 @@ namespace iText.Barcodes {
         /// <summary>Creates a PdfFormXObject with the barcode.</summary>
         /// <remarks>Creates a PdfFormXObject with the barcode. Default bar color and text color will be used.</remarks>
         /// <returns>the XObject</returns>
-        /// <seealso cref="CreateFormXObject(iText.Kernel.Color.Color, iText.Kernel.Color.Color, iText.Kernel.Pdf.PdfDocument)
+        /// <seealso cref="CreateFormXObject(iText.Kernel.Colors.Color, iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfDocument)
         ///     "/>
         public virtual PdfFormXObject CreateFormXObject(PdfDocument document) {
             return CreateFormXObject(null, null, document);
@@ -406,10 +406,9 @@ namespace iText.Barcodes {
         /// <param name="barColor">the color of the bars. It can be <CODE>null</CODE></param>
         /// <param name="textColor">the color of the text. It can be <CODE>null</CODE></param>
         /// <returns>the XObject</returns>
-        /// <seealso cref="PlaceBarcode(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Color.Color, iText.Kernel.Color.Color)
+        /// <seealso cref="PlaceBarcode(iText.Kernel.Pdf.Canvas.PdfCanvas, iText.Kernel.Colors.Color, iText.Kernel.Colors.Color)
         ///     "/>
-        public virtual PdfFormXObject CreateFormXObject(iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
-             textColor, PdfDocument document) {
+        public virtual PdfFormXObject CreateFormXObject(Color barColor, Color textColor, PdfDocument document) {
             PdfFormXObject xObject = new PdfFormXObject((Rectangle)null);
             Rectangle rect = PlaceBarcode(new PdfCanvas(xObject, document), barColor, textColor);
             xObject.SetBBox(new PdfArray(rect));

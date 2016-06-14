@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using iText.IO.Image;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -73,7 +73,7 @@ namespace iText.Pdfa {
             String shortText = "text";
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
             canvas.SetFontAndSize(font, 12);
-            canvas.SetFillColor(iText.Kernel.Color.Color.RED).BeginText().ShowText(shortText).EndText();
+            canvas.SetFillColor(Color.RED).BeginText().ShowText(shortText).EndText();
             canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
             doc.Close();
             CompareResult(outPdf, cmpPdf);
@@ -114,7 +114,7 @@ namespace iText.Pdfa {
                 , @is);
             PdfADocument doc = new PdfADocument(writer, PdfAConformanceLevel.PDF_A_2B, outputIntent);
             PdfCanvas canvas = new PdfCanvas(doc.AddNewPage());
-            canvas.SetFillColor(iText.Kernel.Color.Color.BLUE);
+            canvas.SetFillColor(Color.BLUE);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
             canvas.MoveTo(doc.GetDefaultPageSize().GetLeft(), doc.GetDefaultPageSize().GetBottom());
             canvas.LineTo(doc.GetDefaultPageSize().GetRight(), doc.GetDefaultPageSize().GetBottom());
@@ -144,7 +144,7 @@ namespace iText.Pdfa {
                 PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
                 canvas.SetFontAndSize(font, 12);
                 canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.CLIP);
-                canvas.SetFillColor(iText.Kernel.Color.Color.RED).BeginText().ShowText(shortText).EndText();
+                canvas.SetFillColor(Color.RED).BeginText().ShowText(shortText).EndText();
                 canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.STROKE);
                 canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f)).BeginText().ShowText(shortText).EndText();
                 canvas.SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode.FILL);
@@ -172,7 +172,7 @@ namespace iText.Pdfa {
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "FreeSans.ttf", true);
             canvas.SetFontAndSize(font, 12);
             canvas.SetStrokeColor(new DeviceCmyk(0.1f, 0.1f, 0.1f, 0.1f));
-            canvas.SetFillColor(iText.Kernel.Color.Color.RED);
+            canvas.SetFillColor(Color.RED);
             canvas.BeginText().ShowText(shortText).EndText();
             canvas.SetFillColor(DeviceGray.GRAY).BeginText().ShowText(shortText).EndText();
             doc.Close();

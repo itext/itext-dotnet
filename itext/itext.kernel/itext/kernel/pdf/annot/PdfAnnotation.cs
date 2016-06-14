@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -442,7 +443,7 @@ namespace iText.Kernel.Pdf.Annot {
             return SetColor(new PdfArray(color));
         }
 
-        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetColor(iText.Kernel.Color.Color color) {
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetColor(Color color) {
             return SetColor(new PdfArray(color.GetColorValue()));
         }
 

@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.Kernel.Color;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 
@@ -94,11 +94,11 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>The current background color.</summary>
         /// <remarks>The current background color. Default value is DeviceRgb#WHITE.</remarks>
-        public iText.Kernel.Color.Color currentBackgroundColor = DeviceRgb.WHITE;
+        public Color currentBackgroundColor = DeviceRgb.WHITE;
 
         /// <summary>Current text color.</summary>
         /// <remarks>Current text color. Default value is DeviceRgb#BLACK.</remarks>
-        public iText.Kernel.Color.Color currentTextColor = DeviceRgb.BLACK;
+        public Color currentTextColor = DeviceRgb.BLACK;
 
         /// <summary>The current background mode.</summary>
         /// <remarks>The current background mode. Default value is OPAQUE.</remarks>
@@ -198,12 +198,12 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                     currentBrush = (MetaBrush)obj;
                     style = currentBrush.GetStyle();
                     if (style == MetaBrush.BS_SOLID) {
-                        iText.Kernel.Color.Color color = currentBrush.GetColor();
+                        Color color = currentBrush.GetColor();
                         cb.SetFillColor(color);
                     }
                     else {
                         if (style == MetaBrush.BS_HATCHED) {
-                            iText.Kernel.Color.Color color = currentBackgroundColor;
+                            Color color = currentBackgroundColor;
                             cb.SetFillColor(color);
                         }
                     }
@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                     currentPen = (MetaPen)obj;
                     style = currentPen.GetStyle();
                     if (style != MetaPen.PS_NULL) {
-                        iText.Kernel.Color.Color color = currentPen.GetColor();
+                        Color color = currentPen.GetColor();
                         cb.SetStrokeColor(color);
                         cb.SetLineWidth(Math.Abs(currentPen.GetPenWidth() * scalingX / extentWx));
                         switch (style) {
@@ -394,25 +394,25 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Getter for property currentBackgroundColor.</summary>
         /// <returns>Value of property currentBackgroundColor.</returns>
-        public virtual iText.Kernel.Color.Color GetCurrentBackgroundColor() {
+        public virtual Color GetCurrentBackgroundColor() {
             return currentBackgroundColor;
         }
 
         /// <summary>Setter for property currentBackgroundColor.</summary>
         /// <param name="currentBackgroundColor">New value of property currentBackgroundColor.</param>
-        public virtual void SetCurrentBackgroundColor(iText.Kernel.Color.Color currentBackgroundColor) {
+        public virtual void SetCurrentBackgroundColor(Color currentBackgroundColor) {
             this.currentBackgroundColor = currentBackgroundColor;
         }
 
         /// <summary>Getter for property currentTextColor.</summary>
         /// <returns>Value of property currentTextColor.</returns>
-        public virtual iText.Kernel.Color.Color GetCurrentTextColor() {
+        public virtual Color GetCurrentTextColor() {
             return currentTextColor;
         }
 
         /// <summary>Setter for property currentTextColor.</summary>
         /// <param name="currentTextColor">New value of property currentTextColor.</param>
-        public virtual void SetCurrentTextColor(iText.Kernel.Color.Color currentTextColor) {
+        public virtual void SetCurrentTextColor(Color currentTextColor) {
             this.currentTextColor = currentTextColor;
         }
 

@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -104,8 +105,7 @@ namespace iText.Barcodes {
             n = (width - x) / (bars.Length - 1);
         }
 
-        public override Rectangle PlaceBarcode(PdfCanvas canvas, iText.Kernel.Color.Color barColor, iText.Kernel.Color.Color
-             textColor) {
+        public override Rectangle PlaceBarcode(PdfCanvas canvas, Color barColor, Color textColor) {
             if (barColor != null) {
                 canvas.SetFillColor(barColor);
             }
