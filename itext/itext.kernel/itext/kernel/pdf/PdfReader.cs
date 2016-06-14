@@ -51,7 +51,7 @@ using iText.Kernel;
 using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf {
-    public class PdfReader {
+    public class PdfReader : IDisposable {
         private const String endstream1 = "endstream";
 
         private const String endstream2 = "\nendstream";
@@ -1262,6 +1262,10 @@ namespace iText.Kernel.Pdf {
             public virtual void Close() {
                 buffer = null;
             }
+        }
+
+        public void Dispose() {
+            Close();
         }
     }
 }

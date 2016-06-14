@@ -45,7 +45,7 @@ using System;
 using System.Text;
 
 namespace iText.IO.Source {
-    public class PdfTokenizer {
+    public class PdfTokenizer : IDisposable {
         public enum TokenType {
             Number,
             String,
@@ -945,6 +945,10 @@ namespace iText.IO.Source {
             public virtual void Close() {
                 buffer = null;
             }
+        }
+
+        public void Dispose() {
+            Close();
         }
     }
 }

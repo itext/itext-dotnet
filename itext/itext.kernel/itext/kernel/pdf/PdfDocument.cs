@@ -64,7 +64,7 @@ using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
 namespace iText.Kernel.Pdf {
-    public class PdfDocument : IEventDispatcher {
+    public class PdfDocument : IDisposable, IEventDispatcher {
         /// <summary>Currently active page.</summary>
         protected internal PdfPage currentPage = null;
 
@@ -1681,6 +1681,10 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
+        }
+
+        public void Dispose() {
+            Close();
         }
     }
 }
