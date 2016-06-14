@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
+namespace iText.Layout.Borders {
     public class OutsetBorder : Border3D {
         public OutsetBorder(float width)
             : base(width) {
@@ -63,7 +63,7 @@ namespace iText.Layout.Border {
         }
 
         public override int GetBorderType() {
-            return iText.Layout.Border.Border._3D_OUTSET;
+            return Border._3D_OUTSET;
         }
 
         protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side side) {

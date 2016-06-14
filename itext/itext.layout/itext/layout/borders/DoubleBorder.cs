@@ -44,14 +44,14 @@ address: sales@itextpdf.com
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
+namespace iText.Layout.Borders {
     /// <summary>Creates a double border around the element it's set to.</summary>
     /// <remarks>
     /// Creates a double border around the element it's set to. The space between the two border lines has
     /// the same width as the two borders. If a background has been set on the element the color will show in
     /// between the two borders.
     /// </remarks>
-    public class DoubleBorder : iText.Layout.Border.Border {
+    public class DoubleBorder : Border {
         /// <summary>Creates a DoubleBorder with the specified width for both the two borders as the space in between them.
         ///     </summary>
         /// <remarks>
@@ -78,7 +78,7 @@ namespace iText.Layout.Border {
         }
 
         public override int GetBorderType() {
-            return iText.Layout.Border.Border.DOUBLE;
+            return Border.DOUBLE;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore

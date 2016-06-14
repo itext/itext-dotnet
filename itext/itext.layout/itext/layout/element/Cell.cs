@@ -46,7 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Log;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Layout.Border;
+using iText.Layout.Borders;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -69,7 +69,7 @@ namespace iText.Layout.Element {
     /// .
     /// </summary>
     public class Cell : BlockElement<iText.Layout.Element.Cell> {
-        private static readonly iText.Layout.Border.Border DEFAULT_BORDER = new SolidBorder(0.5f);
+        private static readonly Border DEFAULT_BORDER = new SolidBorder(0.5f);
 
         private int row;
 

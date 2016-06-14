@@ -45,9 +45,9 @@ using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
+namespace iText.Layout.Borders {
     public abstract class Border {
-        public static readonly iText.Layout.Border.Border NO_BORDER = null;
+        public static readonly iText.Layout.Borders.Border NO_BORDER = null;
 
         public const int SOLID = 0;
 
@@ -132,8 +132,8 @@ namespace iText.Layout.Border {
             if (this == anObject) {
                 return true;
             }
-            if (anObject is iText.Layout.Border.Border) {
-                iText.Layout.Border.Border anotherBorder = (iText.Layout.Border.Border)anObject;
+            if (anObject is iText.Layout.Borders.Border) {
+                iText.Layout.Borders.Border anotherBorder = (iText.Layout.Borders.Border)anObject;
                 if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() != GetColor() || anotherBorder
                     .GetWidth() != GetWidth()) {
                     return false;

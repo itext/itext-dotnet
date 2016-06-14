@@ -48,6 +48,7 @@ using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Borders;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
 using iText.Layout.Property;
@@ -397,10 +398,10 @@ namespace iText.Layout {
         /// <summary>Sets a border for all four edges of this Element with customizable color, width, pattern type.</summary>
         /// <param name="border">
         /// a customized
-        /// <see cref="iText.Layout.Border.Border"/>
+        /// <see cref="iText.Layout.Borders.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorder(iText.Layout.Border.Border border) {
+        public virtual T SetBorder(Border border) {
             SetProperty(iText.Layout.Property.Property.BORDER, border);
             return (T)(Object)this;
         }
@@ -408,10 +409,10 @@ namespace iText.Layout {
         /// <summary>Sets a border for the upper limit of this Element with customizable color, width, pattern type.</summary>
         /// <param name="border">
         /// a customized
-        /// <see cref="iText.Layout.Border.Border"/>
+        /// <see cref="iText.Layout.Borders.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderTop(iText.Layout.Border.Border border) {
+        public virtual T SetBorderTop(Border border) {
             SetProperty(iText.Layout.Property.Property.BORDER_TOP, border);
             return (T)(Object)this;
         }
@@ -419,10 +420,10 @@ namespace iText.Layout {
         /// <summary>Sets a border for the right limit of this Element with customizable color, width, pattern type.</summary>
         /// <param name="border">
         /// a customized
-        /// <see cref="iText.Layout.Border.Border"/>
+        /// <see cref="iText.Layout.Borders.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderRight(iText.Layout.Border.Border border) {
+        public virtual T SetBorderRight(Border border) {
             SetProperty(iText.Layout.Property.Property.BORDER_RIGHT, border);
             return (T)(Object)this;
         }
@@ -430,10 +431,10 @@ namespace iText.Layout {
         /// <summary>Sets a border for the bottom limit of this Element with customizable color, width, pattern type.</summary>
         /// <param name="border">
         /// a customized
-        /// <see cref="iText.Layout.Border.Border"/>
+        /// <see cref="iText.Layout.Borders.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderBottom(iText.Layout.Border.Border border) {
+        public virtual T SetBorderBottom(Border border) {
             SetProperty(iText.Layout.Property.Property.BORDER_BOTTOM, border);
             return (T)(Object)this;
         }
@@ -441,10 +442,10 @@ namespace iText.Layout {
         /// <summary>Sets a border for the left limit of this Element with customizable color, width, pattern type.</summary>
         /// <param name="border">
         /// a customized
-        /// <see cref="iText.Layout.Border.Border"/>
+        /// <see cref="iText.Layout.Borders.Border"/>
         /// </param>
         /// <returns>this Element.</returns>
-        public virtual T SetBorderLeft(iText.Layout.Border.Border border) {
+        public virtual T SetBorderLeft(Border border) {
             SetProperty(iText.Layout.Property.Property.BORDER_LEFT, border);
             return (T)(Object)this;
         }

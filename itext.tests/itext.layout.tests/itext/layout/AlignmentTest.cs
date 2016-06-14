@@ -6,7 +6,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
-using iText.Layout.Border;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Property;
 using iText.Test;

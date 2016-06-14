@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
@@ -64,8 +65,7 @@ namespace iText.Layout.Renderer {
             }
             PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
             linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-            iText.Layout.Border.Border border = this.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
-                .BORDER);
+            Border border = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
             if (border != null) {
                 linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
             }

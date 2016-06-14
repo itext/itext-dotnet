@@ -48,6 +48,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Property;
@@ -78,9 +79,9 @@ namespace iText.Layout.Renderer {
         ///     </remarks>
         protected internal bool isOriginalNonSplitRenderer = true;
 
-        private List<List<iText.Layout.Border.Border>> horizontalBorders;
+        private List<List<Border>> horizontalBorders;
 
-        private List<List<iText.Layout.Border.Border>> verticalBorders;
+        private List<List<Border>> verticalBorders;
 
         private float[] columnWidths = null;
 
@@ -150,8 +151,8 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), (float)tableWidth, 0));
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
-            horizontalBorders = new List<List<iText.Layout.Border.Border>>();
-            verticalBorders = new List<List<iText.Layout.Border.Border>>();
+            horizontalBorders = new List<List<Border>>();
+            verticalBorders = new List<List<Border>>();
             Table headerElement = tableModel.GetHeader();
             bool isFirstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
             bool headerShouldBeApplied = !rows.IsEmpty() && (!isOriginalNonSplitRenderer || isFirstHeader && !tableModel
@@ -658,15 +659,15 @@ namespace iText.Layout.Renderer {
             if (hasContent || row == 0) {
                 rowN++;
             }
-            splitRenderer.horizontalBorders = new List<List<iText.Layout.Border.Border>>();
+            splitRenderer.horizontalBorders = new List<List<Border>>();
             //splitRenderer.horizontalBorders.addAll(horizontalBorders);
             for (int i = 0; i <= rowN; i++) {
                 splitRenderer.horizontalBorders.Add(horizontalBorders[i]);
             }
-            splitRenderer.verticalBorders = new List<List<iText.Layout.Border.Border>>();
+            splitRenderer.verticalBorders = new List<List<Border>>();
             //        splitRenderer.verticalBorders.addAll(verticalBorders);
             for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++) {
-                splitRenderer.verticalBorders.Add(new List<iText.Layout.Border.Border>());
+                splitRenderer.verticalBorders.Add(new List<Border>());
                 for (int j = 0; j < rowN; j++) {
                     if (verticalBorders[i_1].Count != 0) {
                         splitRenderer.verticalBorders[i_1].Add(verticalBorders[i_1][j]);
@@ -736,13 +737,13 @@ namespace iText.Layout.Renderer {
             }
             float y1 = startY;
             for (int i = 0; i < horizontalBorders.Count; i++) {
-                List<iText.Layout.Border.Border> borders = horizontalBorders[i];
+                List<Border> borders = horizontalBorders[i];
                 float x1 = startX;
                 float x2 = x1 + columnWidths[0];
                 if (i == 0) {
                     if (verticalBorders != null && verticalBorders.Count > 0 && verticalBorders[0].Count > 0 && verticalBorders
                         [verticalBorders.Count - 1].Count > 0) {
-                        iText.Layout.Border.Border firstBorder = verticalBorders[0][0];
+                        Border firstBorder = verticalBorders[0][0];
                         if (firstBorder != null) {
                             x1 -= firstBorder.GetWidth() / 2;
                         }
@@ -753,7 +754,7 @@ namespace iText.Layout.Renderer {
                         if (verticalBorders != null && verticalBorders.Count > 0 && verticalBorders[0].Count > 0 && verticalBorders
                             [verticalBorders.Count - 1] != null && verticalBorders[verticalBorders.Count - 1].Count > 0 && verticalBorders
                             [0] != null) {
-                            iText.Layout.Border.Border firstBorder = verticalBorders[0][verticalBorders[0].Count - 1];
+                            Border firstBorder = verticalBorders[0][verticalBorders[0].Count - 1];
                             if (firstBorder != null) {
                                 x1 -= firstBorder.GetWidth() / 2;
                             }
@@ -762,8 +763,8 @@ namespace iText.Layout.Renderer {
                 }
                 int j;
                 for (j = 1; j < borders.Count; j++) {
-                    iText.Layout.Border.Border prevBorder = borders[j - 1];
-                    iText.Layout.Border.Border curBorder = borders[j];
+                    Border prevBorder = borders[j - 1];
+                    Border curBorder = borders[j];
                     if (prevBorder != null) {
                         if (!prevBorder.Equals(curBorder)) {
                             prevBorder.DrawCellBorder(drawContext.GetCanvas(), x1, y1, x2, y1);
@@ -778,7 +779,7 @@ namespace iText.Layout.Renderer {
                         x2 += columnWidths[j];
                     }
                 }
-                iText.Layout.Border.Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
+                Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
                 if (lastBorder != null) {
                     if (verticalBorders[j].Count > 0) {
                         if (i == 0) {
@@ -799,7 +800,7 @@ namespace iText.Layout.Renderer {
             }
             float x1_1 = startX;
             for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++) {
-                List<iText.Layout.Border.Border> borders = verticalBorders[i_1];
+                List<Border> borders = verticalBorders[i_1];
                 y1 = startY;
                 float y2 = y1;
                 if (!heights.IsEmpty()) {
@@ -807,8 +808,8 @@ namespace iText.Layout.Renderer {
                 }
                 int j;
                 for (j = 1; j < borders.Count; j++) {
-                    iText.Layout.Border.Border prevBorder = borders[j - 1];
-                    iText.Layout.Border.Border curBorder = borders[j];
+                    Border prevBorder = borders[j - 1];
+                    Border curBorder = borders[j];
                     if (prevBorder != null) {
                         if (!prevBorder.Equals(curBorder)) {
                             prevBorder.DrawCellBorder(drawContext.GetCanvas(), x1_1, y1, x1_1, y2);
@@ -827,7 +828,7 @@ namespace iText.Layout.Renderer {
                     x1_1 += columnWidths[i_1];
                     continue;
                 }
-                iText.Layout.Border.Border lastBorder = borders[j - 1];
+                Border lastBorder = borders[j - 1];
                 if (lastBorder != null) {
                     lastBorder.DrawCellBorder(drawContext.GetCanvas(), x1_1, y1, x1_1, y2);
                 }
@@ -901,7 +902,7 @@ namespace iText.Layout.Renderer {
 
         private void BuildBordersArrays(CellRenderer cell, int row, int rowspan, int colspan, bool hasContent) {
             int colN = ((Cell)cell.GetModelElement()).GetCol();
-            iText.Layout.Border.Border[] cellBorders = cell.GetBorders();
+            Border[] cellBorders = cell.GetBorders();
             if (row + 1 - rowspan < 0) {
                 rowspan = row + 1;
             }
@@ -928,9 +929,9 @@ namespace iText.Layout.Renderer {
             for (int i_1 = 0; i_1 < colspan; i_1++) {
                 if (hasContent) {
                     if (row + 1 == horizontalBorders.Count) {
-                        horizontalBorders.Add(new List<iText.Layout.Border.Border>());
+                        horizontalBorders.Add(new List<Border>());
                     }
-                    List<iText.Layout.Border.Border> borders = horizontalBorders[row + 1];
+                    List<Border> borders = horizontalBorders[row + 1];
                     if (borders.Count <= colN + i_1) {
                         for (int count = borders.Count; count < colN + i_1; count++) {
                             borders.Add(null);
@@ -948,7 +949,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (row == horizontalBorders.Count) {
-                        horizontalBorders.Add(new List<iText.Layout.Border.Border>());
+                        horizontalBorders.Add(new List<Border>());
                     }
                     horizontalBorders[row].Add(colN + i_1, cellBorders[2]);
                 }
@@ -956,7 +957,7 @@ namespace iText.Layout.Renderer {
             if (rowspan > 1) {
                 int numOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
                 for (int k = row - rowspan + 1; k <= row; k++) {
-                    List<iText.Layout.Border.Border> borders = horizontalBorders[k];
+                    List<Border> borders = horizontalBorders[k];
                     if (borders.Count < numOfColumns) {
                         for (int j = borders.Count; j < numOfColumns; j++) {
                             borders.Add(null);
@@ -983,7 +984,7 @@ namespace iText.Layout.Renderer {
             else {
                 for (int j = row - rowspan + 1; j <= row; j++) {
                     if (verticalBorders.IsEmpty()) {
-                        verticalBorders.Add(new List<iText.Layout.Border.Border>());
+                        verticalBorders.Add(new List<Border>());
                     }
                     if (verticalBorders[0].Count <= j) {
                         verticalBorders[0].Add(cellBorders[3]);
@@ -998,7 +999,7 @@ namespace iText.Layout.Renderer {
             }
             if (colspan > 1) {
                 for (int k = colN; k <= colspan + colN; k++) {
-                    List<iText.Layout.Border.Border> borders = verticalBorders[k];
+                    List<Border> borders = verticalBorders[k];
                     if (borders.Count < row + rowspan) {
                         for (int j = borders.Count; j < row + rowspan; j++) {
                             borders.Add(null);
@@ -1008,14 +1009,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private bool CheckAndReplaceBorderInArray(List<List<iText.Layout.Border.Border>> borderArray, int i, int j
-            , iText.Layout.Border.Border borderToAdd) {
+        private bool CheckAndReplaceBorderInArray(List<List<Border>> borderArray, int i, int j, Border borderToAdd
+            ) {
             if (borderArray.Count <= i) {
                 for (int count = borderArray.Count; count <= i; count++) {
-                    borderArray.Add(new List<iText.Layout.Border.Border>());
+                    borderArray.Add(new List<Border>());
                 }
             }
-            List<iText.Layout.Border.Border> borders = borderArray[i];
+            List<Border> borders = borderArray[i];
             if (borders.IsEmpty()) {
                 for (int count = 0; count < j; count++) {
                     borders.Add(null);
@@ -1032,7 +1033,7 @@ namespace iText.Layout.Renderer {
                     borders.Add(count, null);
                 }
             }
-            iText.Layout.Border.Border neighbour = borders[j];
+            Border neighbour = borders[j];
             if (neighbour == null) {
                 borders[j] = borderToAdd;
                 return true;

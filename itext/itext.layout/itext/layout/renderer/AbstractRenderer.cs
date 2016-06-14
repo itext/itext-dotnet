@@ -56,6 +56,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Property;
@@ -391,9 +392,9 @@ namespace iText.Layout.Renderer
 		/// 	</param>
 		public virtual void DrawBorder(DrawContext drawContext)
 		{
-			iText.Layout.Border.Border[] borders = GetBorders();
+			Border[] borders = GetBorders();
 			bool gotBorders = false;
-			foreach (iText.Layout.Border.Border border in borders)
+			foreach (Border border in borders)
 			{
 				gotBorders = gotBorders || border != null;
 			}
@@ -648,12 +649,11 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse)
 		{
-			iText.Layout.Border.Border[] borders = GetBorders();
+			Border[] borders = GetBorders();
 			return ApplyBorderBox(rect, borders, reverse);
 		}
 
-		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, iText.Layout.Border.Border
-			[] borders, bool reverse)
+		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse)
 		{
 			float topWidth = borders[0] != null ? borders[0].GetWidth() : 0;
 			float rightWidth = borders[1] != null ? borders[1].GetWidth() : 0;
@@ -709,8 +709,7 @@ namespace iText.Layout.Renderer
 			{
 				PdfLinkAnnotation link = new PdfLinkAnnotation(GetOccupiedArea().GetBBox());
 				link.SetAction(action);
-				iText.Layout.Border.Border border = this.GetProperty<iText.Layout.Border.Border
-					>(iText.Layout.Property.Property.BORDER);
+				Border border = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
 				if (border != null)
 				{
 					link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
@@ -791,20 +790,14 @@ namespace iText.Layout.Renderer
 		/// and if <code>Property.BORDER</code> is also not set then <code>null<code/> is returned
 		/// on position of this border
 		/// </returns>
-		protected internal virtual iText.Layout.Border.Border[] GetBorders()
+		protected internal virtual Border[] GetBorders()
 		{
-			iText.Layout.Border.Border border = this.GetProperty<iText.Layout.Border.Border
-				>(iText.Layout.Property.Property.BORDER);
-			iText.Layout.Border.Border topBorder = this.GetProperty<iText.Layout.Border.Border
-				>(iText.Layout.Property.Property.BORDER_TOP);
-			iText.Layout.Border.Border rightBorder = this.GetProperty<iText.Layout.Border.Border
-				>(iText.Layout.Property.Property.BORDER_RIGHT);
-			iText.Layout.Border.Border bottomBorder = this.GetProperty<iText.Layout.Border.Border
-				>(iText.Layout.Property.Property.BORDER_BOTTOM);
-			iText.Layout.Border.Border leftBorder = this.GetProperty<iText.Layout.Border.Border
-				>(iText.Layout.Property.Property.BORDER_LEFT);
-			iText.Layout.Border.Border[] borders = new iText.Layout.Border.Border[]
-				 { topBorder, rightBorder, bottomBorder, leftBorder };
+			Border border = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
+			Border topBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_TOP);
+			Border rightBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_RIGHT);
+			Border bottomBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_BOTTOM);
+			Border leftBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_LEFT);
+			Border[] borders = new Border[]{ topBorder, rightBorder, bottomBorder, leftBorder };
 			for (int i = 0; i < borders.Length; ++i)
 			{
 				if (borders[i] == null)
@@ -815,9 +808,7 @@ namespace iText.Layout.Renderer
 			return borders;
 		}
 
-		protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders
-			(iText.Layout.Border.Border border, int borderNumber)
-		{
+		protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders(Border border, int borderNumber) {
 			switch (borderNumber)
 			{
 				case 0:

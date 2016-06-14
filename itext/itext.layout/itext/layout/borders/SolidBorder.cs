@@ -41,99 +41,76 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
-    /// <summary>Draws a border with rounded dots aroudn the element it's been set to.</summary>
-    /// <remarks>
-    /// Draws a border with rounded dots aroudn the element it's been set to. For square dots see
-    /// <see cref="DottedBorder"/>
-    /// .
-    /// </remarks>
-    public class RoundDotsBorder : iText.Layout.Border.Border {
-        private const float GAP_MODIFIER = 2.5f;
-
-        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and sets the color to black.</summary>
+namespace iText.Layout.Borders {
+    /// <summary>Draws a solid border around the element it's set to.</summary>
+    public class SolidBorder : Border {
+        /// <summary>Creates a SolidBorder with the specified width and sets the color to black.</summary>
         /// <param name="width">width of the border</param>
-        public RoundDotsBorder(float width)
+        public SolidBorder(float width)
             : base(width) {
         }
 
-        /// <summary>Creates a RoundDotsBorder with the specified wit?dth and the specified color.</summary>
+        /// <summary>Creates a SolidBorder with the specified width and the specified color.</summary>
         /// <param name="color">color of the border</param>
         /// <param name="width">width of the border</param>
-        public RoundDotsBorder(Color color, float width)
+        public SolidBorder(Color color, float width)
             : base(color, width) {
         }
 
         public override int GetBorderType() {
-            return iText.Layout.Border.Border.ROUND_DOTS;
+            return Border.SOLID;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
             , float borderWidthAfter) {
-            float initialGap = width * GAP_MODIFIER;
-            float dx = x2 - x1;
-            float dy = y2 - y1;
-            double borderLength = Math.Sqrt(dx * dx + dy * dy);
-            float adjustedGap = GetDotsGap(borderLength, initialGap);
-            float widthHalf = width / 2;
+            float x3 = 0;
+            float y3 = 0;
+            float x4 = 0;
+            float y4 = 0;
             Border.Side borderSide = GetBorderSide(x1, y1, x2, y2);
             switch (borderSide) {
                 case Border.Side.TOP: {
-                    y1 += widthHalf;
-                    y2 += widthHalf;
+                    x3 = x2 + borderWidthAfter;
+                    y3 = y2 + width;
+                    x4 = x1 - borderWidthBefore;
+                    y4 = y1 + width;
                     break;
                 }
 
                 case Border.Side.RIGHT: {
-                    x1 += widthHalf;
-                    x2 += widthHalf;
+                    x3 = x2 + width;
+                    y3 = y2 - borderWidthAfter;
+                    x4 = x1 + width;
+                    y4 = y1 + borderWidthBefore;
                     break;
                 }
 
                 case Border.Side.BOTTOM: {
-                    y1 -= widthHalf;
-                    y2 -= widthHalf;
+                    x3 = x2 - borderWidthAfter;
+                    y3 = y2 - width;
+                    x4 = x1 + borderWidthBefore;
+                    y4 = y1 - width;
                     break;
                 }
 
                 case Border.Side.LEFT: {
-                    x1 -= widthHalf;
-                    x2 -= widthHalf;
+                    x3 = x2 - width;
+                    y3 = y2 + borderWidthAfter;
+                    x4 = x1 - width;
+                    y4 = y1 - borderWidthBefore;
                     break;
                 }
             }
-            canvas.SetStrokeColor(color);
-            canvas.SetLineWidth(width);
-            canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
-            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
+            canvas.SetFillColor(color);
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
         }
 
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
-            float initialGap = width * GAP_MODIFIER;
-            float dx = x2 - x1;
-            float dy = y2 - y1;
-            double borderLength = Math.Sqrt(dx * dx + dy * dy);
-            float adjustedGap = GetDotsGap(borderLength, initialGap);
-            bool isHorizontal = false;
-            if (Math.Abs(y2 - y1) < 0.0005f) {
-                isHorizontal = true;
-            }
-            if (isHorizontal) {
-                x2 -= width;
-            }
-            canvas.SetStrokeColor(color);
-            canvas.SetLineWidth(width);
-            canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
-            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
-        }
-
-        protected internal virtual float GetDotsGap(double distance, float initialGap) {
-            double gapsNum = System.Math.Ceiling(distance / initialGap);
-            return (float)(distance / gapsNum);
+            canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
         }
     }
 }

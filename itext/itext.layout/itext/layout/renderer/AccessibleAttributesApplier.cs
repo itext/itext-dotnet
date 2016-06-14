@@ -49,6 +49,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Property;
 
@@ -290,16 +291,14 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyBorderAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
-            bool specificBorderProperties = renderer.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
-                .BORDER_TOP) != null || renderer.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
-                .BORDER_RIGHT) != null || renderer.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
-                .BORDER_BOTTOM) != null || renderer.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
-                .BORDER_LEFT) != null;
+            bool specificBorderProperties = renderer.GetProperty<Border>(iText.Layout.Property.Property.BORDER_TOP) !=
+                 null || renderer.GetProperty<Border>(iText.Layout.Property.Property.BORDER_RIGHT) != null || renderer
+                .GetProperty<Border>(iText.Layout.Property.Property.BORDER_BOTTOM) != null || renderer.GetProperty<Border
+                >(iText.Layout.Property.Property.BORDER_LEFT) != null;
             bool generalBorderProperties = !specificBorderProperties && renderer.GetProperty<Object>(iText.Layout.Property.Property
                 .BORDER) != null;
             if (generalBorderProperties) {
-                iText.Layout.Border.Border generalBorder = renderer.GetProperty<iText.Layout.Border.Border>(iText.Layout.Property.Property
-                    .BORDER);
+                Border generalBorder = renderer.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
                 Color generalBorderColor = generalBorder.GetColor();
                 int borderType = generalBorder.GetBorderType();
                 float borderWidth = generalBorder.GetWidth();
@@ -314,12 +313,12 @@ namespace iText.Layout.Renderer {
                 PdfArray borderTypes = new PdfArray();
                 PdfArray borderWidths = new PdfArray();
                 bool atLeastOneRgb = false;
-                iText.Layout.Border.Border[] borders = renderer.GetBorders();
+                Border[] borders = renderer.GetBorders();
                 bool allColorsEqual = true;
                 bool allTypesEqual = true;
                 bool allWidthsEqual = true;
                 for (int i = 1; i < borders.Length; i++) {
-                    iText.Layout.Border.Border border = borders[i];
+                    Border border = borders[i];
                     if (border != null) {
                         if (!border.GetColor().Equals(borders[0].GetColor())) {
                             allColorsEqual = false;
@@ -450,39 +449,39 @@ namespace iText.Layout.Renderer {
 
         private static PdfName TransformBorderTypeToName(int borderType) {
             switch (borderType) {
-                case iText.Layout.Border.Border.SOLID: {
+                case Border.SOLID: {
                     return PdfName.Solid;
                 }
 
-                case iText.Layout.Border.Border.DASHED: {
+                case Border.DASHED: {
                     return PdfName.Dashed;
                 }
 
-                case iText.Layout.Border.Border.DOTTED: {
+                case Border.DOTTED: {
                     return PdfName.Dotted;
                 }
 
-                case iText.Layout.Border.Border.ROUND_DOTS: {
+                case Border.ROUND_DOTS: {
                     return PdfName.Dotted;
                 }
 
-                case iText.Layout.Border.Border.DOUBLE: {
+                case Border.DOUBLE: {
                     return PdfName.Double;
                 }
 
-                case iText.Layout.Border.Border._3D_GROOVE: {
+                case Border._3D_GROOVE: {
                     return PdfName.Groove;
                 }
 
-                case iText.Layout.Border.Border._3D_INSET: {
+                case Border._3D_INSET: {
                     return PdfName.Inset;
                 }
 
-                case iText.Layout.Border.Border._3D_OUTSET: {
+                case Border._3D_OUTSET: {
                     return PdfName.Outset;
                 }
 
-                case iText.Layout.Border.Border._3D_RIDGE: {
+                case Border._3D_RIDGE: {
                     return PdfName.Ridge;
                 }
 

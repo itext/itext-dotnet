@@ -48,6 +48,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Property;
@@ -70,7 +71,7 @@ namespace iText.Layout.Renderer {
             }
             float[] margins = GetMargins();
             ApplyMargins(parentBBox, margins, false);
-            iText.Layout.Border.Border[] borders = GetBorders();
+            Border[] borders = GetBorders();
             ApplyBorderBox(parentBBox, borders, false);
             bool isPositioned = IsPositioned();
             if (isPositioned) {

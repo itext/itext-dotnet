@@ -53,6 +53,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
@@ -137,7 +138,7 @@ namespace iText.Layout.Renderer
 			LayoutArea area = layoutContext.GetArea();
 			float[] margins = GetMargins();
 			Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
-			iText.Layout.Border.Border[] borders = GetBorders();
+			Border[] borders = GetBorders();
 			ApplyBorderBox(layoutBox, borders, false);
 			occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(
 				), layoutBox.GetY() + layoutBox.GetHeight(), 0, 0));

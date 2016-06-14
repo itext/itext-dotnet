@@ -45,7 +45,7 @@ using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
+namespace iText.Layout.Borders {
     /// <summary>Draws a dotted border around the element it has been set to.</summary>
     /// <remarks>
     /// Draws a dotted border around the element it has been set to. Do note that this border draw square dots,
@@ -53,7 +53,7 @@ namespace iText.Layout.Border {
     /// <see cref="RoundDotsBorder"/>
     /// .
     /// </remarks>
-    public class DottedBorder : iText.Layout.Border.Border {
+    public class DottedBorder : Border {
         private const float GAP_MODIFIER = 1.5f;
 
         /// <summary>Creates a DottedBorder instance with the specified width.</summary>
@@ -72,7 +72,7 @@ namespace iText.Layout.Border {
         }
 
         public override int GetBorderType() {
-            return iText.Layout.Border.Border.DOTTED;
+            return Border.DOTTED;
         }
 
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore

@@ -5,7 +5,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
-using iText.Layout.Border;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Property;
 using iText.Test;

@@ -44,9 +44,9 @@ address: sales@itextpdf.com
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
+namespace iText.Layout.Borders {
     /// <summary>Represents a border that is displayed using a 3D effect.</summary>
-    public abstract class Border3D : iText.Layout.Border.Border {
+    public abstract class Border3D : Border {
         private static readonly DeviceRgb GRAY = new DeviceRgb(212, 208, 200);
 
         /// <summary>Creates a Border3D instance with the specified width.</summary>

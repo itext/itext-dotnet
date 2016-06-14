@@ -44,26 +44,26 @@ address: sales@itextpdf.com
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
-namespace iText.Layout.Border {
-    public class InsetBorder : Border3D {
-        public InsetBorder(float width)
+namespace iText.Layout.Borders {
+    public class RidgeBorder : Border3D {
+        public RidgeBorder(float width)
             : base(width) {
         }
 
-        public InsetBorder(DeviceRgb color, float width)
+        public RidgeBorder(DeviceRgb color, float width)
             : base(color, width) {
         }
 
-        public InsetBorder(DeviceCmyk color, float width)
+        public RidgeBorder(DeviceCmyk color, float width)
             : base(color, width) {
         }
 
-        public InsetBorder(DeviceGray color, float width)
+        public RidgeBorder(DeviceGray color, float width)
             : base(color, width) {
         }
 
         public override int GetBorderType() {
-            return iText.Layout.Border.Border._3D_INSET;
+            return Border._3D_RIDGE;
         }
 
         protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side side) {
@@ -86,13 +86,13 @@ namespace iText.Layout.Border {
             switch (side) {
                 case Border.Side.TOP:
                 case Border.Side.LEFT: {
-                    canvas.SetFillColor(GetDarkerColor());
+                    canvas.SetFillColor(GetColor());
                     break;
                 }
 
                 case Border.Side.BOTTOM:
                 case Border.Side.RIGHT: {
-                    canvas.SetFillColor(GetColor());
+                    canvas.SetFillColor(GetDarkerColor());
                     break;
                 }
             }

@@ -47,6 +47,7 @@ using iText.IO.Log;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Property;
 using iText.Layout.Renderer;
 
@@ -718,26 +719,22 @@ namespace iText.Layout.Element
 		/// 	</summary>
 		/// <returns>
 		/// an array of
-		/// <see cref="iText.Layout.Border.Border"/>
+		/// <see cref="Border"/>
 		/// objects
 		/// </returns>
-		public virtual List<iText.Layout.Border.Border> GetLastRowBottomBorder()
-		{
-			List<iText.Layout.Border.Border> horizontalBorder = new List<iText.Layout.Border.Border
-				>();
-			if (lastAddedRow != null)
-			{
+		public virtual List<Border> GetLastRowBottomBorder() {
+			List<Border> horizontalBorder = new List<Border>();
+			if (lastAddedRow != null) {
 				for (int i = 0; i < lastAddedRow.Length; i++)
 				{
 					Cell cell = lastAddedRow[i];
 					if (cell != null)
 					{
-						iText.Layout.Border.Border border = ((iText.Layout.Border.Border)cell.GetProperty
-							<iText.Layout.Border.Border>(iText.Layout.Property.Property.BORDER));
+						Border border = ((Border)cell.GetProperty
+							<Border>(iText.Layout.Property.Property.BORDER));
 						if (border == null)
 						{
-							border = ((iText.Layout.Border.Border)cell.GetProperty<iText.Layout.Border.Border
-								>(iText.Layout.Property.Property.BORDER_BOTTOM));
+							border = ((Border)cell.GetProperty<Border>(iText.Layout.Property.Property.BORDER_BOTTOM));
 						}
 						horizontalBorder.Add(border);
 					}

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using System.Text;
 using iText.IO.Util;
 using iText.Kernel.Geom;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Property;
@@ -68,7 +69,7 @@ namespace iText.Layout.Renderer {
             }
             float[] margins = GetMargins();
             ApplyMargins(parentBBox, margins, false);
-            iText.Layout.Border.Border[] borders = GetBorders();
+            Border[] borders = GetBorders();
             ApplyBorderBox(parentBBox, borders, false);
             bool isPositioned = IsPositioned();
             if (isPositioned) {
@@ -112,7 +113,7 @@ namespace iText.Layout.Renderer {
                 SetProperty(iText.Layout.Property.Property.PADDING_RIGHT, 0);
                 SetProperty(iText.Layout.Property.Property.PADDING_BOTTOM, 0);
                 SetProperty(iText.Layout.Property.Property.PADDING_LEFT, 0);
-                SetProperty(iText.Layout.Property.Property.BORDER, iText.Layout.Border.Border.NO_BORDER);
+                SetProperty(iText.Layout.Property.Property.BORDER, Border.NO_BORDER);
                 margins = GetMargins();
                 borders = GetBorders();
                 paddings = GetPaddings();
