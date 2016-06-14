@@ -51,7 +51,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     /// <summary>
@@ -131,15 +131,15 @@ namespace iText.Layout.Renderer {
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             if (!((Table)modelElement).IsComplete()) {
-                SetProperty(iText.Layout.Property.Property.MARGIN_BOTTOM, 0);
+                SetProperty(Property.MARGIN_BOTTOM, 0);
             }
             if (rowRange.GetStartRow() != 0) {
-                SetProperty(iText.Layout.Property.Property.MARGIN_TOP, 0);
+                SetProperty(Property.MARGIN_TOP, 0);
             }
             ApplyMargins(layoutBox, false);
             ApplyBorderBox(layoutBox, false);
             if (IsPositioned()) {
-                float x = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.X);
+                float x = (float)this.GetPropertyAsFloat(Property.X);
                 float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
                 layoutBox.SetX(relativeX + x);
             }
@@ -191,8 +191,8 @@ namespace iText.Layout.Renderer {
             for (int row = 0; row < rows.Count; row++) {
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
-                if (row == 1 && true.Equals(this.GetOwnProperty<bool?>(iText.Layout.Property.Property.FORCED_PLACEMENT))) {
-                    DeleteOwnProperty(iText.Layout.Property.Property.FORCED_PLACEMENT);
+                if (row == 1 && true.Equals(this.GetOwnProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                    DeleteOwnProperty(Property.FORCED_PLACEMENT);
                 }
                 CellRenderer[] currentRow = rows[row];
                 float rowHeight = 0;
@@ -229,8 +229,8 @@ namespace iText.Layout.Renderer {
                     targetOverflowRowIndex[col_1] = currentCellInfo.finishRowInd;
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
                     bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
-                    int colspan = (int)cell.GetPropertyAsInteger(iText.Layout.Property.Property.COLSPAN);
-                    int rowspan = (int)cell.GetPropertyAsInteger(iText.Layout.Property.Property.ROWSPAN);
+                    int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+                    int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                     float cellWidth = 0;
                     float colOffset = 0;
                     for (int i = col_1; i < col_1 + colspan; i++) {
@@ -250,11 +250,10 @@ namespace iText.Layout.Renderer {
                     Rectangle cellLayoutBox = new Rectangle(layoutBox.GetX() + colOffset, cellLayoutBoxBottom, cellWidth, cellLayoutBoxHeight
                         );
                     LayoutArea cellArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), cellLayoutBox);
-                    VerticalAlignment? verticalAlignment = cell.GetProperty<VerticalAlignment?>(iText.Layout.Property.Property
-                        .VERTICAL_ALIGNMENT);
-                    cell.SetProperty(iText.Layout.Property.Property.VERTICAL_ALIGNMENT, null);
+                    VerticalAlignment? verticalAlignment = cell.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
+                    cell.SetProperty(Property.VERTICAL_ALIGNMENT, null);
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
-                    cell.SetProperty(iText.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment);
+                    cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     //width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
                         cell.GetOccupiedArea().GetBBox().SetWidth(cellWidth);
@@ -302,10 +301,9 @@ namespace iText.Layout.Renderer {
                                         for (int addRow = row + 1; addRow < rows.Count; addRow++) {
                                             if (rows[addRow][addCol_1] != null) {
                                                 CellRenderer addRenderer = rows[addRow][addCol_1];
-                                                verticalAlignment = addRenderer.GetProperty<VerticalAlignment?>(iText.Layout.Property.Property.VERTICAL_ALIGNMENT
-                                                    );
+                                                verticalAlignment = addRenderer.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
                                                 if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM)) {
-                                                    if (row + addRenderer.GetPropertyAsInteger(iText.Layout.Property.Property.ROWSPAN) - 1 < addRow) {
+                                                    if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 < addRow) {
                                                         cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, addRow));
                                                         cellWithBigRowspanAdded = true;
                                                     }
@@ -330,7 +328,7 @@ namespace iText.Layout.Renderer {
                                                     }
                                                 }
                                                 else {
-                                                    if (row + addRenderer.GetPropertyAsInteger(iText.Layout.Property.Property.ROWSPAN) - 1 >= addRow) {
+                                                    if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
                                                         cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, addRow));
                                                         cellWithBigRowspanAdded = true;
                                                     }
@@ -361,7 +359,7 @@ namespace iText.Layout.Renderer {
                             continue;
                         }
                         float height = 0;
-                        int rowspan = (int)cell.GetPropertyAsInteger(iText.Layout.Property.Property.ROWSPAN);
+                        int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                         for (int i = row; i > targetOverflowRowIndex[col_1] - rowspan && i >= 0; i--) {
                             height += (float)heights[i];
                         }
@@ -468,14 +466,13 @@ namespace iText.Layout.Renderer {
                     }
                     ApplyBorderBox(occupiedArea.GetBBox(), true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
-                    if (IsKeepTogether() && !true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.FORCED_PLACEMENT)
-                        ) && !(this.parent is CellRenderer)) {
+                    if (IsKeepTogether() && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && !(this.parent is 
+                        CellRenderer)) {
                         return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
                     }
                     else {
                         int status = (childRenderers.IsEmpty() && footerRenderer == null) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
-                        if (status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.FORCED_PLACEMENT
-                            ))) {
+                        if (status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                         }
                         else {
@@ -489,7 +486,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (IsPositioned()) {
-                float y = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.Y);
+                float y = (float)this.GetPropertyAsFloat(Property.Y);
                 float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
                 Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
             }
@@ -870,8 +867,8 @@ namespace iText.Layout.Renderer {
                     if (cell == null) {
                         continue;
                     }
-                    int colspan = (int)cell.GetPropertyAsInteger(iText.Layout.Property.Property.COLSPAN);
-                    int rowspan = (int)cell.GetPropertyAsInteger(iText.Layout.Property.Property.ROWSPAN);
+                    int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+                    int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                     float cellWidth = 0;
                     float colOffset = 0;
                     for (int i = col; i < col + colspan; i++) {

@@ -47,7 +47,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Element;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Splitting;
 
@@ -113,33 +113,33 @@ namespace iText.Layout {
         public override T1 GetDefaultProperty<T1>(int property) {
             try {
                 switch (property) {
-                    case iText.Layout.Property.Property.FONT: {
+                    case Property.FONT: {
                         if (defaultFont == null) {
                             defaultFont = PdfFontFactory.CreateFont();
                         }
                         return (T1)(Object)defaultFont;
                     }
 
-                    case iText.Layout.Property.Property.SPLIT_CHARACTERS: {
+                    case Property.SPLIT_CHARACTERS: {
                         if (defaultSplitCharacters == null) {
                             defaultSplitCharacters = new DefaultSplitCharacters();
                         }
                         return (T1)(Object)defaultSplitCharacters;
                     }
 
-                    case iText.Layout.Property.Property.FONT_SIZE: {
+                    case Property.FONT_SIZE: {
                         return (T1)(Object)12;
                     }
 
-                    case iText.Layout.Property.Property.TEXT_RENDERING_MODE: {
+                    case Property.TEXT_RENDERING_MODE: {
                         return (T1)(Object)PdfCanvasConstants.TextRenderingMode.FILL;
                     }
 
-                    case iText.Layout.Property.Property.TEXT_RISE: {
+                    case Property.TEXT_RISE: {
                         return (T1)(Object)0f;
                     }
 
-                    case iText.Layout.Property.Property.SPACING_RATIO: {
+                    case Property.SPACING_RATIO: {
                         return (T1)(Object)0.75f;
                     }
 
@@ -275,8 +275,8 @@ namespace iText.Layout {
             if (angle != 0) {
                 div.SetRotationAngle(angle);
             }
-            div.SetProperty(iText.Layout.Property.Property.ROTATION_POINT_X, x);
-            div.SetProperty(iText.Layout.Property.Property.ROTATION_POINT_Y, y);
+            div.SetProperty(Property.ROTATION_POINT_X, x);
+            div.SetProperty(Property.ROTATION_POINT_Y, y);
             float divWidth = AbstractRenderer.INF;
             float divHeight = AbstractRenderer.INF;
             float divX = x;
@@ -303,7 +303,7 @@ namespace iText.Layout {
                 pageNumber = 1;
             }
             div.SetFixedPosition(pageNumber, divX, divY, divWidth).SetHeight(divHeight);
-            if (p.GetProperty<Leading>(iText.Layout.Property.Property.LEADING) == null) {
+            if (p.GetProperty<Leading>(Property.LEADING) == null) {
                 p.SetMultipliedLeading(1);
             }
             div.Add(p.SetMargins(0, 0, 0, 0));

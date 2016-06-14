@@ -45,6 +45,7 @@ using iText.IO.Log;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class CanvasRenderer : RootRenderer {
@@ -61,7 +62,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override void AddChild(IRenderer renderer) {
-            if (true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.FULL))) {
+            if (true.Equals(GetPropertyAsBoolean(Property.FULL))) {
                 LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.CanvasRenderer)).Warn("Canvas is already full. Element will be skipped."
                     );
             }
@@ -91,7 +92,7 @@ namespace iText.Layout.Renderer {
                 currentArea = new LayoutArea(0, canvas.GetRootArea().Clone());
             }
             else {
-                SetProperty(iText.Layout.Property.Property.FULL, true);
+                SetProperty(Property.FULL, true);
                 currentArea = null;
             }
             return currentArea;

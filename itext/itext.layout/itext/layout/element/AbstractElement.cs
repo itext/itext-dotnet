@@ -48,6 +48,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -144,12 +145,12 @@ namespace iText.Layout.Element {
         }
 
         public virtual T SetAction(PdfAction action) {
-            SetProperty(iText.Layout.Property.Property.ACTION, action);
+            SetProperty(Property.ACTION, action);
             return (T)(Object)this;
         }
 
         public virtual T SetPageNumber(int pageNumber) {
-            SetProperty(iText.Layout.Property.Property.PAGE_NUMBER, pageNumber);
+            SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
     }

@@ -9,6 +9,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Test;
 
@@ -34,8 +35,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
-            document.SetProperty(iText.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA
-                ));
+            document.SetProperty(Property.FONT, PdfFontFactory.CreateFont(FontConstants.HELVETICA));
             for (int i = 0; i < 200; i++) {
                 document.Add(new Paragraph("This is just junk text"));
                 if (i % 10 == 0) {

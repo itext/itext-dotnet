@@ -49,7 +49,7 @@ using iText.IO.Font.Otf;
 using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Font;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     internal class TypographyUtils {
@@ -169,7 +169,7 @@ namespace iText.Layout.Renderer {
                         if (reorderedLine[i].glyph.HasValidUnicode()) {
                             int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getPairedBracket", new Type
                                 [] { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
-                            PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(iText.Layout.Property.Property.FONT);
+                            PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
                             //BidiBracketMap.getPairedBracket(reorderedLine.get(i).getUnicode())
                             reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
                         }

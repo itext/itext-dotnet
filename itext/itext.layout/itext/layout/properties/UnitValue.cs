@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Layout.Property {
+namespace iText.Layout.Properties {
     /// <summary>A specialized class that holds a value and the unit it is measured in.</summary>
     public class UnitValue {
         public const int POINT = 1;
@@ -75,8 +75,8 @@ namespace iText.Layout.Property {
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iText.Layout.Property.UnitValue CreatePointValue(float value) {
-            return new iText.Layout.Property.UnitValue(POINT, value);
+        public static iText.Layout.Properties.UnitValue CreatePointValue(float value) {
+            return new iText.Layout.Properties.UnitValue(POINT, value);
         }
 
         /// <summary>Creates a UnitValue PERCENT object with a specified value.</summary>
@@ -87,8 +87,8 @@ namespace iText.Layout.Property {
         /// 
         /// <see cref="UnitValue"/>
         /// </returns>
-        public static iText.Layout.Property.UnitValue CreatePercentValue(float value) {
-            return new iText.Layout.Property.UnitValue(PERCENT, value);
+        public static iText.Layout.Properties.UnitValue CreatePercentValue(float value) {
+            return new iText.Layout.Properties.UnitValue(PERCENT, value);
         }
 
         public virtual int GetUnitType() {
@@ -116,10 +116,10 @@ namespace iText.Layout.Property {
         }
 
         public override bool Equals(Object obj) {
-            if (!(obj is iText.Layout.Property.UnitValue)) {
+            if (!(obj is iText.Layout.Properties.UnitValue)) {
                 return false;
             }
-            iText.Layout.Property.UnitValue other = (iText.Layout.Property.UnitValue)obj;
+            iText.Layout.Properties.UnitValue other = (iText.Layout.Properties.UnitValue)obj;
             return iText.IO.Util.JavaUtil.IntegerCompare(unitType, other.unitType) == 0 && iText.IO.Util.JavaUtil.FloatCompare
                 (value, other.value) == 0;
         }

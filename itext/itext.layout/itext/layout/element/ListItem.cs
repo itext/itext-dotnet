@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.Kernel.Pdf;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -89,7 +89,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this list item.</returns>
         public virtual iText.Layout.Element.ListItem SetListSymbol(Text text) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, text);
+            SetProperty(Property.LIST_SYMBOL, text);
             return this;
         }
 
@@ -101,14 +101,14 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.ListItem SetListSymbol(Image image) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, image);
+            SetProperty(Property.LIST_SYMBOL, image);
             return this;
         }
 
         /// <summary>Sets the list item numbering type to be used.</summary>
         /// <param name="listNumberingType">
         /// the
-        /// <see cref="iText.Layout.Property.ListNumberingType"/>
+        /// <see cref="iText.Layout.Properties.ListNumberingType"/>
         /// that will generate appropriate prefixes for the
         /// <see cref="ListItem"/>
         /// .
@@ -119,9 +119,9 @@ namespace iText.Layout.Element {
             if (listNumberingType == ListNumberingType.ZAPF_DINGBATS_1 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_2
                  || listNumberingType == ListNumberingType.ZAPF_DINGBATS_3 || listNumberingType == ListNumberingType.ZAPF_DINGBATS_4
                 ) {
-                SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT, " ");
+                SetProperty(Property.LIST_SYMBOL_POST_TEXT, " ");
             }
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, listNumberingType);
+            SetProperty(Property.LIST_SYMBOL, listNumberingType);
             return this;
         }
 

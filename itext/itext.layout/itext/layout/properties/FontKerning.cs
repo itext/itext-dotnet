@@ -41,11 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
-    public enum TabAlignment {
-        LEFT,
-        RIGHT,
-        CENTER,
-        ANCHOR
+namespace iText.Layout.Properties {
+    public enum FontKerning {
+        YES,
+        NO
     }
 }

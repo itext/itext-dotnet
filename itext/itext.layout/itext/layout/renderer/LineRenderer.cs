@@ -49,7 +49,7 @@ using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer
 {
@@ -70,8 +70,7 @@ namespace iText.Layout.Renderer
 			maxAscent = 0;
 			maxDescent = 0;
 			int childPos = 0;
-			BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(iText.Layout.Property.Property
-				.BASE_DIRECTION, BaseDirection.NO_BIDI);
+			BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION, BaseDirection.NO_BIDI);
 			foreach (IRenderer renderer in childRenderers)
 			{
 				if (renderer is TextRenderer)
@@ -81,8 +80,7 @@ namespace iText.Layout.Renderer
 					renderer.SetParent(null);
                     if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI)
 					{
-						baseDirection = renderer.GetOwnProperty<BaseDirection?>(iText.Layout.Property.Property
-							.BASE_DIRECTION);
+						baseDirection = renderer.GetOwnProperty<BaseDirection?>(Property.BASE_DIRECTION);
 					}
 				}
 			}
@@ -119,9 +117,8 @@ namespace iText.Layout.Renderer
 				if (childRenderer is TextRenderer)
 				{
 					// Delete these properties in case of relayout. We might have applied them during justify().
-					childRenderer.DeleteOwnProperty(iText.Layout.Property.Property.CHARACTER_SPACING
-						);
-					childRenderer.DeleteOwnProperty(iText.Layout.Property.Property.WORD_SPACING);
+					childRenderer.DeleteOwnProperty(Property.CHARACTER_SPACING);
+					childRenderer.DeleteOwnProperty(Property.WORD_SPACING);
 				}
 				else
 				{
@@ -153,7 +150,7 @@ namespace iText.Layout.Renderer
 				if (nextTabStop != null && nextTabStop.GetTabAlignment() == TabAlignment.ANCHOR &&
 					 childRenderer is TextRenderer)
 				{
-					childRenderer.SetProperty(iText.Layout.Property.Property.TAB_ANCHOR, nextTabStop
+					childRenderer.SetProperty(Property.TAB_ANCHOR, nextTabStop
 						.GetTabAnchor());
 				}
 				childResult = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea
@@ -316,7 +313,7 @@ namespace iText.Layout.Renderer
 						{
 							IRenderer renderer_1 = lineGlyphs[pos].renderer;
 							TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_1);
-							newRenderer.DeleteOwnProperty(iText.Layout.Property.Property.REVERSED);
+							newRenderer.DeleteOwnProperty(Property.REVERSED);
 							children.Add(newRenderer);
 							((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)
 								children[children.Count - 1]).line);
@@ -336,8 +333,7 @@ namespace iText.Layout.Renderer
 										{
 											IList<int[]> reversedRange = new List<int[]>();
 											reversedRange.Add(new int[] { initialPos - offset, pos - offset });
-											newRenderer.SetProperty(iText.Layout.Property.Property.REVERSED, reversedRange
-												);
+											newRenderer.SetProperty(Property.REVERSED, reversedRange);
 											reversedRanges.Add(new int[] { initialPos - offset, pos - offset });
 											reversed = false;
 										}
@@ -351,7 +347,7 @@ namespace iText.Layout.Renderer
 							{
 								IList<int[]> reversedRange = new List<int[]>();
 								reversedRange.Add(new int[] { initialPos - offset, pos - 1 - offset });
-								newRenderer.SetProperty(iText.Layout.Property.Property.REVERSED, reversedRange
+								newRenderer.SetProperty(Property.REVERSED, reversedRange
 									);
 								reversedRanges.Add(new int[] { initialPos - offset, pos - 1 - offset });
 								reversed = false;
@@ -368,7 +364,7 @@ namespace iText.Layout.Renderer
 							}
 							IList<int[]> reversedRange = new List<int[]>();
 							reversedRange.Add(new int[] { initialPos - offset, pos - offset - 1 });
-							lineGlyphs[pos - 1].renderer.SetProperty(iText.Layout.Property.Property.REVERSED
+							lineGlyphs[pos - 1].renderer.SetProperty(Property.REVERSED
 								, reversedRange);
 							reversedRanges.Add(new int[] { initialPos - offset, pos - 1 - offset });
 						}
@@ -376,8 +372,7 @@ namespace iText.Layout.Renderer
 						{
 							if (children.Count == 1)
 							{
-								lineGlyphs[0].renderer.SetProperty(iText.Layout.Property.Property.REVERSED, 
-									reversedRanges);
+								lineGlyphs[0].renderer.SetProperty(Property.REVERSED, reversedRanges);
 							}
 						}
 						float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
@@ -458,8 +453,7 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual void Justify(float width)
 		{
-			float ratio = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.
-				SPACING_RATIO);
+			float ratio = (float)this.GetPropertyAsFloat(Property.SPACING_RATIO);
 			float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().
 				GetOccupiedArea().GetBBox().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox
 				().GetWidth();
@@ -481,12 +475,9 @@ namespace iText.Layout.Renderer
 				childX = lastRightPos;
 				if (child is TextRenderer)
 				{
-					float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(iText.Layout.Property.Property
-						.HORIZONTAL_SCALING, 1f);
-					child.SetProperty(iText.Layout.Property.Property.CHARACTER_SPACING, characterSpacing
-						 / childHSCale);
-					child.SetProperty(iText.Layout.Property.Property.WORD_SPACING, wordSpacing /
-						 childHSCale);
+					float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
+					child.SetProperty(Property.CHARACTER_SPACING, characterSpacing/ childHSCale);
+					child.SetProperty(Property.WORD_SPACING, wordSpacing / childHSCale);
 					isLastTextRenderer = !iterator.MoveNext();
 					float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() -
 						 1) : ((TextRenderer)child).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer
@@ -638,8 +629,7 @@ namespace iText.Layout.Renderer
 
 		private TabStop GetNextTabStop(float curWidth)
 		{
-			SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float
-				, TabStop>>(iText.Layout.Property.Property.TAB_STOPS);
+			SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float, TabStop>>(Property.TAB_STOPS);
 			KeyValuePair<float, TabStop>? nextTabStopEntry = null;
 			TabStop nextTabStop = null;
 			if (tabStops != null)
@@ -668,12 +658,9 @@ namespace iText.Layout.Renderer
 				ProcessDefaultTab(childRenderer, curWidth, lineWidth);
 				return null;
 			}
-			childRenderer.SetProperty(iText.Layout.Property.Property.TAB_LEADER, nextTabStop
-				.GetTabLeader());
-			childRenderer.SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
-				(nextTabStop.GetTabPosition() - curWidth));
-			childRenderer.SetProperty(iText.Layout.Property.Property.HEIGHT, maxAscent -
-				 maxDescent);
+			childRenderer.SetProperty(Property.TAB_LEADER, nextTabStop.GetTabLeader());
+			childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.GetTabPosition() - curWidth));
+			childRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
 			if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT)
 			{
 				return null;
@@ -735,27 +722,23 @@ namespace iText.Layout.Renderer
 			{
 				tabWidth -= (curWidth + childWidth + tabWidth) - layoutBox.GetWidth();
 			}
-			tabRenderer.SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
-				(tabWidth));
-			tabRenderer.SetProperty(iText.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
-				);
+			tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
+			tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
 			return tabWidth;
 		}
 
 		private void ProcessDefaultTab(IRenderer tabRenderer, float curWidth, float lineWidth
 			)
 		{
-			float? tabDefault = this.GetPropertyAsFloat(iText.Layout.Property.Property.TAB_DEFAULT
-				);
+			float? tabDefault = this.GetPropertyAsFloat(Property.TAB_DEFAULT);
 			float? tabWidth = tabDefault - curWidth % tabDefault;
 			if (curWidth + tabWidth > lineWidth)
 			{
 				tabWidth = lineWidth - curWidth;
 			}
-			tabRenderer.SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue
+			tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue
 				((float)tabWidth));
-			tabRenderer.SetProperty(iText.Layout.Property.Property.HEIGHT, maxAscent - maxDescent
-				);
+			tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
 		}
 
 		internal class RendererGlyph

@@ -46,6 +46,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LinkRenderer : TextRenderer {
@@ -65,7 +66,7 @@ namespace iText.Layout.Renderer {
             }
             PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
             linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-            Border border = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
+            Border border = this.GetProperty<Border>(Property.BORDER);
             if (border != null) {
                 linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
             }

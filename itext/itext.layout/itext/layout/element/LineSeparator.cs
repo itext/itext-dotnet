@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -66,7 +67,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="lineDrawer">line drawer instance</param>
         public LineSeparator(ILineDrawer lineDrawer) {
-            SetProperty(iText.Layout.Property.Property.LINE_DRAWER, lineDrawer);
+            SetProperty(Property.LINE_DRAWER, lineDrawer);
         }
 
         protected internal override IRenderer MakeNewRenderer() {

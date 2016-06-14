@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -85,14 +86,14 @@ namespace iText.Layout.Element {
         /// <summary>Gets the text rise.</summary>
         /// <returns>the vertical distance from the text's default base line, as a float.</returns>
         public virtual float GetTextRise() {
-            return (float)this.GetProperty<float?>(iText.Layout.Property.Property.TEXT_RISE);
+            return (float)this.GetProperty<float?>(Property.TEXT_RISE);
         }
 
         /// <summary>Sets the text rise.</summary>
         /// <param name="textRise">a vertical distance from the text's default base line.</param>
         /// <returns>this Text</returns>
         public virtual iText.Layout.Element.Text SetTextRise(float textRise) {
-            SetProperty(iText.Layout.Property.Property.TEXT_RISE, textRise);
+            SetProperty(Property.TEXT_RISE, textRise);
             return (iText.Layout.Element.Text)(Object)this;
         }
 
@@ -102,7 +103,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <returns>the horizontal spacing, as a <code>float</code></returns>
         public virtual float? GetHorizontalScaling() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.HORIZONTAL_SCALING);
+            return this.GetProperty<float?>(Property.HORIZONTAL_SCALING);
         }
 
         /// <summary>Skews the text to simulate italic and other effects.</summary>
@@ -116,7 +117,7 @@ namespace iText.Layout.Element {
         public virtual iText.Layout.Element.Text SetSkew(float alpha, float beta) {
             alpha = (float)Math.Tan(alpha * Math.PI / 180);
             beta = (float)Math.Tan(beta * Math.PI / 180);
-            SetProperty(iText.Layout.Property.Property.SKEW, new float[] { alpha, beta });
+            SetProperty(Property.SKEW, new float[] { alpha, beta });
             return this;
         }
 
@@ -131,7 +132,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this Text</returns>
         public virtual iText.Layout.Element.Text SetHorizontalScaling(float horizontalScaling) {
-            SetProperty(iText.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling);
+            SetProperty(Property.HORIZONTAL_SCALING, horizontalScaling);
             return (iText.Layout.Element.Text)(Object)this;
         }
 

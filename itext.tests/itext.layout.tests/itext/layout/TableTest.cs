@@ -10,6 +10,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Test;
 using iText.Test.Attributes;
@@ -790,7 +791,7 @@ namespace iText.Layout {
                 result += str;
             }
             Paragraph p = new Paragraph(new Text(result));
-            p.SetProperty(iText.Layout.Property.Property.KEEP_TOGETHER, true);
+            p.SetProperty(Property.KEEP_TOGETHER, true);
             cell.Add(p);
             table.AddCell(cell);
             doc.Add(table);

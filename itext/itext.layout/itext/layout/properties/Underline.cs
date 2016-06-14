@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Colors;
 
-namespace iText.Layout.Property {
+namespace iText.Layout.Properties {
     public class Underline {
         protected internal Color color;
 

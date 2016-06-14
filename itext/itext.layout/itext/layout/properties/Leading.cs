@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.Layout.Property {
+namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized class that specifies the leading, "the vertical distance between
     /// the baselines of adjacent lines of text" (ISO-32000-1, section 9.3.5).
@@ -102,8 +102,8 @@ namespace iText.Layout.Property {
         }
 
         public override bool Equals(Object obj) {
-            return obj is iText.Layout.Property.Leading && type == ((iText.Layout.Property.Leading)obj).type && value 
-                == ((iText.Layout.Property.Leading)obj).value;
+            return obj is iText.Layout.Properties.Leading && type == ((iText.Layout.Properties.Leading)obj).type && value
+                 == ((iText.Layout.Properties.Leading)obj).value;
         }
     }
 }

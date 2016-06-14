@@ -45,7 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -160,7 +160,7 @@ namespace iText.Layout.Element {
 
         /// <summary>
         /// Removes a tabstop position from the Paragraph, if it is present in the
-        /// <see cref="iText.Layout.Property.Property.TAB_STOPS"/>
+        /// <see cref="iText.Layout.Properties.Property.TAB_STOPS"/>
         /// property.
         /// </summary>
         /// <param name="tabStopPosition">
@@ -171,8 +171,7 @@ namespace iText.Layout.Element {
         /// <returns>this Paragraph</returns>
         /// <seealso cref="TabStop"/>
         public virtual iText.Layout.Element.Paragraph RemoveTabStop(float tabStopPosition) {
-            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(iText.Layout.Property.Property
-                .TAB_STOPS);
+            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(Property.TAB_STOPS);
             if (tabStops != null) {
                 tabStops.JRemove(tabStopPosition);
             }
@@ -181,21 +180,21 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case iText.Layout.Property.Property.LEADING: {
+                case Property.LEADING: {
                     return (T1)(Object)new Leading(Leading.MULTIPLIED, childElements.Count == 1 && childElements[0] is Image ? 
                         1 : 1.35f);
                 }
 
-                case iText.Layout.Property.Property.FIRST_LINE_INDENT: {
+                case Property.FIRST_LINE_INDENT: {
                     return (T1)(Object)0f;
                 }
 
-                case iText.Layout.Property.Property.MARGIN_TOP:
-                case iText.Layout.Property.Property.MARGIN_BOTTOM: {
+                case Property.MARGIN_TOP:
+                case Property.MARGIN_BOTTOM: {
                     return (T1)(Object)4f;
                 }
 
-                case iText.Layout.Property.Property.TAB_DEFAULT: {
+                case Property.TAB_DEFAULT: {
                     return (T1)(Object)50f;
                 }
 
@@ -216,33 +215,33 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this Paragraph</returns>
         public virtual iText.Layout.Element.Paragraph SetFirstLineIndent(float indent) {
-            SetProperty(iText.Layout.Property.Property.FIRST_LINE_INDENT, indent);
+            SetProperty(Property.FIRST_LINE_INDENT, indent);
             return this;
         }
 
         /// <summary>
         /// Sets the leading value, using the
-        /// <see cref="iText.Layout.Property.Leading.FIXED"/>
+        /// <see cref="iText.Layout.Properties.Leading.FIXED"/>
         /// strategy.
         /// </summary>
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
-        /// <seealso cref="iText.Layout.Property.Leading"/>
+        /// <seealso cref="iText.Layout.Properties.Leading"/>
         public virtual iText.Layout.Element.Paragraph SetFixedLeading(float leading) {
-            SetProperty(iText.Layout.Property.Property.LEADING, new Leading(Leading.FIXED, leading));
+            SetProperty(Property.LEADING, new Leading(Leading.FIXED, leading));
             return this;
         }
 
         /// <summary>
         /// Sets the leading value, using the
-        /// <see cref="iText.Layout.Property.Leading.MULTIPLIED"/>
+        /// <see cref="iText.Layout.Properties.Leading.MULTIPLIED"/>
         /// strategy.
         /// </summary>
         /// <param name="leading">the new leading value</param>
         /// <returns>this Paragraph</returns>
-        /// <seealso cref="iText.Layout.Property.Leading"/>
+        /// <seealso cref="iText.Layout.Properties.Leading"/>
         public virtual iText.Layout.Element.Paragraph SetMultipliedLeading(float leading) {
-            SetProperty(iText.Layout.Property.Property.LEADING, new Leading(Leading.MULTIPLIED, leading));
+            SetProperty(Property.LEADING, new Leading(Leading.MULTIPLIED, leading));
             return this;
         }
 
@@ -251,11 +250,10 @@ namespace iText.Layout.Element {
         }
 
         private void AddTabStopsAsProperty(IList<TabStop> newTabStops) {
-            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(iText.Layout.Property.Property
-                .TAB_STOPS);
+            IDictionary<float, TabStop> tabStops = this.GetProperty<IDictionary<float, TabStop>>(Property.TAB_STOPS);
             if (tabStops == null) {
                 tabStops = new SortedDictionary<float, TabStop>();
-                SetProperty(iText.Layout.Property.Property.TAB_STOPS, tabStops);
+                SetProperty(Property.TAB_STOPS, tabStops);
             }
             foreach (TabStop tabStop in newTabStops) {
                 tabStops[tabStop.GetTabPosition()] = tabStop;

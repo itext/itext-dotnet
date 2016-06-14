@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Geom;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -72,10 +72,10 @@ namespace iText.Layout.Element {
         /// <summary>Creates an AreaBreak that terminates a specified area type.</summary>
         /// <param name="areaBreakType">
         /// an
-        /// <see cref="iText.Layout.Property.AreaBreakType?">area break type</see>
+        /// <see cref="iText.Layout.Properties.AreaBreakType?">area break type</see>
         /// </param>
         public AreaBreak(AreaBreakType? areaBreakType) {
-            SetProperty(iText.Layout.Property.Property.AREA_BREAK_TYPE, areaBreakType);
+            SetProperty(Property.AREA_BREAK_TYPE, areaBreakType);
         }
 
         /// <summary>Creates an AreaBreak.</summary>
@@ -112,10 +112,10 @@ namespace iText.Layout.Element {
         /// <summary>Gets the type of area that this AreaBreak will terminate.</summary>
         /// <returns>
         /// the current
-        /// <see cref="iText.Layout.Property.AreaBreakType?">area break type</see>
+        /// <see cref="iText.Layout.Properties.AreaBreakType?">area break type</see>
         /// </returns>
         public virtual AreaBreakType? GetAreaType() {
-            return this.GetProperty<AreaBreakType?>(iText.Layout.Property.Property.AREA_BREAK_TYPE);
+            return this.GetProperty<AreaBreakType?>(Property.AREA_BREAK_TYPE);
         }
 
         protected internal override IRenderer MakeNewRenderer() {

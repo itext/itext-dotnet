@@ -47,7 +47,7 @@ namespace iText.Layout {
     /// <summary>
     /// A generic Map-like interface that defines methods for storing and retrieving
     /// objects by an enum key of the
-    /// <see cref="iText.Layout.Property.Property"/>
+    /// <see cref="iText.Layout.Properties.Property"/>
     /// type.
     /// </summary>
     public interface IPropertyContainer {

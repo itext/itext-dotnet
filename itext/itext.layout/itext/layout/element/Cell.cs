@@ -47,6 +47,7 @@ using iText.IO.Log;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -203,14 +204,14 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case iText.Layout.Property.Property.BORDER: {
+                case Property.BORDER: {
                     return (T1)(Object)DEFAULT_BORDER;
                 }
 
-                case iText.Layout.Property.Property.PADDING_BOTTOM:
-                case iText.Layout.Property.Property.PADDING_LEFT:
-                case iText.Layout.Property.Property.PADDING_RIGHT:
-                case iText.Layout.Property.Property.PADDING_TOP: {
+                case Property.PADDING_BOTTOM:
+                case Property.PADDING_LEFT:
+                case Property.PADDING_RIGHT:
+                case Property.PADDING_TOP: {
                     return (T1)(Object)2f;
                 }
 

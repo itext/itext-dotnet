@@ -57,7 +57,7 @@ using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Forms.Fields {
     /// <summary>
@@ -2566,13 +2566,13 @@ namespace iText.Forms.Fields {
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(3, 0, Math.
                 Max(0, width - 6), Math.Max(0, height - 2)));
             for (int index = 0; index < strings.Count; index++) {
-                bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(iText.Layout.Property.Property.FULL);
+                bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);
                 if (true.Equals(isFull)) {
                     break;
                 }
                 Paragraph paragraph = new Paragraph(strings[index]).SetFont(font).SetFontSize(fontSize).SetMargins(0, 0, 0
                     , 0).SetMultipliedLeading(1);
-                paragraph.SetProperty(iText.Layout.Property.Property.FORCED_PLACEMENT, true);
+                paragraph.SetProperty(Property.FORCED_PLACEMENT, true);
                 if (color != null) {
                     paragraph.SetFontColor(color);
                 }

@@ -41,12 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
-    public enum TextAlignment {
-        LEFT,
-        CENTER,
-        RIGHT,
-        JUSTIFIED,
-        JUSTIFIED_ALL
+namespace iText.Layout.Properties {
+    public enum AreaBreakType {
+        NEXT_AREA,
+        NEXT_PAGE,
+        LAST_PAGE
     }
 }

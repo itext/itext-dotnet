@@ -49,7 +49,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Numbering;
 using iText.Layout.Element;
 using iText.Layout.Layout;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ListRenderer : BlockRenderer {
@@ -60,9 +60,9 @@ namespace iText.Layout.Renderer {
         // TODO underlying should not be applied
         // https://jira.itextsupport.com/browse/SUP-952
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            if (!HasOwnProperty(iText.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED)) {
+            if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
-                int listItemNum = (int)this.GetProperty<int?>(iText.Layout.Property.Property.LIST_START, 1);
+                int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
                 for (int i = 0; i < childRenderers.Count; i++) {
                     if (childRenderers[i].GetModelElement() is ListItem) {
                         childRenderers[i].SetParent(this);
@@ -80,12 +80,12 @@ namespace iText.Layout.Renderer {
                 foreach (IRenderer symbolRenderer in symbolRenderers) {
                     maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
                 }
-                float? symbolIndent = modelElement.GetProperty<float?>(iText.Layout.Property.Property.LIST_SYMBOL_INDENT);
+                float? symbolIndent = modelElement.GetProperty<float?>(Property.LIST_SYMBOL_INDENT);
                 listItemNum = 0;
                 foreach (IRenderer childRenderer in childRenderers) {
-                    childRenderer.DeleteOwnProperty(iText.Layout.Property.Property.MARGIN_LEFT);
-                    childRenderer.SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, childRenderer.GetProperty(iText.Layout.Property.Property
-                        .MARGIN_LEFT, (float?)0f) + maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f));
+                    childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
+                    childRenderer.SetProperty(Property.MARGIN_LEFT, childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f
+                        ) + maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f));
                     if (childRenderer.GetModelElement() is ListItem) {
                         IRenderer symbolRenderer_1 = symbolRenderers[listItemNum++];
                         ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer_1, maxSymbolWidth);
@@ -101,18 +101,18 @@ namespace iText.Layout.Renderer {
 
         protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             AbstractRenderer splitRenderer = base.CreateSplitRenderer(layoutResult);
-            splitRenderer.SetProperty(iText.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED, true);
+            splitRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return splitRenderer;
         }
 
         protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
-            overflowRenderer.SetProperty(iText.Layout.Property.Property.LIST_SYMBOLS_INITIALIZED, true);
+            overflowRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return overflowRenderer;
         }
 
         protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
-            Object defaultListSymbol = renderer.GetProperty<Object>(iText.Layout.Property.Property.LIST_SYMBOL);
+            Object defaultListSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
             if (defaultListSymbol is Text) {
                 return new TextRenderer((Text)defaultListSymbol);
             }
@@ -184,8 +184,8 @@ namespace iText.Layout.Renderer {
                                 throw new InvalidOperationException();
                             }
                         }
-                        Text textElement = new Text(renderer.GetProperty<String>(iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT
-                            ) + numberText + renderer.GetProperty<String>(iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT));
+                        Text textElement = new Text(renderer.GetProperty<String>(Property.LIST_SYMBOL_PRE_TEXT) + numberText + renderer
+                            .GetProperty<String>(Property.LIST_SYMBOL_POST_TEXT));
                         IRenderer textRenderer;
                         // Be careful. There is a workaround here. For Greek symbols we first set a dummy font with document=null
                         // in order for the metrics to be taken into account correctly during layout.
@@ -197,7 +197,7 @@ namespace iText.Layout.Renderer {
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
                             textRenderer = new _TextRenderer_187(constantFont, textElement);
                             try {
-                                textRenderer.SetProperty(iText.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(constantFont));
+                                textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
                             catch (System.IO.IOException) {
                             }
@@ -222,7 +222,7 @@ namespace iText.Layout.Renderer {
 
             public override void Draw(DrawContext drawContext) {
                 try {
-                    this.SetProperty(iText.Layout.Property.Property.FONT, PdfFontFactory.CreateFont(constantFont));
+                    this.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                 }
                 catch (System.IO.IOException) {
                 }

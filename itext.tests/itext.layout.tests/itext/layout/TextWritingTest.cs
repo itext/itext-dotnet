@@ -7,6 +7,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
@@ -94,7 +95,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document document = new Document(pdfDocument);
-            document.SetProperty(iText.Layout.Property.Property.FIRST_LINE_INDENT, 25);
+            document.SetProperty(Property.FIRST_LINE_INDENT, 25);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
                  + "independent of application software, hardware, and operating systems.[2] Each PDF file encapsulates a complete "
                  + "description of a fixed-layout flat document, including the text, fonts, graphics, and other information needed to "

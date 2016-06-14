@@ -51,7 +51,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Splitting;
 
 namespace iText.Layout {
@@ -93,14 +93,14 @@ namespace iText.Layout {
 
         public virtual T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case iText.Layout.Property.Property.MARGIN_TOP:
-                case iText.Layout.Property.Property.MARGIN_RIGHT:
-                case iText.Layout.Property.Property.MARGIN_BOTTOM:
-                case iText.Layout.Property.Property.MARGIN_LEFT:
-                case iText.Layout.Property.Property.PADDING_TOP:
-                case iText.Layout.Property.Property.PADDING_RIGHT:
-                case iText.Layout.Property.Property.PADDING_BOTTOM:
-                case iText.Layout.Property.Property.PADDING_LEFT: {
+                case Property.MARGIN_TOP:
+                case Property.MARGIN_RIGHT:
+                case Property.MARGIN_BOTTOM:
+                case Property.MARGIN_LEFT:
+                case Property.PADDING_TOP:
+                case Property.PADDING_RIGHT:
+                case Property.PADDING_BOTTOM:
+                case Property.PADDING_LEFT: {
                     return (T1)(Object)0f;
                 }
 
@@ -112,16 +112,16 @@ namespace iText.Layout {
 
         /// <summary>Gets the width property of the Element.</summary>
         /// <returns>the width of the element, with a value and a measurement unit.</returns>
-        /// <seealso cref="iText.Layout.Property.UnitValue"/>
+        /// <seealso cref="iText.Layout.Properties.UnitValue"/>
         public virtual UnitValue GetWidth() {
-            return (UnitValue)this.GetProperty<UnitValue>(iText.Layout.Property.Property.WIDTH);
+            return (UnitValue)this.GetProperty<UnitValue>(Property.WIDTH);
         }
 
         /// <summary>Sets the width property of the Element, measured in points.</summary>
         /// <param name="width">a value measured in points.</param>
         /// <returns>this Element.</returns>
         public virtual T SetWidth(float width) {
-            SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePointValue(width));
+            SetProperty(Property.WIDTH, UnitValue.CreatePointValue(width));
             return (T)(Object)this;
         }
 
@@ -129,37 +129,37 @@ namespace iText.Layout {
         /// <param name="widthPercent">a value measured in percentage.</param>
         /// <returns>this Element.</returns>
         public virtual T SetWidthPercent(float widthPercent) {
-            SetProperty(iText.Layout.Property.Property.WIDTH, UnitValue.CreatePercentValue(widthPercent));
+            SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(widthPercent));
             return (T)(Object)this;
         }
 
         /// <summary>
         /// Sets the width property of the Element with a
-        /// <see cref="iText.Layout.Property.UnitValue"/>
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
         /// .
         /// </summary>
         /// <param name="width">
         /// a
-        /// <see cref="iText.Layout.Property.UnitValue"/>
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
         /// object
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetWidth(UnitValue width) {
-            SetProperty(iText.Layout.Property.Property.WIDTH, width);
+            SetProperty(Property.WIDTH, width);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the height property of the Element.</summary>
         /// <returns>the height of the element, as a floating point value.</returns>
         public virtual float? GetHeight() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.HEIGHT);
+            return this.GetProperty<float?>(Property.HEIGHT);
         }
 
         /// <summary>Sets the height property of the Element.</summary>
         /// <param name="height">a floating point value for the new height</param>
         /// <returns>this Element.</returns>
         public virtual T SetHeight(float height) {
-            SetProperty(iText.Layout.Property.Property.HEIGHT, height);
+            SetProperty(Property.HEIGHT, height);
             return (T)(Object)this;
         }
 
@@ -167,7 +167,7 @@ namespace iText.Layout {
         /// <remarks>
         /// Sets values for a relative repositioning of the Element. Also has as a
         /// side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.RELATIVE">relative</see>
         /// .
@@ -185,11 +185,11 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         /// <seealso cref="iText.Layout.Layout.LayoutPosition.RELATIVE"/>
         public virtual T SetRelativePosition(float left, float top, float right, float bottom) {
-            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.RELATIVE);
-            SetProperty(iText.Layout.Property.Property.LEFT, left);
-            SetProperty(iText.Layout.Property.Property.RIGHT, right);
-            SetProperty(iText.Layout.Property.Property.TOP, top);
-            SetProperty(iText.Layout.Property.Property.BOTTOM, bottom);
+            SetProperty(Property.POSITION, LayoutPosition.RELATIVE);
+            SetProperty(Property.LEFT, left);
+            SetProperty(Property.RIGHT, right);
+            SetProperty(Property.TOP, top);
+            SetProperty(Property.BOTTOM, bottom);
             return (T)(Object)this;
         }
 
@@ -197,7 +197,7 @@ namespace iText.Layout {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element. Also has as a
         /// side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
@@ -215,7 +215,7 @@ namespace iText.Layout {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element. Also has as a
         /// side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
@@ -224,14 +224,14 @@ namespace iText.Layout {
         /// <param name="y">vertical position on the page</param>
         /// <param name="width">
         /// a
-        /// <see cref="iText.Layout.Property.UnitValue"/>
+        /// <see cref="iText.Layout.Properties.UnitValue"/>
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(float x, float y, UnitValue width) {
-            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
-            SetProperty(iText.Layout.Property.Property.X, x);
-            SetProperty(iText.Layout.Property.Property.Y, y);
-            SetProperty(iText.Layout.Property.Property.WIDTH, width);
+            SetProperty(Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(Property.X, x);
+            SetProperty(Property.Y, y);
+            SetProperty(Property.WIDTH, width);
             return (T)(Object)this;
         }
 
@@ -242,7 +242,7 @@ namespace iText.Layout {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element, on a specific
         /// page. Also has as a side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
@@ -254,7 +254,7 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(int pageNumber, float x, float y, float width) {
             SetFixedPosition(x, y, width);
-            SetProperty(iText.Layout.Property.Property.PAGE_NUMBER, pageNumber);
+            SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
 
@@ -265,7 +265,7 @@ namespace iText.Layout {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element, on a specific
         /// page. Also has as a side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
@@ -277,18 +277,18 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetFixedPosition(int pageNumber, float x, float y, UnitValue width) {
             SetFixedPosition(x, y, width);
-            SetProperty(iText.Layout.Property.Property.PAGE_NUMBER, pageNumber);
+            SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;
         }
 
         /// <summary>Sets the horizontal alignment of this Element.</summary>
         /// <param name="horizontalAlignment">
         /// an enum value of type
-        /// <see cref="iText.Layout.Property.HorizontalAlignment?"/>
+        /// <see cref="iText.Layout.Properties.HorizontalAlignment?"/>
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetHorizontalAlignment(HorizontalAlignment? horizontalAlignment) {
-            SetProperty(iText.Layout.Property.Property.HORIZONTAL_ALIGNMENT, horizontalAlignment);
+            SetProperty(Property.HORIZONTAL_ALIGNMENT, horizontalAlignment);
             return (T)(Object)this;
         }
 
@@ -299,7 +299,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetFont(PdfFont font) {
-            SetProperty(iText.Layout.Property.Property.FONT, font);
+            SetProperty(Property.FONT, font);
             return (T)(Object)this;
         }
 
@@ -311,7 +311,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetFontColor(Color fontColor) {
-            SetProperty(iText.Layout.Property.Property.FONT_COLOR, fontColor);
+            SetProperty(Property.FONT_COLOR, fontColor);
             return (T)(Object)this;
         }
 
@@ -319,18 +319,18 @@ namespace iText.Layout {
         /// <param name="fontSize">a floating point value</param>
         /// <returns>this Element.</returns>
         public virtual T SetFontSize(float fontSize) {
-            SetProperty(iText.Layout.Property.Property.FONT_SIZE, fontSize);
+            SetProperty(Property.FONT_SIZE, fontSize);
             return (T)(Object)this;
         }
 
         /// <summary>Sets the text alignment of this Element.</summary>
         /// <param name="alignment">
         /// an enum value of type
-        /// <see cref="iText.Layout.Property.TextAlignment?"/>
+        /// <see cref="iText.Layout.Properties.TextAlignment?"/>
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetTextAlignment(TextAlignment? alignment) {
-            SetProperty(iText.Layout.Property.Property.TEXT_ALIGNMENT, alignment);
+            SetProperty(Property.TEXT_ALIGNMENT, alignment);
             return (T)(Object)this;
         }
 
@@ -342,7 +342,7 @@ namespace iText.Layout {
         /// <param name="charSpacing">a floating point value</param>
         /// <returns>this Element.</returns>
         public virtual T SetCharacterSpacing(float charSpacing) {
-            SetProperty(iText.Layout.Property.Property.CHARACTER_SPACING, charSpacing);
+            SetProperty(Property.CHARACTER_SPACING, charSpacing);
             return (T)(Object)this;
         }
 
@@ -354,7 +354,7 @@ namespace iText.Layout {
         /// <param name="wordSpacing">a floating point value</param>
         /// <returns>this Element.</returns>
         public virtual T SetWordSpacing(float wordSpacing) {
-            SetProperty(iText.Layout.Property.Property.WORD_SPACING, wordSpacing);
+            SetProperty(Property.WORD_SPACING, wordSpacing);
             return (T)(Object)this;
         }
 
@@ -367,7 +367,7 @@ namespace iText.Layout {
         /// <param name="fontKerning">an enum value as a boolean wrapper specifying whether or not to apply kerning</param>
         /// <returns>this Element.</returns>
         public virtual T SetFontKerning(FontKerning fontKerning) {
-            SetProperty(iText.Layout.Property.Property.FONT_KERNING, fontKerning);
+            SetProperty(Property.FONT_KERNING, fontKerning);
             return (T)(Object)this;
         }
 
@@ -390,8 +390,8 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetBackgroundColor(Color backgroundColor, float extraLeft, float extraTop, float extraRight
             , float extraBottom) {
-            SetProperty(iText.Layout.Property.Property.BACKGROUND, new Background(backgroundColor, extraLeft, extraTop
-                , extraRight, extraBottom));
+            SetProperty(Property.BACKGROUND, new Background(backgroundColor, extraLeft, extraTop, extraRight, extraBottom
+                ));
             return (T)(Object)this;
         }
 
@@ -402,7 +402,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorder(Border border) {
-            SetProperty(iText.Layout.Property.Property.BORDER, border);
+            SetProperty(Property.BORDER, border);
             return (T)(Object)this;
         }
 
@@ -413,7 +413,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorderTop(Border border) {
-            SetProperty(iText.Layout.Property.Property.BORDER_TOP, border);
+            SetProperty(Property.BORDER_TOP, border);
             return (T)(Object)this;
         }
 
@@ -424,7 +424,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorderRight(Border border) {
-            SetProperty(iText.Layout.Property.Property.BORDER_RIGHT, border);
+            SetProperty(Property.BORDER_RIGHT, border);
             return (T)(Object)this;
         }
 
@@ -435,7 +435,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorderBottom(Border border) {
-            SetProperty(iText.Layout.Property.Property.BORDER_BOTTOM, border);
+            SetProperty(Property.BORDER_BOTTOM, border);
             return (T)(Object)this;
         }
 
@@ -446,7 +446,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetBorderLeft(Border border) {
-            SetProperty(iText.Layout.Property.Property.BORDER_LEFT, border);
+            SetProperty(Property.BORDER_LEFT, border);
             return (T)(Object)this;
         }
 
@@ -462,7 +462,7 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetSplitCharacters(ISplitCharacters splitCharacters) {
-            SetProperty(iText.Layout.Property.Property.SPLIT_CHARACTERS, splitCharacters);
+            SetProperty(Property.SPLIT_CHARACTERS, splitCharacters);
             return (T)(Object)this;
         }
 
@@ -472,7 +472,7 @@ namespace iText.Layout {
         /// <see cref="iText.Layout.Splitting.ISplitCharacters"/>
         /// </returns>
         public virtual ISplitCharacters GetSplitCharacters() {
-            return this.GetProperty<ISplitCharacters>(iText.Layout.Property.Property.SPLIT_CHARACTERS);
+            return this.GetProperty<ISplitCharacters>(Property.SPLIT_CHARACTERS);
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace iText.Layout {
         /// <returns>the current text rendering mode</returns>
         /// <seealso cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
         public virtual int? GetTextRenderingMode() {
-            return this.GetProperty<int?>(iText.Layout.Property.Property.TEXT_RENDERING_MODE);
+            return this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
         }
 
         /// <summary>
@@ -495,7 +495,7 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         /// <seealso cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
         public virtual T SetTextRenderingMode(int textRenderingMode) {
-            SetProperty(iText.Layout.Property.Property.TEXT_RENDERING_MODE, textRenderingMode);
+            SetProperty(Property.TEXT_RENDERING_MODE, textRenderingMode);
             return (T)(Object)this;
         }
 
@@ -506,7 +506,7 @@ namespace iText.Layout {
         /// </remarks>
         /// <returns>the current stroke color</returns>
         public virtual Color GetStrokeColor() {
-            return this.GetProperty<Color>(iText.Layout.Property.Property.STROKE_COLOR);
+            return this.GetProperty<Color>(Property.STROKE_COLOR);
         }
 
         /// <summary>Sets the stroke color for the current element.</summary>
@@ -517,7 +517,7 @@ namespace iText.Layout {
         /// <param name="strokeColor">a new stroke color</param>
         /// <returns>this Element.</returns>
         public virtual T SetStrokeColor(Color strokeColor) {
-            SetProperty(iText.Layout.Property.Property.STROKE_COLOR, strokeColor);
+            SetProperty(Property.STROKE_COLOR, strokeColor);
             return (T)(Object)this;
         }
 
@@ -528,7 +528,7 @@ namespace iText.Layout {
         /// </remarks>
         /// <returns>the current stroke width</returns>
         public virtual float? GetStrokeWidth() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.STROKE_WIDTH);
+            return this.GetProperty<float?>(Property.STROKE_WIDTH);
         }
 
         /// <summary>Sets the stroke width for the current element.</summary>
@@ -539,7 +539,7 @@ namespace iText.Layout {
         /// <param name="strokeWidth">a new stroke width</param>
         /// <returns>this Element.</returns>
         public virtual T SetStrokeWidth(float strokeWidth) {
-            SetProperty(iText.Layout.Property.Property.STROKE_WIDTH, strokeWidth);
+            SetProperty(Property.STROKE_WIDTH, strokeWidth);
             return (T)(Object)this;
         }
 
@@ -550,7 +550,7 @@ namespace iText.Layout {
         /// </remarks>
         /// <returns>this element</returns>
         public virtual T SetBold() {
-            SetProperty(iText.Layout.Property.Property.BOLD_SIMULATION, true);
+            SetProperty(Property.BOLD_SIMULATION, true);
             return (T)(Object)this;
         }
 
@@ -561,7 +561,7 @@ namespace iText.Layout {
         /// </remarks>
         /// <returns>this element</returns>
         public virtual T SetItalic() {
-            SetProperty(iText.Layout.Property.Property.ITALIC_SIMULATION, true);
+            SetProperty(Property.ITALIC_SIMULATION, true);
             return (T)(Object)this;
         }
 
@@ -632,17 +632,17 @@ namespace iText.Layout {
             , int lineCapStyle) {
             Underline newUnderline = new Underline(color, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
                 );
-            Object currentProperty = this.GetProperty<Object>(iText.Layout.Property.Property.UNDERLINE);
+            Object currentProperty = this.GetProperty<Object>(Property.UNDERLINE);
             if (currentProperty is IList) {
                 ((IList)currentProperty).Add(newUnderline);
             }
             else {
                 if (currentProperty is Underline) {
-                    SetProperty(iText.Layout.Property.Property.UNDERLINE, iText.IO.Util.JavaUtil.ArraysAsList((Underline)currentProperty
-                        , newUnderline));
+                    SetProperty(Property.UNDERLINE, iText.IO.Util.JavaUtil.ArraysAsList((Underline)currentProperty, newUnderline
+                        ));
                 }
                 else {
-                    SetProperty(iText.Layout.Property.Property.UNDERLINE, newUnderline);
+                    SetProperty(Property.UNDERLINE, newUnderline);
                 }
             }
             return (T)(Object)this;
@@ -656,7 +656,7 @@ namespace iText.Layout {
         /// <param name="baseDirection">base direction</param>
         /// <returns>this element</returns>
         public virtual T SetBaseDirection(BaseDirection baseDirection) {
-            SetProperty(iText.Layout.Property.Property.BASE_DIRECTION, baseDirection);
+            SetProperty(Property.BASE_DIRECTION, baseDirection);
             return (T)(Object)this;
         }
 
@@ -667,7 +667,7 @@ namespace iText.Layout {
         /// <param name="hyphenationConfig"/>
         /// <returns>this element</returns>
         public virtual T SetHyphenation(HyphenationConfig hyphenationConfig) {
-            SetProperty(iText.Layout.Property.Property.HYPHENATION, hyphenationConfig);
+            SetProperty(Property.HYPHENATION, hyphenationConfig);
             return (T)(Object)this;
         }
 
@@ -675,7 +675,7 @@ namespace iText.Layout {
         /// <param name="script">a new script type</param>
         /// <returns>this Element.</returns>
         public virtual T SetFontScript(UnicodeScript? script) {
-            SetProperty(iText.Layout.Property.Property.FONT_SCRIPT, script);
+            SetProperty(Property.FONT_SCRIPT, script);
             return (T)(Object)this;
         }
 
@@ -683,7 +683,7 @@ namespace iText.Layout {
         /// <param name="destination">the destination name to be created</param>
         /// <returns>this Element.</returns>
         public virtual T SetDestination(String destination) {
-            SetProperty(iText.Layout.Property.Property.DESTINATION, destination);
+            SetProperty(Property.DESTINATION, destination);
             return (T)(Object)this;
         }
     }

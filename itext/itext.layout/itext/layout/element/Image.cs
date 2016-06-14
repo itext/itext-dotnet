@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -121,10 +122,10 @@ namespace iText.Layout.Element {
         /// <param name="width">a float value</param>
         public Image(PdfImageXObject xObject, float x, float y, float width) {
             this.xObject = xObject;
-            SetProperty(iText.Layout.Property.Property.X, x);
-            SetProperty(iText.Layout.Property.Property.Y, y);
+            SetProperty(Property.X, x);
+            SetProperty(Property.Y, y);
             SetWidth(width);
-            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
         /// <summary>
@@ -141,9 +142,9 @@ namespace iText.Layout.Element {
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
         public Image(PdfImageXObject xObject, float x, float y) {
             this.xObject = xObject;
-            SetProperty(iText.Layout.Property.Property.X, x);
-            SetProperty(iText.Layout.Property.Property.Y, y);
-            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(Property.X, x);
+            SetProperty(Property.Y, y);
+            SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
         /// <summary>
@@ -160,9 +161,9 @@ namespace iText.Layout.Element {
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the form</param>
         public Image(PdfFormXObject xObject, float x, float y) {
             this.xObject = xObject;
-            SetProperty(iText.Layout.Property.Property.X, x);
-            SetProperty(iText.Layout.Property.Property.Y, y);
-            SetProperty(iText.Layout.Property.Property.POSITION, LayoutPosition.FIXED);
+            SetProperty(Property.X, x);
+            SetProperty(Property.Y, y);
+            SetProperty(Property.POSITION, LayoutPosition.FIXED);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace iText.Layout.Element {
         /// </param>
         public Image(ImageData img)
             : this(new PdfImageXObject(CheckImageType(img))) {
-            SetProperty(iText.Layout.Property.Property.FLUSH_ON_DRAW, true);
+            SetProperty(Property.FLUSH_ON_DRAW, true);
         }
 
         /// <summary>
@@ -194,7 +195,7 @@ namespace iText.Layout.Element {
         /// <param name="y">a float value representing the vertical offset of the lower left corner of the image</param>
         public Image(ImageData img, float x, float y)
             : this(new PdfImageXObject(CheckImageType(img)), x, y) {
-            SetProperty(iText.Layout.Property.Property.FLUSH_ON_DRAW, true);
+            SetProperty(Property.FLUSH_ON_DRAW, true);
         }
 
         /// <summary>
@@ -212,7 +213,7 @@ namespace iText.Layout.Element {
         /// <param name="width">a float value</param>
         public Image(ImageData img, float x, float y, float width)
             : this(new PdfImageXObject(CheckImageType(img)), x, y, width) {
-            SetProperty(iText.Layout.Property.Property.FLUSH_ON_DRAW, true);
+            SetProperty(Property.FLUSH_ON_DRAW, true);
         }
 
         /// <summary>Gets the XObject contained in this image object</summary>
@@ -228,63 +229,63 @@ namespace iText.Layout.Element {
         /// <param name="radAngle">a value in radians</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetRotationAngle(double radAngle) {
-            SetProperty(iText.Layout.Property.Property.ROTATION_ANGLE, radAngle);
+            SetProperty(Property.ROTATION_ANGLE, radAngle);
             return this;
         }
 
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>the left margin width, as a <code>float</code></returns>
         public virtual float? GetMarginLeft() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_LEFT);
+            return this.GetProperty<float?>(Property.MARGIN_LEFT);
         }
 
         /// <summary>Sets the left margin width of the element.</summary>
         /// <param name="value">the new left margin width</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetMarginLeft(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, value);
+            SetProperty(Property.MARGIN_LEFT, value);
             return this;
         }
 
         /// <summary>Gets the current right margin width of the element.</summary>
         /// <returns>the right margin width, as a <code>float</code></returns>
         public virtual float? GetMarginRight() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_RIGHT);
+            return this.GetProperty<float?>(Property.MARGIN_RIGHT);
         }
 
         /// <summary>Sets the right margin width of the element.</summary>
         /// <param name="value">the new right margin width</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetMarginRight(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_RIGHT, value);
+            SetProperty(Property.MARGIN_RIGHT, value);
             return this;
         }
 
         /// <summary>Gets the current top margin width of the element.</summary>
         /// <returns>the top margin width, as a <code>float</code></returns>
         public virtual float? GetMarginTop() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_TOP);
+            return this.GetProperty<float?>(Property.MARGIN_TOP);
         }
 
         /// <summary>Sets the top margin width of the element.</summary>
         /// <param name="value">the new top margin width</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetMarginTop(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_TOP, value);
+            SetProperty(Property.MARGIN_TOP, value);
             return this;
         }
 
         /// <summary>Gets the current bottom margin width of the element.</summary>
         /// <returns>the bottom margin width, as a <code>float</code></returns>
         public virtual float? GetMarginBottom() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_BOTTOM);
+            return this.GetProperty<float?>(Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
         /// <param name="value">the new bottom margin width</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image SetMarginBottom(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_BOTTOM, value);
+            SetProperty(Property.MARGIN_BOTTOM, value);
             return this;
         }
 
@@ -305,8 +306,8 @@ namespace iText.Layout.Element {
         /// <param name="verticalScaling">the vertical scaling coefficient. default value 1 = 100%</param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Element.Image Scale(float horizontalScaling, float verticalScaling) {
-            SetProperty(iText.Layout.Property.Property.HORIZONTAL_SCALING, horizontalScaling);
-            SetProperty(iText.Layout.Property.Property.VERTICAL_SCALING, verticalScaling);
+            SetProperty(Property.HORIZONTAL_SCALING, horizontalScaling);
+            SetProperty(Property.VERTICAL_SCALING, verticalScaling);
             return this;
         }
 
@@ -342,13 +343,13 @@ namespace iText.Layout.Element {
         /// <param name="autoScale">whether or not to let the image resize automatically</param>
         /// <returns>this image</returns>
         public virtual iText.Layout.Element.Image SetAutoScale(bool autoScale) {
-            if (HasProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH) && HasProperty(iText.Layout.Property.Property
-                .AUTO_SCALE_HEIGHT) && autoScale && ((bool)this.GetProperty<bool?>(iText.Layout.Property.Property.AUTO_SCALE_WIDTH
-                ) || (bool)this.GetProperty<bool?>(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT))) {
+            if (HasProperty(Property.AUTO_SCALE_WIDTH) && HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && ((bool
+                )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
+                ))) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Image));
                 logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
-            SetProperty(iText.Layout.Property.Property.AUTO_SCALE, autoScale);
+            SetProperty(Property.AUTO_SCALE, autoScale);
             return this;
         }
 
@@ -356,14 +357,14 @@ namespace iText.Layout.Element {
         /// <param name="autoScale">whether or not to let the image height resize automatically</param>
         /// <returns>this image</returns>
         public virtual iText.Layout.Element.Image SetAutoScaleHeight(bool autoScale) {
-            if (HasProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH) && autoScale && (bool)this.GetProperty<bool?
-                >(iText.Layout.Property.Property.AUTO_SCALE_WIDTH)) {
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT, false);
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE, true);
+            if (HasProperty(Property.AUTO_SCALE_WIDTH) && autoScale && (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH
+                )) {
+                SetProperty(Property.AUTO_SCALE_WIDTH, false);
+                SetProperty(Property.AUTO_SCALE_HEIGHT, false);
+                SetProperty(Property.AUTO_SCALE, true);
             }
             else {
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, autoScale);
+                SetProperty(Property.AUTO_SCALE_WIDTH, autoScale);
             }
             return this;
         }
@@ -372,14 +373,14 @@ namespace iText.Layout.Element {
         /// <param name="autoScale">whether or not to let the image width resize automatically</param>
         /// <returns>this image</returns>
         public virtual iText.Layout.Element.Image SetAutoScaleWidth(bool autoScale) {
-            if (HasProperty(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT) && autoScale && (bool)this.GetProperty<bool?
-                >(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT)) {
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, false);
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_HEIGHT, false);
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE, true);
+            if (HasProperty(Property.AUTO_SCALE_HEIGHT) && autoScale && (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
+                )) {
+                SetProperty(Property.AUTO_SCALE_WIDTH, false);
+                SetProperty(Property.AUTO_SCALE_HEIGHT, false);
+                SetProperty(Property.AUTO_SCALE, true);
             }
             else {
-                SetProperty(iText.Layout.Property.Property.AUTO_SCALE_WIDTH, autoScale);
+                SetProperty(Property.AUTO_SCALE_WIDTH, autoScale);
             }
             return this;
         }
@@ -388,7 +389,7 @@ namespace iText.Layout.Element {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element. Also has as a
         /// side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
@@ -408,7 +409,7 @@ namespace iText.Layout.Element {
         /// <remarks>
         /// Sets values for a absolute repositioning of the Element, on a specific
         /// page. Also has as a side effect that the Element's
-        /// <see cref="iText.Layout.Property.Property.POSITION"/>
+        /// <see cref="iText.Layout.Properties.Property.POSITION"/>
         /// is changed to
         /// <see cref="iText.Layout.Layout.LayoutPosition.FIXED">fixed</see>
         /// .
@@ -445,17 +446,15 @@ namespace iText.Layout.Element {
         /// <summary>Gets scaled width of the image.</summary>
         /// <returns>the current scaled width</returns>
         public virtual float GetImageScaledWidth() {
-            return null == this.GetProperty<float?>(iText.Layout.Property.Property.HORIZONTAL_SCALING) ? xObject.GetWidth
-                () : xObject.GetWidth() * (float)this.GetProperty<float?>(iText.Layout.Property.Property.HORIZONTAL_SCALING
-                );
+            return null == this.GetProperty<float?>(Property.HORIZONTAL_SCALING) ? xObject.GetWidth() : xObject.GetWidth
+                () * (float)this.GetProperty<float?>(Property.HORIZONTAL_SCALING);
         }
 
         /// <summary>Gets scaled height of the image.</summary>
         /// <returns>the current scaled height</returns>
         public virtual float GetImageScaledHeight() {
-            return null == this.GetProperty<float?>(iText.Layout.Property.Property.VERTICAL_SCALING) ? xObject.GetHeight
-                () : xObject.GetHeight() * (float)this.GetProperty<float?>(iText.Layout.Property.Property.VERTICAL_SCALING
-                );
+            return null == this.GetProperty<float?>(Property.VERTICAL_SCALING) ? xObject.GetHeight() : xObject.GetHeight
+                () * (float)this.GetProperty<float?>(Property.VERTICAL_SCALING);
         }
 
         public virtual PdfName GetRole() {

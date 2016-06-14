@@ -1,5 +1,6 @@
 using iText.Kernel.Colors;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
@@ -9,8 +10,7 @@ namespace iText.Layout {
             Style myStyle = new Style();
             myStyle.SetFontColor(Color.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle).SetFontColor(Color.GREEN);
-            NUnit.Framework.Assert.AreEqual(Color.GREEN, p.GetRenderer().GetProperty<Color>(iText.Layout.Property.Property
-                .FONT_COLOR));
+            NUnit.Framework.Assert.AreEqual(Color.GREEN, p.GetRenderer().GetProperty<Color>(Property.FONT_COLOR));
         }
 
         [NUnit.Framework.Test]
@@ -18,8 +18,7 @@ namespace iText.Layout {
             Style myStyle = new Style();
             myStyle.SetFontColor(Color.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle);
-            NUnit.Framework.Assert.AreEqual(Color.RED, p.GetRenderer().GetProperty<Color>(iText.Layout.Property.Property
-                .FONT_COLOR));
+            NUnit.Framework.Assert.AreEqual(Color.RED, p.GetRenderer().GetProperty<Color>(Property.FONT_COLOR));
         }
     }
 }

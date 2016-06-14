@@ -41,10 +41,12 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
-    public enum VerticalAlignment {
-        TOP,
-        MIDDLE,
-        BOTTOM
+namespace iText.Layout.Properties {
+    public enum TextAlignment {
+        LEFT,
+        CENTER,
+        RIGHT,
+        JUSTIFIED,
+        JUSTIFIED_ALL
     }
 }

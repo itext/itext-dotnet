@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
-    public enum AreaBreakType {
-        NEXT_AREA,
-        NEXT_PAGE,
-        LAST_PAGE
+namespace iText.Layout.Properties {
+    public enum HorizontalAlignment {
+        LEFT,
+        CENTER,
+        RIGHT
     }
 }

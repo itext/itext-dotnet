@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Element {
     /// <summary>
@@ -65,56 +65,56 @@ namespace iText.Layout.Element {
         /// <summary>Gets the current left margin width of the element.</summary>
         /// <returns>the left margin width, as a <code>float</code></returns>
         public virtual float? GetMarginLeft() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_LEFT);
+            return this.GetProperty<float?>(Property.MARGIN_LEFT);
         }
 
         /// <summary>Sets the left margin width of the element.</summary>
         /// <param name="value">the new left margin width</param>
         /// <returns>this element</returns>
         public virtual T SetMarginLeft(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, value);
+            SetProperty(Property.MARGIN_LEFT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current right margin width of the element.</summary>
         /// <returns>the right margin width, as a <code>float</code></returns>
         public virtual float? GetMarginRight() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_RIGHT);
+            return this.GetProperty<float?>(Property.MARGIN_RIGHT);
         }
 
         /// <summary>Sets the right margin width of the element.</summary>
         /// <param name="value">the new right margin width</param>
         /// <returns>this element</returns>
         public virtual T SetMarginRight(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_RIGHT, value);
+            SetProperty(Property.MARGIN_RIGHT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current top margin width of the element.</summary>
         /// <returns>the top margin width, as a <code>float</code></returns>
         public virtual float? GetMarginTop() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_TOP);
+            return this.GetProperty<float?>(Property.MARGIN_TOP);
         }
 
         /// <summary>Sets the top margin width of the element.</summary>
         /// <param name="value">the new top margin width</param>
         /// <returns>this element</returns>
         public virtual T SetMarginTop(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_TOP, value);
+            SetProperty(Property.MARGIN_TOP, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current bottom margin width of the element.</summary>
         /// <returns>the bottom margin width, as a <code>float</code></returns>
         public virtual float? GetMarginBottom() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.MARGIN_BOTTOM);
+            return this.GetProperty<float?>(Property.MARGIN_BOTTOM);
         }
 
         /// <summary>Sets the bottom margin width of the element.</summary>
         /// <param name="value">the new bottom margin width</param>
         /// <returns>this element</returns>
         public virtual T SetMarginBottom(float value) {
-            SetProperty(iText.Layout.Property.Property.MARGIN_BOTTOM, value);
+            SetProperty(Property.MARGIN_BOTTOM, value);
             return (T)(Object)this;
         }
 
@@ -142,56 +142,56 @@ namespace iText.Layout.Element {
         /// <summary>Gets the current left padding width of the element.</summary>
         /// <returns>the left padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingLeft() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.PADDING_LEFT);
+            return this.GetProperty<float?>(Property.PADDING_LEFT);
         }
 
         /// <summary>Sets the left padding width of the element.</summary>
         /// <param name="value">the new left padding width</param>
         /// <returns>this element</returns>
         public virtual T SetPaddingLeft(float value) {
-            SetProperty(iText.Layout.Property.Property.PADDING_LEFT, value);
+            SetProperty(Property.PADDING_LEFT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current right padding width of the element.</summary>
         /// <returns>the right padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingRight() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.PADDING_RIGHT);
+            return this.GetProperty<float?>(Property.PADDING_RIGHT);
         }
 
         /// <summary>Sets the right padding width of the element.</summary>
         /// <param name="value">the new right padding width</param>
         /// <returns>this element</returns>
         public virtual T SetPaddingRight(float value) {
-            SetProperty(iText.Layout.Property.Property.PADDING_RIGHT, value);
+            SetProperty(Property.PADDING_RIGHT, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current top padding width of the element.</summary>
         /// <returns>the top padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingTop() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.PADDING_TOP);
+            return this.GetProperty<float?>(Property.PADDING_TOP);
         }
 
         /// <summary>Sets the top padding width of the element.</summary>
         /// <param name="value">the new top padding width</param>
         /// <returns>this element</returns>
         public virtual T SetPaddingTop(float value) {
-            SetProperty(iText.Layout.Property.Property.PADDING_TOP, value);
+            SetProperty(Property.PADDING_TOP, value);
             return (T)(Object)this;
         }
 
         /// <summary>Gets the current bottom padding width of the element.</summary>
         /// <returns>the bottom padding width, as a <code>float</code></returns>
         public virtual float? GetPaddingBottom() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.PADDING_BOTTOM);
+            return this.GetProperty<float?>(Property.PADDING_BOTTOM);
         }
 
         /// <summary>Sets the bottom padding width of the element.</summary>
         /// <param name="value">the new bottom padding width</param>
         /// <returns>this element</returns>
         public virtual T SetPaddingBottom(float value) {
-            SetProperty(iText.Layout.Property.Property.PADDING_BOTTOM, value);
+            SetProperty(Property.PADDING_BOTTOM, value);
             return (T)(Object)this;
         }
 
@@ -220,7 +220,7 @@ namespace iText.Layout.Element {
         /// <param name="verticalAlignment">the vertical alignment setting</param>
         /// <returns>this element</returns>
         public virtual T SetVerticalAlignment(VerticalAlignment? verticalAlignment) {
-            SetProperty(iText.Layout.Property.Property.VERTICAL_ALIGNMENT, verticalAlignment);
+            SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
             return (T)(Object)this;
         }
 
@@ -237,7 +237,7 @@ namespace iText.Layout.Element {
         /// If <b>ratio</b> is 0, additional word spacing will not be applied.
         /// </param>
         public virtual T SetSpacingRatio(float ratio) {
-            SetProperty(iText.Layout.Property.Property.SPACING_RATIO, ratio);
+            SetProperty(Property.SPACING_RATIO, ratio);
             return (T)(Object)this;
         }
 
@@ -249,11 +249,11 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <returns>
         /// the current value of the
-        /// <see cref="iText.Layout.Property.Property.KEEP_TOGETHER"/>
+        /// <see cref="iText.Layout.Properties.Property.KEEP_TOGETHER"/>
         /// property
         /// </returns>
         public virtual bool? IsKeepTogether() {
-            return this.GetProperty<bool?>(iText.Layout.Property.Property.KEEP_TOGETHER);
+            return this.GetProperty<bool?>(Property.KEEP_TOGETHER);
         }
 
         /// <summary>
@@ -264,12 +264,12 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="keepTogether">
         /// the new value of the
-        /// <see cref="iText.Layout.Property.Property.KEEP_TOGETHER"/>
+        /// <see cref="iText.Layout.Properties.Property.KEEP_TOGETHER"/>
         /// property
         /// </param>
         /// <returns>this element</returns>
         public virtual T SetKeepTogether(bool keepTogether) {
-            SetProperty(iText.Layout.Property.Property.KEEP_TOGETHER, keepTogether);
+            SetProperty(Property.KEEP_TOGETHER, keepTogether);
             return (T)(Object)this;
         }
 
@@ -277,7 +277,7 @@ namespace iText.Layout.Element {
         /// <param name="radAngle">the new rotation radAngle, as a <code>float</code></param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(float radAngle) {
-            SetProperty(iText.Layout.Property.Property.ROTATION_ANGLE, radAngle);
+            SetProperty(Property.ROTATION_ANGLE, radAngle);
             return (T)(Object)this;
         }
 
@@ -285,7 +285,7 @@ namespace iText.Layout.Element {
         /// <param name="angle">the new rotation angle, as a <code>double</code></param>
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(double angle) {
-            SetProperty(iText.Layout.Property.Property.ROTATION_ANGLE, (float)angle);
+            SetProperty(Property.ROTATION_ANGLE, (float)angle);
             return (T)(Object)this;
         }
 

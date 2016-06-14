@@ -41,7 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
+namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
     /// elements.
@@ -236,31 +236,31 @@ namespace iText.Layout.Property {
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.BASE_DIRECTION] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.BOLD_SIMULATION] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.CHARACTER_SPACING] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FIRST_LINE_INDENT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_COLOR] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_KERNING] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_SCRIPT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FONT_SIZE] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.FORCED_PLACEMENT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.HYPHENATION] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.ITALIC_SIMULATION] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.KEEP_TOGETHER] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.LIST_SYMBOL] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.SPACING_RATIO] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.SPLIT_CHARACTERS] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.STROKE_COLOR] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.STROKE_WIDTH] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.TEXT_ALIGNMENT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.TEXT_RENDERING_MODE] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.TEXT_RISE] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.UNDERLINE] = true;
-            INHERITED_PROPERTIES[iText.Layout.Property.Property.WORD_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FIRST_LINE_INDENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_COLOR] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_KERNING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SCRIPT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SIZE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FORCED_PLACEMENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_PRE_TEXT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_POST_TEXT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_WIDTH] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_ALIGNMENT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RENDERING_MODE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.TEXT_RISE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.UNDERLINE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.WORD_SPACING] = true;
         }
 
         public static bool IsPropertyInherited(int property) {

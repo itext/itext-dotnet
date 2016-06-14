@@ -1,4 +1,5 @@
 ﻿using System;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer
 {
@@ -8,7 +9,7 @@ namespace iText.Layout.Renderer
         /// <summary>Returns a property with a certain key, as a floating point value.</summary>
         /// <param name="property">
         /// an
-        /// <see cref="iText.Layout.Property.Property">enum value</see>
+        /// <see cref="Property">enum value</see>
         /// </param>
         /// <returns>
         /// a
@@ -34,7 +35,7 @@ namespace iText.Layout.Renderer
         /// <summary>Returns a property with a certain key, as a floating point value.</summary>
         /// <param name="property">
         /// an
-        /// <see cref="iText.Layout.Property.Property">enum value</see>
+        /// <see cref="Property">enum value</see>
         /// </param>
         /// <param name="defaultValue">default value to be returned if property is not found</param>
         /// <returns>
@@ -62,7 +63,7 @@ namespace iText.Layout.Renderer
         /// <summary>Returns a property with a certain key, as an integer value.</summary>
         /// <param name="property">
         /// an
-        /// <see cref="iText.Layout.Property.Property">enum value</see>
+        /// <see cref="Property">enum value</see>
         /// </param>
         /// <returns>
         /// a

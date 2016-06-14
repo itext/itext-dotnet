@@ -41,10 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
-    /// <summary>A specialized enum containing alignment properties for list symbols.</summary>
-    public enum ListSymbolAlignment {
-        RIGHT,
-        LEFT
+namespace iText.Layout.Properties {
+    public enum VerticalAlignment {
+        TOP,
+        MIDDLE,
+        BOTTOM
     }
 }

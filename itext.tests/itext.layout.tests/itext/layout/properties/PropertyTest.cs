@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using iText.Test;
 
-namespace iText.Layout.Property {
+namespace iText.Layout.Properties {
     public class PropertyTest : ExtendedITextTest {
         /// <exception cref="System.MemberAccessException"/>
         [NUnit.Framework.Test]
         public virtual void PropertyUniquenessTest() {
             ICollection<int> fieldValues = new HashSet<int>();
             int maxFieldValue = 1;
-            foreach (FieldInfo field in typeof(iText.Layout.Property.Property).GetFields()) {
+            foreach (FieldInfo field in typeof(Property).GetFields()) {
                 if (field.FieldType == typeof(int)) {
                     int value = (int)field.GetValue(null);
                     maxFieldValue = Math.Max(maxFieldValue, value);

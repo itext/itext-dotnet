@@ -43,13 +43,14 @@ address: sales@itextpdf.com
 */
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class CellRenderer : BlockRenderer {
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
-            SetProperty(iText.Layout.Property.Property.ROWSPAN, modelElement.GetRowspan());
-            SetProperty(iText.Layout.Property.Property.COLSPAN, modelElement.GetColspan());
+            SetProperty(Property.ROWSPAN, modelElement.GetRowspan());
+            SetProperty(Property.COLSPAN, modelElement.GetColspan());
         }
 
         public override IPropertyContainer GetModelElement() {

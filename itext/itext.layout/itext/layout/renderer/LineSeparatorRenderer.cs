@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LineSeparatorRenderer : BlockRenderer {
@@ -52,7 +53,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iText.Layout.Property.Property.LINE_DRAWER);
+            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
             occupiedArea = layoutContext.GetArea().Clone();
             ApplyMargins(occupiedArea.GetBBox(), false);
@@ -70,7 +71,7 @@ namespace iText.Layout.Renderer {
 
         public override void Draw(DrawContext drawContext) {
             base.Draw(drawContext);
-            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(iText.Layout.Property.Property.LINE_DRAWER);
+            ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             if (lineDrawer != null) {
                 lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
             }

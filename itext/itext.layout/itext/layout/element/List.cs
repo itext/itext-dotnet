@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -87,11 +87,11 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
-                case iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT: {
+                case Property.LIST_SYMBOL_PRE_TEXT: {
                     return (T1)(Object)"";
                 }
 
-                case iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT: {
+                case Property.LIST_SYMBOL_POST_TEXT: {
                     return (T1)(Object)". ";
                 }
 
@@ -128,7 +128,7 @@ namespace iText.Layout.Element {
         /// <param name="start">the custom index, as an <code>int</code></param>
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.List SetItemStartIndex(int start) {
-            SetProperty(iText.Layout.Property.Property.LIST_START, start);
+            SetProperty(Property.LIST_START, start);
             return this;
         }
 
@@ -159,7 +159,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.List SetListSymbol(Text text) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, text);
+            SetProperty(Property.LIST_SYMBOL, text);
             return this;
         }
 
@@ -177,7 +177,7 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.List SetListSymbol(Image image) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, image);
+            SetProperty(Property.LIST_SYMBOL, image);
             return this;
         }
 
@@ -190,7 +190,7 @@ namespace iText.Layout.Element {
         /// </remarks>
         /// <param name="listNumberingType">
         /// the
-        /// <see cref="iText.Layout.Property.ListNumberingType"/>
+        /// <see cref="iText.Layout.Properties.ListNumberingType"/>
         /// that will generate appropriate prefixes for the
         /// <see cref="ListItem"/>
         /// s.
@@ -203,25 +203,25 @@ namespace iText.Layout.Element {
                 ) {
                 SetPostSymbolText(" ");
             }
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL, listNumberingType);
+            SetProperty(Property.LIST_SYMBOL, listNumberingType);
             return this;
         }
 
         /// <summary>A specialized enum containing alignment properties for list symbols.</summary>
         /// <remarks>
         /// A specialized enum containing alignment properties for list symbols.
-        /// <see cref="iText.Layout.Property.ListSymbolAlignment.LEFT"/>
+        /// <see cref="iText.Layout.Properties.ListSymbolAlignment.LEFT"/>
         /// means that the items will be aligned as follows:
         /// 9.  Item 9
         /// 10. Item 10
         /// Whereas
-        /// <see cref="iText.Layout.Property.ListSymbolAlignment.RIGHT"/>
+        /// <see cref="iText.Layout.Properties.ListSymbolAlignment.RIGHT"/>
         /// means the items will be aligned as follows:
         /// 9. Item 9
         /// 10. Item 10
         /// </remarks>
         public virtual iText.Layout.Element.List SetListSymbolAlignment(ListSymbolAlignment alignment) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_ALIGNMENT, alignment);
+            SetProperty(Property.LIST_SYMBOL_ALIGNMENT, alignment);
             return this;
         }
 
@@ -232,7 +232,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <returns>the indent offset as a <code>float</code>.</returns>
         public virtual float? GetSymbolIndent() {
-            return this.GetProperty<float?>(iText.Layout.Property.Property.LIST_SYMBOL_INDENT);
+            return this.GetProperty<float?>(Property.LIST_SYMBOL_INDENT);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace iText.Layout.Element {
         /// <param name="symbolIndent">the new indent offset.</param>
         /// <returns>this list.</returns>
         public virtual iText.Layout.Element.List SetSymbolIndent(float symbolIndent) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_INDENT, symbolIndent);
+            SetProperty(Property.LIST_SYMBOL_INDENT, symbolIndent);
             return this;
         }
 
@@ -254,7 +254,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <returns>the post symbol text</returns>
         public virtual String GetPostSymbolText() {
-            return this.GetProperty<String>(iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT);
+            return this.GetProperty<String>(Property.LIST_SYMBOL_POST_TEXT);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="postSymbolText">the post symbol text</param>
         public virtual void SetPostSymbolText(String postSymbolText) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_POST_TEXT, postSymbolText);
+            SetProperty(Property.LIST_SYMBOL_POST_TEXT, postSymbolText);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <returns>the pre symbol text</returns>
         public virtual String GetPreSymbolText() {
-            return this.GetProperty<String>(iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT);
+            return this.GetProperty<String>(Property.LIST_SYMBOL_PRE_TEXT);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace iText.Layout.Element {
         /// </summary>
         /// <param name="preSymbolText">the pre symbol text</param>
         public virtual void SetPreSymbolText(String preSymbolText) {
-            SetProperty(iText.Layout.Property.Property.LIST_SYMBOL_PRE_TEXT, preSymbolText);
+            SetProperty(Property.LIST_SYMBOL_PRE_TEXT, preSymbolText);
         }
 
         public override PdfName GetRole() {

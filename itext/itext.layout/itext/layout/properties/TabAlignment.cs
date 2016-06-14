@@ -41,10 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.Layout.Property {
-    public enum HorizontalAlignment {
+namespace iText.Layout.Properties {
+    public enum TabAlignment {
         LEFT,
+        RIGHT,
         CENTER,
-        RIGHT
+        ANCHOR
     }
 }

@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO;
 using iText.IO.Log;
 using iText.Layout.Layout;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public abstract class RootRenderer : AbstractRenderer {
@@ -97,10 +98,9 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer)) {
-                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(iText.Layout.Property.Property
-                                        .KEEP_TOGETHER))) {
-                                        result.GetOverflowRenderer().GetModelElement().SetProperty(iText.Layout.Property.Property.KEEP_TOGETHER, false
-                                            );
+                                    if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(Property.KEEP_TOGETHER))
+                                        ) {
+                                        result.GetOverflowRenderer().GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                                         logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property will be ignored."
                                             ));
@@ -112,7 +112,7 @@ namespace iText.Layout.Renderer {
                                         storedArea = currentArea;
                                     }
                                     else {
-                                        result.GetOverflowRenderer().SetProperty(iText.Layout.Property.Property.FORCED_PLACEMENT, true);
+                                        result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
                                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                                         logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                     }
@@ -148,7 +148,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count - 1] == renderer) {
-                    int? positionedPageNumber = renderer.GetProperty<int?>(iText.Layout.Property.Property.PAGE_NUMBER);
+                    int? positionedPageNumber = renderer.GetProperty<int?>(Property.PAGE_NUMBER);
                     if (positionedPageNumber == null) {
                         positionedPageNumber = currentPageNumber;
                     }

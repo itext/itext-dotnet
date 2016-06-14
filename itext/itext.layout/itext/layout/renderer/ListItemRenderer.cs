@@ -46,7 +46,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
 using iText.Layout.Layout;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ListItemRenderer : DivRenderer {
@@ -64,9 +64,9 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            if (symbolRenderer != null && this.GetProperty<Object>(iText.Layout.Property.Property.HEIGHT) == null) {
+            if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null) {
                 // TODO this is actually MinHeight.
-                SetProperty(iText.Layout.Property.Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
+                SetProperty(Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
             }
             return base.Layout(layoutContext);
         }
@@ -115,7 +115,7 @@ namespace iText.Layout.Renderer {
                     symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - symbolRenderer
                         .GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
                 }
-                ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty<ListSymbolAlignment?>(iText.Layout.Property.Property
+                ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty<ListSymbolAlignment?>(Property
                     .LIST_SYMBOL_ALIGNMENT, ListSymbolAlignment.RIGHT);
                 float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
                 if (listSymbolAlignment == ListSymbolAlignment.RIGHT) {
@@ -150,8 +150,7 @@ namespace iText.Layout.Renderer {
                 splitRenderer.symbolAreaWidth = symbolAreaWidth;
             }
             // TODO retain all the properties ?
-            splitRenderer.SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, this.GetProperty<Object>(iText.Layout.Property.Property
-                .MARGIN_LEFT));
+            splitRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
             return splitRenderer;
         }
 
@@ -165,8 +164,7 @@ namespace iText.Layout.Renderer {
                 overflowRenderer.symbolAreaWidth = symbolAreaWidth;
             }
             // TODO retain all the properties ?
-            overflowRenderer.SetProperty(iText.Layout.Property.Property.MARGIN_LEFT, this.GetProperty<Object>(iText.Layout.Property.Property
-                .MARGIN_LEFT));
+            overflowRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
             return overflowRenderer;
         }
     }

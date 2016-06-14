@@ -2,6 +2,7 @@ using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {
@@ -25,7 +26,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Text text = new Text(String.Format("Page {0}", 10));
-            text.SetProperty(iText.Layout.Property.Property.DESTINATION, "p10");
+            text.SetProperty(Property.DESTINATION, "p10");
             doc.Add(new Paragraph(text).SetFixedPosition(1, 549, 742, 40));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

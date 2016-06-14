@@ -42,7 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Pdf.Canvas.Draw;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Element {
     public class TabStop {

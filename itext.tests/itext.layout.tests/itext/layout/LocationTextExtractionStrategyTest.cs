@@ -10,7 +10,7 @@ using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Element;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout {
     public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest {

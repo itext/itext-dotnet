@@ -59,7 +59,7 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer
 {
@@ -123,8 +123,7 @@ namespace iText.Layout.Renderer
 		{
 			// https://www.webkit.org/blog/116/webcore-rendering-iii-layout-basics
 			// "The rules can be summarized as follows:"...
-			int? positioning = renderer.GetProperty<int?>(iText.Layout.Property.Property.
-				POSITION);
+			int? positioning = renderer.GetProperty<int?>(Property.POSITION);
 			if (positioning == null || positioning == LayoutPosition.RELATIVE || positioning 
 				== LayoutPosition.STATIC)
 			{
@@ -164,8 +163,7 @@ namespace iText.Layout.Renderer
 		public virtual bool HasProperty(int property)
 		{
 			return HasOwnProperty(property) || (modelElement != null && modelElement.HasProperty
-				(property)) || (parent != null && iText.Layout.Property.Property.IsPropertyInherited
-				(property) && parent.HasProperty(property));
+				(property)) || (parent != null && Property.IsPropertyInherited(property) && parent.HasProperty(property));
 		}
 
 		public virtual bool HasOwnProperty(int property)
@@ -211,8 +209,7 @@ namespace iText.Layout.Renderer
 				return (T1)property;
 			}
 			// TODO in some situations we will want to check inheritance with additional info, such as parent and descendant.
-			if (parent != null && iText.Layout.Property.Property.IsPropertyInherited(key
-				) && (property = parent.GetProperty<T1>(key)) != null)
+			if (parent != null && Property.IsPropertyInherited(key) && (property = parent.GetProperty<T1>(key)) != null)
 			{
 				return (T1)property;
 			}
@@ -249,7 +246,7 @@ namespace iText.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a font object.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="iText.Layout.Property.Property">enum value</see>
+		/// <see cref="Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -263,7 +260,7 @@ namespace iText.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a color.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="iText.Layout.Property.Property">enum value</see>
+		/// <see cref="Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -277,7 +274,7 @@ namespace iText.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="iText.Layout.Property.Property">enum value</see>
+		/// <see cref="Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -324,7 +321,7 @@ namespace iText.Layout.Renderer
 
 		/// <summary>
 		/// Draws a background layer if it is defined by a key
-		/// <see cref="iText.Layout.Property.Property.BACKGROUND"/>
+		/// <see cref="Property.BACKGROUND"/>
 		/// in either the layout element or this
 		/// <see cref="IRenderer"/>
 		/// itself.
@@ -333,8 +330,7 @@ namespace iText.Layout.Renderer
 		/// 	</param>
 		public virtual void DrawBackground(DrawContext drawContext)
 		{
-			Background background = this.GetProperty<Background>(iText.Layout.Property.Property
-				.BACKGROUND);
+			Background background = this.GetProperty<Background>(Property.BACKGROUND);
 			if (background != null)
 			{
 				Rectangle bBox = GetOccupiedAreaBBox();
@@ -382,7 +378,7 @@ namespace iText.Layout.Renderer
 		/// <summary>
 		/// Performs the drawing operation for the border of this renderer, if
 		/// defined by any of the
-		/// <see cref="iText.Layout.Property.Property.BORDER"/>
+		/// <see cref="Property.BORDER"/>
 		/// values in either the layout
 		/// element or this
 		/// <see cref="IRenderer"/>
@@ -535,13 +531,12 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual float? RetrieveWidth(float parentBoxWidth)
 		{
-			return RetrieveUnitValue(parentBoxWidth, iText.Layout.Property.Property.WIDTH
-				);
+			return RetrieveUnitValue(parentBoxWidth, Property.WIDTH);
 		}
 
 		protected internal virtual float? RetrieveHeight()
 		{
-			return this.GetProperty<float?>(iText.Layout.Property.Property.HEIGHT);
+			return this.GetProperty<float?>(Property.HEIGHT);
 		}
 
 		protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property
@@ -619,20 +614,18 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual float[] GetMargins()
 		{
-			return new float[] { (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.MARGIN_TOP), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.MARGIN_RIGHT), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.MARGIN_BOTTOM), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.MARGIN_LEFT) };
+			return new float[] { (float)this.GetPropertyAsFloat(Property.MARGIN_TOP), 
+                (float)this.GetPropertyAsFloat(Property.MARGIN_RIGHT), 
+                (float)this.GetPropertyAsFloat(Property.MARGIN_BOTTOM), 
+                (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT) };
 		}
 
 		protected internal virtual float[] GetPaddings()
 		{
-			return new float[] { (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.PADDING_TOP), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.PADDING_RIGHT), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.PADDING_BOTTOM), (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.PADDING_LEFT) };
+			return new float[] { (float)this.GetPropertyAsFloat(Property.PADDING_TOP), 
+                (float)this.GetPropertyAsFloat(Property.PADDING_RIGHT), 
+                (float)this.GetPropertyAsFloat(Property.PADDING_BOTTOM), 
+                (float)this.GetPropertyAsFloat(Property.PADDING_LEFT) };
 		}
 
 		protected internal virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse)
@@ -665,14 +658,10 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual void ApplyAbsolutePositioningTranslation(bool reverse)
 		{
-			float top = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.TOP
-				);
-			float bottom = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property
-				.BOTTOM);
-			float left = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.LEFT
-				);
-			float right = (float)this.GetPropertyAsFloat(iText.Layout.Property.Property.
-				RIGHT);
+			float top = (float)this.GetPropertyAsFloat(Property.TOP);
+			float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM);
+			float left = (float)this.GetPropertyAsFloat(Property.LEFT);
+			float right = (float)this.GetPropertyAsFloat(Property.RIGHT);
 			int reverseMultiplier = reverse ? -1 : 1;
 			float dxRight = left != 0 ? left * reverseMultiplier : -right * reverseMultiplier;
 			float dyUp = top != 0 ? -top * reverseMultiplier : bottom * reverseMultiplier;
@@ -684,8 +673,7 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual void ApplyDestination(PdfDocument document)
 		{
-			String destination = this.GetProperty<String>(iText.Layout.Property.Property
-				.DESTINATION);
+			String destination = this.GetProperty<String>(Property.DESTINATION);
 			if (destination != null)
 			{
 				PdfArray array = new PdfArray();
@@ -697,19 +685,18 @@ namespace iText.Layout.Renderer
 				array.Add(new PdfNumber(1));
 				document.AddNamedDestination(destination, ((PdfArray)array.MakeIndirect(document)
 					));
-				DeleteProperty(iText.Layout.Property.Property.DESTINATION);
+				DeleteProperty(Property.DESTINATION);
 			}
 		}
 
 		protected internal virtual void ApplyAction(PdfDocument document)
 		{
-			PdfAction action = this.GetProperty<PdfAction>(iText.Layout.Property.Property
-				.ACTION);
+			PdfAction action = this.GetProperty<PdfAction>(Property.ACTION);
 			if (action != null)
 			{
 				PdfLinkAnnotation link = new PdfLinkAnnotation(GetOccupiedArea().GetBBox());
 				link.SetAction(action);
-				Border border = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
+				Border border = this.GetProperty<Border>(Property.BORDER);
 				if (border != null)
 				{
 					link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
@@ -731,36 +718,32 @@ namespace iText.Layout.Renderer
 
 		protected internal virtual bool IsPositioned()
 		{
-			Object positioning = this.GetProperty<Object>(iText.Layout.Property.Property
-				.POSITION);
+			Object positioning = this.GetProperty<Object>(Property.POSITION);
 			return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
 		}
 
 		protected internal virtual bool IsFixedLayout()
 		{
-			Object positioning = this.GetProperty<Object>(iText.Layout.Property.Property
-				.POSITION);
+			Object positioning = this.GetProperty<Object>(Property.POSITION);
 			return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
 		}
 
 		protected internal virtual bool IsRelativePosition()
 		{
-			int? positioning = this.GetPropertyAsInteger(iText.Layout.Property.Property.
-				POSITION);
+			int? positioning = this.GetPropertyAsInteger(Property.POSITION);
 			return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
 		}
 
 		protected internal virtual bool IsKeepTogether()
 		{
-			return true.Equals(GetPropertyAsBoolean(iText.Layout.Property.Property.KEEP_TOGETHER
-				));
+			return true.Equals(GetPropertyAsBoolean(Property.KEEP_TOGETHER));
 		}
 
 		protected internal virtual void AlignChildHorizontally(IRenderer childRenderer, float
 			 availableWidth)
 		{
 			HorizontalAlignment? horizontalAlignment = childRenderer.GetProperty<HorizontalAlignment?
-                >(iText.Layout.Property.Property.HORIZONTAL_ALIGNMENT);
+                >(Property.HORIZONTAL_ALIGNMENT);
 			if (horizontalAlignment != null && horizontalAlignment != HorizontalAlignment.LEFT)
 			{
 				float freeSpace = availableWidth - childRenderer.GetOccupiedArea().GetBBox().GetWidth
@@ -792,11 +775,11 @@ namespace iText.Layout.Renderer
 		/// </returns>
 		protected internal virtual Border[] GetBorders()
 		{
-			Border border = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER);
-			Border topBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_TOP);
-			Border rightBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_RIGHT);
-			Border bottomBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_BOTTOM);
-			Border leftBorder = this.GetProperty<Border>(iText.Layout.Property.Property.BORDER_LEFT);
+			Border border = this.GetProperty<Border>(Property.BORDER);
+			Border topBorder = this.GetProperty<Border>(Property.BORDER_TOP);
+			Border rightBorder = this.GetProperty<Border>(Property.BORDER_RIGHT);
+			Border bottomBorder = this.GetProperty<Border>(Property.BORDER_BOTTOM);
+			Border leftBorder = this.GetProperty<Border>(Property.BORDER_LEFT);
 			Border[] borders = new Border[]{ topBorder, rightBorder, bottomBorder, leftBorder };
 			for (int i = 0; i < borders.Length; ++i)
 			{
@@ -813,25 +796,25 @@ namespace iText.Layout.Renderer
 			{
 				case 0:
 				{
-					SetProperty(iText.Layout.Property.Property.BORDER_TOP, border);
+					SetProperty(Property.BORDER_TOP, border);
 					break;
 				}
 
 				case 1:
 				{
-					SetProperty(iText.Layout.Property.Property.BORDER_RIGHT, border);
+					SetProperty(Property.BORDER_RIGHT, border);
 					break;
 				}
 
 				case 2:
 				{
-					SetProperty(iText.Layout.Property.Property.BORDER_BOTTOM, border);
+					SetProperty(Property.BORDER_BOTTOM, border);
 					break;
 				}
 
 				case 3:
 				{
-					SetProperty(iText.Layout.Property.Property.BORDER_LEFT, border);
+					SetProperty(Property.BORDER_LEFT, border);
 					break;
 				}
 			}

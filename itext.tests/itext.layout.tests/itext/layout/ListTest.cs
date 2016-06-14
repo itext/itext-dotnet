@@ -7,7 +7,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Test;
 
 namespace iText.Layout {

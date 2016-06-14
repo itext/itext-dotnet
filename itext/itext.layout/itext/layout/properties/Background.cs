@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Colors;
 
-namespace iText.Layout.Property {
+namespace iText.Layout.Properties {
     /// <summary>
     /// A specialized class holding configurable properties related to an
     /// <see cref="iText.Layout.Element.IElement"/>

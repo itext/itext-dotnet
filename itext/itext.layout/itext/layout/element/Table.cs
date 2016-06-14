@@ -46,9 +46,8 @@ using System.Collections.Generic;
 using iText.IO.Log;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Layout;
 using iText.Layout.Borders;
-using iText.Layout.Property;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element
@@ -731,10 +730,10 @@ namespace iText.Layout.Element
 					if (cell != null)
 					{
 						Border border = ((Border)cell.GetProperty
-							<Border>(iText.Layout.Property.Property.BORDER));
+							<Border>(Property.BORDER));
 						if (border == null)
 						{
-							border = ((Border)cell.GetProperty<Border>(iText.Layout.Property.Property.BORDER_BOTTOM));
+							border = ((Border)cell.GetProperty<Border>(Property.BORDER_BOTTOM));
 						}
 						horizontalBorder.Add(border);
 					}
