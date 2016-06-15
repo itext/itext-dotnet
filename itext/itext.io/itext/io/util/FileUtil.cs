@@ -52,64 +52,51 @@ namespace iText.IO.Util {
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-    public static class FileUtil
-    {
-	    private static int tempFileCounter = 0;
+    public static class FileUtil {
+        private static int tempFileCounter = 0;
 
-		public static String GetFontsDir()
-		{
+        public static String GetFontsDir() {
             return Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
-		}
+        }
 
-		public static bool FileExists(String path)
-		{
-			if (!String.IsNullOrEmpty(path))
-			{
+        public static bool FileExists(String path) {
+            if (!String.IsNullOrEmpty(path)) {
                 return new FileInfo(path).Exists;
-			}
-			return false;
-		}
+            }
+            return false;
+        }
 
-		public static bool DirectoryExists(String path)
-		{
-            if (!String.IsNullOrEmpty(path))
-			{
+        public static bool DirectoryExists(String path) {
+            if (!String.IsNullOrEmpty(path)) {
                 return new DirectoryInfo(path).Exists;
             }
-			return false;
-		}
+            return false;
+        }
 
-        public static String[] ListFilesInDirectory(String path, bool recursive)
-		{
-            if (!String.IsNullOrEmpty(path))
-            {
+        public static String[] ListFilesInDirectory(String path, bool recursive) {
+            if (!String.IsNullOrEmpty(path)) {
                 DirectoryInfo dir = new DirectoryInfo(path);
-				if (dir.Exists)
-				{
-					FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-					String[] list = new String[files.Length];
-					for (int i = 0; i < files.Length; i++)
-					{
-						list[i] = files[i].FullName;
-					}
-					return list;
-				}
-			}
-			return null;
-		}
+                if (dir.Exists) {
+                    FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    String[] list = new String[files.Length];
+                    for (int i = 0; i < files.Length; i++) {
+                        list[i] = files[i].FullName;
+                    }
+                    return list;
+                }
+            }
+            return null;
+        }
 
-        public static String[] ListFilesInDirectoryByFilter(String path, bool recursive, FileFilter filter)
-        {
-            if (!String.IsNullOrEmpty(path))
-            {
+        public static String[] ListFilesInDirectoryByFilter(String path, bool recursive, FileFilter filter) {
+            if (!String.IsNullOrEmpty(path)) {
                 DirectoryInfo dir = new DirectoryInfo(path);
-                if (dir.Exists)
-                {
+                if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
                     String[] list = new String[files.Length];
                     for (int i = 0; i < files.Length; i++) {
                         if (filter.Accept(files[i].Name)) {
-                            list[i] = files[i].FullName;    
+                            list[i] = files[i].FullName;
                         }
                     }
                     return list;
@@ -118,36 +105,34 @@ namespace iText.IO.Util {
             return null;
         }
 
-		/// <exception cref="System.ArgumentException"/>
-		public static StreamWriter CreatePrintWriter(Stream output, String encoding)
-		{
-			return new StreamWriter(output, Encoding.GetEncoding(encoding));
-		}
+        /// <exception cref="System.ArgumentException"/>
+        public static StreamWriter CreatePrintWriter(Stream output, String encoding) {
+            return new StreamWriter(output, Encoding.GetEncoding(encoding));
+        }
 
-		public static Stream GetBufferedOutputStream(String filename)
-		{			
-			return new FileStream(filename, FileMode.Create);
-		}
+        public static Stream GetBufferedOutputStream(String filename) {
+            return new FileStream(filename, FileMode.Create);
+        }
 
-	    public static FileInfo CreateTempFile(String path) {
-	        if (DirectoryExists(path)) {
+        public static FileInfo CreateTempFile(String path) {
+            if (DirectoryExists(path)) {
                 return new FileInfo(path + Path.DirectorySeparatorChar + "pdf_" + Interlocked.Increment(ref tempFileCounter));
-	        }
+            }
             return new FileInfo(path);
-	    }
+        }
 
-	    public static FileStream GetFileOutputStream(FileInfo file) {
-	        return file.Open(FileMode.Create);
-	    }
+        public static FileStream GetFileOutputStream(FileInfo file) {
+            return file.Open(FileMode.Create);
+        }
 
-	    public static FileStream GetRandomAccessFile(FileInfo file) {
-	        return file.Open(FileMode.Open);
-	    }
+        public static FileStream GetRandomAccessFile(FileInfo file) {
+            return file.Open(FileMode.Open);
+        }
 
         public class FileFilter {
-	        public virtual bool Accept(String pathname) {
-	            return true;
-	        }
-	    }
-	}
+            public virtual bool Accept(String pathname) {
+                return true;
+            }
+        }
+    }
 }

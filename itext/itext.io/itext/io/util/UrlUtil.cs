@@ -52,43 +52,32 @@ namespace iText.IO.Util {
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-    public static class UrlUtil
-    {
+    public static class UrlUtil {
         /// <summary>This method makes a valid URL from a given filename.</summary>
         /// <param name="filename">a given filename</param>
         /// <returns>a valid URL</returns>
-        public static Uri ToURL(String filename)
-        {
-            try
-            {
+        public static Uri ToURL(String filename) {
+            try {
                 return new Uri(filename);
-            }
-            catch
-            {
+            } catch {
                 return new Uri(Path.GetFullPath(filename));
-            } 
+            }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static Stream OpenStream(Uri url)
-        {
+        public static Stream OpenStream(Uri url) {
             Stream isp;
-            if (url.IsFile)
-            {
+            if (url.IsFile) {
                 isp = new FileStream(url.AbsolutePath, FileMode.Open, FileAccess.Read);
-            }
-            else
-            {
+            } else {
                 WebRequest req = WebRequest.Create(url);
                 req.Credentials = CredentialCache.DefaultCredentials;
                 using (WebResponse res = req.GetResponse())
-                using (Stream rs = res.GetResponseStream())
-                {
+                using (Stream rs = res.GetResponseStream()) {
                     isp = new MemoryStream();
                     byte[] buffer = new byte[4096];
                     int read;
-                    while ((read = rs.Read(buffer, 0, buffer.Length)) > 0)
-                    {
+                    while ((read = rs.Read(buffer, 0, buffer.Length)) > 0) {
                         isp.Write(buffer, 0, read);
                     }
                     isp.Position = 0;
@@ -98,5 +87,4 @@ namespace iText.IO.Util {
             return isp;
         }
     }
-
 }

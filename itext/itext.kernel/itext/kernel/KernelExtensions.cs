@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -60,8 +61,7 @@ namespace iText.Kernel {
             return sb.ToString(beginIndex, endIndex - beginIndex);
         }
 
-        public static bool EqualsIgnoreCase(this String str, String anotherString)
-        {
+        public static bool EqualsIgnoreCase(this String str, String anotherString) {
             return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -70,7 +70,7 @@ namespace iText.Kernel {
         }
 
         public static void Write(this Stream stream, int value) {
-            stream.WriteByte((byte)value);
+            stream.WriteByte((byte) value);
         }
 
         public static int Read(this Stream stream) {
@@ -82,8 +82,7 @@ namespace iText.Kernel {
             return size == 0 ? -1 : size;
         }
 
-        public static int JRead(this Stream stream, byte[] buffer, int offset, int count)
-        {
+        public static int JRead(this Stream stream, byte[] buffer, int offset, int count) {
             int result = stream.Read(buffer, offset, count);
             return result == 0 ? -1 : result;
         }
@@ -110,11 +109,11 @@ namespace iText.Kernel {
         }
 
         public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
-            return ((List<T>)list).GetRange(fromIndex, toIndex - fromIndex);
+            return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
         }
 
         public static void AddAll<T>(this IList<T> list, IEnumerable<T> c) {
-            ((List<T>)list).AddRange(c);
+            ((List<T>) list).AddRange(c);
         }
 
         public static void AddAll<T>(this IList<T> list, int index, IList<T> c) {
@@ -127,16 +126,13 @@ namespace iText.Kernel {
             list.Insert(index, elem);
         }
 
-        public static void AddAll<T>(this ICollection<T> c, IEnumerable<T> collectionToAdd)
-        {
-            foreach (T o in collectionToAdd)
-            {
+        public static void AddAll<T>(this ICollection<T> c, IEnumerable<T> collectionToAdd) {
+            foreach (T o in collectionToAdd) {
                 c.Add(o);
             }
         }
 
-        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd)
-        {
+        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd) {
             foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd) {
                 c[pair.Key] = pair.Value;
             }
@@ -154,31 +150,26 @@ namespace iText.Kernel {
             return Regex.IsMatch(str, regex);
         }
 
-        public static T[] ToArray<T>(this ICollection<T> col, T[] toArray)
-        {
+        public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
             T[] r = col.ToArray();
             return r;
         }
 
         public static void ReadFully(this BinaryReader input, byte[] b, int off, int len) {
-            if (len < 0)
-            {
+            if (len < 0) {
                 throw new IndexOutOfRangeException();
             }
             int n = 0;
-            while (n < len)
-            {
+            while (n < len) {
                 int count = input.Read(b, off + n, len - n);
-                if (count < 0)
-                {
+                if (count < 0) {
                     throw new EndOfStreamException();
                 }
                 n += count;
             }
         }
 
-        public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-        {
+        public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             TValue value;
             dictionary.TryGetValue(key, out value);
             dictionary.Remove(key);
@@ -186,8 +177,7 @@ namespace iText.Kernel {
             return value;
         }
 
-        public static T JRemoveAt<T>(this IList<T> list, int index)
-        {
+        public static T JRemoveAt<T>(this IList<T> list, int index) {
             T value = list[index];
             list.RemoveAt(index);
 
@@ -201,17 +191,17 @@ namespace iText.Kernel {
             return item;
         }
 
-		public static bool IsEmpty<T>(this ICollection<T> collection) {
-			return collection.Count == 0;
-		}
+        public static bool IsEmpty<T>(this ICollection<T> collection) {
+            return collection.Count == 0;
+        }
 
-		public static bool IsEmpty(this ICollection collection) {
-			return collection.Count == 0;
-		}
+        public static bool IsEmpty(this ICollection collection) {
+            return collection.Count == 0;
+        }
 
-		public static void SetCharAt(this StringBuilder builder, int index, char ch) {
-			builder[index] = ch;
-		}
+        public static void SetCharAt(this StringBuilder builder, int index, char ch) {
+            builder[index] = ch;
+        }
 
         public static float NextFloat(this Random random) {
             double mantissa = random.NextDouble();
@@ -223,7 +213,7 @@ namespace iText.Kernel {
             if (val < 0) {
                 int b = 6;
             }
-            return (float)(mantissa * exponent);
+            return (float) (mantissa*exponent);
         }
 
         public static bool NextBoolean(this Random random) {
@@ -232,8 +222,7 @@ namespace iText.Kernel {
 
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
             TValue value = default(TValue);
-            if (key != null)
-            {
+            if (key != null) {
                 col.TryGetValue(key, out value);
             }
 
@@ -244,25 +233,21 @@ namespace iText.Kernel {
             return dictionary.ContainsKey(key);
         }
 
-        public static void Update(this IDigest dgst, byte[] input)
-        {
+        public static void Update(this IDigest dgst, byte[] input) {
             dgst.Update(input, 0, input.Length);
         }
 
-        public static void Update(this IDigest dgst, byte[] input, int offset, int len)
-        {
+        public static void Update(this IDigest dgst, byte[] input, int offset, int len) {
             dgst.BlockUpdate(input, offset, len);
         }
 
-        public static byte[] Digest(this IDigest dgst)
-        {
+        public static byte[] Digest(this IDigest dgst) {
             byte[] output = new byte[dgst.GetDigestSize()];
             dgst.DoFinal(output, 0);
             return output;
         }
 
-        public static byte[] Digest(this IDigest dgst, byte[] input)
-        {
+        public static byte[] Digest(this IDigest dgst, byte[] input) {
             dgst.Update(input);
             return dgst.Digest();
         }
@@ -274,8 +259,7 @@ namespace iText.Kernel {
         /// (there are two of them at the moment of the method addition which are in StandardHandlerUsingAes256 class).
         /// This may be not true for future possible usages, so be aware.
         /// </summary>
-        public static void Digest(this IDigest dgst, byte[] buff, int offest, int len)
-        {
+        public static void Digest(this IDigest dgst, byte[] buff, int offest, int len) {
             dgst.DoFinal(buff, offest);
         }
     }

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Globalization;
 using iText.Kernel.Pdf;
@@ -52,10 +53,8 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 
-namespace iText.Kernel.Crypto.Securityhandler
-{
-	internal static class EncryptionUtils
-	{
+namespace iText.Kernel.Crypto.Securityhandler {
+    internal static class EncryptionUtils {
         internal static byte[] GenerateSeed(int seedLength) {
             return IVGenerator.GetIV(seedLength);
         }
@@ -82,8 +81,7 @@ namespace iText.Kernel.Crypto.Securityhandler
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
-        internal static byte[] CipherBytes(X509Certificate x509Certificate, byte[] abyte0, AlgorithmIdentifier algorithmidentifier)
-		{
+        internal static byte[] CipherBytes(X509Certificate x509Certificate, byte[] abyte0, AlgorithmIdentifier algorithmidentifier) {
             IBufferedCipher cipher = CipherUtilities.GetCipher(algorithmidentifier.ObjectID);
             cipher.Init(true, x509Certificate.GetPublicKey());
             byte[] outp = new byte[10000];
@@ -96,7 +94,7 @@ namespace iText.Kernel.Crypto.Securityhandler
 
         // TODO Review this method and it's usages. It is used in bouncy castle sources in itextsharp, so we need to be carefull about it in case we update BouncyCastle.
         internal static CultureInfo GetStandartEnUsLocale() {
-            CultureInfo locale = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+            CultureInfo locale = (CultureInfo) CultureInfo.InvariantCulture.Clone();
             //                          en-US                        Invariant
             //=====================     ==================           ==================
             //Currency Symbol           $                            
@@ -116,10 +114,9 @@ namespace iText.Kernel.Crypto.Securityhandler
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
-        internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in)
-		{
-			String s = "1.2.840.113549.3.2";
-			DERForRecipientParams parameters = new DERForRecipientParams();
+        internal static DERForRecipientParams CalculateDERForRecipientParams(byte[] @in) {
+            String s = "1.2.840.113549.3.2";
+            DERForRecipientParams parameters = new DERForRecipientParams();
 
             byte[] outp = new byte[100];
             DerObjectIdentifier derob = new DerObjectIdentifier(s);
@@ -140,16 +137,15 @@ namespace iText.Kernel.Crypto.Securityhandler
             DerSequence seq = new DerSequence(ev);
 
             parameters.abyte0 = abyte0;
-		    parameters.abyte1 = abyte1;
+            parameters.abyte1 = abyte1;
             parameters.algorithmIdentifier = new AlgorithmIdentifier(derob, seq);
             return parameters;
-		}
+        }
 
-		internal class DERForRecipientParams
-		{
-			internal byte[] abyte0;
-			internal byte[] abyte1;
-			internal AlgorithmIdentifier algorithmIdentifier;
-		}
-	}
+        internal class DERForRecipientParams {
+            internal byte[] abyte0;
+            internal byte[] abyte1;
+            internal AlgorithmIdentifier algorithmIdentifier;
+        }
+    }
 }

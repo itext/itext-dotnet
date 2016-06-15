@@ -41,76 +41,64 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace iText.IO.Util
-{
+namespace iText.IO.Util {
     /// <summary>
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-    public static class JavaUtil
-    {
-        public static String GetStringForBytes(byte[] bytes, int offset, int length)
-        {
+    public static class JavaUtil {
+        public static String GetStringForBytes(byte[] bytes, int offset, int length) {
             return Encoding.UTF8.GetString(bytes, offset, length);
         }
 
-        public static String GetStringForBytes(byte[] bytes, int offset, int length, String encoding)
-        {
+        public static String GetStringForBytes(byte[] bytes, int offset, int length, String encoding) {
             return Encoding.GetEncoding(encoding).GetString(bytes, offset, length);
         }
 
-        public static String GetStringForBytes(byte[] bytes, String encoding)
-        {
+        public static String GetStringForBytes(byte[] bytes, String encoding) {
             return GetStringForBytes(bytes, 0, bytes.Length, encoding);
         }
 
-        public static String GetStringForBytes(byte[] bytes)
-        {
+        public static String GetStringForBytes(byte[] bytes) {
             return GetStringForBytes(bytes, 0, bytes.Length);
         }
 
-        public static int FloatToIntBits(float value)
-        {
+        public static int FloatToIntBits(float value) {
             byte[] bytes = BitConverter.GetBytes(value);
             return BitConverter.ToInt32(bytes, 0);
         }
 
-        public static long DoubleToLongBits(double value)
-        {
+        public static long DoubleToLongBits(double value) {
             byte[] bytes = BitConverter.GetBytes(value);
             return BitConverter.ToInt64(bytes, 0);
         }
 
-        public static float IntBitsToFloat(int bits)
-        {
+        public static float IntBitsToFloat(int bits) {
             byte[] bytes = BitConverter.GetBytes(bits);
             return BitConverter.ToSingle(bytes, 0);
         }
 
-        public static double LongBitsToDouble(long bits)
-        {
+        public static double LongBitsToDouble(long bits) {
             byte[] bytes = BitConverter.GetBytes(bits);
             return BitConverter.ToDouble(bytes, 0);
         }
 
-        public static String IntegerToHexString(int i)
-        {
+        public static String IntegerToHexString(int i) {
             return Convert.ToString(i, 16);
         }
 
-        public static String IntegerToOctalString(int i)
-        {
+        public static String IntegerToOctalString(int i) {
             return Convert.ToString(i, 8);
         }
 
-        public static bool ArraysEquals<T>(T[] a, T[] a2) where T : IComparable
-        {
+        public static bool ArraysEquals<T>(T[] a, T[] a2) where T : IComparable {
             if (a == a2)
                 return true;
             if (a == null || a2 == null)
@@ -125,20 +113,17 @@ namespace iText.IO.Util
             return true;
         }
 
-        public static int ArraysHashCode<T>(T[] a)
-        {
+        public static int ArraysHashCode<T>(T[] a) {
             if (a == null)
                 return 0;
             int result = 1;
-            foreach (T element in a)
-            {
-                result = 31 * result + element.GetHashCode();
+            foreach (T element in a) {
+                result = 31*result + element.GetHashCode();
             }
             return result;
         }
 
-        public static String ArraysToString(char[] a)
-        {
+        public static String ArraysToString(char[] a) {
             if (a == null)
                 return "null";
             if (a.Length == 0)
@@ -146,8 +131,7 @@ namespace iText.IO.Util
 
             StringBuilder b = new StringBuilder();
             b.Append('[');
-            for (int i = 0; ; i++)
-            {
+            for (int i = 0;; i++) {
                 b.Append(a[i]);
                 if (i == a.Length - 1)
                     return b.Append(']').ToString();
@@ -155,8 +139,7 @@ namespace iText.IO.Util
             }
         }
 
-        public static bool IsValidCodePoint(int codePoint)
-        {
+        public static bool IsValidCodePoint(int codePoint) {
             // see http://www.unicode.org/glossary/#code_point
             return codePoint >= 0 && codePoint <= 0x10FFFF;
         }
@@ -165,8 +148,7 @@ namespace iText.IO.Util
         public static readonly char MIN_HIGH_SURROGATE = '\uD800';
         public static readonly char MIN_LOW_SURROGATE = '\uDC00';
 
-        public static int ToCodePoint(char high, char low)
-        {
+        public static int ToCodePoint(char high, char low) {
             // Optimized form of:
             // return ((high - MIN_HIGH_SURROGATE) << 10)
             //         + (low - MIN_LOW_SURROGATE)
@@ -176,40 +158,33 @@ namespace iText.IO.Util
                                            - MIN_LOW_SURROGATE);
         }
 
-        public static IList<T> ArraysAsList<T>(params T[] a)
-        {
+        public static IList<T> ArraysAsList<T>(params T[] a) {
             return new List<T>(a);
         }
 
-        public static int ArraysBinarySearch<T>(T[] a, T key)
-        {
+        public static int ArraysBinarySearch<T>(T[] a, T key) {
             return Array.BinarySearch(a, key);
         }
 
-        public static String IntegerToString(int i)
-        {
+        public static String IntegerToString(int i) {
             return i.ToString();
         }
 
-        public static double Random()
-        {
+        public static double Random() {
             return new Random().NextDouble();
         }
 
-        public static void Fill(short[] a, short val)
-        {
+        public static void Fill(short[] a, short val) {
             for (int i = 0, len = a.Length; i < len; i++)
                 a[i] = val;
         }
 
-        public static void Fill(float[] a, float val)
-        {
+        public static void Fill(float[] a, float val) {
             for (int i = 0, len = a.Length; i < len; i++)
                 a[i] = val;
         }
 
-        public static void Fill(byte[] a, byte val)
-        {
+        public static void Fill(byte[] a, byte val) {
             for (int i = 0, len = a.Length; i < len; i++)
                 a[i] = val;
         }
@@ -239,16 +214,16 @@ namespace iText.IO.Util
         }
 
         public static int IntegerCompare(int a, int b) {
-			return a.CompareTo(b);
-		}
+            return a.CompareTo(b);
+        }
 
-		public static int FloatCompare(float a, float b) {
-			return a.CompareTo(b);
-		}
+        public static int FloatCompare(float a, float b) {
+            return a.CompareTo(b);
+        }
 
-		public static int DoubleCompare(double a, double b) {
-			return a.CompareTo(b);
-		}
+        public static int DoubleCompare(double a, double b) {
+            return a.CompareTo(b);
+        }
 
         public static T[] ArraysCopyOf<T>(T[] original, int newLength) {
             T[] copy = new T[newLength];
@@ -256,28 +231,24 @@ namespace iText.IO.Util
             return copy;
         }
 
-        public static Stream CorrectWavFile(Stream stream)
-        {
+        public static Stream CorrectWavFile(Stream stream) {
             String header = "";
-            for (int i = 0; i < 4; i++)
-            {
-                header = header + (char)stream.Read();
+            for (int i = 0; i < 4; i++) {
+                header = header + (char) stream.Read();
             }
             stream.Position = 0;
-            if (header.Equals("RIFF"))
-            {
+            if (header.Equals("RIFF")) {
                 stream.Read();
             }
 
             return stream;
         }
 
-		public static int CharacterDigit(char ch, int radix) {
-			return Convert.ToInt32(ch.ToString(CultureInfo.InvariantCulture), radix);
-		}
+        public static int CharacterDigit(char ch, int radix) {
+            return Convert.ToInt32(ch.ToString(CultureInfo.InvariantCulture), radix);
+        }
 
-        public static String CharToString(char ch)
-        {
+        public static String CharToString(char ch) {
             return ch.ToString();
         }
     }

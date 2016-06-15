@@ -41,15 +41,15 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace iText.Pdfa {
     internal static class PdfAExtensions {
-
         public static void AddAll<T>(this IList<T> list, IEnumerable<T> c) {
-            ((List<T>)list).AddRange(c);
+            ((List<T>) list).AddRange(c);
         }
 
         public static byte[] GetBytes(this String str) {

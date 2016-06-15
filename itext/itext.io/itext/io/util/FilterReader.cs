@@ -45,40 +45,40 @@
 using System.IO;
 
 namespace iText.IO.Util {
-	/// <summary>
-	/// Abstract class for reading filtered character streams.
-	/// The abstract class <code>FilterReader</code> itself
-	/// provides default methods that pass all requests to
-	/// the contained stream. Subclasses of <code>FilterReader</code>
-	/// should override some of these methods and may also provide
-	/// additional methods and fields.
-	/// 
-	/// @author      Mark Reinhold
-	/// @since       JDK1.1
-	/// </summary>
-	public abstract class FilterReader : TextReader {
-		protected TextReader inp;
+    /// <summary>
+    /// Abstract class for reading filtered character streams.
+    /// The abstract class <code>FilterReader</code> itself
+    /// provides default methods that pass all requests to
+    /// the contained stream. Subclasses of <code>FilterReader</code>
+    /// should override some of these methods and may also provide
+    /// additional methods and fields.
+    /// 
+    /// @author      Mark Reinhold
+    /// @since       JDK1.1
+    /// </summary>
+    public abstract class FilterReader : TextReader {
+        protected TextReader inp;
 
-		protected FilterReader(TextReader inp) {
-			this.inp = Synchronized(inp);
-		}
+        protected FilterReader(TextReader inp) {
+            this.inp = Synchronized(inp);
+        }
 
-		/// <summary>
-		/// Reads a single character.
-		/// </summary>
-		public override int Read() {
-			return inp.Read();
-		}
+        /// <summary>
+        /// Reads a single character.
+        /// </summary>
+        public override int Read() {
+            return inp.Read();
+        }
 
-		/// <summary>
-		/// Reads characters into a portion of an array.
-		/// </summary>
-		public override int Read(char[] cbuf, int off, int len) {
-			return inp.Read(cbuf, off, len);
-		}
+        /// <summary>
+        /// Reads characters into a portion of an array.
+        /// </summary>
+        public override int Read(char[] cbuf, int off, int len) {
+            return inp.Read(cbuf, off, len);
+        }
 
-		public override void Close() {
-			inp.Close();
-		}
-	}
+        public override void Close() {
+            inp.Close();
+        }
+    }
 }

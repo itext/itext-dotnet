@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,19 +51,14 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Utilities.Date;
 
-namespace iText.Signatures
-{
+namespace iText.Signatures {
     internal static class SignExtensions {
-
-        public static String JSubstring(this String str, int beginIndex, int endIndex)
-        {
+        public static String JSubstring(this String str, int beginIndex, int endIndex) {
             return str.Substring(beginIndex, endIndex - beginIndex);
         }
 
-        public static void AddAll<T>(this ICollection<T> t, IEnumerable<T> newItems)
-        {
-            foreach (T item in newItems)
-            {
+        public static void AddAll<T>(this ICollection<T> t, IEnumerable<T> newItems) {
+            foreach (T item in newItems) {
                 t.Add(item);
             }
         }
@@ -72,10 +68,8 @@ namespace iText.Signatures
             return r;
         }
 
-        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd)
-        {
-            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd)
-            {
+        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd) {
+            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd) {
                 c[pair.Key] = pair.Value;
             }
         }
@@ -95,8 +89,7 @@ namespace iText.Signatures
             return value;
         }
 
-        public static int Read(this Stream stream, byte[] buffer)
-        {
+        public static int Read(this Stream stream, byte[] buffer) {
             return stream.Read(buffer, 0, buffer.Length);
         }
 
@@ -104,8 +97,7 @@ namespace iText.Signatures
             stream.Write(buffer, 0, buffer.Length);
         }
 
-        public static void JReset(this MemoryStream stream)
-        {
+        public static void JReset(this MemoryStream stream) {
             stream.Position = 0;
         }
 
@@ -114,8 +106,7 @@ namespace iText.Signatures
             return result == 0 ? -1 : result;
         }
 
-        public static long Seek(this FileStream fs, long offset)
-        {
+        public static long Seek(this FileStream fs, long offset) {
             return fs.Seek(offset, SeekOrigin.Begin);
         }
 
@@ -170,25 +161,21 @@ namespace iText.Signatures
             return algorithm;
         }
 
-        public static void Update(this IDigest dgst, byte[] input)
-        {
+        public static void Update(this IDigest dgst, byte[] input) {
             dgst.Update(input, 0, input.Length);
         }
 
-        public static void Update(this IDigest dgst, byte[] input, int offset, int len)
-        {
+        public static void Update(this IDigest dgst, byte[] input, int offset, int len) {
             dgst.BlockUpdate(input, offset, len);
         }
 
-        public static byte[] Digest(this IDigest dgst)
-        {
+        public static byte[] Digest(this IDigest dgst) {
             byte[] output = new byte[dgst.GetDigestSize()];
             dgst.DoFinal(output, 0);
             return output;
         }
 
-        public static byte[] Digest(this IDigest dgst, byte[] input)
-        {
+        public static byte[] Digest(this IDigest dgst, byte[] input) {
             dgst.Update(input);
             return dgst.Digest();
         }

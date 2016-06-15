@@ -51,70 +51,58 @@ namespace iText.IO.Util {
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-    public static class FilterUtil
-	{
-
-		/// <summary>A helper to FlateDecode.</summary>
-		/// <param name="input">the input data</param>
-		/// <param name="strict">
-		/// <CODE>true</CODE> to read a correct stream. <CODE>false</CODE>
-		/// to try to read a corrupted stream
-		/// </param>
-		/// <returns>the decoded data</returns>
-		public static byte[] FlateDecode(byte[] input, bool strict)
-		{
+    public static class FilterUtil {
+        /// <summary>A helper to FlateDecode.</summary>
+        /// <param name="input">the input data</param>
+        /// <param name="strict">
+        /// <CODE>true</CODE> to read a correct stream. <CODE>false</CODE>
+        /// to try to read a corrupted stream
+        /// </param>
+        /// <returns>the decoded data</returns>
+        public static byte[] FlateDecode(byte[] input, bool strict) {
             MemoryStream stream = new MemoryStream(input);
             ZInflaterInputStream zip = new ZInflaterInputStream(stream);
             MemoryStream output = new MemoryStream();
             byte[] b = new byte[strict ? 4092 : 1];
-            try
-            {
+            try {
                 int n;
-                while ((n = zip.Read(b, 0, b.Length)) > 0)
-                {
+                while ((n = zip.Read(b, 0, b.Length)) > 0) {
                     output.Write(b, 0, n);
                 }
                 zip.Close();
                 output.Close();
                 return output.ToArray();
-            }
-            catch
-            {
+            } catch {
                 if (strict)
                     return null;
                 return output.ToArray();
             }
-		}
+        }
 
-		/// <summary>Decodes a stream that has the FlateDecode filter.</summary>
-		/// <param name="input">the input data</param>
-		/// <returns>the decoded data</returns>
-		public static byte[] FlateDecode(byte[] input)
-		{
-			byte[] b = FlateDecode(input, true);
-			if (b == null)
-			{
-				return FlateDecode(input, false);
-			}
-			return b;
-		}
+        /// <summary>Decodes a stream that has the FlateDecode filter.</summary>
+        /// <param name="input">the input data</param>
+        /// <returns>the decoded data</returns>
+        public static byte[] FlateDecode(byte[] input) {
+            byte[] b = FlateDecode(input, true);
+            if (b == null) {
+                return FlateDecode(input, false);
+            }
+            return b;
+        }
 
-		/// <summary>
-		/// This method provides support for general purpose decompression using the
-		/// popular ZLIB compression library.
-		/// </summary>
-		/// <param name="deflated">the input data bytes</param>
-		/// <param name="inflated">the buffer for the uncompressed data</param>
-		public static void InflateData(byte[] deflated, byte[] inflated)
-        {
+        /// <summary>
+        /// This method provides support for general purpose decompression using the
+        /// popular ZLIB compression library.
+        /// </summary>
+        /// <param name="deflated">the input data bytes</param>
+        /// <param name="inflated">the buffer for the uncompressed data</param>
+        public static void InflateData(byte[] deflated, byte[] inflated) {
             byte[] outp = FlateDecode(deflated);
             System.Array.Copy(outp, 0, inflated, 0, Math.Min(outp.Length, inflated.Length));
+        }
 
-		}
-
-		public static Stream GetInflaterInputStream(Stream input)
-		{
-			return new ZInflaterInputStream(input);
-		}
-	}
+        public static Stream GetInflaterInputStream(Stream input) {
+            return new ZInflaterInputStream(input);
+        }
+    }
 }

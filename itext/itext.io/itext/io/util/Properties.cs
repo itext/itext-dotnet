@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Text;
 using System.IO;
@@ -50,48 +51,43 @@ namespace iText.IO.Util {
     /// <summary>
     /// Summary description for Properties.
     /// </summary>
-    public class Properties
-    {
+    public class Properties {
         private Dictionary<Object, Object> _col;
         private const String whiteSpaceChars = " \t\r\n\f";
         private const String keyValueSeparators = "=: \t\r\n\f";
         private const String strictKeyValueSeparators = "=:";
 
-        public Properties()
-        {
+        public Properties() {
             _col = new Dictionary<Object, Object>();
         }
 
-        virtual public String Remove(String key) {
+        public virtual String Remove(String key) {
             Object retval;
             _col.TryGetValue(key, out retval);
             _col.Remove(key);
             return (String) retval;
         }
 
-        virtual public Dictionary<Object, Object>.Enumerator GetEnumerator()
-        {
+        public virtual Dictionary<Object, Object>.Enumerator GetEnumerator() {
             return _col.GetEnumerator();
         }
 
-        virtual public bool ContainsKey(String key) {
-            return _col.ContainsKey(key);            
+        public virtual bool ContainsKey(String key) {
+            return _col.ContainsKey(key);
         }
 
         public virtual void Add(String key, String value) {
-            _col[key] = value;        
+            _col[key] = value;
         }
 
-        virtual public void AddAll(Properties col) {
+        public virtual void AddAll(Properties col) {
             foreach (String itm in col.Keys) {
                 _col[itm] = col.GetProperty(itm);
             }
         }
 
-        virtual public int Count {
-            get {
-                return _col.Count;
-            }
+        public virtual int Count {
+            get { return _col.Count; }
         }
 
         public virtual String GetProperty(String key) {
@@ -100,23 +96,19 @@ namespace iText.IO.Util {
             return (String) retval;
         }
 
-        public virtual void SetProperty(String key, String value)
-        {
+        public virtual void SetProperty(String key, String value) {
             _col[key] = value;
         }
 
-        virtual public Dictionary<Object, Object>.KeyCollection Keys
-        {
-            get {
-                return _col.Keys;
-            }
+        public virtual Dictionary<Object, Object>.KeyCollection Keys {
+            get { return _col.Keys; }
         }
 
-        virtual public void Clear() {
+        public virtual void Clear() {
             _col.Clear();
         }
 
-        virtual public void Load(Stream inStream) {
+        public virtual void Load(Stream inStream) {
             if (inStream == null) return;
             StreamReader inp = new StreamReader(inStream, Encoding.GetEncoding(1252));
             while (true) {
@@ -126,11 +118,10 @@ namespace iText.IO.Util {
                     return;
 
                 if (line.Length > 0) {
-                
                     // Find start of key
                     int len = line.Length;
                     int keyStart;
-                    for (keyStart=0; keyStart<len; keyStart++)
+                    for (keyStart = 0; keyStart < len; keyStart++)
                         if (whiteSpaceChars.IndexOf(line[keyStart]) == -1)
                             break;
 
@@ -145,20 +136,20 @@ namespace iText.IO.Util {
                             String nextLine = inp.ReadLine();
                             if (nextLine == null)
                                 nextLine = "";
-                            String loppedLine = line.Substring(0, len-1);
+                            String loppedLine = line.Substring(0, len - 1);
                             // Advance beyond whitespace on new line
                             int startIndex;
-                            for (startIndex=0; startIndex<nextLine.Length; startIndex++)
+                            for (startIndex = 0; startIndex < nextLine.Length; startIndex++)
                                 if (whiteSpaceChars.IndexOf(nextLine[startIndex]) == -1)
                                     break;
-                            nextLine = nextLine.Substring(startIndex,nextLine.Length - startIndex);
-                            line = loppedLine+nextLine;
+                            nextLine = nextLine.Substring(startIndex, nextLine.Length - startIndex);
+                            line = loppedLine + nextLine;
                             len = line.Length;
                         }
 
                         // Find separation between key and value
                         int separatorIndex;
-                        for (separatorIndex=keyStart; separatorIndex<len; separatorIndex++) {
+                        for (separatorIndex = keyStart; separatorIndex < len; separatorIndex++) {
                             char currentChar = line[separatorIndex];
                             if (currentChar == '\\')
                                 separatorIndex++;
@@ -168,7 +159,7 @@ namespace iText.IO.Util {
 
                         // Skip over whitespace after key if any
                         int valueIndex;
-                        for (valueIndex=separatorIndex; valueIndex<len; valueIndex++)
+                        for (valueIndex = separatorIndex; valueIndex < len; valueIndex++)
                             if (whiteSpaceChars.IndexOf(line[valueIndex]) == -1)
                                 break;
 
@@ -199,31 +190,48 @@ namespace iText.IO.Util {
         * Converts encoded &#92;uxxxx to unicode chars
         * and changes special saved chars to their original forms
         */
+
         private String LoadConvert(String theString) {
             char aChar;
             int len = theString.Length;
             StringBuilder outBuffer = new StringBuilder(len);
 
-            for (int x=0; x<len; ) {
+            for (int x = 0; x < len;) {
                 aChar = theString[x++];
                 if (aChar == '\\') {
                     aChar = theString[x++];
                     if (aChar == 'u') {
                         // Read the xxxx
-                        int value=0;
-                        for (int i=0; i<4; i++) {
+                        int value = 0;
+                        for (int i = 0; i < 4; i++) {
                             aChar = theString[x++];
                             switch (aChar) {
-                                case '0': case '1': case '2': case '3': case '4':
-                                case '5': case '6': case '7': case '8': case '9':
+                                case '0':
+                                case '1':
+                                case '2':
+                                case '3':
+                                case '4':
+                                case '5':
+                                case '6':
+                                case '7':
+                                case '8':
+                                case '9':
                                     value = (value << 4) + aChar - '0';
                                     break;
-                                case 'a': case 'b': case 'c':
-                                case 'd': case 'e': case 'f':
+                                case 'a':
+                                case 'b':
+                                case 'c':
+                                case 'd':
+                                case 'e':
+                                case 'f':
                                     value = (value << 4) + 10 + aChar - 'a';
                                     break;
-                                case 'A': case 'B': case 'C':
-                                case 'D': case 'E': case 'F':
+                                case 'A':
+                                case 'B':
+                                case 'C':
+                                case 'D':
+                                case 'E':
+                                case 'F':
                                     value = (value << 4) + 10 + aChar - 'A';
                                     break;
                                 default:
@@ -231,7 +239,7 @@ namespace iText.IO.Util {
                                         "Malformed \\uxxxx encoding.");
                             }
                         }
-                        outBuffer.Append((char)value);
+                        outBuffer.Append((char) value);
                     } else {
                         if (aChar == 't') aChar = '\t';
                         else if (aChar == 'r') aChar = '\r';
@@ -250,7 +258,7 @@ namespace iText.IO.Util {
             int index = line.Length - 1;
             while ((index >= 0) && (line[index--] == '\\'))
                 slashCount++;
-            return (slashCount % 2 == 1);
+            return (slashCount%2 == 1);
         }
     }
 }

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 
 namespace iText.IO.Util {
@@ -49,15 +50,12 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public class SystemUtil {
-
-        public static long GetSystemTimeTicks()
-        {
+        public static long GetSystemTimeTicks() {
             return DateTime.Now.Ticks + Environment.TickCount;
         }
 
-        public static long GetFreeMemory()
-        {
+        public static long GetFreeMemory() {
             return GC.GetTotalMemory(false);
-        } 
+        }
     }
 }

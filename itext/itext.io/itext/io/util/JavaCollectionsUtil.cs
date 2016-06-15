@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,8 +54,7 @@ namespace iText.IO.Util {
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-    public static class JavaCollectionsUtil
-    {
+    public static class JavaCollectionsUtil {
         public static IList<T> EmptyList<T>() {
             return new EmptyList<T>();
         }
@@ -67,9 +67,9 @@ namespace iText.IO.Util {
             return new EmptyEnumerator<T>();
         }
 
-		public static IEnumerator EmptyIterator() {
-			return new EmptyEnumerator();
-		}
+        public static IEnumerator EmptyIterator() {
+            return new EmptyEnumerator();
+        }
 
         public static ICollection<T> UnmodifiableCollection<T>(ICollection<T> collection) {
             return new UnmodifiableCollection<T>(collection);
@@ -79,17 +79,17 @@ namespace iText.IO.Util {
             return new ReadOnlyCollection<T>(list);
         }
 
-		public static IList UnmodifiableList(IList list) {
-			return new UnmodifiableList(list);
-		}
+        public static IList UnmodifiableList(IList list) {
+            return new UnmodifiableList(list);
+        }
 
         public static IDictionary<TKey, TValue> UnmodifiableMap<TKey, TValue>(IDictionary<TKey, TValue> dict) {
             return new UnmodifiableDictionary<TKey, TValue>(dict);
         }
 
-		public static ISet<T> UnmodifiableSet<T>(ISet<T> set) {
-			return new UnmodifiableSet<T>(set);
-		}
+        public static ISet<T> UnmodifiableSet<T>(ISet<T> set) {
+            return new UnmodifiableSet<T>(set);
+        }
 
         public static IList<T> SingletonList<T>(T o) {
             return new SingletonList<T>(o);
@@ -132,6 +132,5 @@ namespace iText.IO.Util {
                 list.AddAll(rev);
             }
         }
-
     }
 }

@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Collections.Generic;
 
@@ -49,8 +50,7 @@ namespace iText.IO.Util {
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-    public class SortUtil
-    {
+    public class SortUtil {
         public static void MergeSort<T>(List<T> list, IComparer<T> comparer) {
             if (comparer == null) {
                 comparer = Comparer<T>.Default;
@@ -67,7 +67,7 @@ namespace iText.IO.Util {
 
         private static void MergeSort<T>(List<T> list, IComparer<T> comparer, int left, int right) {
             if (right > left) {
-                int mid = (right + left) / 2;
+                int mid = (right + left)/2;
                 MergeSort(list, comparer, left, mid);
                 MergeSort(list, comparer, (mid + 1), right);
 
@@ -103,8 +103,7 @@ namespace iText.IO.Util {
         /// </summary>
         /// <param name="from">the index of the first element, inclusive, to be sorted</param>
         /// <param name="to">the index of the last element, exclusive, to be sorted</param>
-        public static void MergeSort<T>(T[] array, int from, int to, IComparer<T> comparer)
-        {
+        public static void MergeSort<T>(T[] array, int from, int to, IComparer<T> comparer) {
             if (comparer == null) {
                 comparer = Comparer<T>.Default;
             }
@@ -118,11 +117,9 @@ namespace iText.IO.Util {
             MergeSort(array, comparer, 0, array.Length - 1);
         }
 
-        private static void MergeSort<T>(T[] array, IComparer<T> comparer, int left, int right)
-        {
-            if (right > left)
-            {
-                int mid = (right + left) / 2;
+        private static void MergeSort<T>(T[] array, IComparer<T> comparer, int left, int right) {
+            if (right > left) {
+                int mid = (right + left)/2;
                 MergeSort(array, comparer, left, mid);
                 MergeSort(array, comparer, (mid + 1), right);
 
@@ -130,14 +127,12 @@ namespace iText.IO.Util {
             }
         }
 
-        private static void Merge<T>(T[] array, int left, int mid, int right, IComparer<T> comparer)
-        {
+        private static void Merge<T>(T[] array, int left, int mid, int right, IComparer<T> comparer) {
             int eol = (mid - 1), num = (right - left + 1);
 
             List<T> temp = new List<T>(num);
 
-            while ((left <= eol) && (mid <= right))
-            {
+            while ((left <= eol) && (mid <= right)) {
                 if (comparer.Compare(array[left], array[mid]) <= 0)
                     temp.Add(array[left++]);
                 else
@@ -150,8 +145,7 @@ namespace iText.IO.Util {
             while (mid <= right)
                 temp.Add(array[mid++]);
 
-            for (int i = num - 1; i >= 0; i--)
-            {
+            for (int i = num - 1; i >= 0; i--) {
                 array[right--] = temp[i];
             }
         }

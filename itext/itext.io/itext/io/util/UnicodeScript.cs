@@ -41,10 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-namespace iText.IO.Util
-{
-    public enum UnicodeScript
-    {
+
+namespace iText.IO.Util {
+    public enum UnicodeScript {
         /**
         * Unicode script "Common".
         */

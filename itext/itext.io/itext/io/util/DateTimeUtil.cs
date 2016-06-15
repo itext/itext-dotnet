@@ -49,24 +49,20 @@ namespace iText.IO.Util {
     /// This file is a helper class for internal usage only.
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
-	public static class DateTimeUtil
-	{
-		public static double GetUtcMillisFromEpoch(DateTime? dateTime)
-		{
-		    if (dateTime == null) {
-		        dateTime = DateTime.Now;
-		    }
-		    return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
+    public static class DateTimeUtil {
+        public static double GetUtcMillisFromEpoch(DateTime? dateTime) {
+            if (dateTime == null) {
+                dateTime = DateTime.Now;
+            }
+            return ((DateTime) dateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
-        public static DateTime GetCurrentTime()
-        {
+        public static DateTime GetCurrentTime() {
             return DateTime.Now;
         }
 
-        public static DateTime GetCurrentUtcTime()
-        {
+        public static DateTime GetCurrentUtcTime() {
             return DateTime.UtcNow;
         }
-	}
+    }
 }

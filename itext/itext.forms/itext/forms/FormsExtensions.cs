@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -54,10 +55,8 @@ namespace iText.Forms {
             }
         }
 
-        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd)
-        {
-            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd)
-            {
+        public static void AddAll<TKey, TValue>(this IDictionary<TKey, TValue> c, IDictionary<TKey, TValue> collectionToAdd) {
+            foreach (KeyValuePair<TKey, TValue> pair in collectionToAdd) {
                 c[pair.Key] = pair.Value;
             }
         }
@@ -75,19 +74,16 @@ namespace iText.Forms {
             return r;
         }
 
-        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key)
-        {
+        public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {
             TValue value = default(TValue);
-            if (key != null)
-            {
+            if (key != null) {
                 col.TryGetValue(key, out value);
             }
 
             return value;
         }
 
-        public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-        {
+        public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             TValue value;
             dictionary.TryGetValue(key, out value);
             dictionary.Remove(key);
@@ -95,8 +91,7 @@ namespace iText.Forms {
             return value;
         }
 
-        public static void Write(this Stream stream, byte[] buffer)
-        {
+        public static void Write(this Stream stream, byte[] buffer) {
             stream.Write(buffer, 0, buffer.Length);
         }
     }
