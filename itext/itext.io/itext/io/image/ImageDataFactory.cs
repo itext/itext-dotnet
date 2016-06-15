@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using iText.IO.Codec;
 using iText.IO.Util;
@@ -153,7 +154,7 @@ namespace iText.IO.Image {
         ///     </param>
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color? color) {
+        public static ImageData Create(System.Drawing.Image image, Color? color) {
             return iText.IO.Image.ImageDataFactory.Create(image, color, false);
         }
 
@@ -164,7 +165,7 @@ namespace iText.IO.Image {
         /// <param name="forceBW">if <CODE>true</CODE> the image is treated as black and white</param>
         /// <returns>RawImage</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static ImageData Create(System.Drawing.Image image, System.Drawing.Color? color, bool forceBW) {
+        public static ImageData Create(System.Drawing.Image image, Color? color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
 
