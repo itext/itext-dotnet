@@ -947,7 +947,7 @@ namespace iText.IO.Source {
             }
         }
 
-        public void Dispose() {
+        void System.IDisposable.Dispose() {
             Close();
         }
     }

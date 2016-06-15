@@ -1264,7 +1264,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        public void Dispose() {
+        void System.IDisposable.Dispose() {
             Close();
         }
     }
