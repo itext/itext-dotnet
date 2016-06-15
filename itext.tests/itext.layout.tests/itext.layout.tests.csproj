@@ -12,6 +12,8 @@
     <FileAlignment>512</FileAlignment>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>itext.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

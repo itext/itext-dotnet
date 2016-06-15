@@ -329,12 +329,13 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         protected internal static void WriteKeyInfo(PdfWriter writer) {
+            String platform = " for .NET";
             Version version = Version.GetInstance();
             String k = version.GetKey();
             if (k == null) {
                 k = "iText";
             }
-            writer.WriteString(String.Format("%{0}-{1}\n", k, version.GetRelease()));
+            writer.WriteString(String.Format("%{0}-{1}{2}\n", k, version.GetRelease(), platform));
         }
 
         private void EnsureCount(int count) {
