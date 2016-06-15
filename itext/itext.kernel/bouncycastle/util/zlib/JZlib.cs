@@ -1,6 +1,5 @@
 using System;
 /*
- * $Id$
  *
 Copyright (c) 2000,2001,2002,2003 ymnk, JCraft,Inc. All rights reserved.
 

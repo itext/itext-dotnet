@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 /*
- * $Id$
  * 
  *
  * This file is part of the iText project.
