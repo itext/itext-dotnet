@@ -6,7 +6,7 @@
 *.afm text eol=lf
 *.cmap text eol=lf
 *.crt text eol=lf
-*.cs text eol=lf
+*.cs text eol=lf ident
 *.html text eol=lf
 *.java text eol=lf ident
 *.lng text eol=lf

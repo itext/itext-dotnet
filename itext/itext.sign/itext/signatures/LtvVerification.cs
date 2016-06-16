@@ -1,0 +1,438 @@
+/*
+
+This file is part of the iText (R) project.
+Copyright (c) 1998-2016 iText Group NV
+Authors: Bruno Lowagie, Paulo Soares, et al.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
+using System;
+using System.Collections.Generic;
+using System.IO;
+using  Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.X509;
+using iText.Forms;
+using iText.IO.Font;
+using iText.IO.Log;
+using iText.IO.Source;
+using iText.Kernel;
+using iText.Kernel.Pdf;
+
+namespace iText.Signatures {
+    /// <summary>Add verification according to PAdES-LTV (part 4).</summary>
+    /// <author>Paulo Soares</author>
+    public class LtvVerification {
+        private ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.LtvVerification));
+
+        private PdfDocument document;
+
+        private SignatureUtil sgnUtil;
+
+        private PdfAcroForm acroForm;
+
+        private IDictionary<PdfName, LtvVerification.ValidationData> validated = new Dictionary<PdfName, LtvVerification.ValidationData
+            >();
+
+        private bool used = false;
+
+        /// <summary>What type of verification to include.</summary>
+        public enum Level {
+            OCSP,
+            CRL,
+            OCSP_CRL,
+            OCSP_OPTIONAL_CRL
+        }
+
+        /// <summary>Options for how many certificates to include.</summary>
+        public enum CertificateOption {
+            SIGNING_CERTIFICATE,
+            WHOLE_CHAIN
+        }
+
+        /// <summary>
+        /// Certificate inclusion in the DSS and VRI dictionaries in the CERT and CERTS
+        /// keys.
+        /// </summary>
+        public enum CertificateInclusion {
+            YES,
+            NO
+        }
+
+        /// <summary>The verification constructor.</summary>
+        /// <remarks>
+        /// The verification constructor. This class should only be created with
+        /// PdfStamper.getLtvVerification() otherwise the information will not be
+        /// added to the Pdf.
+        /// </remarks>
+        /// <param name="document">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// to apply the validation to.
+        /// </param>
+        public LtvVerification(PdfDocument document) {
+            this.document = document;
+            this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+            this.sgnUtil = new SignatureUtil(document);
+        }
+
+        /// <summary>Add verification for a particular signature.</summary>
+        /// <param name="signatureName">the signature to validate (it may be a timestamp)</param>
+        /// <param name="ocsp">the interface to get the OCSP</param>
+        /// <param name="crl">the interface to get the CRL</param>
+        /// <param name="certOption">options as to how many certificates to include</param>
+        /// <param name="level">the validation options to include</param>
+        /// <param name="certInclude">certificate inclusion options</param>
+        /// <returns>true if a validation was generated, false otherwise</returns>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual bool AddVerification(String signatureName, IOcspClient ocsp, ICrlClient crl, LtvVerification.CertificateOption
+             certOption, LtvVerification.Level level, LtvVerification.CertificateInclusion certInclude) {
+            if (used) {
+                throw new InvalidOperationException(PdfException.VerificationAlreadyOutput);
+            }
+            PdfPKCS7 pk = sgnUtil.VerifySignature(signatureName);
+            LOGGER.Info("Adding verification for " + signatureName);
+            X509Certificate[] xc = pk.GetCertificates();
+            X509Certificate cert;
+            X509Certificate signingCert = pk.GetSigningCertificate();
+            LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
+            for (int k = 0; k < xc.Length; ++k) {
+                cert = (X509Certificate)xc[k];
+                LOGGER.Info("Certificate: " + cert.SubjectDN);
+                if (certOption == LtvVerification.CertificateOption.SIGNING_CERTIFICATE && !cert.Equals(signingCert)) {
+                    continue;
+                }
+                byte[] ocspEnc = null;
+                if (ocsp != null && level != LtvVerification.Level.CRL) {
+                    ocspEnc = ocsp.GetEncoded(cert, GetParent(cert, xc), null);
+                    if (ocspEnc != null) {
+                        vd.ocsps.Add(BuildOCSPResponse(ocspEnc));
+                        LOGGER.Info("OCSP added");
+                    }
+                }
+                if (crl != null && (level == LtvVerification.Level.CRL || level == LtvVerification.Level.OCSP_CRL || (level
+                     == LtvVerification.Level.OCSP_OPTIONAL_CRL && ocspEnc == null))) {
+                    ICollection<byte[]> cims = crl.GetEncoded(cert, null);
+                    if (cims != null) {
+                        foreach (byte[] cim in cims) {
+                            bool dup = false;
+                            foreach (byte[] b in vd.crls) {
+                                if (iText.IO.Util.JavaUtil.ArraysEquals(b, cim)) {
+                                    dup = true;
+                                    break;
+                                }
+                            }
+                            if (!dup) {
+                                vd.crls.Add(cim);
+                                LOGGER.Info("CRL added");
+                            }
+                        }
+                    }
+                }
+                if (certInclude == LtvVerification.CertificateInclusion.YES) {
+                    vd.certs.Add(cert.GetEncoded());
+                }
+            }
+            if (vd.crls.Count == 0 && vd.ocsps.Count == 0) {
+                return false;
+            }
+            validated[GetSignatureHashKey(signatureName)] = vd;
+            return true;
+        }
+
+        /// <summary>Get the issuing certificate for a child certificate.</summary>
+        /// <param name="cert">the certificate for which we search the parent</param>
+        /// <param name="certs">an array with certificates that contains the parent</param>
+        /// <returns>the parent certificate</returns>
+        private X509Certificate GetParent(X509Certificate cert, X509Certificate[] certs) {
+            X509Certificate parent;
+            for (int i = 0; i < certs.Length; i++) {
+                parent = (X509Certificate)certs[i];
+                if (!cert.IssuerDN.Equals(parent.SubjectDN)) {
+                    continue;
+                }
+                try {
+                    cert.Verify(parent.GetPublicKey());
+                    return parent;
+                }
+                catch (Exception) {
+                }
+            }
+            // do nothing
+            return null;
+        }
+
+        /// <summary>Adds verification to the signature.</summary>
+        /// <param name="signatureName">name of the signature</param>
+        /// <param name="ocsps">collection of ocsp responses</param>
+        /// <param name="crls">collection of crls</param>
+        /// <param name="certs">collection of certificates</param>
+        /// <returns>boolean</returns>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        public virtual bool AddVerification(String signatureName, ICollection<byte[]> ocsps, ICollection<byte[]> crls
+            , ICollection<byte[]> certs) {
+            if (used) {
+                throw new InvalidOperationException(PdfException.VerificationAlreadyOutput);
+            }
+            LtvVerification.ValidationData vd = new LtvVerification.ValidationData();
+            if (ocsps != null) {
+                foreach (byte[] ocsp in ocsps) {
+                    vd.ocsps.Add(BuildOCSPResponse(ocsp));
+                }
+            }
+            if (crls != null) {
+                foreach (byte[] crl in crls) {
+                    vd.crls.Add(crl);
+                }
+            }
+            if (certs != null) {
+                foreach (byte[] cert in certs) {
+                    vd.certs.Add(cert);
+                }
+            }
+            validated[GetSignatureHashKey(signatureName)] = vd;
+            return true;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private static byte[] BuildOCSPResponse(byte[] BasicOCSPResponse) {
+            DerOctetString doctet = new DerOctetString(BasicOCSPResponse);
+            Asn1EncodableVector v2 = new Asn1EncodableVector();
+            v2.Add(OcspObjectIdentifiers.PkixOcspBasic);
+            v2.Add(doctet);
+            DerEnumerated den = new DerEnumerated(0);
+            Asn1EncodableVector v3 = new Asn1EncodableVector();
+            v3.Add(den);
+            v3.Add(new DerTaggedObject(true, 0, new DerSequence(v2)));
+            DerSequence seq = new DerSequence(v3);
+            return seq.GetEncoded();
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        private PdfName GetSignatureHashKey(String signatureName) {
+            PdfDictionary dic = sgnUtil.GetSignatureDictionary(signatureName);
+            PdfString contents = dic.GetAsString(PdfName.Contents);
+            byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
+            byte[] bt = null;
+            if (PdfName.ETSI_RFC3161.Equals(dic.GetAsName(PdfName.SubFilter))) {
+                Asn1InputStream din = new Asn1InputStream(new MemoryStream(bc));
+                Asn1Object pkcs = din.ReadObject();
+                bc = pkcs.GetEncoded();
+            }
+            bt = HashBytesSha1(bc);
+            return new PdfName(ConvertToHex(bt));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
+        private static byte[] HashBytesSha1(byte[] b) {
+            IDigest sh = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA1");
+            return sh.Digest(b);
+        }
+
+        /// <summary>Merges the validation with any validation already in the document or creates a new one.</summary>
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Merge() {
+            if (used || validated.Count == 0) {
+                return;
+            }
+            used = true;
+            PdfDictionary catalog = document.GetCatalog().GetPdfObject();
+            PdfObject dss = catalog.Get(PdfName.DSS);
+            if (dss == null) {
+                CreateDss();
+            }
+            else {
+                UpdateDss();
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void UpdateDss() {
+            PdfDictionary catalog = document.GetCatalog().GetPdfObject();
+            catalog.SetModified();
+            PdfDictionary dss = catalog.GetAsDictionary(PdfName.DSS);
+            PdfArray ocsps = dss.GetAsArray(PdfName.OCSPs);
+            PdfArray crls = dss.GetAsArray(PdfName.CRLs);
+            PdfArray certs = dss.GetAsArray(PdfName.Certs);
+            dss.Remove(PdfName.OCSPs);
+            dss.Remove(PdfName.CRLs);
+            dss.Remove(PdfName.Certs);
+            PdfDictionary vrim = dss.GetAsDictionary(PdfName.VRI);
+            //delete old validations
+            if (vrim != null) {
+                foreach (PdfName n in vrim.KeySet()) {
+                    if (validated.ContainsKey(n)) {
+                        PdfDictionary vri = vrim.GetAsDictionary(n);
+                        if (vri != null) {
+                            DeleteOldReferences(ocsps, vri.GetAsArray(PdfName.OCSP));
+                            DeleteOldReferences(crls, vri.GetAsArray(PdfName.CRL));
+                            DeleteOldReferences(certs, vri.GetAsArray(PdfName.Cert));
+                        }
+                    }
+                }
+            }
+            if (ocsps == null) {
+                ocsps = new PdfArray();
+            }
+            if (crls == null) {
+                crls = new PdfArray();
+            }
+            if (certs == null) {
+                certs = new PdfArray();
+            }
+            OutputDss(dss, vrim, ocsps, crls, certs);
+        }
+
+        private static void DeleteOldReferences(PdfArray all, PdfArray toDelete) {
+            if (all == null || toDelete == null) {
+                return;
+            }
+            foreach (PdfObject pi in toDelete) {
+                PdfIndirectReference pir = pi.GetIndirectReference();
+                if (pir == null) {
+                    continue;
+                }
+                for (int k = 0; k < all.Size(); ++k) {
+                    PdfIndirectReference pod = all.Get(k).GetIndirectReference();
+                    if (pod == null) {
+                        continue;
+                    }
+                    if (pir.GetObjNumber() == pod.GetObjNumber()) {
+                        all.Remove(k);
+                        --k;
+                    }
+                }
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void CreateDss() {
+            OutputDss(new PdfDictionary(), new PdfDictionary(), new PdfArray(), new PdfArray(), new PdfArray());
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void OutputDss(PdfDictionary dss, PdfDictionary vrim, PdfArray ocsps, PdfArray crls, PdfArray certs
+            ) {
+            PdfCatalog catalog = document.GetCatalog();
+            catalog.AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
+            catalog.SetModified();
+            foreach (PdfName vkey in validated.Keys) {
+                PdfArray ocsp = new PdfArray();
+                PdfArray crl = new PdfArray();
+                PdfArray cert = new PdfArray();
+                PdfDictionary vri = new PdfDictionary();
+                foreach (byte[] b in validated.Get(vkey).crls) {
+                    PdfStream ps = new PdfStream(b);
+                    ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
+                    ps.MakeIndirect(document);
+                    crl.Add(ps);
+                    crls.Add(ps);
+                }
+                foreach (byte[] b_1 in validated.Get(vkey).ocsps) {
+                    PdfStream ps = new PdfStream(b_1);
+                    ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
+                    ocsp.Add(ps);
+                    ocsps.Add(ps);
+                }
+                foreach (byte[] b_2 in validated.Get(vkey).certs) {
+                    PdfStream ps = new PdfStream(b_2);
+                    ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
+                    ps.MakeIndirect(document);
+                    cert.Add(ps);
+                    certs.Add(ps);
+                }
+                if (ocsp.Size() > 0) {
+                    ocsp.MakeIndirect(document);
+                    vri.Put(PdfName.OCSP, ocsp);
+                }
+                if (crl.Size() > 0) {
+                    crl.MakeIndirect(document);
+                    vri.Put(PdfName.CRL, crl);
+                }
+                if (cert.Size() > 0) {
+                    cert.MakeIndirect(document);
+                    vri.Put(PdfName.Cert, cert);
+                }
+                vri.MakeIndirect(document);
+                vrim.Put(vkey, vri);
+            }
+            vrim.MakeIndirect(document);
+            dss.Put(PdfName.VRI, vrim);
+            if (ocsps.Size() > 0) {
+                ocsps.MakeIndirect(document);
+                dss.Put(PdfName.OCSPs, ocsps);
+            }
+            if (crls.Size() > 0) {
+                crls.MakeIndirect(document);
+                dss.Put(PdfName.CRLs, crls);
+            }
+            if (certs.Size() > 0) {
+                certs.MakeIndirect(document);
+                dss.Put(PdfName.Certs, certs);
+            }
+            dss.MakeIndirect(document);
+            catalog.Put(PdfName.DSS, dss);
+        }
+
+        private class ValidationData {
+            public IList<byte[]> crls = new List<byte[]>();
+
+            public IList<byte[]> ocsps = new List<byte[]>();
+
+            public IList<byte[]> certs = new List<byte[]>();
+        }
+
+        // TODO: Refactor. Copied from itext5 Utilities
+        /// <summary>Converts an array of bytes to a String of hexadecimal values</summary>
+        /// <param name="bytes">a byte array</param>
+        /// <returns>the same bytes expressed as hexadecimal values</returns>
+        public static String ConvertToHex(byte[] bytes) {
+            ByteBuffer buf = new ByteBuffer();
+            foreach (byte b in bytes) {
+                buf.AppendHex(b);
+            }
+            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpper(System.Globalization.CultureInfo.InvariantCulture
+                );
+        }
+    }
+}
