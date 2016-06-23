@@ -1651,7 +1651,7 @@ namespace iText.Kernel.Utils
 
 		private class PngFileFilter : FileUtil.FileFilter
 		{
-			public virtual bool Accept(String ap) {
+			public override bool Accept(String ap) {
 				bool b1 = ap.EndsWith(".png");
 				bool b2 = ap.Contains("cmp_");
 				return b1 && !b2 && ap.Contains(this._enclosing.outPdfName);
@@ -1667,7 +1667,7 @@ namespace iText.Kernel.Utils
 
 		private class CmpPngFileFilter : FileUtil.FileFilter
 		{
-			public virtual bool Accept(String ap)
+			public override bool Accept(String ap)
 			{
 				bool b1 = ap.EndsWith(".png");
 				bool b2 = ap.Contains("cmp_");
@@ -1692,7 +1692,7 @@ namespace iText.Kernel.Utils
 				this.differenceImagePrefix = differenceImagePrefix;
 			}
 
-			public virtual bool Accept(String ap)
+			public override bool Accept(String ap)
 			{
 				bool b1 = ap.EndsWith(".png");
 				bool b2 = ap.StartsWith(this.differenceImagePrefix);

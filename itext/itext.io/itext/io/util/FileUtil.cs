@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -93,13 +95,13 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-                    String[] list = new String[files.Length];
+                    var list = new LinkedList<String>();
                     for (int i = 0; i < files.Length; i++) {
                         if (filter.Accept(files[i].Name)) {
-                            list[i] = files[i].FullName;
+                            list.AddLast(files[i].FullName);
                         }
                     }
-                    return list;
+                    return list.ToArray();
                 }
             }
             return null;

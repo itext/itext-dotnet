@@ -93,7 +93,7 @@ namespace iText.Signatures
 				.CADES, "Test 1", "TestCity", null, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
 				 + "cmp_" + fileName, destinationFolder, "diff_", 
-                 new Dictionary<int, IList<Rectangle>>{ {1 , IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 155, 15))}}));
+                 new Dictionary<int, IList<Rectangle>>{ {1 , IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}}));
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -111,7 +111,7 @@ namespace iText.Signatures
 				.CADES, "Test 1", "TestCity", null, false);
 			NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
 				 + "cmp_" + fileName, destinationFolder, "diff_",
-                 new Dictionary<int, IList<Rectangle>> { { 1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 155, 15)) } }));
+                 new Dictionary<int, IList<Rectangle>> { { 1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15)) } }));
 		}
 
 		/// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
