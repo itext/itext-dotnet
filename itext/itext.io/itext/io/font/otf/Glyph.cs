@@ -69,7 +69,7 @@ namespace iText.IO.Font.Otf
 
 		internal short yAdvance = 0;
 
-		internal byte anchorDelta = 0;
+		internal sbyte anchorDelta = 0;
 
 		public Glyph(int code, int width, int unicode)
 			: this(code, width, unicode, null, false)
@@ -133,7 +133,7 @@ namespace iText.IO.Font.Otf
 			this.yPlacement = (short)yPlacement;
 			this.xAdvance = (short)xAdvance;
 			this.yAdvance = (short)yAdvance;
-			this.anchorDelta = (byte)anchorDelta;
+			this.anchorDelta = (sbyte)anchorDelta;
 		}
 
 		public Glyph(iText.IO.Font.Otf.Glyph glyph, int unicode)
@@ -227,7 +227,7 @@ namespace iText.IO.Font.Otf
 			this.yAdvance = yAdvance;
 		}
 
-		public virtual byte GetAnchorDelta()
+		public virtual sbyte GetAnchorDelta()
 		{
 			return anchorDelta;
 		}
