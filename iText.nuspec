@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>iText</id>
+    <version>$version$</version>
+    <title>iText Core</title>
+    <authors>Bruno Lowagie, Paulo Soares, et al.</authors>
+    <owners>Bruno Lowagie, Paulo Soares</owners>
+    <licenseUrl>http://www.gnu.org/licenses/agpl.html</licenseUrl>
+    <projectUrl>http://itextpdf.com/</projectUrl>
+    <iconUrl>http://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>iText is a PDF library that allows you to CREATE, ADAPT, INSPECT and MAINTAIN documents in the Portable Document Format (PDF):
+ - Generate documents and reports based on data from an XML file or a database
+ - Create maps and books, exploiting numerous interactive features available in PDF
+ - Add bookmarks, page numbers, watermarks, and other features to existing PDF documents
+ - Split or concatenate pages from existing PDF files
+ - Fill out interactive forms
+ - Serve dynamically generated or manipulated PDF documents to a web browser
+
+ iText is used by Java, .NET, Android and GAE developers to enhance their applications with PDF functionality. 
+ iTextSharp is the .NET port.
+
+ Several iText engineers are actively supporting the project on StackOverflow: http://stackoverflow.com/questions/tagged/itext</description>
+    <summary>iTextSharp is a port of the iText open source java library for PDF generation written entirely in C# for the .NET platform.</summary>
+    <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
+    <copyright>Copyright (c) 1998-2016 iText Group NV</copyright>
+    <language>en-US</language>
+    <tags>itext itextsharp c# .net csharp pdf</tags>
+  </metadata>
+  <files>
+	<file src="itext\itext.io\bin\Release\itext.io.dll" target="lib\net40" />
+	<file src="itext\itext.kernel\bin\Release\itext.kernel.dll" target="lib\net40" />
+	<file src="itext\itext.layout\bin\Release\itext.layout.dll" target="lib\net40" />
+	<file src="itext\itext.pdfa\bin\Release\itext.pdfa.dll" target="lib\net40" />
+	<file src="itext\itext.forms\bin\Release\itext.forms.dll" target="lib\net40" />
+	<file src="itext\itext.barcodes\bin\Release\itext.barcodes.dll" target="lib\net40" />
+	<file src="itext\itext.sign\bin\Release\itext.sign.dll" target="lib\net40" />
+	<file src="gnu-agpl-v3.0.md" target="" />
+	<file src="LICENSE.md" target="" />
+  </files>
+</package>
