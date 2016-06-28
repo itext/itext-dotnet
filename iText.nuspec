@@ -30,12 +30,19 @@
   </metadata>
   <files>
 	<file src="itext\itext.io\bin\Release\itext.io.dll" target="lib\net40" />
+	<file src="itext\itext.io\bin\Release\itext.io.xml" target="lib\net40" />
 	<file src="itext\itext.kernel\bin\Release\itext.kernel.dll" target="lib\net40" />
+	<file src="itext\itext.kernel\bin\Release\itext.kernel.xml" target="lib\net40" />
 	<file src="itext\itext.layout\bin\Release\itext.layout.dll" target="lib\net40" />
+	<file src="itext\itext.layout\bin\Release\itext.layout.xml" target="lib\net40" />
 	<file src="itext\itext.pdfa\bin\Release\itext.pdfa.dll" target="lib\net40" />
+	<file src="itext\itext.pdfa\bin\Release\itext.pdfa.xml" target="lib\net40" />
 	<file src="itext\itext.forms\bin\Release\itext.forms.dll" target="lib\net40" />
+	<file src="itext\itext.forms\bin\Release\itext.forms.xml" target="lib\net40" />
 	<file src="itext\itext.barcodes\bin\Release\itext.barcodes.dll" target="lib\net40" />
+	<file src="itext\itext.barcodes\bin\Release\itext.barcodes.xml" target="lib\net40" />
 	<file src="itext\itext.sign\bin\Release\itext.sign.dll" target="lib\net40" />
+	<file src="itext\itext.sign\bin\Release\itext.sign.xml" target="lib\net40" />
 	<file src="gnu-agpl-v3.0.md" target="" />
 	<file src="LICENSE.md" target="" />
   </files>
