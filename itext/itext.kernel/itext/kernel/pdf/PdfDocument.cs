@@ -238,6 +238,7 @@ namespace iText.Kernel.Pdf {
                 XMPMeta xmpMeta = XMPMetaFactory.Create();
                 xmpMeta.SetObjectName(XMPConst.TAG_XMPMETA);
                 xmpMeta.SetObjectName("");
+                AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
                     xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion());
@@ -1259,8 +1260,8 @@ namespace iText.Kernel.Pdf {
                     info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
                         );
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
-                   //Add a check to make sure that the StructTreeRoot dictionary has an indirect reference.  If it does not it will throw an exception when creating the PdfStructTreeRoot
-                   if (str != null && str.indirectReference != null) {
+                    //Add a check to make sure that the StructTreeRoot dictionary has an indirect reference.  If it does not it will throw an exception when creating the PdfStructTreeRoot
+                    if (str != null && str.indirectReference != null) {
                         structTreeRoot = new PdfStructTreeRoot(str);
                         structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
                     }
@@ -1357,6 +1358,9 @@ namespace iText.Kernel.Pdf {
             catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.CannotOpenDocument, e, this);
             }
+        }
+
+        protected internal virtual void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
         }
 
         protected internal virtual void UpdateXmpMetadata() {
