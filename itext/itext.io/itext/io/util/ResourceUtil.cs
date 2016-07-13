@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -75,11 +76,11 @@ namespace iText.IO.Util {
         /// <see langword="null"/>
         /// if not found.
         /// </returns>
-        public static Stream GetResourceStream(string key) {
+        public static Stream GetResourceStream(string key, Type definedClassType) {
             Stream istr = null;
             // Try to use resource loader to load the properties file.
             try {
-                Assembly assm = Assembly.GetExecutingAssembly();
+                Assembly assm = definedClassType != null ? Assembly.GetAssembly(definedClassType) : Assembly.GetExecutingAssembly();
                 istr = assm.GetManifestResourceStream(key);
             } catch {
             }
@@ -125,6 +126,10 @@ namespace iText.IO.Util {
             }
 
             return istr;
+        }
+
+        public static Stream GetResourceStream(string key) {
+            return GetResourceStream(key, null);
         }
     }
 }
