@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Kernel.Colors;
+using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Properties {
     public class Underline {
@@ -55,7 +56,7 @@ namespace iText.Layout.Properties {
 
         protected internal float yPositionMul;
 
-        protected internal int lineCapStyle;
+        protected internal int lineCapStyle = PdfCanvasConstants.LineCapStyle.BUTT;
 
         public Underline(Color color, float thickness, float thicknessMul, float yPosition, float yPositionMul, int
              lineCapStyle) {
