@@ -851,26 +851,30 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 9)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
             String testName = "splitTableOnShortPage.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, new PageSize(300, 120));
+            Document doc = new Document(pdfDoc, new PageSize(300, 90));
             doc.Add(new Paragraph("Table with setKeepTogether(true):"));
-            Table table = new Table(2);
+            Table table = new Table(3);
             table.SetKeepTogether(true);
-            table.SetMarginTop(10);
             Cell cell = new Cell(3, 1);
             cell.Add("G");
             cell.Add("R");
             cell.Add("P");
             table.AddCell(cell);
-            table.AddCell("row 1");
-            table.AddCell("row 2");
-            table.AddCell("row 3");
+            table.AddCell("middle row 1");
+            cell = new Cell(3, 1);
+            cell.Add("A");
+            cell.Add("B");
+            cell.Add("C");
+            table.AddCell(cell);
+            table.AddCell("middle row 2");
+            table.AddCell("middle row 3");
             doc.Add(table);
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table with setKeepTogether(false):"));

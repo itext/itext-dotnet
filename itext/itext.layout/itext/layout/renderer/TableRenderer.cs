@@ -139,6 +139,10 @@ namespace iText.Layout.Renderer {
             // we can invoke #layout() twice (processing KEEP_TOGETHER for instance)
             // so we need to clear heights
             heights.Clear();
+            // Cells' up moves occured while split processing
+            // key is column number (there can be only one move during one split
+            // value is the previous row number of the cell
+            IDictionary<int, int?> rowMoves = new Dictionary<int, int?>();
             ApplyMargins(layoutBox, false);
             ApplyBorderBox(layoutBox, false);
             if (IsPositioned()) {
@@ -271,6 +275,7 @@ namespace iText.Layout.Renderer {
                         else {
                             rows[currentCellInfo.finishRowInd][col_1] = null;
                             currentRow[col_1] = cell;
+                            rowMoves[col_1] = currentCellInfo.finishRowInd;
                         }
                     }
                     else {
@@ -478,6 +483,15 @@ namespace iText.Layout.Renderer {
                     }
                     ApplyBorderBox(occupiedArea.GetBBox(), true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
+                    // On the next page we need to process rows without any changes except moves connected to actual cell splitting
+                    foreach (KeyValuePair<int, int> entry in rowMoves) {
+                        // Move the cell back to its row if there was no actual split
+                        if (null == splitResult[1].rows[entry.Value - splitResult[0].rows.Count][entry.Key]) {
+                            splitResult[1].rows[entry.Value - splitResult[0].rows.Count][entry.Key] = splitResult[1].rows[row - splitResult
+                                [0].rows.Count][entry.Key];
+                            splitResult[1].rows[row - splitResult[0].rows.Count][entry.Key] = null;
+                        }
+                    }
                     if (IsKeepTogether() && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && !(this.parent is 
                         CellRenderer)) {
                         return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
