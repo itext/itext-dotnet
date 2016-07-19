@@ -184,10 +184,21 @@ namespace iText.Layout.Renderer
 					{
 						childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth);
 					}
-					nextTabStop = null;
-					curWidth += tabWidth;
-				}
-				curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                    float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
+                    if (nextTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < nextTabStop.GetTabPosition())
+                    {
+                        curWidth = nextTabStop.GetTabPosition();
+                    }
+                    else
+                    {
+                        curWidth += tabAndNextElemWidth;
+                    }
+                    nextTabStop = null;
+                }
+                else
+                {
+                    curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                }
 				occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
 					.GetHeight() - maxHeight, curWidth, maxHeight));
 				if (childResult.GetStatus() != LayoutResult.FULL)
