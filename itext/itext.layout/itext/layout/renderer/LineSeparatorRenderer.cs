@@ -56,6 +56,10 @@ namespace iText.Layout.Renderer {
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
             occupiedArea = layoutContext.GetArea().Clone();
+            UnitValue widthProperty = ((LineSeparator)modelElement).GetWidth();
+            if (widthProperty != null) {
+                occupiedArea.GetBBox().SetWidth(widthProperty.GetValue());
+            }
             ApplyMargins(occupiedArea.GetBBox(), false);
             if (occupiedArea.GetBBox().GetHeight() < height) {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this);
