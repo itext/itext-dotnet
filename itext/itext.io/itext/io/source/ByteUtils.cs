@@ -131,6 +131,15 @@ namespace iText.IO.Source {
 
         internal static byte[] GetIsoBytes(double d, ByteBuffer buffer, bool highPrecision) {
             if (highPrecision) {
+                if (Math.Abs(d) < 0.000001) {
+                    if (buffer != null) {
+                        buffer.Prepend(zero);
+                        return null;
+                    }
+                    else {
+                        return zero;
+                    }
+                }
                 byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes();
                 if (buffer != null) {
                     buffer.Prepend(result);
