@@ -280,8 +280,8 @@ namespace iText.Kernel.Pdf {
                         PdfIndirectReference reference = xrefTable.Get(i_2);
                         StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
                         StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
-                        writer.WriteString(off.JSubstring(0, off.Length - 10)).WriteSpace().WriteString(gen.JSubstring(0, gen.Length
-                             - 5)).WriteSpace();
+                        writer.WriteString(off.JSubstring(off.Length - 10, off.Length)).WriteSpace().WriteString(gen.JSubstring(gen
+                            .Length - 5, gen.Length)).WriteSpace();
                         if (reference.IsFree()) {
                             writer.WriteBytes(freeXRefEntry);
                         }
