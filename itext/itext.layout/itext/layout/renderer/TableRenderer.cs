@@ -136,6 +136,9 @@ namespace iText.Layout.Renderer {
             if (rowRange.GetStartRow() != 0) {
                 SetProperty(Property.MARGIN_TOP, 0);
             }
+            // we can invoke #layout() twice (processing KEEP_TOGETHER for instance)
+            // so we need to clear heights
+            heights.Clear();
             ApplyMargins(layoutBox, false);
             ApplyBorderBox(layoutBox, false);
             if (IsPositioned()) {
@@ -338,6 +341,14 @@ namespace iText.Layout.Renderer {
                                             }
                                         }
                                     }
+                                    else {
+                                        // if cell in current row has big rowspan
+                                        // we need to process it specially too,
+                                        // because some problems (for instance, borders related) can occur
+                                        if (((Cell)cell.GetModelElement()).GetRowspan() > 1) {
+                                            cellWithBigRowspanAdded = true;
+                                        }
+                                    }
                                 }
                             }
                             split = true;
@@ -424,7 +435,7 @@ namespace iText.Layout.Renderer {
                             minRowspan = Math.Min(minRowspan, rowspans[col_2]);
                         }
                     }
-                    for (int col_3 = 0; col_3 < columnsWithCellToBeSplitted.Length; col_3++) {
+                    for (int col_3 = 0; col_3 < numberOfColumns; col_3++) {
                         if (columnsWithCellToBeSplitted[col_3]) {
                             if (1 == minRowspan) {
                                 // Here we use the same cell, but create a new renderer which doesn't have any children,
@@ -444,7 +455,7 @@ namespace iText.Layout.Renderer {
                                     rows[i + 1][col_3] = null;
                                 }
                                 // the number of cells behind is less then minRowspan-1
-                                // so we should process the last cell in the columnt as in the case 1 == minRowspan
+                                // so we should process the last cell in the column as in the case 1 == minRowspan
                                 if (i != row + minRowspan - 1 && null != rows[i][col_3]) {
                                     Cell overflowCell = ((Cell)rows[i][col_3].GetModelElement());
                                     rows[i][col_3].isLastRendererForModelElement = false;
