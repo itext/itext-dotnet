@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
@@ -52,10 +52,6 @@ namespace iText.Kernel.Pdf {
         private const int INITIAL_CAPACITY = 32;
 
         private const int MAX_GENERATION = 65535;
-
-        private const String objectOffsetFormatter = "0000000000";
-
-        private const String objectGenerationFormatter = "00000";
 
         private static readonly byte[] freeXRefEntry = ByteUtils.GetIsoBytes("f \n");
 
@@ -282,9 +278,10 @@ namespace iText.Kernel.Pdf {
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
                     for (int i_2 = first; i_2 < first + len; i_2++) {
                         PdfIndirectReference reference = xrefTable.Get(i_2);
-                        writer.WriteString(DecimalFormatUtil.FormatNumber(reference.GetOffset(), objectOffsetFormatter)).WriteSpace
-                            ().WriteString(DecimalFormatUtil.FormatNumber(reference.GetGenNumber(), objectGenerationFormatter)).WriteSpace
-                            ();
+                        StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
+                        StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
+                        writer.WriteString(off.JSubstring(0, off.Length - 10)).WriteSpace().WriteString(gen.JSubstring(0, gen.Length
+                             - 5)).WriteSpace();
                         if (reference.IsFree()) {
                             writer.WriteBytes(freeXRefEntry);
                         }
