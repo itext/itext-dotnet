@@ -57,6 +57,32 @@ namespace iText.Layout.Renderer {
 
         private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";
 
+        private const String SHAPER = "Shaping.Shaper,iText.Typography";
+
+        private const String BIDI_CHARACTER_MAP = "Bidi.BidiCharacterMap,iText.Typography";
+
+        private const String BIDI_BRACKET_MAP = "Bidi.BidiBracketMap,iText.Typography";
+
+        private const String BIDI_ALGORITHM = "Bidi.BidiAlgorithm,iText.Typography";
+
+        private const String APPLY_OTF_SCRIPT = "ApplyOtfScript";
+
+        private const String APPLY_KERNING = "ApplyKerning";
+
+        private const String GET_SUPPORTED_SCRIPTS = "GetSupportedScripts";
+
+        private const String GET_CHARACTER_TYPES = "GetCharacterTypes";
+
+        private const String GET_BRACKET_TYPES = "GetBracketTypes";
+
+        private const String GET_BRACKET_VALUES = "GetBracketValues";
+
+        private const String GET_PAIRED_BRACKET = "GetPairedBracket";
+
+        private const String GET_LEVELS = "GetLevels";
+
+        private const String COMPUTE_REORDERING = "ComputeReordering";
+
         private static readonly ICollection<UnicodeScript> SUPPORTED_SCRIPTS;
 
         private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED;
@@ -64,7 +90,7 @@ namespace iText.Layout.Renderer {
         static TypographyUtils() {
             bool moduleFound = false;
             try {
-                Type type = System.Type.GetType("com.itextpdf.typography.shaping.Shaper");
+                Type type = System.Type.GetType(TYPOGRAPHY_PACKAGE + SHAPER);
                 if (type != null) {
                     moduleFound = true;
                 }
@@ -86,8 +112,8 @@ namespace iText.Layout.Renderer {
                     );
             }
             else {
-                CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyOtfScript", new Type[] { typeof(TrueTypeFont), typeof(
-                    GlyphLine), typeof(UnicodeScript?) }, fontProgram, text, script);
+                CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
+                    ), typeof(UnicodeScript?) }, fontProgram, text, script);
             }
         }
 
@@ -98,8 +124,8 @@ namespace iText.Layout.Renderer {
                     );
             }
             else {
-                CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyKerning", new Type[] { typeof(FontProgram), typeof(
-                    GlyphLine) }, fontProgram, text);
+                CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
+                     }, fontProgram, text);
             }
         }
 
@@ -129,20 +155,20 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 int len = unicodeIds.Length;
-                byte[] types = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiCharacterMap", "getCharacterTypes", new Type
-                    [] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+                byte[] types = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_CHARACTER_MAP, GET_CHARACTER_TYPES, new Type[]
+                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
                 //byte[] types = BidiCharacterMap.getCharacterTypes(unicodeIds, 0, text.end - text.start;
-                byte[] pairTypes = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getBracketTypes", new Type
-                    [] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+                byte[] pairTypes = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_BRACKET_TYPES, new Type[]
+                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
                 //byte[] pairTypes = BidiBracketMap.getBracketTypes(unicodeIds, 0, text.end - text.start);
-                int[] pairValues = (int[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getBracketValues", new Type
-                    [] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+                int[] pairValues = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_BRACKET_VALUES, new Type[]
+                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
                 //int[] pairValues = BidiBracketMap.getBracketValues(unicodeIds, 0, text.end - text.start);
-                Object bidiReorder = CallConstructor(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", new Type[] { typeof(byte[]
-                    ), typeof(byte[]), typeof(int[]), typeof(byte) }, types, pairTypes, pairValues, direction);
+                Object bidiReorder = CallConstructor(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, new Type[] { typeof(byte[]), typeof(
+                    byte[]), typeof(int[]), typeof(byte) }, types, pairTypes, pairValues, direction);
                 //BidiAlgorithm bidiReorder = new BidiAlgorithm(types, pairTypes, pairValues, direction);
-                return (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", "getLevels", bidiReorder, new Type[] 
-                    { typeof(int[]) }, new int[] { len });
+                return (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, GET_LEVELS, bidiReorder, new Type[] { typeof(
+                    int[]) }, new int[] { len });
             }
             //levels = bidiReorder.getLevels(new int[]{text.end - text.start});
             return null;
@@ -158,8 +184,8 @@ namespace iText.Layout.Renderer {
                 if (levels == null) {
                     return null;
                 }
-                int[] reorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", "computeReordering", new Type
-                    [] { typeof(byte[]) }, lineLevels);
+                int[] reorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, COMPUTE_REORDERING, new Type[] { typeof(
+                    byte[]) }, lineLevels);
                 //int[] reorder = BidiAlgorithm.computeReordering(lineLevels);
                 IList<LineRenderer.RendererGlyph> reorderedLine = new List<LineRenderer.RendererGlyph>(lineLevels.Length);
                 for (int i = 0; i < line.Count; i++) {
@@ -167,8 +193,8 @@ namespace iText.Layout.Renderer {
                     // Mirror RTL glyphs
                     if (levels[reorder[i]] % 2 == 1) {
                         if (reorderedLine[i].glyph.HasValidUnicode()) {
-                            int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getPairedBracket", new Type
-                                [] { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
+                            int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_PAIRED_BRACKET, new Type[] 
+                                { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
                             PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
                             //BidiBracketMap.getPairedBracket(reorderedLine.get(i).getUnicode())
                             reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
@@ -193,8 +219,8 @@ namespace iText.Layout.Renderer {
                     return SUPPORTED_SCRIPTS;
                 }
                 else {
-                    return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "getSupportedScripts"
-                        , new Type[] {  });
+                    return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, new Type
+                        [] {  });
                 }
             }
         }
