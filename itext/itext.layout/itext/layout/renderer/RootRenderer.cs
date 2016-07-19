@@ -100,6 +100,7 @@ namespace iText.Layout.Renderer {
                                     UpdateCurrentArea(result);
                                 }
                                 ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
+                                result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
                             }
                             else {
                                 if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer)) {
