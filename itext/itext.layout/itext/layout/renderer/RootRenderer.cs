@@ -151,9 +151,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (currentArea != null) {
-                        UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
-                    }
+                    UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
                 }
             }
             else {
@@ -232,11 +230,13 @@ namespace iText.Layout.Renderer {
 
         private void UpdateCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers, LayoutResult
              result) {
-            currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
-                ());
-            currentArea.SetEmptyArea(false);
-            if (renderer != null) {
-                ProcessRenderer(renderer, resultRenderers);
+            if (currentArea != null) {
+                currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
+                    ());
+                currentArea.SetEmptyArea(false);
+                if (renderer != null) {
+                    ProcessRenderer(renderer, resultRenderers);
+                }
             }
             if (!immediateFlush) {
                 childRenderers.AddAll(resultRenderers);
