@@ -853,8 +853,8 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
-        public virtual void SplitTableOnLowPage() {
-            String testName = "splitTableOnLowPage.pdf";
+        public virtual void SplitTableOnShortPage() {
+            String testName = "splitTableOnShortPage.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
