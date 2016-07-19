@@ -278,31 +278,6 @@ namespace iText.Layout.Renderer {
             return base.GetDefaultProperty<T1>(property);
         }
 
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
-            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer
-                ();
-            // Reset first line indent in case of overflow.
-            float firstLineIndent = (float)this.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
-            if (firstLineIndent != 0) {
-                overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
-            }
-            return overflowRenderer;
-        }
-
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
-            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
-        }
-
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {
-            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
-            splitRenderer.occupiedArea = occupiedArea.Clone();
-            splitRenderer.parent = parent;
-            splitRenderer.isLastRendererForModelElement = false;
-            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
-            overflowRenderer.parent = parent;
-            return new iText.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
-        }
-
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             if (lines != null && lines.Count > 0) {
@@ -339,6 +314,46 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             return lines[0].GetFirstYLineRecursively();
+        }
+
+        [Obsolete]
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
+            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
+        }
+
+        [Obsolete]
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
+            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
+        }
+
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer(IRenderer parent
+            ) {
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
+            overflowRenderer.parent = parent;
+            FixOverflowRenderer(overflowRenderer);
+            return overflowRenderer;
+        }
+
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer(IRenderer parent) {
+            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
+            splitRenderer.parent = parent;
+            return splitRenderer;
+        }
+
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {
+            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer(parent);
+            splitRenderer.occupiedArea = occupiedArea.Clone();
+            splitRenderer.isLastRendererForModelElement = false;
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer(parent);
+            return new iText.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
+        }
+
+        private void FixOverflowRenderer(iText.Layout.Renderer.ParagraphRenderer overflowRenderer) {
+            // Reset first line indent in case of overflow.
+            float firstLineIndent = (float)overflowRenderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
+            if (firstLineIndent != 0) {
+                overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
+            }
         }
     }
 }
