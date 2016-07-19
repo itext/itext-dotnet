@@ -124,8 +124,8 @@ namespace iText.Layout {
 
         /// <summary>Closes the document and associated PdfDocument.</summary>
         public virtual void Close() {
-            if (rootRenderer != null && !immediateFlush) {
-                rootRenderer.Flush();
+            if (rootRenderer != null) {
+                rootRenderer.Close();
             }
             pdfDocument.Close();
         }

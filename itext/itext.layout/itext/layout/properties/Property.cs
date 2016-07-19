@@ -125,6 +125,8 @@ namespace iText.Layout.Properties {
 
         public const int KEEP_TOGETHER = 32;
 
+        public const int KEEP_WITH_NEXT = 81;
+
         public const int LEADING = 33;
 
         public const int LEFT = 34;

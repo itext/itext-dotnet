@@ -58,6 +58,8 @@ namespace iText.IO {
         /// <summary>Log message.</summary>
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
+        public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
+
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
         /// <summary>Log message.</summary>
@@ -107,6 +109,8 @@ namespace iText.IO {
 
         /// <summary>Log message.</summary>
         public const String REGISTERING_DIRECTORY = "Registering directory";
+
+        public const String RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT = "The renderer was not able to process keep with next property properly";
 
         /// <summary>Log message.</summary>
         public const String SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY = "Source document has AcroForm dictionary. The pages you are going to copy may have FormFields, but they will not be copied, because you have not used any IPdfPageExtraCopier";

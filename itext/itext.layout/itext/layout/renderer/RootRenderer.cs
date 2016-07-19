@@ -56,6 +56,10 @@ namespace iText.Layout.Renderer {
 
         protected internal int currentPageNumber;
 
+        private IRenderer keepWithNextHangingRenderer;
+
+        private LayoutResult keepWithNextHangingRendererLayoutResult;
+
         public override void AddChild(IRenderer renderer) {
             base.AddChild(renderer);
             if (currentArea == null) {
@@ -65,6 +69,7 @@ namespace iText.Layout.Renderer {
             if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers.Count - 1] == renderer
                 ) {
                 childRenderers.JRemoveAt(childRenderers.Count - 1);
+                ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
                 LayoutArea storedArea = null;
@@ -133,17 +138,22 @@ namespace iText.Layout.Renderer {
                     }
                     renderer = result.GetOverflowRenderer();
                 }
-                if (currentArea != null) {
-                    System.Diagnostics.Debug.Assert(result != null && result.GetOccupiedArea() != null);
-                    currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
-                        ());
-                    currentArea.SetEmptyArea(false);
-                    if (renderer != null) {
-                        ProcessRenderer(renderer, resultRenderers);
+                // Keep renderer until next element is added for future keep with next adjustments
+                if (renderer != null && true.Equals(renderer.GetProperty(Property.KEEP_WITH_NEXT))) {
+                    if (true.Equals(renderer.GetProperty(Property.FORCED_PLACEMENT))) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                        logger.Warn(LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
+                        UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                    }
+                    else {
+                        keepWithNextHangingRenderer = renderer;
+                        keepWithNextHangingRendererLayoutResult = result;
                     }
                 }
-                if (!immediateFlush) {
-                    childRenderers.AddAll(resultRenderers);
+                else {
+                    if (currentArea != null) {
+                        UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                    }
                 }
             }
             else {
@@ -174,6 +184,27 @@ namespace iText.Layout.Renderer {
             positionedRenderers.Clear();
         }
 
+        /// <summary>
+        /// This method correctly closes the
+        /// <see cref="RootRenderer"/>
+        /// instance.
+        /// There might be hanging elements, like in case of
+        /// <see cref="iText.Layout.Properties.Property.KEEP_WITH_NEXT"/>
+        /// is set to true
+        /// and when no consequent element has been added. This method addresses such situations.
+        /// </summary>
+        public virtual void Close() {
+            if (keepWithNextHangingRenderer != null) {
+                keepWithNextHangingRenderer.SetProperty(Property.KEEP_WITH_NEXT, false);
+                IRenderer rendererToBeAdded = keepWithNextHangingRenderer;
+                keepWithNextHangingRenderer = null;
+                AddChild(rendererToBeAdded);
+            }
+            if (!immediateFlush) {
+                Flush();
+            }
+        }
+
         public override LayoutResult Layout(LayoutContext layoutContext) {
             throw new InvalidOperationException("Layout is not supported for root renderers.");
         }
@@ -196,6 +227,108 @@ namespace iText.Layout.Renderer {
             }
             else {
                 resultRenderers.Add(renderer);
+            }
+        }
+
+        private void UpdateCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers, LayoutResult
+             result) {
+            currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
+                ());
+            currentArea.SetEmptyArea(false);
+            if (renderer != null) {
+                ProcessRenderer(renderer, resultRenderers);
+            }
+            if (!immediateFlush) {
+                childRenderers.AddAll(resultRenderers);
+            }
+        }
+
+        private void ProcessWaitingKeepWithNextElement(IRenderer renderer) {
+            if (keepWithNextHangingRenderer != null) {
+                LayoutArea rest = currentArea.Clone();
+                rest.GetBBox().SetHeight(rest.GetBBox().GetHeight() - keepWithNextHangingRendererLayoutResult.GetOccupiedArea
+                    ().GetBBox().GetHeight());
+                bool ableToProcessKeepWithNext = false;
+                if (renderer.SetParent(this).Layout(new LayoutContext(rest)).GetStatus() != LayoutResult.NOTHING) {
+                    // The area break will not be introduced and we are safe to place everything as is
+                    UpdateCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
+                        );
+                    ableToProcessKeepWithNext = true;
+                }
+                else {
+                    float originalElementHeight = keepWithNextHangingRendererLayoutResult.GetOccupiedArea().GetBBox().GetHeight
+                        ();
+                    IList<float> trySplitHeightPoints = new List<float>();
+                    float delta = 35;
+                    for (int i = 1; i <= 5 && originalElementHeight - delta * i > originalElementHeight / 2; i++) {
+                        trySplitHeightPoints.Add(originalElementHeight - delta * i);
+                    }
+                    for (int i_1 = 0; i_1 < trySplitHeightPoints.Count && !ableToProcessKeepWithNext; i_1++) {
+                        float curElementSplitHeight = trySplitHeightPoints[i_1];
+                        LayoutArea firstElementSplitLayoutArea = currentArea.Clone();
+                        firstElementSplitLayoutArea.GetBBox().SetHeight(curElementSplitHeight).MoveUp(currentArea.GetBBox().GetHeight
+                            () - curElementSplitHeight);
+                        LayoutResult firstElementSplitLayoutResult = keepWithNextHangingRenderer.SetParent(this).Layout(new LayoutContext
+                            (firstElementSplitLayoutArea.Clone()));
+                        if (firstElementSplitLayoutResult.GetStatus() == LayoutResult.PARTIAL) {
+                            LayoutArea storedArea = currentArea;
+                            UpdateCurrentArea(firstElementSplitLayoutResult);
+                            LayoutResult firstElementOverflowLayoutResult = firstElementSplitLayoutResult.GetOverflowRenderer().Layout
+                                (new LayoutContext(currentArea.Clone()));
+                            if (firstElementOverflowLayoutResult.GetStatus() == LayoutResult.FULL) {
+                                LayoutArea secondElementLayoutArea = currentArea.Clone();
+                                secondElementLayoutArea.GetBBox().SetHeight(secondElementLayoutArea.GetBBox().GetHeight() - firstElementOverflowLayoutResult
+                                    .GetOccupiedArea().GetBBox().GetHeight());
+                                LayoutResult secondElementLayoutResult = renderer.SetParent(this).Layout(new LayoutContext(secondElementLayoutArea
+                                    ));
+                                if (secondElementLayoutResult.GetStatus() != LayoutResult.NOTHING) {
+                                    ableToProcessKeepWithNext = true;
+                                    currentArea = firstElementSplitLayoutArea;
+                                    currentPageNumber = firstElementSplitLayoutArea.GetPageNumber();
+                                    UpdateCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetSplitRenderer(), new List<IRenderer>(
+                                        ), firstElementSplitLayoutResult);
+                                    UpdateCurrentArea(firstElementSplitLayoutResult);
+                                    UpdateCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetOverflowRenderer(), new List<IRenderer
+                                        >(), firstElementOverflowLayoutResult);
+                                }
+                            }
+                            if (!ableToProcessKeepWithNext) {
+                                currentArea = storedArea;
+                                currentPageNumber = storedArea.GetPageNumber();
+                            }
+                        }
+                    }
+                }
+                if (!ableToProcessKeepWithNext && !currentArea.IsEmptyArea()) {
+                    LayoutArea storedArea = currentArea;
+                    UpdateCurrentArea(null);
+                    LayoutResult firstElementLayoutResult = keepWithNextHangingRenderer.SetParent(this).Layout(new LayoutContext
+                        (currentArea.Clone()));
+                    if (firstElementLayoutResult.GetStatus() == LayoutResult.FULL) {
+                        LayoutArea secondElementLayoutArea = currentArea.Clone();
+                        secondElementLayoutArea.GetBBox().SetHeight(secondElementLayoutArea.GetBBox().GetHeight() - firstElementLayoutResult
+                            .GetOccupiedArea().GetBBox().GetHeight());
+                        LayoutResult secondElementLayoutResult = renderer.SetParent(this).Layout(new LayoutContext(secondElementLayoutArea
+                            ));
+                        if (secondElementLayoutResult.GetStatus() != LayoutResult.NOTHING) {
+                            ableToProcessKeepWithNext = true;
+                            UpdateCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
+                                );
+                        }
+                    }
+                    if (!ableToProcessKeepWithNext) {
+                        currentArea = storedArea;
+                        currentPageNumber = storedArea.GetPageNumber();
+                    }
+                }
+                if (!ableToProcessKeepWithNext) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                    logger.Warn(LogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT);
+                    UpdateCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
+                        );
+                }
+                keepWithNextHangingRenderer = null;
+                keepWithNextHangingRendererLayoutResult = null;
             }
         }
     }

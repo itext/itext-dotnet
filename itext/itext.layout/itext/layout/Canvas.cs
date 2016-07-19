@@ -177,6 +177,23 @@ namespace iText.Layout {
             rootRenderer.Flush();
         }
 
+        /// <summary>
+        /// Closes the
+        /// <see cref="Canvas"/>
+        /// . Although not completely necessary in all cases, it is still recommended to call this
+        /// method when you are done working with
+        /// <see cref="Canvas"/>
+        /// object, as due to some properties set there might be some
+        /// 'hanging' elements, which are waiting other elements to be added and processed.
+        /// <see cref="Close()"/>
+        /// tells the
+        /// <see cref="Canvas"/>
+        /// that no more elements will be added and it is time to finish processing all the elements.
+        /// </summary>
+        public virtual void Close() {
+            rootRenderer.Close();
+        }
+
         protected internal override RootRenderer EnsureRootRendererNotNull() {
             if (rootRenderer == null) {
                 rootRenderer = new CanvasRenderer(this, immediateFlush);
