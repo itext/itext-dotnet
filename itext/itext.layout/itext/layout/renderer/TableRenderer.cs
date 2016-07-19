@@ -205,7 +205,8 @@ namespace iText.Layout.Renderer {
                 bool cellWithBigRowspanAdded = false;
                 IList<CellRenderer> currChildRenderers = new List<CellRenderer>();
                 // Process in a queue, because we might need to add a cell from the future, i.e. having big rowspan in case of split.
-                Queue<TableRenderer.CellRendererInfo> cellProcessingQueue = new Queue<TableRenderer.CellRendererInfo>();
+                Queue<TableRenderer.CellRendererInfo> cellProcessingQueue = new LinkedList<TableRenderer.CellRendererInfo>
+                    ();
                 for (int col = 0; col < currentRow.Length; col++) {
                     if (currentRow[col] != null) {
                         cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
