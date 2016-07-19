@@ -208,7 +208,8 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                                    // occupiedArea.setBBox(Rectangle.getCommonRectangle(occupiedArea.getBBox(), currentRenderer.getOccupiedArea().getBBox()));
+                                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
+                                        ).GetBBox()));
                                     parent.SetProperty(Property.FULL, true);
                                     lines.Add(currentRenderer);
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, null, this);
