@@ -63,7 +63,23 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
+            bool anythingPlaced = false;
+            bool firstLineInBox = true;
+            LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
+            if (0 == childRenderers.Count) {
+                anythingPlaced = true;
+                currentRenderer = null;
+                SetProperty(Property.MARGIN_TOP, 0);
+                SetProperty(Property.MARGIN_RIGHT, 0);
+                SetProperty(Property.MARGIN_BOTTOM, 0);
+                SetProperty(Property.MARGIN_LEFT, 0);
+                SetProperty(Property.PADDING_TOP, 0);
+                SetProperty(Property.PADDING_RIGHT, 0);
+                SetProperty(Property.PADDING_BOTTOM, 0);
+                SetProperty(Property.PADDING_LEFT, 0);
+                SetProperty(Property.BORDER, Border.NO_BORDER);
+            }
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
@@ -94,29 +110,9 @@ namespace iText.Layout.Renderer {
                 GetHeight(), parentBBox.GetWidth(), 0));
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
-            bool anythingPlaced = false;
-            bool firstLineInBox = true;
             lines = new List<LineRenderer>();
-            LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             foreach (IRenderer child in childRenderers) {
                 currentRenderer.AddChild(child);
-            }
-            if (0 == childRenderers.Count) {
-                anythingPlaced = true;
-                currentRenderer = null;
-                // TODO is this really needed??
-                SetProperty(Property.MARGIN_TOP, 0);
-                SetProperty(Property.MARGIN_RIGHT, 0);
-                SetProperty(Property.MARGIN_BOTTOM, 0);
-                SetProperty(Property.MARGIN_LEFT, 0);
-                SetProperty(Property.PADDING_TOP, 0);
-                SetProperty(Property.PADDING_RIGHT, 0);
-                SetProperty(Property.PADDING_BOTTOM, 0);
-                SetProperty(Property.PADDING_LEFT, 0);
-                SetProperty(Property.BORDER, Border.NO_BORDER);
-                margins = GetMargins();
-                borders = GetBorders();
-                paddings = GetPaddings();
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
@@ -212,6 +208,7 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                                    // occupiedArea.setBBox(Rectangle.getCommonRectangle(occupiedArea.getBBox(), currentRenderer.getOccupiedArea().getBBox()));
                                     parent.SetProperty(Property.FULL, true);
                                     lines.Add(currentRenderer);
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, null, this);
