@@ -56,7 +56,7 @@ namespace iText.Kernel.Font {
         private static bool DEFAULT_EMBEDDING = false;
 
         /// <summary>This is the default value of the <VAR>embedded</VAR> variable.</summary>
-        private static bool DEFAULT_CACHED = false;
+        private static bool DEFAULT_CACHED = true;
 
         /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateFont() {
