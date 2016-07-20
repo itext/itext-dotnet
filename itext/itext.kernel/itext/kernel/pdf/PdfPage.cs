@@ -820,6 +820,9 @@ namespace iText.Kernel.Pdf {
 
         private void FlushXObjects(ICollection<PdfObject> xObjects) {
             foreach (PdfObject obj in xObjects) {
+                if (obj.IsFlushed()) {
+                    continue;
+                }
                 PdfStream xObject = (PdfStream)obj;
                 PdfDictionary innerResources = xObject.GetAsDictionary(PdfName.Resources);
                 ICollection<PdfObject> innerXObjects = null;

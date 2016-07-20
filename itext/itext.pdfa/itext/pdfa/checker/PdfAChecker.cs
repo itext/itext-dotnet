@@ -356,6 +356,9 @@ namespace iText.Pdfa.Checker {
             if (xObjects != null) {
                 foreach (PdfObject xObject in xObjects.Values()) {
                     PdfStream xObjStream = (PdfStream)xObject;
+                    if (checkedObjects.Contains(xObjStream)) {
+                        continue;
+                    }
                     PdfObject subtype = xObjStream.Get(PdfName.Subtype);
                     if (PdfName.Image.Equals(subtype)) {
                         CheckImage(xObjStream, resources.GetAsDictionary(PdfName.ColorSpace));
