@@ -57,11 +57,6 @@ namespace iText.Kernel.Pdf {
 
         private static readonly byte[] endobj = ByteUtils.GetIsoBytes("\nendobj\n");
 
-        private Dictionary<PdfWriter.ByteStore, PdfIndirectReference> streamMap = new Dictionary<PdfWriter.ByteStore
-            , PdfIndirectReference>();
-
-        private readonly IntHashtable serialized = new IntHashtable();
-
         private PdfOutputStream duplicateStream = null;
 
         protected internal WriterProperties properties;
@@ -73,8 +68,20 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         internal PdfObjectStream objectStream = null;
 
+        /// <summary>Is used to avoid duplications on object copying.</summary>
+        /// <remarks>
+        /// Is used to avoid duplications on object copying.
+        /// It stores hashes of the indirect reference from the source document and the corresponding
+        /// indirect references of the copied objects from the new document.
+        /// </remarks>
         protected internal IDictionary<int, PdfIndirectReference> copiedObjects = new Dictionary<int, PdfIndirectReference
             >();
+
+        /// <summary>Is used in smart mode to store serialized objects content.</summary>
+        private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializedContentToObjectRef = new 
+            Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference>();
+
+        private IntHashtable objectRefToSerializedContent = new IntHashtable();
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
@@ -276,28 +283,30 @@ namespace iText.Kernel.Pdf {
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();
-            PdfIndirectReference copiedIndirectReference;
             int copyObjectKey = 0;
-            if (!allowDuplicating && indirectReference != null) {
-                copyObjectKey = GetCopyObjectKey(obj);
-                copiedIndirectReference = copiedObjects.Get(copyObjectKey);
+            bool tryToFindDuplicate = !allowDuplicating && indirectReference != null;
+            if (tryToFindDuplicate) {
+                copyObjectKey = CalculateIndRefKey(indirectReference);
+                PdfIndirectReference copiedIndirectReference = copiedObjects.Get(copyObjectKey);
                 if (copiedIndirectReference != null) {
                     return copiedIndirectReference.GetRefersTo();
                 }
             }
-            if (properties.smartMode && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
-                PdfObject copiedObject = SmartCopyObject(obj);
-                if (copiedObject != null) {
-                    return copiedObjects.Get(GetCopyObjectKey(copiedObject)).GetRefersTo();
+            if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
+                PdfIndirectReference copiedObjectRef = TryToFindPreviouslyCopiedEqualObject(obj);
+                if (copiedObjectRef != null) {
+                    PdfIndirectReference copiedIndirectReference = copiedObjects.Get(CalculateIndRefKey(copiedObjectRef));
+                    copiedObjects[copyObjectKey] = copiedIndirectReference;
+                    return copiedIndirectReference.GetRefersTo();
                 }
             }
             PdfObject newObject = obj.NewInstance();
             if (indirectReference != null) {
                 if (copyObjectKey == 0) {
-                    copyObjectKey = GetCopyObjectKey(obj);
+                    copyObjectKey = CalculateIndRefKey(indirectReference);
                 }
-                PdfIndirectReference reference = newObject.MakeIndirect(document).GetIndirectReference();
-                copiedObjects[copyObjectKey] = reference;
+                PdfIndirectReference indRef = newObject.MakeIndirect(document).GetIndirectReference();
+                copiedObjects[copyObjectKey] = indRef;
             }
             newObject.CopyContent(obj, document);
             return newObject;
@@ -369,24 +378,35 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <summary>Calculates hash code for object to be copied.</summary>
-        /// <remarks>
-        /// Calculates hash code for object to be copied.
-        /// The hash code and the copied object is the stored in @{link copiedObjects} hash map to avoid duplications.
-        /// </remarks>
-        /// <param name="obj">object to be copied.</param>
+        /// <summary>Calculates hash code for the indirect reference taking into account the document it belongs to.</summary>
+        /// <param name="indRef">object to be hashed.</param>
         /// <returns>calculated hash code.</returns>
-        protected internal virtual int GetCopyObjectKey(PdfObject obj) {
-            PdfIndirectReference reference;
-            if (obj.IsIndirectReference()) {
-                reference = (PdfIndirectReference)obj;
-            }
-            else {
-                reference = obj.GetIndirectReference();
-            }
-            int result = reference.GetHashCode();
-            result = 31 * result + reference.GetDocument().GetHashCode();
+        protected internal static int CalculateIndRefKey(PdfIndirectReference indRef) {
+            int result = indRef.GetHashCode();
+            result = 31 * result + indRef.GetDocument().GetHashCode();
             return result;
+        }
+
+        /// <summary>Used in the smart mode.</summary>
+        /// <remarks>
+        /// Used in the smart mode.
+        /// It serializes given object content and tries to find previously copied object with the same content.
+        /// If already copied object is not found, it saves current object serialized content into the map.
+        /// </remarks>
+        /// <param name="object">an object to check if some other object with the same content was already copied.</param>
+        /// <returns>indirect reference of the object with the same content, which already has a copy in the new document.
+        ///     </returns>
+        private PdfIndirectReference TryToFindPreviouslyCopiedEqualObject(PdfObject @object) {
+            PdfWriter.SerializedPdfObject objectKey;
+            if (@object.IsStream() || @object.IsDictionary()) {
+                objectKey = new PdfWriter.SerializedPdfObject(@object, objectRefToSerializedContent);
+                PdfIndirectReference objectRef = serializedContentToObjectRef.Get(objectKey);
+                if (objectRef != null) {
+                    return objectRef;
+                }
+                serializedContentToObjectRef[objectKey] = @object.GetIndirectReference();
+            }
+            return null;
         }
 
         private void MarkArrayContentToFlush(PdfArray array) {
@@ -434,29 +454,6 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
-        private PdfObject SmartCopyObject(PdfObject obj) {
-            PdfWriter.ByteStore streamKey;
-            if (obj.IsStream()) {
-                streamKey = new PdfWriter.ByteStore((PdfStream)obj, serialized);
-                PdfIndirectReference streamRef = streamMap.Get(streamKey);
-                if (streamRef != null) {
-                    return streamRef;
-                }
-                streamMap[streamKey] = obj.GetIndirectReference();
-            }
-            else {
-                if (obj.IsDictionary()) {
-                    streamKey = new PdfWriter.ByteStore((PdfDictionary)obj, serialized);
-                    PdfIndirectReference streamRef = streamMap.Get(streamKey);
-                    if (streamRef != null) {
-                        return streamRef.GetRefersTo();
-                    }
-                    streamMap[streamKey] = obj.GetIndirectReference();
-                }
-            }
-            return null;
-        }
-
         /// <exception cref="System.IO.IOException"/>
         private byte[] GetDebugBytes() {
             if (duplicateStream != null) {
@@ -473,13 +470,32 @@ namespace iText.Kernel.Pdf {
                 ));
         }
 
-        internal class ByteStore {
-            private readonly byte[] b;
-
-            private readonly int hash;
+        internal class SerializedPdfObject {
+            private readonly byte[] serializedContent;
 
             private IDigest md5;
 
+            private readonly int hash;
+
+            internal SerializedPdfObject(PdfObject obj, IntHashtable serialized) {
+                System.Diagnostics.Debug.Assert(obj.IsDictionary() || obj.IsStream());
+                try {
+                    md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+                }
+                catch (Exception e) {
+                    throw new PdfException(e);
+                }
+                ByteBufferOutputStream bb = new ByteBufferOutputStream();
+                int level = 100;
+                SerObject(obj, level, bb, serialized);
+                this.serializedContent = bb.ToByteArray();
+                hash = CalculateHash(this.serializedContent);
+                md5 = null;
+            }
+
+            // TODO 1: objToSerialized contains hashes while on first run we append value itself
+            // TODO 2: object is not checked if it was alreadry serialized on start, double work could be done
+            // TODO 3: indirect objects often stored multiple times as parts of the other objects
             private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, IntHashtable serialized) {
                 if (level <= 0) {
                     return;
@@ -492,7 +508,7 @@ namespace iText.Kernel.Pdf {
                 ByteBufferOutputStream savedBb = null;
                 if (obj.IsIndirectReference()) {
                     reference = (PdfIndirectReference)obj;
-                    int key = GetCopyObjectKey(obj);
+                    int key = CalculateIndRefKey(reference);
                     if (serialized.ContainsKey(key)) {
                         bb.Append((int)serialized.Get(key));
                         return;
@@ -500,6 +516,7 @@ namespace iText.Kernel.Pdf {
                     else {
                         savedBb = bb;
                         bb = new ByteBufferOutputStream();
+                        obj = reference.GetRefersTo();
                     }
                 }
                 if (obj.IsStream()) {
@@ -534,7 +551,7 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 if (savedBb != null) {
-                    int key = GetCopyObjectKey(reference);
+                    int key = CalculateIndRefKey(reference);
                     if (!serialized.ContainsKey(key)) {
                         serialized.Put(key, CalculateHash(bb.GetBuffer()));
                     }
@@ -571,36 +588,6 @@ namespace iText.Kernel.Pdf {
                 }
             }
 
-            internal ByteStore(PdfStream str, IntHashtable serialized) {
-                try {
-                    md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
-                }
-                catch (Exception e) {
-                    throw new PdfException(e);
-                }
-                ByteBufferOutputStream bb = new ByteBufferOutputStream();
-                int level = 100;
-                SerObject(str, level, bb, serialized);
-                this.b = bb.ToByteArray();
-                hash = CalculateHash(this.b);
-                md5 = null;
-            }
-
-            internal ByteStore(PdfDictionary dict, IntHashtable serialized) {
-                try {
-                    md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
-                }
-                catch (Exception e) {
-                    throw new PdfException(e);
-                }
-                ByteBufferOutputStream bb = new ByteBufferOutputStream();
-                int level = 100;
-                SerObject(dict, level, bb, serialized);
-                this.b = bb.ToByteArray();
-                hash = CalculateHash(this.b);
-                md5 = null;
-            }
-
             private static int CalculateHash(byte[] b) {
                 int hash = 0;
                 int len = b.Length;
@@ -611,25 +598,12 @@ namespace iText.Kernel.Pdf {
             }
 
             public override bool Equals(Object obj) {
-                return obj is PdfWriter.ByteStore && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
-                    (b, ((PdfWriter.ByteStore)obj).b);
+                return obj is PdfWriter.SerializedPdfObject && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
+                    (serializedContent, ((PdfWriter.SerializedPdfObject)obj).serializedContent);
             }
 
             public override int GetHashCode() {
                 return hash;
-            }
-
-            protected internal virtual int GetCopyObjectKey(PdfObject obj) {
-                PdfIndirectReference reference;
-                if (obj.IsIndirectReference()) {
-                    reference = (PdfIndirectReference)obj;
-                }
-                else {
-                    reference = obj.GetIndirectReference();
-                }
-                int result = reference.GetHashCode();
-                result = 31 * result + reference.GetDocument().GetHashCode();
-                return result;
             }
         }
     }
