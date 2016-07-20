@@ -131,6 +131,12 @@ namespace iText.IO.Util {
             return file.Open(FileMode.Open);
         }
 
+        public static Stream WrapWithBufferedOutputStream(Stream outputStream)
+        {
+            //.NET standard stream already has buffer
+            return outputStream;
+        }
+
         public class FileFilter {
             public virtual bool Accept(String pathname) {
                 return true;

@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public PdfWriter(Stream os, WriterProperties properties)
-            : base(os) {
+            : base(FileUtil.WrapWithBufferedOutputStream(os)) {
             // For internal usage only
             //forewarned is forearmed
             this.properties = properties;

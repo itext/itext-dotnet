@@ -18,8 +18,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocumentWithXmp() {
             String filename = "emptyDocumentWithXmp.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos, new WriterProperties().AddXmpMetadata());
+            PdfWriter writer = new PdfWriter(destinationFolder + filename, new WriterProperties().AddXmpMetadata());
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle("Empty iText 7 Document"
                 );

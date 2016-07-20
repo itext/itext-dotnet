@@ -122,7 +122,6 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         /// <exception cref="System.IO.IOException">on error</exception>
-        /// <exception cref="iText.Kernel.PdfException">on error</exception>
         public PdfReader(Stream @is, ReaderProperties properties)
             : this(new RandomAccessSourceFactory().CreateSource(@is), properties) {
         }
@@ -135,7 +134,6 @@ namespace iText.Kernel.Pdf {
         /// if user doesn't want to close stream, he should set closeStream=false;
         /// </param>
         /// <exception cref="System.IO.IOException">on error</exception>
-        /// <exception cref="iText.Kernel.PdfException">on error</exception>
         public PdfReader(Stream @is)
             : this(@is, new ReaderProperties()) {
         }
@@ -288,7 +286,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="decode">true if to get decoded stream, false if to leave it originally encoded.</param>
         /// <returns>InputStream</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual Stream ReadStream(PdfStream stream, bool decode) {
             byte[] bytes = ReadStreamBytes(stream, decode);
             return bytes != null ? new MemoryStream(bytes) : null;
