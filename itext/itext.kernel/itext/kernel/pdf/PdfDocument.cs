@@ -917,19 +917,25 @@ namespace iText.Kernel.Pdf {
             // It's important to copy tag structure after link annotations were copied, because object content items in tag
             // structure are not copied in case if their's OBJ key is annotation and doesn't contain /P entry.
             if (toDocument.IsTagged()) {
-                if (tagStructureContext != null) {
-                    tagStructureContext.ActualizeTagsProperties();
-                }
-                foreach (IDictionary<PdfPage, PdfPage> increasingPagesRange in rangesOfPagesWithIncreasingNumbers) {
-                    if (insertInBetween) {
-                        GetStructTreeRoot().CopyTo(toDocument, insertBeforePage, increasingPagesRange);
+                if (IsTagged()) {
+                    if (tagStructureContext != null) {
+                        tagStructureContext.ActualizeTagsProperties();
                     }
-                    else {
-                        GetStructTreeRoot().CopyTo(toDocument, increasingPagesRange);
+                    foreach (IDictionary<PdfPage, PdfPage> increasingPagesRange in rangesOfPagesWithIncreasingNumbers) {
+                        if (insertInBetween) {
+                            GetStructTreeRoot().CopyTo(toDocument, insertBeforePage, increasingPagesRange);
+                        }
+                        else {
+                            GetStructTreeRoot().CopyTo(toDocument, increasingPagesRange);
+                        }
+                        insertBeforePage += increasingPagesRange.Count;
                     }
-                    insertBeforePage += increasingPagesRange.Count;
+                    toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
                 }
-                toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
+                else {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                    logger.Error(LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
+                }
             }
             if (catalog.IsOutlineMode()) {
                 CopyOutlines(outlinesToCopy, toDocument, page2page);

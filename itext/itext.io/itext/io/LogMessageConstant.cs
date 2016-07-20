@@ -95,6 +95,8 @@ namespace iText.IO {
         /// <summary>Log message.</summary>
         public const String MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN = "Make copy of Catalog dictionary is forbidden.";
 
+        public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
+
         /// <summary>Log message.</summary>
         public const String OCSP_STATUS_IS_UNKNOWN = "OCSP status is unknown.";
 
