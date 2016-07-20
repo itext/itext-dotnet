@@ -35,5 +35,22 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void LineSeparatorBackgroundTest01() {
+            String outFileName = destinationFolder + "lineSeparatorBackgroundTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_lineSeparatorBackgroundTest01.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            Style style = new Style();
+            style.SetBackgroundColor(Color.YELLOW);
+            style.SetMargin(10);
+            document.Add(new LineSeparator(new SolidLine()).AddStyle(style));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
