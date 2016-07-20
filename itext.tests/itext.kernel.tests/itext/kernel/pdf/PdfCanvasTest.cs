@@ -1238,7 +1238,7 @@ namespace iText.Kernel.Pdf {
         /*@Test
         public void ccittImageTest01() throws IOException, InterruptedException {
         String filename = "ccittImage01.pdf";
-        PdfWriter writer = new PdfWriter(new FileOutputStream(destinationFolder + filename));
+        PdfWriter writer = new PdfWriter(destinationFolder + filename);
         PdfDocument document = new PdfDocument(writer);
         
         PdfPage page = document.addNewPage();

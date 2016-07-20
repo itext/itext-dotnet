@@ -347,8 +347,7 @@ namespace iText.Kernel.Pdf {
             pdfDoc.Close();
             pdfDoc = new PdfDocument(new PdfReader(destinationFolder + "copyObject6_1.pdf"));
             helloWorld = (PdfDictionary)pdfDoc.GetPage(1).GetPdfObject().Get(new PdfName("HelloWorld"));
-            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "copyObject6_2.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject6_2.pdf"));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.GetPdfObject().Put(new PdfName("HelloWorldCopy1"), ((PdfDictionary)helloWorld.CopyTo(pdfDoc1)));
             page1.GetPdfObject().Put(new PdfName("HelloWorldCopy2"), ((PdfDictionary)helloWorld.CopyTo(pdfDoc1, true))

@@ -108,8 +108,7 @@ namespace iText.Kernel.Pdf {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "linkAnnotation03.pdf"
                 , sourceFolder + "cmp_linkAnnotation03.pdf", destinationFolder, "diff_"));
-            document = new PdfDocument(new PdfReader(new FileStream(destinationFolder + "linkAnnotation03.pdf", FileMode.Open
-                , FileAccess.Read)));
+            document = new PdfDocument(new PdfReader(destinationFolder + "linkAnnotation03.pdf"));
             page = document.GetPage(1);
             NUnit.Framework.Assert.AreEqual(3, page.GetAnnotsSize());
             IList<PdfAnnotation> annotations = page.GetAnnotations();

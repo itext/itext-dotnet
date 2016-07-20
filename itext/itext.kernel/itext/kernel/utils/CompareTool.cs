@@ -598,10 +598,8 @@ namespace iText.Kernel.Utils
 		private void CreateIgnoredAreasPdfs(String outPath, IDictionary<int, IList<Rectangle
 			>> ignoredAreas)
 		{
-			PdfWriter outWriter = new PdfWriter(new FileStream(outPath + ignoredAreasPrefix +
-				 outPdfName, FileMode.Create));
-			PdfWriter cmpWriter = new PdfWriter(new FileStream(outPath + ignoredAreasPrefix +
-				 cmpPdfName, FileMode.Create));
+			PdfWriter outWriter = new PdfWriter(outPath + ignoredAreasPrefix + outPdfName);
+			PdfWriter cmpWriter = new PdfWriter(outPath + ignoredAreasPrefix + cmpPdfName);
 			PdfDocument pdfOutDoc = new PdfDocument(new PdfReader(outPdf), outWriter);
 			PdfDocument pdfCmpDoc = new PdfDocument(new PdfReader(cmpPdf), cmpWriter);
 			foreach (KeyValuePair<int, IList<Rectangle>> entry in ignoredAreas)

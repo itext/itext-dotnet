@@ -181,7 +181,7 @@ namespace iText.Kernel.Pdf {
             document.Close();
             byte[] bytes = baos.ToArray();
             PdfReader reader = new PdfReader(new MemoryStream(bytes));
-            writer = new PdfWriter(new FileStream(destinationFolder + "structElemTest04.pdf", FileMode.Create));
+            writer = new PdfWriter(destinationFolder + "structElemTest04.pdf");
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             document = new PdfDocument(reader, writer);
             page = document.GetPage(1);
