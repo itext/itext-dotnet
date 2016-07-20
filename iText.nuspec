@@ -1,28 +1,17 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>iText</id>
+    <id>itext</id>
     <version>$version$</version>
     <title>iText Core</title>
-    <authors>Bruno Lowagie, Paulo Soares, et al.</authors>
-    <owners>Bruno Lowagie, Paulo Soares</owners>
+    <authors>iText Software</authors>
+    <owners>iText Software</owners>
     <licenseUrl>http://www.gnu.org/licenses/agpl.html</licenseUrl>
     <projectUrl>http://itextpdf.com/</projectUrl>
     <iconUrl>http://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>iText is a PDF library that allows you to CREATE, ADAPT, INSPECT and MAINTAIN documents in the Portable Document Format (PDF):
- - Generate documents and reports based on data from an XML file or a database
- - Create maps and books, exploiting numerous interactive features available in PDF
- - Add bookmarks, page numbers, watermarks, and other features to existing PDF documents
- - Split or concatenate pages from existing PDF files
- - Fill out interactive forms
- - Serve dynamically generated or manipulated PDF documents to a web browser
-
- iText is used by Java, .NET, Android and GAE developers to enhance their applications with PDF functionality. 
- iTextSharp is the .NET port.
-
- Several iText engineers are actively supporting the project on StackOverflow: http://stackoverflow.com/questions/tagged/itext</description>
-    <summary>iTextSharp is a port of the iText open source java library for PDF generation written entirely in C# for the .NET platform.</summary>
+    <description>iText 7 represents the next level of SDKs for developers that want to take advantage of the benefits PDF can bring. Equipped with a better document engine, high- and low-level programming capabilities and the ability to create, edit and enhance PDF documents, iText 7 can be a boon to nearly every workflow. iText 7 allows you to build custom PDF scenarios for web, mobile, desktop or cloud apps in Java and .NET.</description>
+    <summary>iText for .NET is a port of the iText open source java library for PDF generation written entirely in C# for the .NET platform.</summary>
     <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2016 iText Group NV</copyright>
     <language>en-US</language>

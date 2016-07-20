@@ -576,8 +576,7 @@ namespace iText.Kernel.Utils
 			}
 			if (differentPagesFail != null)
 			{
-				String errorMessage = differentPages.Replace("<filename>", outPdf).Replace("<pagenumber>"
-					, diffPages.ToString());
+				String errorMessage = differentPages.Replace("<filename>", outPdf).Replace("<pagenumber>" , "[" + String.Join(", ", diffPages) + "]");
 				if (!compareExecIsOk)
 				{
 					errorMessage += "\nYou can optionally specify path to ImageMagick compare tool (e.g. -DcompareExec=\"C:/Program Files/ImageMagick-6.5.4-2/compare.exe\") to visualize differences.";
