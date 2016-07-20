@@ -714,20 +714,21 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc1, "c:\\morph\\itext6\\itextpdf\\canvas\\src\\test\\resources\\com\\itextpdf\\canvas\\PdfAnnotationTest\\"
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc1, "../../../../../../../src/test/resources/com/itextpdf/kernel/pdf/PdfAnnotationTest/"
                  + "sample.wav", true);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
             pdfDoc1.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_screenAnnotation01.pdf", 
+                destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
         }
 
-        //        CompareTool compareTool = new CompareTool();
-        //        String errorMessage = compareTool.compareByContent(filename, sourceFolder + "cmp_screenAnnotation01.pdf", destinationFolder, "diff_");
-        //        if (errorMessage != null) {
-        //            Assert.fail(errorMessage);
-        //        }
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
