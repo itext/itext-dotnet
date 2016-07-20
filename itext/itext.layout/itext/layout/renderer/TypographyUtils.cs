@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Java.Lang.Reflect;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
@@ -86,6 +87,11 @@ namespace iText.Layout.Renderer {
         private static readonly ICollection<UnicodeScript> SUPPORTED_SCRIPTS;
 
         private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED;
+
+        private static IDictionary<String, Type> cachedClasses = new Dictionary<String, Type>();
+
+        private static IDictionary<TypographyUtils.TypographyMethodSignature, AccessibleObject> cachedMethods = new 
+            Dictionary<TypographyUtils.TypographyMethodSignature, AccessibleObject>();
 
         static TypographyUtils() {
             bool moduleFound = false;
@@ -238,7 +244,7 @@ namespace iText.Layout.Renderer {
         private static Object CallMethod(String className, String methodName, Object target, Type[] parameterTypes
             , params Object[] args) {
             try {
-                MethodInfo method = System.Type.GetType(className).GetMethod(methodName, parameterTypes);
+                MethodInfo method = FindMethod(className, methodName, parameterTypes);
                 return method.Invoke(target, args);
             }
             catch (MissingMethodException) {
@@ -255,7 +261,7 @@ namespace iText.Layout.Renderer {
 
         private static Object CallConstructor(String className, Type[] parameterTypes, params Object[] args) {
             try {
-                ConstructorInfo constructor = System.Type.GetType(className).GetConstructor(parameterTypes);
+                Constructor<object> constructor = FindConstructor(className, parameterTypes);
                 return constructor.Invoke(args);
             }
             catch (MissingMethodException) {
@@ -268,6 +274,84 @@ namespace iText.Layout.Renderer {
                 throw new Exception(exc.ToString(), exc);
             }
             return null;
+        }
+
+        /// <exception cref="System.MissingMethodException"/>
+        /// <exception cref="System.TypeLoadException"/>
+        private static MethodInfo FindMethod(String className, String methodName, Type[] parameterTypes) {
+            TypographyUtils.TypographyMethodSignature tm = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
+                , methodName);
+            MethodInfo m = (MethodInfo)cachedMethods.Get(tm);
+            if (m == null) {
+                m = FindClass(className).GetMethod(methodName, parameterTypes);
+                cachedMethods[tm] = m;
+            }
+            return m;
+        }
+
+        /// <exception cref="System.MissingMethodException"/>
+        /// <exception cref="System.TypeLoadException"/>
+        private static Constructor<object> FindConstructor(String className, Type[] parameterTypes) {
+            TypographyUtils.TypographyMethodSignature tc = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
+                );
+            Constructor<object> c = (Constructor<object>)cachedMethods.Get(tc);
+            if (c == null) {
+                c = FindClass(className).GetConstructor(parameterTypes);
+                cachedMethods[tc] = c;
+            }
+            return c;
+        }
+
+        /// <exception cref="System.TypeLoadException"/>
+        private static Type FindClass(String className) {
+            Type c = cachedClasses.Get(className);
+            if (c == null) {
+                c = System.Type.GetType(className);
+                cachedClasses[className] = c;
+            }
+            return c;
+        }
+
+        private class TypographyMethodSignature {
+            protected internal String className;
+
+            protected internal Type[] parameterTypes;
+
+            private String methodName;
+
+            internal TypographyMethodSignature(String className, Type[] parameterTypes)
+                : this(className, parameterTypes, null) {
+            }
+
+            internal TypographyMethodSignature(String className, Type[] parameterTypes, String methodName) {
+                this.methodName = methodName;
+                this.className = className;
+                this.parameterTypes = parameterTypes;
+            }
+
+            public override bool Equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || GetType() != o.GetType()) {
+                    return false;
+                }
+                TypographyUtils.TypographyMethodSignature that = (TypographyUtils.TypographyMethodSignature)o;
+                if (!className.Equals(that.className)) {
+                    return false;
+                }
+                if (!iText.IO.Util.JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
+                    return false;
+                }
+                return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
+            }
+
+            public override int GetHashCode() {
+                int result = className.GetHashCode();
+                result = 31 * result + iText.IO.Util.JavaUtil.ArraysHashCode(parameterTypes);
+                result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
+                return result;
+            }
         }
     }
 }
