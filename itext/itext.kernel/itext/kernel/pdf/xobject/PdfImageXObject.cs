@@ -336,8 +336,13 @@ namespace iText.Kernel.Pdf.Xobject {
                             array.Add(new PdfNumber((float)obj));
                         }
                         else {
-                            //TODO instance of was removed due to autoport
-                            array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
+                            if (obj is Object[]) {
+                                array.Add(CreateArray(stream, (Object[])obj));
+                            }
+                            else {
+                                //TODO instance of was removed due to autoport
+                                array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
+                            }
                         }
                     }
                 }
