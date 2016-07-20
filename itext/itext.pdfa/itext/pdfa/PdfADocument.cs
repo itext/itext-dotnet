@@ -257,16 +257,26 @@ namespace iText.Pdfa {
             return checker.GetConformanceLevel();
         }
 
+        protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
+            if (this.IsTagged()) {
+                try {
+                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
+                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                }
+                catch (XMPException exc) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                    logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
+                }
+            }
+        }
+
         protected override void UpdateXmpMetadata() {
             try {
                 XMPMeta xmpMeta = UpdateDefaultXmpMetadata();
                 xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel().GetPart());
                 xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel().GetConformance
                     ());
-                if (this.IsTagged()) {
-                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
-                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
-                }
+                AddCustomMetadataExtensions(xmpMeta);
                 SetXmpMetadata(xmpMeta);
             }
             catch (XMPException e) {

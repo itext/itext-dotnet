@@ -238,6 +238,7 @@ namespace iText.Kernel.Pdf {
                 XMPMeta xmpMeta = XMPMetaFactory.Create();
                 xmpMeta.SetObjectName(XMPConst.TAG_XMPMETA);
                 xmpMeta.SetObjectName("");
+                AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
                     xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion());
@@ -1363,6 +1364,9 @@ namespace iText.Kernel.Pdf {
             catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.CannotOpenDocument, e, this);
             }
+        }
+
+        protected internal virtual void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
         }
 
         protected internal virtual void UpdateXmpMetadata() {
