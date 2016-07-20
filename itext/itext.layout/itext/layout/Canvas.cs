@@ -159,6 +159,18 @@ namespace iText.Layout {
             return page != null;
         }
 
+        /// <summary>
+        /// Performs an entire recalculation of the element flow on the canvas,
+        /// taking into account all its current child elements.
+        /// </summary>
+        /// <remarks>
+        /// Performs an entire recalculation of the element flow on the canvas,
+        /// taking into account all its current child elements. May become very
+        /// resource-intensive for large documents.
+        /// Do not use when you have set
+        /// <see cref="RootElement{T}.immediateFlush"/>
+        /// to <code>true</code>.
+        /// </remarks>
         public virtual void Relayout() {
             if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");

@@ -216,34 +216,50 @@ namespace iText.Layout {
             return rootRenderer;
         }
 
+        /// <summary>Gets the left margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the left margin value</returns>
         public virtual float GetLeftMargin() {
             return leftMargin;
         }
 
+        /// <summary>Sets the left margin, measured in points</summary>
+        /// <param name="leftMargin">a <code>float</code> containing the new left margin value</param>
         public virtual void SetLeftMargin(float leftMargin) {
             this.leftMargin = leftMargin;
         }
 
+        /// <summary>Gets the right margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the right margin value</returns>
         public virtual float GetRightMargin() {
             return rightMargin;
         }
 
+        /// <summary>Sets the right margin, measured in points</summary>
+        /// <param name="rightMargin">a <code>float</code> containing the new right margin value</param>
         public virtual void SetRightMargin(float rightMargin) {
             this.rightMargin = rightMargin;
         }
 
+        /// <summary>Gets the top margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the top margin value</returns>
         public virtual float GetTopMargin() {
             return topMargin;
         }
 
+        /// <summary>Sets the top margin, measured in points</summary>
+        /// <param name="topMargin">a <code>float</code> containing the new top margin value</param>
         public virtual void SetTopMargin(float topMargin) {
             this.topMargin = topMargin;
         }
 
+        /// <summary>Gets the bottom margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the bottom margin value</returns>
         public virtual float GetBottomMargin() {
             return bottomMargin;
         }
 
+        /// <summary>Sets the bottom margin, measured in points</summary>
+        /// <param name="bottomMargin">a <code>float</code> containing the new bottom margin value</param>
         public virtual void SetBottomMargin(float bottomMargin) {
             this.bottomMargin = bottomMargin;
         }
