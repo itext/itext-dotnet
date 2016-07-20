@@ -118,8 +118,8 @@ namespace iText.Layout.Renderer {
                                         storedArea = currentArea;
                                     }
                                     else {
-                                        if (null != result.GetCauseOfNothing() && true.Equals(result.GetCauseOfNothing().GetProperty(Property.KEEP_TOGETHER
-                                            ))) {
+                                        if (null != result.GetCauseOfNothing() && true.Equals(result.GetCauseOfNothing().GetProperty<bool?>(Property
+                                            .KEEP_TOGETHER))) {
                                             // set KEEP_TOGETHER false on the deepest parent (maybe the element itself) to have KEEP_TOGETHER == true
                                             IRenderer theDeepestKeptTogether = result.GetCauseOfNothing();
                                             while (null == theDeepestKeptTogether.GetModelElement() || null == theDeepestKeptTogether.GetModelElement(
@@ -155,8 +155,8 @@ namespace iText.Layout.Renderer {
                     renderer = result.GetOverflowRenderer();
                 }
                 // Keep renderer until next element is added for future keep with next adjustments
-                if (renderer != null && true.Equals(renderer.GetProperty(Property.KEEP_WITH_NEXT))) {
-                    if (true.Equals(renderer.GetProperty(Property.FORCED_PLACEMENT))) {
+                if (renderer != null && true.Equals(renderer.GetProperty<bool?>(Property.KEEP_WITH_NEXT))) {
+                    if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                         logger.Warn(LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
                         UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);

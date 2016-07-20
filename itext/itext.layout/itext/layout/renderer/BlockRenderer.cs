@@ -292,7 +292,7 @@ namespace iText.Layout.Renderer {
                     ) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
                     logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
-                        .GetSimpleName()));
+                        .Name));
                 }
                 else {
                     bBox.SetWidth((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
@@ -416,7 +416,7 @@ namespace iText.Layout.Renderer {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
                     logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
-                        .GetSimpleName()));
+                        .Name));
                 }
                 else {
                     float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
@@ -436,7 +436,7 @@ namespace iText.Layout.Renderer {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
                     logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
-                        .GetSimpleName()));
+                        .Name));
                 }
                 else {
                     float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox

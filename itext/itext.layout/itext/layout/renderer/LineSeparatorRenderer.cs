@@ -70,8 +70,8 @@ namespace iText.Layout.Renderer {
                  !HasOwnProperty(Property.FORCED_PLACEMENT)) {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
-            occupiedArea.GetBBox().SetWidth(calculatedWidth).MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight
-                (height);
+            occupiedArea.GetBBox().SetWidth((float)calculatedWidth).MoveUp(occupiedArea.GetBBox().GetHeight() - height
+                ).SetHeight(height);
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());

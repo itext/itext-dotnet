@@ -379,7 +379,7 @@ namespace iText.IO.Codec {
                 return null;
             }
             else {
-                return fields[i];
+                return fields[(int)i];
             }
         }
 

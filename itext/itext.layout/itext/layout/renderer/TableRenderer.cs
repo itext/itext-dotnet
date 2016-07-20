@@ -213,17 +213,17 @@ namespace iText.Layout.Renderer {
                 bool cellWithBigRowspanAdded = false;
                 IList<CellRenderer> currChildRenderers = new List<CellRenderer>();
                 // Process in a queue, because we might need to add a cell from the future, i.e. having big rowspan in case of split.
-                Queue<TableRenderer.CellRendererInfo> cellProcessingQueue = new LinkedList<TableRenderer.CellRendererInfo>
-                    ();
+                LinkedList<TableRenderer.CellRendererInfo> cellProcessingQueue = new LinkedList<TableRenderer.CellRendererInfo
+                    >();
                 for (int col = 0; col < currentRow.Length; col++) {
                     if (currentRow[col] != null) {
-                        cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
+                        cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
                     }
                 }
                 // the element which was the first to cause Layout.Nothing
                 IRenderer firstCauseOfNothing = null;
-                while (!cellProcessingQueue.IsEmpty()) {
-                    TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.Dequeue();
+                while (cellProcessingQueue.Count > 0) {
+                    TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.JRemoveFirst();
                     int col_1 = currentCellInfo.column;
                     CellRenderer cell = currentCellInfo.cellRenderer;
                     if (cell != null) {
@@ -302,7 +302,7 @@ namespace iText.Layout.Renderer {
                                         cellProcessingQueue.Clear();
                                         for (int addCol = 0; addCol < currentRow.Length; addCol++) {
                                             if (currentRow[addCol] != null) {
-                                                cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(currentRow[addCol], addCol, row));
+                                                cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(currentRow[addCol], addCol, row));
                                             }
                                         }
                                         footerRenderer = null;
@@ -321,7 +321,7 @@ namespace iText.Layout.Renderer {
                                                 verticalAlignment = addRenderer.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
                                                 if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM)) {
                                                     if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 < addRow) {
-                                                        cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, addRow));
+                                                        cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, addRow));
                                                         cellWithBigRowspanAdded = true;
                                                     }
                                                     else {
@@ -346,7 +346,7 @@ namespace iText.Layout.Renderer {
                                                 }
                                                 else {
                                                     if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
-                                                        cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, addRow));
+                                                        cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol_1, addRow));
                                                         cellWithBigRowspanAdded = true;
                                                     }
                                                 }
@@ -492,10 +492,10 @@ namespace iText.Layout.Renderer {
                     ApplyBorderBox(occupiedArea.GetBBox(), true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
-                    foreach (KeyValuePair<int, int> entry in rowMoves) {
+                    foreach (KeyValuePair<int, int?> entry in rowMoves) {
                         // Move the cell back to its row if there was no actual split
-                        if (null == splitResult[1].rows[entry.Value - splitResult[0].rows.Count][entry.Key]) {
-                            splitResult[1].rows[entry.Value - splitResult[0].rows.Count][entry.Key] = splitResult[1].rows[row - splitResult
+                        if (null == splitResult[1].rows[(int) entry.Value - splitResult[0].rows.Count][entry.Key]) {
+                            splitResult[1].rows[(int) entry.Value - splitResult[0].rows.Count][entry.Key] = splitResult[1].rows[row - splitResult
                                 [0].rows.Count][entry.Key];
                             splitResult[1].rows[row - splitResult[0].rows.Count][entry.Key] = null;
                         }

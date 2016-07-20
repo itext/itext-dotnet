@@ -137,5 +137,13 @@ namespace iText.Layout {
         public static String[] Split(this String str, String regex) {
             return str.Split(regex.ToCharArray());
         }
+
+        public static T JRemoveFirst<T>(this LinkedList<T> list)
+        {
+            T value = list.First.Value;
+            list.RemoveFirst();
+
+            return value;
+        }
     }
 }

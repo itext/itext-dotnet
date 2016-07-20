@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Java.Lang.Reflect;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
@@ -90,8 +89,8 @@ namespace iText.Layout.Renderer {
 
         private static IDictionary<String, Type> cachedClasses = new Dictionary<String, Type>();
 
-        private static IDictionary<TypographyUtils.TypographyMethodSignature, AccessibleObject> cachedMethods = new 
-            Dictionary<TypographyUtils.TypographyMethodSignature, AccessibleObject>();
+        private static IDictionary<TypographyUtils.TypographyMethodSignature, MemberInfo> cachedMethods = new 
+            Dictionary<TypographyUtils.TypographyMethodSignature, MemberInfo>();
 
         static TypographyUtils() {
             bool moduleFound = false;
@@ -261,7 +260,7 @@ namespace iText.Layout.Renderer {
 
         private static Object CallConstructor(String className, Type[] parameterTypes, params Object[] args) {
             try {
-                Constructor<object> constructor = FindConstructor(className, parameterTypes);
+                ConstructorInfo constructor = FindConstructor(className, parameterTypes);
                 return constructor.Invoke(args);
             }
             catch (MissingMethodException) {
@@ -291,10 +290,10 @@ namespace iText.Layout.Renderer {
 
         /// <exception cref="System.MissingMethodException"/>
         /// <exception cref="System.TypeLoadException"/>
-        private static Constructor<object> FindConstructor(String className, Type[] parameterTypes) {
+        private static ConstructorInfo FindConstructor(String className, Type[] parameterTypes) {
             TypographyUtils.TypographyMethodSignature tc = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
                 );
-            Constructor<object> c = (Constructor<object>)cachedMethods.Get(tc);
+            ConstructorInfo c = (ConstructorInfo)cachedMethods.Get(tc);
             if (c == null) {
                 c = FindClass(className).GetConstructor(parameterTypes);
                 cachedMethods[tc] = c;
@@ -313,11 +312,11 @@ namespace iText.Layout.Renderer {
         }
 
         private class TypographyMethodSignature {
-            protected internal String className;
+            protected internal readonly String className;
 
             protected internal Type[] parameterTypes;
 
-            private String methodName;
+            private readonly String methodName;
 
             internal TypographyMethodSignature(String className, Type[] parameterTypes)
                 : this(className, parameterTypes, null) {
@@ -340,7 +339,7 @@ namespace iText.Layout.Renderer {
                 if (!className.Equals(that.className)) {
                     return false;
                 }
-                if (!iText.IO.Util.JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
+                if (!EqualParameterTypes(that.parameterTypes)) {
                     return false;
                 }
                 return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
@@ -351,6 +350,27 @@ namespace iText.Layout.Renderer {
                 result = 31 * result + iText.IO.Util.JavaUtil.ArraysHashCode(parameterTypes);
                 result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
                 return result;
+            }
+
+            private bool EqualParameterTypes(Type[] parameterTypes2) {
+                if (parameterTypes == parameterTypes2) {
+                    return true;
+                }
+                if (parameterTypes == null || parameterTypes2 == null) {
+                    return false;
+                }
+                int length = parameterTypes.Length;
+                if (parameterTypes2.Length != length) {
+                    return false;
+                }
+                for (int i = 0; i < length; i++) {
+                    Type type = parameterTypes[i];
+                    Type type2 = parameterTypes2[i];
+                    if (!(type == null ? type2 == null : type.Equals(type2))) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }
