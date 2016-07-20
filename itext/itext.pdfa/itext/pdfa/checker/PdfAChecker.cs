@@ -50,17 +50,57 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Pdfa.Checker {
+    /// <summary>
+    /// An abstract class that will run through all necessary checks defined in the
+    /// different PDF/A standards and levels.
+    /// </summary>
+    /// <remarks>
+    /// An abstract class that will run through all necessary checks defined in the
+    /// different PDF/A standards and levels. A number of common checks are executed
+    /// in this class, while standard-dependent specifications are implemented in the
+    /// available subclasses.
+    /// While it is possible to subclass this method and implement its abstract
+    /// methods in client code, this is not encouraged and will have little effect.
+    /// It is not possible to plug custom implementations into iText, because iText
+    /// should always refuse to create non-compliant PDF/A, which would be possible
+    /// with client code implementations. Any future generations of the PDF/A
+    /// standard and its derivates will get their own implementation in the
+    /// iText 7 - pdfa project.
+    /// </remarks>
     public abstract class PdfAChecker {
+        /// <summary>
+        /// The Red-Green-Blue color profile as defined by the International Color
+        /// Consortium.
+        /// </summary>
         public const String ICC_COLOR_SPACE_RGB = "RGB ";
 
+        /// <summary>
+        /// The Cyan-Magenta-Yellow-Key (black) color profile as defined by the
+        /// International Color Consortium.
+        /// </summary>
         public const String ICC_COLOR_SPACE_CMYK = "CMYK";
 
+        /// <summary>
+        /// The Grayscale color profile as defined by the International Color
+        /// Consortium.
+        /// </summary>
         public const String ICC_COLOR_SPACE_GRAY = "GRAY";
 
+        /// <summary>The Output device class</summary>
         public const String ICC_DEVICE_CLASS_OUTPUT_PROFILE = "prtr";
 
+        /// <summary>The Monitor device class</summary>
         public const String ICC_DEVICE_CLASS_MONITOR_PROFILE = "mntr";
 
+        /// <summary>The maximum Graphics State stack depth in PDF/A documents, i.e.</summary>
+        /// <remarks>
+        /// The maximum Graphics State stack depth in PDF/A documents, i.e. the
+        /// maximum number of graphics state operators with code <code>q</code> that
+        /// may be opened (i.e. not yet closed by a corresponding <code>Q</code>) at
+        /// any point in a content stream sequence.
+        /// Defined as 28 by PDF/A-1 section 6.1.12, by referring to the PDF spec
+        /// Appendix C table 1 "architectural limits".
+        /// </remarks>
         public const int maxGsStackDepth = 28;
 
         protected internal PdfAConformanceLevel conformanceLevel;
@@ -93,6 +133,17 @@ namespace iText.Pdfa.Checker {
             this.conformanceLevel = conformanceLevel;
         }
 
+        /// <summary>
+        /// This method checks a number of document-wide requirements of the PDF/A
+        /// standard.
+        /// </summary>
+        /// <remarks>
+        /// This method checks a number of document-wide requirements of the PDF/A
+        /// standard. The algorithms of some of these checks vary with the PDF/A
+        /// level and thus are implemented in subclasses; others are implemented
+        /// as private methods in this class.
+        /// </remarks>
+        /// <param name="catalog"/>
         public virtual void CheckDocument(PdfCatalog catalog) {
             PdfDictionary catalogDict = catalog.GetPdfObject();
             SetPdfAOutputIntentColorSpace(catalogDict);
@@ -108,10 +159,20 @@ namespace iText.Pdfa.Checker {
             CheckColorsUsages();
         }
 
+        /// <summary>
+        /// This method checks all requirements that must be fulfilled by a page in a
+        /// PDF/A document.
+        /// </summary>
+        /// <param name="page">the page that must be checked</param>
         public virtual void CheckSinglePage(PdfPage page) {
             CheckPage(page);
         }
 
+        /// <summary>
+        /// This method checks the requirements that must be fulfilled by a COS
+        /// object in a PDF/A document.
+        /// </summary>
+        /// <param name="obj">the COS object that must be checked</param>
         public virtual void CheckPdfObject(PdfObject obj) {
             switch (obj.GetObjectType()) {
                 case PdfObject.NUMBER: {
@@ -143,18 +204,62 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// for this file.
+        /// </summary>
+        /// <returns>the defined conformance level for this document.</returns>
         public virtual PdfAConformanceLevel GetConformanceLevel() {
             return conformanceLevel;
         }
 
+        /// <summary>
+        /// Remembers which objects have already been checked, in order to avoid
+        /// redundant checks.
+        /// </summary>
+        /// <param name="object">the object to check</param>
+        /// <returns>whether or not the object has already been checked</returns>
         public virtual bool ObjectIsChecked(PdfObject @object) {
             return checkedObjects.Contains(@object);
         }
 
+        /// <summary>
+        /// This method checks compliance with the graphics state architectural
+        /// limitation, explained by
+        /// <see cref="maxGsStackDepth"/>
+        /// .
+        /// </summary>
+        /// <param name="stackOperation">the operation to check the graphics state counter for</param>
         public abstract void CheckCanvasStack(char stackOperation);
 
+        /// <summary>
+        /// This method checks compliance with the inline image restrictions in the
+        /// PDF/A specs, specifically filter parameters.
+        /// </summary>
+        /// <param name="inlineImage">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// containing the inline image
+        /// </param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
         public abstract void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces);
 
+        /// <summary>
+        /// This method checks compliance with the color restrictions imposed by the
+        /// available color spaces in the document.
+        /// </summary>
+        /// <param name="color">the color to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="fill"/>
         public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill);
 
         public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
