@@ -54,19 +54,33 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+                parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
+            }
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
-            occupiedArea = layoutContext.GetArea().Clone();
-            float? calculatedWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
-            if (calculatedWidth != null) {
-                occupiedArea.GetBBox().SetWidth(calculatedWidth);
-            }
+            occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), parentBBox.Clone());
             ApplyMargins(occupiedArea.GetBBox(), false);
-            if (occupiedArea.GetBBox().GetHeight() < height) {
+            float? calculatedWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
+            if (calculatedWidth == null) {
+                calculatedWidth = occupiedArea.GetBBox().GetWidth();
+            }
+            if ((occupiedArea.GetBBox().GetHeight() < height || occupiedArea.GetBBox().GetWidth() < calculatedWidth) &&
+                 !HasOwnProperty(Property.FORCED_PLACEMENT)) {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
-            occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight(height);
+            occupiedArea.GetBBox().SetWidth(calculatedWidth).MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight
+                (height);
             ApplyMargins(occupiedArea.GetBBox(), true);
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+                ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
+                if (IsNotFittingHeight(layoutContext.GetArea())) {
+                    if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                    }
+                }
+            }
             return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null);
         }
 
@@ -74,11 +88,10 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement);
         }
 
-        public override void Draw(DrawContext drawContext) {
-            base.Draw(drawContext);
+        public override void DrawChildren(DrawContext drawContext) {
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             if (lineDrawer != null) {
-                Rectangle area = occupiedArea.GetBBox().Clone();
+                Rectangle area = GetOccupiedAreaBBox();
                 ApplyMargins(area, false);
                 lineDrawer.Draw(drawContext.GetCanvas(), area);
             }

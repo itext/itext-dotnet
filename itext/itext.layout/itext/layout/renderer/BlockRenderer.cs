@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -286,8 +288,16 @@ namespace iText.Layout.Renderer {
             Rectangle bBox = occupiedArea.GetBBox().Clone();
             float? rotationAngle = this.GetProperty<float?>(Property.ROTATION_ANGLE);
             if (rotationAngle != null) {
-                bBox.SetWidth((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
-                bBox.SetHeight((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT));
+                if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)
+                    ) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+                    logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
+                        .GetSimpleName()));
+                }
+                else {
+                    bBox.SetWidth((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
+                    bBox.SetHeight((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT));
+                }
             }
             return bBox;
         }
@@ -403,25 +413,39 @@ namespace iText.Layout.Renderer {
         protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
-                float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
-                    ().GetHeight();
-                float shiftX = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
-                float shiftY = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
-                Move(-shiftX, -shiftY);
-                float[] ctm = ApplyRotation();
-                canvas.SaveState().ConcatMatrix(ctm[0], ctm[1], ctm[2], ctm[3], ctm[4], ctm[5]);
+                if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+                    logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
+                        .GetSimpleName()));
+                }
+                else {
+                    float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
+                        ().GetHeight();
+                    float shiftX = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
+                    float shiftY = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
+                    Move(-shiftX, -shiftY);
+                    float[] ctm = ApplyRotation();
+                    canvas.SaveState().ConcatMatrix(ctm[0], ctm[1], ctm[2], ctm[3], ctm[4], ctm[5]);
+                }
             }
         }
 
         protected internal virtual void EndRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
-                float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
-                    ().GetHeight();
-                float shiftX = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
-                float shiftY = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
-                canvas.RestoreState();
-                Move(shiftX, shiftY);
+                if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
+                    logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
+                        .GetSimpleName()));
+                }
+                else {
+                    float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
+                        ().GetHeight();
+                    float shiftX = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
+                    float shiftY = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
+                    canvas.RestoreState();
+                    Move(shiftX, shiftY);
+                }
             }
         }
 
