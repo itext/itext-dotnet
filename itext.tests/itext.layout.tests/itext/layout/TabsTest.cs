@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -48,9 +47,7 @@ namespace iText.Layout {
         public virtual void DefaultTabsTest() {
             String outFileName = destinationFolder + "defaultTabTest.pdf";
             String cmpFileName = sourceFolder + "cmp_defaultTabTest.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Paragraph p = new Paragraph();
             AddTabbedTextToParagraph(p, text0, new float[0], null, null, null);
@@ -181,9 +178,7 @@ namespace iText.Layout {
         public virtual void OutOfPageBoundsTest() {
             String outFileName = destinationFolder + "outOfPageBoundsTest.pdf";
             String cmpFileName = sourceFolder + "cmp_outOfPageBoundsTest.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             //tabstops out of page bounds
             Paragraph p = new Paragraph();
@@ -231,9 +226,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document InitDocument(String outFileName) {
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             pdfDoc.SetDefaultPageSize(PageSize.A4.Rotate());
             return new Document(pdfDoc);
         }

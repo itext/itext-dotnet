@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -46,7 +45,7 @@ namespace iText.Layout {
         public virtual void FixedTextRotationTest01() {
             String outFileName = destinationFolder + "fixedTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             SolidBorder border = new SolidBorder(0.5f);
             int x1 = 350;
@@ -73,7 +72,7 @@ namespace iText.Layout {
         public virtual void FixedTextRotationTest02() {
             String outFileName = destinationFolder + "fixedTextRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String longText = "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
                  + "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooong text";
@@ -90,7 +89,7 @@ namespace iText.Layout {
         public virtual void FixedTextRotationTest03() {
             String outFileName = destinationFolder + "fixedTextRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String simpleText = "text simple text";
             float x = 50;
@@ -111,7 +110,7 @@ namespace iText.Layout {
         public virtual void FixedTextRotationTest04() {
             String outFileName = destinationFolder + "fixedTextRotationTest04.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "fixedTextRotationTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String simpleText = "text simple text";
             float x = 50;
@@ -132,7 +131,7 @@ namespace iText.Layout {
         public virtual void StaticTextRotationTest01() {
             String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph();
             for (int i = 0; i < 7; ++i) {
@@ -152,7 +151,7 @@ namespace iText.Layout {
         public virtual void StaticTextRotationTest02() {
             String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph(para2Text).SetRotationAngle((Math.PI / 12)));
@@ -170,7 +169,7 @@ namespace iText.Layout {
         public virtual void StaticTextRotationTest03() {
             String outFileName = destinationFolder + "staticTextRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph(para2Text).SetRotationAngle((Math.PI / 6)).SetBackgroundColor(Color.RED));
@@ -187,7 +186,7 @@ namespace iText.Layout {
         public virtual void StaticTextRotationTest04() {
             String outFileName = destinationFolder + "staticTextRotationTest04.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "staticTextRotationTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph("short text string").SetRotationAngle((Math.PI / 6)).SetBackgroundColor(Color.RED
@@ -204,7 +203,7 @@ namespace iText.Layout {
         public virtual void SplitTextRotationTest01() {
             String outFileName = destinationFolder + "splitTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph(para1Text).SetRotationAngle((Math.PI / 4)));
@@ -222,7 +221,7 @@ namespace iText.Layout {
         public virtual void SplitTextRotationTest02() {
             String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "splitTextRotationTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text));
             document.Add(new Paragraph(para1Text));
@@ -245,7 +244,7 @@ namespace iText.Layout {
             String fileName = "rotationInfiniteLoopTest01.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + cmpPrefix + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetDefaultPageSize(PageSize.A5.Rotate());
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph(para1Text).SetRotationAngle((Math.PI / 2)));
@@ -262,7 +261,7 @@ namespace iText.Layout {
             String fileName = "rotationInfiniteLoopTest02.pdf";
             String outFileName = destinationFolder + fileName;
             String cmpFileName = sourceFolder + cmpPrefix + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             pdfDocument.SetDefaultPageSize(PageSize.A5.Rotate());
             Document document = new Document(pdfDocument);
             document.Add(new List().Add(para1Text).SetRotationAngle((Math.PI / 2)));
@@ -277,9 +276,7 @@ namespace iText.Layout {
         public virtual void TableRotationTest02() {
             String outFileName = destinationFolder + "tableRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest02.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle
                 ((Math.PI / 2)))).AddCell(new Cell().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).
@@ -297,9 +294,7 @@ namespace iText.Layout {
         public virtual void DivRotationTest01() {
             String outFileName = destinationFolder + "divRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest01.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Div div = new Div().SetBackgroundColor(Color.GREEN);
             div.Add(new Paragraph(para1Text).SetBackgroundColor(Color.RED)).SetRotationAngle(Math.PI / 4);
@@ -319,9 +314,7 @@ namespace iText.Layout {
         public virtual void DivRotationTest02() {
             String outFileName = destinationFolder + "divRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "divRotationTest02.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
             doc.Add(new Paragraph(para1Text));
@@ -343,9 +336,7 @@ namespace iText.Layout {
         public virtual void ListRotationTest01() {
             String outFileName = destinationFolder + "listRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest01.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
             List list = new List().SetRotationAngle(3 * Math.PI / 4).SetBackgroundColor(Color.GREEN);
@@ -365,9 +356,7 @@ namespace iText.Layout {
         public virtual void ListRotationTest02() {
             String outFileName = destinationFolder + "listRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "listRotationTest02.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
             doc.Add(new Paragraph(para1Text));
@@ -390,9 +379,7 @@ namespace iText.Layout {
         public virtual void AlignedTextRotationTest01() {
             String outFileName = destinationFolder + "alignedTextRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "alignedTextRotationTest01.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(para1Text));
             Paragraph p = new Paragraph();
@@ -412,9 +399,7 @@ namespace iText.Layout {
         public virtual void InnerRotationTest01() {
             String outFileName = destinationFolder + "innerRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest01.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Div().SetBackgroundColor(Color.GREEN).SetHeight(300).SetWidth(300).Add(new Div().SetBackgroundColor
                 (Color.RED).SetHeight(100).SetWidth(100).SetRotationAngle(Math.PI / 4)).SetRotationAngle(Math.PI / 8));
@@ -429,9 +414,7 @@ namespace iText.Layout {
         public virtual void InnerRotationTest02() {
             String outFileName = destinationFolder + "innerRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest02.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String longText = para1Text + para2Text + para3Text;
             String extremeLongText = longText + longText + longText;

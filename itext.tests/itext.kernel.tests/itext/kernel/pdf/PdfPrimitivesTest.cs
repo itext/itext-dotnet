@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Text;
 using iText.Test;
 
@@ -59,9 +58,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesFloatNumberTest() {
             String filename = "primitivesFloatNumberTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfArray array = GeneratePdfArrayWithFloatNumbers(null, false);
@@ -76,9 +73,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesIntNumberTest() {
             String filename = "primitivesIntNumberTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfArray array = GeneratePdfArrayWithIntNumbers(null, false);
@@ -93,9 +88,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesNameTest() {
             String filename = "primitivesNameTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfArray array = GeneratePdfArrayWithNames(null, false);
@@ -110,9 +103,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesStringTest() {
             String filename = "primitivesStringTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 PdfArray array = GeneratePdfArrayWithStrings(null, false);
@@ -127,9 +118,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesBooleanTest() {
             String filename = "primitivesBooleanTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithBooleans(null, false));
@@ -142,9 +131,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesFloatNumberIndirectTest() {
             String filename = "primitivesFloatNumberIndirectTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithFloatNumbers(pdfDoc, true));
@@ -157,9 +144,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesIntNumberIndirectTest() {
             String filename = "primitivesIntNumberIndirectTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithIntNumbers(pdfDoc, true));
@@ -172,9 +157,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesStringIndirectTest() {
             String filename = "primitivesStringIndirectTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithStrings(pdfDoc, true));
@@ -187,9 +170,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesNameIndirectTest() {
             String filename = "primitivesNameIndirectTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithNames(pdfDoc, true));
@@ -202,9 +183,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrimitivesBooleanIndirectTest() {
             String filename = "primitivesBooleanIndirectTest.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < PageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(TestArray, GeneratePdfArrayWithBooleans(pdfDoc, true));

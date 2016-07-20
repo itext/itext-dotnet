@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
@@ -28,7 +27,7 @@ namespace iText.Layout {
         public virtual void NestedListTest01() {
             String outFileName = destinationFolder + "nestedListTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_nestedListTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List romanList2 = new List(ListNumberingType.ROMAN_LOWER).SetSymbolIndent(20).SetMarginLeft(25).Add("One")
                 .Add("Two").Add("Three");
@@ -49,7 +48,7 @@ namespace iText.Layout {
         public virtual void ListNumberingTest01() {
             String outFileName = destinationFolder + "listNumberingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listNumberingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             IList<List> lists = new List<List>();
             lists.Add(new List(ListNumberingType.DECIMAL));
@@ -78,7 +77,7 @@ namespace iText.Layout {
         public virtual void DivInListItemTest01() {
             String outFileName = destinationFolder + "divInListItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divInListItemTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             ListItem item = new ListItem();
             item.Add(new Div().Add(new Paragraph("text")));
@@ -94,7 +93,7 @@ namespace iText.Layout {
         public virtual void ListOverflowTest01() {
             String outFileName = destinationFolder + "listOverflowTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).Add("first string").Add("second string").Add("third string"
@@ -114,7 +113,7 @@ namespace iText.Layout {
         public virtual void ListOverflowTest02() {
             String outFileName = destinationFolder + "listOverflowTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).Add("first string");
@@ -135,7 +134,7 @@ namespace iText.Layout {
         public virtual void ListOverflowTest03() {
             String outFileName = destinationFolder + "listOverflowTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_listOverflowTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph("Test String");
             List list = new List(ListNumberingType.DECIMAL).SetItemStartIndex(10).Add("first string").Add("second string"
@@ -155,7 +154,7 @@ namespace iText.Layout {
         public virtual void ListEmptyItemTest01() {
             String outFileName = destinationFolder + "listEmptyItemTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listEmptyItemTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             list.Add(new ListItem()).Add(new ListItem()).Add(new ListItem()).Add("123").Add((ListItem)new ListItem().Add
@@ -172,7 +171,7 @@ namespace iText.Layout {
         public virtual void ImageInListTest01() {
             String outFileName = destinationFolder + "imageInListTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageInListTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
@@ -191,7 +190,7 @@ namespace iText.Layout {
         public virtual void ListItemAlignmentTest01() {
             String outFileName = destinationFolder + "listItemAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemAlignmentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.DECIMAL).SetListSymbolAlignment(ListSymbolAlignment.LEFT);
             for (int i = 1; i <= 30; i++) {

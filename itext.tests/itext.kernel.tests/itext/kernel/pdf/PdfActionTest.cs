@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Pdf.Action;
 using iText.Test;
 
@@ -18,8 +17,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ActionTest01() {
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest01.pdf", FileMode.Create));
-            PdfDocument document = CreateDocument(writer, true);
+            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + "actionTest01.pdf"), true);
             document.GetCatalog().SetOpenAction(PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
             System.Console.Out.WriteLine(String.Format("Please open document {0} and make sure that you're automatically redirected to {1} site."
@@ -29,8 +27,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ActionTest02() {
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + "actionTest02.pdf", FileMode.Create));
-            PdfDocument document = CreateDocument(writer, false);
+            PdfDocument document = CreateDocument(new PdfWriter(destinationFolder + "actionTest02.pdf"), false);
             document.GetPage(2).SetAdditionalAction(PdfName.O, PdfAction.CreateURI("http://itextpdf.com/"));
             document.Close();
             System.Console.Out.WriteLine(String.Format("Please open document {0} at page 2 and make sure that you're automatically redirected to {1} site."

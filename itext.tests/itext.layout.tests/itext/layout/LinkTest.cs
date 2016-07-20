@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Navigation;
@@ -25,9 +24,7 @@ namespace iText.Layout {
         public virtual void LinkTest01() {
             String outFileName = destinationFolder + "linkTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest01.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
@@ -43,9 +40,7 @@ namespace iText.Layout {
         public virtual void LinkTest02() {
             String outFileName = destinationFolder + "linkTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_linkTest02.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new AreaBreak()).Add(new AreaBreak());
             PdfArray array = new PdfArray();

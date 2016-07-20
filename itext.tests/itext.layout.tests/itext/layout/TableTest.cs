@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO;
 using iText.IO.Image;
 using iText.IO.Util;
@@ -42,9 +41,7 @@ namespace iText.Layout {
             String testName = "tableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2")));
@@ -61,9 +58,7 @@ namespace iText.Layout {
             String testName = "tableTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 2, 1"))).AddCell
@@ -82,9 +77,7 @@ namespace iText.Layout {
             String testName = "tableTest03.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent1 = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n";
@@ -107,9 +100,7 @@ namespace iText.Layout {
             String testName = "tableTest04.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -132,9 +123,7 @@ namespace iText.Layout {
             String testName = "tableTest05.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -155,9 +144,7 @@ namespace iText.Layout {
             String testName = "tableTest06.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -178,9 +165,7 @@ namespace iText.Layout {
             String testName = "tableTest07.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -201,9 +186,7 @@ namespace iText.Layout {
             String testName = "tableTest08.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -229,9 +212,7 @@ namespace iText.Layout {
             String testName = "tableTest09.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -259,9 +240,7 @@ namespace iText.Layout {
             String testName = "tableTest10.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph("Table 1"));
             Table table = new Table(new float[] { 100, 100 }).AddCell(new Cell().Add(new Paragraph("1, 1"))).AddCell(new 
@@ -293,9 +272,7 @@ namespace iText.Layout {
             String testName = "tableTest11.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -325,9 +302,7 @@ namespace iText.Layout {
             String testName = "tableTest12.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -362,9 +337,7 @@ namespace iText.Layout {
             String testName = "tableTest13.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String shortTextContent = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.";
             String middleTextContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -392,9 +365,7 @@ namespace iText.Layout {
             String testName = "tableTest14.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -424,9 +395,7 @@ namespace iText.Layout {
             String testName = "tableTest15.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -458,9 +427,7 @@ namespace iText.Layout {
             String testName = "tableTest16.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -486,9 +453,7 @@ namespace iText.Layout {
             String testName = "tableTest17.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
                 (new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph("cell 1, 3")));
@@ -513,9 +478,7 @@ namespace iText.Layout {
             String testName = "tableTest18.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new Paragraph(textContent));
             Table table = new Table(new float[] { 50, 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1"))).AddCell
@@ -541,9 +504,7 @@ namespace iText.Layout {
             String testName = "tableTest19.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell(3, 2).Add(new Paragraph("cell 1:2, 1:3\n"
                  + textContent + textContent))).AddCell(new Cell().Add(new Paragraph("cell 1, 3\n" + textContent))).AddCell
@@ -569,9 +530,7 @@ namespace iText.Layout {
             String testName = "tableTest20.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 130, 130, 260 }).AddCell(new Cell().Add(new iText.Layout.Element.Image
                 (ImageDataFactory.Create(sourceFolder + "red.png")))).AddCell(new Cell().Add(new Paragraph("cell 4, 2\n"
@@ -595,9 +554,7 @@ namespace iText.Layout {
             String testName = "tableTest21.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -626,9 +583,7 @@ namespace iText.Layout {
             String testName = "bigRowspanTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -654,9 +609,7 @@ namespace iText.Layout {
             String testName = "bigRowspanTest02.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -682,9 +635,7 @@ namespace iText.Layout {
             String testName = "bigRowspanTest03.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -708,9 +659,7 @@ namespace iText.Layout {
             String testName = "bigRowspanTest04.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
@@ -736,9 +685,7 @@ namespace iText.Layout {
             String testName = "differentPageOrientationTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             String textContent1 = "Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.";
             String textContent2 = "To make your document look professionally produced, Word provides header, footer, cover page, and text box designs that complement each other. For example, you can add a matching cover page, header, and sidebar. Click Insert and then choose the elements you want from the different galleries.";
@@ -781,7 +728,7 @@ namespace iText.Layout {
             String testName = "toLargeElementWithKeepTogetherPropertyInTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1);
             Cell cell = new Cell();
@@ -795,7 +742,7 @@ namespace iText.Layout {
             cell.Add(p);
             table.AddCell(cell);
             doc.Add(table);
-            pdfDoc.Close();
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
@@ -808,8 +755,7 @@ namespace iText.Layout {
             String testName = "toLargeElementInTableTest01.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "toLargeElementInTableTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "toLargeElementInTableTest01.pdf"));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 5 });
             Cell cell = new Cell();
@@ -817,7 +763,7 @@ namespace iText.Layout {
             cell.Add(p);
             table.AddCell(cell);
             doc.Add(table);
-            pdfDoc.Close();
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
@@ -829,9 +775,7 @@ namespace iText.Layout {
             String testName = "nestedTableSkipHeaderFooter.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
             Table table = new Table(5);
             table.AddHeaderCell(new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")));

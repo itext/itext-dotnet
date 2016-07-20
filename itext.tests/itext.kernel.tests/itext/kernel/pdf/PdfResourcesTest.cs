@@ -9,9 +9,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void ResourcesTest1() {
-            MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             PdfPage page = document.AddNewPage();
             PdfExtGState egs1 = new PdfExtGState();
             PdfExtGState egs2 = new PdfExtGState();
@@ -29,8 +27,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ResourcesTest2() {
             MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(baos));
             PdfPage page = document.AddNewPage();
             PdfExtGState egs1 = new PdfExtGState();
             PdfExtGState egs2 = new PdfExtGState();

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -28,7 +27,7 @@ namespace iText.Layout {
         public virtual void RelativePositioningTest01() {
             String outFileName = destinationFolder + "relativePositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(300).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
@@ -46,7 +45,7 @@ namespace iText.Layout {
         public virtual void RelativePositioningTest02() {
             String outFileName = destinationFolder + "relativePositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(180).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
@@ -64,7 +63,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest01() {
             String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(Color
                 .BLUE).SetHeight(100);
@@ -81,7 +80,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest02() {
             String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
             new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(Color.BLACK).Rectangle(300, 300, 100, 100
@@ -100,7 +99,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest01() {
             String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
@@ -165,7 +164,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest02() {
             String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String watermarkText = "WATERMARK";
             Paragraph watermark = new Paragraph(watermarkText);

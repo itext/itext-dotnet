@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO;
 using iText.IO.Source;
 using iText.Kernel.Utils;
@@ -23,11 +22,8 @@ namespace iText.Kernel.Pdf {
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         [LogMessage(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN)]
         public virtual void CopySignedDocuments() {
-            FileStream fis1 = new FileStream(sourceFolder + "hello_signed.pdf", FileMode.Open, FileAccess.Read);
-            PdfReader reader1 = new PdfReader(fis1);
-            PdfDocument pdfDoc1 = new PdfDocument(reader1);
-            FileStream fos2 = new FileStream(destinationFolder + "copySignedDocuments.pdf", FileMode.Create);
-            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(fos2));
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(sourceFolder + "hello_signed.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copySignedDocuments.pdf"));
             pdfDoc1.CopyPagesTo(1, 1, pdfDoc2);
             pdfDoc2.Close();
             pdfDoc1.Close();
@@ -41,21 +37,15 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Copying1() {
-            FileStream fos1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copying1_1.pdf"));
             pdfDoc1.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 6").SetTitle("Empty iText 6 Document"
                 );
             pdfDoc1.GetCatalog().Put(new PdfName("a"), ((PdfName)new PdfName("b").MakeIndirect(pdfDoc1)));
             PdfPage page1 = pdfDoc1.AddNewPage();
             page1.Flush();
             pdfDoc1.Close();
-            FileStream fis1 = new FileStream(destinationFolder + "copying1_1.pdf", FileMode.Open, FileAccess.Read);
-            PdfReader reader1 = new PdfReader(fis1);
-            pdfDoc1 = new PdfDocument(reader1);
-            FileStream fos2 = new FileStream(destinationFolder + "copying1_2.pdf", FileMode.Create);
-            PdfWriter writer2 = new PdfWriter(fos2);
-            PdfDocument pdfDoc2 = new PdfDocument(writer2);
+            pdfDoc1 = new PdfDocument(new PdfReader(destinationFolder + "copying1_1.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copying1_2.pdf"));
             pdfDoc2.AddNewPage();
             pdfDoc2.GetDocumentInfo().GetPdfObject().Put(new PdfName("a"), pdfDoc1.GetCatalog().GetPdfObject().Get(new 
                 PdfName("a")).CopyTo(pdfDoc2));
@@ -68,15 +58,13 @@ namespace iText.Kernel.Pdf {
             PdfDictionary info = trailer.GetAsDictionary(PdfName.Info);
             PdfName b = info.GetAsName(new PdfName("a"));
             NUnit.Framework.Assert.AreEqual("/b", b.ToString());
-            reader.Close();
+            pdfDocument.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Copying2() {
-            FileStream fos1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
+            PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copying2_1.pdf"));
             for (int i = 0; i < 10; i++) {
                 PdfPage page1 = pdfDoc1.AddNewPage();
                 page1.GetContentStream(0).GetOutputStream().Write(ByteUtils.GetIsoBytes("%page " + (i + 1).ToString() + "\n"
@@ -84,12 +72,8 @@ namespace iText.Kernel.Pdf {
                 page1.Flush();
             }
             pdfDoc1.Close();
-            FileStream fis1 = new FileStream(destinationFolder + "copying2_1.pdf", FileMode.Open, FileAccess.Read);
-            PdfReader reader1 = new PdfReader(fis1);
-            pdfDoc1 = new PdfDocument(reader1);
-            FileStream fos2 = new FileStream(destinationFolder + "copying2_2.pdf", FileMode.Create);
-            PdfWriter writer2 = new PdfWriter(fos2);
-            PdfDocument pdfDoc2 = new PdfDocument(writer2);
+            pdfDoc1 = new PdfDocument(new PdfReader(destinationFolder + "copying2_1.pdf"));
+            PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copying2_2.pdf"));
             for (int i_1 = 0; i_1 < 10; i_1++) {
                 if (i_1 % 2 == 0) {
                     pdfDoc2.AddPage(pdfDoc1.GetPage(i_1 + 1).CopyTo(pdfDoc2));
@@ -105,15 +89,13 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual("%page " + (i_2 * 2 + 1).ToString() + "\n", iText.IO.Util.JavaUtil.GetStringForBytes
                     (bytes));
             }
-            reader.Close();
+            pdfDocument.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void Copying3() {
-            FileStream fos = new FileStream(destinationFolder + "copying3_1.pdf", FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copying3_1.pdf"));
             PdfDictionary helloWorld = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
             PdfDictionary helloWorld1 = ((PdfDictionary)new PdfDictionary().MakeIndirect(pdfDoc));
             helloWorld.Put(new PdfName("Hello"), new PdfString("World"));
@@ -152,7 +134,7 @@ namespace iText.Kernel.Pdf {
                 GetGenNumber());
             NUnit.Framework.Assert.AreEqual(dic12.GetIndirectReference().GetObjNumber(), 5);
             NUnit.Framework.Assert.AreEqual(dic12.GetIndirectReference().GetGenNumber(), 0);
-            reader.Close();
+            pdfDoc.Close();
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -161,13 +143,11 @@ namespace iText.Kernel.Pdf {
         [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyDocumentsWithFormFieldsTest() {
             String filename = sourceFolder + "fieldsOn2-sPage.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
-            FileStream fos = new FileStream(destinationFolder + "copyDocumentsWithFormFields.pdf", FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument sourceDoc = new PdfDocument(reader);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument sourceDoc = new PdfDocument(new PdfReader(filename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "copyDocumentsWithFormFields.pdf"));
             sourceDoc.InitializeOutlines();
             sourceDoc.CopyPagesTo(1, sourceDoc.GetNumberOfPages(), pdfDoc);
+            sourceDoc.Close();
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copyDocumentsWithFormFields.pdf"
                 , sourceFolder + "cmp_copyDocumentsWithFormFields.pdf", destinationFolder, "diff_"));

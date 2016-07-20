@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
@@ -24,9 +23,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestInStamperMode1() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "input_layered.pdf", FileMode.Open
-                , FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "output_copy_layered.pdf", FileMode.Create
-                )));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), new PdfWriter(destinationFolder
+                 + "output_copy_layered.pdf"));
             pdfDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "output_copy_layered.pdf"
                 , sourceFolder + "input_layered.pdf", destinationFolder, "diff"));
@@ -36,9 +34,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestInStamperMode2() {
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(new FileStream(sourceFolder + "input_layered.pdf", FileMode.Open
-                , FileAccess.Read)), new PdfWriter(new FileStream(destinationFolder + "output_layered.pdf", FileMode.Create
-                )));
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "input_layered.pdf"), new PdfWriter(destinationFolder
+                 + "output_layered.pdf"));
             PdfCanvas canvas = new PdfCanvas(pdfDoc, 1);
             PdfLayer newLayer = new PdfLayer("appended", pdfDoc);
             canvas.BeginLayer(newLayer).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA), 

@@ -29,8 +29,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddLinkAnnotation01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation01.pdf"
-                , FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation01.pdf"));
             PdfPage page1 = document.AddNewPage();
             PdfPage page2 = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
@@ -61,8 +60,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddLinkAnnotation02() {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation02.pdf"
-                , FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation02.pdf"));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
@@ -83,8 +81,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddAndGetLinkAnnotations() {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "linkAnnotation03.pdf"
-                , FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "linkAnnotation03.pdf"));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.BeginText();
@@ -125,8 +122,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddTextAnnotation01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "textAnnotation01.pdf"
-                , FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "textAnnotation01.pdf"));
             PdfPage page = document.AddNewPage();
             PdfTextAnnotation textannot = new PdfTextAnnotation(new Rectangle(100, 600, 50, 40));
             textannot.SetText(new PdfString("Text Annotation 01")).SetContents(new PdfString("Some contents..."));
@@ -147,10 +143,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CaretTest() {
             String filename = destinationFolder + "caretAnnotation.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("This is a text").EndText().RestoreState();
@@ -165,7 +159,7 @@ namespace iText.Kernel.Pdf {
             page1.AddAnnotation(caret);
             page1.AddAnnotation(popup);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_CaretAnnotation.pdf", destinationFolder
                 , "diff_");
@@ -177,8 +171,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddFreeTextAnnotation01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "freeTextAnnotation01.pdf"
-                , FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "freeTextAnnotation01.pdf"));
             PdfPage page = document.AddNewPage();
             new PdfCanvas(page).BeginText().SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24).MoveText
                 (100, 600).ShowText("Annotated text").EndText().Release();
@@ -198,8 +191,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddSquareAndCircleAnnotations01() {
-            PdfDocument document = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "squareAndCircleAnnotations01.pdf"
-                , FileMode.Create)));
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + "squareAndCircleAnnotations01.pdf"
+                ));
             PdfPage page = document.AddNewPage();
             PdfSquareAnnotation square = new PdfSquareAnnotation(new Rectangle(100, 700, 100, 100));
             square.SetInteriorColor(new float[] { 1, 0, 0 }).SetColor(new float[] { 0, 1, 0 }).SetContents("RED Square"
@@ -220,18 +213,17 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void FileAttachmentTest() {
             String filename = destinationFolder + "fileAttachmentAnnotation.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            writer1.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, sourceFolder + "sample.wav", null, "sample.wav"
+            PdfWriter writer = new PdfWriter(filename);
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfPage page1 = pdfDoc.AddNewPage();
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
                 , null, null, true);
             PdfFileAttachmentAnnotation fileAttach = new PdfFileAttachmentAnnotation(new Rectangle(100, 100), spec);
             fileAttach.SetIconName(PdfName.Paperclip);
             page1.AddAnnotation(fileAttach);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_fileAttachmentAnnotation.pdf"
                 , destinationFolder, "diff_");
@@ -245,10 +237,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void RubberStampTest() {
             String filename = destinationFolder + "rubberStampAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
             stamp.SetStampName(PdfName.Approved);
             PdfStampAnnotation stamp1 = new PdfStampAnnotation(new Rectangle(0, 50, 100, 50));
@@ -292,7 +282,7 @@ namespace iText.Kernel.Pdf {
             page1.AddAnnotation(stamp12);
             page1.AddAnnotation(stamp13);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_rubberStampAnnotation01.pdf"
                 , destinationFolder, "diff_");
@@ -306,15 +296,13 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void RubberStampWrongStampTest() {
             String filename = destinationFolder + "rubberStampAnnotation02.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfStampAnnotation stamp = new PdfStampAnnotation(new Rectangle(0, 0, 100, 50));
             stamp.SetStampName(PdfName.StrikeOut);
             page1.AddAnnotation(stamp);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_rubberStampAnnotation02.pdf"
                 , destinationFolder, "diff_");
@@ -328,10 +316,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void InkTest() {
             String filename = destinationFolder + "inkAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             float[] array1 = new float[] { 100, 100, 100, 200, 200, 200, 300, 300 };
             PdfArray firstPoint = new PdfArray(array1);
             PdfArray resultArray = new PdfArray();
@@ -346,7 +332,7 @@ namespace iText.Kernel.Pdf {
             ink.SetColor(colors);
             page1.AddAnnotation(ink);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_inkAnnotation01.pdf", destinationFolder
                 , "diff_");
@@ -360,10 +346,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest01() {
             String filename = destinationFolder + "textMarkupAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -376,7 +360,7 @@ namespace iText.Kernel.Pdf {
             markup.SetColor(colors);
             page1.AddAnnotation(markup);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation01.pdf"
                 , destinationFolder, "diff_");
@@ -390,10 +374,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest02() {
             String filename = destinationFolder + "textMarkupAnnotation02.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -406,7 +388,7 @@ namespace iText.Kernel.Pdf {
             markup.SetColor(colors);
             page1.AddAnnotation(markup);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation02.pdf"
                 , destinationFolder, "diff_");
@@ -420,10 +402,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest03() {
             String filename = destinationFolder + "textMarkupAnnotation03.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -436,7 +416,7 @@ namespace iText.Kernel.Pdf {
             markup.SetColor(colors);
             page1.AddAnnotation(markup);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation03.pdf"
                 , destinationFolder, "diff_");
@@ -450,10 +430,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TextMarkupTest04() {
             String filename = destinationFolder + "textMarkupAnnotation04.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             //Initialize canvas and write text to it
             canvas.SaveState().BeginText().MoveText(36, 750).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
@@ -466,7 +444,7 @@ namespace iText.Kernel.Pdf {
             markup.SetColor(colors);
             page1.AddAnnotation(markup);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_textMarkupAnnotation04.pdf"
                 , destinationFolder, "diff_");
@@ -480,21 +458,19 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PrinterMarkText() {
             String filename = destinationFolder + "printerMarkAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page1);
             canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
                 .HELVETICA), 16).ShowText("This is Printer Mark annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
-            PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
+            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
             canvas.SaveState().Circle(265, 795, 5).SetColor(Color.GREEN, true).Fill().RestoreState();
             canvas.Release();
             PdfPrinterMarkAnnotation printer = new PdfPrinterMarkAnnotation(PageSize.A4, form);
             page1.AddAnnotation(printer);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_printerMarkAnnotation01.pdf"
                 , destinationFolder, "diff_");
@@ -508,22 +484,20 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TrapNetworkText() {
             String filename = destinationFolder + "trapNetworkAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvasText = new PdfCanvas(page);
             canvasText.SaveState().BeginText().MoveText(36, 790).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants
                 .HELVETICA), 16).ShowText("This is Trap Network annotation:").EndText().RestoreState();
             PdfFormXObject form = new PdfFormXObject(PageSize.A4);
-            PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
+            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
             canvas.SaveState().Circle(272, 795, 5).SetColor(Color.GREEN, true).Fill().RestoreState();
             canvas.Release();
             form.SetProcessColorModel(PdfName.DeviceN);
             PdfTrapNetworkAnnotation trap = new PdfTrapNetworkAnnotation(PageSize.A4, form);
             page.AddAnnotation(trap);
             page.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_trapNetworkAnnotation01.pdf"
                 , destinationFolder, "diff_");
@@ -539,10 +513,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SoundTestAif() {
             String filename = destinationFolder + "soundAnnotation02.pdf";
             String audioFile = sourceFolder + "sample.aif";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             String @string = "";
             for (int i = 0; i < 4; i++) {
@@ -555,7 +527,7 @@ namespace iText.Kernel.Pdf {
             else {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             }
-            PdfStream sound1 = new PdfStream(pdfDoc1, @is);
+            PdfStream sound1 = new PdfStream(pdfDoc, @is);
             sound1.Put(PdfName.R, new PdfNumber(32117));
             sound1.Put(PdfName.E, PdfName.Signed);
             sound1.Put(PdfName.B, new PdfNumber(16));
@@ -563,7 +535,7 @@ namespace iText.Kernel.Pdf {
             PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), sound1);
             page1.AddAnnotation(sound);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation02.pdf", destinationFolder
                 , "diff_");
@@ -578,10 +550,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SoundTestAiff() {
             String filename = destinationFolder + "soundAnnotation03.pdf";
             String audioFile = sourceFolder + "sample.aiff";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             String @string = "";
             for (int i = 0; i < 4; i++) {
@@ -594,7 +564,7 @@ namespace iText.Kernel.Pdf {
             else {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             }
-            PdfStream sound1 = new PdfStream(pdfDoc1, @is);
+            PdfStream sound1 = new PdfStream(pdfDoc, @is);
             sound1.Put(PdfName.R, new PdfNumber(44100));
             sound1.Put(PdfName.E, PdfName.Signed);
             sound1.Put(PdfName.B, new PdfNumber(16));
@@ -602,7 +572,7 @@ namespace iText.Kernel.Pdf {
             PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), sound1);
             page1.AddAnnotation(sound);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation03.pdf", destinationFolder
                 , "diff_");
@@ -618,16 +588,14 @@ namespace iText.Kernel.Pdf {
         public virtual void SoundTestSnd() {
             String filename = destinationFolder + "soundAnnotation04.pdf";
             String audioFile = sourceFolder + "sample.snd";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100, 100, 100), @is, 44100, 
-                PdfName.Signed, 2, 16);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc, new Rectangle(100, 100, 100, 100), @is, 44100, PdfName
+                .Signed, 2, 16);
             page1.AddAnnotation(sound);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation04.pdf", destinationFolder
                 , "diff_");
@@ -643,16 +611,14 @@ namespace iText.Kernel.Pdf {
         public virtual void SoundTestWav() {
             String filename = destinationFolder + "soundAnnotation01.pdf";
             String audioFile = sourceFolder + "sample.wav";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
-            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc1, new Rectangle(100, 100, 100, 100), @is, 48000, 
-                PdfName.Signed, 2, 16);
+            PdfSoundAnnotation sound = new PdfSoundAnnotation(pdfDoc, new Rectangle(100, 100, 100, 100), @is, 48000, PdfName
+                .Signed, 2, 16);
             page1.AddAnnotation(sound);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation01.pdf", destinationFolder
                 , "diff_");
@@ -668,10 +634,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SoundTestWav01() {
             String filename = destinationFolder + "soundAnnotation05.pdf";
             String audioFile = sourceFolder + "sample.wav";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             Stream @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             String header = "";
             for (int i = 0; i < 4; i++) {
@@ -684,7 +648,7 @@ namespace iText.Kernel.Pdf {
             else {
                 @is = new FileStream(audioFile, FileMode.Open, FileAccess.Read);
             }
-            PdfStream soundStream = new PdfStream(pdfDoc1, @is);
+            PdfStream soundStream = new PdfStream(pdfDoc, @is);
             soundStream.Put(PdfName.R, new PdfNumber(48000));
             soundStream.Put(PdfName.E, PdfName.Signed);
             soundStream.Put(PdfName.B, new PdfNumber(16));
@@ -692,7 +656,7 @@ namespace iText.Kernel.Pdf {
             PdfSoundAnnotation sound = new PdfSoundAnnotation(new Rectangle(100, 100, 100, 100), soundStream);
             page1.AddAnnotation(sound);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_soundAnnotation05.pdf", destinationFolder
                 , "diff_");
@@ -706,21 +670,19 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ScreenTestExternalWavFile() {
             String filename = destinationFolder + "screenAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc1, "../../../../../../../src/test/resources/com/itextpdf/kernel/pdf/PdfAnnotationTest/"
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "../../../../../../../src/test/resources/com/itextpdf/kernel/pdf/PdfAnnotationTest/"
                  + "sample.wav", true);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_screenAnnotation01.pdf", 
                 destinationFolder, "diff_");
@@ -734,21 +696,19 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ScreenTestEmbeddedWavFile01() {
             String filename = destinationFolder + "screenAnnotation02.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, sourceFolder + "sample.wav", null, "sample.wav"
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, sourceFolder + "sample.wav", null, "sample.wav"
                 , null, null, true);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
         }
 
         //        CompareTool compareTool = new CompareTool();
@@ -761,21 +721,19 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ScreenTestEmbeddedWavFile02() {
             String filename = destinationFolder + "screenAnnotation03.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, new FileStream(sourceFolder + "sample.wav", 
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, new FileStream(sourceFolder + "sample.wav", 
                 FileMode.Open, FileAccess.Read), null, "sample.wav", null, null, true);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
         }
 
         //        CompareTool compareTool = new CompareTool();
@@ -788,10 +746,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ScreenTestEmbeddedWavFile03() {
             String filename = destinationFolder + "screenAnnotation04.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page1);
             canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
@@ -803,13 +759,13 @@ namespace iText.Kernel.Pdf {
                 baos.Write(reads);
                 reads = @is.Read();
             }
-            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc1, baos.ToArray(), null, "sample.wav", null, null
+            PdfFileSpec spec = PdfFileSpec.CreateEmbeddedFileSpec(pdfDoc, baos.ToArray(), null, "sample.wav", null, null
                 , null, true);
             PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
         }
 
         //        CompareTool compareTool = new CompareTool();
@@ -822,10 +778,8 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void WaterMarkTest() {
             String filename = destinationFolder + "waterMarkAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             PdfWatermarkAnnotation watermark = new PdfWatermarkAnnotation(new Rectangle(400, 400, 200, 200));
             float[] arr = new float[] { 1, 0, 0, 1, 0, 0 };
             PdfFixedPrint fixedPrint = new PdfFixedPrint();
@@ -834,14 +788,14 @@ namespace iText.Kernel.Pdf {
             fixedPrint.SetVerticalTranslation(0);
             watermark.SetFixedPrint(fixedPrint);
             PdfFormXObject form = new PdfFormXObject(new Rectangle(200, 200));
-            PdfCanvas canvas = new PdfCanvas(form, pdfDoc1);
+            PdfCanvas canvas = new PdfCanvas(form, pdfDoc);
             canvas.SaveState().Circle(100, 100, 50).SetColor(Color.BLACK, true).Fill().RestoreState();
             canvas.Release();
             watermark.SetNormalAppearance(form.GetPdfObject());
             watermark.SetFlags(PdfAnnotation.PRINT);
             page1.AddAnnotation(watermark);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_watermarkAnnotation01.pdf"
                 , destinationFolder, "diff_");
@@ -855,28 +809,26 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void RedactionTest() {
             String filename = destinationFolder + "redactionAnnotation01.pdf";
-            FileStream fos1 = new FileStream(filename, FileMode.Create);
-            PdfWriter writer1 = new PdfWriter(fos1);
-            PdfDocument pdfDoc1 = new PdfDocument(writer1);
-            PdfPage page1 = pdfDoc1.AddNewPage();
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page1 = pdfDoc.AddNewPage();
             float[] rgb = new float[] { 0, 0, 0 };
             float[] rgb1 = new float[] { 1, 0, 0 };
             PdfRedactAnnotation redact = new PdfRedactAnnotation(new Rectangle(180, 531, 120, 49));
             PdfFormXObject formD = new PdfFormXObject(new Rectangle(180, 531, 120, 49));
-            PdfCanvas canvasD = new PdfCanvas(formD, pdfDoc1);
+            PdfCanvas canvasD = new PdfCanvas(formD, pdfDoc);
             canvasD.SetFillColorGray(0).Rectangle(180, 531, 120, 48).Fill();
             redact.SetDownAppearance(formD.GetPdfObject());
             PdfFormXObject formN = new PdfFormXObject(new Rectangle(179, 530, 122, 51));
-            PdfCanvas canvasN = new PdfCanvas(formN, pdfDoc1);
+            PdfCanvas canvasN = new PdfCanvas(formN, pdfDoc);
             canvasN.SetColor(Color.RED, true).SetLineWidth(1.5f).SetLineCapStyle(PdfCanvasConstants.LineCapStyle.PROJECTING_SQUARE
                 ).Rectangle(180, 531, 120, 48).Stroke().Rectangle(181, 532, 118, 47).ClosePath();
             redact.SetNormalAppearance(formN.GetPdfObject());
             PdfFormXObject formR = new PdfFormXObject(new Rectangle(180, 531, 120, 49));
-            PdfCanvas canvasR = new PdfCanvas(formR, pdfDoc1);
+            PdfCanvas canvasR = new PdfCanvas(formR, pdfDoc);
             canvasR.SaveState().Rectangle(180, 531, 120, 48).Fill().RestoreState().Release();
             redact.SetRolloverAppearance(formR.GetPdfObject());
             PdfFormXObject formRO = new PdfFormXObject(new Rectangle(180, 531, 120, 49));
-            PdfCanvas canvasRO = new PdfCanvas(formRO, pdfDoc1);
+            PdfCanvas canvasRO = new PdfCanvas(formRO, pdfDoc);
             canvasRO.SaveState().Rectangle(180, 531, 120, 48).Fill().RestoreState().Release();
             redact.SetRedactRolloverAppearance(formRO.GetPdfObject());
             redact.Put(PdfName.OC, new PdfArray(rgb1));
@@ -884,7 +836,7 @@ namespace iText.Kernel.Pdf {
             redact.SetInteriorColor(rgb);
             page1.AddAnnotation(redact);
             page1.Flush();
-            pdfDoc1.Close();
+            pdfDoc.Close();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_redactionAnnotation01.pdf"
                 , destinationFolder, "diff_");

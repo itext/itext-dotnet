@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -29,7 +28,7 @@ namespace iText.Layout {
             // CountryChunks example
             String outFileName = destinationFolder + "textRiseTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textRiseTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             for (int i = 0; i < 10; i++) {
@@ -50,7 +49,7 @@ namespace iText.Layout {
         public virtual void TextRenderingModeTest01() {
             String outFileName = destinationFolder + "textRenderingModeTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_textRenderingModeTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Text text1 = new Text("This is a fill and stroke text").SetTextRenderingMode(PdfCanvasConstants.TextRenderingMode
                 .FILL_STROKE).SetStrokeColor(Color.RED).SetStrokeWidth(0.1f);
@@ -73,7 +72,7 @@ namespace iText.Layout {
         public virtual void LeadingTest01() {
             String outFileName = destinationFolder + "leadingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_leadingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p1 = new Paragraph("first, leading of 150").SetFixedLeading(150);
             document.Add(p1);
@@ -93,7 +92,7 @@ namespace iText.Layout {
         public virtual void FirstLineIndentTest01() {
             String outFileName = destinationFolder + "firstLineIndentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.SetProperty(Property.FIRST_LINE_INDENT, 25);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
@@ -129,7 +128,7 @@ namespace iText.Layout {
         public virtual void CharSpacingTest01() {
             String outFileName = destinationFolder + "charSpacingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_charSpacingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
@@ -152,7 +151,7 @@ namespace iText.Layout {
         public virtual void WordSpacingTest01() {
             String outFileName = destinationFolder + "wordSpacingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_wordSpacingTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA);
             Paragraph p = new Paragraph().SetFont(font);
@@ -176,7 +175,7 @@ namespace iText.Layout {
         public virtual void FontStyleSimulationTest01() {
             String outFileName = destinationFolder + "fontStyleSimulationTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fontStyleSimulationTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("I'm underlined").SetUnderline());
             document.Add(new Paragraph("I'm strikethrough").SetLineThrough());

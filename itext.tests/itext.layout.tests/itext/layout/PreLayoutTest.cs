@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using iText.IO.Font;
 using iText.Kernel.Font;
@@ -31,7 +30,7 @@ namespace iText.Layout {
         public virtual void PreLayoutTest01() {
             String outFileName = destinationFolder + "preLayoutTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument, PageSize.Default, false);
             IList<Text> pageNumberTexts = new List<Text>();
             IList<IRenderer> pageNumberRenderers = new List<IRenderer>();
@@ -66,7 +65,7 @@ namespace iText.Layout {
         public virtual void PreLayoutTest02() {
             String outFileName = destinationFolder + "preLayoutTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_preLayoutTest02.pdf";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDoc, PageSize.Default, false);
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             StringBuilder text = new StringBuilder();

@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO.Font;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Canvas;
@@ -23,9 +22,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void EgsTest1() {
             String destinationDocument = destinationFolder + "egsTest1.pdf";
-            FileStream fos = new FileStream(destinationDocument, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationDocument));
             //Create page and canvas
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);

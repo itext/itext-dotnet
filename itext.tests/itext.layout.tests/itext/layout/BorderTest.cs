@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -182,7 +181,7 @@ namespace iText.Layout {
         private Document CreateDocument() {
             outFileName = destinationFolder + fileName;
             cmpFileName = sourceFolder + cmpPrefix + fileName;
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             return new Document(pdfDocument);
         }
 

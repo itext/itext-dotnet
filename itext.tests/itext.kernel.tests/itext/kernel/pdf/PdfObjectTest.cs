@@ -5,9 +5,7 @@ namespace iText.Kernel.Pdf {
     public class PdfObjectTest {
         [NUnit.Framework.Test]
         public virtual void IndirectsChain1() {
-            MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             catalog.Put(new PdfName("a"), ((PdfDictionary)GetTestPdfDictionary().MakeIndirect(document)).GetIndirectReference
@@ -19,9 +17,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void IndirectsChain2() {
-            MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfDictionary dictionary = GetTestPdfDictionary();
@@ -37,9 +33,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void IndirectsChain3() {
-            MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfDictionary dictionary = GetTestPdfDictionary();
@@ -57,9 +51,7 @@ namespace iText.Kernel.Pdf {
 
         [NUnit.Framework.Test]
         public virtual void IndirectsChain4() {
-            MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfDictionary dictionary = GetTestPdfDictionary();
@@ -115,8 +107,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing1() {
             MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(baos));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfIndirectReference indRef = document.CreateNextIndirectReference();
@@ -126,8 +117,7 @@ namespace iText.Kernel.Pdf {
             dictionary.MakeIndirect(document, indRef);
             document.Close();
             MemoryStream bais = new MemoryStream(baos.ToArray());
-            PdfReader reader = new PdfReader(bais);
-            document = new PdfDocument(reader);
+            document = new PdfDocument(new PdfReader(bais));
             PdfObject @object = document.GetCatalog().GetPdfObject().Get(new PdfName("Smth"));
             NUnit.Framework.Assert.IsTrue(@object is PdfDictionary);
             dictionary = (PdfDictionary)@object;
@@ -140,8 +130,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing2() {
             MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(baos));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfIndirectReference indRef1 = document.CreateNextIndirectReference();
@@ -153,8 +142,7 @@ namespace iText.Kernel.Pdf {
             array.MakeIndirect(document, indRef2);
             document.Close();
             MemoryStream bais = new MemoryStream(baos.ToArray());
-            PdfReader reader = new PdfReader(bais);
-            document = new PdfDocument(reader);
+            document = new PdfDocument(new PdfReader(bais));
             PdfDictionary catalogDict = document.GetCatalog().GetPdfObject();
             PdfObject object1 = catalogDict.Get(new PdfName("Smth1"));
             PdfObject object2 = catalogDict.Get(new PdfName("Smth2"));
@@ -165,9 +153,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void PdtIndirectReferenceLateInitializing3() {
-            MemoryStream baos = new MemoryStream();
-            PdfWriter writer = new PdfWriter(baos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new MemoryStream()));
             document.AddNewPage();
             PdfDictionary catalog = document.GetCatalog().GetPdfObject();
             PdfIndirectReference indRef1 = document.CreateNextIndirectReference();

@@ -27,9 +27,7 @@ namespace iText.Kernel.Pdf {
         public virtual void SimplePagesTest() {
             String filename = "simplePagesTest.pdf";
             int pageCount = 111;
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
@@ -66,9 +64,7 @@ namespace iText.Kernel.Pdf {
         public virtual void ReversePagesTest() {
             String filename = "reversePagesTest.pdf";
             int pageCount = 111;
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = pageCount; i > 0; i--) {
                 PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
                 pdfDoc.AddPage(1, page);
@@ -95,9 +91,7 @@ namespace iText.Kernel.Pdf {
                 indexes[index] = indexes[i_1];
                 indexes[i_1] = a;
             }
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage[] pages = new PdfPage[pageCount];
             for (int i_2 = 0; i_2 < indexes.Length; i_2++) {
                 PdfPage page = document.AddNewPage();
@@ -134,9 +128,7 @@ namespace iText.Kernel.Pdf {
                 indexes[index] = indexes[i_1];
                 indexes[i_1] = a;
             }
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i_2 = 0; i_2 < indexes.Length; i_2++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(indexes[i_2]));
@@ -208,9 +200,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoveFlushedPage() {
             String filename = "removeFlushedPage.pdf";
             int pageCount = 10;
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage removedPage = pdfDoc.AddNewPage();
             int removedPageObjectNumber = removedPage.GetPdfObject().GetIndirectReference().GetObjNumber();
             removedPage.Flush();
@@ -239,7 +229,7 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(i, number.IntValue(), "Page number");
             }
             NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages");
-            reader.Close();
+            pdfDocument.Close();
         }
 
         internal virtual int VerifyIntegrity(PdfPagesTree pagesTree) {
@@ -321,6 +311,7 @@ namespace iText.Kernel.Pdf {
             PdfDictionary kid = (PdfDictionary)field.GetAsArray(PdfName.Kids).Get(0);
             NUnit.Framework.Assert.AreEqual(6, kid.KeySet().Count);
             NUnit.Framework.Assert.AreEqual(3, fields.Size());
+            pdfDoc.Close();
         }
     }
 }
