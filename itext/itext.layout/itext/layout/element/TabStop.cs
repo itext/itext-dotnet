@@ -45,6 +45,20 @@ using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Element {
+    /// <summary>
+    /// A TabStop is the closest location on a line of text that the text will jump
+    /// to if a
+    /// <see cref="Tab"/>
+    /// is inserted. At least one TabStop must be defined on an
+    /// element if you want to use
+    /// <see cref="Tab">Tabs</see>
+    /// .
+    /// This object can be added to a
+    /// <see cref="Paragraph"/>
+    /// with the method
+    /// <see cref="Paragraph.AddTabStops(TabStop[])"/>
+    /// .
+    /// </summary>
     public class TabStop {
         private float tabPosition;
 
@@ -54,14 +68,54 @@ namespace iText.Layout.Element {
 
         private ILineDrawer tabLeader;
 
+        /// <summary>Creates a TabStop at the appropriate position.</summary>
+        /// <param name="tabPosition">a <code>float</code>, measured in points</param>
         public TabStop(float tabPosition)
             : this(tabPosition, TabAlignment.LEFT) {
         }
 
+        /// <summary>
+        /// Creates a TabStop at the appropriate position, with a specified tab
+        /// alignment.
+        /// </summary>
+        /// <remarks>
+        /// Creates a TabStop at the appropriate position, with a specified tab
+        /// alignment. A tab alignment defines the way the textual content should be
+        /// positioned with regards to this tab stop.
+        /// </remarks>
+        /// <param name="tabPosition">a <code>float</code>, measured in points</param>
+        /// <param name="tabAlignment">
+        /// a
+        /// <see cref="iText.Layout.Properties.TabAlignment"/>
+        /// value
+        /// </param>
         public TabStop(float tabPosition, TabAlignment tabAlignment)
             : this(tabPosition, tabAlignment, null) {
         }
 
+        /// <summary>
+        /// Creates a TabStop at the appropriate position, with a specified tab
+        /// alignment and an explicitly given line pattern.
+        /// </summary>
+        /// <remarks>
+        /// Creates a TabStop at the appropriate position, with a specified tab
+        /// alignment and an explicitly given line pattern. A tab alignment defines
+        /// the way the textual content should be positioned with regards to this tab
+        /// stop. The line pattern defines a pattern that should be repeated until
+        /// the TabStop is reached. If null, the space leading up to the TabStop will
+        /// be empty.
+        /// </remarks>
+        /// <param name="tabPosition">a <code>float</code>, measured in points</param>
+        /// <param name="tabAlignment">
+        /// a
+        /// <see cref="iText.Layout.Properties.TabAlignment"/>
+        /// value
+        /// </param>
+        /// <param name="tabLeader">
+        /// the
+        /// <ILineDrawer/>
+        /// value, a pattern drawing object
+        /// </param>
         public TabStop(float tabPosition, TabAlignment tabAlignment, ILineDrawer tabLeader) {
             this.tabPosition = tabPosition;
             this.tabAlignment = tabAlignment;
