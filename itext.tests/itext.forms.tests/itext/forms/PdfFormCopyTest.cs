@@ -83,8 +83,9 @@ namespace iText.Forms {
             PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.InitializeOutlines();
-            doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
-            doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
+            PdfPageFormCopier formCopier = new PdfPageFormCopier();
+            doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, formCopier);
+            doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, formCopier);
             pdfDoc.Close();
             System.Console.Out.WriteLine(((System.DateTime.Now.Ticks - timeStart) / 1000 / 1000));
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_copyLargeFile.pdf"
@@ -99,8 +100,9 @@ namespace iText.Forms {
             String srcFilename = sourceFolder + "srcFile1.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
-            srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, new PdfPageFormCopier());
-            srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, new PdfPageFormCopier());
+            PdfPageFormCopier formCopier = new PdfPageFormCopier();
+            srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, formCopier);
+            srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, formCopier);
             PdfAcroForm form = PdfAcroForm.GetAcroForm(destDoc, false);
             NUnit.Framework.Assert.AreEqual(1, form.GetFields().Size());
             NUnit.Framework.Assert.IsNotNull(form.GetField("Name1"));
@@ -119,6 +121,71 @@ namespace iText.Forms {
             destDoc.AddPage(srcDoc.GetFirstPage().CopyTo(destDoc, new PdfPageFormCopier()));
             destDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields05.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-720")]
+        public virtual void CopyFieldsTest06() {
+            String srcFilename = sourceFolder + "datasheet.pdf";
+            String destFilename = destinationFolder + "copyFields06.pdf";
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            // copying the same page from the same document twice
+            for (int i = 0; i < 2; ++i) {
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+            }
+            destDoc.Close();
+            srcDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields06.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-720")]
+        public virtual void CopyFieldsTest07() {
+            String srcFilename = sourceFolder + "datasheet.pdf";
+            String destFilename = destinationFolder + "copyFields07.pdf";
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
+            PdfPageFormCopier pdfPageFormCopier = new PdfPageFormCopier();
+            // copying the same page from reopened document twice
+            for (int i = 0; i < 2; ++i) {
+                PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+                srcDoc.CopyPagesTo(1, 1, destDoc, pdfPageFormCopier);
+                srcDoc.Close();
+            }
+            destDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields07.pdf"
+                , destinationFolder, "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-720")]
+        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        public virtual void CopyFieldsTest08() {
+            String srcFilename1 = sourceFolder + "appearances1.pdf";
+            String srcFilename2 = sourceFolder + "fieldsOn2-sPage.pdf";
+            String srcFilename3 = sourceFolder + "fieldsOn3-sPage.pdf";
+            String filename = destinationFolder + "copyFields08.pdf";
+            PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
+            PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
+            PdfDocument doc3 = new PdfDocument(new PdfReader(srcFilename3));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
+            pdfDoc.InitializeOutlines();
+            PdfPageFormCopier formCopier = new PdfPageFormCopier();
+            doc3.CopyPagesTo(1, doc3.GetNumberOfPages(), pdfDoc, formCopier);
+            doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, formCopier);
+            doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, formCopier);
+            pdfDoc.Close();
+            // comparing with cmp_copyFields01.pdf on purpose: result should be the same as in the first test
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, sourceFolder + "cmp_copyFields01.pdf"
                 , destinationFolder, "diff_"));
         }
 
