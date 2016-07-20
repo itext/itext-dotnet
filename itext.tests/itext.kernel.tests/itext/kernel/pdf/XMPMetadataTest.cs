@@ -30,8 +30,9 @@ namespace iText.Kernel.Pdf {
             PdfReader reader = new PdfReader(destinationFolder + filename);
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual(ReadFile(sourceFolder + "emptyDocumentWithXmp.xml").Length, pdfDocument.GetXmpMetadata
-                ().Length);
+            int delta = ReadFile(sourceFolder + "emptyDocumentWithXmp.xml").Length - pdfDocument.GetXmpMetadata().Length;
+            //Difference could be because of -SNAPSHOT postfix.
+            NUnit.Framework.Assert.IsTrue(delta == 0 || delta == 9, "Unexpected length delta");
             NUnit.Framework.Assert.IsNotNull(reader.pdfDocument.GetPage(1));
             reader.Close();
         }
