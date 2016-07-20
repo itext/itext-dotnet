@@ -55,6 +55,13 @@ using iText.Kernel.Pdf.Extgstate;
 using iText.Pdfa;
 
 namespace iText.Pdfa.Checker {
+    /// <summary>
+    /// PdfA2Checker defines the requirements of the PDF/A-2 standard and contains a
+    /// number of methods that override the implementations of its superclass
+    /// <see cref="PdfA1Checker"/>
+    /// .
+    /// The specification implemented by this class is ISO 19005-2
+    /// </summary>
     public class PdfA2Checker : PdfA1Checker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName._3D, PdfName.Sound, PdfName.Screen, PdfName.Movie));
@@ -80,6 +87,11 @@ namespace iText.Pdfa.Checker {
 
         private IDictionary<PdfName, PdfArray> separationColorSpaces = new Dictionary<PdfName, PdfArray>();
 
+        /// <summary>Creates a PdfA2Checker with the required conformance level</summary>
+        /// <param name="conformanceLevel">
+        /// the required conformance level, <code>a</code> or
+        /// <code>u</code> or <code>b</code>
+        /// </param>
         public PdfA2Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
         }
@@ -118,15 +130,15 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_137(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_150(extGStateDict);
                     CheckExtGState(gState);
                 }
             }
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
-        private sealed class _CanvasGraphicsState_137 : CanvasGraphicsState {
-            public _CanvasGraphicsState_137(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_150 : CanvasGraphicsState {
+            public _CanvasGraphicsState_150(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));

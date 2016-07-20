@@ -52,6 +52,13 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa;
 
 namespace iText.Pdfa.Checker {
+    /// <summary>
+    /// PdfA1Checker defines the requirements of the PDF/A-1 standard and contains
+    /// method implementations from the abstract
+    /// <see cref="PdfAChecker"/>
+    /// class.
+    /// The specification implemented by this class is ISO 19005-1
+    /// </summary>
     public class PdfA1Checker : PdfAChecker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));
@@ -70,6 +77,11 @@ namespace iText.Pdfa.Checker {
         protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric, PdfName.Perceptual, PdfName.Saturation));
 
+        /// <summary>Creates a PdfA1Checker with the required conformance level</summary>
+        /// <param name="conformanceLevel">
+        /// the required conformance level, <code>a</code> or
+        /// <code>b</code>
+        /// </param>
         public PdfA1Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
         }

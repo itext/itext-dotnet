@@ -58,7 +58,9 @@ namespace iText.Pdfa.Checker {
     /// An abstract class that will run through all necessary checks defined in the
     /// different PDF/A standards and levels. A number of common checks are executed
     /// in this class, while standard-dependent specifications are implemented in the
-    /// available subclasses.
+    /// available subclasses. The standard that is followed is the series of ISO
+    /// 19005 specifications, currently generations 1 through 3. The ZUGFeRD standard
+    /// is derived from ISO 19005-3.
     /// While it is possible to subclass this method and implement its abstract
     /// methods in client code, this is not encouraged and will have little effect.
     /// It is not possible to plug custom implementations into iText, because iText
@@ -259,14 +261,41 @@ namespace iText.Pdfa.Checker {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// containing the color spaces used in the document
         /// </param>
-        /// <param name="fill"/>
+        /// <param name="fill">whether the color is used for fill or stroke operations</param>
         public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill);
 
+        /// <summary>
+        /// This method performs a range of checks on the given color space, depending
+        /// on the type and properties of that color space.
+        /// </summary>
+        /// <param name="colorSpace">the color space to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="checkAlternate">whether or not to also check the parent color space</param>
+        /// <param name="fill">whether the color space is used for fill or stroke operations</param>
         public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
             , bool? fill);
 
+        /// <summary>
+        /// Checks whether the rendering intent of the document is within the allowed
+        /// range of intents.
+        /// </summary>
+        /// <remarks>
+        /// Checks whether the rendering intent of the document is within the allowed
+        /// range of intents. This is defined in ISO 19005-1 section 6.2.9, and
+        /// unchanged in newer generations of the PDF/A specification.
+        /// </remarks>
+        /// <param name="intent">the intent to be analyzed</param>
         public abstract void CheckRenderingIntent(PdfName intent);
 
+        /// <summary>
+        /// Performs a number of checks on the graphics state, among others ISO
+        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
+        /// </summary>
+        /// <param name="extGState">the graphics state to be checked</param>
         public abstract void CheckExtGState(CanvasGraphicsState extGState);
 
         protected internal abstract ICollection<PdfName> GetForbiddenActions();

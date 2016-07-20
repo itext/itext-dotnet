@@ -46,10 +46,22 @@ using iText.Kernel.Pdf;
 using iText.Pdfa;
 
 namespace iText.Pdfa.Checker {
+    /// <summary>
+    /// PdfA3Checker defines the requirements of the PDF/A-3 standard and contains a
+    /// number of methods that override the implementations of its superclass
+    /// <see cref="PdfA2Checker"/>
+    /// .
+    /// The specification implemented by this class is ISO 19005-3
+    /// </summary>
     public class PdfA3Checker : PdfA2Checker {
         protected internal static readonly ICollection<PdfName> allowedAFRelationships = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Source, PdfName.Data, PdfName.Alternative, PdfName.Supplement, PdfName.Unspecified));
 
+        /// <summary>Creates a PdfA3Checker with the required conformance level</summary>
+        /// <param name="conformanceLevel">
+        /// the required conformance level, <code>a</code> or
+        /// <code>u</code> or <code>b</code>
+        /// </param>
         public PdfA3Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
         }
