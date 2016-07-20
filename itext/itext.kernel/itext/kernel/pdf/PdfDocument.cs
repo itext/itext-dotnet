@@ -1259,7 +1259,8 @@ namespace iText.Kernel.Pdf {
                     info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
                         );
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
-                    if (str != null) {
+                    //Add a check to the structTreeRoot since the dictionary can be present while the tree is null
+                    if (str != null && structTreeRoot != null) {
                         structTreeRoot = new PdfStructTreeRoot(str);
                         structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
                     }
