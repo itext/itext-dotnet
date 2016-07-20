@@ -91,26 +91,48 @@ namespace iText.Layout.Properties {
             return new iText.Layout.Properties.UnitValue(PERCENT, value);
         }
 
+        /// <summary>Returns the unit this value is stored in, either points (pt) or percent(%)</summary>
+        /// <returns>
+        /// either 1 for
+        /// <see cref="POINT"/>
+        /// or 2 for
+        /// <see cref="PERCENT"/>
+        /// </returns>
         public virtual int GetUnitType() {
             return unitType;
         }
 
+        /// <summary>Sets the unit this value is stored in, either points (pt) or percent(%)</summary>
+        /// <param name="unitType">
+        /// either
+        /// <see cref="POINT"/>
+        /// or
+        /// <see cref="PERCENT"/>
+        /// </param>
         public virtual void SetUnitType(int unitType) {
             this.unitType = unitType;
         }
 
+        /// <summary>Gets the measured value stored in this object</summary>
+        /// <returns>the value, as a <code>float</code></returns>
         public virtual float GetValue() {
             return value;
         }
 
+        /// <summary>Sets the measured value stored in this object</summary>
+        /// <param name="value">a <code>float</code></param>
         public virtual void SetValue(float value) {
             this.value = value;
         }
 
+        /// <summary>Returns whether or not the value is stored in points (pt)</summary>
+        /// <returns><code>true</code> if stored in points</returns>
         public virtual bool IsPointValue() {
             return unitType == POINT;
         }
 
+        /// <summary>Returns whether or not the value is stored in percent (%)</summary>
+        /// <returns><code>true</code> if stored in percent</returns>
         public virtual bool IsPercentValue() {
             return unitType == PERCENT;
         }
