@@ -70,7 +70,7 @@ namespace iText.Pdfa {
     /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
     /// .
     /// </summary>
-    public sealed class PdfADocument : PdfDocument {
+    public class PdfADocument : PdfDocument {
         protected internal PdfAChecker checker;
 
         /// <summary>Constructs a new PdfADocument for writing purposes, i.e.</summary>
@@ -248,7 +248,7 @@ namespace iText.Pdfa {
         /// a
         /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
         /// </returns>
-        public PdfAConformanceLevel GetConformanceLevel() {
+        public virtual PdfAConformanceLevel GetConformanceLevel() {
             return checker.GetConformanceLevel();
         }
 
@@ -294,7 +294,7 @@ namespace iText.Pdfa {
             base.FlushFonts();
         }
 
-        protected internal void SetChecker(PdfAConformanceLevel conformanceLevel) {
+        protected internal virtual void SetChecker(PdfAConformanceLevel conformanceLevel) {
             switch (conformanceLevel.GetPart()) {
                 case "1": {
                     checker = new PdfA1Checker(conformanceLevel);
