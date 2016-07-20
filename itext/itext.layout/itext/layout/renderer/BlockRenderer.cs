@@ -67,7 +67,7 @@ namespace iText.Layout.Renderer {
             }
             float? blockHeight = RetrieveHeight();
             if (!IsFixedLayout() && blockHeight != null && blockHeight > parentBBox.GetHeight()) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+                return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             float[] margins = GetMargins();
             ApplyMargins(parentBBox, margins, false);
@@ -176,7 +176,8 @@ namespace iText.Layout.Renderer {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                                 }
                                 else {
-                                    return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer);
+                                    return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, LayoutResult.NOTHING 
+                                        == layoutResult ? result.GetCauseOfNothing() : null);
                                 }
                             }
                         }
@@ -208,7 +209,7 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingHeight(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                     }
                 }
             }

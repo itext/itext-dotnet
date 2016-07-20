@@ -118,9 +118,24 @@ namespace iText.Layout.Renderer {
                                         storedArea = currentArea;
                                     }
                                     else {
-                                        result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
-                                        ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                                        logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                        if (null != result.GetCauseOfNothing() && true.Equals(result.GetCauseOfNothing().GetProperty(Property.KEEP_TOGETHER
+                                            ))) {
+                                            // set KEEP_TOGETHER false on the deepest parent (maybe the element itself) to have KEEP_TOGETHER == true
+                                            IRenderer theDeepestKeptTogether = result.GetCauseOfNothing();
+                                            while (null == theDeepestKeptTogether.GetModelElement() || null == theDeepestKeptTogether.GetModelElement(
+                                                ).GetOwnProperty<bool?>(Property.KEEP_TOGETHER)) {
+                                                theDeepestKeptTogether = theDeepestKeptTogether.GetParent();
+                                            }
+                                            theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
+                                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                            logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, "KeepTogether property of inner element will be ignored."
+                                                ));
+                                        }
+                                        else {
+                                            result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
+                                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                            logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
+                                        }
                                     }
                                     renderer = result.GetOverflowRenderer();
                                     continue;

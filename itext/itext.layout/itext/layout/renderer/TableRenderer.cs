@@ -137,8 +137,9 @@ namespace iText.Layout.Renderer {
                 SetProperty(Property.MARGIN_TOP, 0);
             }
             // we can invoke #layout() twice (processing KEEP_TOGETHER for instance)
-            // so we need to clear heights
+            // so we need to clear the results of previous #layout() invocation
             heights.Clear();
+            childRenderers.Clear();
             // Cells' up moves occured while split processing
             // key is column number (there can be only one move during one split
             // value is the previous row number of the cell
@@ -170,7 +171,7 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
-                    return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, result.GetCauseOfNothing());
                 }
                 float headerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
                 layoutBox.DecreaseHeight(headerHeight);
@@ -183,7 +184,7 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
-                    return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, result.GetCauseOfNothing());
                 }
                 float footerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
                 footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
@@ -219,6 +220,8 @@ namespace iText.Layout.Renderer {
                         cellProcessingQueue.Enqueue(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
                     }
                 }
+                // the element which was the first to cause Layout.Nothing
+                IRenderer firstCauseOfNothing = null;
                 while (!cellProcessingQueue.IsEmpty()) {
                     TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.Dequeue();
                     int col_1 = currentCellInfo.column;
@@ -262,9 +265,14 @@ namespace iText.Layout.Renderer {
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, null);
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
-                    //width of BlockRenderer depends on child areas, while in cell case it is hardly define.
+                    // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
                         cell.GetOccupiedArea().GetBBox().SetWidth(cellWidth);
+                    }
+                    else {
+                        if (null == firstCauseOfNothing) {
+                            firstCauseOfNothing = cellResult.GetCauseOfNothing();
+                        }
                     }
                     if (currentCellHasBigRowspan) {
                         // cell from the future
@@ -492,9 +500,9 @@ namespace iText.Layout.Renderer {
                             splitResult[1].rows[row - splitResult[0].rows.Count][entry.Key] = null;
                         }
                     }
-                    if (IsKeepTogether() && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && !(this.parent is 
-                        CellRenderer)) {
-                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+                    if (IsKeepTogether() && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, null == firstCauseOfNothing ? this
+                             : firstCauseOfNothing);
                     }
                     else {
                         int status = (childRenderers.IsEmpty() && footerRenderer == null) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
@@ -502,7 +510,8 @@ namespace iText.Layout.Renderer {
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                         }
                         else {
-                            return new LayoutResult(status, occupiedArea, splitResult[0], splitResult[1]);
+                            return new LayoutResult(status, occupiedArea, splitResult[0], splitResult[1], LayoutResult.NOTHING == status
+                                 ? firstCauseOfNothing : null);
                         }
                     }
                 }

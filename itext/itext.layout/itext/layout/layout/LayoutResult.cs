@@ -63,12 +63,22 @@ namespace iText.Layout.Layout {
 
         protected internal AreaBreak areaBreak;
 
+        protected internal IRenderer causeOfNothing;
+
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             ) {
             this.status = status;
             this.occupiedArea = occupiedArea;
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
+        }
+
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause)
+            : this(status, occupiedArea, splitRenderer, overflowRenderer) {
+            if (iText.Layout.Layout.LayoutResult.NOTHING == status) {
+                causeOfNothing = cause;
+            }
         }
 
         public virtual int GetStatus() {
@@ -102,6 +112,10 @@ namespace iText.Layout.Layout {
         public virtual iText.Layout.Layout.LayoutResult SetAreaBreak(AreaBreak areaBreak) {
             this.areaBreak = areaBreak;
             return this;
+        }
+
+        public virtual IRenderer GetCauseOfNothing() {
+            return causeOfNothing;
         }
 
         public override String ToString() {

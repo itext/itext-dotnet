@@ -125,7 +125,7 @@ namespace iText.Layout.Renderer {
             GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && (width > layoutBox.GetWidth() || height
                  > layoutBox.GetHeight())) {
-                return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+                return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
             }
             occupiedArea.GetBBox().MoveDown(height);
             occupiedArea.GetBBox().SetHeight(height);

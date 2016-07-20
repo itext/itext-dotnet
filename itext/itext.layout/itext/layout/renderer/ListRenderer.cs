@@ -72,7 +72,8 @@ namespace iText.Layout.Renderer {
                         LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout(layoutContext);
                         currentSymbolRenderer.SetParent(null);
                         if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
-                            return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+                            return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
+                                );
                         }
                     }
                 }

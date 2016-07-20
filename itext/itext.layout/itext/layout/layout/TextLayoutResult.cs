@@ -54,6 +54,11 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer) {
         }
 
+        public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause)
+            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
+        }
+
         public virtual bool IsWordHasBeenSplit() {
             return wordHasBeenSplit;
         }

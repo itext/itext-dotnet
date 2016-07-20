@@ -52,6 +52,11 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer) {
         }
 
+        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause)
+            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
+        }
+
         public virtual bool IsSplitForcedByNewline() {
             return splitForcedByNewline;
         }

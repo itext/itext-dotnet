@@ -248,13 +248,11 @@ namespace iText.Layout.Renderer
 							split[1] = null;
 						}
 					}
-					result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult
-						.NOTHING, occupiedArea, split[0], split[1]);
-					if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult
-						 && ((TextLayoutResult)childResult).IsSplitForcedByNewline())
-					{
-						result.SetSplitForcedByNewline(true);
-					}
+					result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING, occupiedArea, split[0], split[1],
+                        anythingPlaced ? null : (childResult.GetStatus() == LayoutResult.NOTHING ? this : childResult.GetCauseOfNothing()));
+                    if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult && ((TextLayoutResult) childResult).IsSplitForcedByNewline()) {
+                        result.SetSplitForcedByNewline(true);
+                    }
 					break;
 				}
 				else
@@ -271,7 +269,7 @@ namespace iText.Layout.Renderer
 				}
 				else
 				{
-					result = new LineLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+					result = new LineLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
 				}
 			}
 			// Consider for now that all the children have the same font, and that after reordering text pieces

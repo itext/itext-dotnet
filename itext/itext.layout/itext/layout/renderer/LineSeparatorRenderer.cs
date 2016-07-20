@@ -62,7 +62,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyMargins(occupiedArea.GetBBox(), false);
             if (occupiedArea.GetBBox().GetHeight() < height) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+                return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight(height);
             ApplyMargins(occupiedArea.GetBBox(), true);

@@ -287,8 +287,7 @@ namespace iText.Layout.Renderer
 						iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
 						ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 						ApplyMargins(occupiedArea.GetBBox(), margins, true);
-						return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult
-							[1]);
+						return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this);
 					}
 					else
 					{
@@ -372,7 +371,7 @@ namespace iText.Layout.Renderer
 						}
 						if (line.end <= 0)
 						{
-							result = new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+							result = new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
 						}
 						else
 						{
@@ -393,7 +392,7 @@ namespace iText.Layout.Renderer
 				{
 					ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 					ApplyMargins(occupiedArea.GetBBox(), margins, true);
-					return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+					return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
 				}
 				yLineOffset = currentLineAscender * fontSize / TEXT_SPACE_COEFF;
 				occupiedArea.GetBBox().MoveDown(currentLineHeight);
