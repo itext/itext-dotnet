@@ -156,10 +156,7 @@ namespace iText.IO.Font {
         public static FontProgram GetFont(String fontName) {
             String key = GetFontCacheKey(fontName);
             FontProgram font = null;
-            if (fontCache.ContainsKey(key)) {
-                font = fontCache.Get(key);
-            }
-            return font;
+            return fontCache.Get(key);
         }
 
         public static FontProgram SaveFont(FontProgram font, String fontName) {

@@ -433,10 +433,7 @@ namespace iText.IO.Font {
             // nonbreakingspace;00A0
             // space;0020
             if (!unicodeToGlyph.ContainsKey(0x00A0)) {
-                Glyph space = null;
-                if (unicodeToGlyph.ContainsKey(0x0020)) {
-                    space = unicodeToGlyph.Get(0x0020);
-                }
+                Glyph space = unicodeToGlyph.Get(0x0020);
                 if (space != null) {
                     unicodeToGlyph[0x00A0] = new Glyph(space.GetCode(), space.GetWidth(), 0x00A0, space.GetBbox());
                 }

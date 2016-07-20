@@ -115,11 +115,8 @@ namespace iText.IO.Font {
 
         // empty on purpose
         public static int? NameToUnicode(String name) {
-            int v = -1;
-            if (names2unicode.ContainsKey(name)) {
-                v = (int)names2unicode.Get(name);
-            }
-            if (v == -1 && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith
+            int? v = names2unicode.Get(name);
+            if (v == null && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith
                 ("uni")) {
                 try {
                     return System.Convert.ToInt32(name.Substring(3), 16);

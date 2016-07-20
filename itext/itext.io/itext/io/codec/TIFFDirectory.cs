@@ -374,11 +374,8 @@ namespace iText.IO.Codec {
         /// or null if the tag is not present.
         /// </summary>
         public virtual TIFFField GetField(int tag) {
-            int i = -1;
-            if (fieldIndex.ContainsKey(tag)) {
-                i = (int)fieldIndex.Get(tag);
-            }
-            if (i == -1) {
+            int? i = fieldIndex.Get(tag);
+            if (i == null) {
                 return null;
             }
             else {
