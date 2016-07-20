@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf {
         private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializedContentToObjectRef = new 
             Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference>();
 
-        private IntHashtable objectRefToSerializedContent = new IntHashtable();
+        private Dictionary<int, byte[]> objectRefToSerializedContent = new Dictionary<int, byte[]>();
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
@@ -473,12 +473,15 @@ namespace iText.Kernel.Pdf {
         internal class SerializedPdfObject {
             private readonly byte[] serializedContent;
 
-            private IDigest md5;
-
             private readonly int hash;
 
-            internal SerializedPdfObject(PdfObject obj, IntHashtable serialized) {
+            private IDigest md5;
+
+            private Dictionary<int, byte[]> objToSerializedContent;
+
+            internal SerializedPdfObject(PdfObject obj, Dictionary<int, byte[]> objToSerializedContent) {
                 System.Diagnostics.Debug.Assert(obj.IsDictionary() || obj.IsStream());
+                this.objToSerializedContent = objToSerializedContent;
                 try {
                     md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
                 }
@@ -487,16 +490,15 @@ namespace iText.Kernel.Pdf {
                 }
                 ByteBufferOutputStream bb = new ByteBufferOutputStream();
                 int level = 100;
-                SerObject(obj, level, bb, serialized);
+                SerObject(obj, level, bb);
                 this.serializedContent = bb.ToByteArray();
                 hash = CalculateHash(this.serializedContent);
                 md5 = null;
             }
 
-            // TODO 1: objToSerialized contains hashes while on first run we append value itself
-            // TODO 2: object is not checked if it was alreadry serialized on start, double work could be done
+            // TODO 2: object is not checked if it was already serialized on start, double work could be done
             // TODO 3: indirect objects often stored multiple times as parts of the other objects
-            private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb, IntHashtable serialized) {
+            private void SerObject(PdfObject obj, int level, ByteBufferOutputStream bb) {
                 if (level <= 0) {
                     return;
                 }
@@ -506,11 +508,13 @@ namespace iText.Kernel.Pdf {
                 }
                 PdfIndirectReference reference = null;
                 ByteBufferOutputStream savedBb = null;
+                int indRefKey = -1;
                 if (obj.IsIndirectReference()) {
                     reference = (PdfIndirectReference)obj;
-                    int key = CalculateIndRefKey(reference);
-                    if (serialized.ContainsKey(key)) {
-                        bb.Append((int)serialized.Get(key));
+                    indRefKey = CalculateIndRefKey(reference);
+                    byte[] cached = objToSerializedContent.Get(indRefKey);
+                    if (cached != null) {
+                        bb.Append(cached);
                         return;
                     }
                     else {
@@ -521,7 +525,7 @@ namespace iText.Kernel.Pdf {
                 }
                 if (obj.IsStream()) {
                     bb.Append("$B");
-                    SerDic((PdfDictionary)obj, level - 1, bb, serialized);
+                    SerDic((PdfDictionary)obj, level - 1, bb);
                     if (level > 0) {
                         md5.Reset();
                         bb.Append(md5.Digest(((PdfStream)obj).GetBytes(false)));
@@ -529,11 +533,11 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     if (obj.IsDictionary()) {
-                        SerDic((PdfDictionary)obj, level - 1, bb, serialized);
+                        SerDic((PdfDictionary)obj, level - 1, bb);
                     }
                     else {
                         if (obj.IsArray()) {
-                            SerArray((PdfArray)obj, level - 1, bb, serialized);
+                            SerArray((PdfArray)obj, level - 1, bb);
                         }
                         else {
                             if (obj.IsString()) {
@@ -550,16 +554,14 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                 }
+                // PdfNull case is also here
                 if (savedBb != null) {
-                    int key = CalculateIndRefKey(reference);
-                    if (!serialized.ContainsKey(key)) {
-                        serialized.Put(key, CalculateHash(bb.GetBuffer()));
-                    }
+                    objToSerializedContent[indRefKey] = bb.GetBuffer();
                     savedBb.Append(bb);
                 }
             }
 
-            private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb, IntHashtable serialized) {
+            private void SerDic(PdfDictionary dic, int level, ByteBufferOutputStream bb) {
                 bb.Append("$D");
                 if (level <= 0) {
                     return;
@@ -573,18 +575,18 @@ namespace iText.Kernel.Pdf {
                         // ignore recursive call
                         continue;
                     }
-                    SerObject((PdfObject)key, level, bb, serialized);
-                    SerObject(dic.Get((PdfName)key, false), level, bb, serialized);
+                    SerObject((PdfObject)key, level, bb);
+                    SerObject(dic.Get((PdfName)key, false), level, bb);
                 }
             }
 
-            private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb, IntHashtable serialized) {
+            private void SerArray(PdfArray array, int level, ByteBufferOutputStream bb) {
                 bb.Append("$A");
                 if (level <= 0) {
                     return;
                 }
                 for (int k = 0; k < array.Size(); ++k) {
-                    SerObject(array.Get(k, false), level, bb, serialized);
+                    SerObject(array.Get(k, false), level, bb);
                 }
             }
 
