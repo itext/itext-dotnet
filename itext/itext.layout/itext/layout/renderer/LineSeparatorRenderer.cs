@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -56,9 +57,9 @@ namespace iText.Layout.Renderer {
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
             occupiedArea = layoutContext.GetArea().Clone();
-            UnitValue widthProperty = ((LineSeparator)modelElement).GetWidth();
-            if (widthProperty != null) {
-                occupiedArea.GetBBox().SetWidth(widthProperty.GetValue());
+            float? calculatedWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
+            if (calculatedWidth != null) {
+                occupiedArea.GetBBox().SetWidth(calculatedWidth);
             }
             ApplyMargins(occupiedArea.GetBBox(), false);
             if (occupiedArea.GetBBox().GetHeight() < height) {
@@ -77,7 +78,9 @@ namespace iText.Layout.Renderer {
             base.Draw(drawContext);
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             if (lineDrawer != null) {
-                lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
+                Rectangle area = occupiedArea.GetBBox().Clone();
+                ApplyMargins(area, false);
+                lineDrawer.Draw(drawContext.GetCanvas(), area);
             }
         }
     }
