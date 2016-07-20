@@ -46,6 +46,11 @@ using System.Collections;
 using System.Text;
 
 namespace iText.Layout.Hyphenation {
+    /// <summary>
+    /// An object that iterates over the
+    /// <see cref="TernaryTree"/>
+    /// .
+    /// </summary>
     internal class TernaryTreeIterator : IEnumerator {
         /// <summary>current node index</summary>
         internal int cur;
@@ -108,6 +113,7 @@ namespace iText.Layout.Hyphenation {
             Reset();
         }
 
+        /// <summary>Resets the Iterator to its initial state.</summary>
         public virtual void Reset() {
             ns.Clear();
             ks.Length = 0;
