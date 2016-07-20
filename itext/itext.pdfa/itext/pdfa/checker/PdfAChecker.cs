@@ -227,6 +227,17 @@ namespace iText.Pdfa.Checker {
         }
 
         /// <summary>
+        /// This method checks compliance of the tag structure elements, such as struct elements
+        /// or parent tree entries.
+        /// </summary>
+        /// <param name="obj">an object that represents tag structure element.</param>
+        public virtual void CheckTagStructureElement(PdfObject obj) {
+            // We don't check tag structure as there are no strict constraints,
+            // so we just mark tag structure elements to be able to flush them
+            checkedObjects.Add(obj);
+        }
+
+        /// <summary>
         /// This method checks compliance with the graphics state architectural
         /// limitation, explained by
         /// <see cref="maxGsStackDepth"/>

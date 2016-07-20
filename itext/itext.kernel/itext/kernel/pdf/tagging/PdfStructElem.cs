@@ -369,7 +369,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override void Flush() {
-            //TODO log that to prevent undefined behaviour, use StructTreeRoot#flushStructElem method
+            GetDocument().CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
             base.Flush();
         }
 

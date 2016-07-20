@@ -51,6 +51,7 @@ namespace iText.Kernel.Pdf {
         INLINE_IMAGE,
         PAGE,
         PDF_OBJECT,
-        RENDERING_INTENT
+        RENDERING_INTENT,
+        TAG_STRUCTURE_ELEMENT
     }
 }

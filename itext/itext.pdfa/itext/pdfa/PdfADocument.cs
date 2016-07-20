@@ -235,6 +235,11 @@ namespace iText.Pdfa {
                     checker.CheckSinglePage((PdfPage)obj);
                     break;
                 }
+
+                case IsoKey.TAG_STRUCTURE_ELEMENT: {
+                    checker.CheckTagStructureElement((PdfObject)obj);
+                    break;
+                }
             }
         }
 
