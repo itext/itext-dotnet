@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
@@ -28,13 +27,10 @@ namespace iText.Forms {
             String srcFilename2 = sourceFolder + "fieldsOn2-sPage.pdf";
             String srcFilename3 = sourceFolder + "fieldsOn3-sPage.pdf";
             String filename = destinationFolder + "copyFields01.pdf";
-            PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename1, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument doc2 = new PdfDocument(new PdfReader(new FileStream(srcFilename2, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument doc3 = new PdfDocument(new PdfReader(new FileStream(srcFilename3, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode.Create)));
+            PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
+            PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
+            PdfDocument doc3 = new PdfDocument(new PdfReader(srcFilename3));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc3.CopyPagesTo(1, doc3.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
@@ -50,9 +46,8 @@ namespace iText.Forms {
         public virtual void CopyFieldsTest02() {
             String srcFilename = sourceFolder + "hello_with_comments.pdf";
             String filename = destinationFolder + "copyFields02.pdf";
-            PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode.Create)));
+            PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfDoc.Close();
@@ -66,9 +61,8 @@ namespace iText.Forms {
         public virtual void CopyFieldsTest03() {
             String srcFilename = sourceFolder + "hello2_with_comments.pdf";
             String filename = destinationFolder + "copyFields03.pdf";
-            PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode.Create)));
+            PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             pdfDoc.Close();
@@ -85,11 +79,9 @@ namespace iText.Forms {
             String srcFilename2 = sourceFolder + "largeFile.pdf";
             String filename = destinationFolder + "copyLargeFile.pdf";
             long timeStart = System.DateTime.Now.Ticks;
-            PdfDocument doc1 = new PdfDocument(new PdfReader(new FileStream(srcFilename1, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument doc2 = new PdfDocument(new PdfReader(new FileStream(srcFilename2, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(filename, FileMode.Create)));
+            PdfDocument doc1 = new PdfDocument(new PdfReader(srcFilename1));
+            PdfDocument doc2 = new PdfDocument(new PdfReader(srcFilename2));
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             pdfDoc.InitializeOutlines();
             doc1.CopyPagesTo(1, doc1.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
             doc2.CopyPagesTo(1, doc2.GetNumberOfPages(), pdfDoc, new PdfPageFormCopier());
@@ -105,8 +97,7 @@ namespace iText.Forms {
         [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void CopyFieldsTest04() {
             String srcFilename = sourceFolder + "srcFile1.pdf";
-            PdfDocument srcDoc = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode.Open, FileAccess.Read
-                )));
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
             PdfDocument destDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, new PdfPageFormCopier());
             srcDoc.CopyPagesTo(1, srcDoc.GetNumberOfPages(), destDoc, new PdfPageFormCopier());
@@ -123,9 +114,8 @@ namespace iText.Forms {
         public virtual void CopyFieldsTest05() {
             String srcFilename = sourceFolder + "srcFile1.pdf";
             String destFilename = destinationFolder + "copyFields05.pdf";
-            PdfDocument srcDoc = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode.Open, FileAccess.Read
-                )));
-            PdfDocument destDoc = new PdfDocument(new PdfWriter(new FileStream(destFilename, FileMode.Create)));
+            PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
+            PdfDocument destDoc = new PdfDocument(new PdfWriter(destFilename));
             destDoc.AddPage(srcDoc.GetFirstPage().CopyTo(destDoc, new PdfPageFormCopier()));
             destDoc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFilename, sourceFolder + "cmp_copyFields05.pdf"
@@ -138,10 +128,8 @@ namespace iText.Forms {
         public virtual void CopyPagesWithInheritedResources() {
             String sourceFile = sourceFolder + "AnnotationSampleStandard.pdf";
             String destFile = destinationFolder + "AnnotationSampleStandard_copy.pdf";
-            PdfReader reader = new PdfReader(new FileStream(sourceFile, FileMode.Open, FileAccess.Read));
-            PdfWriter writer = new PdfWriter(destFile);
-            PdfDocument source = new PdfDocument(reader);
-            PdfDocument target = new PdfDocument(writer);
+            PdfDocument source = new PdfDocument(new PdfReader(sourceFile));
+            PdfDocument target = new PdfDocument(new PdfWriter(destFile));
             target.InitializeOutlines();
             source.CopyPagesTo(1, source.GetNumberOfPages(), target, new PdfPageFormCopier());
             target.Close();

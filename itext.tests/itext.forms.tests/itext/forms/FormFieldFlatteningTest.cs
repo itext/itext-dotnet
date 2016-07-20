@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -22,8 +21,7 @@ namespace iText.Forms {
         public virtual void FormFlatteningTest01() {
             String srcFilename = sourceFolder + "formFlatteningSource.pdf";
             String filename = destinationFolder + "formFlatteningTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfReader(new FileStream(srcFilename, FileMode.Open, FileAccess.Read
-                )), new PdfWriter(new FileStream(filename, FileMode.Create)));
+            PdfDocument doc = new PdfDocument(new PdfReader(srcFilename), new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
             form.FlattenFields();
             doc.Close();
