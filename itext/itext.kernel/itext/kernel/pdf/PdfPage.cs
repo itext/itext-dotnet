@@ -296,7 +296,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
-                        , false))), false);
+                        , true))), false);
                 }
             }
             if (toDocument.IsTagged()) {

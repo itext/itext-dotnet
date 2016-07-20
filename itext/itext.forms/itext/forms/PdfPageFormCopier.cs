@@ -79,14 +79,14 @@ namespace iText.Forms {
             if (documentTo != toPage.GetDocument()) {
                 documentTo = toPage.GetDocument();
                 formTo = PdfAcroForm.GetAcroForm(documentTo, true);
-                if (formFrom != null) {
-                    //duplicate AcroForm dictionary
-                    IList<PdfName> excludedKeys = new List<PdfName>();
-                    excludedKeys.Add(PdfName.Fields);
-                    excludedKeys.Add(PdfName.DR);
-                    PdfDictionary dict = formFrom.GetPdfObject().CopyTo(documentTo, excludedKeys, false);
-                    formTo.GetPdfObject().MergeDifferent(dict);
-                }
+            }
+            if (formFrom != null) {
+                //duplicate AcroForm dictionary
+                IList<PdfName> excludedKeys = new List<PdfName>();
+                excludedKeys.Add(PdfName.Fields);
+                excludedKeys.Add(PdfName.DR);
+                PdfDictionary dict = formFrom.GetPdfObject().CopyTo(documentTo, excludedKeys, false);
+                formTo.GetPdfObject().MergeDifferent(dict);
             }
             IList<PdfDictionary> usedParents = new List<PdfDictionary>();
             if (formFrom != null) {
@@ -102,14 +102,16 @@ namespace iText.Forms {
                                 if (parentName == null) {
                                     continue;
                                 }
-                                if (!usedParents.Contains(parent)) {
+                                if (!fieldsTo.ContainsKey(parentName.ToUnicodeString())) {
                                     PdfFormField field = PdfFormField.MakeFormField(parent, toPage.GetDocument());
                                     field.GetKids().Clear();
                                     formTo.AddField(field, toPage);
-                                    usedParents.Add(parent);
+                                    fieldsTo[parentName.ToUnicodeString()] = new PdfFormField(parent);
                                     field.AddKid((PdfWidgetAnnotation)annot);
                                 }
                                 else {
+                                    parent = fieldsTo.Get(parentName.ToUnicodeString()).GetPdfObject();
+                                    annot.GetPdfObject().Put(PdfName.Parent, fieldsTo.Get(parentName.ToUnicodeString()).GetPdfObject());
                                     parent.GetAsArray(PdfName.Kids).Add(annot.GetPdfObject());
                                 }
                             }

@@ -127,7 +127,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-720")]
+        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest06() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields06.pdf";
@@ -147,7 +147,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-720")]
+        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest07() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields07.pdf";
@@ -167,7 +167,6 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-720")]
         [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest08() {
             String srcFilename1 = sourceFolder + "appearances1.pdf";
