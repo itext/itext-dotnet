@@ -48,6 +48,7 @@ namespace iText.Layout {
             style.SetBackgroundColor(Color.YELLOW);
             style.SetMargin(10);
             document.Add(new LineSeparator(new SolidLine()).AddStyle(style));
+            document.Add(new LineSeparator(new DashedLine()).SetBackgroundColor(Color.RED));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
