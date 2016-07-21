@@ -58,12 +58,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             if (type == EventType.RENDER_TEXT) {
                 TextRenderInfo info = (TextRenderInfo)data;
                 if (textRectangle == null) {
-                    textRectangle = info.GetDescentLine().GetBoundingRectange();
+                    textRectangle = info.GetDescentLine().GetBoundingRectangle();
                 }
                 else {
-                    textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine().GetBoundingRectange());
+                    textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetDescentLine().GetBoundingRectangle());
                 }
-                textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().GetBoundingRectange());
+                textRectangle = Rectangle.GetCommonRectangle(textRectangle, info.GetAscentLine().GetBoundingRectangle());
             }
             else {
                 throw new InvalidOperationException(String.Format("Event type not supported: {0}", type));
