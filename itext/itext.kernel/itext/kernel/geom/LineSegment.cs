@@ -84,7 +84,20 @@ namespace iText.Kernel.Geom {
         /// origin of the lower left hand end point of the segment, with width = 4 and height = 3.
         /// </remarks>
         /// <returns>the bounding rectangle</returns>
+        [System.ObsoleteAttribute(@"Use getBoundingRectangle(). Will be removed in 7.1")]
         public virtual Rectangle GetBoundingRectange() {
+            return GetBoundingRectangle();
+        }
+
+        /// <summary>Computes the bounding rectangle for this line segment.</summary>
+        /// <remarks>
+        /// Computes the bounding rectangle for this line segment.  The rectangle has a rotation 0 degrees
+        /// with respect to the coordinate system that the line system is in.  For example, if a line segment
+        /// is 5 unit long and sits at a 37 degree angle from horizontal, the bounding rectangle will have
+        /// origin of the lower left hand end point of the segment, with width = 4 and height = 3.
+        /// </remarks>
+        /// <returns>the bounding rectangle</returns>
+        public virtual Rectangle GetBoundingRectangle() {
             float x1 = GetStartPoint().Get(Vector.I1);
             float y1 = GetStartPoint().Get(Vector.I2);
             float x2 = GetEndPoint().Get(Vector.I1);
