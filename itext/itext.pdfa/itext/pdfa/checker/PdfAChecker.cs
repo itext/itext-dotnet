@@ -354,7 +354,7 @@ namespace iText.Pdfa.Checker {
             PdfDictionary xObjects = resources.GetAsDictionary(PdfName.XObject);
             PdfDictionary shadings = resources.GetAsDictionary(PdfName.Shading);
             if (xObjects != null) {
-                foreach (PdfObject xObject in xObjects.Values()) {
+                foreach (PdfObject xObject in xObjects.DirectValues()) {
                     PdfStream xObjStream = (PdfStream)xObject;
                     if (checkedObjects.Contains(xObjStream)) {
                         continue;
@@ -371,7 +371,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             if (shadings != null) {
-                foreach (PdfObject shading in shadings.Values()) {
+                foreach (PdfObject shading in shadings.DirectValues()) {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
                         (PdfName.ColorSpace), true, null);

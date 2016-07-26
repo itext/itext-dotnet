@@ -314,11 +314,30 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Returns all the values of this map in a Collection.</summary>
+        /// <remarks>
+        /// Returns all the values of this map in a Collection.
+        /// <br/>
+        /// NOTE: returned collection will contain
+        /// <see cref="PdfIndirectReference"/>
+        /// instances
+        /// for the indirect objects in dictionary.
+        /// Use
+        /// <see cref="DirectValues()"/>
+        /// to get the collection of the actual objects.
+        /// </remarks>
         /// <returns>a Collection holding all the values</returns>
         public virtual ICollection<PdfObject> Values() {
             return map.Values;
         }
 
+        /// <summary>Returns all the values of this map in a Collection.</summary>
+        /// <remarks>
+        /// Returns all the values of this map in a Collection. In opposite to
+        /// <see cref="Values()"/>
+        /// method,
+        /// this method will resolve all indirect references in the dictionary and return actual objects in collection.
+        /// </remarks>
+        /// <returns>a Collection holding all the values</returns>
         public virtual ICollection<PdfObject> DirectValues() {
             ICollection<PdfObject> directValues = new List<PdfObject>();
             foreach (PdfObject value in map.Values) {
@@ -333,13 +352,32 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
+        /// <remarks>
+        /// Returns a Set holding the key-value pairs as Map#Entry objects.
+        /// <br/>
+        /// NOTE: returned collection will contain
+        /// <see cref="PdfIndirectReference"/>
+        /// instances
+        /// for the values that are indirect objects.
+        /// Use
+        /// <see cref="DirectEntrySet()"/>
+        /// to get the collection of the entries with actual objects as values.
+        /// </remarks>
         /// <returns>a Set of Map.Entry objects</returns>
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> EntrySet() {
             return map;
         }
 
+        /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
+        /// <remarks>
+        /// Returns a Set holding the key-value pairs as Map#Entry objects. In opposite to
+        /// <see cref="EntrySet()"/>
+        /// method, this method will resolve all indirect references in the dictionary and return actual objects as values of
+        /// entries in the collection.
+        /// </remarks>
+        /// <returns>a Set of Map.Entry objects</returns>
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> DirectEntrySet() {
-            IDictionary<PdfName, PdfObject> directMap = new Dictionary<PdfName, PdfObject>();
+            IDictionary<PdfName, PdfObject> directMap = new SortedDictionary<PdfName, PdfObject>();
             foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
                 PdfObject value = entry.Value;
                 if (value.IsIndirectReference()) {

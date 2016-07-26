@@ -395,7 +395,7 @@ namespace iText.Kernel.Pdf {
                     if (flushXObjects) {
                         PdfDictionary xObjectsDict = GetPdfObject().GetAsDictionary(PdfName.Resources).GetAsDictionary(PdfName.XObject
                             );
-                        xObjects = xObjectsDict != null ? xObjectsDict.Values() : null;
+                        xObjects = xObjectsDict != null ? xObjectsDict.DirectValues() : null;
                     }
                 }
             }
@@ -828,7 +828,7 @@ namespace iText.Kernel.Pdf {
                 ICollection<PdfObject> innerXObjects = null;
                 if (innerResources != null) {
                     PdfDictionary innerXObjectsDict = innerResources.GetAsDictionary(PdfName.XObject);
-                    innerXObjects = innerXObjectsDict != null ? innerXObjectsDict.Values() : null;
+                    innerXObjects = innerXObjectsDict != null ? innerXObjectsDict.DirectValues() : null;
                 }
                 obj.Flush();
                 if (innerXObjects != null) {
