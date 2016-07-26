@@ -710,7 +710,8 @@ namespace iText.Forms {
                             }
                         }
                     }
-                    if (xObject != null) {
+                    // Subtype is required key, if there is no Subtype it is invalid XObject. DEVSIX-725
+                    if (xObject != null && xObject.GetPdfObject().Get(PdfName.Subtype) != null) {
                         Rectangle box = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
                             throw new PdfException(PdfException.PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing
