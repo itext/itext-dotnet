@@ -81,9 +81,24 @@ namespace iText.Kernel.Font {
             GetPdfObject().Put(PdfName.Type, PdfName.Font);
         }
 
+        /// <summary>Get glyph by unicode</summary>
+        /// <param name="unicode">a unicode code point</param>
+        /// <returns>
+        /// 
+        /// <seealso>Glyph</seealso>
+        /// if it exists or .NOTDEF if supported, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public abstract Glyph GetGlyph(int unicode);
 
-        public virtual bool ContainsGlyph(char unicode) {
+        /// <summary>Check whether font contains glyph with specified unicode.</summary>
+        /// <param name="unicode">a unicode code point</param>
+        /// <returns>
+        /// true if font contains glyph, represented with the unicode code point,
+        /// otherwise false.
+        /// </returns>
+        public virtual bool ContainsGlyph(int unicode) {
             Glyph glyph = GetGlyph(unicode);
             if (glyph != null) {
                 if (GetFontProgram() != null && GetFontProgram().IsFontSpecific()) {
