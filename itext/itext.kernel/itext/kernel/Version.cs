@@ -102,69 +102,58 @@ namespace iText.Kernel {
                         String licenseKeyClassFullName = "iText.License.LicenseKey, itext.licensekey";
                         String licenseeInfoMethodName = "GetLicenseeInfo";
                         Type klass = System.Type.GetType(licenseKeyClassFullName);
-                        MethodInfo m = klass.GetMethod(licenseeInfoMethodName);
-                        String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
-                        if (info[3] != null && info[3].Trim().Length > 0) {
-                            version.key = info[3];
-                        }
-                        else {
-                            version.key = "Trial version";
-                            if (info[5] == null) {
-                                version.key += "unauthorised";
+                        if (klass != null) {
+                            MethodInfo m = klass.GetMethod(licenseeInfoMethodName);
+                            String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
+                            if (info[3] != null && info[3].Trim().Length > 0) {
+                                version.key = info[3];
                             }
                             else {
-                                version.key += info[5];
-                            }
-                        }
-                        if (info.Length > 6) {
-                            if (info[6] != null && info[6].Trim().Length > 0) {
-                                String versionToCheck = release.JSubstring(0, release.LastIndexOf("."));
-                                if (!info[6].EqualsIgnoreCase(versionToCheck)) {
-                                    throw new ArgumentException("Your license key version doesn't match the iText version.");
-                                }
-                            }
-                        }
-                        if (info[4] != null && info[4].Trim().Length > 0) {
-                            version.iTextVersion = info[4];
-                        }
-                        else {
-                            if (info[2] != null && info[2].Trim().Length > 0) {
-                                version.iTextVersion += " (" + info[2];
-                                if (!version.key.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith("trial")) {
-                                    version.iTextVersion += "; licensed version)";
+                                version.key = "Trial version ";
+                                if (info[5] == null) {
+                                    version.key += "unauthorised";
                                 }
                                 else {
-                                    version.iTextVersion += "; " + version.key + ")";
+                                    version.key += info[5];
                                 }
                             }
+                            if (info.Length > 6) {
+                                if (info[6] != null && info[6].Trim().Length > 0) {
+                                    String versionToCheck = release.JSubstring(0, release.LastIndexOf("."));
+                                    if (!info[6].EqualsIgnoreCase(versionToCheck)) {
+                                        throw new ArgumentException("Your license key version doesn't match the iText version.");
+                                    }
+                                }
+                            }
+                            if (info[4] != null && info[4].Trim().Length > 0) {
+                                version.iTextVersion = info[4];
+                            }
                             else {
-                                if (info[0] != null && info[0].Trim().Length > 0) {
-                                    // fall back to contact name, if company name is unavailable
-                                    version.iTextVersion += " (" + info[0];
-                                    if (!version.key.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith("trial")) {
+                                if (info[2] != null && info[2].Trim().Length > 0) {
+                                    version.AddLicensedPostfix(info[2]);
+                                }
+                                else {
+                                    if (info[0] != null && info[0].Trim().Length > 0) {
+                                        // fall back to contact name, if company name is unavailable.
                                         // we shouldn't have a licensed version without company name,
                                         // but let's account for it anyway
-                                        version.iTextVersion += "; licensed version)";
+                                        version.AddLicensedPostfix(info[0]);
                                     }
                                     else {
-                                        version.iTextVersion += "; " + version.key + ")";
+                                        version.AddAGPLPostfix(null);
                                     }
                                 }
-                                else {
-                                    throw new Exception();
-                                }
                             }
+                        }
+                        else {
+                            version.AddAGPLPostfix(null);
                         }
                     }
                     catch (ArgumentException exc) {
                         throw;
                     }
                     catch (Exception e) {
-                        version.iTextVersion += AGPL;
-                        if (e.InnerException != null && e.InnerException.Message != null && e.InnerException.Message.Contains("expired"
-                            )) {
-                            expired = true;
-                        }
+                        version.AddAGPLPostfix(e.InnerException);
                     }
                 }
             }
@@ -221,6 +210,23 @@ namespace iText.Kernel {
         /// <returns>a license key.</returns>
         public String GetKey() {
             return key;
+        }
+
+        private void AddLicensedPostfix(String ownerName) {
+            iTextVersion += " (" + ownerName;
+            if (!key.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith("trial")) {
+                iTextVersion += "; licensed version)";
+            }
+            else {
+                iTextVersion += "; " + key + ")";
+            }
+        }
+
+        private void AddAGPLPostfix(Exception cause) {
+            iTextVersion += AGPL;
+            if (cause != null && cause.Message != null && cause.Message.Contains("expired")) {
+                expired = true;
+            }
         }
     }
 }
