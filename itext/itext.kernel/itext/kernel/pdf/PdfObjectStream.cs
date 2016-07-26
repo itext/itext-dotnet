@@ -57,7 +57,8 @@ namespace iText.Kernel.Pdf {
 
         public PdfObjectStream(PdfDocument doc)
             : base() {
-            MakeIndirect(doc);
+            //avoid reuse existed references
+            MakeIndirect(doc, doc.GetXref().CreateNewIndirectReference(doc));
             GetOutputStream().document = doc;
             Put(PdfName.Type, PdfName.ObjStm);
             Put(PdfName.N, size);

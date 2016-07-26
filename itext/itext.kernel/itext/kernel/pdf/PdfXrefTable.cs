@@ -121,6 +121,13 @@ namespace iText.Kernel.Pdf {
             return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
+        //For Object streams
+        internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
+            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
+            Add(reference);
+            return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
+        }
+
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
             reference.SetOffset(0);
             reference.SetState(PdfObject.FREE);
