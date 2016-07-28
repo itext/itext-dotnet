@@ -47,23 +47,50 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Function;
 
 namespace iText.Kernel.Pdf.Colorspace {
+    /// <summary>The abstract PdfShading class that represents the Shading Dictionary PDF object.</summary>
     public abstract class PdfShading : PdfObjectWrapper<PdfDictionary> {
         private class ShadingType {
+            /// <summary>The int value of function-based shading type</summary>
             public const int FUNCTION_BASED = 1;
 
+            /// <summary>The int value of axial shading type</summary>
             public const int AXIAL = 2;
 
+            /// <summary>The int value of radial shading type</summary>
             public const int RADIAL = 3;
 
+            /// <summary>The int value of free-form Gouraud-shaded triangle mesh shading type</summary>
             public const int FREE_FORM_GOURAUD_SHADED_TRIANGLE_MESH = 4;
 
+            /// <summary>The int value of lattice-form Gouraud-shaded triangle mesh shading type</summary>
             public const int LATTICE_FORM_GOURAUD_SHADED_TRIANGLE_MESH = 5;
 
+            /// <summary>The int value of coons patch meshes shading type</summary>
             public const int COONS_PATCH_MESH = 6;
 
+            /// <summary>The int value of tensor-product patch meshes shading type</summary>
             public const int TENSOR_PRODUCT_PATCH_MESH = 7;
         }
 
+        /// <summary>
+        /// Creates the type specific
+        /// <see cref="PdfShading"/>
+        /// object from the given
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// .
+        /// </summary>
+        /// <param name="shadingDictionary">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// from which the
+        /// <see cref="PdfShading"/>
+        /// object will be created.
+        /// </param>
+        /// <returns>
+        /// Created
+        /// <see cref="PdfShading"/>
+        /// object.
+        /// </returns>
         public static PdfShading MakeShading(PdfDictionary shadingDictionary) {
             if (!shadingDictionary.ContainsKey(PdfName.ShadingType)) {
                 throw new PdfException(PdfException.UnexpectedShadingType);
@@ -134,23 +161,62 @@ namespace iText.Kernel.Pdf.Colorspace {
             GetPdfObject().Put(PdfName.ColorSpace, colorSpace);
         }
 
+        /// <summary>Gets the shading type.</summary>
+        /// <returns>
+        /// int value of
+        /// <see cref="ShadingType"/>
+        /// .
+        /// </returns>
         public virtual int GetShadingType() {
             return (int)GetPdfObject().GetAsInt(PdfName.ShadingType);
         }
 
+        /// <summary>Gets the color space in which colour values shall be expressed.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// Color space
+        /// </returns>
         public virtual PdfObject GetColorSpace() {
             return GetPdfObject().Get(PdfName.ColorSpace);
         }
 
+        /// <summary>
+        /// Gets the function PdfObject that represents color transitions
+        /// across the shading geometry.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// Function
+        /// </returns>
         public virtual PdfObject GetFunction() {
             return GetPdfObject().Get(PdfName.Function);
         }
 
+        /// <summary>
+        /// Sets the function that represents color transitions
+        /// across the shading geometry as one object.
+        /// </summary>
+        /// <param name="function">
+        /// The
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// to set.
+        /// </param>
         public virtual void SetFunction(PdfFunction function) {
             GetPdfObject().Put(PdfName.Function, function.GetPdfObject());
             SetModified();
         }
 
+        /// <summary>
+        /// Sets the function object that represents color transitions
+        /// across the shading geometry as an array of functions.
+        /// </summary>
+        /// <param name="functions">
+        /// The array of
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// to be set.
+        /// </param>
         public virtual void SetFunction(PdfFunction[] functions) {
             PdfArray arr = new PdfArray();
             foreach (PdfFunction func in functions) {
@@ -179,34 +245,125 @@ namespace iText.Kernel.Pdf.Colorspace {
             return true;
         }
 
+        /// <summary>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with function-based type
+        /// </summary>
         public class FunctionBased : PdfShading {
-            public FunctionBased(PdfDictionary pdfObject)
-                : base(pdfObject) {
+            /// <summary>
+            /// Creates the new instance of the class from the given
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+            /// object.
+            /// </summary>
+            /// <param name="pdfDictionary">
+            /// 
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+            /// from which the instance is created.
+            /// </param>
+            public FunctionBased(PdfDictionary pdfDictionary)
+                : base(pdfDictionary) {
             }
 
+            /// <summary>
+            /// Creates the new instance of the class from the given
+            /// <see cref="PdfColorSpace"/>
+            /// and
+            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// objects.
+            /// </summary>
+            /// <param name="colorSpace">
+            /// the
+            /// <see cref="PdfColorSpace"/>
+            /// that will be used for shading.
+            /// </param>
+            /// <param name="function">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// that will be used for shading.
+            /// </param>
             public FunctionBased(PdfColorSpace colorSpace, PdfFunction function)
                 : this(colorSpace.GetPdfObject(), function) {
             }
 
+            /// <summary>
+            /// Creates the new instance of the class from the given
+            /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+            /// color space object
+            /// and
+            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// object.
+            /// </summary>
+            /// <param name="colorSpace">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+            /// that will be used for shading.
+            /// </param>
+            /// <param name="function">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// that will be used for shading.
+            /// </param>
             public FunctionBased(PdfObject colorSpace, PdfFunction function)
                 : base(new PdfDictionary(), PdfShading.ShadingType.FUNCTION_BASED, colorSpace) {
                 SetFunction(function);
             }
 
+            /// <summary>
+            /// Gets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// domain rectangle object that establishes an internal coordinate space
+            /// for the shading that is independent of the target coordinate space in which it shall be painted.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// domain rectangle.
+            /// </returns>
             public virtual PdfArray GetDomain() {
                 return GetPdfObject().GetAsArray(PdfName.Domain);
             }
 
+            /// <summary>
+            /// Sets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// domain rectangle object that establishes an internal coordinate space
+            /// for the shading that is independent of the target coordinate space in which it shall be painted.
+            /// </summary>
+            /// <param name="xmin">the Xmin coordinate of rectangle.</param>
+            /// <param name="xmax">the Xmax coordinate of rectangle.</param>
+            /// <param name="ymin">the Ymin coordinate of rectangle.</param>
+            /// <param name="ymax">the Ymax coordinate of rectangle.</param>
             public virtual void SetDomain(float xmin, float xmax, float ymin, float ymax) {
                 GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { xmin, xmax, ymin, ymax }));
                 SetModified();
             }
 
+            /// <summary>
+            /// Sets the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// domain rectangle object that establishes an internal coordinate space
+            /// for the shading that is independent of the target coordinate space in which it shall be painted.
+            /// </summary>
+            /// <param name="domain">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// domain rectangle object to be set.
+            /// </param>
             public virtual void SetDomain(PdfArray domain) {
                 GetPdfObject().Put(PdfName.Domain, domain);
                 SetModified();
             }
 
+            /// <summary>
+            /// Gets the array of floats that represents the transformation matrix that maps the domain rectangle
+            /// into a corresponding figure in the target coordinate space.
+            /// </summary>
+            /// <returns>
+            /// the
+            /// <c>float[]</c>
+            /// of transformation matrix (identical matrix by default).
+            /// </returns>
             public virtual float[] GetMatrix() {
                 PdfArray matrix = GetPdfObject().GetAsArray(PdfName.Matrix);
                 if (matrix == null) {
@@ -219,21 +376,74 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return result;
             }
 
+            /// <summary>
+            /// Sets the array of floats that represents the transformation matrix that maps the domain rectangle
+            /// into a corresponding figure in the target coordinate space.
+            /// </summary>
+            /// <param name="matrix">
+            /// the
+            /// <c>float[]</c>
+            /// of transformation matrix to be set.
+            /// </param>
             public virtual void SetMatrix(float[] matrix) {
                 SetMatrix(new PdfArray(matrix));
             }
 
+            /// <summary>
+            /// Sets the array of floats that represents the transformation matrix that maps the domain rectangle
+            /// into a corresponding figure in the target coordinate space.
+            /// </summary>
+            /// <param name="matrix">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// transformation matrix object to be set.
+            /// </param>
             public virtual void SetMatrix(PdfArray matrix) {
                 GetPdfObject().Put(PdfName.Matrix, matrix);
                 SetModified();
             }
         }
 
+        /// <summary>
+        /// The class that extends
+        /// <see cref="PdfShading"/>
+        /// class and is in charge of Shading Dictionary with axial type
+        /// </summary>
         public class Axial : PdfShading {
+            /// <summary>
+            /// Creates the new instance of the class from the given
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+            /// object.
+            /// </summary>
+            /// <param name="pdfDictionary">
+            /// 
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+            /// from which the instance is created.
+            /// </param>
             public Axial(PdfDictionary pdfDictionary)
                 : base(pdfDictionary) {
             }
 
+            /// <summary>Creates the new instance of the class.</summary>
+            /// <param name="cs">
+            /// 
+            /// <see cref="PdfColorSpace"/>
+            /// object. The special Pattern space isn't excepted.
+            /// </param>
+            /// <param name="x0">the start coordinate of X axis expressed in the shading's target coordinate space.</param>
+            /// <param name="y0">the start coordinate of Y axis expressed in the shading's target coordinate space.</param>
+            /// <param name="color0">
+            /// the
+            /// <c>float[]</c>
+            /// that represents start color of function.
+            /// </param>
+            /// <param name="x1">the end coordinate of X axis expressed in the shading's target coordinate space.</param>
+            /// <param name="y1">the end coordinate of Y axis expressed in the shading's target coordinate space.</param>
+            /// <param name="color1">
+            /// the
+            /// <c>float[]</c>
+            /// that represents end color of function.
+            /// </param>
             public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1)
                 : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs.GetPdfObject()) {
                 if (cs is PdfSpecialCs.Pattern) {
@@ -245,6 +455,30 @@ namespace iText.Kernel.Pdf.Colorspace {
                 SetFunction(func);
             }
 
+            /// <summary>Creates the new instance of the class.</summary>
+            /// <param name="cs">
+            /// 
+            /// <see cref="PdfColorSpace"/>
+            /// object.
+            /// </param>
+            /// <param name="x0">the start coordinate of X axis expressed in the shading's target coordinate space.</param>
+            /// <param name="y0">the start coordinate of Y axis expressed in the shading's target coordinate space.</param>
+            /// <param name="color0">
+            /// the
+            /// <c>float[]</c>
+            /// that represents start color of function.
+            /// </param>
+            /// <param name="x1">the end coordinate of X axis expressed in the shading's target coordinate space.</param>
+            /// <param name="y1">the end coordinate of Y axis expressed in the shading's target coordinate space.</param>
+            /// <param name="color1">
+            /// the
+            /// <c>float[]</c>
+            /// that represents end color of function.
+            /// </param>
+            /// <param name="extend">
+            /// the array of two booleans that specified whether to extend the shading
+            /// beyond the starting and ending points of the axis, respectively.
+            /// </param>
             public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1, bool
                 [] extend)
                 : this(cs, x0, y0, color0, x1, y1, color1) {
@@ -254,25 +488,78 @@ namespace iText.Kernel.Pdf.Colorspace {
                 SetExtend(extend[0], extend[1]);
             }
 
+            /// <summary>Creates the new instance of the class.</summary>
+            /// <param name="cs">
+            /// the
+            /// <see cref="PdfColorSpace"/>
+            /// object. The special Pattern space isn't excepted.
+            /// </param>
+            /// <param name="coords">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of four number that specified the starting and the ending points.
+            /// </param>
+            /// <param name="function">
+            /// the
+            /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+            /// object, that is used to calculate color transitions.
+            /// </param>
             public Axial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
                 : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs.GetPdfObject()) {
                 SetCoords(coords);
                 SetFunction(function);
             }
 
+            /// <summary>
+            /// Gets
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of four numbers [x0 y0 x1 y1] that specified the starting
+            /// and the endings coordinates of thew axis, expressed in the shading's target coordinate space.
+            /// </summary>
+            /// <returns>
+            /// the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// Coords object.
+            /// </returns>
             public virtual PdfArray GetCoords() {
                 return GetPdfObject().GetAsArray(PdfName.Coords);
             }
 
+            /// <summary>Sets the Choords object with the four params expressed in the shading's target coordinate space.</summary>
+            /// <param name="x0">the start coordinate of X axis to be set.</param>
+            /// <param name="y0">the start coordinate of Y axis to be set.</param>
+            /// <param name="x1">the end coordinate of X axis to be set.</param>
+            /// <param name="y1">the end coordinate of Y axis to be set.</param>
             public virtual void SetCoords(float x0, float y0, float x1, float y1) {
                 SetCoords(new PdfArray(new float[] { x0, y0, x1, y1 }));
             }
 
+            /// <summary>
+            /// Sets the Choords object with the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// of four numbers [x0 y0 x1 y1],
+            /// that specified the starting and the endings coordinates of thew axis,
+            /// expressed in the shading's target coordinate space.
+            /// </summary>
+            /// <param name="coords">
+            /// the Chords
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// to be set.
+            /// </param>
             public virtual void SetCoords(PdfArray coords) {
                 GetPdfObject().Put(PdfName.Coords, coords);
                 SetModified();
             }
 
+            /// <summary>
+            /// Gets the array of two floats [t0, t1] that represent the limiting values of a parametric
+            /// variable t, that becomes an input of color function(s).
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <c>float[]</c>
+            /// of Domain object ([0.0 1.0] by default)
+            /// </returns>
             public virtual float[] GetDomain() {
                 PdfArray domain = GetPdfObject().GetAsArray(PdfName.Domain);
                 if (domain == null) {
@@ -281,11 +568,26 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return new float[] { domain.GetAsNumber(0).FloatValue(), domain.GetAsNumber(1).FloatValue() };
             }
 
+            /// <summary>
+            /// Sets the Domain with the array of two floats [t0, t1] that represent the limiting values
+            /// of a parametric variable t, that becomes an input of color function(s).
+            /// </summary>
+            /// <param name="t0">first limit of variable t</param>
+            /// <param name="t1">second limit of variable t</param>
             public virtual void SetDomain(float t0, float t1) {
                 GetPdfObject().Put(PdfName.Domain, new PdfArray(new float[] { t0, t1 }));
                 SetModified();
             }
 
+            /// <summary>
+            /// Gets the array of two booleans that specified whether to extend the shading
+            /// beyond the starting and ending points of the axis, respectively.
+            /// </summary>
+            /// <returns>
+            /// 
+            /// <c>boolean[]</c>
+            /// of Extended object ([false false] by default)
+            /// </returns>
             public virtual bool[] GetExtend() {
                 PdfArray extend = GetPdfObject().GetAsArray(PdfName.Extend);
                 if (extend == null) {
@@ -294,6 +596,9 @@ namespace iText.Kernel.Pdf.Colorspace {
                 return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
             }
 
+            /// <summary>Sets the Extend object with the two booleans value.</summary>
+            /// <param name="extendStart">if true will extend shading beyond the starting point of Coords</param>
+            /// <param name="extendEnd">if true will extend shading beyond the ending point of Coords</param>
             public virtual void SetExtend(bool extendStart, bool extendEnd) {
                 GetPdfObject().Put(PdfName.Extend, new PdfArray(new bool[] { extendStart, extendEnd }));
                 SetModified();
