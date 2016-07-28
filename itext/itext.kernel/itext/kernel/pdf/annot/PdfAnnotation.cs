@@ -294,6 +294,25 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual PdfPage GetPage() {
+            if (page == null && GetPdfObject().IsIndirect()) {
+                PdfIndirectReference annotationIndirectReference = GetPdfObject().GetIndirectReference();
+                PdfDocument doc = annotationIndirectReference.GetDocument();
+                PdfDictionary pageDictionary = GetPageObject();
+                if (pageDictionary != null) {
+                    page = doc.GetPage(pageDictionary);
+                }
+                else {
+                    for (int i = 1; i <= doc.GetNumberOfPages(); i++) {
+                        PdfPage docPage = doc.GetPage(i);
+                        foreach (iText.Kernel.Pdf.Annot.PdfAnnotation annot in docPage.GetAnnotations()) {
+                            if (annot.GetPdfObject().GetIndirectReference().Equals(annotationIndirectReference)) {
+                                page = docPage;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             return page;
         }
 

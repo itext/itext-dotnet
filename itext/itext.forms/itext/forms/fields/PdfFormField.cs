@@ -1952,6 +1952,10 @@ namespace iText.Forms.Fields {
         public virtual bool RegenerateField() {
             PdfName type = GetFormType();
             String value = GetValueAsString();
+            PdfPage page = null;
+            if (GetWidgets().Count > 0) {
+                page = GetWidgets()[0].GetPage();
+            }
             if (PdfName.Tx.Equals(type) || PdfName.Ch.Equals(type)) {
                 try {
                     PdfDictionary apDic = GetPdfObject().GetAsDictionary(PdfName.AP);
@@ -1973,6 +1977,20 @@ namespace iText.Forms.Fields {
                     if (fontSz == 0) {
                         fontSz = DEFAULT_FONT_SIZE;
                     }
+                    int rotation = 0;
+                    if (page != null) {
+                        rotation = page.GetRotation();
+                    }
+                    PdfArray matrix = null;
+                    if (rotation != 0 && rotation % 90 == 0) {
+                        double angle = Math.PI * rotation / 180;
+                        matrix = new PdfArray(new double[] { Math.Cos(angle), Math.Sin(angle), -Math.Sin(angle), Math.Cos(angle), 
+                            0, 0 });
+                        Rectangle rect = bBox.ToRectangle();
+                        rect.SetWidth(bBox.ToRectangle().GetHeight());
+                        rect.SetHeight(bBox.ToRectangle().GetWidth());
+                        bBox = new PdfArray(rect);
+                    }
                     PdfFormXObject appearance = null;
                     if (asNormal != null) {
                         appearance = new PdfFormXObject(asNormal);
@@ -1982,6 +2000,9 @@ namespace iText.Forms.Fields {
                     if (appearance == null) {
                         appearance = new PdfFormXObject(new Rectangle(0, 0, bBox.ToRectangle().GetWidth(), bBox.ToRectangle().GetHeight
                             ()));
+                    }
+                    if (matrix != null) {
+                        appearance.Put(PdfName.Matrix, matrix);
                     }
                     if (PdfName.Tx.Equals(type)) {
                         if (!IsMultiline()) {
