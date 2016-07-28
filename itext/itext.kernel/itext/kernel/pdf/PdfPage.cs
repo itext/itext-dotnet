@@ -357,19 +357,23 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes page and its content stream.</summary>
         /// <remarks>
-        /// Flushes page and its content stream. If <code>flushXObjects</code> is true the images and FormXObjects
-        /// associated with this page will also be flushed.
+        /// Flushes page and its content stream. If <code>flushContentStreams</code> is true, all content streams that are
+        /// rendered on this page (like FormXObjects, annotation appearance streams, patterns) and also all images associated
+        /// with this page will also be flushed.
         /// <br />
         /// For notes about tag structure flushing see
         /// <see cref="Flush()">PdfPage#flush() method</see>
         /// .
         /// <br />
         /// <br />
-        /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushXObjects</code> is true.
+        /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushContentStreams</code> is true.
         /// </remarks>
-        /// <param name="flushXObjects">if true the images and FormXObjects associated with this page will also be flushed.
-        ///     </param>
-        public virtual void Flush(bool flushXObjects) {
+        /// <param name="flushContentStreams">
+        /// if true all content streams that are rendered on this page (like form xObjects,
+        /// annotation appearance streams, patterns) and also all images associated with this page
+        /// will be flushed.
+        /// </param>
+        public virtual void Flush(bool flushContentStreams) {
             // TODO log warning in case of failed flush in pdfa document case
             if (IsFlushed()) {
                 return;
@@ -379,31 +383,21 @@ namespace iText.Kernel.Pdf {
                 GetDocument().GetStructTreeRoot().CreateParentTreeEntryForPage(this);
             }
             GetDocument().DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_PAGE, this));
-            if (flushXObjects) {
+            if (flushContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
+                FlushContentStreams();
             }
             int contentStreamCount = GetContentStreamCount();
             for (int i = 0; i < contentStreamCount; i++) {
                 GetContentStream(i).Flush(false);
             }
-            ICollection<PdfObject> xObjects = null;
             if (resources != null) {
                 if (resources.IsReadOnly() && !resources.IsModified()) {
                     GetPdfObject().Remove(PdfName.Resources);
                 }
-                else {
-                    if (flushXObjects) {
-                        PdfDictionary xObjectsDict = GetPdfObject().GetAsDictionary(PdfName.Resources).GetAsDictionary(PdfName.XObject
-                            );
-                        xObjects = xObjectsDict != null ? xObjectsDict.DirectValues() : null;
-                    }
-                }
             }
             resources = null;
             base.Flush();
-            if (flushXObjects && xObjects != null) {
-                FlushXObjects(xObjects);
-            }
         }
 
         public virtual Rectangle GetMediaBox() {
@@ -818,21 +812,52 @@ namespace iText.Kernel.Pdf {
             return contentStream;
         }
 
-        private void FlushXObjects(ICollection<PdfObject> xObjects) {
-            foreach (PdfObject obj in xObjects) {
+        private void FlushContentStreams() {
+            FlushContentStreams(GetPdfObject().GetAsDictionary(PdfName.Resources));
+            PdfArray annots = GetAnnots(false);
+            if (annots != null) {
+                for (int i = 0; i < annots.Size(); ++i) {
+                    PdfDictionary apDict = annots.GetAsDictionary(i).GetAsDictionary(PdfName.AP);
+                    if (apDict != null) {
+                        FlushAppearanceStreams(apDict);
+                    }
+                }
+            }
+        }
+
+        private void FlushContentStreams(PdfDictionary resources) {
+            if (resources != null) {
+                FlushWithResources(resources.GetAsDictionary(PdfName.XObject));
+                FlushWithResources(resources.GetAsDictionary(PdfName.Pattern));
+                FlushWithResources(resources.GetAsDictionary(PdfName.Shading));
+            }
+        }
+
+        private void FlushWithResources(PdfDictionary objsCollection) {
+            if (objsCollection == null) {
+                return;
+            }
+            foreach (PdfObject obj in objsCollection.DirectValues()) {
                 if (obj.IsFlushed()) {
                     continue;
                 }
-                PdfStream xObject = (PdfStream)obj;
-                PdfDictionary innerResources = xObject.GetAsDictionary(PdfName.Resources);
-                ICollection<PdfObject> innerXObjects = null;
-                if (innerResources != null) {
-                    PdfDictionary innerXObjectsDict = innerResources.GetAsDictionary(PdfName.XObject);
-                    innerXObjects = innerXObjectsDict != null ? innerXObjectsDict.DirectValues() : null;
-                }
+                FlushContentStreams(((PdfDictionary)obj).GetAsDictionary(PdfName.Resources));
                 obj.Flush();
-                if (innerXObjects != null) {
-                    FlushXObjects(innerXObjects);
+            }
+        }
+
+        private void FlushAppearanceStreams(PdfDictionary appearanceStreamsDict) {
+            foreach (PdfObject val in appearanceStreamsDict.DirectValues()) {
+                if (val is PdfDictionary) {
+                    PdfDictionary ap = (PdfDictionary)val;
+                    if (ap.IsDictionary()) {
+                        FlushAppearanceStreams(ap);
+                    }
+                    else {
+                        if (ap.IsStream()) {
+                            ap.Flush();
+                        }
+                    }
                 }
             }
         }

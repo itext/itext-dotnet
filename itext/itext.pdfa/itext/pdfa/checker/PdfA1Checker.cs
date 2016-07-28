@@ -271,6 +271,8 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.AGroupObjectWithAnSKeyWithAValueOfTransparencyShallNotBeIncludedInAFormXobject
                     );
             }
+
+            CheckResources(form.GetAsDictionary(PdfName.Resources));
         }
 
         protected internal override void CheckLogicalStructure(PdfDictionary catalog) {
@@ -412,6 +414,8 @@ namespace iText.Pdfa.Checker {
                     throw new PdfAConformanceException(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue
                         );
                 }
+
+                CheckResourcesOfAppearanceStreams(ap);
             }
             if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic.ContainsKey(PdfName.A)
                 )) {
@@ -438,6 +442,9 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.NeedAppearancesFlagOfTheInteractiveFormDictionaryShallEitherNotBePresentedOrShallBeFalse
                     );
             }
+
+            CheckResources(form.GetAsDictionary(PdfName.DR));
+
             PdfArray fields = form.GetAsArray(PdfName.Fields);
             if (fields != null) {
                 fields = GetFormFields(fields);
@@ -447,6 +454,7 @@ namespace iText.Pdfa.Checker {
                         throw new PdfAConformanceException(PdfAConformanceException.WidgetAnnotationDictionaryOrFieldDictionaryShallNotIncludeAOrAAEntry
                             );
                     }
+                    CheckResources(fieldDic.GetAsDictionary(PdfName.DR));
                 }
             }
         }
@@ -509,7 +517,7 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        private PdfArray GetFormFields(PdfArray array) {
+        protected PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
             for (IEnumerator<PdfObject> iterator = array.GetDirectEnumerator(); iterator.MoveNext();) {
                 PdfDictionary field = (PdfDictionary)iterator.Current;

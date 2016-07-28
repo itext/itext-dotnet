@@ -183,10 +183,7 @@ namespace iText.Pdfa.Checker {
                 }
 
                 case PdfObject.STREAM: {
-                    PdfStream stream = (PdfStream)obj;
-                    //form xObjects, annotation appearance streams, patterns and type3 glyphs may have their own resources dictionary
-                    CheckResources(stream.GetAsDictionary(PdfName.Resources));
-                    CheckPdfStream(stream);
+                    CheckPdfStream((PdfStream)obj);
                     break;
                 }
 
@@ -353,14 +350,17 @@ namespace iText.Pdfa.Checker {
             }
             PdfDictionary xObjects = resources.GetAsDictionary(PdfName.XObject);
             PdfDictionary shadings = resources.GetAsDictionary(PdfName.Shading);
+            PdfDictionary patterns = resources.GetAsDictionary(PdfName.Pattern);
             if (xObjects != null) {
                 foreach (PdfObject xObject in xObjects.DirectValues()) {
                     PdfStream xObjStream = (PdfStream)xObject;
-                    if (checkedObjects.Contains(xObjStream)) {
-                        continue;
+                    PdfObject subtype = null;
+                    bool isFlushed = xObjStream.IsFlushed();
+                    if (!isFlushed) {
+                        subtype = xObjStream.Get(PdfName.Subtype);
                     }
-                    PdfObject subtype = xObjStream.Get(PdfName.Subtype);
-                    if (PdfName.Image.Equals(subtype)) {
+                    if (PdfName.Image.Equals(subtype) || isFlushed) {
+                        // if flushed still may be need to check colorspace in given context
                         CheckImage(xObjStream, resources.GetAsDictionary(PdfName.ColorSpace));
                     }
                     else {
@@ -375,6 +375,16 @@ namespace iText.Pdfa.Checker {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
                         (PdfName.ColorSpace), true, null);
+                }
+            }
+            if (patterns != null) {
+                foreach (PdfObject p in patterns.DirectValues()) {
+                    if (p.IsStream()) {
+                        PdfStream pStream = (PdfStream)p;
+                        if (!IsAlreadyChecked(pStream)) {
+                            CheckResources(pStream.GetAsDictionary(PdfName.Resources));
+                        }
+                    }
                 }
             }
         }
@@ -394,6 +404,24 @@ namespace iText.Pdfa.Checker {
             }
             checkedObjects.Add(dictionary);
             return false;
+        }
+
+        protected internal virtual void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict) {
+            foreach (PdfObject val in appearanceStreamsDict.DirectValues()) {
+                if (val is PdfDictionary) {
+                    PdfDictionary ap = (PdfDictionary)val;
+                    if (ap.IsDictionary()) {
+                        CheckResourcesOfAppearanceStreams(ap);
+                    }
+                    else {
+                        if (ap.IsStream()) {
+                            if (!IsAlreadyChecked(ap)) {
+                                CheckResources(ap.GetAsDictionary(PdfName.Resources));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void CheckPages(PdfDocument document) {
@@ -438,8 +466,6 @@ namespace iText.Pdfa.Checker {
         private void CheckAnnotations(PdfDictionary page) {
             PdfArray annots = page.GetAsArray(PdfName.Annots);
             if (annots != null) {
-                // explicit iteration to resolve indirect references on get().
-                // TODO DEVSIX-591
                 for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
                     CheckAnnotation(annot);

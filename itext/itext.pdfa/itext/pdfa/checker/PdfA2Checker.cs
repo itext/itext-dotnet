@@ -361,6 +361,8 @@ namespace iText.Pdfa.Checker {
                             );
                     }
                 }
+
+                CheckResourcesOfAppearanceStreams(ap);
             }
             else {
                 bool isCorrectRect = false;
@@ -392,6 +394,16 @@ namespace iText.Pdfa.Checker {
                 if (form.ContainsKey(PdfName.XFA)) {
                     throw new PdfAConformanceException(PdfAConformanceException.TheInteractiveFormDictionaryShallNotContainTheXfaKey
                         );
+                }
+                CheckResources(form.GetAsDictionary(PdfName.DR));
+
+                PdfArray fields = form.GetAsArray(PdfName.Fields);
+                if (fields != null) {
+                    fields = GetFormFields(fields);
+                    foreach (PdfObject field in fields) {
+                        PdfDictionary fieldDic = (PdfDictionary)field;
+                        CheckResources(fieldDic.GetAsDictionary(PdfName.DR));
+                    }
                 }
             }
         }
@@ -793,6 +805,8 @@ namespace iText.Pdfa.Checker {
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(cs), currentColorSpaces, true, null);
                 }
             }
+
+            CheckResources(form.GetAsDictionary(PdfName.Resources));
         }
 
         private void CheckBlendMode(PdfName blendMode) {

@@ -104,7 +104,7 @@ namespace iText.Pdfa {
 
         public const String CatalogShallIncludeMarkInfoDictionaryWithMarkedTrueValue = "catalog.dictionary.shall.include.a.markinfo.dictionary.whose.entry.marked.shall.have.a.value.of.true";
 
-        public const String CatalogShallContainLangEntry = "catalog.dictionary.shall.contain.lang.entry";
+        public const String CatalogShallContainLangEntry = "catalog.dictionary.should.contain.lang.entry";
 
         public const String CatalogShallContainMetadataEntry = "catalog.dictionary.shall.contain.metadata.entry";
 
