@@ -41,52 +41,105 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Extgstate {
+    /// <summary>Graphics state parameter dictionary wrapper</summary>
     public class PdfExtGState : PdfObjectWrapper<PdfDictionary> {
-        /// <summary>Blend mode constants</summary>
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_NORMAL = PdfName.Normal;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_MULTIPLY = PdfName.Multiply;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_SCREEN = PdfName.Screen;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_OVERLAY = PdfName.Overlay;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_DARKEN = PdfName.Darken;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_LIGHTEN = PdfName.Lighten;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_COLOR_DODGE = PdfName.ColorDodge;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_COLOR_BURN = PdfName.ColorBurn;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_HARD_LIGHT = PdfName.HardLight;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_SOFT_LIGHT = PdfName.SoftLight;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_DIFFERENCE = PdfName.Difference;
 
+        /// <summary>Standard separable blend mode.</summary>
+        /// <remarks>Standard separable blend mode. See ISO-320001, table 136</remarks>
         public static PdfName BM_EXCLUSION = PdfName.Exclusion;
 
+        /// <summary>Standard nonseparable blend mode.</summary>
+        /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
         public static PdfName BM_HUE = PdfName.Hue;
 
+        /// <summary>Standard nonseparable blend mode.</summary>
+        /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
         public static PdfName BM_SATURATION = PdfName.Saturation;
 
+        /// <summary>Standard nonseparable blend mode.</summary>
+        /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
         public static PdfName BM_COLOR = PdfName.Color;
 
+        /// <summary>Standard nonseparable blend mode.</summary>
+        /// <remarks>Standard nonseparable blend mode. See ISO-320001, table 137</remarks>
         public static PdfName BM_LUMINOSITY = PdfName.Luminosity;
 
+        /// <summary>
+        /// Create instance of graphics state parameter dictionary wrapper
+        /// by existed
+        /// <seealso>PdfDictionary</seealso>
+        /// object
+        /// </summary>
+        /// <param name="pdfObject">instance of graphics state parameter dictionary</param>
         public PdfExtGState(PdfDictionary pdfObject)
             : base(pdfObject) {
             MarkObjectAsIndirect(GetPdfObject());
         }
 
+        /// <summary>Create default instance of graphics state parameter dictionary</summary>
         public PdfExtGState()
             : this(new PdfDictionary()) {
         }
 
+        /// <summary>
+        /// Gets line width value,
+        /// <c>LW</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>float</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual float? GetLineWidth() {
             return GetPdfObject().GetAsFloat(PdfName.LW);
         }
@@ -95,14 +148,26 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.LW, new PdfNumber(lineWidth));
         }
 
+        /// <summary>
+        /// Gets line gap style value,
+        /// <c>LC</c>
+        /// key.
+        /// </summary>
+        /// <returns>0 - butt cap, 1 - round cap, 2 - projecting square cap.</returns>
         public virtual int? GetLineCapStyle() {
             return GetPdfObject().GetAsInt(PdfName.LC);
         }
 
-        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStryle(int lineCapStyle) {
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStyle(int lineCapStyle) {
             return Put(PdfName.LC, new PdfNumber(lineCapStyle));
         }
 
+        /// <summary>
+        /// Gets line join style value,
+        /// <c>LJ</c>
+        /// key.
+        /// </summary>
+        /// <returns>0 - miter join (see also miter limit), 1 - round join, 2 - bevel join.</returns>
         public virtual int? GetLineJoinStyle() {
             return GetPdfObject().GetAsInt(PdfName.LJ);
         }
@@ -111,6 +176,18 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.LJ, new PdfNumber(lineJoinStyle));
         }
 
+        /// <summary>
+        /// Gets miter limit value,
+        /// <c>ML key</c>
+        /// . See also line join style.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>float</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual float? GetMiterLimit() {
             return GetPdfObject().GetAsFloat(PdfName.ML);
         }
@@ -119,6 +196,16 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.ML, new PdfNumber(miterLimit));
         }
 
+        /// <summary>
+        /// Gets line dash pattern value,
+        /// <c>D</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>PdfArray</c>
+        /// , that represents line dash pattern.
+        /// </returns>
         public virtual PdfArray GetDashPattern() {
             return GetPdfObject().GetAsArray(PdfName.D);
         }
@@ -127,6 +214,25 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.D, dashPattern);
         }
 
+        /// <summary>
+        /// Gets rendering intent value,
+        /// <c>RI</c>
+        /// key.
+        /// Valid values are:
+        /// <c>AbsoluteColorimetric</c>
+        /// ,
+        /// <c>RelativeColorimetric</c>
+        /// ,
+        /// <c>Saturation</c>
+        /// ,
+        /// <c>Perceptual</c>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>PdfName</c>
+        /// instance.
+        /// </returns>
         public virtual PdfName GetRenderingIntent() {
             return GetPdfObject().GetAsName(PdfName.RI);
         }
@@ -135,22 +241,18 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.RI, renderingIntent);
         }
 
-        public virtual int? GetOverprintMode() {
-            return GetPdfObject().GetAsInt(PdfName.OPM);
-        }
-
-        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetOverprintMode(int overprintMode) {
-            return Put(PdfName.OPM, new PdfNumber(overprintMode));
-        }
-
-        public virtual bool? GetFillOverprintFlag() {
-            return GetPdfObject().GetAsBool(PdfName.op);
-        }
-
-        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetFillOverPrintFlag(bool fillOverprintFlag) {
-            return Put(PdfName.op, new PdfBoolean(fillOverprintFlag));
-        }
-
+        /// <summary>
+        /// Get overprint flag value for stroke operations,
+        /// <c>OP</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>boolean</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual bool? GetStrokeOverprintFlag() {
             return GetPdfObject().GetAsBool(PdfName.OP);
         }
@@ -159,6 +261,56 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.OP, new PdfBoolean(strokeOverPrintFlag));
         }
 
+        /// <summary>
+        /// Gets overprint flag value,
+        /// <c>op</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>boolean</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
+        public virtual bool? GetFillOverprintFlag() {
+            return GetPdfObject().GetAsBool(PdfName.op);
+        }
+
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetFillOverPrintFlag(bool fillOverprintFlag) {
+            return Put(PdfName.op, new PdfBoolean(fillOverprintFlag));
+        }
+
+        /// <summary>
+        /// Get overprint control mode,
+        /// <c>OPM</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>int</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
+        public virtual int? GetOverprintMode() {
+            return GetPdfObject().GetAsInt(PdfName.OPM);
+        }
+
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetOverprintMode(int overprintMode) {
+            return Put(PdfName.OPM, new PdfNumber(overprintMode));
+        }
+
+        /// <summary>
+        /// Gets font,
+        /// <c>Font</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <seealso>PdfFont</seealso>
+        /// instance.
+        /// </returns>
         public virtual PdfArray GetFont() {
             return GetPdfObject().GetAsArray(PdfName.Font);
         }
@@ -167,6 +319,18 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.Font, font);
         }
 
+        /// <summary>
+        /// Gets the black-generation function value,
+        /// <c>BG</c>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetBlackGenerationFunction() {
             return GetPdfObject().Get(PdfName.BG);
         }
@@ -176,15 +340,54 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.BG, blackGenerationFunction);
         }
 
+        /// <summary>
+        /// Gets the black-generation function value or
+        /// <c>Default</c>
+        /// ,
+        /// <c>BG2</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// value, represents either
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetBlackGenerationFunction2() {
             return GetPdfObject().Get(PdfName.BG2);
         }
 
+        /// <summary>
+        /// Note, if both
+        /// <c>BG</c>
+        /// and
+        /// <c>BG2</c>
+        /// are present in the same graphics state parameter dictionary,
+        /// <c>BG2</c>
+        /// takes precedence.
+        /// </summary>
+        /// <param name="blackGenerationFunction2"/>
+        /// <returns/>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetBlackGenerationFunction2(PdfObject blackGenerationFunction2
             ) {
             return Put(PdfName.BG2, blackGenerationFunction2);
         }
 
+        /// <summary>
+        /// Gets the undercolor-removal function,
+        /// <c>UCR</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetUndercolorRemovalFunction() {
             return GetPdfObject().Get(PdfName.UCR);
         }
@@ -194,15 +397,58 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.UCR, undercolorRemovalFunction);
         }
 
+        /// <summary>
+        /// Gets the undercolor-removal function value or
+        /// <c>Default</c>
+        /// ,
+        /// <c>UCR2</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// value, represents either
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetUndercolorRemovalFunction2() {
             return GetPdfObject().Get(PdfName.UCR2);
         }
 
+        /// <summary>
+        /// Note, if both
+        /// <c>UCR</c>
+        /// and
+        /// <c>UCR2</c>
+        /// are present in the same graphics state parameter dictionary,
+        /// <c>UCR2</c>
+        /// takes precedence.
+        /// </summary>
+        /// <param name="undercolorRemovalFunction2"/>
+        /// <returns/>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetUndercolorRemovalFunction2(PdfObject undercolorRemovalFunction2
             ) {
             return Put(PdfName.UCR2, undercolorRemovalFunction2);
         }
 
+        /// <summary>
+        /// Gets the transfer function value,
+        /// <c>TR</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents either
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetTransferFunction() {
             return GetPdfObject().Get(PdfName.TR);
         }
@@ -211,14 +457,61 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.TR, transferFunction);
         }
 
+        /// <summary>
+        /// Gets the transfer function value or
+        /// <c>Default</c>
+        /// ,
+        /// <c>TR2</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents either
+        /// <see cref="iText.Kernel.Pdf.Function.PdfFunction"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetTransferFunction2() {
             return GetPdfObject().Get(PdfName.TR2);
         }
 
+        /// <summary>
+        /// Note, if both
+        /// <c>TR</c>
+        /// and
+        /// <c>TR2</c>
+        /// are present in the same graphics state parameter dictionary,
+        /// <c>TR2</c>
+        /// takes precedence.
+        /// </summary>
+        /// <param name="transferFunction"/>
+        /// <returns/>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetTransferFunction2(PdfObject transferFunction) {
             return Put(PdfName.TR2, transferFunction);
         }
 
+        /// <summary>
+        /// Gets the halftone dictionary or stream or
+        /// <c>Default</c>
+        /// ,
+        /// <c>HT</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents either
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetHalftone() {
             return GetPdfObject().Get(PdfName.HT);
         }
@@ -227,22 +520,53 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.HT, halftone);
         }
 
+        /// <summary>
+        /// Gets
+        /// <c>HTP</c>
+        /// key.
+        /// </summary>
+        [Obsolete]
         public virtual PdfObject GetHTP() {
             return GetPdfObject().Get(PdfName.HTP);
         }
 
+        [Obsolete]
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetHTP(PdfObject htp) {
             return Put(PdfName.HTP, htp);
         }
 
+        /// <summary>
+        /// Gets the flatness tolerance value,
+        /// <c>FL</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>float</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual float? GetFlatnessTolerance() {
-            return GetPdfObject().GetAsFloat(PdfName.FT);
+            return GetPdfObject().GetAsFloat(PdfName.FL);
         }
 
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetFlatnessTolerance(float flatnessTolerance) {
-            return Put(PdfName.FT, new PdfNumber(flatnessTolerance));
+            return Put(PdfName.FL, new PdfNumber(flatnessTolerance));
         }
 
+        /// <summary>
+        /// Gets the smoothness tolerance value,
+        /// <c>SM</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>float</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual float? GetSmothnessTolerance() {
             return GetPdfObject().GetAsFloat(PdfName.SM);
         }
@@ -251,6 +575,18 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.SM, new PdfNumber(smoothnessTolerance));
         }
 
+        /// <summary>
+        /// Gets value of an automatic stroke adjustment flag,
+        /// <c>SA</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>boolean</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual bool? GetAutomaticStrokeAdjustmentFlag() {
             return GetPdfObject().GetAsBool(PdfName.SA);
         }
@@ -260,6 +596,20 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.SA, new PdfBoolean(strokeAdjustment));
         }
 
+        /// <summary>
+        /// Gets the current blend mode for the transparent imaging model,
+        /// <c>BM</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents either
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetBlendMode() {
             return GetPdfObject().Get(PdfName.BM);
         }
@@ -268,6 +618,20 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.BM, blendMode);
         }
 
+        /// <summary>
+        /// Gets the current soft mask,
+        /// <c>SMask</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// , represents either
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// .
+        /// </returns>
         public virtual PdfObject GetSoftMask() {
             return GetPdfObject().Get(PdfName.SMask);
         }
@@ -276,6 +640,19 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.SMask, sMask);
         }
 
+        /// <summary>
+        /// Gets the current alpha constant, specifying the constant shape or constant opacity value
+        /// for <b>stroking</b> operations in the transparent imaging model,
+        /// <c>CA</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>float</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual float? GetStrokeOpacity() {
             return GetPdfObject().GetAsFloat(PdfName.CA);
         }
@@ -284,6 +661,19 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.CA, new PdfNumber(strokingAlphaConstant));
         }
 
+        /// <summary>
+        /// Gets the current alpha constant, specifying the constant shape or constant opacity value
+        /// for <b>nonstroking</b> operations in the transparent imaging model,
+        /// <c>ca</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>float</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual float? GetFillOpacity() {
             return GetPdfObject().GetAsFloat(PdfName.ca);
         }
@@ -292,6 +682,23 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.ca, new PdfNumber(fillingAlphaConstant));
         }
 
+        /// <summary>
+        /// Gets the alpha source flag (â€œalpha is shapeâ€?), specifying whether the current soft mask and alpha constant
+        /// shall be interpreted as shape values (
+        /// <see langword="true"/>
+        /// ) or opacity values (
+        /// <see langword="false"/>
+        /// ),
+        /// <c>AIS</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>boolean</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual bool? GetAlphaSourceFlag() {
             return GetPdfObject().GetAsBool(PdfName.AIS);
         }
@@ -300,6 +707,19 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.AIS, new PdfBoolean(alphaSourceFlag));
         }
 
+        /// <summary>
+        /// Gets the text knockout flag, which determine the behaviour of overlapping glyphs
+        /// within a text object in the transparent imaging model,
+        /// <c>TK</c>
+        /// key.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <c>boolean</c>
+        /// value if exist, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public virtual bool? GetTextKnockoutFlag() {
             return GetPdfObject().GetAsBool(PdfName.TK);
         }
