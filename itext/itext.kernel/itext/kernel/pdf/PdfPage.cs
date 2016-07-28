@@ -842,7 +842,7 @@ namespace iText.Kernel.Pdf {
                     continue;
                 }
                 FlushContentStreams(((PdfDictionary)obj).GetAsDictionary(PdfName.Resources));
-                obj.Flush();
+                FlushMustBeIndirectObject(obj);
             }
         }
 
@@ -855,11 +855,16 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (ap.IsStream()) {
-                            ap.Flush();
+                            FlushMustBeIndirectObject(ap);
                         }
                     }
                 }
             }
+        }
+
+        private void FlushMustBeIndirectObject(PdfObject obj) {
+            // TODO DEVSIX-744
+            obj.MakeIndirect(GetDocument()).Flush();
         }
 
         /*

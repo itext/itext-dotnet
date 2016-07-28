@@ -127,6 +127,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush(bool canBeInObjStm) {
             if (IsFlushed() || GetIndirectReference() == null) {
+                // TODO here we should take into account and log the case when object is MustBeIndirect, but has no indirect reference
+                // TODO DEVSIX-744
                 //            Logger logger = LoggerFactory.getLogger(PdfObject.class);
                 //            if (isFlushed()) {
                 //                logger.warn("Meaningless call, the object has already flushed");
