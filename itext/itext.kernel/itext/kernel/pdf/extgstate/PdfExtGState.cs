@@ -120,7 +120,6 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <param name="pdfObject">instance of graphics state parameter dictionary</param>
         public PdfExtGState(PdfDictionary pdfObject)
             : base(pdfObject) {
-            MarkObjectAsIndirect(GetPdfObject());
         }
 
         /// <summary>Create default instance of graphics state parameter dictionary</summary>
