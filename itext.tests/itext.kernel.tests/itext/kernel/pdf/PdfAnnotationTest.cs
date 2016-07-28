@@ -667,7 +667,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("Fix path to wav file")]
         public virtual void ScreenTestExternalWavFile() {
             String filename = destinationFolder + "screenAnnotation01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
