@@ -1029,7 +1029,8 @@ namespace iText.Forms {
             }
             PdfArray kids = field.GetAsArray(PdfName.Kids);
             if (kids != null) {
-                foreach (PdfObject kid in kids) {
+                for (IEnumerator<PdfObject> iterator = kids.GetDirectEnumerator(); iterator.MoveNext();) {
+                    PdfObject kid = iterator.Current;
                     resources.AddAll(GetResources((PdfDictionary)kid));
                 }
             }

@@ -511,10 +511,8 @@ namespace iText.Pdfa.Checker {
 
         private PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
-            // explicit iteration to resolve indirect references on get().
-            // TODO DEVSIX-591
-            for (int i = 0; i < array.Size(); i++) {
-                PdfDictionary field = array.GetAsDictionary(i);
+            for (IEnumerator<PdfObject> iterator = array.GetDirectEnumerator(); iterator.MoveNext();) {
+                PdfDictionary field = (PdfDictionary)iterator.Current;
                 PdfArray kids = field.GetAsArray(PdfName.Kids);
                 fields.Add(field);
                 if (kids != null) {
