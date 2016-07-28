@@ -86,7 +86,7 @@ namespace iText.Kernel {
         /// <summary>The license key.</summary>
         private String key = null;
 
-        private static bool expired;
+        private bool expired;
 
         /// <summary>Gets an instance of the iText version that is currently used.</summary>
         /// <remarks>
@@ -169,7 +169,7 @@ namespace iText.Kernel {
         /// <summary>Is the license expired?</summary>
         /// <returns>true if expired</returns>
         public static bool IsExpired() {
-            return expired;
+            return GetInstance().expired;
         }
 
         /// <summary>Gets the product name.</summary>
