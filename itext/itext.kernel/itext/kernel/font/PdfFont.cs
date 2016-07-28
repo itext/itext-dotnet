@@ -397,6 +397,21 @@ namespace iText.Kernel.Font {
             return resultString;
         }
 
+        /// <summary>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
+        /// Basically this means that before flushing you need to explicitly call
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// For example: wrapperInstance.makeIndirect(document).flush();
+        /// Note that not every wrapper require this, only those that have such warning in documentation.
+        /// </summary>
+        public override void Flush() {
+            base.Flush();
+        }
+
         protected internal abstract PdfDictionary GetFontDescriptor(String fontName);
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {

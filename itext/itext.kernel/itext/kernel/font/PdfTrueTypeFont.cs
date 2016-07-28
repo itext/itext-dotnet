@@ -103,8 +103,8 @@ namespace iText.Kernel.Font {
             return null;
         }
 
-        //TODO make subtype class member and simplify this method
         public override void Flush() {
+            //TODO make subtype class member and simplify this method
             if (newFont) {
                 PdfName subtype;
                 String fontName;
