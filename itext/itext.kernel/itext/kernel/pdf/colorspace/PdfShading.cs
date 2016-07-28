@@ -248,9 +248,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1, bool
                 [] extend)
                 : this(cs, x0, y0, color0, x1, y1, color1) {
-                if (extend != null) {
-                    SetExtend(extend[0], extend[1]);
+                if (extend == null || extend.Length != 2) {
+                    throw new ArgumentException("extend");
                 }
+                SetExtend(extend[0], extend[1]);
             }
 
             public Axial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
@@ -288,7 +289,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public virtual bool[] GetExtend() {
                 PdfArray extend = GetPdfObject().GetAsArray(PdfName.Extend);
                 if (extend == null) {
-                    return new bool[] { true, true };
+                    return new bool[] { false, false };
                 }
                 return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
             }
