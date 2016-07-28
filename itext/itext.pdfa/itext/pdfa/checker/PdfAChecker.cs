@@ -447,19 +447,8 @@ namespace iText.Pdfa.Checker {
         }
 
         private void CheckOpenAction(PdfObject openAction) {
-            if (openAction == null) {
-                return;
-            }
-            if (openAction.IsDictionary()) {
+            if (openAction != null && openAction.IsDictionary()) {
                 CheckAction((PdfDictionary)openAction);
-            }
-            else {
-                if (openAction.IsArray()) {
-                    PdfArray actions = (PdfArray)openAction;
-                    foreach (PdfObject action in actions) {
-                        CheckAction((PdfDictionary)action);
-                    }
-                }
             }
         }
 
