@@ -675,9 +675,17 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().MoveText(36, 105).SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.HELVETICA
                 ), 16).ShowText("Click on the area below to play a sound.").EndText().RestoreState();
             PdfScreenAnnotation screen = new PdfScreenAnnotation(new Rectangle(100, 100));
-            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "../../../../../../../src/test/resources/com/itextpdf/kernel/pdf/PdfAnnotationTest/"
-                 + "sample.wav", true);
-            PdfAction action = PdfAction.CreateRendition(sourceFolder + "sample.wav", spec, "audio/x-wav", screen);
+            FileStream fos = new FileStream(destinationFolder + "sample.wav", FileMode.Create);
+            FileStream fis = new FileStream(sourceFolder + "sample.wav", FileMode.Open, FileAccess.Read);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.Read(buffer)) > 0) {
+                fos.Write(buffer, 0, length);
+            }
+            fos.Close();
+            fis.Close();
+            PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav", true);
+            PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);
             page1.AddAnnotation(screen);
             page1.Flush();
