@@ -329,9 +329,11 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
             NUnit.Framework.Assert.AreEqual(8, reader.trailer.GetAsNumber(PdfName.Size).IntValue());
             byte[] bytes = pdfDocument.GetPage(1).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes("%Page_1"), bytes);
+            // getting content bytes results in adding '\n' for each content stream
+            // so we should compare String with '\n' at the end
+            NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes("%Page_1\n"), bytes);
             bytes = pdfDocument.GetPage(2).GetContentBytes();
-            NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes("%Page_2"), bytes);
+            NUnit.Framework.Assert.AreEqual(ByteUtils.GetIsoBytes("%Page_2\n"), bytes);
             pdfDocument.Close();
         }
 

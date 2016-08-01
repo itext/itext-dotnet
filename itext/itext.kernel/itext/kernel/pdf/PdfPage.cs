@@ -466,8 +466,13 @@ namespace iText.Kernel.Pdf {
             try {
                 MemoryStream baos = new MemoryStream();
                 int streamCount = GetContentStreamCount();
+                byte[] streamBytes;
                 for (int i = 0; i < streamCount; i++) {
-                    baos.Write(GetStreamBytes(i));
+                    streamBytes = GetStreamBytes(i);
+                    baos.Write(streamBytes);
+                    if (streamBytes[streamBytes.Length - 1] != '\n') {
+                        baos.Write('\n');
+                    }
                 }
                 return baos.ToArray();
             }
