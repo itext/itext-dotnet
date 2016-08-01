@@ -470,7 +470,7 @@ namespace iText.Kernel.Pdf {
                 for (int i = 0; i < streamCount; i++) {
                     streamBytes = GetStreamBytes(i);
                     baos.Write(streamBytes);
-                    if (streamBytes[streamBytes.Length - 1] != '\n') {
+                    if (0 != streamBytes.Length && !char.IsWhiteSpace((char) streamBytes[streamBytes.Length - 1])) {
                         baos.Write('\n');
                     }
                 }
