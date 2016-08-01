@@ -682,7 +682,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         }
 
         /// <summary>
-        /// Gets the alpha source flag (“alpha is shape”), specifying whether the current soft mask and alpha constant
+        /// Gets the alpha source flag (“alpha is shape�?), specifying whether the current soft mask and alpha constant
         /// shall be interpreted as shape values (
         /// <see langword="true"/>
         /// ) or opacity values (
