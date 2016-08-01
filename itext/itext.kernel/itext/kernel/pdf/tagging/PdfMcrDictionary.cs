@@ -58,7 +58,8 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override int GetMcid() {
-            return ((PdfDictionary)GetPdfObject()).GetAsNumber(PdfName.MCID).IntValue();
+            PdfNumber mcidNumber = ((PdfDictionary)GetPdfObject()).GetAsNumber(PdfName.MCID);
+            return mcidNumber != null ? mcidNumber.IntValue() : -1;
         }
 
         public override PdfDictionary GetPageObject() {

@@ -595,8 +595,7 @@ namespace iText.Kernel.Pdf {
                     PdfObject crypto_1 = null;
                     if (properties.appendMode) {
                         if (structTreeRoot != null && structTreeRoot.GetPdfObject().IsModified()) {
-                            GetTagStructureContext().RemoveAllConnectionsToTags();
-                            structTreeRoot.Flush();
+                            TryFlushTagStructure();
                         }
                         if (catalog.IsOCPropertiesMayHaveChanged() && catalog.GetOCProperties(false).GetPdfObject().IsModified()) {
                             catalog.GetOCProperties(false).Flush();
@@ -628,8 +627,7 @@ namespace iText.Kernel.Pdf {
                     }
                     else {
                         if (structTreeRoot != null) {
-                            GetTagStructureContext().RemoveAllConnectionsToTags();
-                            structTreeRoot.Flush();
+                            TryFlushTagStructure();
                         }
                         if (catalog.IsOCPropertiesMayHaveChanged()) {
                             catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
@@ -922,16 +920,21 @@ namespace iText.Kernel.Pdf {
                     if (tagStructureContext != null) {
                         tagStructureContext.ActualizeTagsProperties();
                     }
-                    foreach (IDictionary<PdfPage, PdfPage> increasingPagesRange in rangesOfPagesWithIncreasingNumbers) {
-                        if (insertInBetween) {
-                            GetStructTreeRoot().CopyTo(toDocument, insertBeforePage, increasingPagesRange);
+                    try {
+                        foreach (IDictionary<PdfPage, PdfPage> increasingPagesRange in rangesOfPagesWithIncreasingNumbers) {
+                            if (insertInBetween) {
+                                GetStructTreeRoot().CopyTo(toDocument, insertBeforePage, increasingPagesRange);
+                            }
+                            else {
+                                GetStructTreeRoot().CopyTo(toDocument, increasingPagesRange);
+                            }
+                            insertBeforePage += increasingPagesRange.Count;
                         }
-                        else {
-                            GetStructTreeRoot().CopyTo(toDocument, increasingPagesRange);
-                        }
-                        insertBeforePage += increasingPagesRange.Count;
+                        toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
                     }
-                    toDocument.GetTagStructureContext().NormalizeDocumentRootTag();
+                    catch (Exception ex) {
+                        throw new PdfException(PdfException.TagStructureCopyingFailedItMightBeCorruptedInOneOfTheDocuments, ex);
+                    }
                 }
                 else {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
@@ -1266,10 +1269,8 @@ namespace iText.Kernel.Pdf {
                     info = new PdfDocumentInfo(infoDict is PdfDictionary ? (PdfDictionary)infoDict : new PdfDictionary(), this
                         );
                     PdfDictionary str = catalog.GetPdfObject().GetAsDictionary(PdfName.StructTreeRoot);
-                    //Add a check to make sure that the StructTreeRoot dictionary has an indirect reference.  If it does not it will throw an exception when creating the PdfStructTreeRoot
-                    if (str != null && str.indirectReference != null) {
-                        structTreeRoot = new PdfStructTreeRoot(str);
-                        structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
+                    if (str != null) {
+                        TryInitTagStructure(str);
                     }
                     if (properties.appendMode && (reader.HasRebuiltXref() || reader.HasFixedXref())) {
                         throw new PdfException(PdfException.AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible);
@@ -1511,6 +1512,29 @@ namespace iText.Kernel.Pdf {
 
         protected internal virtual Counter GetCounter() {
             return CounterFactory.GetCounter(typeof(iText.Kernel.Pdf.PdfDocument));
+        }
+
+        private void TryInitTagStructure(PdfDictionary str) {
+            try {
+                structTreeRoot = new PdfStructTreeRoot(str);
+                structParentIndex = GetStructTreeRoot().GetParentTreeNextKey();
+            }
+            catch (Exception ex) {
+                structTreeRoot = null;
+                structParentIndex = -1;
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                logger.Error(LogMessageConstant.TAG_STRUCTURE_INIT_FAILED, ex);
+            }
+        }
+
+        private void TryFlushTagStructure() {
+            try {
+                GetTagStructureContext().RemoveAllConnectionsToTags();
+                structTreeRoot.Flush();
+            }
+            catch (Exception ex) {
+                throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
+            }
         }
 
         /// <summary>This method removes all annotation entries from form fields associated with a given page.</summary>

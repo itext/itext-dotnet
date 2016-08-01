@@ -273,7 +273,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 return kid;
             }
             else {
-                // TODO do we always copy numbers?
+                // TODO do we always copy numbers? don't we need to check if it is supposed to be copied like objs in objectsToCopy?
                 if (kid.IsDictionary()) {
                     PdfDictionary kidAsDict = (PdfDictionary)kid;
                     if (objectsToCopy.Contains(kidAsDict)) {

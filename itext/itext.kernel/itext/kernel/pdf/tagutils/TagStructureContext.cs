@@ -522,7 +522,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 else {
                     if (kid is PdfStructElem) {
                         // If kid is structElem and was already flushed then in kids list there will be null for it instead of
-                        // PdfStructElem. And therefore if we get into this if clause it means that some StructElem wasn't flushed.
+                        // PdfStructElem. And therefore if we get into this if-clause it means that some StructElem wasn't flushed.
                         allKidsBelongToPage = false;
                         break;
                     }

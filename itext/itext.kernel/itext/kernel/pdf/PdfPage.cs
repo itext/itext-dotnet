@@ -379,8 +379,7 @@ namespace iText.Kernel.Pdf {
                 return;
             }
             if (GetDocument().IsTagged() && !GetDocument().GetStructTreeRoot().IsFlushed()) {
-                GetDocument().GetTagStructureContext().FlushPageTags(this);
-                GetDocument().GetStructTreeRoot().CreateParentTreeEntryForPage(this);
+                TryFlushPageTags();
             }
             GetDocument().DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_PAGE, this));
             if (flushContentStreams) {
@@ -815,6 +814,16 @@ namespace iText.Kernel.Pdf {
                 SetModified();
             }
             return contentStream;
+        }
+
+        private void TryFlushPageTags() {
+            try {
+                GetDocument().GetTagStructureContext().FlushPageTags(this);
+                GetDocument().GetStructTreeRoot().CreateParentTreeEntryForPage(this);
+            }
+            catch (Exception ex) {
+                throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
+            }
         }
 
         private void FlushContentStreams() {

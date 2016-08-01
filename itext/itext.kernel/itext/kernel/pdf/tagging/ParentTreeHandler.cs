@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.IO;
+using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 
@@ -138,10 +140,16 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void RegisterMcr(PdfMcr mcr) {
-            SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(mcr.GetPageObject().GetIndirectReference());
+            PdfDictionary mcrPageObject = mcr.GetPageObject();
+            if (mcrPageObject == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
+                logger.Error(LogMessageConstant.ENCOUNTERED_INVALID_MCR);
+                return;
+            }
+            SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(mcrPageObject.GetIndirectReference());
             if (pageMcrs == null) {
                 pageMcrs = new SortedDictionary<int, PdfMcr>();
-                pageToPageMcrs[mcr.GetPageObject().GetIndirectReference()] = pageMcrs;
+                pageToPageMcrs[mcrPageObject.GetIndirectReference()] = pageMcrs;
             }
             if (mcr is PdfObjRef) {
                 PdfDictionary obj = ((PdfDictionary)mcr.GetPdfObject()).GetAsDictionary(PdfName.Obj);
@@ -164,6 +172,10 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual void UnregisterMcr(PdfMcr mcrToUnregister) {
             PdfDictionary pageDict = mcrToUnregister.GetPageObject();
+            if (pageDict == null) {
+                // invalid mcr, ignore
+                return;
+            }
             if (pageDict.IsFlushed()) {
                 throw new PdfException(PdfException.CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed);
             }

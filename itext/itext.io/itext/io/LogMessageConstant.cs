@@ -60,6 +60,8 @@ namespace iText.IO {
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
 
+        public const String ENCOUNTERED_INVALID_MCR = "Corrupted tag structure: encountered invalid marked content reference - it doesn't refer to any page or any mcid. This content reference will be ignored.";
+
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
         /// <summary>Log message.</summary>
@@ -121,6 +123,8 @@ namespace iText.IO {
 
         /// <summary>Log message.</summary>
         public const String START_MARKER_MISSING_IN_PFB_FILE = "Start marker is missing in the pfb file";
+
+        public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
 
         /// <summary>Log message.</summary>
         public const String UNKNOWN_CMAP = "Unknown CMap {0}";

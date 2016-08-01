@@ -431,9 +431,6 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private IPdfStructElem ConvertPdfObjectToIPdfStructElem(PdfObject obj) {
-            if (obj.IsIndirectReference()) {
-                obj = ((PdfIndirectReference)obj).GetRefersTo();
-            }
             IPdfStructElem elem = null;
             switch (obj.GetObjectType()) {
                 case PdfObject.DICTIONARY: {
