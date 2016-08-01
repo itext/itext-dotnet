@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>itext.hyph</id>
+    <version>$version$</version>
+    <title>iText 7 Hyph</title>
+    <authors>iText Software</authors>
+    <owners>iText Software</owners>
+    <licenseUrl>http://www.gnu.org/licenses/agpl.html</licenseUrl>
+    <projectUrl>http://itextpdf.com/</projectUrl>
+    <iconUrl>http://itextpdf.com/sites/default/files/ITSC-avatar.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>XML files that can be used for hyphenation with iText 7, an open source PDF library</description>
+    <summary></summary>
+    <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
+    <copyright>Copyright (c) 1998-2016 iText Group NV</copyright>
+    <language>en-US</language>
+    <tags>itext itextsharp c# .net csharp pdf hyphenation hyph</tags>
+  </metadata>
+  <files>
+	<file src="bin\Release\itext.hyph.dll" target="lib\net40" />
+	<file src="bin\Release\itext.hyph.xml" target="lib\net40" />
+  </files>
+</package>
