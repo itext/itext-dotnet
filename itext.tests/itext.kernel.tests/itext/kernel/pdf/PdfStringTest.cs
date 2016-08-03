@@ -22,10 +22,10 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + fileName, new WriterProperties
                 ().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
             pdfDocument.AddNewPage();
-            String author = "�?лек�?ей";
+            String author = "Алексей";
             String title = "Заголовок";
             String subject = "Тема";
-            String keywords = "Ключевые �?лова";
+            String keywords = "Ключевые слова";
             String creator = "English text";
             pdfDocument.GetDocumentInfo().SetAuthor(author);
             pdfDocument.GetDocumentInfo().SetTitle(title);
