@@ -98,16 +98,17 @@ namespace iText.IO.Util {
             return Convert.ToString(i, 8);
         }
 
-        public static bool ArraysEquals<T>(T[] a, T[] a2) where T : IComparable {
+        public static bool ArraysEquals<T>(T[] a, T[] a2) {
             if (a == a2)
                 return true;
             if (a == null || a2 == null)
                 return false;
 
-            if (a.Length != a2.Length) return false;
+            if (a.Length != a2.Length) 
+                return false;
 
             for (int i = 0; i < a.Length; i++)
-                if (a[i].CompareTo(a2[i]) != 0)
+                if (!(a[i] == null ? a2[i] == null : a[i].Equals(a2[i])))
                     return false;
 
             return true;
