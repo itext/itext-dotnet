@@ -494,8 +494,8 @@ namespace iText.Layout.Renderer {
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
                     foreach (KeyValuePair<int, int?> entry in rowMoves) {
                         // Move the cell back to its row if there was no actual split
-                        if (null == splitResult[1].rows[(int) entry.Value - splitResult[0].rows.Count][entry.Key]) {
-                            splitResult[1].rows[(int) entry.Value - splitResult[0].rows.Count][entry.Key] = splitResult[1].rows[row - splitResult
+                        if (null == splitResult[1].rows[(int)entry.Value - splitResult[0].rows.Count][entry.Key]) {
+                            splitResult[1].rows[(int)entry.Value - splitResult[0].rows.Count][entry.Key] = splitResult[1].rows[row - splitResult
                                 [0].rows.Count][entry.Key];
                             splitResult[1].rows[row - splitResult[0].rows.Count][entry.Key] = null;
                         }
