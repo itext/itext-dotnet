@@ -55,7 +55,6 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
-using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -63,16 +62,22 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer
 {
-	/// <summary>
-	/// Defines the most common properties and behavior that are shared by most
-	/// <see cref="IRenderer"/>
-	/// implementations. All default Renderers are subclasses of
-	/// this default implementation.
-	/// </summary>
-	public abstract class AbstractRenderer : IRenderer
-	{
-		public const float EPS = 1e-4f;
+    /// <summary>
+    /// Defines the most common properties and behavior that are shared by most
+    /// <see cref="IRenderer"/>
+    /// implementations. All default Renderers are subclasses of
+    /// this default implementation.
+    /// </summary>
+    public abstract class AbstractRenderer : IRenderer
+    {
+        /// <summary>
+        /// The maximum difference between
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// coordinates to consider rectangles equal
+        /// </summary>
+        public const float EPS = 1e-4f;
 
+        /// <summary>The infinity value which is used while layouting</summary>
 		public const float INF = 1e6f;
 
 		protected internal IList<IRenderer> childRenderers = new List<IRenderer>();
@@ -98,8 +103,7 @@ namespace iText.Layout.Renderer
 		}
 
 		/// <summary>Creates a renderer for the specified layout element.</summary>
-		/// <param name="modelElement">the layout element that will be drawn by this renderer
-		/// 	</param>
+		/// <param name="modelElement">the layout element that will be drawn by this renderer</param>
 		protected internal AbstractRenderer(IElement modelElement)
 		{
 			// TODO linkedList?
@@ -119,6 +123,7 @@ namespace iText.Layout.Renderer
 			this.isLastRendererForModelElement = other.isLastRendererForModelElement;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual void AddChild(IRenderer renderer)
 		{
 			// https://www.webkit.org/blog/116/webcore-rendering-iii-layout-basics
@@ -150,27 +155,32 @@ namespace iText.Layout.Renderer
 			}
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual IPropertyContainer GetModelElement()
 		{
 			return modelElement;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual IList<IRenderer> GetChildRenderers()
 		{
 			return childRenderers;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual bool HasProperty(int property)
 		{
 			return HasOwnProperty(property) || (modelElement != null && modelElement.HasProperty
 				(property)) || (parent != null && Property.IsPropertyInherited(property) && parent.HasProperty(property));
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual bool HasOwnProperty(int property)
 		{
 			return properties.ContainsKey(property);
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual void DeleteOwnProperty(int property)
 		{
 			properties.JRemove(property);
@@ -196,6 +206,7 @@ namespace iText.Layout.Renderer
 			}
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual T1 GetProperty<T1>(int key)
 		{
 			Object property;
@@ -227,17 +238,20 @@ namespace iText.Layout.Renderer
 			return (T1)properties.Get(property);
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual T1 GetProperty<T1>(int property, T1 defaultValue)
 		{
 			T1 result = this.GetProperty<T1>(property);
 			return result != null ? result : defaultValue;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual void SetProperty(int property, Object value)
 		{
 			properties[property] = value;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual T1 GetDefaultProperty<T1>(int property)
 		{
 			return (T1)(Object)null;
@@ -246,7 +260,7 @@ namespace iText.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a font object.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="Property">enum value</see>
+		/// <see cref="iText.Layout.Properties.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -260,11 +274,11 @@ namespace iText.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a color.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="Property">enum value</see>
+		/// <see cref="iText.Layout.Properties.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
-		//Color="Color.Color"/>
+		/// <see cref="iText.Kernel.Font.PdfFont"/>
 		/// </returns>
 		public virtual Color GetPropertyAsColor(int property)
 		{
@@ -274,7 +288,7 @@ namespace iText.Layout.Renderer
 		/// <summary>Returns a property with a certain key, as a boolean value.</summary>
 		/// <param name="property">
 		/// an
-		/// <see cref="Property">enum value</see>
+		/// <see cref="iText.Layout.Properties.Property">enum value</see>
 		/// </param>
 		/// <returns>
 		/// a
@@ -295,11 +309,13 @@ namespace iText.Layout.Renderer
 			return sb.ToString();
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual LayoutArea GetOccupiedArea()
 		{
 			return occupiedArea;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual void Draw(DrawContext drawContext)
 		{
 			ApplyDestination(drawContext.GetDocument());
@@ -321,13 +337,12 @@ namespace iText.Layout.Renderer
 
 		/// <summary>
 		/// Draws a background layer if it is defined by a key
-		/// <see cref="Property.BACKGROUND"/>
+		/// <see cref="iText.Layout.Properties.Property.BACKGROUND"/>
 		/// in either the layout element or this
 		/// <see cref="IRenderer"/>
 		/// itself.
 		/// </summary>
-		/// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.
-		/// 	</param>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
 		public virtual void DrawBackground(DrawContext drawContext)
 		{
 			Background background = this.GetProperty<Background>(Property.BACKGROUND);
@@ -360,13 +375,12 @@ namespace iText.Layout.Renderer
 			}
 		}
 
-		/// <summary>
-		/// Performs the drawing operation for all
-		/// <see cref="IRenderer">children</see>
-		/// of this renderer.
-		/// </summary>
-		/// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.
-		/// 	</param>
+        /// <summary>
+        /// Performs the drawing operation for all
+        /// <see cref="IRenderer">children</see>
+        /// of this renderer.
+        /// </summary>
+        /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
 		public virtual void DrawChildren(DrawContext drawContext)
 		{
 			foreach (IRenderer child in childRenderers)
@@ -384,8 +398,7 @@ namespace iText.Layout.Renderer
 		/// <see cref="IRenderer"/>
 		/// itself.
 		/// </summary>
-		/// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.
-		/// 	</param>
+		/// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
 		public virtual void DrawBorder(DrawContext drawContext)
 		{
 			Border[] borders = GetBorders();
@@ -450,11 +463,21 @@ namespace iText.Layout.Renderer
 			}
 		}
 
+        /// <summary>Indicates whether this renderer is flushed or not, i.e.</summary>
+        /// <remarks>
+        /// Indicates whether this renderer is flushed or not, i.e. if
+        /// <see cref="Draw(DrawContext)"/>
+        /// has already
+        /// been called.
+        /// </remarks>
+        /// <returns>whether the renderer has been flushed</returns>
+        /// <seealso cref="Draw(DrawContext)"/>
 		public virtual bool IsFlushed()
 		{
 			return flushed;
 		}
 
+        /// <summary><inheritDoc/></summary>
 		public virtual IRenderer SetParent(IRenderer parent)
 		{
 			this.parent = parent;
@@ -596,11 +619,35 @@ namespace iText.Layout.Renderer
 				();
 		}
 
+        /// <summary>Applies margins of the renderer on the given rectangle</summary>
+        /// <param name="rect">a rectangle margins will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether margins will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetMargins()"/>
 		protected internal virtual Rectangle ApplyMargins(Rectangle rect, bool reverse)
 		{
 			return this.ApplyMargins(rect, GetMargins(), reverse);
 		}
 
+        /// <summary>Applies given margins on the given rectangle</summary>
+        /// <param name="rect">a rectangle margins will be applied on.</param>
+        /// <param name="margins">the margins to be applied on the given rectangle</param>
+        /// <param name="reverse">
+        /// indicates whether margins will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
 		protected internal virtual Rectangle ApplyMargins(Rectangle rect, float[] margins
 			, bool reverse)
 		{
@@ -612,6 +659,12 @@ namespace iText.Layout.Renderer
 				], reverse);
 		}
 
+        /// <summary>Returns margins of the renderer</summary>
+        /// <returns>
+        /// a
+        /// <see>float[] margins</see>
+        /// of the renderer
+        /// </returns>
 		protected internal virtual float[] GetMargins()
 		{
 			return new float[] { (float)this.GetPropertyAsFloat(Property.MARGIN_TOP), 
@@ -620,6 +673,12 @@ namespace iText.Layout.Renderer
                 (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT) };
 		}
 
+        /// <summary>Returns paddings of the renderer</summary>
+        /// <returns>
+        /// a
+        /// <see>float[] paddings</see>
+        /// of the renderer
+        /// </returns>
 		protected internal virtual float[] GetPaddings()
 		{
 			return new float[] { (float)this.GetPropertyAsFloat(Property.PADDING_TOP), 
@@ -628,11 +687,35 @@ namespace iText.Layout.Renderer
                 (float)this.GetPropertyAsFloat(Property.PADDING_LEFT) };
 		}
 
+        /// <summary>Applies paddings of the renderer on the given rectangle</summary>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether paddings will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetPaddings()"/>
 		protected internal virtual Rectangle ApplyPaddings(Rectangle rect, bool reverse)
 		{
 			return ApplyPaddings(rect, GetPaddings(), reverse);
 		}
 
+        /// <summary>Applies given paddings on the given rectangle</summary>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="paddings">the paddings to be applied on the given rectangle</param>
+        /// <param name="reverse">
+        /// indicates whether paddings will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
 		protected internal virtual Rectangle ApplyPaddings(Rectangle rect, float[] paddings
 			, bool reverse)
 		{
@@ -640,12 +723,43 @@ namespace iText.Layout.Renderer
 				[3], reverse);
 		}
 
+        /// <summary>
+        /// Applies the border box of the renderer on the given rectangle
+        /// If the border of a certain side is null, the side will remain as it was.
+        /// </summary>
+        /// <param name="rect">a rectangle the border box will be applied on.</param>
+        /// <param name="reverse">
+        /// indicates whether the border box will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
+        /// <seealso cref="GetBorders()"/>
 		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, bool reverse)
 		{
 			Border[] borders = GetBorders();
 			return ApplyBorderBox(rect, borders, reverse);
 		}
 
+        /// <summary>Applies the given border box (borders) on the given rectangle</summary>
+        /// <param name="rect">a rectangle paddings will be applied on.</param>
+        /// <param name="borders">
+        /// the
+        /// <see cref="iText.Layout.Borders.Border">borders</see>
+        /// to be applied on the given rectangle
+        /// </param>
+        /// <param name="reverse">
+        /// indicates whether the border box will be applied
+        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle">border box</see>
+        /// of the renderer
+        /// </returns>
 		protected internal virtual Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse)
 		{
 			float topWidth = borders[0] != null ? borders[0].GetWidth() : 0;
@@ -716,12 +830,22 @@ namespace iText.Layout.Renderer
 			return !IsPositioned() && occupiedArea.GetBBox().GetHeight() > area.GetHeight();
 		}
 
+        /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
+        /// <returns>
+        /// a
+        /// <see>boolean</see>
+        /// </returns>
 		protected internal virtual bool IsPositioned()
 		{
 			Object positioning = this.GetProperty<Object>(Property.POSITION);
 			return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
 		}
 
+        /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
+        /// <returns>
+        /// a
+        /// <see>boolean</see>
+        /// </returns>
 		protected internal virtual bool IsFixedLayout()
 		{
 			Object positioning = this.GetProperty<Object>(Property.POSITION);

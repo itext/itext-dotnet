@@ -51,10 +51,35 @@ namespace iText.Layout.Renderer {
     public class CanvasRenderer : RootRenderer {
         protected internal Canvas canvas;
 
+        /// <summary>Creates a CanvasRenderer from its corresponding layout object.</summary>
+        /// <remarks>
+        /// Creates a CanvasRenderer from its corresponding layout object.
+        /// Sets
+        /// <see cref="RootRenderer.immediateFlush"/>
+        /// to true.
+        /// </remarks>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Layout.Canvas"/>
+        /// which this object should manage
+        /// </param>
         public CanvasRenderer(Canvas canvas)
             : this(canvas, true) {
         }
 
+        /// <summary>Creates a CanvasRenderer from its corresponding layout object.</summary>
+        /// <remarks>
+        /// Creates a CanvasRenderer from its corresponding layout object.
+        /// Defines whether the content should be flushed immediately after addition
+        /// <see cref="AddChild(IRenderer)"/>
+        /// or not
+        /// </remarks>
+        /// <param name="canvas">
+        /// the
+        /// <see cref="iText.Layout.Canvas"/>
+        /// which this object should manage
+        /// </param>
+        /// <param name="immediateFlush">the value which stands for immediate flushing</param>
         public CanvasRenderer(Canvas canvas, bool immediateFlush) {
             this.canvas = canvas;
             this.modelElement = canvas;
@@ -71,6 +96,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void FlushSingleRenderer(IRenderer resultRenderer) {
             if (!resultRenderer.IsFlushed()) {
                 bool toTag = canvas.GetPdfDocument().IsTagged() && canvas.IsAutoTaggingEnabled();
@@ -87,6 +113,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             if (currentArea == null) {
                 currentArea = new LayoutArea(0, canvas.GetRootArea().Clone());
@@ -98,6 +125,7 @@ namespace iText.Layout.Renderer {
             return currentArea;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return null;
         }

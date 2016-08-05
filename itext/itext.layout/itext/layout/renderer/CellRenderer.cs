@@ -47,16 +47,24 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class CellRenderer : BlockRenderer {
+        /// <summary>Creates a CellRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.Cell"/>
+        /// which this object should manage
+        /// </param>
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
             SetProperty(Property.ROWSPAN, modelElement.GetRowspan());
             SetProperty(Property.COLSPAN, modelElement.GetColspan());
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IPropertyContainer GetModelElement() {
             return (Cell)base.GetModelElement();
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             iText.Layout.Renderer.CellRenderer splitRenderer = (iText.Layout.Renderer.CellRenderer)GetNextRenderer();
             splitRenderer.parent = parent;
@@ -67,6 +75,7 @@ namespace iText.Layout.Renderer {
             return splitRenderer;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override AbstractRenderer CreateOverflowRenderer(int layoutResult) {
             iText.Layout.Renderer.CellRenderer overflowRenderer = (iText.Layout.Renderer.CellRenderer)GetNextRenderer(
                 );
@@ -76,10 +85,12 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawBorder(DrawContext drawContext) {
         }
 
         // Do nothing here. Border drawing for tables is done on TableRenderer.
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
         }

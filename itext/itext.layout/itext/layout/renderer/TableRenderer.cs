@@ -114,6 +114,7 @@ namespace iText.Layout.Renderer {
             : this(modelElement, new Table.RowRange(0, modelElement.GetNumberOfRows() - 1)) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void AddChild(IRenderer renderer) {
             if (renderer is CellRenderer) {
                 // In case rowspan or colspan save cell into bottom left corner.
@@ -127,6 +128,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
@@ -534,6 +536,7 @@ namespace iText.Layout.Renderer {
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Draw(DrawContext drawContext) {
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
@@ -567,6 +570,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             Table modelElement = (Table)GetModelElement();
             if (headerRenderer != null) {
@@ -650,12 +654,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             iText.Layout.Renderer.TableRenderer nextTable = new iText.Layout.Renderer.TableRenderer();
             nextTable.modelElement = modelElement;
             return nextTable;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Move(float dxRight, float dyUp) {
             base.Move(dxRight, dyUp);
             if (headerRenderer != null) {

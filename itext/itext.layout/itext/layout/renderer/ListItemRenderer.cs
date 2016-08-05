@@ -54,6 +54,12 @@ namespace iText.Layout.Renderer {
 
         protected internal float symbolAreaWidth;
 
+        /// <summary>Creates a ListItemRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.ListItem"/>
+        /// which this object should manage
+        /// </param>
         public ListItemRenderer(ListItem modelElement)
             : base(modelElement) {
         }

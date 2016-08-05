@@ -185,6 +185,15 @@ namespace iText.Layout.Renderer {
         /// <returns>new renderer instance</returns>
         IRenderer GetNextRenderer();
 
+        /// <summary>
+        /// Gets the parent
+        /// <see cref="IRenderer">renderer</see>
+        /// of this renderer.
+        /// </summary>
+        /// <returns>
+        /// the parent
+        /// <see cref="IRenderer">renderer</see>
+        /// </returns>
         IRenderer GetParent();
     }
 }

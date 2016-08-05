@@ -49,10 +49,17 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LineSeparatorRenderer : BlockRenderer {
+        /// <summary>Creates a LineSeparatorRenderer from its corresponding layout object.</summary>
+        /// <param name="lineSeparator">
+        /// the
+        /// <see cref="iText.Layout.Element.LineSeparator"/>
+        /// which this object should manage
+        /// </param>
         public LineSeparatorRenderer(LineSeparator lineSeparator)
             : base(lineSeparator) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
@@ -84,10 +91,12 @@ namespace iText.Layout.Renderer {
             return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             if (lineDrawer != null) {
