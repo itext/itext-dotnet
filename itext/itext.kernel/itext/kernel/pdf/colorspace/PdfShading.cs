@@ -730,9 +730,10 @@ namespace iText.Kernel.Pdf.Colorspace {
             public Radial(PdfColorSpace cs, float x0, float y0, float r0, float[] color0, float x1, float y1, float r1
                 , float[] color1, bool[] extend)
                 : this(cs, x0, y0, r0, color0, x1, y1, r1, color1) {
-                if (extend != null) {
-                    SetExtend(extend[0], extend[1]);
+                if (extend == null || extend.Length != 2) {
+                    throw new ArgumentException("extend");
                 }
+                SetExtend(extend[0], extend[1]);
             }
 
             /// <summary>Creates the new instance of the class.</summary>
