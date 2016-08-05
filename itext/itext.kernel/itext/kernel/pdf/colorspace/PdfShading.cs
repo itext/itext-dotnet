@@ -662,7 +662,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             public virtual bool[] GetExtend() {
                 PdfArray extend = GetPdfObject().GetAsArray(PdfName.Extend);
                 if (extend == null) {
-                    return new bool[] { true, true };
+                    return new bool[] { false, false };
                 }
                 return new bool[] { extend.GetAsBoolean(0).GetValue(), extend.GetAsBoolean(1).GetValue() };
             }
