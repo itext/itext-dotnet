@@ -189,7 +189,11 @@ namespace iText.IO {
 
         public const String PageNumberMustBeGtEq1 = "page.number.must.be.gt.eq {0}";
 
+        [System.ObsoleteAttribute(@"because naming clash with iText.IO.Font.PdfEncodings may produce confusion with imports. Superseded by PdfEncodingsException"
+            )]
         public const String PdfEncodings = "pdf.encodings";
+
+        public const String PdfEncodingsException = "pdf.encodings";
 
         public const String PdfHeaderNotFound = "pdf.header.not.found";
 
