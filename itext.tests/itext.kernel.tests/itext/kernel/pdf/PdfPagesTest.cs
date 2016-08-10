@@ -313,5 +313,18 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(3, fields.Size());
             pdfDoc.Close();
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GetPageSizeWithInheritedMediaBox() {
+            double eps = 0.0000001;
+            String filename = sourceFolder + "inheritedMediaBox.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetPage(1).GetPageSize().GetLeft(), eps);
+            NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetPage(1).GetPageSize().GetBottom(), eps);
+            NUnit.Framework.Assert.AreEqual(595, pdfDoc.GetPage(1).GetPageSize().GetRight(), eps);
+            NUnit.Framework.Assert.AreEqual(842, pdfDoc.GetPage(1).GetPageSize().GetTop(), eps);
+            pdfDoc.Close();
+        }
     }
 }

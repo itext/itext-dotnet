@@ -91,6 +91,8 @@ namespace iText.Kernel {
 
         public const String CannotGetPdfStreamBytes = "cannot.get.pdfstream.bytes";
 
+        public const String CannotRetrieveMediaBoxAttribute = "Invalid pdf. There is no media box attribute for page or its parents.";
+
         public const String CannotFindImageDataOrEI = "cannot.find.image.data.or.EI";
 
         public const String CannotFlushDocumentRootTagBeforeDocumentIsClosed = "cannot.flush.document.root.tag.before.document.is.closed";
@@ -232,6 +234,8 @@ namespace iText.Kernel {
         public const String InvalidCrossReferenceEntryInThisXrefSubsection = "invalid.cross.reference.entry.in.this.xref.subsection";
 
         public const String InvalidIndirectReference1 = "invalid.indirect.reference {0}";
+
+        public const String InvalidMediaBoxValue = "Tne media box object has incorrect values";
 
         public const String InvalidPageStructure1 = "invalid.page.structure {0}";
 
@@ -422,6 +426,8 @@ namespace iText.Kernel {
         public const String WmfImageException = "wmf.image.exception";
 
         public const String WrongFormFieldAddAnnotationToTheField = "wrong.form.field.add.annotation.to.the.field";
+
+        public const String WrongMediaBoxSize = "Wrong media box size: {0}";
 
         public const String XrefSubsectionNotFound = "xref.subsection.not.found";
 

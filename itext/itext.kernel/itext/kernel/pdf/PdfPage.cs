@@ -106,19 +106,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual Rectangle GetPageSize() {
-            PdfArray box = GetPdfObject().GetAsArray(PdfName.MediaBox);
-            if (box == null || box.Size() != 4) {
-                throw new ArgumentException("MediaBox");
-            }
-            PdfNumber llx = box.GetAsNumber(0);
-            PdfNumber lly = box.GetAsNumber(1);
-            PdfNumber urx = box.GetAsNumber(2);
-            PdfNumber ury = box.GetAsNumber(3);
-            if (llx == null || lly == null || urx == null || ury == null) {
-                throw new ArgumentException("MediaBox");
-            }
-            return new Rectangle(Math.Min(llx.FloatValue(), urx.FloatValue()), Math.Min(lly.FloatValue(), ury.FloatValue
-                ()), Math.Abs(urx.FloatValue() - llx.FloatValue()), Math.Abs(ury.FloatValue() - lly.FloatValue()));
+            return GetMediaBox();
         }
 
         /// <summary>Gets the rotated page.</summary>
@@ -405,7 +393,21 @@ namespace iText.Kernel.Pdf {
             if (mediaBox == null) {
                 mediaBox = (PdfArray)GetParentValue(parentPages, PdfName.MediaBox);
             }
-            return mediaBox.ToRectangle();
+            if (mediaBox == null) {
+                throw new PdfException(PdfException.CannotRetrieveMediaBoxAttribute);
+            }
+            if (mediaBox.Size() != 4) {
+                throw new PdfException(PdfException.WrongMediaBoxSize).SetMessageParams(mediaBox.Size());
+            }
+            PdfNumber llx = mediaBox.GetAsNumber(0);
+            PdfNumber lly = mediaBox.GetAsNumber(1);
+            PdfNumber urx = mediaBox.GetAsNumber(2);
+            PdfNumber ury = mediaBox.GetAsNumber(3);
+            if (llx == null || lly == null || urx == null || ury == null) {
+                throw new PdfException(PdfException.InvalidMediaBoxValue);
+            }
+            return new Rectangle(Math.Min(llx.FloatValue(), urx.FloatValue()), Math.Min(lly.FloatValue(), ury.FloatValue
+                ()), Math.Abs(urx.FloatValue() - llx.FloatValue()), Math.Abs(ury.FloatValue() - lly.FloatValue()));
         }
 
         public virtual iText.Kernel.Pdf.PdfPage SetMediaBox(Rectangle rectangle) {
@@ -419,7 +421,7 @@ namespace iText.Kernel.Pdf {
             if (cropBox == null) {
                 cropBox = (PdfArray)GetParentValue(parentPages, PdfName.CropBox);
                 if (cropBox == null) {
-                    cropBox = new PdfArray(GetMediaBox());
+                    return GetMediaBox();
                 }
             }
             return cropBox.ToRectangle();
