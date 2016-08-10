@@ -321,7 +321,11 @@ namespace iText.Kernel {
 
         public const String PdfStartxrefNotFound = "pdf.startxref.not.found";
 
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.0. There is a typo in the name of the constant. Use PdfIndirectObjectBelongToOtherPdfDocument instead."
+            )]
         public const String PdfInderectObjectBelongToOtherPdfDocument = "pdf.inderect.object.belong.to.other.pdf.document.Copy.object.to.current.pdf.document";
+
+        public const String PdfIndirectObjectBelongToOtherPdfDocument = "pdf.indirect.object.belong.to.other.pdf.document.Copy.object.to.current.pdf.document";
 
         public const String PdfVersionNotValid = "pdf.version.not.valid";
 
