@@ -58,6 +58,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             : base(encryptionDictionary, certificateKey, certificate, encryptMetadata) {
         }
 
+        public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
+        }
+
+        // in AES256 we don't recalculate nextObjectKey
         protected internal override String GetDigestAlgorithm() {
             return "SHA-256";
         }

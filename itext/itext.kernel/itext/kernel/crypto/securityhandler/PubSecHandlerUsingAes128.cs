@@ -50,6 +50,8 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Crypto.Securityhandler {
     public class PubSecHandlerUsingAes128 : PubKeySecurityHandler {
+        private static readonly byte[] salt = new byte[] { (byte)0x73, (byte)0x41, (byte)0x6c, (byte)0x54 };
+
         public PubSecHandlerUsingAes128(PdfDictionary encryptionDictionary, X509Certificate[] certs, int[] permissions
             , bool encryptMetadata, bool embeddedFilesOnly) {
             InitKeyAndFillDictionary(encryptionDictionary, certs, permissions, encryptMetadata, embeddedFilesOnly);
@@ -66,6 +68,24 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         public override IDecryptor GetDecryptor() {
             return new AesDecryptor(nextObjectKey, 0, nextObjectKeySize);
+        }
+
+        public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
+            md5.Reset();
+            // added by ujihara
+            extra[0] = (byte)objNumber;
+            extra[1] = (byte)(objNumber >> 8);
+            extra[2] = (byte)(objNumber >> 16);
+            extra[3] = (byte)objGeneration;
+            extra[4] = (byte)(objGeneration >> 8);
+            md5.Update(mkey);
+            md5.Update(extra);
+            md5.Update(salt);
+            nextObjectKey = md5.Digest();
+            nextObjectKeySize = mkey.Length + 5;
+            if (nextObjectKeySize > 16) {
+                nextObjectKeySize = 16;
+            }
         }
 
         protected internal override String GetDigestAlgorithm() {
