@@ -37,7 +37,7 @@ namespace iText.Kernel.Pdf {
 
         internal const String author = "Alexander Chingarev";
 
-        internal const String creator = "iText 6";
+        internal const String creator = "iText 7";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfEncryptionTest/";
@@ -386,6 +386,7 @@ namespace iText.Kernel.Pdf {
                 ());
             PdfPage newPage = document.AddNewPage();
             newPage.Put(PdfName.Default, new PdfString("Hello world string"));
+            WriteTextBytesOnPageContent(newPage, "Hello world page_2!");
             document.Close();
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_appended_" + filename
