@@ -140,5 +140,11 @@ namespace iText.IO {
         public const String WRITER_ENCRYPTION_IS_IGNORED_PRESERVE = "Writer encryption will be ignored, because preservation of encryption is enabled. Document will preserve the original encryption (or will stay unencrypted)";
 
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
+
+        public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
+
+        public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
+
+        public const String ONE_OF_GROUPED_SOURCES_CLOSING_FAILED = "Closing of one of the grouped sources failed.";
     }
 }

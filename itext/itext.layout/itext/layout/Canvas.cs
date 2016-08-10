@@ -202,7 +202,7 @@ namespace iText.Layout {
         /// <see cref="Canvas"/>
         /// that no more elements will be added and it is time to finish processing all the elements.
         /// </summary>
-        public virtual void Close() {
+        public override void Close() {
             rootRenderer.Close();
         }
 

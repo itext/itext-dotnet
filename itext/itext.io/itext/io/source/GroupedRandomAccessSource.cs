@@ -41,6 +41,10 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+using iText.IO;
+using iText.IO.Log;
+
 namespace iText.IO.Source {
     /// <summary>
     /// A RandomAccessSource that is based on a set of underlying sources,
@@ -196,12 +200,32 @@ namespace iText.IO.Source {
 
         /// <summary>
         /// <inheritDoc/>
-        /// Closes all of the underlying sources
+        /// <br/>
+        /// Closes all of the underlying sources.
         /// </summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
+            System.IO.IOException firstThrownIOExc = null;
             foreach (GroupedRandomAccessSource.SourceEntry entry in sources) {
-                entry.source.Close();
+                try {
+                    entry.source.Close();
+                }
+                catch (System.IO.IOException ex) {
+                    if (firstThrownIOExc == null) {
+                        firstThrownIOExc = ex;
+                    }
+                    else {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+                        logger.Error(LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
+                    }
+                }
+                catch (Exception ex) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
+                    logger.Error(LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
+                }
+            }
+            if (firstThrownIOExc != null) {
+                throw firstThrownIOExc;
             }
         }
 

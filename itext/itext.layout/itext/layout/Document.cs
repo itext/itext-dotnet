@@ -123,7 +123,7 @@ namespace iText.Layout {
         }
 
         /// <summary>Closes the document and associated PdfDocument.</summary>
-        public virtual void Close() {
+        public override void Close() {
             if (rootRenderer != null) {
                 rootRenderer.Close();
             }
