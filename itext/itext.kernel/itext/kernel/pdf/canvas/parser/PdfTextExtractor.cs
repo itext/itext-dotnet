@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 
@@ -51,13 +52,32 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <summary>Extract text from a specified page using an extraction strategy.</summary>
+        /// <remarks>
+        /// Extract text from a specified page using an extraction strategy.
+        /// Also allows registration of custom IContentOperators that can influence
+        /// how (and whether or not) the PDF instructions will be parsed.
+        /// </remarks>
+        /// <param name="page">the page for the text to be extracted from</param>
+        /// <param name="strategy">the strategy to use for extracting text</param>
+        /// <param name="additionalContentOperators">
+        /// an optional map of custom
+        /// <see cref="IContentOperator"/>
+        /// s for rendering instructions
+        /// </param>
+        /// <returns>the extracted text</returns>
+        public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy, IDictionary<String, IContentOperator
+            > additionalContentOperators) {
+            PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy, additionalContentOperators);
+            parser.ProcessPageContent(page);
+            return strategy.GetResultantText();
+        }
+
+        /// <summary>Extract text from a specified page using an extraction strategy.</summary>
         /// <param name="page">the page for the text to be extracted from</param>
         /// <param name="strategy">the strategy to use for extracting text</param>
         /// <returns>the extracted text</returns>
         public static String GetTextFromPage(PdfPage page, ITextExtractionStrategy strategy) {
-            PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
-            parser.ProcessPageContent(page);
-            return strategy.GetResultantText();
+            return GetTextFromPage(page, strategy, new Dictionary<String, IContentOperator>());
         }
 
         /// <summary>Extract text from a specified page using the default strategy.</summary>
@@ -71,7 +91,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// </remarks>
         /// <param name="page">the page for the text to be extracted from</param>
         /// <returns>the extracted text</returns>
-        /// <exception cref="System.IO.IOException"/>
         public static String GetTextFromPage(PdfPage page) {
             return GetTextFromPage(page, new LocationTextExtractionStrategy());
         }

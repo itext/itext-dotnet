@@ -62,7 +62,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Processes content from the specified page number using the specified listener.</summary>
         /// <remarks>
         /// Processes content from the specified page number using the specified listener.
-        /// Also allows registration of custom ContentOperators
+        /// Also allows registration of custom IContentOperators that can influence
+        /// how (and whether or not) the PDF instructions will be parsed.
         /// </remarks>
         /// 
         /// <param name="pageNumber">the page number to process</param>
@@ -73,10 +74,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         public virtual E ProcessContent<E>(int pageNumber, E renderListener, IDictionary<String, IContentOperator>
              additionalContentOperators)
             where E : IEventListener {
-            PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener);
-            foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators) {
-                processor.RegisterContentOperator(entry.Key, entry.Value);
-            }
+            PdfCanvasProcessor processor = new PdfCanvasProcessor(renderListener, additionalContentOperators);
             processor.ProcessPageContent(pdfDocument.GetPage(pageNumber));
             return renderListener;
         }

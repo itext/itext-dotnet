@@ -113,7 +113,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private Stack<CanvasTag> markedContentStack = new Stack<CanvasTag>();
 
         /// <summary>
-        /// Creates a new PDF Content Stream Processor that will send it's output to the
+        /// Creates a new PDF Content Stream Processor that will send its output to the
         /// designated render listener.
         /// </summary>
         /// <param name="eventListener">
@@ -129,6 +129,34 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             xobjectDoHandlers = new Dictionary<PdfName, IXObjectDoHandler>();
             PopulateXObjectDoHandlers();
             Reset();
+        }
+
+        /// <summary>
+        /// Creates a new PDF Content Stream Processor that will send its output to the
+        /// designated render listener.
+        /// </summary>
+        /// <remarks>
+        /// Creates a new PDF Content Stream Processor that will send its output to the
+        /// designated render listener.
+        /// Also allows registration of custom IContentOperators that can influence
+        /// how (and whether or not) the PDF instructions will be parsed.
+        /// </remarks>
+        /// <param name="eventListener">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Canvas.Parser.Listener.IEventListener"/>
+        /// that will receive rendering notifications
+        /// </param>
+        /// <param name="additionalContentOperators">
+        /// an optional map of custom
+        /// <see cref="IContentOperator"/>
+        /// s for rendering instructions
+        /// </param>
+        public PdfCanvasProcessor(IEventListener eventListener, IDictionary<String, IContentOperator> additionalContentOperators
+            )
+            : this(eventListener) {
+            foreach (KeyValuePair<String, IContentOperator> entry in additionalContentOperators) {
+                RegisterContentOperator(entry.Key, entry.Value);
+            }
         }
 
         /// <summary>Registers a Do handler that will be called when Do for the provided XObject subtype is encountered during content processing.
