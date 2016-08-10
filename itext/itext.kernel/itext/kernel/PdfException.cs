@@ -59,9 +59,9 @@ namespace iText.Kernel {
 
         public const String AvailableSpaceIsNotEnoughForSignature = "available.space.is.not.enough.for.signature";
 
-        public const String BadCertificateAndKey = "bad.certificate.and.key";
+        public const String BadCertificateAndKey = "Bad public key certificate and/or private key.";
 
-        public const String BadUserPassword = "bad.user.password";
+        public const String BadUserPassword = "Bad user password. Password is not provided or provided wrong password. Correct password should be passed to PdfReader constructor with properties. See ReaderProperties.setPassword method.";
 
         public const String CannotAddKidToTheFlushedElement = "cannot.add.kid.to.the.flushed.element";
 
@@ -130,6 +130,8 @@ namespace iText.Kernel {
         public const String CantDecodePkcs7SigneddataObject = "can.t.decode.pkcs7signeddata.object";
 
         public const String CantFindSigningCertificateWithSerial1 = "can.t.find.signing.certificate.with.serial {0}";
+
+        public const String CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate = "Certificate is not provided. Document is encrypted with public key certificate, it should be passed to PdfReader constructor with properties. See ReaderProperties.setPublicKeySecurityParams method.";
 
         public const String CfNotFoundEncryption = "cf.not.found.encryption";
 
@@ -309,7 +311,7 @@ namespace iText.Kernel {
 
         public const String PdfEncryption = "pdf.encryption";
 
-        public const String PdfDecryption = "pdf.decryption";
+        public const String PdfDecryption = "Exception occurred with pdf document decryption. One of the possible reasons is wrong password or wrong public key certificate and private key.";
 
         public const String PdfDocumentMustBeOpenedInStampingMode = "pdf.document.must.be.opened.in.stamping.mode";
 

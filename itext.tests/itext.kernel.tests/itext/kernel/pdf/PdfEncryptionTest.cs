@@ -4,6 +4,8 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.IO.Font;
 using iText.IO.Util;
+using iText.Kernel;
+using iText.Kernel.Crypto;
 using iText.Kernel.Font;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -223,6 +225,101 @@ namespace iText.Kernel.Pdf {
             String filename = "encryptWithCertificateAes256NoCompression.pdf";
             int encryptionType = EncryptionConstants.ENCRYPTION_AES_256;
             EncryptWithCertificate(filename, encryptionType, CompressionConstants.NO_COMPRESSION);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithoutPassword() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf"));
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithWrongPassword() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new ReaderProperties
+                    ().SetPassword("wrong_password".GetBytes()));
+                PdfDocument doc = new PdfDocument(reader);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<BadPasswordException>().With.Message.EqualTo(BadPasswordException.BadUserPassword));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithoutCertificate() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfDocument doc = new PdfDocument(new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf"));
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Java.Security.Cert.CertificateException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithoutPrivateKey() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), null));
+                PdfDocument doc = new PdfDocument(reader);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithWrongCertificate() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), GetPrivateKey()));
+                PdfDocument doc = new PdfDocument(reader);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithWrongPrivateKey() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                    ().SetPublicKeySecurityParams(GetPublicCertificate(CERT), iText.Kernel.Crypto.CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
+                    (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
+                    ())));
+                PdfDocument doc = new PdfDocument(reader);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.PdfDecryption));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        [NUnit.Framework.Test]
+        public virtual void OpenEncryptedDocWithWrongCertificateAndPrivateKey() {
+            NUnit.Framework.Assert.That(() =>  {
+                PdfReader reader = new PdfReader(sourceFolder + "encryptedWithCertificateAes128.pdf", new ReaderProperties
+                    ().SetPublicKeySecurityParams(GetPublicCertificate(sourceFolder + "wrong.cer"), iText.Kernel.Crypto.CryptoUtil.ReadPrivateKeyFromPkcs12KeyStore
+                    (new FileStream(sourceFolder + "wrong.p12", FileMode.Open, FileAccess.Read), "demo", "password".ToCharArray
+                    ())));
+                PdfDocument doc = new PdfDocument(reader);
+                doc.Close();
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.BadCertificateAndKey));
+;
         }
 
         /// <exception cref="iText.Kernel.XMP.XMPException"/>

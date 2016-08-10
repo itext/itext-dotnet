@@ -470,6 +470,9 @@ namespace iText.Kernel.Pdf {
             encrypted = true;
             PdfName filter = enc.GetAsName(PdfName.Filter);
             if (PdfName.Adobe_PubSec.Equals(filter)) {
+                if (properties.certificate == null) {
+                    throw new PdfException(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate);
+                }
                 decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate);
             }
             else {
