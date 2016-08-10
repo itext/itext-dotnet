@@ -819,8 +819,8 @@ namespace iText.Layout.Renderer {
                 }
                 Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
                 if (lastBorder != null) {
-                    if (verticalBorders[j].Count > 0) {
-                        if (i == 0) {
+                    if (verticalBorders != null && verticalBorders[j] != null && verticalBorders[j].Count > 0) {
+                        if (i == 0 && verticalBorders[j][i] != null) {
                             x2 += verticalBorders[j][i].GetWidth() / 2;
                         }
                         else {
