@@ -198,8 +198,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the ascentline line segment</returns>
         public virtual LineSegment GetAscentLine() {
-            float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender() * gs.GetFontSize() / 1000f;
-            return GetUnscaledBaselineWithOffset(ascent + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
+            return GetUnscaledBaselineWithOffset(GetAscentDescent()[0] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
                 );
         }
 
@@ -212,9 +211,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the descentline line segment</returns>
         public virtual LineSegment GetDescentLine() {
-            // per getFontDescription() API, descent is returned as a negative number, so we apply that as a normal vertical offset
-            float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender() * gs.GetFontSize() / 1000f;
-            return GetUnscaledBaselineWithOffset(descent + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
+            return GetUnscaledBaselineWithOffset(GetAscentDescent()[1] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
                 );
         }
 
@@ -475,6 +472,15 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 strings.Add(newString);
             }
             return strings.ToArray(new PdfString[strings.Count]);
+        }
+
+        private float[] GetAscentDescent() {
+            float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender();
+            float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender();
+            float scale = ascent - descent < 700 ? ascent - descent : 1000;
+            descent = descent / scale * gs.GetFontSize();
+            ascent = ascent / scale * gs.GetFontSize();
+            return new float[] { ascent, descent };
         }
     }
 }
