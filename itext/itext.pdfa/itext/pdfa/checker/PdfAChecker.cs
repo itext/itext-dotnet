@@ -373,8 +373,10 @@ namespace iText.Pdfa.Checker {
             if (shadings != null) {
                 foreach (PdfObject shading in shadings.DirectValues()) {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
-                    CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
-                        (PdfName.ColorSpace), true, null);
+                    if (!IsAlreadyChecked(shadingDict)) {
+                        CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
+                            (PdfName.ColorSpace), true, null);
+                    }
                 }
             }
             if (patterns != null) {

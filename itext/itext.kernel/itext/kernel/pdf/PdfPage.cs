@@ -378,10 +378,10 @@ namespace iText.Kernel.Pdf {
             if (IsFlushed()) {
                 return;
             }
+            GetDocument().DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_PAGE, this));
             if (GetDocument().IsTagged() && !GetDocument().GetStructTreeRoot().IsFlushed()) {
                 TryFlushPageTags();
             }
-            GetDocument().DispatchEvent(new PdfDocumentEvent(PdfDocumentEvent.END_PAGE, this));
             if (flushContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
                 FlushContentStreams();
@@ -827,7 +827,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void FlushContentStreams() {
-            FlushContentStreams(GetPdfObject().GetAsDictionary(PdfName.Resources));
+            FlushContentStreams(GetResources().GetPdfObject());
             PdfArray annots = GetAnnots(false);
             if (annots != null) {
                 for (int i = 0; i < annots.Size(); ++i) {
