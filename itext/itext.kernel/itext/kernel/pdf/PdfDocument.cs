@@ -1482,7 +1482,8 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void FlushFonts() {
             if (properties.appendMode) {
                 foreach (PdfFont font in GetDocumentFonts()) {
-                    if (font.GetPdfObject().GetIndirectReference().CheckState(PdfObject.MODIFIED)) {
+                    if (font.GetPdfObject().CheckState(PdfObject.MUST_BE_INDIRECT) || font.GetPdfObject().GetIndirectReference
+                        ().CheckState(PdfObject.MODIFIED)) {
                         font.Flush();
                     }
                 }
