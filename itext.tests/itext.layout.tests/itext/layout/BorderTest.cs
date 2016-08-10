@@ -177,6 +177,36 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NoVerticalBorderTest() {
+            fileName = "noVerticalBorderTest.pdf";
+            Document doc = CreateDocument();
+            Table mainTable = new Table(1);
+            Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderTop(new SolidBorder(Color.BLACK, 0.5f));
+            cell.Add("TESCHTINK");
+            mainTable.AddCell(cell);
+            doc.Add(mainTable);
+            doc.Close();
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NoHorizontalBorderTest() {
+            fileName = "noHorizontalBorderTest.pdf";
+            Document doc = CreateDocument();
+            Table mainTable = new Table(1);
+            Cell cell = new Cell().SetBorder(Border.NO_BORDER).SetBorderRight(new SolidBorder(Color.BLACK, 0.5f));
+            cell.Add("TESCHTINK");
+            mainTable.AddCell(cell);
+            doc.Add(mainTable);
+            doc.Close();
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document CreateDocument() {
             outFileName = destinationFolder + fileName;
