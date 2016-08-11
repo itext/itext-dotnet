@@ -367,7 +367,12 @@ namespace iText.Kernel.Font {
             subsetRanges.Add(range);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use SplitString(System.String, float, float) instead")]
         public virtual IList<String> SplitString(String text, int fontSize, float maxWidth) {
+            return SplitString(text, (float)fontSize, maxWidth);
+        }
+
+        public virtual IList<String> SplitString(String text, float fontSize, float maxWidth) {
             IList<String> resultString = new List<String>();
             int lastWhiteSpace = 0;
             int startPos = 0;
@@ -467,8 +472,7 @@ namespace iText.Kernel.Font {
         /// <see langword="null"/>
         /// , if there is an error reading the font.
         /// </returns>
-        /// <exception>
-        /// PdfException
+        /// <exception cref="iText.Kernel.PdfException">
         /// Method will throw exception if
         /// <paramref name="fontStreamBytes"/>
         /// is
