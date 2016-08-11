@@ -50,103 +50,182 @@ using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf.Action {
+    /// <summary>A wrapper for action dictionaries (ISO 32000-1 section 12.6).</summary>
+    /// <remarks>
+    /// A wrapper for action dictionaries (ISO 32000-1 section 12.6).
+    /// An action dictionary defines the characteristics and behaviour of an action.
+    /// </remarks>
     public class PdfAction : PdfObjectWrapper<PdfDictionary> {
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_EXCLUDE = 1;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_INCLUDE_NO_VALUE_FIELDS = 2;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_HTML_FORMAT = 4;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_HTML_GET = 8;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_COORDINATES = 16;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_XFDF = 32;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_INCLUDE_APPEND_SAVES = 64;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_INCLUDE_ANNOTATIONS = 128;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_PDF = 256;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_CANONICAL_FORMAT = 512;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_EXCL_NON_USER_ANNOTS = 1024;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_EXCL_F_KEY = 2048;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int SUBMIT_EMBED_FORM = 8196;
 
-        /// <summary>a possible submitvalue</summary>
+        /// <summary>A possible submit value</summary>
         public const int RESET_EXCLUDE = 1;
 
+        /// <summary>Constructs an empty action that can be further modified.</summary>
         public PdfAction()
             : this(new PdfDictionary()) {
             Put(PdfName.Type, PdfName.Action);
         }
 
+        /// <summary>
+        /// Constructs a
+        /// <see cref="PdfAction"/>
+        /// instance with a given dictionary. It can be used for handy
+        /// property reading in reading mode or modifying in stamping mode.
+        /// </summary>
+        /// <param name="pdfObject">the dictionary to construct the wrapper around</param>
         public PdfAction(PdfDictionary pdfObject)
             : base(pdfObject) {
             MarkObjectAsIndirect(GetPdfObject());
         }
 
+        /// <summary>Creates a GoTo action (section 12.6.4.2 of ISO 32000-1) via a given destination.</summary>
+        /// <param name="destination">the desired destination of the action</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoTo(PdfDestination destination) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoTo).Put(PdfName.D, destination.GetPdfObject
                 ());
         }
 
+        /// <summary>
+        /// Creates a GoTo action (section 12.6.4.2 of ISO 32000-1) via a given
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfStringDestination"/>
+        /// name.
+        /// </summary>
+        /// <param name="destination">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.Navigation.PdfStringDestination"/>
+        /// name
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoTo(String destination) {
             return CreateGoTo(new PdfStringDestination(destination));
         }
 
+        /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
+        /// <param name="fileSpec">the file in which the destination shall be located</param>
+        /// <param name="destination">the destination in the remote document to jump to</param>
+        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
                 ()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
         }
 
+        /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
+        /// <param name="fileSpec">the file in which the destination shall be located</param>
+        /// <param name="destination">the destination in the remote document to jump to</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             ) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
                 ()).Put(PdfName.D, destination.GetPdfObject());
         }
 
+        /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
+        /// <param name="filename">the remote destination file to jump to</param>
+        /// <param name="pageNum">the remote destination document page to jump to</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum) {
             return CreateGoToR(filename, pageNum, false);
         }
 
+        /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
+        /// <param name="filename">the remote destination file to jump to</param>
+        /// <param name="pageNum">the remote destination document page to jump to</param>
+        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, int pageNum, bool newWindow) {
             return CreateGoToR(new PdfStringFS(filename), PdfExplicitDestination.CreateFitH(pageNum, 10000), newWindow
                 );
         }
 
+        /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
+        /// <param name="filename">the remote destination file to jump to</param>
+        /// <param name="destination">the string destination in the remote document to jump to</param>
+        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, String destination, bool newWindow
             ) {
             return CreateGoToR(new PdfStringFS(filename), new PdfStringDestination(destination), newWindow);
         }
 
+        /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
+        /// <param name="filename">the remote destination file to jump to</param>
+        /// <param name="destination">the string destination in the remote document to jump to</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(String filename, String destination) {
             return CreateGoToR(filename, destination, false);
         }
 
+        /// <summary>Creates a GoToE action, or embedded file action (section 12.6.4.4 of ISO 32000-1).</summary>
+        /// <param name="destination">the destination in the target to jump to</param>
+        /// <param name="newWindow">
+        /// if true, the destination document should be opened in a new window;
+        /// if false, the destination document should replace the current document in the same window
+        /// </param>
+        /// <param name="targetDictionary">
+        /// A target dictionary specifying path information to the target document.
+        /// Each target dictionary specifies one element in the full path to the target and
+        /// may have nested target dictionaries specifying additional elements
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfDestination destination, bool newWindow, PdfTargetDictionary
              targetDictionary) {
             return CreateGoToE(null, destination, newWindow, targetDictionary);
         }
 
+        /// <summary>Creates a GoToE action, or embedded file action (section 12.6.4.4 of ISO 32000-1).</summary>
+        /// <param name="fileSpec">The root document of the target relative to the root document of the source</param>
+        /// <param name="destination">the destination in the target to jump to</param>
+        /// <param name="newWindow">
+        /// if true, the destination document should be opened in a new window;
+        /// if false, the destination document should replace the current document in the same window
+        /// </param>
+        /// <param name="targetDictionary">
+        /// A target dictionary specifying path information to the target document.
+        /// Each target dictionary specifies one element in the full path to the target and
+        /// may have nested target dictionaries specifying additional elements
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToE(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow, PdfTargetDictionary targetDictionary) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
@@ -163,10 +242,19 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
+        /// <param name="fileSpec">the application that shall be launched or the document that shall beopened or printed
+        ///     </param>
+        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, bool newWindow) {
             return CreateLaunch(fileSpec, null, newWindow);
         }
 
+        /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
+        /// <param name="fileSpec">the application that shall be launched or the document that shall beopened or printed
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
                 Launch);
@@ -176,6 +264,12 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
+        /// <param name="fileSpec">the application that shall be launched or the document that shall beopened or printed
+        ///     </param>
+        /// <param name="win">A dictionary containing Windows-specific launch parameters</param>
+        /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
             ) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
@@ -189,6 +283,18 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>Creates a Thread action (section 12.6.4.6 of ISO 32000-1).</summary>
+        /// <remarks>
+        /// Creates a Thread action (section 12.6.4.6 of ISO 32000-1).
+        /// A thread action jumps to a specified bead on an article thread (see 12.4.3, “Articles”),
+        /// in either the current document or a different one. Table 205 shows the action dictionary
+        /// entries specific to this type of action.
+        /// </remarks>
+        /// <param name="fileSpec">the file containing the thread. If this entry is absent, the thread is in the current file
+        ///     </param>
+        /// <param name="destinationThread">the destination thread</param>
+        /// <param name="bead">the bead in the destination thread</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateThread(PdfFileSpec fileSpec, PdfObject destinationThread
             , PdfObject bead) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
@@ -199,14 +305,31 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>Creates a Thread action (section 12.6.4.6 of ISO 32000-1).</summary>
+        /// <remarks>
+        /// Creates a Thread action (section 12.6.4.6 of ISO 32000-1).
+        /// A thread action jumps to a specified bead on an article thread (see 12.4.3, “Articles”),
+        /// in either the current document or a different one. Table 205 shows the action dictionary
+        /// entries specific to this type of action.
+        /// </remarks>
+        /// <param name="fileSpec">the file containing the thread. If this entry is absent, the thread is in the current file
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateThread(PdfFileSpec fileSpec) {
             return CreateThread(fileSpec, null, null);
         }
 
+        /// <summary>Creates a URI action (section 12.6.4.7 of ISO 32000-1).</summary>
+        /// <param name="uri">the uniform resource identifier to resolve</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateURI(String uri) {
             return CreateURI(uri, false);
         }
 
+        /// <summary>Creates a URI action (section 12.6.4.7 of ISO 32000-1).</summary>
+        /// <param name="uri">the uniform resource identifier to resolve</param>
+        /// <param name="isMap">a flag specifying whether to track the mouse position when the URI is resolved</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateURI(String uri, bool isMap) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.URI).Put(PdfName.URI, new PdfString(
                 uri)).Put(PdfName.IsMap, new PdfBoolean(isMap));
