@@ -44,14 +44,54 @@ address: sales@itextpdf.com
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the result of a line
+    /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+    /// .
+    /// </summary>
     public class LineLayoutResult : LayoutResult {
         protected internal bool splitForcedByNewline;
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// The
+        /// <see cref="LayoutResult.causeOfNothing"/>
+        /// will be set as null.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             )
             : base(status, occupiedArea, splitRenderer, overflowRenderer) {
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="LayoutResult.NOTHING"/>
+        /// </param>
         public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             , IRenderer cause)
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
