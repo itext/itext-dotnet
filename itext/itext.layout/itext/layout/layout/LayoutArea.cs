@@ -47,44 +47,77 @@ using iText.Kernel.Geom;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the area for content
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+    /// .
+    /// </summary>
     public class LayoutArea {
+        /// <summary>The number of page on which the area is located.</summary>
         protected internal int pageNumber;
 
+        /// <summary>The area's bounding box</summary>
         protected internal Rectangle bBox;
 
+        /// <summary>Indicates whether the area already has some placed content or not.</summary>
         protected internal bool emptyArea = true;
 
+        /// <summary>
+        /// Creates the area for content
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// </summary>
+        /// <param name="pageNumber">the number of page on which the area is located.</param>
+        /// <param name="bBox">the area's bounding box</param>
         public LayoutArea(int pageNumber, Rectangle bBox) {
             this.pageNumber = pageNumber;
             this.bBox = bBox;
         }
 
+        /// <summary>Gets the number of page on which the area is located.</summary>
+        /// <returns>page number</returns>
         public virtual int GetPageNumber() {
             return pageNumber;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle">box</see>
+        /// which bounds the area.
+        /// </summary>
+        /// <returns>the bounding box</returns>
         public virtual Rectangle GetBBox() {
             return bBox;
         }
 
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Kernel.Geom.Rectangle">box</see>
+        /// which bounds the area.
+        /// </summary>
         public virtual void SetBBox(Rectangle bbox) {
             this.bBox = bbox;
         }
 
+        /// <summary>Indicates whether the area already has some placed content or not.</summary>
+        /// <returns>whether the area is empty or not</returns>
         public virtual bool IsEmptyArea() {
             return emptyArea;
         }
 
+        /// <summary>Defines whether the area already has some placed content or not.</summary>
         public virtual void SetEmptyArea(bool emptyArea) {
             this.emptyArea = emptyArea;
         }
 
+        /// <summary><inheritDoc/></summary>
         public virtual iText.Layout.Layout.LayoutArea Clone() {
             iText.Layout.Layout.LayoutArea area = new iText.Layout.Layout.LayoutArea(pageNumber, bBox.Clone());
             area.SetEmptyArea(emptyArea);
             return area;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override bool Equals(Object obj) {
             if (!(obj is iText.Layout.Layout.LayoutArea)) {
                 return false;
@@ -93,12 +126,14 @@ namespace iText.Layout.Layout {
             return pageNumber == that.pageNumber && bBox.EqualsWithEpsilon(that.bBox, AbstractRenderer.EPS);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             HashCode hashCode = new HashCode();
             hashCode.Append(pageNumber).Append(bBox.GetHashCode()).Append(emptyArea);
             return hashCode.GetHashCode();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override String ToString() {
             return String.Format("{0}, page {1}", bBox.ToString(), pageNumber);
         }
