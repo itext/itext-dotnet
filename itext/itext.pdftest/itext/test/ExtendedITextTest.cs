@@ -41,15 +41,28 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+
+using iText.Test.Attributes;
 using NUnit.Framework;
 
 namespace iText.Test {
+    /// <summary>
+    /// This class is used for testing when logger output should be tested as well.
+    /// By default any logger output that is not expected, i.e. marked with <see cref="LogMessageAttribute"/>
+    /// will result in crash.
+    /// </summary>
     [LogListener]
     public abstract class ExtendedITextTest : ITextTest {
+        /// <summary>
+        /// This method is called before each test method is executed
+        /// </summary>
         [SetUp]
         public virtual void BeforeTestMethodAction() {
         }
 
+        /// <summary>
+        /// This method is called after each test method is executed
+        /// </summary>
         [TearDown]
         public virtual void AfterTestMethodAction() {
         }
