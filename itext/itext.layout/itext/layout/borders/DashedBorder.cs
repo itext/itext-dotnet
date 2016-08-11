@@ -48,8 +48,10 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Layout.Borders {
     /// <summary>Draws a border with dashes around the element it's been set to.</summary>
     public class DashedBorder : Border {
+        /// <summary>The modifier to be applied on the width to have the dash size</summary>
         private const float DASH_MODIFIER = 5f;
 
+        /// <summary>The modifier to be applied on the width to have the initial gap size</summary>
         private const float GAP_MODIFIER = 3.5f;
 
         /// <summary>Creates a DashedBorder with the specified width and sets the color to black.</summary>
@@ -65,10 +67,12 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border.DASHED;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
             , float borderWidthAfter) {
             float initialGap = width * GAP_MODIFIER;
@@ -112,6 +116,7 @@ namespace iText.Layout.Borders {
             canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             float initialGap = width * GAP_MODIFIER;
             float dash = width * DASH_MODIFIER;
@@ -126,6 +131,14 @@ namespace iText.Layout.Borders {
                 (width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
 
+        /// <summary>Adjusts the size of the gap between dots</summary>
+        /// <param name="distance">
+        /// the
+        /// <see cref="Border">border</see>
+        /// length
+        /// </param>
+        /// <param name="initialGap">the initial size of the gap</param>
+        /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
             return (float)(distance / gapsNum);
