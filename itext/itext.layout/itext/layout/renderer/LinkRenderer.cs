@@ -50,10 +50,28 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LinkRenderer : TextRenderer {
+        /// <summary>Creates a LinkRenderer from its corresponding layout object.</summary>
+        /// <param name="link">
+        /// the
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// which this object should manage
+        /// </param>
         public LinkRenderer(Link link)
             : this(link, link.GetText()) {
         }
 
+        /// <summary>
+        /// Creates a LinkRenderer from its corresponding layout object, with a custom
+        /// text to replace the contents of the
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// .
+        /// </summary>
+        /// <param name="linkElement">
+        /// the
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// which this object should manage
+        /// </param>
+        /// <param name="text">the replacement text</param>
         public LinkRenderer(Link linkElement, String text)
             : base(linkElement, text) {
         }

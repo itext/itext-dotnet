@@ -192,9 +192,19 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         public override void Close() {
-            base.Close();
-            if (duplicateStream != null) {
-                duplicateStream.Close();
+            try {
+                base.Close();
+            }
+            finally {
+                try {
+                    if (duplicateStream != null) {
+                        duplicateStream.Close();
+                    }
+                }
+                catch (Exception ex) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfWriter));
+                    logger.Error("Closing of the duplicatedStream failed.", ex);
+                }
             }
         }
 

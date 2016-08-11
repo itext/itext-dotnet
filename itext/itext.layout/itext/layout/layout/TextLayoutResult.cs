@@ -49,11 +49,46 @@ namespace iText.Layout.Layout {
 
         protected internal bool splitForcedByNewline;
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// The
+        /// <see cref="LayoutResult.causeOfNothing"/>
+        /// will be set as null.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             )
             : base(status, occupiedArea, splitRenderer, overflowRenderer) {
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="LayoutResult.NOTHING"/>
+        /// </param>
         public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             , IRenderer cause)
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {

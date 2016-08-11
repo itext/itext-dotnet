@@ -54,7 +54,7 @@ using iText.Layout.Splitting;
 namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
     /// 
-    public abstract class RootElement<T> : ElementPropertyContainer<T>
+    public abstract class RootElement<T> : ElementPropertyContainer<T>, IDisposable
         where T : IPropertyContainer {
         protected internal bool immediateFlush = true;
 
@@ -313,5 +313,11 @@ namespace iText.Layout {
         }
 
         protected internal abstract RootRenderer EnsureRootRendererNotNull();
+
+        public abstract void Close();
+
+        void System.IDisposable.Dispose() {
+            Close();
+        }
     }
 }

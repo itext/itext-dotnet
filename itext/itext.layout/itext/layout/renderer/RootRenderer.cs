@@ -186,7 +186,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        // Drawing of content. Might need to rename.
+        // TODO Drawing of content. Might need to rename.
+        /// <summary>Draws (flushes) the content.</summary>
+        /// <seealso cref="AbstractRenderer.Draw(DrawContext)"/>
         public virtual void Flush() {
             foreach (IRenderer resultRenderer in childRenderers) {
                 FlushSingleRenderer(resultRenderer);
@@ -219,6 +221,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             throw new InvalidOperationException("Layout is not supported for root renderers.");
         }

@@ -52,15 +52,31 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+    /// <summary>
+    /// This class represents the
+    /// <see cref="IRenderer">renderer</see>
+    /// object for a
+    /// <see cref="iText.Layout.Element.Paragraph"/>
+    /// object. It will draw the glyphs of the textual content on the
+    /// <see cref="DrawContext"/>
+    /// .
+    /// </summary>
     public class ParagraphRenderer : BlockRenderer {
         protected internal float previousDescent = 0;
 
         protected internal IList<LineRenderer> lines = null;
 
+        /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.Paragraph"/>
+        /// which this object should manage
+        /// </param>
         public ParagraphRenderer(Paragraph modelElement)
             : base(modelElement) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool anythingPlaced = false;
@@ -269,10 +285,12 @@ namespace iText.Layout.Renderer {
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.ParagraphRenderer((Paragraph)modelElement);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override T1 GetDefaultProperty<T1>(int property) {
             if ((property == Property.MARGIN_TOP || property == Property.MARGIN_BOTTOM) && parent is CellRenderer) {
                 return (T1)(Object)0f;
@@ -280,6 +298,7 @@ namespace iText.Layout.Renderer {
             return base.GetDefaultProperty<T1>(property);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             if (lines != null && lines.Count > 0) {
@@ -295,6 +314,7 @@ namespace iText.Layout.Renderer {
             return sb.ToString();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             if (lines != null) {
                 foreach (LineRenderer line in lines) {
@@ -303,6 +323,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Move(float dxRight, float dyUp) {
             occupiedArea.GetBBox().MoveRight(dxRight);
             occupiedArea.GetBBox().MoveUp(dyUp);

@@ -692,9 +692,6 @@ namespace iText.Kernel.Pdf {
                     trailer.Put(PdfName.Info, info.GetPdfObject());
                     xref.WriteXrefTableAndTrailer(this, fileId, crypto_1);
                     writer.Flush();
-                    if (IsCloseWriter()) {
-                        writer.Close();
-                    }
                     Counter counter = GetCounter();
                     if (counter != null) {
                         counter.OnDocumentWritten(writer.GetCurrentPos());
@@ -702,12 +699,29 @@ namespace iText.Kernel.Pdf {
                 }
                 catalog.GetPageTree().ClearPageRefs();
                 RemoveAllHandlers();
-                if (reader != null && IsCloseReader()) {
-                    reader.Close();
-                }
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.CannotCloseDocument, e, this);
+            }
+            finally {
+                if (writer != null && IsCloseWriter()) {
+                    try {
+                        writer.Close();
+                    }
+                    catch (Exception e) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                        logger.Error(LogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
+                    }
+                }
+                if (reader != null && IsCloseReader()) {
+                    try {
+                        reader.Close();
+                    }
+                    catch (Exception e) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                        logger.Error(LogMessageConstant.PDF_READER_CLOSING_FAILED, e);
+                    }
+                }
             }
             closed = true;
         }
@@ -938,7 +952,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Error(LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
+                    logger.Warn(LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
                 }
             }
             if (catalog.IsOutlineMode()) {
@@ -1468,7 +1482,8 @@ namespace iText.Kernel.Pdf {
         protected internal virtual void FlushFonts() {
             if (properties.appendMode) {
                 foreach (PdfFont font in GetDocumentFonts()) {
-                    if (font.GetPdfObject().GetIndirectReference().CheckState(PdfObject.MODIFIED)) {
+                    if (font.GetPdfObject().CheckState(PdfObject.MUST_BE_INDIRECT) || font.GetPdfObject().GetIndirectReference
+                        ().CheckState(PdfObject.MODIFIED)) {
                         font.Flush();
                     }
                 }

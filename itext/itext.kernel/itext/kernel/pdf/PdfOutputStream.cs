@@ -187,7 +187,7 @@ namespace iText.Kernel.Pdf {
 
         private void Write(PdfIndirectReference indirectReference) {
             if (document != null && !indirectReference.GetDocument().Equals(document)) {
-                throw new PdfException(PdfException.PdfInderectObjectBelongToOtherPdfDocument);
+                throw new PdfException(PdfException.PdfIndirectObjectBelongToOtherPdfDocument);
             }
             if (indirectReference.GetRefersTo() == null) {
                 Write(PdfNull.PDF_NULL);

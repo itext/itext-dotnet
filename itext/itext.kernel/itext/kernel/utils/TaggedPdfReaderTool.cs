@@ -64,16 +64,37 @@ namespace iText.Kernel.Utils {
         protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags = new Dictionary<PdfDictionary
             , IDictionary<int, String>>();
 
+        /// <summary>
+        /// Constructs a
+        /// <see cref="TaggedPdfReaderTool"/>
+        /// via a given
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// .
+        /// </summary>
+        /// <param name="document">the document to read tag structure from</param>
         public TaggedPdfReaderTool(PdfDocument document) {
-            // key - page dictionary; value pairs of mcid and text in them
+            // key - page dictionary; value - a mapping of mcids to text in them
             this.document = document;
         }
 
+        /// <summary>Checks if a character value should be escaped/unescaped.</summary>
+        /// <param name="c">a character value</param>
+        /// <returns>true if it's OK to escape or unescape this value</returns>
+        public static bool IsValidCharacterValue(int c) {
+            return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000 && c <= 0xFFFD || c >=
+                 0x10000 && c <= 0x10FFFF);
+        }
+
+        /// <summary>Converts the current tag structure into an XML file with default encoding (UTF-8).</summary>
+        /// <param name="os">the output stream to save XML file to</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os) {
             ConvertToXml(os, "UTF-8");
         }
 
+        /// <summary>Converts the current tag structure into an XML file with provided encoding.</summary>
+        /// <param name="os">the output stream to save XML file to</param>
+        /// <param name="charset">the charset of the resultant XML file</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os, String charset) {
             @out = new StreamWriter(os, System.Text.Encoding.GetEncoding(charset));
@@ -94,6 +115,9 @@ namespace iText.Kernel.Utils {
             @out.Close();
         }
 
+        /// <summary>Sets the name of the root tag of the resultant XML file</summary>
+        /// <param name="rootTagName">the name of the root tag</param>
+        /// <returns>this object</returns>
         public virtual iText.Kernel.Utils.TaggedPdfReaderTool SetRootTag(String rootTagName) {
             this.rootTag = rootTagName;
             return this;
@@ -220,13 +244,11 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// NOTE: copied from itext5 XMLUtils class
-        /// <p>
         /// Escapes a string with the appropriated XML codes.
         /// </summary>
         /// <param name="s">the string to be escaped</param>
         /// <param name="onlyASCII">codes above 127 will always be escaped with &amp;#nn; if <CODE>true</CODE></param>
         /// <returns>the escaped string</returns>
-        /// <since>5.0.6</since>
         protected internal static String EscapeXML(String s, bool onlyASCII) {
             char[] cc = s.ToCharArray();
             int len = cc.Length;
@@ -273,14 +295,6 @@ namespace iText.Kernel.Utils {
                 }
             }
             return sb.ToString();
-        }
-
-        /// <summary>Checks if a character value should be escaped/unescaped.</summary>
-        /// <param name="c">a character value</param>
-        /// <returns>true if it's OK to escape or unescape this value</returns>
-        public static bool IsValidCharacterValue(int c) {
-            return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000 && c <= 0xFFFD || c >=
-                 0x10000 && c <= 0x10FFFF);
         }
 
         private class MarkedContentEventListener : IEventListener {

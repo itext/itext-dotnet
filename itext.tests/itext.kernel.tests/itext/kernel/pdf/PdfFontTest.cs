@@ -1021,10 +1021,10 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void TestSplitString() {
             PdfFont font = PdfFontFactory.CreateFont();
-            IList<String> list1 = font.SplitString("Hello", 12, 10);
+            IList<String> list1 = font.SplitString("Hello", 12f, 10);
             NUnit.Framework.Assert.IsTrue(list1.Count == 2);
             IList<String> list2 = font.SplitString("Digitally signed by Dmitry Trusevich\nDate: 2015.10.25 14:43:56 MSK\nReason: Test 1\nLocation: Ghent"
-                , 12, 176);
+                , 12f, 176);
             NUnit.Framework.Assert.IsTrue(list2.Count == 5);
         }
     }

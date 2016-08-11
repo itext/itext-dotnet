@@ -71,6 +71,12 @@ namespace iText.Layout.Renderer {
 
         internal float[] matrix = new float[6];
 
+        /// <summary>Creates an ImageRenderer from its corresponding layout object.</summary>
+        /// <param name="image">
+        /// the
+        /// <see cref="iText.Layout.Element.Image"/>
+        /// which this object should manage
+        /// </param>
         public ImageRenderer(Image image)
             : base(image) {
         }

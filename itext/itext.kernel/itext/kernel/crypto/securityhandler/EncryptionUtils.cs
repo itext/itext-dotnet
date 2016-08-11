@@ -63,14 +63,18 @@ namespace iText.Kernel.Crypto.Securityhandler {
             bool foundRecipient = false;
             byte[] envelopedData = null;
             for (int i = 0; i < recipients.Size(); i++) {
-                PdfString recipient = recipients.GetAsString(i);
-                CmsEnvelopedData data = new CmsEnvelopedData(recipient.GetValueBytes());
+                try {
+                    PdfString recipient = recipients.GetAsString(i);
+                    CmsEnvelopedData data = new CmsEnvelopedData(recipient.GetValueBytes());
 
-                foreach (RecipientInformation recipientInfo in data.GetRecipientInfos().GetRecipients()) {
-                    if (recipientInfo.RecipientID.Match(certificate) && !foundRecipient) {
-                        envelopedData = recipientInfo.GetContent(certificateKey);
-                        foundRecipient = true;
+                    foreach (RecipientInformation recipientInfo in data.GetRecipientInfos().GetRecipients()) {
+                        if (recipientInfo.RecipientID.Match(certificate) && !foundRecipient) {
+                            envelopedData = recipientInfo.GetContent(certificateKey);
+                            foundRecipient = true;
+                        }
                     }
+                } catch (Exception f) {
+                    throw new PdfException(PdfException.PdfDecryption, f);
                 }
             }
             if (!foundRecipient || envelopedData == null) {

@@ -47,6 +47,10 @@ using iText.Kernel.Pdf.Canvas;
 namespace iText.Layout.Borders {
     /// <summary>Represents a border that is displayed using a 3D effect.</summary>
     public abstract class Border3D : Border {
+        /// <summary>
+        /// Predefined gray
+        /// <see cref="iText.Kernel.Colors.DeviceRgb">RGB-color</see>
+        /// </summary>
         private static readonly DeviceRgb GRAY = new DeviceRgb(212, 208, 200);
 
         /// <summary>Creates a Border3D instance with the specified width.</summary>
@@ -77,6 +81,7 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
             , float borderWidthAfter) {
             float x3 = 0;
@@ -159,11 +164,17 @@ namespace iText.Layout.Borders {
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
                 ();
         }
 
+        /// <summary>
+        /// Makes the
+        /// <see cref="Border.color">color of the border</see>
+        /// darker and returns the result
+        /// </summary>
         protected internal virtual Color GetDarkerColor() {
             if (color is DeviceRgb) {
                 return DeviceRgb.MakeDarker((DeviceRgb)color);
@@ -181,8 +192,28 @@ namespace iText.Layout.Borders {
             return color;
         }
 
+        /// <summary>
+        /// Sets the fill color for the inner half of
+        /// <see cref="Border3D">3D Border</see>
+        /// </summary>
+        /// <param name="canvas">PdfCanvas the color will be applied on</param>
+        /// <param name="side">
+        /// the
+        /// <see cref="Side">side</see>
+        /// the color will be applied on
+        /// </param>
         protected internal abstract void SetInnerHalfColor(PdfCanvas canvas, Border.Side side);
 
+        /// <summary>
+        /// Sets the fill color for the outer half of
+        /// <see cref="Border3D">3D Border</see>
+        /// </summary>
+        /// <param name="canvas">PdfCanvas the color will be applied on</param>
+        /// <param name="side">
+        /// the
+        /// <see cref="Side">side</see>
+        /// the color will be applied on
+        /// </param>
         protected internal abstract void SetOuterHalfColor(PdfCanvas canvas, Border.Side side);
     }
 }

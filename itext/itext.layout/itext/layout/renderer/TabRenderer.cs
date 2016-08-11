@@ -50,6 +50,12 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class TabRenderer : AbstractRenderer {
+        /// <summary>Creates a TabRenderer from its corresponding layout object</summary>
+        /// <param name="tab">
+        /// the
+        /// <see cref="iText.Layout.Element.Tab"/>
+        /// which this object should manage
+        /// </param>
         public TabRenderer(Tab tab)
             : base(tab) {
         }

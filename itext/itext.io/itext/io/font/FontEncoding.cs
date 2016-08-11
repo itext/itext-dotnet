@@ -363,6 +363,10 @@ namespace iText.IO.Font {
                     return PdfEncodings.MACROMAN;
                 }
 
+                case "zapfdingbatsencoding": {
+                    return PdfEncodings.ZAPFDINGBATS;
+                }
+
                 default: {
                     return enc;
                 }

@@ -54,6 +54,7 @@ namespace iText.Layout.Borders {
     /// .
     /// </remarks>
     public class DottedBorder : Border {
+        /// <summary>The modifier to be applied on the width to have the initial gap size</summary>
         private const float GAP_MODIFIER = 1.5f;
 
         /// <summary>Creates a DottedBorder instance with the specified width.</summary>
@@ -71,10 +72,12 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border.DOTTED;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
             , float borderWidthAfter) {
             float initialGap = width * GAP_MODIFIER;
@@ -117,6 +120,7 @@ namespace iText.Layout.Borders {
             canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
             float initialGap = width * GAP_MODIFIER;
             float dx = x2 - x1;
@@ -130,6 +134,14 @@ namespace iText.Layout.Borders {
                  / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
 
+        /// <summary>Adjusts the size of the gap between dots</summary>
+        /// <param name="distance">
+        /// the
+        /// <see cref="Border">border</see>
+        /// length
+        /// </param>
+        /// <param name="initialGap">the initial size of the gap</param>
+        /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
             return (float)(distance / gapsNum);
