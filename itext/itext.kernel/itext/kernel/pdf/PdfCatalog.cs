@@ -409,8 +409,10 @@ namespace iText.Kernel.Pdf {
             if (HasOutlines()) {
                 GetOutlines(false);
                 if (pagesWithOutlines.Count > 0) {
-                    foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject())) {
-                        outline.RemoveOutline();
+                    if (pagesWithOutlines.Get(page.GetPdfObject()) != null) {
+                        foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject())) {
+                            outline.RemoveOutline();
+                        }
                     }
                 }
             }
