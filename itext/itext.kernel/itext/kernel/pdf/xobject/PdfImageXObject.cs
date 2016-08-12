@@ -183,7 +183,6 @@ namespace iText.Kernel.Pdf.Xobject {
         /// </summary>
         /// <returns>the identified type of image</returns>
         public virtual ImageType IdentifyImageType() {
-            ImageType result = null;
             PdfObject filter = GetPdfObject().Get(PdfName.Filter);
             PdfArray filters = new PdfArray();
             if (filter != null) {
@@ -199,33 +198,28 @@ namespace iText.Kernel.Pdf.Xobject {
             for (int i = filters.Size() - 1; i >= 0; i--) {
                 PdfName filterName = (PdfName)filters.Get(i);
                 if (PdfName.DCTDecode.Equals(filterName)) {
-                    result = ImageType.JPEG;
-                    break;
+                    return ImageType.JPEG;
                 }
                 else {
                     if (PdfName.JBIG2Decode.Equals(filterName)) {
-                        result = ImageType.JBIG2;
-                        break;
+                        return ImageType.JBIG2;
                     }
                     else {
                         if (PdfName.JPXDecode.Equals(filterName)) {
-                            result = ImageType.JPEG2000;
-                            break;
+                            return ImageType.JPEG2000;
                         }
                     }
                 }
             }
-            if (result == null) {
-                PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
-                PrepareAndFindColorspace(colorspace);
-                if (pngColorType < 0) {
-                    result = ImageType.TIFF;
-                }
-                else {
-                    result = ImageType.PNG;
-                }
+            // None of the previous types match
+            PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
+            PrepareAndFindColorspace(colorspace);
+            if (pngColorType < 0) {
+                return ImageType.TIFF;
             }
-            return result;
+            else {
+                return ImageType.PNG;
+            }
         }
 
         /// <summary>
