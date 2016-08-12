@@ -240,6 +240,26 @@ namespace iText.Kernel.Pdf {
             content.Put(PdfName.A, action.GetPdfObject());
         }
 
+        /// <summary>Defines if the outline needs to be closed or not.</summary>
+        /// <remarks>
+        /// Defines if the outline needs to be closed or not.
+        /// By default, outlines are open.
+        /// </remarks>
+        /// <param name="open">if false, the outline will be closed by default</param>
+        public virtual void SetOpen(bool open) {
+            if (!open) {
+                content.Put(PdfName.Count, new PdfNumber(-1));
+            }
+            else {
+                if (children.Count > 0) {
+                    content.Put(PdfName.Count, new PdfNumber(children.Count));
+                }
+                else {
+                    content.Remove(PdfName.Count);
+                }
+            }
+        }
+
         /// <summary>
         /// Adds a new
         /// <c>PdfOutline</c>
@@ -281,17 +301,9 @@ namespace iText.Kernel.Pdf {
             if (position == children.Count) {
                 content.Put(PdfName.Last, dictionary);
             }
-            if (children.Count > 0) {
-                int count = (int)this.content.GetAsInt(PdfName.Count);
-                if (count > 0) {
-                    content.Put(PdfName.Count, new PdfNumber(count++));
-                }
-                else {
-                    content.Put(PdfName.Count, new PdfNumber(count--));
-                }
-            }
-            else {
-                this.content.Put(PdfName.Count, new PdfNumber(-1));
+            PdfNumber count = this.content.GetAsNumber(PdfName.Count);
+            if (count == null || count.GetValue() != -1) {
+                content.Put(PdfName.Count, new PdfNumber(children.Count + 1));
             }
             children.Add(position, outline);
             return outline;
