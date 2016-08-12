@@ -161,6 +161,118 @@ namespace iText.Kernel.Pdf.Xobject {
             return bytes;
         }
 
+        /// <summary>
+        /// Identifies the type of the image that is stored in the bytes of this
+        /// <see cref="PdfImageXObject"/>
+        /// .
+        /// Note that this has nothing to do with the original type of the image. For instance, the return value
+        /// of this method will never be
+        /// <see cref="iText.IO.Image.ImageType.PNG"/>
+        /// as we loose this information when converting a
+        /// PNG image into something that can be put into a PDF file.
+        /// The possible values are:
+        /// <see cref="iText.IO.Image.ImageType.JPEG"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.JPEG2000"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.JBIG2"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.TIFF"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.PNG"/>
+        /// </summary>
+        /// <returns>the identified type of image</returns>
+        public virtual ImageType IdentifyImageType() {
+            ImageType result = null;
+            PdfObject filter = GetPdfObject().Get(PdfName.Filter);
+            PdfArray filters = new PdfArray();
+            if (filter != null) {
+                if (filter.GetObjectType() == PdfObject.NAME) {
+                    filters.Add(filter);
+                }
+                else {
+                    if (filter.GetObjectType() == PdfObject.ARRAY) {
+                        filters = ((PdfArray)filter);
+                    }
+                }
+            }
+            for (int i = filters.Size() - 1; i >= 0; i--) {
+                PdfName filterName = (PdfName)filters.Get(i);
+                if (PdfName.DCTDecode.Equals(filterName)) {
+                    result = ImageType.JPEG;
+                    break;
+                }
+                else {
+                    if (PdfName.JBIG2Decode.Equals(filterName)) {
+                        result = ImageType.JBIG2;
+                        break;
+                    }
+                    else {
+                        if (PdfName.JPXDecode.Equals(filterName)) {
+                            result = ImageType.JPEG2000;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (result == null) {
+                PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
+                PrepareAndFindColorspace(colorspace);
+                if (pngColorType < 0) {
+                    result = ImageType.TIFF;
+                }
+                else {
+                    result = ImageType.PNG;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Identifies recommended file extension to store the bytes of this
+        /// <see cref="PdfImageXObject"/>
+        /// .
+        /// Possible values are: 'png', 'jpg', 'jp2', 'tif', 'jbig2'.
+        /// This extension can later be used together with the result of
+        /// <see cref="GetImageBytes()"/>
+        /// .
+        /// </summary>
+        /// <seealso cref="IdentifyImageType()"/>
+        /// <returns>
+        /// a
+        /// <see cref="System.String"/>
+        /// with recommended file extension
+        /// </returns>
+        public virtual String IdentifyImageFileExtension() {
+            ImageType bytesType = IdentifyImageType();
+            switch (bytesType) {
+                case ImageType.PNG: {
+                    return "png";
+                }
+
+                case ImageType.JPEG: {
+                    return "jpg";
+                }
+
+                case ImageType.JPEG2000: {
+                    return "jp2";
+                }
+
+                case ImageType.TIFF: {
+                    return "tif";
+                }
+
+                case ImageType.JBIG2: {
+                    return "jbig2";
+                }
+
+                default: {
+                    throw new InvalidOperationException("Should have never happened. This type of image is not allowed for ImageXObject"
+                        );
+                }
+            }
+        }
+
         public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
@@ -361,19 +473,22 @@ namespace iText.Kernel.Pdf.Xobject {
             return array;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        private byte[] DecodeTiffAndPngBytes(byte[] imageBytes) {
+        private void PrepareAndFindColorspace(PdfObject colorspace) {
             pngColorType = -1;
-            PdfArray decode = GetPdfObject().GetAsArray(PdfName.Decode);
             width = GetPdfObject().GetAsNumber(PdfName.Width).IntValue();
             height = GetPdfObject().GetAsNumber(PdfName.Height).IntValue();
             bpc = GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue();
             pngBitDepth = bpc;
-            PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
             palette = null;
             icc = null;
             stride = 0;
             FindColorspace(colorspace, true);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private byte[] DecodeTiffAndPngBytes(byte[] imageBytes) {
+            PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
+            PrepareAndFindColorspace(colorspace);
             MemoryStream ms = new MemoryStream();
             if (pngColorType < 0) {
                 if (bpc != 8) {
@@ -429,6 +544,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             else {
                 PngWriter png = new PngWriter(ms);
+                PdfArray decode = GetPdfObject().GetAsArray(PdfName.Decode);
                 if (decode != null) {
                     if (pngBitDepth == 1) {
                         // if the decode array is 1,0, then we need to invert the image
