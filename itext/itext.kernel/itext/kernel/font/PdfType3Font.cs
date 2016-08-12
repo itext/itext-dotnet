@@ -216,6 +216,7 @@ namespace iText.Kernel.Font {
                 if (fontEncoding.CanDecode(i)) {
                     Type3Glyph glyph = GetType3Glyph(fontEncoding.GetUnicode(i));
                     charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream());
+                    glyph.GetContentStream().Flush();
                 }
             }
             GetPdfObject().Put(PdfName.CharProcs, charProcs);

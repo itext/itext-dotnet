@@ -77,7 +77,6 @@ namespace iText.Kernel.Font {
 
         protected internal PdfFont()
             : base(new PdfDictionary()) {
-            MarkObjectAsIndirect(GetPdfObject());
             GetPdfObject().Put(PdfName.Type, PdfName.Font);
         }
 
@@ -484,6 +483,7 @@ namespace iText.Kernel.Font {
                 throw new PdfException(PdfException.FontEmbeddingIssue);
             }
             PdfStream fontStream = new PdfStream(fontStreamBytes);
+            MakeObjectIndirect(fontStream);
             for (int k = 0; k < fontStreamLengths.Length; ++k) {
                 fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
             }
@@ -517,6 +517,32 @@ namespace iText.Kernel.Font {
                 s[k * 2 + 1] = r[1];
             }
             return s;
+        }
+
+        /// <summary>Helper method for making an object indirect, if the object already is indirect.</summary>
+        /// <remarks>
+        /// Helper method for making an object indirect, if the object already is indirect.
+        /// Useful for FontDescriptor and FontFile to make possible immediate flushing.
+        /// If there is no PdfDocument, mark the object as
+        /// <c>MUST_BE_INDIRECT</c>
+        /// .
+        /// </remarks>
+        /// <param name="obj">an object to make indirect.</param>
+        /// <returns>
+        /// if current object isn't indirect, returns
+        /// <see langword="false"/>
+        /// , otherwise
+        /// <c>tree</c>
+        /// </returns>
+        internal virtual bool MakeObjectIndirect(PdfObject obj) {
+            if (GetPdfObject().GetIndirectReference() != null) {
+                obj.MakeIndirect(GetPdfObject().GetIndirectReference().GetDocument());
+                return true;
+            }
+            else {
+                MarkObjectAsIndirect(obj);
+                return false;
+            }
         }
     }
 }

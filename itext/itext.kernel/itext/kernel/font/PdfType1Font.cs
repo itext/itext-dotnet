@@ -134,6 +134,7 @@ namespace iText.Kernel.Font {
                 if (fontProgram is IDocFontProgram) {
                     IDocFontProgram docType1Font = (IDocFontProgram)fontProgram;
                     fontDescriptor.Put(docType1Font.GetFontFileName(), docType1Font.GetFontFile());
+                    docType1Font.GetFontFile().Flush();
                     if (docType1Font.GetSubtype() != null) {
                         fontDescriptor.Put(PdfName.Subtype, docType1Font.GetSubtype());
                     }
@@ -147,6 +148,9 @@ namespace iText.Kernel.Font {
                             fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
                         }
                         fontDescriptor.Put(PdfName.FontFile, fontStream);
+                        if (MakeObjectIndirect(fontStream)) {
+                            fontStream.Flush();
+                        }
                     }
                 }
             }

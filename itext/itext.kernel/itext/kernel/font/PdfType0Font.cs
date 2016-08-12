@@ -388,7 +388,7 @@ namespace iText.Kernel.Font {
 
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
             PdfDictionary fontDescriptor = new PdfDictionary();
-            MarkObjectAsIndirect(fontDescriptor);
+            MakeObjectIndirect(fontDescriptor);
             fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
             fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
             fontDescriptor.Put(PdfName.FontBBox, new PdfArray(GetFontProgram().GetFontMetrics().GetBbox()));
@@ -436,8 +436,11 @@ namespace iText.Kernel.Font {
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
-                fontDescriptor.Flush();
-                cidFont.Flush();
+                if (GetPdfObject().GetIndirectReference() != null) {
+                    //this means, that fontDescriptor and cidFont already are indirects
+                    fontDescriptor.Flush();
+                    cidFont.Flush();
+                }
             }
             else {
                 if (cidFontType == CID_FONT_TYPE_2) {
@@ -495,10 +498,16 @@ namespace iText.Kernel.Font {
                     PdfStream toUnicode = GetToUnicode(metrics);
                     if (toUnicode != null) {
                         GetPdfObject().Put(PdfName.ToUnicode, toUnicode);
-                        toUnicode.Flush();
+                        if (toUnicode.GetIndirectReference() != null) {
+                            toUnicode.Flush();
+                        }
                     }
-                    fontDescriptor.Flush();
-                    cidFont.Flush();
+                    if (GetPdfObject().GetIndirectReference() != null) {
+                        //this means, that fontDescriptor, cidFont and fontStream already are indirects
+                        fontDescriptor.Flush();
+                        cidFont.Flush();
+                        fontStream.Flush();
+                    }
                 }
                 else {
                     throw new InvalidOperationException("Unsupported CID Font");
@@ -514,7 +523,7 @@ namespace iText.Kernel.Font {
         protected internal virtual PdfDictionary GetCidFontType2(TrueTypeFont ttf, PdfDictionary fontDescriptor, String
              fontName, int[][] metrics) {
             PdfDictionary cidFont = new PdfDictionary();
-            MarkObjectAsIndirect(cidFont);
+            MakeObjectIndirect(cidFont);
             cidFont.Put(PdfName.Type, PdfName.Font);
             // sivan; cff
             cidFont.Put(PdfName.FontDescriptor, fontDescriptor);
@@ -606,7 +615,9 @@ namespace iText.Kernel.Font {
                 }
             }
             buf.Append("endbfrange\n" + "endcmap\n" + "CMapName currentdict /CMap defineresource pop\n" + "end end\n");
-            return new PdfStream(PdfEncodings.ConvertToBytes(buf.ToString(), null));
+            PdfStream toUnicode = new PdfStream(PdfEncodings.ConvertToBytes(buf.ToString(), null));
+            MakeObjectIndirect(toUnicode);
+            return toUnicode;
         }
 
         //TODO optimize memory ussage

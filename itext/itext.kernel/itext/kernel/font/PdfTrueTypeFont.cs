@@ -204,6 +204,9 @@ namespace iText.Kernel.Font {
                 }
                 if (fontStream != null) {
                     fontDescriptor.Put(fontFileName, fontStream);
+                    if (fontStream.GetIndirectReference() != null) {
+                        fontStream.Flush();
+                    }
                 }
             }
         }
