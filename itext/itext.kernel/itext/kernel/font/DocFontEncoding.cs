@@ -110,9 +110,6 @@ namespace iText.Kernel.Font {
                 fontEncoding.baseEncoding = enc;
                 fontEncoding.FillNamedEncoding();
             }
-            else {
-                fontEncoding.FillStandardEncoding();
-            }
         }
 
         private static void FillDifferences(iText.Kernel.Font.DocFontEncoding fontEncoding, PdfArray diffs, CMapToUnicode

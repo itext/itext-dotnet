@@ -377,6 +377,10 @@ namespace iText.IO.Util {
             protected internal virtual Object Clone() {
                 return new IntHashtable.Entry(key, value, next != null ? (IntHashtable.Entry)next.Clone() : null);
             }
+
+            public override String ToString() {
+                return String.Format("{0}={1}", key, value);
+            }
         }
 
         public virtual int[] ToOrderedKeys() {

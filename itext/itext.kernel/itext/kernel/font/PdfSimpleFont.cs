@@ -181,9 +181,11 @@ namespace iText.Kernel.Font {
                     builder.Append((char)(int)uni);
                 }
                 else {
-                    Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
-                    if (glyph != null && glyph.GetChars() != null) {
-                        builder.Append(glyph.GetChars());
+                    if (fontEncoding.GetBaseEncoding() == null) {
+                        Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
+                        if (glyph != null && glyph.GetChars() != null) {
+                            builder.Append(glyph.GetChars());
+                        }
                     }
                 }
             }
@@ -194,7 +196,16 @@ namespace iText.Kernel.Font {
             float width = 0;
             byte[] contentBytes = content.GetValueBytes();
             foreach (byte b in contentBytes) {
-                Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
+                Glyph glyph = null;
+                int uni = fontEncoding.GetUnicode(b & 0xff);
+                if (uni > -1) {
+                    glyph = GetGlyph(uni);
+                }
+                else {
+                    if (fontEncoding.GetBaseEncoding() == null) {
+                        glyph = fontProgram.GetGlyphByCode(b & 0xff);
+                    }
+                }
                 width += glyph != null ? glyph.GetWidth() : 0;
             }
             return width;
