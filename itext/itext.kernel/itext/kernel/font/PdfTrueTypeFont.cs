@@ -81,7 +81,7 @@ namespace iText.Kernel.Font {
             newFont = false;
             CheckFontDictionary(fontDictionary, PdfName.TrueType);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, false);
             fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);
             embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
             subset = false;

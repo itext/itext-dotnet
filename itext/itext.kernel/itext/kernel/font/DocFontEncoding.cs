@@ -53,7 +53,7 @@ namespace iText.Kernel.Font {
         protected internal DocFontEncoding() {
         }
 
-        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode, bool fillBaseEncoding
+        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode, bool fillStandardEncoding
             ) {
             if (encoding != null) {
                 if (encoding.IsName()) {
@@ -63,9 +63,8 @@ namespace iText.Kernel.Font {
                     if (encoding.IsDictionary()) {
                         iText.Kernel.Font.DocFontEncoding fontEncoding = new iText.Kernel.Font.DocFontEncoding();
                         fontEncoding.differences = new String[256];
-                        if (fillBaseEncoding) {
-                            FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding));
-                        }
+                        FillBaseEncoding(fontEncoding, ((PdfDictionary)encoding).GetAsName(PdfName.BaseEncoding), fillStandardEncoding
+                            );
                         FillDifferences(fontEncoding, ((PdfDictionary)encoding).GetAsArray(PdfName.Differences), toUnicode);
                         return fontEncoding;
                     }
@@ -82,12 +81,8 @@ namespace iText.Kernel.Font {
             }
         }
 
-        public static FontEncoding CreateDocFontEncoding(PdfObject encoding, CMapToUnicode toUnicode) {
-            return CreateDocFontEncoding(encoding, toUnicode, true);
-        }
-
         private static void FillBaseEncoding(iText.Kernel.Font.DocFontEncoding fontEncoding, PdfName baseEncodingName
-            ) {
+            , bool fillStandardEncoding) {
             if (baseEncodingName != null) {
                 fontEncoding.baseEncoding = baseEncodingName.GetValue();
             }
@@ -109,6 +104,11 @@ namespace iText.Kernel.Font {
                 }
                 fontEncoding.baseEncoding = enc;
                 fontEncoding.FillNamedEncoding();
+            }
+            else {
+                if (fillStandardEncoding) {
+                    fontEncoding.FillStandardEncoding();
+                }
             }
         }
 
