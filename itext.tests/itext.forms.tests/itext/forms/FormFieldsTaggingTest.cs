@@ -42,6 +42,7 @@ namespace iText.Forms {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-786")]
         public virtual void FormFieldTaggingTest02() {
             String outFileName = destinationFolder + "taggedPdfWithForms02.pdf";
             String cmpFileName = sourceFolder + "cmp_taggedPdfWithForms02.pdf";
