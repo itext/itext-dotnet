@@ -99,7 +99,20 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            return base.Layout(layoutContext);
+            LayoutResult result = base.Layout(layoutContext);
+            // cannot place even the first ListItemRenderer
+            if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && null != result.GetCauseOfNothing()) {
+                if (LayoutResult.FULL == result.GetStatus()) {
+                    result = CorrectListSplitting(this, null, result.GetCauseOfNothing(), result.GetOccupiedArea());
+                }
+                else {
+                    if (LayoutResult.PARTIAL == result.GetStatus()) {
+                        result = CorrectListSplitting(result.GetSplitRenderer(), result.GetOverflowRenderer(), result.GetCauseOfNothing
+                            (), result.GetOccupiedArea());
+                    }
+                }
+            }
+            return result;
         }
 
         public override IRenderer GetNextRenderer() {
@@ -202,7 +215,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_191(constantFont, textElement);
+                            textRenderer = new _TextRenderer_201(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -221,8 +234,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_191 : TextRenderer {
-            public _TextRenderer_191(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_201 : TextRenderer {
+            public _TextRenderer_201(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -237,6 +250,49 @@ namespace iText.Layout.Renderer {
             }
 
             private readonly String constantFont;
+        }
+
+        private LayoutResult CorrectListSplitting(IRenderer splitRenderer, IRenderer overflowRenderer, IRenderer causeOfNothing
+            , LayoutArea occupiedArea) {
+            // the first not rendered child
+            int firstNotRendered = splitRenderer.GetChildRenderers()[0].GetChildRenderers().IndexOf(causeOfNothing);
+            if (-1 == firstNotRendered) {
+                return new LayoutResult(null == overflowRenderer ? LayoutResult.FULL : LayoutResult.PARTIAL, occupiedArea, 
+                    splitRenderer, overflowRenderer, this);
+            }
+            // Notice that placed item is a son of the first ListItemRenderer (otherwise there would be now FORCED_PLACEMENT applied)
+            IRenderer firstListItemRenderer = splitRenderer.GetChildRenderers()[0];
+            iText.Layout.Renderer.ListRenderer newOverflowRenderer = (iText.Layout.Renderer.ListRenderer)CreateOverflowRenderer
+                (LayoutResult.PARTIAL);
+            newOverflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
+            // ListItemRenderer for not rendered children of firstListItemRenderer
+            newOverflowRenderer.childRenderers.Add(new ListItemRenderer((ListItem)firstListItemRenderer.GetModelElement
+                ()));
+            newOverflowRenderer.childRenderers.AddAll(splitRenderer.GetChildRenderers().SubList(1, splitRenderer.GetChildRenderers
+                ().Count));
+            IList<IRenderer> childrenStillRemainingToRender = new List<IRenderer>(firstListItemRenderer.GetChildRenderers
+                ().SubList(firstNotRendered + 1, firstListItemRenderer.GetChildRenderers().Count));
+            // 'this' renderer will become split renderer
+            splitRenderer.GetChildRenderers().RemoveAll(splitRenderer.GetChildRenderers().SubList(1, splitRenderer.GetChildRenderers
+                ().Count));
+            if (0 != childrenStillRemainingToRender.Count) {
+                newOverflowRenderer.GetChildRenderers()[0].GetChildRenderers().AddAll(childrenStillRemainingToRender);
+                splitRenderer.GetChildRenderers()[0].GetChildRenderers().RemoveAll(childrenStillRemainingToRender);
+                newOverflowRenderer.GetChildRenderers()[0].SetProperty(Property.MARGIN_LEFT, splitRenderer.GetChildRenderers
+                    ()[0].GetProperty(Property.MARGIN_LEFT));
+            }
+            else {
+                newOverflowRenderer.childRenderers.JRemoveAt(0);
+            }
+            if (null != overflowRenderer) {
+                newOverflowRenderer.childRenderers.AddAll(overflowRenderer.GetChildRenderers());
+            }
+            if (0 != newOverflowRenderer.childRenderers.Count) {
+                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, newOverflowRenderer, this);
+            }
+            else {
+                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this);
+            }
         }
     }
 }

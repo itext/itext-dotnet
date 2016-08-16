@@ -229,7 +229,17 @@ namespace iText.Layout.Renderer {
                                         ).GetBBox()));
                                     parent.SetProperty(Property.FULL, true);
                                     lines.Add(currentRenderer);
-                                    return new LayoutResult(LayoutResult.FULL, occupiedArea, null, this);
+                                    // Force placement of children we have and do not force placement of the others
+                                    if (LayoutResult.PARTIAL == result.GetStatus()) {
+                                        IRenderer childNotRendered = result.GetCauseOfNothing();
+                                        int firstNotRendered = currentRenderer.childRenderers.IndexOf(childNotRendered);
+                                        currentRenderer.childRenderers.IntersectWith(currentRenderer.childRenderers.SubList(0, firstNotRendered));
+                                        split[1].childRenderers.RemoveAll(split[1].childRenderers.SubList(0, firstNotRendered));
+                                        return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, split[1]);
+                                    }
+                                    else {
+                                        return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this);
+                                    }
                                 }
                                 else {
                                     return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, null == result.GetCauseOfNothing()

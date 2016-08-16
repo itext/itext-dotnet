@@ -280,11 +280,20 @@ namespace iText.Layout.Renderer
 				else
 				{
 					// check if line height exceeds the allowed height
-					if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight(
-						))
+					if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight())
 					{
-						// the line does not fit because of height - full overflow
-						iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
+                        // Force to place what we can
+                        if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)))
+                        {
+                            if (line.start == -1)
+                            {
+                                line.start = currentTextPos;
+                            }
+                            line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
+                        }
+
+                        // the line does not fit because of height - full overflow
+                        iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
 						ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 						ApplyMargins(occupiedArea.GetBBox(), margins, true);
 						return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this);
@@ -371,9 +380,10 @@ namespace iText.Layout.Renderer
 						}
 						if (line.end <= 0)
 						{
-							result = new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
-						}
-						else
+							return new TextLayoutResult(true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) ? LayoutResult.FULL : LayoutResult.NOTHING,
+                                occupiedArea, null, this, this);
+                        }
+                        else
 						{
 							result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null).SetWordHasBeenSplit
 								(wordSplit);
@@ -382,58 +392,62 @@ namespace iText.Layout.Renderer
 					}
 				}
 			}
-			if (result != null && result.GetStatus() == LayoutResult.NOTHING)
-			{
-				return result;
-			}
-			else
-			{
-				if (currentLineHeight > layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)))
-				{
-					ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+            // indicates whether the placing is forced while the layout result is LayoutResult.NOTHING
+            bool isPlacingForcedWhileNothing = false;
+            if (currentLineHeight > layoutBox.GetHeight())
+            {
+                if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)))
+                {
+                    ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
 					ApplyMargins(occupiedArea.GetBBox(), margins, true);
 					return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
-				}
-				yLineOffset = currentLineAscender * fontSize / TEXT_SPACE_COEFF;
-				occupiedArea.GetBBox().MoveDown(currentLineHeight);
-				occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight
-					);
-				occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth
-					));
-				layoutBox.SetHeight(area.GetBBox().GetHeight() - currentLineHeight);
-				occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() + italicSkewAddition
-					 + boldSimulationAddition);
-				ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-				ApplyMargins(occupiedArea.GetBBox(), margins, true);
-				if (result != null)
+                }
+                else
+                {
+                    isPlacingForcedWhileNothing = true;
+                }
+            }
+
+            yLineOffset = currentLineAscender * fontSize / TEXT_SPACE_COEFF;
+			occupiedArea.GetBBox().MoveDown(currentLineHeight);
+			occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + currentLineHeight
+				);
+			occupiedArea.GetBBox().SetWidth(Math.Max(occupiedArea.GetBBox().GetWidth(), currentLineWidth
+				));
+			layoutBox.SetHeight(area.GetBBox().GetHeight() - currentLineHeight);
+			occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() + italicSkewAddition
+				 + boldSimulationAddition);
+			ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+			ApplyMargins(occupiedArea.GetBBox(), margins, true);
+            if (result != null)
+			{
+				iText.Layout.Renderer.TextRenderer[] split;
+				if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol)
 				{
-					iText.Layout.Renderer.TextRenderer[] split;
-					if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol)
-					{
-						// ignore '\n'
-						split = Split(currentTextPos + 1);
-					}
-					else
-					{
-						split = Split(currentTextPos);
-					}
-					// if (split[1].length() > 0 && split[1].charAt(0) != null && split[1].charAt(0) == '\n') {
-					if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol)
-					{
-						result.SetSplitForcedByNewline(true);
-					}
-					result.SetSplitRenderer(split[0]);
-					// no sense to process empty renderer
-					if (split[1].text.start != split[1].text.end)
-					{
-						result.SetOverflowRenderer(split[1]);
-					}
+					// ignore '\n'
+					split = Split(currentTextPos + 1);
 				}
 				else
 				{
-					result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+					split = Split(currentTextPos);
+				}
+				// if (split[1].length() > 0 && split[1].charAt(0) != null && split[1].charAt(0) == '\n') {
+				if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol)
+				{
+					result.SetSplitForcedByNewline(true);
+				}
+				result.SetSplitRenderer(split[0]);
+				// no sense to process empty renderer
+				if (split[1].text.start != split[1].text.end)
+				{
+					result.SetOverflowRenderer(split[1]);
 				}
 			}
+			else
+			{
+                result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null,
+                    isPlacingForcedWhileNothing ? this : null);
+            }
 			return result;
 		}
 

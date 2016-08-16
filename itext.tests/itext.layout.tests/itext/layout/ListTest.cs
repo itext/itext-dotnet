@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using iText.IO;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class ListTest : ExtendedITextTest {
@@ -67,6 +70,63 @@ namespace iText.Layout {
                 document.Add(list_1).Add(new AreaBreak());
             }
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 8)]
+        public virtual void AddListOnShortPage1() {
+            String outFileName = destinationFolder + "addListOnShortPage1.pdf";
+            String cmpFileName = sourceFolder + "cmp_addListOnShortPage1.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(500, 60));
+            ListItem item = new ListItem();
+            ListItem nestedItem = new ListItem();
+            List list = new List(ListNumberingType.DECIMAL);
+            List nestedList = new List(ListNumberingType.ENGLISH_UPPER);
+            List nestedNestedList = new List(ListNumberingType.GREEK_LOWER);
+            nestedNestedList.Add("Hello");
+            nestedNestedList.Add("World");
+            nestedItem.Add(nestedNestedList);
+            nestedList.Add(nestedItem);
+            nestedList.Add(nestedItem);
+            item.Add(nestedList);
+            list.Add(item);
+            list.Add(item);
+            doc.Add(list);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        public virtual void AddListOnShortPage2() {
+            String outFileName = destinationFolder + "addListOnShortPage2.pdf";
+            String cmpFileName = sourceFolder + "cmp_addListOnShortPage2.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(500, 130));
+            List list = new List(ListNumberingType.DECIMAL);
+            ListItem item = new ListItem();
+            item.Add(new Paragraph("Red"));
+            item.Add(new Paragraph("Is"));
+            item.Add(new Paragraph("The"));
+            item.Add(new Paragraph("Color"));
+            item.Add(new Image(ImageDataFactory.Create(sourceFolder + "red.png")));
+            List nestedList = new List(ListNumberingType.ENGLISH_UPPER);
+            nestedList.Add("Hello");
+            nestedList.Add("World");
+            item.Add(nestedList);
+            for (int i = 0; i < 3; i++) {
+                list.Add(item);
+            }
+            doc.Add(list);
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

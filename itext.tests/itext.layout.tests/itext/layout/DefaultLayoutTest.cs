@@ -89,5 +89,44 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void AddParagraphOnShortPage1() {
+            String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";
+            String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage1.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(500, 70));
+            Paragraph p = new Paragraph();
+            p.Add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            p.Add(new Text("BBB").SetFontSize(30));
+            p.Add("CCC");
+            p.Add("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+            p.Add("EEE");
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        public virtual void AddParagraphOnShortPage2() {
+            String outFileName = destinationFolder + "addParagraphOnShortPage2.pdf";
+            String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage2.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, new PageSize(300, 50));
+            Paragraph p = new Paragraph();
+            p.Add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                );
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

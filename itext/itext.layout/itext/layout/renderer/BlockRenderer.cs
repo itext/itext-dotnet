@@ -68,7 +68,8 @@ namespace iText.Layout.Renderer {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
             float? blockHeight = RetrieveHeight();
-            if (!IsFixedLayout() && blockHeight != null && blockHeight > parentBBox.GetHeight()) {
+            if (!IsFixedLayout() && blockHeight != null && blockHeight > parentBBox.GetHeight() && !true.Equals(GetPropertyAsBoolean
+                (Property.FORCED_PLACEMENT))) {
                 return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             float[] margins = GetMargins();
@@ -98,6 +99,8 @@ namespace iText.Layout.Renderer {
                 GetHeight(), parentBBox.GetWidth(), 0));
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
+            // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
+            IRenderer causeOfNothing = null;
             bool anythingPlaced = false;
             for (int childPos = 0; childPos < childRenderers.Count; childPos++) {
                 IRenderer childRenderer = childRenderers[childPos];
@@ -112,6 +115,10 @@ namespace iText.Layout.Renderer {
                     }
                     if (childRenderer.GetProperty<Object>(Property.WIDTH) != null) {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
+                    }
+                    // Save the first renderer to produce LayoutResult.NOTHING
+                    if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
+                        causeOfNothing = result.GetCauseOfNothing();
                     }
                     // have more areas
                     if (currentAreaPos + 1 < areas.Count) {
@@ -136,6 +143,8 @@ namespace iText.Layout.Renderer {
                                 splitRenderer.childRenderers.Add(result.GetSplitRenderer());
                                 splitRenderer.occupiedArea = occupiedArea;
                                 AbstractRenderer overflowRenderer = CreateOverflowRenderer(LayoutResult.PARTIAL);
+                                // Apply forced placement only on split renderer
+                                overflowRenderer.DeleteOwnProperty(Property.FORCED_PLACEMENT);
                                 IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
                                 overflowRendererChildren.Add(result.GetOverflowRenderer());
                                 overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
@@ -143,7 +152,8 @@ namespace iText.Layout.Renderer {
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
-                                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer);
+                                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer, causeOfNothing
+                                    );
                             }
                             else {
                                 childRenderers[childPos] = result.GetSplitRenderer();
@@ -194,6 +204,10 @@ namespace iText.Layout.Renderer {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
                     }
                 }
+                // Save the first renderer to produce LayoutResult.NOTHING
+                if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
+                    causeOfNothing = result.GetCauseOfNothing();
+                }
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight()) {
@@ -216,7 +230,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             ApplyVerticalAlignment();
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, causeOfNothing);
         }
 
         protected internal virtual AbstractRenderer CreateSplitRenderer(int layoutResult) {
@@ -232,7 +246,7 @@ namespace iText.Layout.Renderer {
             AbstractRenderer overflowRenderer = (AbstractRenderer)GetNextRenderer();
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
-            overflowRenderer.properties = properties;
+            overflowRenderer.properties = new Dictionary<int, Object>(properties);
             return overflowRenderer;
         }
 

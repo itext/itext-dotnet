@@ -129,9 +129,15 @@ namespace iText.Layout.Renderer {
                 t.Scale(scaleCoef, scaleCoef);
             }
             GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
-            if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && (width > layoutBox.GetWidth() || height
-                 > layoutBox.GetHeight())) {
-                return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+            // indicates whether the placement is forced
+            bool isPlacingForced = false;
+            if (width > layoutBox.GetWidth() || height > layoutBox.GetHeight()) {
+                if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                    isPlacingForced = true;
+                }
+                else {
+                    return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                }
             }
             occupiedArea.GetBBox().MoveDown(height);
             occupiedArea.GetBBox().SetHeight(height);
@@ -143,7 +149,7 @@ namespace iText.Layout.Renderer {
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
             ApplyMargins(occupiedArea.GetBBox(), true);
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
         }
 
         public override void Draw(DrawContext drawContext) {
