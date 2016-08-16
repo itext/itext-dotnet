@@ -1102,6 +1102,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Perms = CreateDirectName("Perms");
 
+        public static readonly iText.Kernel.Pdf.PdfName PC = CreateDirectName("PC");
+
         public static readonly iText.Kernel.Pdf.PdfName PCM = CreateDirectName("PCM");
 
         public static readonly iText.Kernel.Pdf.PdfName Pdf_Version_1_2 = CreateDirectName("1.2");
@@ -1118,9 +1120,13 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Pg = CreateDirectName("Pg");
 
+        public static readonly iText.Kernel.Pdf.PdfName PI = CreateDirectName("PI");
+
         public static readonly iText.Kernel.Pdf.PdfName PickTrayByPDFSize = CreateDirectName("PickTrayByPDFSize");
 
         public static readonly iText.Kernel.Pdf.PdfName Placement = CreateDirectName("Placement");
+
+        public static readonly iText.Kernel.Pdf.PdfName PO = CreateDirectName("PO");
 
         public static readonly iText.Kernel.Pdf.PdfName Polygon = CreateDirectName("Polygon");
 
@@ -1167,6 +1173,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName PS = CreateDirectName("PS");
 
         public static readonly iText.Kernel.Pdf.PdfName Pushpin = CreateDirectName("PushPin");
+
+        public static readonly iText.Kernel.Pdf.PdfName PV = CreateDirectName("PV");
 
         public static readonly iText.Kernel.Pdf.PdfName Q = CreateDirectName("Q");
 
@@ -1561,6 +1569,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Watermark = CreateDirectName("Watermark");
 
+        public static readonly iText.Kernel.Pdf.PdfName WC = CreateDirectName("WC");
+
         public static readonly iText.Kernel.Pdf.PdfName WhitePoint = CreateDirectName("WhitePoint");
 
         public static readonly iText.Kernel.Pdf.PdfName Width = CreateDirectName("Width");
@@ -1576,6 +1586,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName WritingMode = CreateDirectName("WritingMode");
 
         public static readonly iText.Kernel.Pdf.PdfName WP = CreateDirectName("WP");
+
+        public static readonly iText.Kernel.Pdf.PdfName WS = CreateDirectName("WS");
 
         public static readonly iText.Kernel.Pdf.PdfName WT = CreateDirectName("WT");
 
