@@ -397,7 +397,7 @@ namespace iText.Kernel.Pdf {
                 throw new PdfException(PdfException.CannotRetrieveMediaBoxAttribute);
             }
             if (mediaBox.Size() != 4) {
-                throw new PdfException(PdfException.WrongMediaBoxSize).SetMessageParams(mediaBox.Size());
+                throw new PdfException(PdfException.WrongMediaBoxSize1).SetMessageParams(mediaBox.Size());
             }
             PdfNumber llx = mediaBox.GetAsNumber(0);
             PdfNumber lly = mediaBox.GetAsNumber(1);

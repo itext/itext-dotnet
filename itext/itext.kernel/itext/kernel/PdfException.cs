@@ -145,6 +145,8 @@ namespace iText.Kernel {
 
         public const String ColorNotFound = "color.not.found";
 
+        public const String ColorSpaceNotFound = "color.space.not.found";
+
         public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters = "content.stream.must.not.invoke.operators.that.specify.colors.or.other.color.related.parameters.in.the.graphics.state";
 
         public const String DecodeParameterType1IsNotSupported = "decode.parameter.type {0} is.not.supported";
@@ -343,6 +345,8 @@ namespace iText.Kernel {
 
         public const String RoleIsNotMappedWithAnyStandardRole = "role.is.not.mapped.with.any.standard.role";
 
+        public const String ShadingTypeNotFound = "shading.type.not.found";
+
         public const String SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument = "signature.with.name.1.is.not.the.last.it.doesnt.cover.whole.document";
 
         public const String StdcfNotFoundEncryption = "stdcf.not.found.encryption";
@@ -429,7 +433,7 @@ namespace iText.Kernel {
 
         public const String WrongFormFieldAddAnnotationToTheField = "wrong.form.field.add.annotation.to.the.field";
 
-        public const String WrongMediaBoxSize = "Wrong media box size: {0}";
+        public const String WrongMediaBoxSize1 = "Wrong media box size: {0}";
 
         public const String XrefSubsectionNotFound = "xref.subsection.not.found";
 

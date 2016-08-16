@@ -98,7 +98,10 @@ namespace iText.Kernel.Pdf.Colorspace {
         /// </returns>
         public static PdfShading MakeShading(PdfDictionary shadingDictionary) {
             if (!shadingDictionary.ContainsKey(PdfName.ShadingType)) {
-                throw new PdfException(PdfException.UnexpectedShadingType);
+                throw new PdfException(PdfException.ShadingTypeNotFound);
+            }
+            if (!shadingDictionary.ContainsKey(PdfName.ColorSpace)) {
+                throw new PdfException(PdfException.ColorSpaceNotFound);
             }
             PdfShading shading;
             switch (shadingDictionary.GetAsNumber(PdfName.ShadingType).IntValue()) {
@@ -160,10 +163,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             : base(pdfObject) {
         }
 
-        protected internal PdfShading(PdfDictionary pdfObject, int type, PdfObject colorSpace)
+        protected internal PdfShading(PdfDictionary pdfObject, int type, PdfColorSpace colorSpace)
             : base(pdfObject) {
             GetPdfObject().Put(PdfName.ShadingType, new PdfNumber(type));
-            GetPdfObject().Put(PdfName.ColorSpace, colorSpace);
+            if (colorSpace is PdfSpecialCs.Pattern) {
+                throw new ArgumentException("colorSpace");
+            }
+            GetPdfObject().Put(PdfName.ColorSpace, colorSpace.GetPdfObject());
         }
 
         /// <summary>Gets the shading type.</summary>
@@ -300,7 +306,8 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// , that is used to calculate color transitions.
             /// </param>
             public FunctionBased(PdfObject colorSpace, PdfFunction function)
-                : base(new PdfDictionary(), PdfShading.ShadingType.FUNCTION_BASED, colorSpace) {
+                : base(new PdfDictionary(), PdfShading.ShadingType.FUNCTION_BASED, PdfColorSpace.MakeColorSpace(colorSpace
+                    )) {
                 SetFunction(function);
             }
 
@@ -445,10 +452,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// that represents the color in the end point.
             /// </param>
             public Axial(PdfColorSpace cs, float x0, float y0, float[] color0, float x1, float y1, float[] color1)
-                : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs.GetPdfObject()) {
-                if (cs is PdfSpecialCs.Pattern) {
-                    throw new ArgumentException("colorSpace");
-                }
+                : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs) {
                 SetCoords(x0, y0, x1, y1);
                 PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null, new PdfArray(color0), new 
                     PdfArray(color1), new PdfNumber(1));
@@ -508,7 +512,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// object, that is used to calculate color transitions.
             /// </param>
             public Axial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
-                : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs.GetPdfObject()) {
+                : base(new PdfDictionary(), PdfShading.ShadingType.AXIAL, cs) {
                 SetCoords(coords);
                 SetFunction(function);
             }
@@ -679,7 +683,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public Radial(PdfColorSpace cs, float x0, float y0, float r0, float[] color0, float x1, float y1, float r1
                 , float[] color1)
-                : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs.GetPdfObject()) {
+                : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs) {
                 SetCoords(x0, y0, r0, x1, y1, r1);
                 PdfFunction func = new PdfFunction.Type2(new PdfArray(new float[] { 0, 1 }), null, new PdfArray(color0), new 
                     PdfArray(color1), new PdfNumber(1));
@@ -759,7 +763,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// object, that is used to calculate color transitions.
             /// </param>
             public Radial(PdfColorSpace cs, PdfArray coords, PdfFunction function)
-                : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs.GetPdfObject()) {
+                : base(new PdfDictionary(), PdfShading.ShadingType.RADIAL, cs) {
                 SetCoords(coords);
                 SetFunction(function);
             }
@@ -991,7 +995,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public FreeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int
                  bitsPerFlag, PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.FREE_FORM_GOURAUD_SHADED_TRIANGLE_MESH, cs.GetPdfObject()) {
+                : base(new PdfStream(), PdfShading.ShadingType.FREE_FORM_GOURAUD_SHADED_TRIANGLE_MESH, cs) {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
                 SetBitsPerFlag(bitsPerFlag);
@@ -1193,8 +1197,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public LatticeFormGouraudShadedTriangleMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, 
                 int verticesPerRow, PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.LATTICE_FORM_GOURAUD_SHADED_TRIANGLE_MESH, cs.GetPdfObject(
-                    )) {
+                : base(new PdfStream(), PdfShading.ShadingType.LATTICE_FORM_GOURAUD_SHADED_TRIANGLE_MESH, cs) {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
                 SetVerticesPerRow(verticesPerRow);
@@ -1398,7 +1401,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public CoonsPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int bitsPerFlag, PdfArray
                  decode)
-                : base(new PdfStream(), PdfShading.ShadingType.COONS_PATCH_MESH, cs.GetPdfObject()) {
+                : base(new PdfStream(), PdfShading.ShadingType.COONS_PATCH_MESH, cs) {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
                 SetBitsPerFlag(bitsPerFlag);
@@ -1601,7 +1604,7 @@ namespace iText.Kernel.Pdf.Colorspace {
             /// </param>
             public TensorProductPatchMesh(PdfColorSpace cs, int bitsPerCoordinate, int bitsPerComponent, int bitsPerFlag
                 , PdfArray decode)
-                : base(new PdfStream(), PdfShading.ShadingType.TENSOR_PRODUCT_PATCH_MESH, cs.GetPdfObject()) {
+                : base(new PdfStream(), PdfShading.ShadingType.TENSOR_PRODUCT_PATCH_MESH, cs) {
                 SetBitsPerCoordinate(bitsPerCoordinate);
                 SetBitsPerComponent(bitsPerComponent);
                 SetBitsPerFlag(bitsPerFlag);
