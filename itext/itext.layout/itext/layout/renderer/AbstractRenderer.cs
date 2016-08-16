@@ -837,8 +837,7 @@ namespace iText.Layout.Renderer
         /// </returns>
 		protected internal virtual bool IsPositioned()
 		{
-			Object positioning = this.GetProperty<Object>(Property.POSITION);
-			return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
+			return IsFixedLayout();
 		}
 
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>

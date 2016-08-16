@@ -1,8 +1,10 @@
 using System;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -176,6 +178,26 @@ namespace iText.Layout {
             document.Add(new Paragraph(textContent + textContent + textContent));
             document.Add(new Paragraph(textContent + textContent + textContent));
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ShowTextAlignedTest03() {
+            String outFileName = destinationFolder + "showTextAlignedTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_showTextAlignedTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(sourceFolder + "bruno.jpg"));
+            float width = img.GetImageScaledWidth();
+            float height = img.GetImageScaledHeight();
+            PdfFormXObject template = new PdfFormXObject(new Rectangle(width, height));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(template, pdfDoc);
+            canvas.Add(img).ShowTextAligned("HELLO BRUNO", width / 2, height / 2, TextAlignment.CENTER);
+            doc.Add(new iText.Layout.Element.Image(template));
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

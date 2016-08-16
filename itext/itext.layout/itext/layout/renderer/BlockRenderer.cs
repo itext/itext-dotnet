@@ -63,8 +63,9 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
+            bool isPositioned = IsPositioned();
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || isPositioned) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
             float? blockHeight = RetrieveHeight();
@@ -76,7 +77,6 @@ namespace iText.Layout.Renderer {
             ApplyMargins(parentBBox, margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(parentBBox, borders, false);
-            bool isPositioned = IsPositioned();
             if (isPositioned) {
                 float x = (float)this.GetPropertyAsFloat(Property.X);
                 float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
