@@ -425,7 +425,7 @@ namespace iText.Layout.Renderer
 				if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol)
 				{
 					// ignore '\n'
-					split = Split(currentTextPos + 1);
+                    split = SplitIgnoreFirstNewLine(currentTextPos);
 				}
 				else
 				{
@@ -920,13 +920,25 @@ namespace iText.Layout.Renderer
 			return new iText.Layout.Renderer.TextRenderer((Text)modelElement, null);
 		}
 
-		private bool IsNewLine(GlyphLine text, int ind)
-		{
-			return text.Get(ind).HasValidUnicode() && text.Get(ind).GetUnicode() == '\n';
-		}
+	    protected static bool isNewLine(GlyphLine text, int ind) {
+	        return text.Get(ind).HasValidUnicode() && (text.Get(ind).GetUnicode() == '\n' || text.Get(ind).GetUnicode() == '\r');
+	    }
 
-		private GlyphLine ConvertToGlyphLine(String text)
-		{
+	    private TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
+	        if (text.Get(currentTextPos).HasValidUnicode() && text.Get(currentTextPos).GetUnicode() == '\r') {
+	            int next = currentTextPos + 1 < text.end ? text.Get(currentTextPos + 1).GetUnicode() : -1;
+	            if (next == '\n') {
+	                return Split(currentTextPos + 2);
+	            } else {
+	                return Split(currentTextPos + 1);
+	            }
+	        } else {
+	            return Split(currentTextPos + 1);
+	        }
+	    }
+        
+	    private GlyphLine ConvertToGlyphLine(String text)
+        {
 			PdfFont font = GetPropertyAsFont(Property.FONT);
             return font.CreateGlyphLine(text);
 		}
