@@ -198,6 +198,10 @@ namespace iText.IO.Font {
             return gposTable;
         }
 
+        public virtual OpenTypeGdefTableReader GetGdefTable() {
+            return gdefTable;
+        }
+
         public virtual byte[] GetSubset(ICollection<int> glyphs, bool subset) {
             try {
                 return fontParser.GetSubset(glyphs, subset);
@@ -216,6 +220,7 @@ namespace iText.IO.Font {
             else {
                 gdefTable = new OpenTypeGdefTableReader(fontParser.raf, 0);
             }
+            gdefTable.ReadTable();
         }
 
         /// <exception cref="System.IO.IOException"/>

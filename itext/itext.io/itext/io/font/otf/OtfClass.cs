@@ -46,6 +46,12 @@ using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class OtfClass {
+        public const int GLYPH_BASE = 1;
+
+        public const int GLYPH_LIGATURE = 2;
+
+        public const int GLYPH_MARK = 3;
+
         private IntHashtable mapClass = new IntHashtable();
 
         /// <exception cref="System.IO.IOException"/>
