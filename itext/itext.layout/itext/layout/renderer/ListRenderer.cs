@@ -279,7 +279,7 @@ namespace iText.Layout.Renderer {
                 newOverflowRenderer.GetChildRenderers()[0].GetChildRenderers().AddAll(childrenStillRemainingToRender);
                 splitRenderer.GetChildRenderers()[0].GetChildRenderers().RemoveAll(childrenStillRemainingToRender);
                 newOverflowRenderer.GetChildRenderers()[0].SetProperty(Property.MARGIN_LEFT, splitRenderer.GetChildRenderers
-                    ()[0].GetProperty(Property.MARGIN_LEFT));
+                    ()[0].GetProperty<float?>(Property.MARGIN_LEFT));
             }
             else {
                 newOverflowRenderer.childRenderers.JRemoveAt(0);

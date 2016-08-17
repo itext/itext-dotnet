@@ -190,7 +190,7 @@ namespace iText.Layout.Renderer
         /// </returns>
         public bool HasOwnOrModelProperty(int property)
         {
-            return properties.ContainsKey(property) || (null != GetModelElement() && GetModelElement().HasOwnProperty(property));
+            return properties.ContainsKey(property) || (null != GetModelElement() && GetModelElement().HasProperty(property));
         }
 
         /// <summary><inheritDoc/></summary>
