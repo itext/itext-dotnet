@@ -2581,11 +2581,20 @@ namespace iText.Forms.Fields {
             if (asNormal != null) {
                 resources = asNormal.GetAsDictionary(PdfName.Resources);
             }
+            if (resources == null) {
+                PdfDocument document = GetDocument();
+                if (document != null) {
+                    PdfDictionary acroformDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
+                    if (acroformDictionary != null) {
+                        resources = acroformDictionary.GetAsDictionary(PdfName.DR);
+                    }
+                }
+            }
             if (resources != null) {
                 PdfDictionary fontDic = resources.GetAsDictionary(PdfName.Font);
-                if (fontDic != null) {
-                    String str = GetDefaultAppearance().ToUnicodeString();
-                    Object[] dab = SplitDAelements(str);
+                PdfString defaultAppearance = GetDefaultAppearance();
+                if (fontDic != null && defaultAppearance != null) {
+                    Object[] dab = SplitDAelements(defaultAppearance.ToUnicodeString());
                     PdfName fontName = new PdfName(dab[DA_FONT].ToString());
                     if (font != null) {
                         fontAndSize[0] = font;
