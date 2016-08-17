@@ -233,7 +233,7 @@ namespace iText.Layout.Renderer {
                                     if (LayoutResult.PARTIAL == result.GetStatus()) {
                                         IRenderer childNotRendered = result.GetCauseOfNothing();
                                         int firstNotRendered = currentRenderer.childRenderers.IndexOf(childNotRendered);
-                                        currentRenderer.childRenderers.IntersectWith(currentRenderer.childRenderers.SubList(0, firstNotRendered));
+                                        currentRenderer.childRenderers.RetainAll(currentRenderer.childRenderers.SubList(0, firstNotRendered));
                                         split[1].childRenderers.RemoveAll(split[1].childRenderers.SubList(0, firstNotRendered));
                                         return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, split[1]);
                                     }

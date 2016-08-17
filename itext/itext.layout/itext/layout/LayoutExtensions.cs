@@ -87,6 +87,31 @@ namespace iText.Layout {
             }
         }
 
+        public static bool RemoveAll<T>(this IList<T> list, ICollection<T> c)
+        {
+            bool modefied = false;
+            foreach (T item in c)
+            {
+                if (list.Remove(item)) modefied = true;
+            }
+            return modefied;
+        }
+
+        // Removes from this list all of its elements that are not contained in the specified collection.
+        public static bool RetainAll<T>(this IList<T> list, ICollection<T> c)
+        {
+            bool modefied = false;
+            foreach (T item in list)
+            {
+                if (!c.Contains(item))
+                {
+                    list.Remove(item);
+                    modefied = true;
+                }
+            }
+            return modefied;
+        }
+
         public static void Add<T>(this IList<T> list, int index, T elem) {
             list.Insert(index, elem);
         }
