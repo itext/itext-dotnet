@@ -180,6 +180,19 @@ namespace iText.Layout.Renderer
 			return properties.ContainsKey(property);
 		}
 
+        /// <summary>
+        /// Checks if this renderer or its model element have the specified property,
+        /// i.e. if it was set to this very element or its very model element earlier.
+        /// </summary>
+        /// <param name="property">the property to be checked</param>
+        /// <returns>
+        /// <code>true</code> if this instance or its model element have given own property, <code>false</code> otherwise
+        /// </returns>
+        public bool HasOwnOrModelProperty(int property)
+        {
+            return properties.ContainsKey(property) || (null != GetModelElement() && GetModelElement().HasOwnProperty(property));
+        }
+
         /// <summary><inheritDoc/></summary>
 		public virtual void DeleteOwnProperty(int property)
 		{
@@ -893,7 +906,7 @@ namespace iText.Layout.Renderer
 		/// <returns>
 		/// an array of BorderDrawer objects.
 		/// In case when certain border isn't set <code>Property.BORDER</code> is used,
-		/// and if <code>Property.BORDER</code> is also not set then <code>null<code/> is returned
+		/// and if <code>Property.BORDER</code> is also not set then <code>null</code> is returned
 		/// on position of this border
 		/// </returns>
 		protected internal virtual Border[] GetBorders()
@@ -904,14 +917,23 @@ namespace iText.Layout.Renderer
 			Border bottomBorder = this.GetProperty<Border>(Property.BORDER_BOTTOM);
 			Border leftBorder = this.GetProperty<Border>(Property.BORDER_LEFT);
 			Border[] borders = new Border[]{ topBorder, rightBorder, bottomBorder, leftBorder };
-			for (int i = 0; i < borders.Length; ++i)
-			{
-				if (borders[i] == null)
-				{
-					borders[i] = border;
-				}
-			}
-			return borders;
+            if (!HasOwnOrModelProperty(Property.BORDER_TOP))
+            {
+                borders[0] = border;
+            }
+            if (!HasOwnOrModelProperty(Property.BORDER_RIGHT))
+            {
+                borders[1] = border;
+            }
+            if (!HasOwnOrModelProperty(Property.BORDER_BOTTOM))
+            {
+                borders[2] = border;
+            }
+            if (!HasOwnOrModelProperty(Property.BORDER_LEFT))
+            {
+                borders[3] = border;
+            }
+            return borders;
 		}
 
 		protected internal virtual iText.Layout.Renderer.AbstractRenderer SetBorders(Border border, int borderNumber) {
