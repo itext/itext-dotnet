@@ -920,7 +920,7 @@ namespace iText.Layout.Renderer
 			return new iText.Layout.Renderer.TextRenderer((Text)modelElement, null);
 		}
 
-	    protected static bool isNewLine(GlyphLine text, int ind) {
+	    protected internal static bool IsNewLine(GlyphLine text, int ind) {
 	        return text.Get(ind).HasValidUnicode() && (text.Get(ind).GetUnicode() == '\n' || text.Get(ind).GetUnicode() == '\r');
 	    }
 
