@@ -80,7 +80,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfDocument"/>
         /// the outline belongs to.
         /// </param>
-        public PdfOutline(String title, PdfDictionary content, PdfDocument pdfDocument) {
+        internal PdfOutline(String title, PdfDictionary content, PdfDocument pdfDocument) {
             this.title = title;
             this.content = content;
             this.pdfDoc = pdfDocument;
@@ -90,7 +90,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="title">the text that shall be displayed on the screen for this item.</param>
         /// <param name="content">Outline dictionary</param>
         /// <param name="parent">parent outline.</param>
-        public PdfOutline(String title, PdfDictionary content, iText.Kernel.Pdf.PdfOutline parent) {
+        internal PdfOutline(String title, PdfDictionary content, iText.Kernel.Pdf.PdfOutline parent) {
             this.title = title;
             this.content = content;
             this.parent = parent;
@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf {
         /// 
         /// <see cref="PdfDocument"/>
         /// </param>
-        protected internal PdfOutline(PdfDocument doc) {
+        internal PdfOutline(PdfDocument doc) {
             content = new PdfDictionary();
             content.Put(PdfName.Type, PdfName.Outlines);
             this.pdfDoc = doc;
