@@ -2659,13 +2659,15 @@ namespace iText.Forms.Fields {
                         if (@operator.Equals("Tf")) {
                             if (stack.Count >= 2) {
                                 ret[DA_FONT] = stack[stack.Count - 2];
-                                ret[DA_SIZE] = System.Convert.ToSingle(stack[stack.Count - 1]);
+                                ret[DA_SIZE] = System.Convert.ToSingle(stack[stack.Count - 1], System.Globalization.CultureInfo.InvariantCulture
+                                    );
                             }
                         }
                         else {
                             if (@operator.Equals("g")) {
                                 if (stack.Count >= 1) {
-                                    float gray = System.Convert.ToSingle(stack[stack.Count - 1]);
+                                    float gray = System.Convert.ToSingle(stack[stack.Count - 1], System.Globalization.CultureInfo.InvariantCulture
+                                        );
                                     if (gray != 0) {
                                         ret[DA_COLOR] = new DeviceGray(gray);
                                     }
@@ -2674,19 +2676,26 @@ namespace iText.Forms.Fields {
                             else {
                                 if (@operator.Equals("rg")) {
                                     if (stack.Count >= 3) {
-                                        float red = System.Convert.ToSingle(stack[stack.Count - 3]);
-                                        float green = System.Convert.ToSingle(stack[stack.Count - 2]);
-                                        float blue = System.Convert.ToSingle(stack[stack.Count - 1]);
+                                        float red = System.Convert.ToSingle(stack[stack.Count - 3], System.Globalization.CultureInfo.InvariantCulture
+                                            );
+                                        float green = System.Convert.ToSingle(stack[stack.Count - 2], System.Globalization.CultureInfo.InvariantCulture
+                                            );
+                                        float blue = System.Convert.ToSingle(stack[stack.Count - 1], System.Globalization.CultureInfo.InvariantCulture
+                                            );
                                         ret[DA_COLOR] = new DeviceRgb(red, green, blue);
                                     }
                                 }
                                 else {
                                     if (@operator.Equals("k")) {
                                         if (stack.Count >= 4) {
-                                            float cyan = System.Convert.ToSingle(stack[stack.Count - 4]);
-                                            float magenta = System.Convert.ToSingle(stack[stack.Count - 3]);
-                                            float yellow = System.Convert.ToSingle(stack[stack.Count - 2]);
-                                            float black = System.Convert.ToSingle(stack[stack.Count - 1]);
+                                            float cyan = System.Convert.ToSingle(stack[stack.Count - 4], System.Globalization.CultureInfo.InvariantCulture
+                                                );
+                                            float magenta = System.Convert.ToSingle(stack[stack.Count - 3], System.Globalization.CultureInfo.InvariantCulture
+                                                );
+                                            float yellow = System.Convert.ToSingle(stack[stack.Count - 2], System.Globalization.CultureInfo.InvariantCulture
+                                                );
+                                            float black = System.Convert.ToSingle(stack[stack.Count - 1], System.Globalization.CultureInfo.InvariantCulture
+                                                );
                                             ret[DA_COLOR] = new DeviceCmyk(cyan, magenta, yellow, black);
                                         }
                                     }
