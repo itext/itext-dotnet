@@ -100,8 +100,10 @@ namespace iText.Layout {
         // Removes from this list all of its elements that are not contained in the specified collection.
         public static bool RetainAll<T>(this IList<T> list, ICollection<T> c)
         {
+            // A copy of the list to iterate through
+            IList<T> tempList = new List<T>(list);
             bool modefied = false;
-            foreach (T item in list)
+            foreach (T item in tempList)
             {
                 if (!c.Contains(item))
                 {
