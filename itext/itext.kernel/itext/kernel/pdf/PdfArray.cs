@@ -283,8 +283,8 @@ namespace iText.Kernel.Pdf
 			return list[index] = element;
 		}
 
-		/// <summary>Adds the specified PdfObject qt the specified index.</summary>
-		/// <remarks>Adds the specified PdfObject qt the specified index. All objects after this index will be shifted by 1.
+		/// <summary>Adds the specified PdfObject at the specified index.</summary>
+		/// <remarks>Adds the specified PdfObject at the specified index. All objects after this index will be shifted by 1.
 		/// 	</remarks>
 		/// <param name="index">position to insert the PdfObject</param>
 		/// <param name="element">PdfObject to be added</param>

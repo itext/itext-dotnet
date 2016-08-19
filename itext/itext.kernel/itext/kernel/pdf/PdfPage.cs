@@ -105,12 +105,24 @@ namespace iText.Kernel.Pdf {
             : this(pdfDocument, pdfDocument.GetDefaultPageSize()) {
         }
 
+        /// <summary>Gets page size, defined by media box object.</summary>
+        /// <remarks>Gets page size, defined by media box object. This method doesn't take page rotation into account.
+        ///     </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// that specify page size.
+        /// </returns>
         public virtual Rectangle GetPageSize() {
             return GetMediaBox();
         }
 
-        /// <summary>Gets the rotated page.</summary>
-        /// <returns>the rotated rectangle</returns>
+        /// <summary>Gets page size, considering page rotation.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// that specify size of rotated page.
+        /// </returns>
         public virtual Rectangle GetPageSizeWithRotation() {
             PageSize rect = new PageSize(GetPageSize());
             int rotation = GetRotation();
@@ -121,6 +133,17 @@ namespace iText.Kernel.Pdf {
             return rect;
         }
 
+        /// <summary>Gets the number of degrees by which the page shall be rotated clockwise when displayed or printed.
+        ///     </summary>
+        /// <remarks>
+        /// Gets the number of degrees by which the page shall be rotated clockwise when displayed or printed.
+        /// Shall be a multiple of 90.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <c>int</c>
+        /// number of degrees. Default value: 0
+        /// </returns>
         public virtual int GetRotation() {
             PdfNumber rotate = GetPdfObject().GetAsNumber(PdfName.Rotate);
             if (rotate == null) {
@@ -133,11 +156,44 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Sets the page rotation.</summary>
+        /// <param name="degAngle">
+        /// the
+        /// <c>int</c>
+        /// number of degrees by which the page shall be rotated clockwise
+        /// when displayed or printed. Shall be a multiple of 90.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetRotation(int degAngle) {
             GetPdfObject().Put(PdfName.Rotate, new PdfNumber(degAngle));
             return this;
         }
 
+        /// <summary>
+        /// Gets the content stream at specified 0-based index in the Contents object
+        /// <see cref="PdfArray"/>
+        /// .
+        /// The situation when Contents object is a
+        /// <see cref="PdfStream"/>
+        /// is treated like a one element array.
+        /// </summary>
+        /// <param name="index">
+        /// the
+        /// <c>int</c>
+        /// index of returned
+        /// <see cref="PdfStream"/>
+        /// .
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="PdfStream"/>
+        /// object at specified index.
+        /// </returns>
+        /// <exception cref="System.IndexOutOfRangeException">if the index is out of range</exception>
         public virtual PdfStream GetContentStream(int index) {
             int count = GetContentStreamCount();
             if (index >= count) {
@@ -158,6 +214,21 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>
+        /// Gets the size of Contents object
+        /// <see cref="PdfArray"/>
+        /// .
+        /// The situation when Contents object is a
+        /// <see cref="PdfStream"/>
+        /// is treated like a one element array.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <c>int</c>
+        /// size of Contents object, or 1 if Contents object is a
+        /// <see cref="PdfStream"/>
+        /// .
+        /// </returns>
         public virtual int GetContentStreamCount() {
             PdfObject contents = GetPdfObject().Get(PdfName.Contents);
             if (contents is PdfStream) {
@@ -173,6 +244,20 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>
+        /// Returns the Contents object if it is
+        /// <see cref="PdfStream"/>
+        /// , or first stream in the array if it is
+        /// <see cref="PdfArray"/>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// first
+        /// <see cref="PdfStream"/>
+        /// in Contents object, or
+        /// <see langword="null"/>
+        /// if Contents is empty.
+        /// </returns>
         public virtual PdfStream GetFirstContentStream() {
             if (GetContentStreamCount() > 0) {
                 return GetContentStream(0);
@@ -180,6 +265,20 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
+        /// <summary>
+        /// Returns the Contents object if it is
+        /// <see cref="PdfStream"/>
+        /// , or last stream in the array if it is
+        /// <see cref="PdfArray"/>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// first
+        /// <see cref="PdfStream"/>
+        /// in Contents object, or
+        /// <see langword="null"/>
+        /// if Contents is empty.
+        /// </returns>
         public virtual PdfStream GetLastContentStream() {
             int count = GetContentStreamCount();
             if (count > 0) {
@@ -188,10 +287,36 @@ namespace iText.Kernel.Pdf {
             return null;
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="PdfStream"/>
+        /// object and puts it at the beginning of Contents array
+        /// (if Contents object is
+        /// <see cref="PdfStream"/>
+        /// it will be replaced with one-element array).
+        /// </summary>
+        /// <returns>
+        /// Created
+        /// <see cref="PdfStream"/>
+        /// object.
+        /// </returns>
         public virtual PdfStream NewContentStreamBefore() {
             return NewContentStream(true);
         }
 
+        /// <summary>
+        /// Creates new
+        /// <see cref="PdfStream"/>
+        /// object and puts it at the end of Contents array
+        /// (if Contents object is
+        /// <see cref="PdfStream"/>
+        /// it will be replaced with one-element array).
+        /// </summary>
+        /// <returns>
+        /// Created
+        /// <see cref="PdfStream"/>
+        /// object.
+        /// </returns>
         public virtual PdfStream NewContentStreamAfter() {
             return NewContentStream(false);
         }
@@ -208,7 +333,7 @@ namespace iText.Kernel.Pdf {
         /// This new object under the wrapper will be added to page dictionary on
         /// <see cref="Flush()"/>
         /// ,
-        /// or you can add it manually with this line, if needed:
+        /// or you can add it manually with this line, if needed:<br/>
         /// <c>getPdfObject().put(PdfName.Resources, getResources().getPdfObject());</c>
         /// </summary>
         /// <returns>
@@ -237,15 +362,34 @@ namespace iText.Kernel.Pdf {
             return this.resources;
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="PdfResources"/>
+        /// object.
+        /// </summary>
+        /// <param name="pdfResources">
+        /// 
+        /// <see cref="PdfResources"/>
+        /// to set.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetResources(PdfResources pdfResources) {
             GetPdfObject().Put(PdfName.Resources, pdfResources.GetPdfObject());
             this.resources = pdfResources;
             return this;
         }
 
-        /// <summary>Use this method to set the XMP Metadata for each page.</summary>
-        /// <param name="xmpMetadata">The xmpMetadata to set.</param>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Sets the XMP Metadata.</summary>
+        /// <param name="xmpMetadata">
+        /// the
+        /// <c>byte[]</c>
+        /// of XMP Metadata to set.
+        /// </param>
+        /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual void SetXmpMetadata(byte[] xmpMetadata) {
             PdfStream xmp = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
             xmp.GetOutputStream().Write(xmpMetadata);
@@ -254,20 +398,44 @@ namespace iText.Kernel.Pdf {
             GetPdfObject().Put(PdfName.Metadata, xmp);
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
+        /// <param name="xmpMeta">
+        /// the
+        /// <see cref="iText.Kernel.XMP.XMPMeta"/>
+        /// object to set.
+        /// </param>
+        /// <param name="serializeOptions">
+        /// the
+        /// <see cref="iText.Kernel.XMP.Options.SerializeOptions"/>
+        /// used while serialization.
+        /// </param>
+        /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
+        /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta, SerializeOptions serializeOptions) {
             SetXmpMetadata(XMPMetaFactory.SerializeToBuffer(xmpMeta, serializeOptions));
         }
 
-        /// <exception cref="iText.Kernel.XMP.XMPException"/>
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
+        /// <remarks>Serializes XMP Metadata to byte array and sets it. Uses padding equals to 2000.</remarks>
+        /// <param name="xmpMeta">
+        /// the
+        /// <see cref="iText.Kernel.XMP.XMPMeta"/>
+        /// object to set.
+        /// </param>
+        /// <exception cref="iText.Kernel.XMP.XMPException">in case of XMP Metadata serialization error.</exception>
+        /// <exception cref="System.IO.IOException">in case of writing error.</exception>
         public virtual void SetXmpMetadata(XMPMeta xmpMeta) {
             SerializeOptions serializeOptions = new SerializeOptions();
             serializeOptions.SetPadding(2000);
             SetXmpMetadata(xmpMeta, serializeOptions);
         }
 
+        /// <summary>Gets the XMP Metadata object.</summary>
+        /// <returns>
+        /// 
+        /// <see cref="PdfStream"/>
+        /// object, that represent XMP Metadata.
+        /// </returns>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         public virtual PdfStream GetXmpMetadata() {
             return GetPdfObject().GetAsStream(PdfName.Metadata);
@@ -280,7 +448,11 @@ namespace iText.Kernel.Pdf {
         /// NOTE: Works only for pages from the document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
-        /// <returns>copied page.</returns>
+        /// <returns>
+        /// copied
+        /// <see cref="PdfPage"/>
+        /// .
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument) {
             return CopyTo(toDocument, null);
         }
@@ -292,8 +464,15 @@ namespace iText.Kernel.Pdf {
         /// NOTE: Works only for pages from the document opened in reading mode, otherwise an exception is thrown.
         /// </remarks>
         /// <param name="toDocument">a document to copy page to.</param>
-        /// <param name="copier">a copier which bears a specific copy logic. May be NULL</param>
-        /// <returns>copied page.</returns>
+        /// <param name="copier">
+        /// a copier which bears a specific copy logic. May be
+        /// <see langword="null"/>
+        /// </param>
+        /// <returns>
+        /// copied
+        /// <see cref="PdfPage"/>
+        /// .
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage CopyTo(PdfDocument toDocument, IPdfPageExtraCopier copier) {
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
             iText.Kernel.Pdf.PdfPage page = new iText.Kernel.Pdf.PdfPage(dictionary);
@@ -327,7 +506,11 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Copies page as FormXObject to the specified document.</summary>
         /// <param name="toDocument">a document to copy to.</param>
-        /// <returns>resultant XObject.</returns>
+        /// <returns>
+        /// copied
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// object.
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument) {
             PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
@@ -340,6 +523,20 @@ namespace iText.Kernel.Pdf {
             return xObject;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="PdfDocument"/>
+        /// that owns that page, or
+        /// <see langword="null"/>
+        /// if such document isn't exist.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="PdfDocument"/>
+        /// that owns that page, or
+        /// <see langword="null"/>
+        /// if such document isn't exist.
+        /// </returns>
         public virtual PdfDocument GetDocument() {
             if (GetPdfObject().GetIndirectReference() != null) {
                 return GetPdfObject().GetIndirectReference().GetDocument();
@@ -480,7 +677,10 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Get decoded bytes for the whole page content.</summary>
         /// <returns>byte array.</returns>
-        /// <exception cref="iText.Kernel.PdfException">in case any @see IOException.</exception>
+        /// <exception cref="iText.Kernel.PdfException">
+        /// in case of any
+        /// <see>IOException).</see>
+        /// </exception>
         public virtual byte[] GetContentBytes() {
             try {
                 MemoryStream baos = new MemoryStream();
@@ -503,14 +703,17 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets decoded bytes of a certain stream of a page content.</summary>
         /// <param name="index">index of stream inside Content.</param>
         /// <returns>byte array.</returns>
-        /// <exception cref="iText.Kernel.PdfException">in case any @see IOException.</exception>
+        /// <exception cref="iText.Kernel.PdfException">
+        /// in case of any
+        /// <see>IOException).</see>
+        /// </exception>
         public virtual byte[] GetStreamBytes(int index) {
             return GetContentStream(index).GetBytes();
         }
 
         /// <summary>Calculates and returns next available MCID reference.</summary>
         /// <returns>calculated MCID reference.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="iText.Kernel.PdfException">in case of not tagged document.</exception>
         public virtual int GetNextMcid() {
             if (!GetDocument().IsTagged()) {
                 throw new PdfException(PdfException.MustBeATaggedDocument);
@@ -596,7 +799,11 @@ namespace iText.Kernel.Pdf {
         /// NOTE: If document is tagged, PdfDocument's PdfTagStructure instance will point at annotation tag parent after method call.
         /// </remarks>
         /// <param name="annotation">an annotation to be removed.</param>
-        /// <returns>this PdfPage instance.</returns>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage RemoveAnnotation(PdfAnnotation annotation) {
             PdfArray annots = GetAnnots(false);
             if (annots != null) {
@@ -672,7 +879,11 @@ namespace iText.Kernel.Pdf {
         /// May be NULL
         /// </param>
         /// <param name="labelPrefix">The label prefix for page labels in this range. May be NULL</param>
-        /// <returns/>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String
              labelPrefix) {
             return SetPageLabel(numberingStyle, labelPrefix, 1);
@@ -688,7 +899,11 @@ namespace iText.Kernel.Pdf {
         /// The value of the numeric portion for the first page label in the range. Must be greater or
         /// equal 1.
         /// </param>
-        /// <returns/>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String
              labelPrefix, int firstPage) {
             if (firstPage < 1) {
