@@ -44,6 +44,11 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the context for content
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+    /// .
+    /// </summary>
     public class LayoutContext {
         /// <summary>
         /// The
