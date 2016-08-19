@@ -107,11 +107,11 @@ namespace iText.IO.Font {
         /// createFont(name, null, true);
         /// </PRE>
         /// </remarks>
-        /// <param name="name">the name of the font or its location on file</param>
+        /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <returns>returns a new font. This font may come from the cache</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateFont(String name) {
-            return CreateFont(name, null, true);
+        public static FontProgram CreateFont(String fontProgram) {
+            return CreateFont(fontProgram, null, true);
         }
 
         /// <summary>Creates a new font.</summary>
@@ -157,15 +157,15 @@ namespace iText.IO.Font {
         /// createFont(name, encoding, embedded, true, null, null);
         /// </PRE>
         /// </remarks>
-        /// <param name="font">the name of the font or its location on file</param>
+        /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <param name="cached">
         /// ttrue if the font comes from the cache or is added to
         /// the cache if new, false if the font is always created new
         /// </param>
         /// <returns>returns a new font. This font may come from the cache</returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateFont(String font, bool cached) {
-            return CreateFont(font, null, cached);
+        public static FontProgram CreateFont(String fontProgram, bool cached) {
+            return CreateFont(fontProgram, null, cached);
         }
 
         /// <summary>Creates a new font.</summary>
@@ -203,7 +203,7 @@ namespace iText.IO.Font {
         /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
         /// </PRE>
         /// </remarks>
-        /// <param name="font">
+        /// <param name="fontProgram">
         /// the true type font or the afm in a byte array
         /// an exception if the font is not recognized. Note that even if true an exception may be thrown in some circumstances.
         /// This parameter is useful for FontProgramFactory that may have to check many invalid font names before finding the right one
@@ -213,8 +213,8 @@ namespace iText.IO.Font {
         /// is true, otherwise it will always be created new
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateFont(byte[] font) {
-            return CreateFont(null, font, false);
+        public static FontProgram CreateFont(byte[] fontProgram) {
+            return CreateFont(null, fontProgram, false);
         }
 
         /// <summary>Creates a new font.</summary>
@@ -449,7 +449,7 @@ namespace iText.IO.Font {
         /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
         /// </PRE>
         /// </remarks>
-        /// <param name="ttcPath">location  of true type collection file (*.ttc)</param>
+        /// <param name="ttc">location  of true type collection file (*.ttc)</param>
         /// <param name="ttcIndex">the encoding to be applied to this font</param>
         /// <param name="cached">
         /// true if the font comes from the cache or is added to
@@ -460,15 +460,15 @@ namespace iText.IO.Font {
         /// is true, otherwise it will always be created new
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateFont(String ttcPath, int ttcIndex, bool cached) {
+        public static FontProgram CreateFont(String ttc, int ttcIndex, bool cached) {
             if (cached) {
-                FontProgram fontFound = FontCache.GetFont(ttcPath + ttcIndex);
+                FontProgram fontFound = FontCache.GetFont(ttc + ttcIndex);
                 if (fontFound != null) {
                     return fontFound;
                 }
             }
-            FontProgram fontBuilt = new TrueTypeFont(ttcPath, ttcIndex);
-            return cached ? FontCache.SaveFont(fontBuilt, ttcPath + ttcIndex) : fontBuilt;
+            FontProgram fontBuilt = new TrueTypeFont(ttc, ttcIndex);
+            return cached ? FontCache.SaveFont(fontBuilt, ttc + ttcIndex) : fontBuilt;
         }
 
         /// <exception cref="System.IO.IOException"/>

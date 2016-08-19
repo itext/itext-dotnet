@@ -88,13 +88,13 @@ namespace iText.Kernel.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(String path) {
-            return CreateFont(path, DEFAULT_ENCODING);
+        public static PdfFont CreateFont(String fontProgram) {
+            return CreateFont(fontProgram, DEFAULT_ENCODING);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(String path, String encoding) {
-            return CreateFont(path, encoding, DEFAULT_EMBEDDING);
+        public static PdfFont CreateFont(String fontProgram, String encoding) {
+            return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -104,26 +104,25 @@ namespace iText.Kernel.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateTtcFont(String ttcPath, int ttcIndex, String encoding, bool embedded, bool cached
-            ) {
-            FontProgram fontProgram = FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);
+        public static PdfFont CreateTtcFont(String ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
+            FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
             return CreateFont(fontProgram, encoding, embedded);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(String path, bool embedded) {
-            return CreateFont(path, DEFAULT_ENCODING, embedded);
+        public static PdfFont CreateFont(String fontProgram, bool embedded) {
+            return CreateFont(fontProgram, DEFAULT_ENCODING, embedded);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(String path, String encoding, bool embedded) {
-            return CreateFont(path, encoding, embedded, DEFAULT_CACHED);
+        public static PdfFont CreateFont(String fontProgram, String encoding, bool embedded) {
+            return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(String path, String encoding, bool embedded, bool cached) {
-            FontProgram fontProgram = FontProgramFactory.CreateFont(path, cached);
-            return CreateFont(fontProgram, encoding, embedded);
+        public static PdfFont CreateFont(String fontProgram, String encoding, bool embedded, bool cached) {
+            FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
+            return CreateFont(fp, encoding, embedded);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -172,24 +171,24 @@ namespace iText.Kernel.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(byte[] font, String encoding) {
-            return CreateFont(font, encoding, DEFAULT_EMBEDDING);
+        public static PdfFont CreateFont(byte[] fontProgram, String encoding) {
+            return CreateFont(fontProgram, encoding, DEFAULT_EMBEDDING);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(byte[] font, bool embedded) {
-            return CreateFont(font, null, embedded);
+        public static PdfFont CreateFont(byte[] fontProgram, bool embedded) {
+            return CreateFont(fontProgram, null, embedded);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(byte[] font, String encoding, bool embedded) {
-            return CreateFont(font, encoding, embedded, DEFAULT_CACHED);
+        public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded) {
+            return CreateFont(fontProgram, encoding, embedded, DEFAULT_CACHED);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateFont(byte[] font, String encoding, bool embedded, bool cached) {
-            FontProgram fontProgram = FontProgramFactory.CreateFont(null, font, cached);
-            return CreateFont(fontProgram, encoding, embedded);
+        public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
+            FontProgram fp = FontProgramFactory.CreateFont(null, fontProgram, cached);
+            return CreateFont(fp, encoding, embedded);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -197,33 +196,117 @@ namespace iText.Kernel.Font {
             return new PdfType3Font(document, colorized);
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's.
+        /// </summary>
+        /// <seealso cref="Register(System.String)"/>
+        /// <seealso cref="Register(System.String, System.String)"/>
+        /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
+        /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterSystemDirectories()"/>
+        /// <seealso cref="GetRegisteredFamilies()"/>
+        /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded, int style, bool cached
-            ) {
-            FontProgram fontProgram = FontProgramFactory.CreateRegisteredFont(font, style, cached);
-            return CreateFont(fontProgram, encoding, embedded);
+        public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, int style, bool
+             cached) {
+            FontProgram fp = FontProgramFactory.CreateRegisteredFont(fontName, style, cached);
+            return CreateFont(fp, encoding, embedded);
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's.
+        /// </summary>
+        /// <seealso cref="Register(System.String)"/>
+        /// <seealso cref="Register(System.String, System.String)"/>
+        /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
+        /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterSystemDirectories()"/>
+        /// <seealso cref="GetRegisteredFamilies()"/>
+        /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded, bool cached) {
-            return CreateRegisteredFont(font, encoding, embedded, FontConstants.UNDEFINED, cached);
+        public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, bool cached) {
+            return CreateRegisteredFont(fontName, encoding, embedded, FontConstants.UNDEFINED, cached);
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's.
+        /// </summary>
+        /// <seealso cref="Register(System.String)"/>
+        /// <seealso cref="Register(System.String, System.String)"/>
+        /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
+        /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterSystemDirectories()"/>
+        /// <seealso cref="GetRegisteredFamilies()"/>
+        /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded) {
-            return CreateRegisteredFont(font, encoding, embedded, FontConstants.UNDEFINED);
+        public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded) {
+            return CreateRegisteredFont(fontName, encoding, embedded, FontConstants.UNDEFINED);
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's.
+        /// </summary>
+        /// <seealso cref="Register(System.String)"/>
+        /// <seealso cref="Register(System.String, System.String)"/>
+        /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
+        /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterSystemDirectories()"/>
+        /// <seealso cref="GetRegisteredFamilies()"/>
+        /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateRegisteredFont(String font, String encoding, bool embedded, int style) {
-            return CreateRegisteredFont(font, encoding, embedded, style, DEFAULT_CACHED);
+        public static PdfFont CreateRegisteredFont(String fontName, String encoding, bool embedded, int style) {
+            return CreateRegisteredFont(fontName, encoding, embedded, style, DEFAULT_CACHED);
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's.
+        /// </summary>
+        /// <seealso cref="Register(System.String)"/>
+        /// <seealso cref="Register(System.String, System.String)"/>
+        /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
+        /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterSystemDirectories()"/>
+        /// <seealso cref="GetRegisteredFamilies()"/>
+        /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
-        public static PdfFont CreateRegisteredFont(String font, String encoding) {
-            return CreateRegisteredFont(font, encoding, false, FontConstants.UNDEFINED);
+        public static PdfFont CreateRegisteredFont(String fontName, String encoding) {
+            return CreateRegisteredFont(fontName, encoding, false, FontConstants.UNDEFINED);
         }
 
+        /// <summary>
+        /// Creates
+        /// <see cref="PdfFont"/>
+        /// based on registered
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// 's.
+        /// </summary>
+        /// <seealso cref="Register(System.String)"/>
+        /// <seealso cref="Register(System.String, System.String)"/>
+        /// <seealso cref="RegisterFamily(System.String, System.String, System.String)"/>
+        /// <seealso cref="RegisterDirectory(System.String)"/>
+        /// <seealso cref="RegisterSystemDirectories()"/>
+        /// <seealso cref="GetRegisteredFamilies()"/>
+        /// <seealso cref="GetRegisteredFonts()"/>
         /// <exception cref="System.IO.IOException"/>
         public static PdfFont CreateRegisteredFont(String fontName) {
             return CreateRegisteredFont(fontName, null, false, FontConstants.UNDEFINED);
@@ -286,8 +369,7 @@ namespace iText.Kernel.Font {
             return FontProgramFactory.IsRegisteredFont(fontname);
         }
 
-        protected internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException
-            ) {
+        internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {
                 if (isException) {
