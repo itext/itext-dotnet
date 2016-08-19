@@ -42,23 +42,24 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 
-namespace iText.Kernel.Pdf
-{
-	public class CompressionConstants
-	{
-		/// <summary>A possible compression level.</summary>
-		public const int UNDEFINED_COMPRESSION = int.MinValue;
+namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Compression constants for <see cref="PdfStream"/>. 
+    /// </summary>
+    public class CompressionConstants {
+        /// <summary>A possible compression level.</summary>
+        public const int UNDEFINED_COMPRESSION = int.MinValue;
 
-		/// <summary>A possible compression level.</summary>
-		public const int DEFAULT_COMPRESSION = -1;
+        /// <summary>A possible compression level.</summary>
+        public const int DEFAULT_COMPRESSION = -1;
 
-		/// <summary>A possible compression level.</summary>
-		public const int NO_COMPRESSION = 0;
+        /// <summary>A possible compression level.</summary>
+        public const int NO_COMPRESSION = 0;
 
-		/// <summary>A possible compression level.</summary>
-		public const int BEST_SPEED = 1;
+        /// <summary>A possible compression level.</summary>
+        public const int BEST_SPEED = 1;
 
-		/// <summary>A possible compression level.</summary>
-		public const int BEST_COMPRESSION = 9;
-	}
+        /// <summary>A possible compression level.</summary>
+        public const int BEST_COMPRESSION = 9;
+    }
 }

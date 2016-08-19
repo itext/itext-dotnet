@@ -42,6 +42,11 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Encryption constants for
+    /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>
+    /// .
+    /// </summary>
     public class EncryptionConstants {
         /// <summary>Type of encryption.</summary>
         public const int STANDARD_ENCRYPTION_40 = 0;

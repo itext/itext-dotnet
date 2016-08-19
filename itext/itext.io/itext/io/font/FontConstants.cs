@@ -45,6 +45,11 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.IO.Font {
+    /// <summary>
+    /// Font constants for
+    /// <see cref="FontProgramFactory"/>
+    /// and PdfFontFactory.
+    /// </summary>
     public class FontConstants {
         internal static readonly ICollection<String> BUILTIN_FONTS_14 = new HashSet<String>();
 
@@ -72,24 +77,25 @@ namespace iText.IO.Font {
 
         public const String CMAP_RESOURCE_PATH = "iText.IO.Font.Cmap.";
 
+        /// <summary>Undefined font style.</summary>
         public const int UNDEFINED = -1;
 
-        /// <summary>this is a possible style.</summary>
+        /// <summary>Normal font style.</summary>
         public const int NORMAL = 0;
 
-        /// <summary>this is a possible style.</summary>
+        /// <summary>Bold font style.</summary>
         public const int BOLD = 1;
 
-        /// <summary>this is a possible style.</summary>
+        /// <summary>Italic font style.</summary>
         public const int ITALIC = 2;
 
-        /// <summary>this is a possible style.</summary>
+        /// <summary>Underline font style.</summary>
         public const int UNDERLINE = 4;
 
-        /// <summary>this is a possible style.</summary>
+        /// <summary>Strikethru font style.</summary>
         public const int STRIKETHRU = 8;
 
-        /// <summary>this is a possible style.</summary>
+        /// <summary>Bold-Italic font style.</summary>
         public const int BOLDITALIC = BOLD | ITALIC;
 
         /// <summary>Type 1 PostScript font.</summary>
