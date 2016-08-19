@@ -815,10 +815,9 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>
-        /// Returns the length of the
-        /// <seealso>line</seealso>
-        /// which is the result of the layout call.
+        /// Returns the length of the <see cref="line"/>which is the result of the layout call.
         /// </summary>
+        /// <returns>the length of the line</returns>
         protected internal virtual int LineLength() {
             return line.end > 0 ? line.end - line.start : 0;
         }
