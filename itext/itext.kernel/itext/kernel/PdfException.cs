@@ -423,6 +423,8 @@ namespace iText.Kernel {
 
         public const String UnknownColorFormatMustBeRGBorRRGGBB = "unknown.color.format.must.be.rgb.or.rrggbb";
 
+        public const String UnsupportedXObjectType = "Unsupported XObject type";
+
         public const String VerificationAlreadyOutput = "verification.already.output";
 
         public const String WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject = "when.adding.object.reference.to.the.tag.tree.it.must.be.connected.to.not.flushed.object";
