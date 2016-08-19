@@ -791,7 +791,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , int insertBeforePage) {
             return CopyPagesTo(pageFrom, pageTo, toDocument, insertBeforePage, null);
@@ -810,7 +809,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
         /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , int insertBeforePage, IPdfPageExtraCopier copier) {
             IList<int> pages = new List<int>();
@@ -831,7 +829,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="pageTo"/>
         /// <param name="toDocument"/>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             ) {
             return CopyPagesTo(pageFrom, pageTo, toDocument, null);
@@ -849,7 +846,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="toDocument"/>
         /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(int pageFrom, int pageTo, iText.Kernel.Pdf.PdfDocument toDocument
             , IPdfPageExtraCopier copier) {
             return CopyPagesTo(pageFrom, pageTo, toDocument, toDocument.GetNumberOfPages() + 1, copier);
@@ -866,7 +862,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             int insertBeforePage) {
             return CopyPagesTo(pagesToCopy, toDocument, insertBeforePage, null);
@@ -884,7 +879,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="insertBeforePage">a position where to insert copied pages.</param>
         /// <param name="copier">a copier which bears a special copy logic. May be NULL</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             int insertBeforePage, IPdfPageExtraCopier copier) {
             if (pagesToCopy.IsEmpty()) {
@@ -971,7 +965,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="pagesToCopy">list of pages to be copied. TreeSet for the order of the pages to be natural.</param>
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument) {
             return CopyPagesTo(pagesToCopy, toDocument, null);
         }
@@ -987,7 +980,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="toDocument">a document to copy pages to.</param>
         /// <param name="copier">a copier which bears a special copy logic</param>
         /// <returns>list of copied pages</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfPage> CopyPagesTo(IList<int> pagesToCopy, iText.Kernel.Pdf.PdfDocument toDocument, 
             IPdfPageExtraCopier copier) {
             return CopyPagesTo(pagesToCopy, toDocument, toDocument.GetNumberOfPages() + 1, copier);
@@ -1037,7 +1029,6 @@ namespace iText.Kernel.Pdf {
         /// An object destination refers to. Must be an array or a dictionary with key /D and array.
         /// See PdfSpec 12.3.2.3 for more info.
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void AddNamedDestination(String key, PdfObject value) {
             CheckClosingStatus();
             catalog.AddNamedDestination(key, value);
@@ -1248,7 +1239,6 @@ namespace iText.Kernel.Pdf {
         /// <see langword="null"/>
         /// otherwise
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void Open(PdfVersion newPdfVersion) {
             try {
                 if (reader != null) {
@@ -1518,7 +1508,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>checks whether a method is invoked at the closed document</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void CheckClosingStatus() {
             if (closed) {
                 throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);
@@ -1625,7 +1614,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method copies all given outlines</summary>
         /// <param name="outlines">outlines to be copied</param>
         /// <param name="toDocument">document where outlines should be copied</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private void CopyOutlines(ICollection<PdfOutline> outlines, iText.Kernel.Pdf.PdfDocument toDocument, IDictionary
             <PdfPage, PdfPage> page2page) {
             ICollection<PdfOutline> outlinesToCopy = new HashSet<PdfOutline>();
@@ -1659,7 +1647,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="outlinesToCopy">- Set of outlines to be copied</param>
         /// <param name="newParent">- new parent outline</param>
         /// <param name="oldParent">- old parent outline</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private void CloneOutlines(ICollection<PdfOutline> outlinesToCopy, PdfOutline newParent, PdfOutline oldParent
             , IDictionary<PdfPage, PdfPage> page2page, iText.Kernel.Pdf.PdfDocument toDocument) {
             if (null == oldParent) {
