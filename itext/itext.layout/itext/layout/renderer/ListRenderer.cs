@@ -252,6 +252,50 @@ namespace iText.Layout.Renderer {
             private readonly String constantFont;
         }
 
+        /// <summary>
+        /// <p>
+        /// Corrects split and overflow renderers when
+        /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
+        /// is applied.
+        /// We assume that
+        /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
+        /// is applied when the first
+        /// <see cref="ListItemRenderer"/>
+        /// cannot be fully layouted.
+        /// This means that the problem has occurred in one of first list item renderer's child.
+        /// We consider the right solution to force placement of all first item renderer's childs before the one,
+        /// which was the cause of
+        /// <see cref="iText.Layout.Layout.LayoutResult.NOTHING"/>
+        /// , including this child.
+        /// </p>
+        /// <p>
+        /// Notice that we do not expect
+        /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
+        /// to be applied
+        /// if we can render the first item renderer and strongly recommend not to set
+        /// <see cref="iText.Layout.Properties.Property.FORCED_PLACEMENT"/>
+        /// manually.
+        /// </p>
+        /// </summary>
+        /// <param name="splitRenderer">
+        /// the
+        /// <see cref="IRenderer">split renderer</see>
+        /// before correction
+        /// </param>
+        /// <param name="overflowRenderer">
+        /// the
+        /// <see cref="IRenderer">overflow renderer</see>
+        /// before correction
+        /// </param>
+        /// <param name="causeOfNothing">
+        /// the
+        /// <see cref="com.itextpdf.layout.layout.LayoutResult#causeOfNothing">cause of nothing renderer</see>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by layouting before correction</param>
+        /// <returns>
+        /// corrected
+        /// <see cref="iText.Layout.Layout.LayoutResult">layout result</see>
+        /// </returns>
         private LayoutResult CorrectListSplitting(IRenderer splitRenderer, IRenderer overflowRenderer, IRenderer causeOfNothing
             , LayoutArea occupiedArea) {
             // the first not rendered child
