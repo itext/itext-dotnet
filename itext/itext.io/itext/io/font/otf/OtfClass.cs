@@ -90,6 +90,10 @@ namespace iText.IO.Font.Otf {
             return mapClass.Get(glyph);
         }
 
+        public virtual bool IsMarkOtfClass(int glyph) {
+            return HasClass(glyph) && GetOtfClass(glyph) == GLYPH_MARK;
+        }
+
         public virtual bool HasClass(int glyph) {
             return mapClass.ContainsKey(glyph);
         }
