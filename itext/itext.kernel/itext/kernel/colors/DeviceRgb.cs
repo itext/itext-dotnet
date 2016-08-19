@@ -42,22 +42,58 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO;
+using iText.IO.Log;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Color space to specify colors according to RGB color model.</summary>
     public class DeviceRgb : Color {
+        /// <summary>Creates DeviceRgb color by intensities of red, green and blue colorants.</summary>
+        /// <remarks>
+        /// Creates DeviceRgb color by intensities of red, green and blue colorants.
+        /// The intensities are considered to be in [0, 255] gap, if not,
+        /// the intensity will be considered as 255 (when colorant's value is bigger than 255)
+        /// or 0 (when colorant's value is less than 0).
+        /// </remarks>
+        /// <param name="r">the intensity of red colorant</param>
+        /// <param name="g">the intensity of green colorant</param>
+        /// <param name="b">the intensity of blue colorant</param>
         public DeviceRgb(int r, int g, int b)
             : this(r / 255f, g / 255f, b / 255f) {
         }
 
+        /// <summary>Creates DeviceRgb color by intensities of red, green and blue colorants.</summary>
+        /// <remarks>
+        /// Creates DeviceRgb color by intensities of red, green and blue colorants.
+        /// The intensities are considered to be in [0, 1] interval, if not,
+        /// the intensity will be considered as 1 (when colorant's value is bigger than 1)
+        /// or 0 (when colorant's value is less than 0).
+        /// </remarks>
+        /// <param name="r">the intensity of red colorant</param>
+        /// <param name="g">the intensity of green colorant</param>
+        /// <param name="b">the intensity of blue colorant</param>
         public DeviceRgb(float r, float g, float b)
-            : base(new PdfDeviceCs.Rgb(), new float[] { r, g, b }) {
+            : base(new PdfDeviceCs.Rgb(), new float[] { r > 1 ? 1 : (r > 0 ? r : 0), g > 1 ? 1 : (g > 0 ? g : 0), b > 
+                1 ? 1 : (b > 0 ? b : 0) }) {
+            if (r > 1 || r < 0 || g > 1 || g < 0 || b > 1 || b < 0) {
+                ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Colors.DeviceRgb));
+                LOGGER.Warn(LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+            }
         }
 
+        /// <summary>Creates DeviceRgb color with all colorants intensities initialised as zeroes.</summary>
         public DeviceRgb()
             : this(0f, 0f, 0f) {
         }
 
+        /// <summary>
+        /// Returns
+        /// <see cref="DeviceRgb">DeviceRgb</see>
+        /// color which is lighter than given one
+        /// </summary>
+        /// <param name="rgbColor">the DeviceRgb color to be made lighter</param>
+        /// <returns>lighter color</returns>
         public static iText.Kernel.Colors.DeviceRgb MakeLighter(iText.Kernel.Colors.DeviceRgb rgbColor) {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];
@@ -73,6 +109,13 @@ namespace iText.Kernel.Colors {
             return new iText.Kernel.Colors.DeviceRgb(r, g, b);
         }
 
+        /// <summary>
+        /// Returns
+        /// <see cref="DeviceRgb">DeviceRgb</see>
+        /// color which is darker than given one
+        /// </summary>
+        /// <param name="rgbColor">the DeviceRgb color to be made darker</param>
+        /// <returns>darker color</returns>
         public static iText.Kernel.Colors.DeviceRgb MakeDarker(iText.Kernel.Colors.DeviceRgb rgbColor) {
             float r = rgbColor.GetColorValue()[0];
             float g = rgbColor.GetColorValue()[1];

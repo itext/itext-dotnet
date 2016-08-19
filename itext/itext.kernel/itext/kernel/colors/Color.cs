@@ -46,37 +46,60 @@ using iText.Kernel;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Colors {
+    /// <summary>Represents a color</summary>
     public class Color {
+        /// <summary>Predefined black DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color BLACK = new DeviceRgb(0, 0, 0);
 
+        /// <summary>Predefined blue  DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color BLUE = new DeviceRgb(0, 0, 255);
 
+        /// <summary>Predefined cyan DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color CYAN = new DeviceRgb(0, 255, 255);
 
+        /// <summary>Predefined dark gray DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color DARK_GRAY = new DeviceRgb(64, 64, 64);
 
+        /// <summary>Predefined gray DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color GRAY = new DeviceRgb(128, 128, 128);
 
+        /// <summary>Predefined green DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color GREEN = new DeviceRgb(0, 255, 0);
 
+        /// <summary>Predefined light gray DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color LIGHT_GRAY = new DeviceRgb(192, 192, 192);
 
+        /// <summary>Predefined magenta DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color MAGENTA = new DeviceRgb(255, 0, 255);
 
+        /// <summary>Predefined orange DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color ORANGE = new DeviceRgb(255, 200, 0);
 
+        /// <summary>Predefined pink DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color PINK = new DeviceRgb(255, 175, 175);
 
+        /// <summary>Predefined red DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color RED = new DeviceRgb(255, 0, 0);
 
+        /// <summary>Predefined white DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color WHITE = new DeviceRgb(255, 255, 255);
 
+        /// <summary>Predefined yellow DeviceRgb color</summary>
         public static readonly iText.Kernel.Colors.Color YELLOW = new DeviceRgb(255, 255, 0);
 
+        /// <summary>The color space of the color</summary>
         protected internal PdfColorSpace colorSpace;
 
+        /// <summary>The color value of the color</summary>
         protected internal float[] colorValue;
 
+        /// <summary>Creates a Color of certain color space and color value.</summary>
+        /// <remarks>
+        /// Creates a Color of certain color space and color value.
+        /// If color value is set in null, all value components will be initialised with zeroes.
+        /// </remarks>
+        /// <param name="colorSpace">the color space to which the created Color object relates</param>
+        /// <param name="colorValue">the color value of the created Color object</param>
         protected internal Color(PdfColorSpace colorSpace, float[] colorValue) {
             this.colorSpace = colorSpace;
             if (colorValue == null) {
@@ -87,10 +110,23 @@ namespace iText.Kernel.Colors {
             }
         }
 
+        /// <summary>Makes a Color of certain color space.</summary>
+        /// <remarks>
+        /// Makes a Color of certain color space.
+        /// All color value components will be initialised with zeroes.
+        /// </remarks>
+        /// <param name="colorSpace">the color space to which the returned Color object relates</param>
         public static iText.Kernel.Colors.Color MakeColor(PdfColorSpace colorSpace) {
             return MakeColor(colorSpace, null);
         }
 
+        /// <summary>Makes a Color of certain color space and color value.</summary>
+        /// <remarks>
+        /// Makes a Color of certain color space and color value.
+        /// If color value is set in null, all value components will be initialised with zeroes.
+        /// </remarks>
+        /// <param name="colorSpace">the color space to which the returned Color object relates</param>
+        /// <param name="colorValue">the color value of the returned Color object</param>
         public static iText.Kernel.Colors.Color MakeColor(PdfColorSpace colorSpace, float[] colorValue) {
             iText.Kernel.Colors.Color c = null;
             bool unknownColorSpace = false;
@@ -180,6 +216,15 @@ namespace iText.Kernel.Colors {
             return c;
         }
 
+        /// <summary>
+        /// Converts
+        /// <see cref="DeviceCmyk">DeviceCmyk</see>
+        /// color to
+        /// <see cref="DeviceRgb">DeviceRgb</see>
+        /// color
+        /// </summary>
+        /// <param name="cmykColor">the DeviceCmyk color which will be converted to DeviceRgb color</param>
+        /// <returns>converted color</returns>
         public static DeviceRgb ConvertCmykToRgb(DeviceCmyk cmykColor) {
             float cyanComp = 1 - cmykColor.GetColorValue()[0];
             float magentaComp = 1 - cmykColor.GetColorValue()[1];
@@ -191,6 +236,15 @@ namespace iText.Kernel.Colors {
             return new DeviceRgb(r, g, b);
         }
 
+        /// <summary>
+        /// Converts
+        /// <see cref="DeviceRgb">DeviceRgb</see>
+        /// color to
+        /// <see cref="DeviceCmyk">DeviceCmyk</see>
+        /// color
+        /// </summary>
+        /// <param name="rgbColor">the DeviceRgb color which will be converted to DeviceCmyk color</param>
+        /// <returns>converted color</returns>
         public static DeviceCmyk ConvertRgbToCmyk(DeviceRgb rgbColor) {
             float redComp = rgbColor.GetColorValue()[0];
             float greenComp = rgbColor.GetColorValue()[1];
@@ -202,18 +256,30 @@ namespace iText.Kernel.Colors {
             return new DeviceCmyk(c, m, y, k);
         }
 
+        /// <summary>Returns the number of color value components</summary>
+        /// <returns>the number of color value components</returns>
         public virtual int GetNumberOfComponents() {
             return colorValue.Length;
         }
 
+        /// <summary>
+        /// Returns the
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace">color space</see>
+        /// to which the color is related.
+        /// </summary>
+        /// <returns>the color space of the color</returns>
         public virtual PdfColorSpace GetColorSpace() {
             return colorSpace;
         }
 
+        /// <summary>Returns the color value of the color</summary>
+        /// <returns>the color value</returns>
         public virtual float[] GetColorValue() {
             return colorValue;
         }
 
+        /// <summary>Sets the color value of the color</summary>
+        /// <param name="value">new color value</param>
         public virtual void SetColorValue(float[] value) {
             colorValue = value;
             if (colorValue.Length != value.Length) {
@@ -221,6 +287,15 @@ namespace iText.Kernel.Colors {
             }
         }
 
+        /// <summary>Indicates whether the color is equal to the given color.</summary>
+        /// <remarks>
+        /// Indicates whether the color is equal to the given color.
+        /// The
+        /// <see cref="colorSpace">color space</see>
+        /// and
+        /// <see cref="colorValue">color value</see>
+        /// are considered during the comparison.
+        /// </remarks>
         public override bool Equals(Object o) {
             if (this == o) {
                 return true;
@@ -233,6 +308,7 @@ namespace iText.Kernel.Colors {
                  == null) && iText.IO.Util.JavaUtil.ArraysEquals(colorValue, color.colorValue);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             int result = colorSpace != null ? colorSpace.GetHashCode() : 0;
             result = 31 * result + (colorValue != null ? iText.IO.Util.JavaUtil.ArraysHashCode(colorValue) : 0);
