@@ -968,11 +968,6 @@ namespace iText.Layout.Renderer
 
 		public abstract IRenderer GetNextRenderer();
 	    
-        public IRenderer GetParent()
-        {
-            return parent;
-        }
-
         public abstract LayoutResult Layout(LayoutContext layoutContext);
 	}
 }

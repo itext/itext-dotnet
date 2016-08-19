@@ -140,9 +140,5 @@ namespace iText.Layout.Renderer {
         public virtual IRenderer GetNextRenderer() {
             return null;
         }
-
-        public virtual IRenderer GetParent() {
-            return null;
-        }
     }
 }

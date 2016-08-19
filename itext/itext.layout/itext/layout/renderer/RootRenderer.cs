@@ -124,7 +124,7 @@ namespace iText.Layout.Renderer {
                                             IRenderer theDeepestKeptTogether = result.GetCauseOfNothing();
                                             while (null == theDeepestKeptTogether.GetModelElement() || null == theDeepestKeptTogether.GetModelElement(
                                                 ).GetOwnProperty<bool?>(Property.KEEP_TOGETHER)) {
-                                                theDeepestKeptTogether = theDeepestKeptTogether.GetParent();
+                                                theDeepestKeptTogether = ((AbstractRenderer)theDeepestKeptTogether).parent;
                                             }
                                             theDeepestKeptTogether.GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
                                             ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
