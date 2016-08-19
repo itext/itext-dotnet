@@ -196,6 +196,26 @@ namespace iText.Kernel.Pdf {
             return NewContentStream(false);
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="PdfResources"/>
+        /// wrapper object for this page resources.
+        /// If page doesn't have resource object, then it will be inherited from page's parents.
+        /// If neither parents nor page has the resource object, then the new one is created and added to page dictionary.
+        /// <br/><br/>
+        /// NOTE: If you'll try to modify the inherited resources, then the new resources object will be created,
+        /// so you won't change the parent's resources.
+        /// This new object under the wrapper will be added to page dictionary on
+        /// <see cref="Flush()"/>
+        /// ,
+        /// or you can add it manually with this line, if needed:
+        /// <c>getPdfObject().put(PdfName.Resources, getResources().getPdfObject());</c>
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="PdfResources"/>
+        /// wrapper of the page.
+        /// </returns>
         public virtual PdfResources GetResources() {
             if (this.resources == null) {
                 bool readOnly = false;
@@ -370,6 +390,9 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged() && !GetDocument().GetStructTreeRoot().IsFlushed()) {
                 TryFlushPageTags();
             }
+            if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
+                GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
+            }
             if (flushContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
                 FlushContentStreams();
@@ -377,11 +400,6 @@ namespace iText.Kernel.Pdf {
             int contentStreamCount = GetContentStreamCount();
             for (int i = 0; i < contentStreamCount; i++) {
                 GetContentStream(i).Flush(false);
-            }
-            if (resources != null) {
-                if (resources.IsReadOnly() && !resources.IsModified()) {
-                    GetPdfObject().Remove(PdfName.Resources);
-                }
             }
             resources = null;
             base.Flush();
