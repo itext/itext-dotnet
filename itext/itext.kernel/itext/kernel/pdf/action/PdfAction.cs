@@ -335,17 +335,54 @@ namespace iText.Kernel.Pdf.Action {
                 uri)).Put(PdfName.IsMap, new PdfBoolean(isMap));
         }
 
+        /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
+        /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateSound(PdfStream sound) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound);
         }
 
+        /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
+        /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
+        ///     </param>
+        /// <param name="volume">the volume at which to play the sound, in the range -1.0 to 1.0. Default value: 1.0</param>
+        /// <param name="synchronous">
+        /// a flag specifying whether to play the sound synchronously or asynchronously.
+        /// If this flag is <code>true</code>, the conforming reader retains control, allowing no further user
+        /// interaction other than canceling the sound, until the sound has been completely played.
+        /// Default value: <code>false</code>
+        /// </param>
+        /// <param name="repeat">
+        /// a flag specifying whether to repeat the sound indefinitely
+        /// If this entry is present, the Synchronous entry shall be ignored. Default value: <code>false</code>
+        /// </param>
+        /// <param name="mix">a flag specifying whether to mix this sound with any other sound already playing</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateSound(PdfStream sound, float volume, bool synchronous
             , bool repeat, bool mix) {
+            if (volume < -1 || volume > 1) {
+                throw new ArgumentException("volume");
+            }
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Sound).Put(PdfName.Sound, sound).Put
                 (PdfName.Volume, new PdfNumber(volume)).Put(PdfName.Synchronous, new PdfBoolean(synchronous)).Put(PdfName
                 .Repeat, new PdfBoolean(repeat)).Put(PdfName.Mix, new PdfBoolean(mix));
         }
 
+        /// <summary>Creates a Movie annotation (section 12.6.4.9 of ISO 32000-1).</summary>
+        /// <param name="annotation">a movie annotation identifying the movie that shall be played</param>
+        /// <param name="title">the title of a movie annotation identifying the movie that shall be played</param>
+        /// <param name="operation">
+        /// the operation that shall be performed on the movie. Shall be one of the following:
+        /// <see cref="iText.Kernel.Pdf.PdfName.Play"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Stop"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Pause"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.Resume"/>
+        /// </param>
+        /// <returns>created annotation</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateMovie(PdfAnnotation annotation, String title, PdfName
              operation) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
@@ -356,34 +393,90 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
+        /// <param name="annotation">the annotation to be hidden or shown</param>
+        /// <param name="hidden">a flag indicating whether to hide the annotation (<code>true</code>) or show it (<code>false</code>)
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation annotation, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, annotation.GetPdfObject
                 ()).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
+        /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
+        /// <param name="annotations">the annotations to be hidden or shown</param>
+        /// <param name="hidden">a flag indicating whether to hide the annotation (<code>true</code>) or show it (<code>false</code>)
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(PdfAnnotation[] annotations, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetPdfArrayFromAnnotationsList
                 (annotations)).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
+        /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
+        /// <param name="text">
+        /// a text string giving the fully qualified field name of an interactive form field whose
+        /// associated widget annotation or annotations are to be affected
+        /// </param>
+        /// <param name="hidden">a flag indicating whether to hide the annotation (<code>true</code>) or show it (<code>false</code>)
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(String text, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, new PdfString(text
                 )).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
+        /// <summary>Creates a Hide action (section 12.6.4.10 of ISO 32000-1).</summary>
+        /// <param name="text">
+        /// a text string array giving the fully qualified field names of interactive form fields whose
+        /// associated widget annotation or annotations are to be affected
+        /// </param>
+        /// <param name="hidden">a flag indicating whether to hide the annotation (<code>true</code>) or show it (<code>false</code>)
+        ///     </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateHide(String[] text, bool hidden) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Hide).Put(PdfName.T, GetArrayFromStringList
                 (text)).Put(PdfName.H, new PdfBoolean(hidden));
         }
 
+        /// <summary>Creates a Named action (section 12.6.4.11 of ISO 32000-1).</summary>
+        /// <param name="namedAction">
+        /// the name of the action that shall be performed. Shall be one of the following:
+        /// <see cref="iText.Kernel.Pdf.PdfName.NextPage"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.PrevPage"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.FirstPage"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.LastPage"/>
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateNamed(PdfName namedAction) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Named).Put(PdfName.N, namedAction);
         }
 
+        /// <summary>Creates a Set-OCG-State action (section 12.6.4.12 of ISO 32000-1).</summary>
+        /// <param name="states">
+        /// a list of
+        /// <see cref="PdfActionOcgState"/>
+        /// state descriptions
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateSetOcgState(IList<PdfActionOcgState> states) {
             return CreateSetOcgState(states, false);
         }
 
+        /// <summary>Creates a Set-OCG-State action (section 12.6.4.12 of ISO 32000-1).</summary>
+        /// <param name="states">
+        /// states a list of
+        /// <see cref="PdfActionOcgState"/>
+        /// state descriptions
+        /// </param>
+        /// <param name="preserveRb">
+        /// If true, indicates that radio-button state relationships between optional content groups
+        /// should be preserved when the states are applied
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateSetOcgState(IList<PdfActionOcgState> states, bool preserveRb
             ) {
             PdfArray stateArr = new PdfArray();
@@ -445,24 +538,40 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Add a chained action.</summary>
-        /// <param name="na"/>
-        public virtual void Next(iText.Kernel.Pdf.Action.PdfAction na) {
-            PdfObject nextAction = GetPdfObject().Get(PdfName.Next);
-            if (nextAction == null) {
-                Put(PdfName.Next, na.GetPdfObject());
+        /// <param name="nextAction">the next action or sequence of actions that shall be performed after the current action
+        ///     </param>
+        public virtual void Next(iText.Kernel.Pdf.Action.PdfAction nextAction) {
+            PdfObject currentNextAction = GetPdfObject().Get(PdfName.Next);
+            if (currentNextAction == null) {
+                Put(PdfName.Next, nextAction.GetPdfObject());
             }
             else {
-                if (nextAction.IsDictionary()) {
-                    PdfArray array = new PdfArray(nextAction);
-                    array.Add(na.GetPdfObject());
+                if (currentNextAction.IsDictionary()) {
+                    PdfArray array = new PdfArray(currentNextAction);
+                    array.Add(nextAction.GetPdfObject());
                     Put(PdfName.Next, array);
                 }
                 else {
-                    ((PdfArray)nextAction).Add(na.GetPdfObject());
+                    ((PdfArray)currentNextAction).Add(nextAction.GetPdfObject());
                 }
             }
         }
 
+        /// <summary>
+        /// Inserts the value into the underlying object of this
+        /// <see cref="PdfAction"/>
+        /// and associates it with the specified key.
+        /// If the key is already present in this
+        /// <see cref="PdfAction"/>
+        /// , this method will override the old value with the specified one.
+        /// </summary>
+        /// <param name="key">key to insert or to override</param>
+        /// <param name="value">the value to associate with the specified key</param>
+        /// <returns>
+        /// the previous
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// associated with this key
+        /// </returns>
         public virtual iText.Kernel.Pdf.Action.PdfAction Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
@@ -483,6 +592,7 @@ namespace iText.Kernel.Pdf.Action {
             base.Flush();
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
