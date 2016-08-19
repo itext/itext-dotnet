@@ -114,7 +114,7 @@ namespace iText.IO.Util {
             return true;
         }
 
-        public static int ArraysHashCode<T>(T[] a) {
+        public static int ArraysHashCode<T>(params T[] a) {
             if (a == null)
                 return 0;
             int result = 1;
