@@ -1086,15 +1086,15 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.TK, new PdfBoolean(textKnockoutFlag));
         }
 
-        /// <summary>Inserts the value into Graphics state parameter dictionary and associates it with the specified key.
+        /// <summary>Puts the value into Graphics state parameter dictionary and associates it with the specified key.
         ///     </summary>
         /// <remarks>
-        /// Inserts the value into Graphics state parameter dictionary and associates it with the specified key.
+        /// Puts the value into Graphics state parameter dictionary and associates it with the specified key.
         /// If the key is already present, it will override the old value with the specified one.
         /// </remarks>
         /// <param name="key">key to insert or to override</param>
         /// <param name="value">the value to associate with the specified key</param>
-        /// <returns>the previous PdfObject associated with this key</returns>
+        /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
