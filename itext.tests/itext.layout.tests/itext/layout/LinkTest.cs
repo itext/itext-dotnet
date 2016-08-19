@@ -1,8 +1,11 @@
 using System;
+using System.IO;
+using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Test;
 
@@ -52,6 +55,22 @@ namespace iText.Layout {
             PdfDestination dest = PdfDestination.MakeDestination(array);
             PdfAction action = PdfAction.CreateGoTo(dest);
             Link link = new Link("TestLink", action);
+            doc.Add(new Paragraph(link));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderedLinkTest() {
+            String outFileName = destinationFolder + "borderedLinkTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_borderedLinkTest.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            Link link = new Link("Link with orange border", PdfAction.CreateURI("http://itextpdf.com"));
+            link.SetBorder(new SolidBorder(Color.ORANGE, 5));
             doc.Add(new Paragraph(link));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
