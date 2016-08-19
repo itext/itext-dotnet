@@ -1455,6 +1455,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName TOCI = CreateDirectName("TOCI");
 
+        public static readonly iText.Kernel.Pdf.PdfName Toggle = CreateDirectName("Toggle");
+
         public static readonly iText.Kernel.Pdf.PdfName TopSecret = CreateDirectName("TopSecret");
 
         public static readonly iText.Kernel.Pdf.PdfName ToUnicode = CreateDirectName("ToUnicode");
