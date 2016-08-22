@@ -369,7 +369,9 @@ namespace iText.Kernel.Font {
             return FontProgramFactory.IsRegisteredFont(fontname);
         }
 
-        internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException) {
+        [Obsolete]
+        protected internal static bool CheckFontDictionary(PdfDictionary fontDic, PdfName fontType, bool isException
+            ) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {
                 if (isException) {
