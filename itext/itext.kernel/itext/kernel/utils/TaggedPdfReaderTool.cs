@@ -123,7 +123,6 @@ namespace iText.Kernel.Utils {
             return this;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void InspectKids(IList<IPdfStructElem> kids) {
             if (kids == null) {
                 return;
@@ -133,39 +132,42 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void InspectKid(IPdfStructElem kid) {
-            if (kid is PdfStructElem) {
-                PdfStructElem structElemKid = (PdfStructElem)kid;
-                PdfName s = structElemKid.GetRole();
-                String tagN = s.GetValue();
-                String tag = FixTagName(tagN);
-                @out.Write("<");
-                @out.Write(tag);
-                InspectAttributes(structElemKid);
-                @out.Write(">" + Environment.NewLine);
-                PdfString alt = (structElemKid).GetAlt();
-                if (alt != null) {
-                    @out.Write("<alt><![CDATA[");
-                    @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
-                    @out.Write("]]></alt>" + Environment.NewLine);
-                }
-                InspectKids(structElemKid.GetKids());
-                @out.Write("</");
-                @out.Write(tag);
-                @out.Write(">" + Environment.NewLine);
-            }
-            else {
-                if (kid is PdfMcr) {
-                    ParseTag((PdfMcr)kid);
+            try {
+                if (kid is PdfStructElem) {
+                    PdfStructElem structElemKid = (PdfStructElem)kid;
+                    PdfName s = structElemKid.GetRole();
+                    String tagN = s.GetValue();
+                    String tag = FixTagName(tagN);
+                    @out.Write("<");
+                    @out.Write(tag);
+                    InspectAttributes(structElemKid);
+                    @out.Write(">" + Environment.NewLine);
+                    PdfString alt = (structElemKid).GetAlt();
+                    if (alt != null) {
+                        @out.Write("<alt><![CDATA[");
+                        @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
+                        @out.Write("]]></alt>" + Environment.NewLine);
+                    }
+                    InspectKids(structElemKid.GetKids());
+                    @out.Write("</");
+                    @out.Write(tag);
+                    @out.Write(">" + Environment.NewLine);
                 }
                 else {
-                    @out.Write(" <flushedKid/> ");
+                    if (kid is PdfMcr) {
+                        ParseTag((PdfMcr)kid);
+                    }
+                    else {
+                        @out.Write(" <flushedKid/> ");
+                    }
                 }
+            }
+            catch (System.IO.IOException e) {
+                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void InspectAttributes(PdfStructElem kid) {
             PdfObject attrObj = kid.GetAttributes(false);
             if (attrObj != null) {
@@ -176,18 +178,22 @@ namespace iText.Kernel.Utils {
                 else {
                     attrDict = (PdfDictionary)attrObj;
                 }
-                foreach (KeyValuePair<PdfName, PdfObject> entry in attrDict.EntrySet()) {
-                    @out.Write(' ');
-                    String attrName = entry.Key.GetValue();
-                    @out.Write(char.ToLower(attrName[0]) + attrName.Substring(1));
-                    @out.Write("=\"");
-                    @out.Write(entry.Value.ToString());
-                    @out.Write("\"");
+                try {
+                    foreach (KeyValuePair<PdfName, PdfObject> entry in attrDict.EntrySet()) {
+                        @out.Write(' ');
+                        String attrName = entry.Key.GetValue();
+                        @out.Write(char.ToLower(attrName[0]) + attrName.Substring(1));
+                        @out.Write("=\"");
+                        @out.Write(entry.Value.ToString());
+                        @out.Write("\"");
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
                 }
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ParseTag(PdfMcr kid) {
             int mcid = kid.GetMcid();
             PdfDictionary pageDic = kid.GetPageObject();
@@ -213,7 +219,12 @@ namespace iText.Kernel.Utils {
                     tagContent = subtype.ToString();
                 }
             }
-            @out.Write(EscapeXML(tagContent, true));
+            try {
+                @out.Write(EscapeXML(tagContent, true));
+            }
+            catch (System.IO.IOException e) {
+                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+            }
         }
 
         protected internal static String FixTagName(String tag) {
