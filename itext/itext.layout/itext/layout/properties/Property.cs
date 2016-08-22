@@ -205,7 +205,11 @@ namespace iText.Layout.Properties {
 
         public const int TEXT_ALIGNMENT = 70;
 
-        /// <summary>Use values from .</summary>
+        /// <summary>
+        /// Use values from
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
+        /// .
+        /// </summary>
         public const int TEXT_RENDERING_MODE = 71;
 
         public const int TEXT_RISE = 72;

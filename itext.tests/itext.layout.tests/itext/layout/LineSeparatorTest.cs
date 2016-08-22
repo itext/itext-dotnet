@@ -73,7 +73,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void RotatedLineSeparatorTest0() {
+        public virtual void RotatedLineSeparatorTest02() {
             String outFileName = destinationFolder + "rotatedLineSeparatorTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_rotatedLineSeparatorTest02.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));

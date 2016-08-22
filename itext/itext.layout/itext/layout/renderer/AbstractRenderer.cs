@@ -964,9 +964,43 @@ namespace iText.Layout.Renderer
 				}
 			}
 			return this;
-		}
+        }
 
-		public abstract IRenderer GetNextRenderer();
+        /**
+         * Calculates bounding box around points.
+         * @param points list of the points calculated bbox will enclose.
+         * @return array of float values which denote left, bottom, right, top lines of bbox in this specific order
+         */
+        protected Rectangle CalculateBBox(List<Point> points) {
+            double minX = double.MaxValue;
+            double minY = double.MaxValue;
+            double maxX = -double.MaxValue;
+            double maxY = -double.MaxValue;
+            foreach (Point p in points) {
+                minX = Math.Min(p.GetX(), minX);
+                minY = Math.Min(p.GetY(), minY);
+                maxX = Math.Max(p.GetX(), maxX);
+                maxY = Math.Max(p.GetY(), maxY);
+            }
+            return new Rectangle((float)minX, (float)minY, (float)(maxX - minX), (float)(maxY - minY));
+        }
+
+        protected IList<Point> RectangleToPointsList(Rectangle rect) {
+            IList<Point> points = new List<Point>();
+            points.AddAll(JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect.GetRight(), rect.GetBottom()),
+                    new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect.GetTop())));
+            return points;
+        }
+
+        protected IList<Point> TransformPoints(IList<Point> points, AffineTransform transform) {
+            foreach (Point point in points) {
+                transform.Transform(point, point);
+            }
+
+            return points;
+        }
+
+        public abstract IRenderer GetNextRenderer();
 	    
         public abstract LayoutResult Layout(LayoutContext layoutContext);
 	}

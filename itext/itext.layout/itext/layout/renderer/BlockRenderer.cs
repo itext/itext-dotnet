@@ -340,59 +340,91 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void ApplyRotationLayout(Rectangle layoutBox) {
-            float? rotationPointX = this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
-            float? rotationPointY = this.GetPropertyAsFloat(Property.ROTATION_POINT_Y);
-            if (rotationPointX == null || rotationPointY == null) {
-                // if rotation point was not specified, the most bottom-left point is used
-                rotationPointX = occupiedArea.GetBBox().GetX();
-                rotationPointY = occupiedArea.GetBBox().GetY();
-                SetProperty(Property.ROTATION_POINT_X, rotationPointX);
-                SetProperty(Property.ROTATION_POINT_Y, rotationPointY);
-            }
+            float angle = (float)this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            float x = occupiedArea.GetBBox().GetX();
+            float y = occupiedArea.GetBBox().GetY();
             float height = occupiedArea.GetBBox().GetHeight();
             float width = occupiedArea.GetBBox().GetWidth();
             SetProperty(Property.ROTATION_INITIAL_WIDTH, width);
             SetProperty(Property.ROTATION_INITIAL_HEIGHT, height);
-            if (!IsPositioned()) {
-                IList<Point> rotatedPoints = new List<Point>();
-                GetLayoutShiftAndRotatedPoints(rotatedPoints, (float)rotationPointX, (float)rotationPointY);
+            AffineTransform rotationTransform = new AffineTransform();
+            // here we calculate and set the actual occupied area of the rotated content
+            if (IsPositioned()) {
+                float? rotationPointX = this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
+                float? rotationPointY = this.GetPropertyAsFloat(Property.ROTATION_POINT_Y);
+                if (rotationPointX == null || rotationPointY == null) {
+                    // if rotation point was not specified, the most bottom-left point is used
+                    rotationPointX = x;
+                    rotationPointY = y;
+                }
+                // transforms apply from bottom to top
+                rotationTransform.Translate((float)rotationPointX, (float)rotationPointY);
+                // move point back at place
+                rotationTransform.Rotate(angle);
+                // rotate
+                rotationTransform.Translate((float)-rotationPointX, (float)-rotationPointY);
+                // move rotation point to origin
+                IList<Point> rotatedPoints = TransformPoints(RectangleToPointsList(occupiedArea.GetBBox()), rotationTransform
+                    );
+                Rectangle newBBox = CalculateBBox(rotatedPoints);
+                // make occupied area be of size and position of actual content
+                occupiedArea.GetBBox().SetWidth(newBBox.GetWidth());
+                occupiedArea.GetBBox().SetHeight(newBBox.GetHeight());
+                float occupiedAreaShiftX = newBBox.GetX() - x;
+                float occupiedAreaShiftY = newBBox.GetY() - y;
+                Move(occupiedAreaShiftX, occupiedAreaShiftY);
+            }
+            else {
+                rotationTransform = AffineTransform.GetRotateInstance(angle);
+                IList<Point> rotatedPoints = TransformPoints(RectangleToPointsList(occupiedArea.GetBBox()), rotationTransform
+                    );
+                float[] shift = CalculateShiftToPositionBBoxOfPointsAt(x, y + height, rotatedPoints);
+                foreach (Point point in rotatedPoints) {
+                    point.SetLocation(point.GetX() + shift[0], point.GetY() + shift[1]);
+                }
+                // clip bounding box on the right side to make it fit in the layout area width
                 Point clipLineBeg = new Point(layoutBox.GetRight(), layoutBox.GetTop());
                 Point clipLineEnd = new Point(layoutBox.GetRight(), layoutBox.GetBottom());
-                IList<Point> newOccupiedBox = ClipBBox(rotatedPoints, clipLineBeg, clipLineEnd);
-                double maxX = -double.MaxValue;
-                double minY = double.MaxValue;
-                foreach (Point point in newOccupiedBox) {
-                    if (point.GetX() > maxX) {
-                        maxX = point.GetX();
-                    }
-                    if (point.GetY() < minY) {
-                        minY = point.GetY();
-                    }
-                }
-                float newHeight = (float)(occupiedArea.GetBBox().GetTop() - minY);
-                float newWidth = (float)(maxX - occupiedArea.GetBBox().GetLeft());
-                occupiedArea.GetBBox().SetWidth(newWidth);
-                occupiedArea.GetBBox().SetHeight(newHeight);
-                Move(0, height - newHeight);
+                IList<Point> newOccupiedAreaPoints = ClipPolygon(rotatedPoints, clipLineBeg, clipLineEnd);
+                Rectangle newBBox = CalculateBBox(newOccupiedAreaPoints);
+                occupiedArea.GetBBox().SetWidth(newBBox.GetWidth());
+                occupiedArea.GetBBox().SetHeight(newBBox.GetHeight());
+                float heightDiff = height - newBBox.GetHeight();
+                Move(0, heightDiff);
             }
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1")]
         protected internal virtual float[] ApplyRotation() {
-            float dx = 0;
-            float dy = 0;
-            if (!IsPositioned()) {
-                Point shift = GetLayoutShiftAndRotatedPoints(new List<Point>(), 0, 0);
-                dy = (float)shift.GetY();
-                dx = (float)shift.GetX();
-            }
-            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            AffineTransform transform = new AffineTransform();
-            transform.Rotate((float)angle);
             float[] ctm = new float[6];
-            transform.GetMatrix(ctm);
-            ctm[4] = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X) + dx;
-            ctm[5] = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + dy;
+            CreateRotationTransformInsideOccupiedArea().GetMatrix(ctm);
             return ctm;
+        }
+
+        /// <summary>
+        /// This method creates
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// instance that could be used
+        /// to rotate content inside the occupied area. Be aware that it should be used only after
+        /// layout rendering is finished and correct occupied area for the rotated element is calculated.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.AffineTransform"/>
+        /// that rotates the content and places it inside occupied area.
+        /// </returns>
+        protected internal virtual AffineTransform CreateRotationTransformInsideOccupiedArea() {
+            float? angle = this.GetProperty<float?>(Property.ROTATION_ANGLE);
+            AffineTransform rotationTransform = AffineTransform.GetRotateInstance((float)angle);
+            Rectangle contentBox = this.GetOccupiedAreaBBox();
+            IList<Point> rotatedContentBoxPoints = TransformPoints(RectangleToPointsList(contentBox), rotationTransform
+                );
+            // Occupied area for rotated elements is already calculated on layout in such way to enclose rotated content;
+            // therefore we can simply rotate content as is and then shift it to the occupied area.
+            float[] shift = CalculateShiftToPositionBBoxOfPointsAt(occupiedArea.GetBBox().GetLeft(), occupiedArea.GetBBox
+                ().GetTop(), rotatedContentBoxPoints);
+            rotationTransform.PreConcatenate(AffineTransform.GetTranslateInstance(shift[0], shift[1]));
+            return rotationTransform;
         }
 
         protected internal virtual void BeginRotationIfApplied(PdfCanvas canvas) {
@@ -404,13 +436,8 @@ namespace iText.Layout.Renderer {
                         .Name));
                 }
                 else {
-                    float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
-                        ().GetHeight();
-                    float shiftX = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
-                    float shiftY = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
-                    Move(-shiftX, -shiftY);
-                    float[] ctm = ApplyRotation();
-                    canvas.SaveState().ConcatMatrix(ctm[0], ctm[1], ctm[2], ctm[3], ctm[4], ctm[5]);
+                    AffineTransform transform = CreateRotationTransformInsideOccupiedArea();
+                    canvas.SaveState().ConcatMatrix(transform);
                 }
             }
         }
@@ -418,62 +445,34 @@ namespace iText.Layout.Renderer {
         protected internal virtual void EndRotationIfApplied(PdfCanvas canvas) {
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
-                if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
-                        .Name));
-                }
-                else {
-                    float heightDiff = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT) - occupiedArea.GetBBox
-                        ().GetHeight();
-                    float shiftX = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_X);
-                    float shiftY = (float)this.GetPropertyAsFloat(Property.ROTATION_POINT_Y) + heightDiff;
-                    canvas.RestoreState();
-                    Move(shiftX, shiftY);
-                }
+                canvas.RestoreState();
             }
         }
 
-        private Point GetLayoutShiftAndRotatedPoints(IList<Point> rotatedPoints, float shiftX, float shiftY) {
-            float angle = (float)this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            float width = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH);
-            float height = (float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_HEIGHT);
-            float left = occupiedArea.GetBBox().GetX() - shiftX;
-            float bottom = occupiedArea.GetBBox().GetY() - shiftY;
-            float right = left + width;
-            float top = bottom + height;
-            AffineTransform rotateTransform = new AffineTransform();
-            rotateTransform.Rotate(angle);
-            TransformBBox(left, bottom, right, top, rotateTransform, rotatedPoints);
+        /// <summary>
+        /// This method calculates the shift needed to be applied to the points in order to position
+        /// upper and left borders of their bounding box at the given lines.
+        /// </summary>
+        /// <param name="left">x coordinate at which points bbox left border is to be aligned</param>
+        /// <param name="top">y coordinate at which points bbox upper border is to be aligned</param>
+        /// <param name="points">the points, which bbox will be aligned at the given position</param>
+        /// <returns>
+        /// array of two floats, where first element denotes x-coordinate shift and the second
+        /// element denotes y-coordinate shift which are needed to align points bbox at the given lines.
+        /// </returns>
+        private float[] CalculateShiftToPositionBBoxOfPointsAt(float left, float top, IList<Point> points) {
             double minX = double.MaxValue;
             double maxY = -double.MaxValue;
-            foreach (Point point in rotatedPoints) {
-                if (point.GetX() < minX) {
-                    minX = point.GetX();
-                }
-                if (point.GetY() > maxY) {
-                    maxY = point.GetY();
-                }
+            foreach (Point point in points) {
+                minX = Math.Min(point.GetX(), minX);
+                maxY = Math.Max(point.GetY(), maxY);
             }
             float dx = (float)(left - minX);
             float dy = (float)(top - maxY);
-            foreach (Point point_1 in rotatedPoints) {
-                point_1.SetLocation(point_1.GetX() + dx + shiftX, point_1.GetY() + dy + shiftY);
-            }
-            return new Point(dx, dy);
+            return new float[] { dx, dy };
         }
 
-        private IList<Point> TransformBBox(float left, float bottom, float right, float top, AffineTransform transform
-            , IList<Point> bBoxPoints) {
-            bBoxPoints.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(new Point(left, bottom), new Point(right, bottom), new 
-                Point(right, top), new Point(left, top)));
-            foreach (Point point in bBoxPoints) {
-                transform.Transform(point, point);
-            }
-            return bBoxPoints;
-        }
-
-        private IList<Point> ClipBBox(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
+        private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
             IList<Point> filteredPoints = new List<Point>();
             bool prevOnRightSide = false;
             Point filteringPoint = points[0];
