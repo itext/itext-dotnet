@@ -230,9 +230,13 @@ namespace iText.IO.Font.Otf
 		public virtual short GetAnchorDelta()
 		{
 			return anchorDelta;
-		}
+        }
 
-		public virtual bool HasOffsets()
+        public void SetAnchorDelta(short anchorDelta) {
+            this.anchorDelta = anchorDelta;
+        }
+
+        public virtual bool HasOffsets()
 		{
 			return xPlacement != 0 || yPlacement != 0 || xAdvance != 0 || yAdvance != 0;
 		}
