@@ -106,7 +106,7 @@ namespace iText.Kernel.Font {
             }
             SetFontMatrix(fontMatrix);
             foreach (PdfName glyphName in charProcsDic.KeySet()) {
-                int unicode = (int)AdobeGlyphList.NameToUnicode(glyphName.GetValue());
+                int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
                 if (unicode != -1 && fontEncoding.CanEncode(unicode)) {
                     int code = fontEncoding.ConvertToByte(unicode);
                     ((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic

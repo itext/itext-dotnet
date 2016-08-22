@@ -124,7 +124,7 @@ namespace iText.Kernel.Font {
                     }
                     else {
                         String glyphName = ((PdfName)obj).GetValue();
-                        int unicode = (int)AdobeGlyphList.NameToUnicode(glyphName);
+                        int unicode = AdobeGlyphList.NameToUnicode(glyphName);
                         if (unicode != -1) {
                             fontEncoding.codeToUnicode[currentNumber] = (int)unicode;
                             fontEncoding.unicodeToCode.Put((int)unicode, currentNumber);

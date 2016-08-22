@@ -163,7 +163,7 @@ namespace iText.IO.Font {
         /// <param name="name">Glyph name</param>
         /// <returns>Glyph instance if found, otherwise null.</returns>
         public virtual Glyph GetGlyph(String name) {
-            int unicode = (int)AdobeGlyphList.NameToUnicode(name);
+            int unicode = AdobeGlyphList.NameToUnicode(name);
             if (unicode != -1) {
                 return GetGlyph((int)unicode);
             }
@@ -406,7 +406,7 @@ namespace iText.IO.Font {
                         }
                     }
                 }
-                int unicode = (int)AdobeGlyphList.NameToUnicode(N);
+                int unicode = AdobeGlyphList.NameToUnicode(N);
                 Glyph glyph = new Glyph(C, WX, unicode, B);
                 if (C >= 0) {
                     codeToGlyph[C] = glyph;
@@ -467,8 +467,8 @@ namespace iText.IO.Font {
                         String first = tok.NextToken();
                         String second = tok.NextToken();
                         int? width = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
-                        int firstUni = (int)AdobeGlyphList.NameToUnicode(first);
-                        int secondUni = (int)AdobeGlyphList.NameToUnicode(second);
+                        int firstUni = AdobeGlyphList.NameToUnicode(first);
+                        int secondUni = AdobeGlyphList.NameToUnicode(second);
                         if (firstUni != -1 && secondUni != -1) {
                             long record = ((long)firstUni << 32) + secondUni;
                             kernPairs[record] = width;
