@@ -76,5 +76,74 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <summary>
+        /// <a href="http://stackoverflow.com/questions/34408764/create-local-link-in-rotated-pdfpcell-in-itextsharp">
+        /// Stack overflow: Create local link in rotated PdfPCell in iTextSharp
+        /// </a>
+        /// <p>
+        /// This is the equivalent Java code for iText 7 of the C# code for iTextSharp 5
+        /// in the question.
+        /// </summary>
+        /// <remarks>
+        /// <a href="http://stackoverflow.com/questions/34408764/create-local-link-in-rotated-pdfpcell-in-itextsharp">
+        /// Stack overflow: Create local link in rotated PdfPCell in iTextSharp
+        /// </a>
+        /// <p>
+        /// This is the equivalent Java code for iText 7 of the C# code for iTextSharp 5
+        /// in the question.
+        /// </p>
+        /// Author: mkl.
+        /// </remarks>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestCreateLocalLinkInRotatedCell() {
+            String outFileName = destinationFolder + "linkInRotatedCell.pdf";
+            String cmpFileName = sourceFolder + "cmp_linkInRotatedCell.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Table table = new Table(2);
+            Link chunk = new Link("Click here", PdfAction.CreateURI("http://itextpdf.com/"));
+            table.AddCell(new Cell().Add(new Paragraph().Add(chunk)).SetRotationAngle(Math.PI / 2));
+            chunk = new Link("Click here 2", PdfAction.CreateURI("http://itextpdf.com/"));
+            table.AddCell(new Paragraph().Add(chunk));
+            document.Add(table);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RotatedLinkAtFixedPosition() {
+            String outFileName = destinationFolder + "rotatedLinkAtFixedPosition.pdf";
+            String cmpFileName = sourceFolder + "cmp_rotatedLinkAtFixedPosition.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            Link link = new Link("TestLink", action);
+            doc.Add(new Paragraph(link).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RotatedLinkInnerRotation() {
+            String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
+            String cmpFileName = sourceFolder + "cmp_rotatedLinkInnerRotation.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            Link link = new Link("TestLink", action);
+            Paragraph p = new Paragraph(link).SetRotationAngle(Math.PI / 4).SetBackgroundColor(Color.RED);
+            Div div = new Div().Add(p).SetRotationAngle(Math.PI / 3).SetBackgroundColor(Color.BLUE);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

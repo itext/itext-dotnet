@@ -971,7 +971,7 @@ namespace iText.Layout.Renderer
          * @param points list of the points calculated bbox will enclose.
          * @return array of float values which denote left, bottom, right, top lines of bbox in this specific order
          */
-        protected Rectangle CalculateBBox(List<Point> points) {
+        protected Rectangle CalculateBBox(IList<Point> points) {
             double minX = double.MaxValue;
             double minY = double.MaxValue;
             double maxX = -double.MaxValue;
@@ -998,6 +998,34 @@ namespace iText.Layout.Renderer
             }
 
             return points;
+        }
+
+
+        /// <summary>
+        /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,
+        /// e.g. document page or form xObject. This is particularly useful for the cases when element is nested in the rotated
+        /// element.
+        /// </summary>
+        /// <returns>a <see cref="Rectangle"/> which is a bbox of the content not relative to the parent's layout area but rather to
+        /// the some pdf entity coordinate system.</returns>
+        protected Rectangle CalculateAbsolutePdfBBox() {
+            Rectangle contentBox = GetOccupiedAreaBBox();
+            IList<Point> contentBoxPoints = RectangleToPointsList(contentBox);
+            AbstractRenderer renderer = this;
+            while (renderer.parent != null) {
+                if (renderer is BlockRenderer) {
+                    float? angle = renderer.GetProperty<float?>(Property.ROTATION_ANGLE);
+                    if (angle != null) {
+                        BlockRenderer blockRenderer = (BlockRenderer)renderer;
+                        AffineTransform rotationTransform = blockRenderer.CreateRotationTransformInsideOccupiedArea();
+                        TransformPoints(contentBoxPoints, rotationTransform);
+                    }
+                }
+
+                renderer = (AbstractRenderer)renderer.parent;
+            }
+
+            return CalculateBBox(contentBoxPoints);
         }
 
         public abstract IRenderer GetNextRenderer();
