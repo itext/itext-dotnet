@@ -402,11 +402,11 @@ namespace iText.Kernel.Pdf {
         /// Calculates hash code for object to be copied.
         /// The hash code and the copied object is the stored in @{link copiedObjects} hash map to avoid duplications.
         /// </remarks>
-        /// <param name="object">object to be copied.</param>
+        /// <param name="obj">object to be copied.</param>
         /// <returns>calculated hash code.</returns>
-        [System.ObsoleteAttribute(@"Functionality has been moved.")]
-        protected internal virtual int GetCopyObjectKey(PdfObject @object) {
-            throw new InvalidOperationException("Functionality has been moved");
+        [System.ObsoleteAttribute(@"Functionality will be removed.")]
+        protected internal virtual int GetCopyObjectKey(PdfObject obj) {
+            return CalculateIndRefKey(obj.GetIndirectReference());
         }
 
         /// <summary>Used in the smart mode.</summary>
