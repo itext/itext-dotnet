@@ -163,6 +163,13 @@ namespace iText.Kernel.Pdf.Colorspace {
             : base(pdfObject) {
         }
 
+        [System.ObsoleteAttribute(@"Use PdfShading(iText.Kernel.Pdf.PdfDictionary, int, PdfColorSpace) instead.")]
+        protected internal PdfShading(PdfDictionary pdfObject, int type, PdfObject colorSpace)
+            : base(pdfObject) {
+            GetPdfObject().Put(PdfName.ShadingType, new PdfNumber(type));
+            GetPdfObject().Put(PdfName.ColorSpace, colorSpace);
+        }
+
         protected internal PdfShading(PdfDictionary pdfObject, int type, PdfColorSpace colorSpace)
             : base(pdfObject) {
             GetPdfObject().Put(PdfName.ShadingType, new PdfNumber(type));
