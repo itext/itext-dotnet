@@ -179,6 +179,18 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// </summary>
         /// <param name="lineCapStyle">0 - butt cap, 1 - round cap, 2 - projecting square cap.</param>
         /// <returns>object itself.</returns>
+        [System.ObsoleteAttribute(@"Use SetLineCapStyle(int) instead.")]
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStryle(int lineCapStyle) {
+            return Put(PdfName.LC, new PdfNumber(lineCapStyle));
+        }
+
+        /// <summary>
+        /// Sets line gap style value,
+        /// <c>LC</c>
+        /// key.
+        /// </summary>
+        /// <param name="lineCapStyle">0 - butt cap, 1 - round cap, 2 - projecting square cap.</param>
+        /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetLineCapStyle(int lineCapStyle) {
             return Put(PdfName.LC, new PdfNumber(lineCapStyle));
         }
