@@ -200,8 +200,7 @@ namespace iText.Layout.Renderer {
                     if (NoPrint(currentGlyph)) {
                         continue;
                     }
-                    if (tabAnchorCharacter != null && tabAnchorCharacter == (int)text.Get(ind).GetUnicode
-                        ()) {
+                    if (tabAnchorCharacter != null && tabAnchorCharacter == text.Get(ind).GetUnicode()) {
                         tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
                         tabAnchorCharacter = (char?)null;
                     }
@@ -233,8 +232,8 @@ namespace iText.Layout.Renderer {
                         break;
                     }
                     if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters
-                        .IsSplitCharacter(text, ind + 1) && (char.IsWhiteSpace((char)(int)text.Get(ind +
-                         1).GetUnicode()) || char.IsSeparator((char)(int)text.Get(ind + 1).GetUnicode())
+                        .IsSplitCharacter(text, ind + 1) && (char.IsWhiteSpace((char)text.Get(ind +
+                         1).GetUnicode()) || char.IsSeparator((char)text.Get(ind + 1).GetUnicode())
                         )) {
                         nonBreakablePartEnd = ind;
                         break;
@@ -642,7 +641,7 @@ namespace iText.Layout.Renderer {
             if (text != null) {
                 Glyph glyph;
                 while (text.start < text.end && (glyph = text.Get(text.start)).HasValidUnicode()
-                    && char.IsWhiteSpace((char)(int)glyph.GetUnicode()) && !IsNewLine(text, text.start
+                    && char.IsWhiteSpace((char)glyph.GetUnicode()) && !IsNewLine(text, text.start
                     )) {
                     text.start++;
                 }
@@ -668,7 +667,7 @@ namespace iText.Layout.Renderer {
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!currentGlyph.HasValidUnicode() || !char.IsWhiteSpace((char)(int)currentGlyph
+                if (!currentGlyph.HasValidUnicode() || !char.IsWhiteSpace((char)currentGlyph
                     .GetUnicode())) {
                     break;
                 }
@@ -999,8 +998,8 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
-            return g.HasValidUnicode() && (char.IsLetter((char)(int)g.GetUnicode()) || char.IsDigit
-                ((char)(int)g.GetUnicode()) || '\u00ad' == g.GetUnicode());
+            return g.HasValidUnicode() && (char.IsLetter((char)g.GetUnicode()) || char.IsDigit
+                ((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode());
         }
 
         private bool IsWhitespaceGlyph(Glyph g) {

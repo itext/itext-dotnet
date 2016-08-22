@@ -131,7 +131,7 @@ namespace iText.IO.Font {
 
         public override int GetKerning(Glyph first, Glyph second) {
             if (first.HasValidUnicode() && second.HasValidUnicode()) {
-                long record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
+                long record = ((long)first.GetUnicode() << 32) + second.GetUnicode();
                 if (kernPairs.ContainsKey(record)) {
                     return (int)kernPairs.Get(record);
                 }
