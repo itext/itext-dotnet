@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
@@ -297,7 +298,7 @@ namespace iText.Kernel.Pdf {
                 CheckAndResolveCircularReferences(resource);
             }
             if (readOnly) {
-                SetPdfObject(new PdfDictionary(GetPdfObject()));
+                SetPdfObject(GetPdfObject().Clone(JavaCollectionsUtil.EmptyList<PdfName>()));
                 BuildResources(GetPdfObject());
                 isModified = true;
                 readOnly = false;
