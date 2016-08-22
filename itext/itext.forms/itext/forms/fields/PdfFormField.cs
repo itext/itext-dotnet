@@ -2764,8 +2764,10 @@ namespace iText.Forms.Fields {
                     x = rect.GetWidth() / 2;
                 }
             }
-            new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 0, 2 * height)).ShowTextAligned(paragraph
-                , x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
+                0, 2 * height));
+            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            modelCanvas.ShowTextAligned(paragraph, x, rect.GetHeight() / 2, textAlignment, VerticalAlignment.MIDDLE);
             canvas.RestoreState().EndVariableText();
             appearance.GetPdfObject().SetData(stream.GetBytes());
         }
@@ -2806,6 +2808,7 @@ namespace iText.Forms.Fields {
             canvas.BeginVariableText().SaveState().Rectangle(3, 3, width - 6, height - 6).Clip().NewPath();
             iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(3, 0, Math.
                 Max(0, width - 6), Math.Max(0, height - 2)));
+            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
             for (int index = 0; index < strings.Count; index++) {
                 bool? isFull = modelCanvas.GetRenderer().GetPropertyAsBoolean(Property.FULL);
                 if (true.Equals(isFull)) {
@@ -3105,8 +3108,11 @@ namespace iText.Forms.Fields {
             }
             Paragraph paragraph = new Paragraph(text).SetFont(font).SetFontSize(fontSize).SetMargin(0).SetMultipliedLeading
                 (1).SetVerticalAlignment(VerticalAlignment.MIDDLE);
-            new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, width, 2 * height)).ShowTextAligned
-                (paragraph, width / 2, height / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE);
+            iText.Layout.Canvas modelCanvas = new iText.Layout.Canvas(canvas, GetDocument(), new Rectangle(0, -height, 
+                width, 2 * height));
+            modelCanvas.SetProperty(Property.APPEARANCE_STREAM_LAYOUT, true);
+            modelCanvas.ShowTextAligned(paragraph, width / 2, height / 2, TextAlignment.CENTER, VerticalAlignment.MIDDLE
+                );
         }
 
         /// <summary>Performs the low-level drawing operations to draw a button object.</summary>

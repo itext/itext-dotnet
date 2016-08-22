@@ -550,20 +550,30 @@ namespace iText.Layout.Renderer {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
                 GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_546();
+
+                bool appearanceStreamLayout = GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT) == true;
+
                 if (HasOwnProperty(Property.REVERSED)) {
                     //We should mark a RTL written text
                     IDictionary<GlyphLine, bool?> outputs = GetOutputChunks();
                     foreach (KeyValuePair<GlyphLine, bool?> output in outputs) {
                         GlyphLine o = output.Key.Filter(filter);
-                        if ((bool)output.Value) {
+                        bool writeReversedChars = !appearanceStreamLayout && (bool)output.Value;
+                        if (writeReversedChars) {
                             canvas.OpenTag(new CanvasTag(PdfName.ReversedChars));
                         }
+                        if (appearanceStreamLayout) {
+                            o.SetActualText(o.start, o.end, null);
+                        }
                         canvas.ShowText(o);
-                        if ((bool)output.Value) {
+                        if (writeReversedChars) {
                             canvas.CloseTag();
                         }
                     }
                 } else {
+                    if (appearanceStreamLayout) {
+                        line.SetActualText(line.start, line.end, null);
+                    }
                     canvas.ShowText(line.Filter(filter));
                 }
                 canvas.EndText().RestoreState();

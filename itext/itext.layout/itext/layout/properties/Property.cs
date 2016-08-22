@@ -62,6 +62,8 @@ namespace iText.Layout.Properties {
 
         public const int ACTION = 1;
 
+        public const int APPEARANCE_STREAM_LAYOUT = 82;
+
         public const int AREA_BREAK_TYPE = 2;
 
         public const int AUTO_SCALE = 3;
@@ -234,10 +236,11 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 80;
+        private const int MAX_INHERITED_PROPERTY_ID = 82;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
@@ -274,7 +277,7 @@ namespace iText.Layout.Properties {
         /// <param name="property">the ID, defined in this class, of the property to check</param>
         /// <returns>whether the property type is inheritable</returns>
         public static bool IsPropertyInherited(int property) {
-            return property >= 0 && property < MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES[property];
+            return property >= 0 && property <= MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES[property];
         }
     }
 }
