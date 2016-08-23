@@ -620,8 +620,38 @@ namespace iText.Kernel.Pdf.Canvas {
                         float xPlacement = float.NaN;
                         float yPlacement = float.NaN;
                         if (glyph.HasPlacement()) {
-                            xPlacement = -GetSubrangeWidth(text, i + glyph.GetAnchorDelta(), i) + glyph.GetXPlacement() * fontSize;
-                            yPlacement = glyph.GetYAdvance() * fontSize;
+ {
+                                float xPlacementAddition = 0;
+                                int currentGlyphIndex = i;
+                                Glyph currentGlyph = text.Get(i);
+                                while (currentGlyph != null && currentGlyph.GetXPlacement() != 0) {
+                                    xPlacementAddition += currentGlyph.GetXPlacement();
+                                    if (currentGlyph.GetAnchorDelta() == 0) {
+                                        break;
+                                    }
+                                    else {
+                                        currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                        currentGlyph = text.Get(currentGlyphIndex);
+                                    }
+                                }
+                                xPlacement = -GetSubrangeWidth(text, currentGlyphIndex, i) + xPlacementAddition * fontSize;
+                            }
+ {
+                                float yPlacementAddition = 0;
+                                int currentGlyphIndex = i;
+                                Glyph currentGlyph = text.Get(i);
+                                while (currentGlyph != null && currentGlyph.GetYPlacement() != 0) {
+                                    yPlacementAddition += currentGlyph.GetYPlacement();
+                                    if (currentGlyph.GetAnchorDelta() == 0) {
+                                        break;
+                                    }
+                                    else {
+                                        currentGlyph = text.Get(currentGlyphIndex + currentGlyph.GetAnchorDelta());
+                                        currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                    }
+                                }
+                                yPlacement = glyph.GetYAdvance() * fontSize + yPlacementAddition * fontSize;
+                            }
                             contentStream.GetOutputStream().WriteFloat(xPlacement, true).WriteSpace().WriteFloat(yPlacement, true).WriteSpace
                                 ().WriteBytes(Td);
                         }
