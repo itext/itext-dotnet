@@ -15,7 +15,7 @@ namespace iText.Layout.Properties {
                     int value = (int)field.GetValue(null);
                     maxFieldValue = Math.Max(maxFieldValue, value);
                     if (fieldValues.Contains(value)) {
-                        NUnit.Framework.Assert.Fail(String.Format("Multiple fields with same value: %s", value));
+                        NUnit.Framework.Assert.Fail(String.Format("Multiple fields with same value: {0}", value));
                     }
                     fieldValues.Add(value);
                 }
