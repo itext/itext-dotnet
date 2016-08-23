@@ -90,6 +90,28 @@ namespace iText.IO.Util {
             return null;
         }
 
+        public static FileInfo[] ListFilesInDirectoryByFilter(String path, IFileFilter filter) {
+            return ListFilesInDirectoryByFilter(path, false, filter);
+        }
+
+        public static FileInfo[] ListFilesInDirectoryByFilter(String path, bool recursive, IFileFilter filter) {
+            if (!String.IsNullOrEmpty(path)) {
+                DirectoryInfo dir = new DirectoryInfo(path);
+                if (dir.Exists) {
+                    FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    List<FileInfo> list = new List<FileInfo>();
+                    foreach (FileInfo f in files) {
+                        if (filter.Accept(f)) {
+                            list.Add(f);
+                        }
+                    }
+                    return list.ToArray();
+                }
+            }
+            return null;
+        }
+
+        [Obsolete]
         public static String[] ListFilesInDirectoryByFilter(String path, bool recursive, FileFilter filter) {
             if (!String.IsNullOrEmpty(path)) {
                 DirectoryInfo dir = new DirectoryInfo(path);
@@ -137,9 +159,22 @@ namespace iText.IO.Util {
             return outputStream;
         }
 
-        public class FileFilter {
+        public static void CreateDirectories(String outPath) {
+            Directory.CreateDirectory(outPath);
+        }
+
+        public interface IFileFilter {
+            bool Accept(FileInfo pathname);
+        }
+
+        [Obsolete]
+        public class FileFilter : IFileFilter {
             public virtual bool Accept(String pathname) {
                 return true;
+            }
+
+            public bool Accept(FileInfo pathname) {
+                return Accept(pathname.Name);
             }
         }
     }

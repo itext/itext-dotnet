@@ -233,6 +233,10 @@ namespace iText.Kernel {
             return dictionary.ContainsKey(key);
         }
 
+        public static Stack<T> Clone<T>(this Stack<T> stack) {
+            return new Stack<T>(new Stack<T>(stack)); // create stack twice to retain the original order
+        }
+
         public static void Update(this IDigest dgst, byte[] input) {
             dgst.Update(input, 0, input.Length);
         }

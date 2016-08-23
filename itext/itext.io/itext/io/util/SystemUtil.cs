@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Diagnostics;
+using System.Text;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -56,6 +58,49 @@ namespace iText.IO.Util {
 
         public static long GetFreeMemory() {
             return GC.GetTotalMemory(false);
+        }
+
+        /// <summary>
+        /// Gets environment variable with given name.
+        /// </summary>
+        /// <param name="name">the name of environment variable.</param>
+        /// <returns>variable value or null if there is no such.</returns>
+        public static String GetEnvironmentVariable(String name) {
+            return Environment.GetEnvironmentVariable(name);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        public static bool RunProcessAndWait(String execPath, String @params) {
+            StringTokenizer st = new StringTokenizer(@params);
+            String[] cmdArray = new String[st.CountTokens() + 1];
+            cmdArray[0] = execPath;
+            for (int i = 1; st.HasMoreTokens(); ++i) {
+                cmdArray[i] = st.NextToken();
+            }
+            Process p = new Process();
+            p.StartInfo = new ProcessStartInfo(execPath, @params);
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = true;
+            p.Start();
+
+            PrintProcessOutput(p);
+            p.WaitForExit();
+            return true;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private static void PrintProcessOutput(Process p) {
+            StringBuilder bri = new StringBuilder();
+            StringBuilder bre = new StringBuilder();
+            while (!p.HasExited) {
+                bri.Append(p.StandardOutput.ReadToEnd());
+                bre.Append(p.StandardError.ReadToEnd());
+            }
+            System.Console.Out.WriteLine(bri.ToString());
+            System.Console.Out.WriteLine(bre.ToString());
         }
     }
 }
