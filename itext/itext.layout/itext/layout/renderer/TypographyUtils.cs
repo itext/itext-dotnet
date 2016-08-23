@@ -83,6 +83,8 @@ namespace iText.Layout.Renderer {
 
         private const String COMPUTE_REORDERING = "ComputeReordering";
 
+        private const String INVERSE_REORDERING = "InverseReordering";
+
         private static readonly ICollection<UnicodeScript> SUPPORTED_SCRIPTS;
 
         private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED;
@@ -192,18 +194,34 @@ namespace iText.Layout.Renderer {
                 int[] reorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, COMPUTE_REORDERING, new Type[] { typeof(
                     byte[]) }, lineLevels);
                 //            int[] reorder = BidiAlgorithm.computeReordering(lineLevels);
+                int[] inverseReorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, INVERSE_REORDERING, new Type
+                    [] { typeof(int[]) }, reorder);
+                //            int[] inverseReorder = BidiAlgorithm.inverseReordering(reorder);
                 IList<LineRenderer.RendererGlyph> reorderedLine = new List<LineRenderer.RendererGlyph>(lineLevels.Length);
                 for (int i = 0; i < line.Count; i++) {
                     reorderedLine.Add(line[reorder[i]]);
                     // Mirror RTL glyphs
                     if (levels[reorder[i]] % 2 == 1) {
                         if (reorderedLine[i].glyph.HasValidUnicode()) {
+                            int unicode = reorderedLine[i].glyph.GetUnicode();
                             int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_PAIRED_BRACKET, new Type[] 
-                                { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
+                                { typeof(int) }, unicode);
                             //                        int pairedBracket = BidiBracketMap.getPairedBracket(reorderedLine.get(i).glyph.getUnicode());
-                            PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
-                            reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
+                            if (pairedBracket != unicode) {
+                                PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
+                                reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
+                            }
                         }
+                    }
+                }
+                // fix anchorDelta
+                for (int i_1 = 0; i_1 < reorderedLine.Count; i_1++) {
+                    Glyph glyph = reorderedLine[i_1].glyph;
+                    if (glyph.HasPlacement()) {
+                        int oldAnchor = reorder[i_1] + glyph.GetAnchorDelta();
+                        int newPos = inverseReorder[oldAnchor];
+                        int newAnchorDelta = newPos - i_1;
+                        glyph.SetAnchorDelta((short)newAnchorDelta);
                     }
                 }
                 line.Clear();
