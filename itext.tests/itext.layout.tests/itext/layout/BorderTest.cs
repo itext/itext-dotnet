@@ -195,6 +195,35 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("bugs in TableRenderer#buildBordersArrays")]
+        public virtual void WideBorderTest01() {
+            fileName = "wideBorderTest01.pdf";
+            Document doc = CreateDocument();
+            doc.Add(new Paragraph("ROWS SHOULD BE THE SAME"));
+            Table table = new Table(new float[] { 1, 3 });
+            table.SetWidthPercent(50);
+            Cell cell;
+            // row 21, cell 1
+            cell = new Cell().Add("BORDERS");
+            table.AddCell(cell);
+            // row 1, cell 2
+            cell = new Cell().Add("ONE");
+            cell.SetBorderLeft(new SolidBorder(Color.RED, 16f));
+            table.AddCell(cell);
+            // row 2, cell 1
+            cell = new Cell().Add("BORDERS");
+            table.AddCell(cell);
+            // row 2, cell 2
+            cell = new Cell().Add("TWO");
+            cell.SetBorderLeft(new SolidBorder(Color.RED, 16f));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void NoHorizontalBorderTest() {
             fileName = "noHorizontalBorderTest.pdf";
             Document doc = CreateDocument();
