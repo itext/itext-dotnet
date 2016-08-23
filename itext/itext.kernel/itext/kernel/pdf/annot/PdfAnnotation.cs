@@ -879,7 +879,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation ResetFlag(int flag) {
             int flags = GetFlags();
-            flags = flags & (~flag & 0xff);
+            flags = flags & ~flag;
             return SetFlags(flags);
         }
 
@@ -890,14 +890,22 @@ namespace iText.Kernel.Pdf.Annot {
         /// <remarks>
         /// Checks if the certain flag that specifies a characteristic of the annotation
         /// is in enabled state (see ISO-320001 12.5.3, “Annotation Flags”).
-        /// This method allows only one flag to be checked at once. Use constants listed in
+        /// This method allows only one flag to be checked at once, use constants listed in
         /// <see cref="SetFlag(int)"/>
         /// .
         /// </remarks>
-        /// <param name="flag">an integer interpreted as set of one-bit flags. Only one bit must be set in this integer.
-        ///     </param>
+        /// <param name="flag">
+        /// an integer interpreted as set of one-bit flags. Only one bit must be set in this integer, otherwise
+        /// exception is thrown.
+        /// </param>
         /// <returns>true if the given flag is in enabled state.</returns>
         public virtual bool HasFlag(int flag) {
+            if (flag == 0) {
+                return false;
+            }
+            if ((flag & flag - 1) != 0) {
+                throw new ArgumentException("Only one flag must be checked at once.");
+            }
             int flags = GetFlags();
             return (flags & flag) != 0;
         }
@@ -944,7 +952,10 @@ namespace iText.Kernel.Pdf.Annot {
         public virtual PdfDictionary GetAppearanceObject(PdfName appearanceType) {
             PdfDictionary ap = GetAppearanceDictionary();
             if (ap != null) {
-                return ap.GetAsDictionary(appearanceType);
+                PdfObject apObject = ap.Get(appearanceType);
+                if (apObject is PdfDictionary) {
+                    return (PdfDictionary)apObject;
+                }
             }
             return null;
         }
