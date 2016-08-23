@@ -83,6 +83,10 @@ namespace iText.IO.Font.Otf {
                     return new GposLookupType5(this, lookupFlag, subTableLocations);
                 }
 
+                case 6: {
+                    return new GposLookupType6(this, lookupFlag, subTableLocations);
+                }
+
                 default: {
                     return null;
                 }
