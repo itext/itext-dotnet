@@ -41,7 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Geom;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 
@@ -90,6 +92,14 @@ namespace iText.Layout.Renderer {
         }
 
         // Do nothing here. Border drawing for tables is done on TableRenderer.
+        protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
+            float topWidth = borders[0] != null ? borders[0].GetWidth() : 0;
+            float rightWidth = borders[1] != null ? borders[1].GetWidth() : 0;
+            float bottomWidth = borders[2] != null ? borders[2].GetWidth() : 0;
+            float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
+            return rect.ApplyMargins<Rectangle>(topWidth / 2, rightWidth / 2, bottomWidth / 2, leftWidth / 2, reverse);
+        }
+
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));

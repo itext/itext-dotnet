@@ -291,7 +291,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("fix background rotation")]
+        [NUnit.Framework.Ignore("DEVSIX-797")]
         public virtual void CellRotationTest01() {
             String outFileName = destinationFolder + "cellRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest01.pdf";

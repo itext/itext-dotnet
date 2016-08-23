@@ -197,6 +197,24 @@ namespace iText.Layout.Borders {
             return width;
         }
 
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        public virtual void SetColor(Color color) {
+            this.color = color;
+        }
+
+        /// <summary>
+        /// Sets the width of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        public virtual void SetWidth(float width) {
+            this.width = width;
+        }
+
         /// <summary>Indicates whether the border is equal to the given border.</summary>
         /// <remarks>
         /// Indicates whether the border is equal to the given border.

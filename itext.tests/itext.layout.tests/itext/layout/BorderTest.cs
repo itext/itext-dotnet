@@ -195,7 +195,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("bugs in TableRenderer#buildBordersArrays")]
+        [NUnit.Framework.Ignore("DEVSIX-796")]
         public virtual void WideBorderTest01() {
             fileName = "wideBorderTest01.pdf";
             Document doc = CreateDocument();
@@ -224,7 +224,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("borders shouldn't be layouted outside the layout area")]
+        [NUnit.Framework.Ignore("DEVSIX-798")]
         public virtual void WideBorderTest02() {
             fileName = "wideBorderTest02.pdf";
             Document doc = CreateDocument();
