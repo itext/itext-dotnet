@@ -156,7 +156,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore]
         public virtual void CopySamePageWithAnnotationsSeveralTimes() {
             String filename = sourceFolder + "rotated_annotation.pdf";
             PdfDocument sourceDoc = new PdfDocument(new PdfReader(filename));
@@ -166,8 +165,8 @@ namespace iText.Kernel.Pdf {
             sourceDoc.CopyPagesTo(iText.IO.Util.JavaUtil.ArraysAsList(1, 1, 1), pdfDoc);
             sourceDoc.Close();
             pdfDoc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copyDocumentsWithFormFields.pdf"
-                , sourceFolder + "cmp_copyDocumentsWithFormFields.pdf", destinationFolder, "diff_"));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "copySamePageWithAnnotationsSeveralTimes.pdf"
+                , sourceFolder + "cmp_copySamePageWithAnnotationsSeveralTimes.pdf", destinationFolder, "diff_"));
         }
     }
 }

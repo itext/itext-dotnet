@@ -1561,7 +1561,7 @@ namespace iText.Kernel.Pdf {
             excludedKeys.Add(PdfName.Dest);
             excludedKeys.Add(PdfName.A);
             foreach (KeyValuePair<PdfPage, IList<PdfLinkAnnotation>> entry in linkAnnotations) {
-                // We don't want to copy those link annotations, which reference to not copied pages.
+                // We don't want to copy those link annotations, which reference to pages which weren't copied.
                 foreach (PdfLinkAnnotation annot in entry.Value) {
                     bool toCopyAnnot = true;
                     PdfDestination copiedDest = null;
@@ -1597,14 +1597,14 @@ namespace iText.Kernel.Pdf {
                     }
                     if (toCopyAnnot) {
                         PdfLinkAnnotation newAnnot = (PdfLinkAnnotation)PdfAnnotation.MakeAnnotation(annot.GetPdfObject().CopyTo(toDocument
-                            , excludedKeys, false));
+                            , excludedKeys, true));
                         if (copiedDest != null) {
                             newAnnot.SetDestination(copiedDest);
                         }
                         if (copiedAction != null) {
                             newAnnot.SetAction(copiedAction);
                         }
-                        page2page.Get(entry.Key).AddAnnotation(-1, newAnnot, false);
+                        entry.Key.AddAnnotation(-1, newAnnot, false);
                     }
                 }
             }

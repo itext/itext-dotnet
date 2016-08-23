@@ -479,11 +479,17 @@ namespace iText.Kernel.Pdf {
             CopyInheritedProperties(page, toDocument);
             foreach (PdfAnnotation annot in GetAnnotations()) {
                 if (annot.GetSubtype().Equals(PdfName.Link)) {
-                    GetDocument().StoreLinkAnnotation(this, (PdfLinkAnnotation)annot);
+                    GetDocument().StoreLinkAnnotation(page, (PdfLinkAnnotation)annot);
                 }
                 else {
-                    page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
-                        ))), false);
+                    if (annot.GetSubtype().Equals(PdfName.Widget)) {
+                        page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
+                            , false))), false);
+                    }
+                    else {
+                        page.AddAnnotation(-1, PdfAnnotation.MakeAnnotation(((PdfDictionary)annot.GetPdfObject().CopyTo(toDocument
+                            , true))), false);
+                    }
                 }
             }
             if (toDocument.IsTagged()) {
