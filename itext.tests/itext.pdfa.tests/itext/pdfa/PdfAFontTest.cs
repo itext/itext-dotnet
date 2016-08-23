@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
@@ -219,6 +220,83 @@ namespace iText.Pdfa {
             PdfPage page = doc.AddNewPage();
             // Identity-H must be embedded
             PdfFont font = PdfFontFactory.CreateFont(sourceFolder + "NotoSansCJKtc-Light.otf", "Identity-H", true);
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
+                ).RestoreState();
+            doc.Close();
+            CompareResult(outPdf, cmpPdf);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SymbolicTtfCharEncodingsPdfA1Test01() {
+            // encoding must not be specified
+            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test01.pdf", "Symbols1.ttf", "", PdfAConformanceLevel
+                .PDF_A_1B);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SymbolicTtfCharEncodingsPdfA1Test02() {
+            // if you specify encoding, symbolic font is treated as non-symbolic
+            CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test02.pdf", "Symbols1.ttf", PdfEncodings.MACROMAN, PdfAConformanceLevel
+                .PDF_A_1B);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SymbolicTtfCharEncodingsPdfA1Test03() {
+            NUnit.Framework.Assert.That(() =>  {
+                // if you specify encoding, symbolic font is treated as non-symbolic
+                CreateDocumentWithFont("symbolicTtfCharEncodingsPdfA1Test03.pdf", "Symbols1.ttf", "ISO-8859-1", PdfAConformanceLevel
+                    .PDF_A_1B);
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry));
+;
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NonSymbolicTtfCharEncodingsPdfA1Test01() {
+            // encoding must be either winansi or macroman, by default winansi is used
+            CreateDocumentWithFont("nonSymbolicTtfCharEncodingsPdfA1Test01.pdf", "FreeSans.ttf", PdfEncodings.WINANSI, 
+                PdfAConformanceLevel.PDF_A_1B);
+        }
+
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NonSymbolicTtfCharEncodingsPdfA1Test02() {
+            NUnit.Framework.Assert.That(() =>  {
+                // encoding must be either winansi or macroman, by default winansi is used
+                CreateDocumentWithFont("nonSymbolicTtfCharEncodingsPdfA1Test02.pdf", "FreeSans.ttf", "ISO-8859-1", PdfAConformanceLevel
+                    .PDF_A_2B);
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanEncodingOrWinAnsiEncoding));
+;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void CreateDocumentWithFont(String outFileName, String fontFileName, String encoding, PdfAConformanceLevel
+             conformanceLevel) {
+            String outPdf = outputDir + outFileName;
+            String cmpPdf = sourceFolder + "cmp/PdfAFontTest/cmp_" + outFileName;
+            PdfWriter writer = new PdfWriter(outPdf);
+            Stream @is = new FileStream(sourceFolder + "sRGB Color Space Profile.icm", FileMode.Open, FileAccess.Read);
+            PdfDocument doc = new PdfADocument(writer, conformanceLevel, new PdfOutputIntent("Custom", "", "http://www.color.org"
+                , "sRGB IEC61966-2.1", @is));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(sourceFolder + fontFileName, encoding, true);
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(font, 12).ShowText("Hello World").EndText(
                 ).RestoreState();

@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Log;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
@@ -219,6 +221,43 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.IfSpecifiedRenderingShallBeOneOfTheFollowingRelativecolorimetricAbsolutecolorimetricPerceptualOrSaturation
                     );
             }
+        }
+
+        public override void CheckFont(PdfFont pdfFont) {
+            if (!pdfFont.IsEmbedded()) {
+                throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1)
+                    .SetMessageParams(pdfFont.GetFontProgram().GetFontNames().GetFontName());
+            }
+
+            if (pdfFont is PdfTrueTypeFont) {
+                PdfTrueTypeFont trueTypeFont = (PdfTrueTypeFont) pdfFont;
+                bool symbolic = trueTypeFont.GetFontEncoding().IsFontSpecific();
+                if (symbolic) {
+                    CheckSymbolicTrueTypeFont(trueTypeFont);
+                } else {
+                    CheckNonSymbolicTrueTypeFont(trueTypeFont);
+                }
+            }
+        }
+
+        protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
+            // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN) ||
+                trueTypeFont.GetFontEncoding().HasDifferences()) {
+                throw new PdfAConformanceException(
+                    PdfAConformanceException
+                        .AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry, trueTypeFont);
+            }
+        }
+
+        protected internal override void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            if (trueTypeFont.GetFontEncoding().HasDifferences()) {
+                throw new PdfAConformanceException(
+                    PdfAConformanceException.AllSymbolicTrueTypeFontsShallNotSpecifyEncoding);
+            }
+
+            // if symbolic font encoding doesn't have differences, itext7 won't write encoding for such font
         }
 
         protected internal override void CheckImage(PdfStream image, PdfDictionary currentColorSpaces) {

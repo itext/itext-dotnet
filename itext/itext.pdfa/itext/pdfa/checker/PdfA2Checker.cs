@@ -44,8 +44,10 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Colors;
+using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -289,6 +291,18 @@ namespace iText.Pdfa.Checker {
                     }
                 }
             }
+        }
+
+        protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
+            // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN)) {
+                throw new PdfAConformanceException(
+                    PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanEncodingOrWinAnsiEncoding,
+                    trueTypeFont);
+            }
+
+            // if font has differences array, itext7 ensures that all names in it are listed in AdobeGlyphList
         }
 
         protected internal override double GetMaxRealValue() {

@@ -301,10 +301,7 @@ namespace iText.Pdfa {
         //TODO log unsuccessful call
         protected override void FlushFonts() {
             foreach (PdfFont pdfFont in GetDocumentFonts()) {
-                if (!pdfFont.IsEmbedded()) {
-                    throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1).SetMessageParams
-                        (pdfFont.GetFontProgram().GetFontNames().GetFontName());
-                }
+                checker.CheckFont(pdfFont);
             }
             base.FlushFonts();
         }

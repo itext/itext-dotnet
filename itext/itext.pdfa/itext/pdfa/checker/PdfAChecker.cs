@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Colors;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
@@ -306,6 +307,16 @@ namespace iText.Pdfa.Checker {
         /// <param name="extGState">the graphics state to be checked</param>
         public abstract void CheckExtGState(CanvasGraphicsState extGState);
 
+        /// <summary>Performs a number of checks on the font.</summary>
+        /// <remarks>
+        /// Performs a number of checks on the font. See ISO 19005-1 section 6.3,
+        /// ISO 19005-2 and ISO 19005-3 section 6.2.11.
+        /// Be aware that not all constraints defined in the ISO are checked in this method,
+        /// for most of them we consider that iText always creates valid fonts.
+        /// </remarks>
+        /// <param name="pdfFont">font to be checked</param>
+        public abstract void CheckFont(PdfFont pdfFont);
+
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
         protected internal abstract ICollection<PdfName> GetAllowedNamedActions();
@@ -330,6 +341,8 @@ namespace iText.Pdfa.Checker {
 
         protected internal abstract void CheckMetaData(PdfDictionary catalog);
 
+        protected internal abstract void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
+
         protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
 
         protected internal abstract void CheckPageObject(PdfDictionary page, PdfDictionary pageResources);
@@ -341,6 +354,8 @@ namespace iText.Pdfa.Checker {
         protected internal abstract void CheckPdfStream(PdfStream stream);
 
         protected internal abstract void CheckPdfString(PdfString @string);
+
+        protected internal abstract void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
 
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
 

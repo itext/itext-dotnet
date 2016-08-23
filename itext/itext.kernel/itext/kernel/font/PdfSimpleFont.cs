@@ -379,9 +379,12 @@ namespace iText.Kernel.Font {
             //add font stream and flush it immediately
             AddFontStream(fontDescriptor);
             int flags = fontProgram.GetPdfFontFlags();
-            if (!fontEncoding.IsFontSpecific()) {
-                flags &= ~64;
+            if (fontProgram.IsFontSpecific() != fontEncoding.IsFontSpecific()) {
+                flags &= ~(4 | 32);
+                // reset both flags
+                flags |= fontEncoding.IsFontSpecific() ? 4 : 32;
             }
+            // set based on font encoding
             fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
             return fontDescriptor;
         }
