@@ -734,7 +734,7 @@ namespace iText.Forms {
                             canvas.OpenTag(tagRef);
                         }
                         canvas.AddXObject(xObject, box.GetX(), box.GetY());
-                        if (document.IsTagged() && tagPointer != null) {
+                        if (tagPointer != null) {
                             canvas.CloseTag();
                         }
                     }
