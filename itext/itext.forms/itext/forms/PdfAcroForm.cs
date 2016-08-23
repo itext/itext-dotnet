@@ -235,6 +235,9 @@ namespace iText.Forms {
             }
             GetFields().Add(fieldDic);
             fields[field.GetFieldName().ToUnicodeString()] = field;
+            if (field.GetKids() != null) {
+                IterateFields(field.GetKids(), fields);
+            }
             if (field.GetFormType() != null && (field.GetFormType().Equals(PdfName.Tx) || field.GetFormType().Equals(PdfName
                 .Ch))) {
                 IList<PdfDictionary> resources = GetResources(field.GetPdfObject());
@@ -895,8 +898,7 @@ namespace iText.Forms {
             return false;
         }
 
-        private IDictionary<String, PdfFormField> IterateFields(PdfArray array) {
-            IDictionary<String, PdfFormField> fields = new LinkedDictionary<String, PdfFormField>();
+        private IDictionary<String, PdfFormField> IterateFields(PdfArray array, IDictionary<String, PdfFormField> fields) {
             int index = 1;
             foreach (PdfObject field in array) {
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
@@ -918,10 +920,14 @@ namespace iText.Forms {
                 }
                 fields[name] = formField;
                 if (formField.GetKids() != null) {
-                    fields.AddAll(IterateFields(formField.GetKids()));
+                    IterateFields(formField.GetKids(), fields);
                 }
             }
             return fields;
+        }
+
+        private IDictionary<String, PdfFormField> IterateFields(PdfArray array) {
+            return IterateFields(array, new LinkedDictionary<String, PdfFormField>());
         }
 
         private PdfDictionary ProcessKids(PdfArray kids, PdfDictionary parent, PdfPage page) {

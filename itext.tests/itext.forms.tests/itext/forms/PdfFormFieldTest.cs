@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
+using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -156,6 +157,22 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddFieldWithKidsTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfFormField root = PdfFormField.CreateEmptyField(pdfDoc);
+            root.SetFieldName("root");
+            PdfFormField child = PdfFormField.CreateEmptyField(pdfDoc);
+            child.SetFieldName("child");
+            root.AddKid(child);
+            PdfTextFormField text1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 700, 200, 20), "text1", "test"
+                );
+            child.AddKid(text1);
+            form.AddField(root);
+            NUnit.Framework.Assert.AreEqual(3, form.GetFormFields().Count);
         }
     }
 }
