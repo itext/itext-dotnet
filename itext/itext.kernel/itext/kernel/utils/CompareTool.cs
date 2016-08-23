@@ -247,6 +247,23 @@ namespace iText.Kernel.Utils {
             return this;
         }
 
+        /// <summary>Documents for comparison are opened in reader mode.</summary>
+        /// <remarks>
+        /// Documents for comparison are opened in reader mode. This method is intended to alter
+        /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
+        /// which are used to open output document. This is particularly useful for comparison of encrypted documents.
+        /// <p>
+        /// For more explanations about what is outDoc and cmpDoc see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
+        /// instance which will be later passed to the output document
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// .
+        /// </returns>
         public virtual ReaderProperties GetOutReaderProperties() {
             if (outProps == null) {
                 outProps = new ReaderProperties();
@@ -254,6 +271,23 @@ namespace iText.Kernel.Utils {
             return outProps;
         }
 
+        /// <summary>Documents for comparison are opened in reader mode.</summary>
+        /// <remarks>
+        /// Documents for comparison are opened in reader mode. This method is intended to alter
+        /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
+        /// which are used to open cmp document. This is particularly useful for comparison of encrypted documents.
+        /// <p>
+        /// For more explanations about what is outDoc and cmpDoc see last paragraph of the
+        /// <see cref="CompareTool"/>
+        /// class description.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.ReaderProperties"/>
+        /// instance which will be later passed to the cmp document
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// .
+        /// </returns>
         public virtual ReaderProperties GetCmpReaderProperties() {
             if (cmpProps == null) {
                 cmpProps = new ReaderProperties();
@@ -1830,8 +1864,21 @@ namespace iText.Kernel.Utils {
             private readonly CompareTool _enclosing;
         }
 
-        /// <summary>Class that encapsulates information about paths to the objects from the certain base or root object.
-        ///     </summary>
+        /// <summary>
+        /// Class that helps to find two corresponding objects in the comparing documents and also keeps track of the
+        /// already met in comparing process parent indirect objects.
+        /// </summary>
+        /// <remarks>
+        /// Class that helps to find two corresponding objects in the comparing documents and also keeps track of the
+        /// already met in comparing process parent indirect objects.
+        /// <p>
+        /// You could say that ObjectPath instance consists of two parts: direct path and indirect path. Direct path defines
+        /// path to the currently comparing objects in relation to base objects. It could be empty, which would mean that
+        /// currently comparing objects are base objects themselves. Base objects are the two indirect objects from the comparing
+        /// documents which are in the same position in the pdf trees. Another part, indirect path, defines which indirect
+        /// objects were met during comparison process to get to the current base objects. Indirect path is needed to avoid
+        /// infinite loops during comparison.
+        /// </remarks>
         public class ObjectPath {
             protected internal PdfIndirectReference baseCmpObject;
 
@@ -1847,9 +1894,9 @@ namespace iText.Kernel.Utils {
             public ObjectPath() {
             }
 
-            /// <summary>Creates ObjectPath with corresponding root objects in two documents.</summary>
-            /// <param name="baseCmpObject">root object in cmp document.</param>
-            /// <param name="baseOutObject">root object in out document.</param>
+            /// <summary>Creates ObjectPath with corresponding base objects in two documents.</summary>
+            /// <param name="baseCmpObject">base object in cmp document.</param>
+            /// <param name="baseOutObject">base object in out document.</param>
             protected internal ObjectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject) {
                 this.baseCmpObject = baseCmpObject;
                 this.baseOutObject = baseOutObject;
@@ -1863,6 +1910,25 @@ namespace iText.Kernel.Utils {
                 this.indirects = indirects;
             }
 
+            /// <summary>
+            /// Creates a new ObjectPath instance with two new given base objects, which are supposed to be nested in the base
+            /// objects of the current instance of the ObjectPath.
+            /// </summary>
+            /// <remarks>
+            /// Creates a new ObjectPath instance with two new given base objects, which are supposed to be nested in the base
+            /// objects of the current instance of the ObjectPath. This method is used to avoid infinite loop in case of
+            /// circular references in pdf documents objects structure.
+            /// <br/>
+            /// Basically, this method creates copy of the current ObjectPath instance, but resets information of the direct
+            /// paths, and also adds current ObjectPath instance base objects to the indirect references chain that denotes
+            /// a path to the new base objects.
+            /// </remarks>
+            /// <param name="baseCmpObject">new base object in cmp document.</param>
+            /// <param name="baseOutObject">new base object in out document.</param>
+            /// <returns>
+            /// new ObjectPath instance, which stores chain of the indirect references which were already met to get
+            /// to the new base objects.
+            /// </returns>
             public virtual CompareTool.ObjectPath ResetDirectPath(PdfIndirectReference baseCmpObject, PdfIndirectReference
                  baseOutObject) {
                 CompareTool.ObjectPath newPath = new CompareTool.ObjectPath(baseCmpObject, baseOutObject);
@@ -1871,42 +1937,89 @@ namespace iText.Kernel.Utils {
                 return newPath;
             }
 
-            public virtual bool IsComparing(PdfIndirectReference baseCmpObject, PdfIndirectReference baseOutObject) {
-                return indirects.Contains(new CompareTool.ObjectPath.IndirectPathItem(this, baseCmpObject, baseOutObject));
+            /// <summary>This method is used to define if given objects were already met in the path to the current base objects.
+            ///     </summary>
+            /// <remarks>
+            /// This method is used to define if given objects were already met in the path to the current base objects.
+            /// If this method returns true it basically means that we found a loop in the objects structure and that we
+            /// already compared these objects.
+            /// </remarks>
+            /// <param name="cmpObject">cmp object to check if it was already met in base objects path.</param>
+            /// <param name="outObject">out object to check if it was already met in base objects path.</param>
+            /// <returns>true if given objects are contained in the path and therefore were already compared.</returns>
+            public virtual bool IsComparing(PdfIndirectReference cmpObject, PdfIndirectReference outObject) {
+                return indirects.Contains(new CompareTool.ObjectPath.IndirectPathItem(this, cmpObject, outObject));
             }
 
+            /// <summary>Adds array item to the direct path.</summary>
+            /// <remarks>
+            /// Adds array item to the direct path. See
+            /// <see cref="ArrayPathItem"/>
+            /// .
+            /// </remarks>
+            /// <param name="index">index in the array of the direct object to be compared.</param>
             public virtual void PushArrayItemToPath(int index) {
                 path.Push(new CompareTool.ObjectPath.ArrayPathItem(index));
             }
 
+            /// <summary>Adds dictionary item to the direct path.</summary>
+            /// <remarks>
+            /// Adds dictionary item to the direct path. See
+            /// <see cref="DictPathItem"/>
+            /// .
+            /// </remarks>
+            /// <param name="key">key in the dictionary to which corresponds direct object to be compared.</param>
             public virtual void PushDictItemToPath(PdfName key) {
                 path.Push(new CompareTool.ObjectPath.DictPathItem(key));
             }
 
+            /// <summary>Adds offset item to the direct path.</summary>
+            /// <remarks>
+            /// Adds offset item to the direct path. See
+            /// <see cref="OffsetPathItem"/>
+            /// .
+            /// </remarks>
+            /// <param name="offset">offset to the specific byte in the stream that is compared.</param>
             public virtual void PushOffsetToPath(int offset) {
                 path.Push(new CompareTool.ObjectPath.OffsetPathItem(offset));
             }
 
+            /// <summary>Removes the last path item from the direct path.</summary>
             public virtual void Pop() {
                 path.Pop();
             }
 
+            /// <summary>
+            /// Gets local (or direct) path that denotes sequence of the path items from base object to the comparing
+            /// direct object.
+            /// </summary>
+            /// <returns>direct path to the comparing object.</returns>
             public virtual Stack<CompareTool.ObjectPath.LocalPathItem> GetLocalPath() {
                 return path;
             }
 
+            /// <summary>
+            /// Gets indirect path which denotes sequence of the indirect references that were passed in comparing process
+            /// to get to the current base objects.
+            /// </summary>
+            /// <returns>indirect path to the current base objects.</returns>
             public virtual Stack<CompareTool.ObjectPath.IndirectPathItem> GetIndirectPath() {
                 return indirects;
             }
 
+            /// <returns>current base object in the cmp document.</returns>
             public virtual PdfIndirectReference GetBaseCmpObject() {
                 return baseCmpObject;
             }
 
+            /// <returns>current base object in the out document.</returns>
             public virtual PdfIndirectReference GetBaseOutObject() {
                 return baseOutObject;
             }
 
+            /// <summary>Creates an xml node that describes a direct path stored in this ObjectPath instance.</summary>
+            /// <param name="document">xml document, to which this xml node will be added.</param>
+            /// <returns>an xml node describing direct path.</returns>
             public virtual XmlElement ToXmlNode(XmlDocument document) {
                 XmlElement element = document.CreateElement("path");
                 XmlElement baseNode = document.CreateElement("base");
@@ -1921,6 +2034,7 @@ namespace iText.Kernel.Utils {
                 return element;
             }
 
+            /// <returns>string representation of the direct path stored in this ObjectPath instance.</returns>
             public override String ToString() {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(String.Format("Base cmp object: {0} obj. Base out object: {1} obj", baseCmpObject, baseOutObject
@@ -1953,11 +2067,20 @@ namespace iText.Kernel.Utils {
                     >)path.Clone(), (Stack<CompareTool.ObjectPath.IndirectPathItem>)indirects.Clone());
             }
 
+            /// <summary>
+            /// An item in the indirect path (see
+            /// <see cref="ObjectPath"/>
+            /// . It encapsulates two corresponding objects from the two
+            /// comparing documents that were met to get to the path base objects during comparing process.
+            /// </summary>
             public class IndirectPathItem {
                 private PdfIndirectReference cmpObject;
 
                 private PdfIndirectReference outObject;
 
+                /// <summary>Creates IndirectPathItem instance for two corresponding objects from two comparing documents.</summary>
+                /// <param name="cmpObject">an object from the cmp document.</param>
+                /// <param name="outObject">an object from the out document.</param>
                 public IndirectPathItem(ObjectPath _enclosing, PdfIndirectReference cmpObject, PdfIndirectReference outObject
                     ) {
                     this._enclosing = _enclosing;
@@ -1965,10 +2088,14 @@ namespace iText.Kernel.Utils {
                     this.outObject = outObject;
                 }
 
+                /// <returns>an object from the cmp object that was met to get to the path base objects during comparing process.
+                ///     </returns>
                 public virtual PdfIndirectReference GetCmpObject() {
                     return this.cmpObject;
                 }
 
+                /// <returns>an object from the out object that was met to get to the path base objects during comparing process.
+                ///     </returns>
                 public virtual PdfIndirectReference GetOutObject() {
                     return this.outObject;
                 }
@@ -1985,13 +2112,38 @@ namespace iText.Kernel.Utils {
                 private readonly ObjectPath _enclosing;
             }
 
+            /// <summary>
+            /// An abstract class for the items in the direct path (see
+            /// <see cref="ObjectPath"/>
+            /// .
+            /// </summary>
             public abstract class LocalPathItem {
+                /// <summary>Creates an xml node that describes this direct path item.</summary>
+                /// <param name="document">xml document, to which this xml node will be added.</param>
+                /// <returns>an xml node describing direct path item.</returns>
                 protected internal abstract XmlElement ToXmlNode(XmlDocument document);
             }
 
+            /// <summary>
+            /// Direct path item (see
+            /// <see cref="ObjectPath"/>
+            /// , which describes transition to the
+            /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+            /// entry which value is now a currently comparing direct object.
+            /// </summary>
             public class DictPathItem : CompareTool.ObjectPath.LocalPathItem {
                 internal PdfName key;
 
+                /// <summary>
+                /// Creates an instance of the
+                /// <see cref="DictPathItem"/>
+                /// .
+                /// </summary>
+                /// <param name="key">
+                /// the key which defines to which entry of the
+                /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+                /// the transition was performed.
+                /// </param>
                 public DictPathItem(PdfName key) {
                     this.key = key;
                 }
@@ -2015,14 +2167,46 @@ namespace iText.Kernel.Utils {
                     return element;
                 }
 
+                /// <summary>
+                /// The key which defines to which entry of the
+                /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+                /// the transition was performed.
+                /// See
+                /// <see cref="DictPathItem"/>
+                /// for more info.
+                /// </summary>
+                /// <returns>
+                /// a
+                /// <see cref="iText.Kernel.Pdf.PdfName"/>
+                /// which is the key which defines to which entry of the dictionary
+                /// the transition was performed.
+                /// </returns>
                 public virtual PdfName GetKey() {
                     return key;
                 }
             }
 
+            /// <summary>
+            /// Direct path item (see
+            /// <see cref="ObjectPath"/>
+            /// , which describes transition to the
+            /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+            /// element which is now a currently comparing direct object.
+            /// </summary>
             public class ArrayPathItem : CompareTool.ObjectPath.LocalPathItem {
                 internal int index;
 
+                /// <summary>
+                /// Creates an instance of the
+                /// <see cref="ArrayPathItem"/>
+                /// .
+                /// </summary>
+                /// <param name="index">
+                /// the index which defines element of the
+                /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+                /// to which
+                /// the transition was performed.
+                /// </param>
                 public ArrayPathItem(int index) {
                     this.index = index;
                 }
@@ -2046,18 +2230,52 @@ namespace iText.Kernel.Utils {
                     return element;
                 }
 
+                /// <summary>
+                /// The index which defines element of the
+                /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+                /// to which the transition was performed.
+                /// See
+                /// <see cref="ArrayPathItem"/>
+                /// for more info.
+                /// </summary>
+                /// <returns>the index which defines element of the array to which the transition was performed</returns>
                 public virtual int GetIndex() {
                     return index;
                 }
             }
 
+            /// <summary>
+            /// Direct path item (see
+            /// <see cref="ObjectPath"/>
+            /// , which describes transition to the
+            /// specific position in
+            /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+            /// .
+            /// </summary>
             public class OffsetPathItem : CompareTool.ObjectPath.LocalPathItem {
                 internal int offset;
 
+                /// <summary>
+                /// Creates an instance of the
+                /// <see cref="OffsetPathItem"/>
+                /// .
+                /// </summary>
+                /// <param name="offset">
+                /// bytes offset to the specific position in
+                /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+                /// .
+                /// </param>
                 public OffsetPathItem(int offset) {
                     this.offset = offset;
                 }
 
+                /// <summary>
+                /// The bytes offset of the stream which defines specific position in the
+                /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+                /// , to which transition
+                /// was performed.
+                /// </summary>
+                /// <returns>an integer defining bytes offset to the specific position in stream.</returns>
                 public virtual int GetOffset() {
                     return offset;
                 }
