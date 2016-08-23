@@ -3,7 +3,6 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.IO.Font;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
 using iText.Kernel.Font;

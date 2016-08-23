@@ -110,6 +110,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 stdcf.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
             }
             stdcf.Put(PdfName.CFM, PdfName.AESV2);
+            stdcf.Put(PdfName.Length, new PdfNumber(128));
             PdfDictionary cf = new PdfDictionary();
             cf.Put(PdfName.DefaultCryptFilter, stdcf);
             encryptionDictionary.Put(PdfName.CF, cf);
