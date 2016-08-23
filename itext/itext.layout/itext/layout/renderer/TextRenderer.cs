@@ -420,8 +420,9 @@ namespace iText.Layout.Renderer {
                     UnicodeScript? selectScript = null;
                     foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency) {
                         UnicodeScript? entryScript = entry.Key;
-                        if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript
-                            .UNKNOWN.Equals(entryScript)) {
+                        if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript.UNKNOWN.Equals(entryScript)
+                            && !UnicodeScript.INHERITED.Equals(entryScript)) {
+
                             max = entry.Value;
                             selectScript = entryScript;
                         }
