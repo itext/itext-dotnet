@@ -178,7 +178,34 @@ namespace iText.Kernel.Utils {
             return compareResult;
         }
 
-        // TODO to document
+        /// <summary>Disables the default logic of pages comparison.</summary>
+        /// <remarks>
+        /// Disables the default logic of pages comparison.
+        /// This option makes sense only for
+        /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
+        /// method.
+        /// <p>
+        /// By default, pages are treated as special objects and if they are met in the process of comparison, then they are
+        /// not checked as objects, but rather simply checked that they has same page numbers in both documents.
+        /// This behaviour is intended for the
+        /// <see cref="CompareByContent(System.String, System.String, System.Collections.Generic.IDictionary{K, V})"/>
+        /// set of methods, because in them documents are compared in page by page basis. Thus, we don't need to check if pages
+        /// are of the same content when they are met in comparison process, we are sure that we will compare their content or
+        /// we have already compared them.
+        /// <p>
+        /// However, if you would use
+        /// <see cref="CompareByCatalog(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfDocument)"/>
+        /// with default behaviour
+        /// of pages comparison, pages won't be checked at all, every time when reference to the page dictionary is met,
+        /// only page numbers will be compared for both documents. You can say that in this case, comparison will be performed
+        /// for all document's catalog entries except /Pages (However in fact, document's page tree structures will be compared,
+        /// but pages themselves - won't).
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <see cref="CompareTool"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Utils.CompareTool DisableCachedPagesComparison() {
             this.useCachedPagesForComparison = false;
             return this;

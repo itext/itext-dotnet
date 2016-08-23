@@ -568,9 +568,9 @@ namespace iText.Kernel.Pdf.Action {
         /// <param name="key">key to insert or to override</param>
         /// <param name="value">the value to associate with the specified key</param>
         /// <returns>
-        /// the previous
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// associated with this key
+        /// this
+        /// <see cref="PdfAction"/>
+        /// instance
         /// </returns>
         public virtual iText.Kernel.Pdf.Action.PdfAction Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
