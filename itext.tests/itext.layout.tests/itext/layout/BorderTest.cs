@@ -224,6 +224,23 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("borders shouldn't be layouted outside the layout area")]
+        public virtual void WideBorderTest02() {
+            fileName = "wideBorderTest02.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            table.SetWidthPercent(50);
+            Cell cell;
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 100f));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void NoHorizontalBorderTest() {
             fileName = "noHorizontalBorderTest.pdf";
             Document doc = CreateDocument();
