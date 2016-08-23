@@ -477,6 +477,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         private float[] GetAscentDescent() {
             float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender();
             float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender();
+            // If descent is positive, we consider it a bug and fix it
+            if (descent > 0) {
+                descent = -descent;
+            }
             float scale = ascent - descent < 700 ? ascent - descent : 1000;
             descent = descent / scale * gs.GetFontSize();
             ascent = ascent / scale * gs.GetFontSize();
