@@ -84,17 +84,14 @@ namespace iText.Test
                 for (int i = 0; i < attributes.Length; i++)
                 {
                     LogMessageAttribute logMessage = attributes[i];
-                    if (!logMessage.Ignore)
+                    int foundCount = Contains(logMessage.GetMessageTemplate());
+                    if (foundCount != logMessage.Count && !logMessage.Ignore) {
+                        Assert.Fail("{0} Expected to find {1}, but found {2} messages with the following content: \"{3}\"",
+                            testDetails.FullName, logMessage.Count, foundCount, logMessage.GetMessageTemplate());
+                    }
+                    else
                     {
-                        int foundedCount = Contains(logMessage.GetMessageTemplate());
-                        if (foundedCount != logMessage.Count) {
-                            Assert.Fail("{0} Some log messages are not found in test execution - {1} messages",
-                                testDetails.FullName,
-                                logMessage.Count - foundedCount);
-
-                        } else {
-                            checkedMessages += logMessage.Count;
-                        }
+                        checkedMessages += foundCount;
                     }
                 }
             }
