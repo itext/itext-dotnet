@@ -988,7 +988,6 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.REGISTERING_DIRECTORY)]
         public virtual void TestFontDirectoryRegister() {
             PdfFontFactory.RegisterDirectory(sourceFolder);
             PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());

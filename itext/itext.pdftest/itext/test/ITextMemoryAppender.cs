@@ -49,7 +49,9 @@ namespace iText.Test {
     public class ITextMemoryAppender : MemoryAppender {
         protected override void Append(LoggingEvent le) {
             Console.WriteLine(le.LoggerName + ": " + le.RenderedMessage);
-            base.Append(le);
+            if (le.Level >= Level.Warn) {
+                base.Append(le);
+            }
         }
     }
 }
