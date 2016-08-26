@@ -77,7 +77,8 @@ namespace iText.Test
 
         private void CheckLogMessages(ITest testDetails)
         {
-			LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
+            int checkedMessages = 0;
+            LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
             if (attributes.Length > 0)
             {
                 for (int i = 0; i < attributes.Length; i++)
@@ -86,25 +87,23 @@ namespace iText.Test
                     if (!logMessage.Ignore)
                     {
                         int foundedCount = Contains(logMessage.GetMessageTemplate());
-                        if (foundedCount != logMessage.Count)
-                        {
+                        if (foundedCount != logMessage.Count) {
                             Assert.Fail("{0} Some log messages are not found in test execution - {1} messages",
                                 testDetails.FullName,
                                 logMessage.Count - foundedCount);
 
+                        } else {
+                            checkedMessages += logMessage.Count;
                         }
                     }
                 }
             }
-            else
+            
+            if (GetSize() > checkedMessages)
             {
-                if (GetSize() > 0)
-                {
-                    Assert.Fail("{0}: The test does not check the message logging - {1} messages",
-                        testDetails.FullName,
-                        GetSize());
-                }
-
+                Assert.Fail("{0}: The test does not check the message logging - {1} messages",
+                    testDetails.FullName,
+                    GetSize() - checkedMessages);
             }
         }
 
