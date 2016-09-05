@@ -291,6 +291,25 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore]
+        public virtual void TableRotationTest03() {
+            String outFileName = destinationFolder + "tableRotationTest03.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(new float[] { 25, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle
+                ((Math.PI / 2)))).AddCell(new Cell().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).
+                AddCell(new Cell().Add(new Paragraph("cell 2, 1").SetRotationAngle(-(Math.PI / 2)))).AddCell(new Cell(
+                ).Add(new Paragraph("cell 2, 2").SetRotationAngle((Math.PI))));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-797")]
         public virtual void CellRotationTest01() {
             String outFileName = destinationFolder + "cellRotationTest01.pdf";
