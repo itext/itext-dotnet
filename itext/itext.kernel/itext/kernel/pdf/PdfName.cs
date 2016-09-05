@@ -619,6 +619,20 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName FixedPrint = CreateDirectName("FixedPrint");
 
+        /// <summary>PdfName for the abbreviation of FlateDecode.</summary>
+        /// <remarks>
+        /// PdfName for the abbreviation of FlateDecode. For the Flatness Tolerance PdfName use
+        /// <see cref="FL"/>
+        /// (Uppercase 'L')
+        /// </remarks>
+        public static readonly iText.Kernel.Pdf.PdfName Fl = CreateDirectName("Fl");
+
+        /// <summary>PdfName for Flatness Tolerance.</summary>
+        /// <remarks>
+        /// PdfName for Flatness Tolerance. For the PdfName with the FlateDecode abbreviation use
+        /// <see cref="Fl"/>
+        /// (Lowercase 'L')
+        /// </remarks>
         public static readonly iText.Kernel.Pdf.PdfName FL = CreateDirectName("FL");
 
         public static readonly iText.Kernel.Pdf.PdfName Flags = CreateDirectName("Flags");
