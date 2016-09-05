@@ -824,14 +824,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateWrongAfm2() {
             String message = "";
+            String font = fontsFolder + "cmr10.pfb";
             try {
-                FontProgramFactory.CreateType1Font(fontsFolder + "cmr10.pfb", null);
+                FontProgramFactory.CreateType1Font(font, null);
             }
             catch (iText.IO.IOException e) {
                 message = e.Message;
             }
-            NUnit.Framework.Assert.AreEqual(NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/fonts/cmr10.pfb is.not.an.afm.or.pfm.font.file"
-                , message);
+            NUnit.Framework.Assert.AreEqual(String.Format(iText.IO.IOException._1IsNotAnAfmOrPfmFontFile, font), message
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
