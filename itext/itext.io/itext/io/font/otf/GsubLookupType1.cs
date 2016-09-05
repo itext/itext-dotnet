@@ -43,17 +43,18 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     /// <summary>LookupType 1: Single Substitution Subtable</summary>
     /// <author>psoares</author>
     public class GsubLookupType1 : OpenTableLookup {
-        private IDictionary<int, int?> substMap;
+        private IntHashtable substMap;
 
         /// <exception cref="System.IO.IOException"/>
         public GsubLookupType1(OpenTypeFontTableReader openReader, int lookupFlag, int[] subTableLocations)
             : base(openReader, lookupFlag, subTableLocations) {
-            substMap = new Dictionary<int, int?>();
+            substMap = new IntHashtable();
             ReadSubTables();
         }
 
@@ -64,9 +65,9 @@ namespace iText.IO.Font.Otf {
             Glyph g = line.Get(line.idx);
             bool changed = false;
             if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
-                int? substCode = substMap.Get(g.GetCode());
-                if (substCode != null) {
-                    line.SubstituteOneToOne(openReader, (int)substCode);
+                int substCode = substMap.Get(g.GetCode());
+                if (substCode != 0) {
+                    line.SubstituteOneToOne(openReader, substCode);
                     changed = true;
                 }
             }
@@ -84,7 +85,7 @@ namespace iText.IO.Font.Otf {
                 IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
                 foreach (int coverageGlyphId in coverageGlyphIds) {
                     int substituteGlyphId = coverageGlyphId + deltaGlyphID;
-                    substMap[coverageGlyphId] = substituteGlyphId;
+                    substMap.Put(coverageGlyphId, substituteGlyphId);
                 }
             }
             else {
@@ -97,7 +98,7 @@ namespace iText.IO.Font.Otf {
                     }
                     IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
                     for (int k_1 = 0; k_1 < glyphCount; ++k_1) {
-                        substMap[coverageGlyphIds[k_1]] = substitute[k_1];
+                        substMap.Put(coverageGlyphIds[k_1], substitute[k_1]);
                     }
                 }
                 else {
