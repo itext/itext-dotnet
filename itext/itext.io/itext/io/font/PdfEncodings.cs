@@ -270,7 +270,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToBytes(text.ToCharArray(), encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PdfEncodingsException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.CharacterCodeException, e);
             }
         }
 
@@ -325,7 +325,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToBytes(new char[] { ch }, encoding);
             }
             catch (System.IO.IOException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PdfEncodingsException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.CharacterCodeException, e);
             }
         }
 
@@ -383,7 +383,7 @@ namespace iText.IO.Font {
                 return EncodingUtil.ConvertToString(bytes, encoding);
             }
             catch (ArgumentException e) {
-                throw new iText.IO.IOException(iText.IO.IOException.PdfEncodingsException, e);
+                throw new iText.IO.IOException(iText.IO.IOException.UnsupportedEncodingException, e);
             }
         }
 

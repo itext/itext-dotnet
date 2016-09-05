@@ -85,7 +85,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public virtual FontProgram GetFontByTccIndex(int ttcIndex) {
             if (ttcIndex > TTCSize - 1) {
-                throw new iText.IO.IOException(iText.IO.IOException.TTCIndexDoesNotExistInFile);
+                throw new iText.IO.IOException(iText.IO.IOException.TtcIndexDoesNotExistInThisTtcFile);
             }
             if (ttcPath != null) {
                 return FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);

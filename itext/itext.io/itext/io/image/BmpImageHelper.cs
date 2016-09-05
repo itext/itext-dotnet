@@ -178,7 +178,7 @@ namespace iText.IO.Image {
             if (!bmp.image.IsNoHeader()) {
                 // Start File Header
                 if (!(ReadUnsignedByte(bmp.inputStream) == 'B' && ReadUnsignedByte(bmp.inputStream) == 'M')) {
-                    throw new iText.IO.IOException(iText.IO.IOException.InvalidMagicValueForBmpFile);
+                    throw new iText.IO.IOException(iText.IO.IOException.InvalidMagicValueForBmpFileMustBeBM);
                 }
                 // Read file size
                 bmp.bitmapFileSize = ReadDWord(bmp.inputStream);

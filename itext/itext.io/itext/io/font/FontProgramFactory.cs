@@ -293,7 +293,7 @@ namespace iText.IO.Font {
                     catch (Exception) {
                     }
                 }
-                throw new iText.IO.IOException(iText.IO.IOException.FontIsNotRecognized);
+                throw new iText.IO.IOException(iText.IO.IOException.TypeOfFontIsNotRecognized);
             }
             FontProgram fontBuilt;
             if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm") ||
@@ -316,7 +316,7 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        throw new iText.IO.IOException(iText.IO.IOException.Font1IsNotRecognized).SetMessageParams(name);
+                        throw new iText.IO.IOException(iText.IO.IOException.TypeOfFont1IsNotRecognized).SetMessageParams(name);
                     }
                 }
             }

@@ -149,7 +149,7 @@ namespace iText.IO.Image {
             while (true) {
                 int v = jpegStream.Read();
                 if (v < 0) {
-                    throw new iText.IO.IOException(iText.IO.IOException.PrematureEofWhileReadingJpg);
+                    throw new iText.IO.IOException(iText.IO.IOException.PrematureEofWhileReadingJpeg);
                 }
                 if (v == 0xFF) {
                     int marker = jpegStream.Read();

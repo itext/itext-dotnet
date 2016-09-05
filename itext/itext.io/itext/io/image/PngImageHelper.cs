@@ -745,7 +745,7 @@ namespace iText.IO.Image {
 
                     default: {
                         // Error -- uknown filter type
-                        throw new iText.IO.IOException(iText.IO.IOException.PngFilterUnknown);
+                        throw new iText.IO.IOException(iText.IO.IOException.UnknownPngFilter);
                     }
                 }
                 ProcessPixels(curr, xOffset, xStep, dstY, passWidth, png);

@@ -222,7 +222,7 @@ namespace iText.IO.Image {
                 throw new iText.IO.IOException(iText.IO.IOException.ImageMaskCannotContainAnotherImageMask);
             }
             if (!imageMask.mask) {
-                throw new iText.IO.IOException(iText.IO.IOException.ImageMaskIsNotAMaskDidYouDoMakeMask);
+                throw new iText.IO.IOException(iText.IO.IOException.ImageIsNotMaskYouMustCallImageDataMakeMask);
             }
             this.imageMask = imageMask;
         }
@@ -233,7 +233,7 @@ namespace iText.IO.Image {
 
         public virtual void MakeMask() {
             if (!CanBeMask()) {
-                throw new iText.IO.IOException(iText.IO.IOException.ImageCanNotBeAnImageMask);
+                throw new iText.IO.IOException(iText.IO.IOException.ThisImageCanNotBeAnImageMask);
             }
             mask = true;
         }
