@@ -589,7 +589,7 @@ namespace iText.Kernel.Pdf {
                     return;
                 }
                 PdfName[] keys = new PdfName[dic.KeySet().Count];
-                dic.KeySet().ToArray(keys);
+                keys = dic.KeySet().ToArray(keys);
                 iText.IO.Util.JavaUtil.Sort(keys);
                 foreach (Object key in keys) {
                     if (key.Equals(PdfName.P) && (dic.Get((PdfName)key).IsIndirectReference() || dic.Get((PdfName)key).IsDictionary
