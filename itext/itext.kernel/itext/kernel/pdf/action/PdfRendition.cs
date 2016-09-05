@@ -46,11 +46,22 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Action {
+    /// <summary>This a wrapper around a rendition dictionary.</summary>
+    /// <remarks>This a wrapper around a rendition dictionary. See ISO 32000-1 sections 13.2.3.2, 13.2.3.3.</remarks>
     public class PdfRendition : PdfObjectWrapper<PdfDictionary> {
+        /// <summary>
+        /// Creates a new wrapper around an existing
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// </summary>
+        /// <param name="pdfObject">a rendition object to create a wrapper for</param>
         public PdfRendition(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
+        /// <summary>Creates a new wrapper around a newly created media rendition dictionary object.</summary>
+        /// <param name="file">a text string specifying the name of the file to display</param>
+        /// <param name="fs">a file specification that specifies the actual media data</param>
+        /// <param name="mimeType">an ASCII string identifying the type of data</param>
         public PdfRendition(String file, PdfFileSpec fs, String mimeType)
             : this(new PdfDictionary()) {
             GetPdfObject().Put(PdfName.S, PdfName.MR);

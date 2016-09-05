@@ -46,13 +46,29 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Action {
+    /// <summary>This class is a wrapper of media clip data dictionary that defines the data for a media object that can be played.
+    ///     </summary>
     public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary> {
         private static readonly PdfString TEMPACCESS = new PdfString("TEMPACCESS");
 
+        /// <summary>
+        /// Constructs a new
+        /// <see cref="PdfMediaClipData"/>
+        /// wrapper using an existing dictionary.
+        /// </summary>
+        /// <param name="pdfObject">the dictionary to construct the wrapper from</param>
         public PdfMediaClipData(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
+        /// <summary>
+        /// Constructs a new
+        /// <see cref="PdfMediaClipData"/>
+        /// wrapper around a newly created dictionary.
+        /// </summary>
+        /// <param name="file">the name of the file to create a media clip for</param>
+        /// <param name="fs">a file specification that specifies the actual media data</param>
+        /// <param name="mimeType">an ASCII string identifying the type of data</param>
         public PdfMediaClipData(String file, PdfFileSpec fs, String mimeType)
             : this(new PdfDictionary()) {
             PdfDictionary dic = new PdfDictionary();
@@ -81,6 +97,7 @@ namespace iText.Kernel.Pdf.Action {
             base.Flush();
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }
