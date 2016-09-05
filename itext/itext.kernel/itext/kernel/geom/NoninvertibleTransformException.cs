@@ -21,9 +21,13 @@
 using System;
 
 namespace iText.Kernel.Geom {
+    /// <summary>NoninvertibleTransformException</summary>
+    /// <author>Denis M. Kishenko</author>
     public class NoninvertibleTransformException : Exception {
-        public NoninvertibleTransformException(String s)
-            : base(s) {
+        /// <summary>Creates a new MapFailedException.</summary>
+        /// <param name="message">the detail message.</param>
+        public NoninvertibleTransformException(String message)
+            : base(message) {
         }
     }
 }

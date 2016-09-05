@@ -45,13 +45,23 @@ using System;
 using iText.Kernel;
 
 namespace iText.Kernel.Crypto {
+    /// <summary>Bad password exception.</summary>
     public class BadPasswordException : PdfException {
         public const String PdfReaderNotOpenedWithOwnerPassword = "PdfReader is not opened with owner password";
 
+        /// <summary>Creates a new BadPasswordException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public BadPasswordException(String message, Exception cause)
             : base(message, cause) {
         }
 
+        /// <summary>Creates a new BadPasswordException.</summary>
+        /// <param name="message">the detail message.</param>
         public BadPasswordException(String message)
             : base(message) {
         }

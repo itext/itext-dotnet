@@ -46,6 +46,7 @@ using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.IO {
+    /// <summary>Exception class for exceptions in io module.</summary>
     public class IOException : Exception {
         public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit samples are not supported for horizontal differencing predictor.";
 
@@ -283,28 +284,55 @@ namespace iText.IO {
 
         private IList<Object> messageParams;
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
         public IOException(String message)
             : base(message) {
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public IOException(Exception cause)
             : this(UnknownIOException, cause) {
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="obj">an object for more details.</param>
         public IOException(String message, Object obj)
             : this(message) {
             this.obj = obj;
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public IOException(String message, Exception cause)
             : base(message, cause) {
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        /// <param name="obj">an object for more details.</param>
         public IOException(String message, Exception cause, Object obj)
             : this(message, cause) {
             this.obj = obj;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override String Message {
             get {
                 if (messageParams == null || messageParams.Count == 0) {
@@ -316,12 +344,16 @@ namespace iText.IO {
             }
         }
 
+        /// <summary>Sets additional params for Exception message.</summary>
+        /// <param name="messageParams">additional params.</param>
+        /// <returns>object itself.</returns>
         public virtual iText.IO.IOException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;
         }
 
+        /// <summary>Gets additional params for Exception message.</summary>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
             for (int i = 0; i < messageParams.Count; i++) {
