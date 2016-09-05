@@ -333,37 +333,6 @@ namespace iText.Kernel.Pdf.Annot {
         /// .
         /// </returns>
         public static iText.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject) {
-            return MakeAnnotation(pdfObject, null);
-        }
-
-        /// <summary>
-        /// Factory method that creates the type specific
-        /// <see cref="PdfAnnotation"/>
-        /// from the given
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// that represents annotation object. This method is useful for property reading in reading mode or
-        /// modifying in stamping mode.
-        /// </summary>
-        /// <param name="pdfObject">
-        /// a
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// that represents annotation in the document.
-        /// </param>
-        /// <param name="parent">
-        /// parent annotation of the
-        /// <see cref="PdfPopupAnnotation"/>
-        /// to be created. This parameter is
-        /// only needed if passed
-        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
-        /// represents a pop-up annotation in the document.
-        /// </param>
-        /// <returns>
-        /// created
-        /// <see cref="PdfAnnotation"/>
-        /// .
-        /// </returns>
-        public static iText.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject, iText.Kernel.Pdf.Annot.PdfAnnotation
-             parent) {
             iText.Kernel.Pdf.Annot.PdfAnnotation annotation = null;
             if (pdfObject.IsIndirectReference()) {
                 pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
@@ -476,17 +445,40 @@ namespace iText.Kernel.Pdf.Annot {
                     }
                 }
             }
-            if (annotation is PdfMarkupAnnotation) {
-                PdfMarkupAnnotation markup = (PdfMarkupAnnotation)annotation;
-                PdfDictionary inReplyTo = markup.GetInReplyToObject();
-                if (inReplyTo != null) {
-                    markup.SetInReplyTo(MakeAnnotation(inReplyTo));
-                }
-                PdfDictionary popup = markup.GetPopupObject();
-                if (popup != null) {
-                    markup.SetPopup((PdfPopupAnnotation)MakeAnnotation(popup, markup));
-                }
-            }
+            return annotation;
+        }
+
+        /// <summary>
+        /// Factory method that creates the type specific
+        /// <see cref="PdfAnnotation"/>
+        /// from the given
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// that represents annotation object. This method is useful for property reading in reading mode or
+        /// modifying in stamping mode.
+        /// </summary>
+        /// <param name="pdfObject">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// that represents annotation in the document.
+        /// </param>
+        /// <param name="parent">
+        /// parent annotation of the
+        /// <see cref="PdfPopupAnnotation"/>
+        /// to be created. This parameter is
+        /// only needed if passed
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// represents a pop-up annotation in the document.
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfAnnotation"/>
+        /// .
+        /// </returns>
+        [System.ObsoleteAttribute(@"This method will be removed in iText 7.1. Please, simply use MakeAnnotation(iText.Kernel.Pdf.PdfObject) ."
+            )]
+        public static iText.Kernel.Pdf.Annot.PdfAnnotation MakeAnnotation(PdfObject pdfObject, iText.Kernel.Pdf.Annot.PdfAnnotation
+             parent) {
+            iText.Kernel.Pdf.Annot.PdfAnnotation annotation = MakeAnnotation(pdfObject);
             if (annotation is PdfPopupAnnotation) {
                 PdfPopupAnnotation popup = (PdfPopupAnnotation)annotation;
                 if (parent != null) {

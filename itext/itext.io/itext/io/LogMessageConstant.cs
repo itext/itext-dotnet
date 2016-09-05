@@ -62,8 +62,6 @@ namespace iText.IO {
 
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
-        public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The removing page has already been flushed.";
-
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";
@@ -86,15 +84,25 @@ namespace iText.IO {
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
-        public const String OCSP_STATUS_IS_UNKNOWN = "OCSP status is unknown.";
+        public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
+
+        public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
+
+        public const String POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION = "Popup entry in the markup annotations refers not to the annotation with Popup subtype.";
 
         public const String OCSP_STATUS_IS_REVOKED = "OCSP status is revoked.";
+
+        public const String OCSP_STATUS_IS_UNKNOWN = "OCSP status is unknown.";
+
+        public const String ONE_OF_GROUPED_SOURCES_CLOSING_FAILED = "Closing of one of the grouped sources failed.";
 
         public const String ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE = "Only one of artbox or trimbox can exist on the page. The trimbox will be deleted";
 
         public const String RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES = "The {0} rectangle has negative or zero sizes. It will not be displayed.";
 
         public const String REGISTERING_DIRECTORY = "Registering directory";
+
+        public const String REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED = "The removing page has already been flushed.";
 
         public const String RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT = "The renderer was not able to process keep with next property properly";
 
@@ -117,11 +125,5 @@ namespace iText.IO {
         public const String WRITER_ENCRYPTION_IS_IGNORED_PRESERVE = "Writer encryption will be ignored, because preservation of encryption is enabled. Document will preserve the original encryption (or will stay unencrypted)";
 
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
-
-        public const String PDF_WRITER_CLOSING_FAILED = "PdfWriter closing failed due to the error occurred!";
-
-        public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
-
-        public const String ONE_OF_GROUPED_SOURCES_CLOSING_FAILED = "Closing of one of the grouped sources failed.";
     }
 }

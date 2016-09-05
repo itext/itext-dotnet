@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.IO;
+using iText.IO.Log;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -96,6 +98,9 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual PdfAnnotation GetInReplyTo() {
+            if (inReplyTo == null) {
+                inReplyTo = MakeAnnotation(GetInReplyToObject());
+            }
             return inReplyTo;
         }
 
@@ -106,7 +111,7 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfMarkupAnnotation SetPopup(PdfPopupAnnotation popup) {
             this.popup = popup;
-            popup.Put(PdfName.Parent, GetPdfObject());
+            popup.SetParent(this);
             return (iText.Kernel.Pdf.Annot.PdfMarkupAnnotation)Put(PdfName.Popup, popup.GetPdfObject());
         }
 
@@ -115,6 +120,15 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual PdfPopupAnnotation GetPopup() {
+            if (popup == null) {
+                PdfAnnotation annotation = MakeAnnotation(GetPopupObject());
+                if (!(annotation is PdfPopupAnnotation)) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfMarkupAnnotation));
+                    logger.Warn(LogMessageConstant.POPUP_ENTRY_IS_NOT_POPUP_ANNOTATION);
+                    return null;
+                }
+                popup = (PdfPopupAnnotation)annotation;
+            }
             return popup;
         }
 
