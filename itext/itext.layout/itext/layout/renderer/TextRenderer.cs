@@ -795,7 +795,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal static bool IsNewLine(GlyphLine text, int ind) {
-            return text.Get(ind).HasValidUnicode() && (text.Get(ind).GetUnicode() == '\n' || text.Get(ind).GetUnicode() == '\r');
+            int unicode = text.Get(ind).GetUnicode();
+            return unicode == '\n' || unicode == '\r';
         }
 
         private TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {

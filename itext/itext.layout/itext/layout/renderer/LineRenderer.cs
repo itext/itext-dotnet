@@ -101,7 +101,6 @@ namespace iText.Layout.Renderer
 						GlyphLine text = ((TextRenderer)child).GetText();
 						for (int i = text.start; i < text.end; i++)
 						{
-							System.Diagnostics.Debug.Assert(text.Get(i).GetChars().Length > 0);
                             if (TextRenderer.IsNewLine(text, i))
                             {
                                 newLineFound = true;
@@ -109,9 +108,8 @@ namespace iText.Layout.Renderer
                             }
 							// we assume all the chars will have the same bidi group
 							// we also assume pairing symbols won't get merged with other ones
-							int unicode = text.Get(i).GetChars()[0];
-                            unicodeIdsReorderingList.Add(unicode);
-						}
+                            unicodeIdsReorderingList.Add(text.Get(i).GetUnicode());
+                        }
 					}
 				}
                 levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels((BaseDirection) baseDirection, ArrayUtil.ToArray(unicodeIdsReorderingList)) : null;
