@@ -911,6 +911,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Markup = CreateDirectName("Markup");
 
+        public static readonly iText.Kernel.Pdf.PdfName Markup3D = CreateDirectName("Markup3D");
+
         public static readonly iText.Kernel.Pdf.PdfName MarkStyle = CreateDirectName("MarkStyle");
 
         public static readonly iText.Kernel.Pdf.PdfName Mask = CreateDirectName("Mask");
