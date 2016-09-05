@@ -608,6 +608,18 @@ namespace iText.Kernel.Pdf {
             base.Flush();
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's Media Box, that defines the boundaries of the physical medium
+        /// on which the page shall be displayed or printed
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page Media Box, expressed in default user space units.
+        /// </returns>
+        /// <exception cref="iText.Kernel.PdfException">in case of any error while reading MediaBox object.</exception>
         public virtual Rectangle GetMediaBox() {
             InitParentPages();
             PdfArray mediaBox = GetPdfObject().GetAsArray(PdfName.MediaBox);
@@ -631,11 +643,38 @@ namespace iText.Kernel.Pdf {
                 ()), Math.Abs(urx.FloatValue() - llx.FloatValue()), Math.Abs(ury.FloatValue() - lly.FloatValue()));
         }
 
+        /// <summary>
+        /// Sets the Media Box object, that defines the boundaries of the physical medium
+        /// on which the page shall be displayed or printed.
+        /// </summary>
+        /// <param name="rectangle">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object to set, expressed in default user space units.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetMediaBox(Rectangle rectangle) {
             GetPdfObject().Put(PdfName.MediaBox, new PdfArray(rectangle));
             return this;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// specified by page's CropBox, that defines the visible region of default user space.
+        /// When the page is displayed or printed, its contents shall be clipped (cropped) to this rectangle
+        /// and then shall be imposed on the output medium in some implementation-defined manner.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by pages's CropBox, expressed in default user space units.
+        /// MediaBox by default.
+        /// </returns>
         public virtual Rectangle GetCropBox() {
             InitParentPages();
             PdfArray cropBox = GetPdfObject().GetAsArray(PdfName.CropBox);
@@ -648,11 +687,41 @@ namespace iText.Kernel.Pdf {
             return cropBox.ToRectangle();
         }
 
+        /// <summary>Sets the CropBox object, that defines the visible region of default user space.</summary>
+        /// <remarks>
+        /// Sets the CropBox object, that defines the visible region of default user space.
+        /// When the page is displayed or printed, its contents shall be clipped (cropped) to this rectangle
+        /// and then shall be imposed on the output medium in some implementation-defined manner.
+        /// </remarks>
+        /// <param name="rectangle">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object to set, expressed in default user space units.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetCropBox(Rectangle rectangle) {
             GetPdfObject().Put(PdfName.CropBox, new PdfArray(rectangle));
             return this;
         }
 
+        /// <summary>
+        /// Sets the ArtBox object, that define the extent of the page’s meaningful content
+        /// (including potential white space) as intended by the page’s creator.
+        /// </summary>
+        /// <param name="rectangle">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object to set, expressed in default user space units.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetArtBox(Rectangle rectangle) {
             if (GetPdfObject().GetAsRectangle(PdfName.TrimBox) != null) {
                 GetPdfObject().Remove(PdfName.TrimBox);
@@ -663,11 +732,35 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's ArtBox, that define the extent of the page’s
+        /// meaningful content (including potential white space) as intended by the page’s creator.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's ArtBox, expressed in default user space units.
+        /// CropBox by default.
+        /// </returns>
         public virtual Rectangle GetArtBox() {
             Rectangle artBox = GetPdfObject().GetAsRectangle(PdfName.ArtBox);
             return artBox == null ? GetCropBox() : artBox;
         }
 
+        /// <summary>Sets the TrimBox object, that define the intended dimensions of the finished page after trimming.
+        ///     </summary>
+        /// <param name="rectangle">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object to set, expressed in default user space units.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetTrimBox(Rectangle rectangle) {
             if (GetPdfObject().GetAsRectangle(PdfName.ArtBox) != null) {
                 GetPdfObject().Remove(PdfName.ArtBox);
@@ -678,6 +771,18 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's TrimBox object,
+        /// that define the intended dimensions of the finished page after trimming.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's TrimBox, expressed in default user space units.
+        /// CropBox by default.
+        /// </returns>
         public virtual Rectangle GetTrimBox() {
             Rectangle trimBox = GetPdfObject().GetAsRectangle(PdfName.TrimBox);
             return trimBox == null ? GetCropBox() : trimBox;
@@ -733,6 +838,16 @@ namespace iText.Kernel.Pdf {
             return mcid++;
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="int?"/>
+        /// key of the page’s entry in the structural parent tree.
+        /// </summary>
+        /// <returns>
+        /// 
+        /// <see cref="int?"/>
+        /// key of the page’s entry in the structural parent tree.
+        /// </returns>
         public virtual int? GetStructParentIndex() {
             if (structParents == -1) {
                 PdfNumber n = GetPdfObject().GetAsNumber(PdfName.StructParents);
@@ -746,11 +861,40 @@ namespace iText.Kernel.Pdf {
             return structParents;
         }
 
+        /// <summary>Helper method to add an additional action to this page.</summary>
+        /// <remarks>
+        /// Helper method to add an additional action to this page.
+        /// May be used in chain.
+        /// </remarks>
+        /// <param name="key">
+        /// a
+        /// <see cref="PdfName"/>
+        /// specifying the name of an additional action
+        /// </param>
+        /// <param name="action">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// to add as an additional action
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetAdditionalAction(PdfName key, PdfAction action) {
             PdfAction.SetAdditionalAction(this, key, action);
             return this;
         }
 
+        /// <summary>
+        /// Gets array of annotation dictionaries that shall contain indirect references
+        /// to all annotations associated with the page.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see>List<PdfAnnotation></see>
+        /// containing all page's annotations.
+        /// </returns>
         public virtual IList<PdfAnnotation> GetAnnotations() {
             IList<PdfAnnotation> annotations = new List<PdfAnnotation>();
             PdfArray annots = GetPdfObject().GetAsArray(PdfName.Annots);
@@ -763,6 +907,19 @@ namespace iText.Kernel.Pdf {
             return annotations;
         }
 
+        /// <summary>Checks if page contains the specified annotation.</summary>
+        /// <param name="annotation">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// to check.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if page contains specified annotation and
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool ContainsAnnotation(PdfAnnotation annotation) {
             foreach (PdfAnnotation a in GetAnnotations()) {
                 if (a.GetPdfObject().Equals(annotation.GetPdfObject())) {
@@ -772,10 +929,55 @@ namespace iText.Kernel.Pdf {
             return false;
         }
 
+        /// <summary>Adds specified annotation to the end of annotations array and tagged it.</summary>
+        /// <remarks>
+        /// Adds specified annotation to the end of annotations array and tagged it.
+        /// May be used in chain.
+        /// </remarks>
+        /// <param name="annotation">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// to add.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage AddAnnotation(PdfAnnotation annotation) {
             return AddAnnotation(-1, annotation, true);
         }
 
+        /// <summary>
+        /// Adds specified
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// to specified index in annotations array with or without autotagging.
+        /// May be used in chain.
+        /// </summary>
+        /// <param name="index">
+        /// the index at which specified annotation will be added. If
+        /// <c>-1</c>
+        /// then annotation will be added
+        /// to the end of array.
+        /// </param>
+        /// <param name="annotation">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// to add.
+        /// </param>
+        /// <param name="tagAnnotation">
+        /// if
+        /// <see langword="true"/>
+        /// the added annotation will be autotagged. <br/>
+        /// (see
+        /// <see cref="iText.Kernel.Pdf.Tagutils.TagStructureContext.GetAutoTaggingPointer()"/>
+        /// )
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage AddAnnotation(int index, PdfAnnotation annotation, bool tagAnnotation
             ) {
             if (GetDocument().IsTagged() && tagAnnotation) {
@@ -838,6 +1040,18 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Gets the number of
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// associated with this page.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <c>int</c>
+        /// number of
+        /// <see cref="iText.Kernel.Pdf.Annot.PdfAnnotation"/>
+        /// associated with this page.
+        /// </returns>
         public virtual int GetAnnotsSize() {
             PdfArray annots = GetAnnots(false);
             if (annots == null) {
@@ -961,6 +1175,27 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>
+        /// Helper method that associate specified value with specified key in the underlined
+        /// <see cref="PdfDictionary"/>
+        /// .
+        /// May be used in chain.
+        /// </summary>
+        /// <param name="key">
+        /// the
+        /// <see cref="PdfName"/>
+        /// key with which the specified value is to be associated.
+        /// </param>
+        /// <param name="value">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// value to be associated with the specified key.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// object.
+        /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
