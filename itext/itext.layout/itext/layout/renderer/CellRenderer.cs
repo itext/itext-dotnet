@@ -41,7 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -87,11 +89,39 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
+        public override void DrawBackground(DrawContext drawContext) {
+            PdfCanvas canvas = drawContext.GetCanvas();
+            Matrix ctm = canvas.GetGraphicsState().GetCtm();
+            // Avoid rotation
+            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            bool avoidRotation = null != angle && null != this.GetProperty<Background>(Property.BACKGROUND);
+            if (avoidRotation) {
+                AffineTransform transform = new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6)
+                    , ctm.Get(7));
+                try {
+                    transform = transform.CreateInverse();
+                }
+                catch (NoninvertibleTransformException e) {
+                    throw new Exception(e.Message, e);
+                }
+                transform.Concatenate(AffineTransform.GetRotateInstance(0));
+                canvas.ConcatMatrix(transform);
+                DeleteProperty(Property.ROTATION_ANGLE);
+            }
+            base.DrawBackground(drawContext);
+            // restore concat matrix and rotation angle
+            if (avoidRotation) {
+                SetProperty(Property.ROTATION_ANGLE, angle);
+                canvas.ConcatMatrix(new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6), ctm.Get
+                    (7)));
+            }
+        }
+
         /// <summary><inheritDoc/></summary>
         public override void DrawBorder(DrawContext drawContext) {
         }
 
-        // Do nothing here. Border drawing for tables is done on TableRenderer.
+        // Do nothing here. Border drawing for cells is done on TableRenderer.
         protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
             float topWidth = borders[0] != null ? borders[0].GetWidth() : 0;
             float rightWidth = borders[1] != null ? borders[1].GetWidth() : 0;

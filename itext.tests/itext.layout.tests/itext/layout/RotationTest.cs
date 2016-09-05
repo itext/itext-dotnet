@@ -310,13 +310,12 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-797")]
         public virtual void CellRotationTest01() {
             String outFileName = destinationFolder + "cellRotationTest01.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1).SetWidth(50).AddCell(new Cell().Add(new Paragraph("Helloo")).SetRotationAngle(Math
+            Table table = new Table(1).SetWidth(50).AddCell(new Cell().Add(new Paragraph("Hello")).SetRotationAngle(Math
                 .PI * 70 / 180.0).SetBackgroundColor(Color.GREEN));
             doc.Add(table);
             doc.Close();
