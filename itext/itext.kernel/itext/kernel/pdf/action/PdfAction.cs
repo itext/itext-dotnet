@@ -487,6 +487,12 @@ namespace iText.Kernel.Pdf.Action {
                 ).Put(PdfName.PreserveRB, new PdfBoolean(preserveRb));
         }
 
+        /// <summary>Creates a Rendition action (section 12.6.4.13 of ISO 32000-1).</summary>
+        /// <param name="file">the name of the media clip, for use in the user interface.</param>
+        /// <param name="fileSpec">a full file specification or form XObject that specifies the actual media data</param>
+        /// <param name="mimeType">an ASCII string identifying the type of data</param>
+        /// <param name="screenAnnotation">a screen annotation</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateRendition(String file, PdfFileSpec fileSpec, String 
             mimeType, PdfAnnotation screenAnnotation) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.Rendition).Put(PdfName.OP, new PdfNumber
@@ -494,18 +500,33 @@ namespace iText.Kernel.Pdf.Action {
                 mimeType).GetPdfObject());
         }
 
+        /// <summary>Creates a JavaScript action (section 12.6.4.16 of ISO 32000-1).</summary>
+        /// <param name="javaScript">a text string containing the JavaScript script to be executed.</param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateJavaScript(String javaScript) {
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.JavaScript).Put(PdfName.JS, new PdfString
                 (javaScript));
         }
 
+        /// <summary>Creates a Submit-Form Action (section 12.7.5.2 of ISO 32000-1).</summary>
+        /// <param name="file">a uniform resource locator, as described in 7.11.5, "URL Specifications"</param>
+        /// <param name="names">
+        /// an array identifying which fields to include in the submission or which to exclude,
+        /// depending on the setting of the Include/Exclude flag in the Flags entry.
+        /// This is an optional parameter and can be <code>null</code>
+        /// </param>
+        /// <param name="flags">
+        /// a set of flags specifying various characteristics of the action (see Table 237 of ISO 32000-1).
+        /// Default value to be passed: 0.
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateSubmitForm(String file, Object[] names, int flags) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction();
             action.Put(PdfName.S, PdfName.SubmitForm);
-            PdfDictionary dic = new PdfDictionary();
-            dic.Put(PdfName.F, new PdfString(file));
-            dic.Put(PdfName.FS, PdfName.URL);
-            action.Put(PdfName.F, dic);
+            PdfDictionary urlFileSpec = new PdfDictionary();
+            urlFileSpec.Put(PdfName.F, new PdfString(file));
+            urlFileSpec.Put(PdfName.FS, PdfName.URL);
+            action.Put(PdfName.F, urlFileSpec);
             if (names != null) {
                 action.Put(PdfName.Fields, BuildArray(names));
             }
@@ -513,6 +534,16 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>Creates a Reset-Form Action (section 12.7.5.3 of ISO 32000-1).</summary>
+        /// <param name="names">
+        /// an array identifying which fields to reset or which to exclude from resetting,
+        /// depending on the setting of the Include/Exclude flag in the Flags entry (see Table 239 of ISO 32000-1).
+        /// </param>
+        /// <param name="flags">
+        /// a set of flags specifying various characteristics of the action (see Table 239 of ISO 32000-1).
+        /// Default value to be passed: 0.
+        /// </param>
+        /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateResetForm(Object[] names, int flags) {
             iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction();
             action.Put(PdfName.S, PdfName.ResetForm);
@@ -523,6 +554,22 @@ namespace iText.Kernel.Pdf.Action {
             return action;
         }
 
+        /// <summary>
+        /// Adds an additional action to the provided
+        /// <see>PdfObjectWrapper<PdfDictionary></see>
+        /// wrapper.
+        /// </summary>
+        /// <param name="wrapper">the wrapper to add an additional action to</param>
+        /// <param name="key">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// specifying the name of an additional action
+        /// </param>
+        /// <param name="action">
+        /// the
+        /// <see cref="PdfAction"/>
+        /// to add as an additional action
+        /// </param>
         public static void SetAdditionalAction(PdfObjectWrapper<PdfDictionary> wrapper, PdfName key, iText.Kernel.Pdf.Action.PdfAction
              action) {
             PdfDictionary dic;
@@ -537,7 +584,7 @@ namespace iText.Kernel.Pdf.Action {
             wrapper.GetPdfObject().Put(PdfName.AA, dic);
         }
 
-        /// <summary>Add a chained action.</summary>
+        /// <summary>Adds a chained action.</summary>
         /// <param name="nextAction">the next action or sequence of actions that shall be performed after the current action
         ///     </param>
         public virtual void Next(iText.Kernel.Pdf.Action.PdfAction nextAction) {
