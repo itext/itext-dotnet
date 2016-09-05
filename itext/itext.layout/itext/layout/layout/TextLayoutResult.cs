@@ -44,9 +44,20 @@ address: sales@itextpdf.com
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the result of a text
+    /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
+    /// .
+    /// </summary>
     public class TextLayoutResult : LayoutResult {
+        /// <summary>
+        /// Indicates whether some word was splitted during
+        /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
+        /// .
+        /// </summary>
         protected internal bool wordHasBeenSplit;
 
+        /// <summary>Indicates whether split was forced by new line symbol in text or not.</summary>
         protected internal bool splitForcedByNewline;
 
         /// <summary>
@@ -94,19 +105,58 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
         }
 
+        /// <summary>
+        /// Indicates whether some word in a rendered text was splitted during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>
+        /// .
+        /// The value will be set as true if, for example, the rendered words width is bigger than the width of layout area.
+        /// </summary>
+        /// <returns>whether some word was splitted or not.</returns>
         public virtual bool IsWordHasBeenSplit() {
             return wordHasBeenSplit;
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="wordHasBeenSplit"/>
+        /// </summary>
+        /// <param name="wordHasBeenSplit">
+        /// indicates that some word was splitted during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>
+        /// .
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on
+        /// </returns>
+        /// <seealso cref="wordHasBeenSplit"/>
         public virtual iText.Layout.Layout.TextLayoutResult SetWordHasBeenSplit(bool wordHasBeenSplit) {
             this.wordHasBeenSplit = wordHasBeenSplit;
             return this;
         }
 
+        /// <summary>Indicates whether split was forced by new line symbol in rendered text.</summary>
+        /// <remarks>
+        /// Indicates whether split was forced by new line symbol in rendered text.
+        /// The value will be set as true if, for example, the rendered text contains '\n' symbol.
+        /// </remarks>
+        /// <returns>whether split was forced by new line or not.</returns>
         public virtual bool IsSplitForcedByNewline() {
             return splitForcedByNewline;
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="SetSplitForcedByNewline(bool)"/>
+        /// </summary>
+        /// <param name="isSplitForcedByNewline">indicates that split was forced by new line symbol in rendered text.</param>
+        /// <returns>
+        /// 
+        /// <see cref="TextLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        /// <seealso cref="SetSplitForcedByNewline(bool)"/>
         public virtual iText.Layout.Layout.TextLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;

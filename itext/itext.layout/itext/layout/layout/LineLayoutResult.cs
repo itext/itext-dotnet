@@ -50,6 +50,7 @@ namespace iText.Layout.Layout {
     /// .
     /// </summary>
     public class LineLayoutResult : LayoutResult {
+        /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
 
         /// <summary>
@@ -97,10 +98,28 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
         }
 
+        /// <summary>Indicates whether split was forced by new line symbol in rendered text.</summary>
+        /// <remarks>
+        /// Indicates whether split was forced by new line symbol in rendered text.
+        /// The value will be set as true if, for example,
+        /// the rendered text of one of the child renderers contains '\n' symbol.
+        /// </remarks>
+        /// <returns>whether split was forced by new line or not</returns>
         public virtual bool IsSplitForcedByNewline() {
             return splitForcedByNewline;
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="SetSplitForcedByNewline(bool)"/>
+        /// </summary>
+        /// <param name="isSplitForcedByNewline">indicates that split was forced by new line symbol in rendered text.</param>
+        /// <returns>
+        /// 
+        /// <see cref="LineLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        /// <seealso cref="SetSplitForcedByNewline(bool)"/>
         public virtual iText.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;
