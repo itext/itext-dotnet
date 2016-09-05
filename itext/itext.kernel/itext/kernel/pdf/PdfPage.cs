@@ -664,7 +664,8 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual Rectangle GetArtBox() {
-            return GetPdfObject().GetAsRectangle(PdfName.ArtBox);
+            Rectangle artBox = GetPdfObject().GetAsRectangle(PdfName.ArtBox);
+            return artBox == null ? GetCropBox() : artBox;
         }
 
         public virtual iText.Kernel.Pdf.PdfPage SetTrimBox(Rectangle rectangle) {
@@ -678,7 +679,8 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual Rectangle GetTrimBox() {
-            return GetPdfObject().GetAsRectangle(PdfName.TrimBox);
+            Rectangle trimBox = GetPdfObject().GetAsRectangle(PdfName.TrimBox);
+            return trimBox == null ? GetCropBox() : trimBox;
         }
 
         /// <summary>Get decoded bytes for the whole page content.</summary>
