@@ -62,6 +62,7 @@ namespace iText.Kernel.Pdf.Action {
             GetPdfObject().Put(PdfName.P, p);
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }

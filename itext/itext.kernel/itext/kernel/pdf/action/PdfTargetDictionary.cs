@@ -131,6 +131,7 @@ namespace iText.Kernel.Pdf.Action {
             return this;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
