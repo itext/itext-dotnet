@@ -61,6 +61,42 @@ namespace iText.Kernel.Geom {
 
         public static iText.Kernel.Geom.PageSize A8 = new iText.Kernel.Geom.PageSize(148, 210);
 
+        public static iText.Kernel.Geom.PageSize A9 = new iText.Kernel.Geom.PageSize(105, 547);
+
+        public static iText.Kernel.Geom.PageSize A10 = new iText.Kernel.Geom.PageSize(74, 105);
+
+        public static iText.Kernel.Geom.PageSize B0 = new iText.Kernel.Geom.PageSize(2834, 4008);
+
+        public static iText.Kernel.Geom.PageSize B1 = new iText.Kernel.Geom.PageSize(2004, 2834);
+
+        public static iText.Kernel.Geom.PageSize B2 = new iText.Kernel.Geom.PageSize(1417, 2004);
+
+        public static iText.Kernel.Geom.PageSize B3 = new iText.Kernel.Geom.PageSize(1000, 1417);
+
+        public static iText.Kernel.Geom.PageSize B4 = new iText.Kernel.Geom.PageSize(708, 1000);
+
+        public static iText.Kernel.Geom.PageSize B5 = new iText.Kernel.Geom.PageSize(498, 708);
+
+        public static iText.Kernel.Geom.PageSize B6 = new iText.Kernel.Geom.PageSize(354, 498);
+
+        public static iText.Kernel.Geom.PageSize B7 = new iText.Kernel.Geom.PageSize(249, 354);
+
+        public static iText.Kernel.Geom.PageSize B8 = new iText.Kernel.Geom.PageSize(175, 249);
+
+        public static iText.Kernel.Geom.PageSize B9 = new iText.Kernel.Geom.PageSize(124, 175);
+
+        public static iText.Kernel.Geom.PageSize B10 = new iText.Kernel.Geom.PageSize(88, 124);
+
+        public static iText.Kernel.Geom.PageSize LETTER = new iText.Kernel.Geom.PageSize(612, 792);
+
+        public static iText.Kernel.Geom.PageSize LEGAL = new iText.Kernel.Geom.PageSize(612, 1008);
+
+        public static iText.Kernel.Geom.PageSize TABLOID = new iText.Kernel.Geom.PageSize(792, 1224);
+
+        public static iText.Kernel.Geom.PageSize LEDGER = new iText.Kernel.Geom.PageSize(1224, 792);
+
+        public static iText.Kernel.Geom.PageSize EXECUTIVE = new iText.Kernel.Geom.PageSize(522, 756);
+
         public static iText.Kernel.Geom.PageSize Default = A4;
 
         public PageSize(float width, float height)
