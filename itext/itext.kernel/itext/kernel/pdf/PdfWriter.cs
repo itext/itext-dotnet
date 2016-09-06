@@ -211,7 +211,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets the current object stream.</summary>
         /// <returns>object stream.</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual PdfObjectStream GetObjectStream() {
             if (!IsFullCompression()) {
                 return null;
@@ -234,7 +233,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="pdfObject">object to flush.</param>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void FlushObject(PdfObject pdfObject, bool canBeInObjStm) {
             PdfIndirectReference indirectReference = pdfObject.GetIndirectReference();
             if (IsFullCompression() && canBeInObjStm) {
@@ -325,7 +323,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Writes object to body of PDF document.</summary>
         /// <param name="pdfObj">object to write.</param>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void WriteToBody(PdfObject pdfObj) {
             if (crypto != null) {
                 crypto.SetHashKeyForNextObject(pdfObj.GetIndirectReference().GetObjNumber(), pdfObj.GetIndirectReference()
@@ -338,14 +335,12 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Writes PDF header.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void WriteHeader() {
             WriteByte('%').WriteString(document.GetPdfVersion().ToString()).WriteString("\n%\u00e2\u00e3\u00cf\u00d3\n"
                 );
         }
 
         /// <summary>Flushes all objects which have not been flushed yet.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void FlushWaitingObjects() {
             PdfXrefTable xref = document.GetXref();
             bool needFlush = true;
@@ -370,7 +365,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes all modified objects which have not been flushed yet.</summary>
         /// <remarks>Flushes all modified objects which have not been flushed yet. Used in case incremental updates.</remarks>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void FlushModifiedWaitingObjects() {
             PdfXrefTable xref = document.GetXref();
             for (int i = 1; i < xref.Size(); i++) {

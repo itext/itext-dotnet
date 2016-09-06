@@ -195,7 +195,6 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </summary>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page) {
             StructureTreeCopier.CopyTo(destDocument, page2page, GetDocument());
         }
@@ -213,7 +212,6 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
             ) {
             StructureTreeCopier.CopyTo(destDocument, insertBeforePage, page2page, GetDocument());

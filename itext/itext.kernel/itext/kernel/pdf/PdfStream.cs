@@ -72,7 +72,6 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
-        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(byte[] bytes, int compressionLevel)
             : base() {
             // Output stream associated with PDF stream.
@@ -111,7 +110,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="inputStream">the data to write to this stream</param>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
-        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(PdfDocument doc, Stream inputStream, int compressionLevel)
             : base() {
             if (doc == null) {
@@ -141,7 +139,6 @@ namespace iText.Kernel.Pdf {
         /// </pre>
         /// </remarks>
         /// <param name="inputStream">the data to write to this stream</param>
-        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(PdfDocument doc, Stream inputStream)
             : this(doc, inputStream, CompressionConstants.UNDEFINED_COMPRESSION) {
         }
@@ -153,7 +150,6 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="compressionLevel">the compression level (0 = best speed, 9 = best compression, -1 is default)
         ///     </param>
-        /// <exception cref="iText.Kernel.PdfException">on error.</exception>
         public PdfStream(int compressionLevel)
             : this(null, compressionLevel) {
         }
@@ -219,7 +215,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Gets decoded stream bytes.</summary>
         /// <returns>byte[]</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual byte[] GetBytes() {
             return GetBytes(true);
         }
@@ -238,7 +233,6 @@ namespace iText.Kernel.Pdf {
         /// <c>InputStream</c>
         /// .
         /// </returns>
-        /// <on>error.</on>
         public virtual byte[] GetBytes(bool decoded) {
             if (inputStream != null) {
                 LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).Warn("PdfStream was created by InputStream." +
@@ -300,7 +294,7 @@ namespace iText.Kernel.Pdf {
         /// </param>
         public virtual void SetData(byte[] bytes, bool append) {
             if (inputStream != null) {
-                throw new PdfException(PdfException.CannotSetDataToPdfstreamWhichWasCreatedByInputstream);
+                throw new PdfException(PdfException.CannotSetDataToPdfstreamWhichWasCreatedByInputStream);
             }
             bool outputStreamIsUninitialized = outputStream == null;
             if (outputStreamIsUninitialized) {
@@ -392,7 +386,6 @@ namespace iText.Kernel.Pdf {
         /// <seealso>PdfReader.checkPdfStreamLength()</seealso>
         /// method.
         /// </remarks>
-        /// <on>error.</on>
         protected internal virtual void UpdateLength(int length) {
             this.length = length;
         }

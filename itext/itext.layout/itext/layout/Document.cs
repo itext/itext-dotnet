@@ -55,6 +55,7 @@ namespace iText.Layout {
     /// mainly operates high-level operations e.g. setting page size and rotation,
     /// adding elements, and writing text at specific coordinates. It has no
     /// knowledge of the actual PDF concepts and syntax.
+    /// <p>
     /// A
     /// <see cref="Document"/>
     /// 's rendering behavior can be modified by extending
@@ -192,6 +193,7 @@ namespace iText.Layout {
         /// Performs an entire recalculation of the document flow, taking into
         /// account all its current child elements. May become very
         /// resource-intensive for large documents.
+        /// <p>
         /// Do not use when you have set
         /// <see cref="RootElement{T}.immediateFlush"/>
         /// to <code>true</code>.
@@ -295,11 +297,10 @@ namespace iText.Layout {
                 () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
         }
 
-        /// <summary>checks whether a method is invoked at the closed document</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <summary>Checks whether a method is invoked at the closed document</summary>
         protected internal virtual void CheckClosingStatus() {
             if (GetPdfDocument().IsClosed()) {
-                throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);
+                throw new PdfException(PdfException.DocumentClosedItIsImpossibleToExecuteAction);
             }
         }
     }

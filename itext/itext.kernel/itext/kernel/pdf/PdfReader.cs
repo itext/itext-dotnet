@@ -210,7 +210,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="decode">true if to get decoded stream bytes, false if to leave it originally encoded.</param>
         /// <returns>byte[]</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual byte[] ReadStreamBytes(PdfStream stream, bool decode) {
             byte[] b = ReadStreamBytesRaw(stream);
             if (decode && b != null) {
@@ -516,7 +515,7 @@ namespace iText.Kernel.Pdf {
                     address[k] = tokens.GetIntValue() + first;
                 }
                 if (!ok) {
-                    throw new PdfException(PdfException.ErrorReadingObjectStream);
+                    throw new PdfException(PdfException.ErrorWhileReadingObjectStream);
                 }
                 for (int k_1 = 0; k_1 < n; ++k_1) {
                     tokens.Seek(address[k_1]);
@@ -821,7 +820,7 @@ namespace iText.Kernel.Pdf {
                     if (tokens.TokenValueEqualsTo(PdfTokenizer.N)) {
                         if (xref.Get(num) == null) {
                             if (pos == 0) {
-                                tokens.ThrowError(PdfException.FilePosition0CrossReferenceEntryInThisXrefSubsection);
+                                tokens.ThrowError(PdfException.FilePosition1CrossReferenceEntryInThisXrefSubsection);
                             }
                             xref.Add(reference);
                         }

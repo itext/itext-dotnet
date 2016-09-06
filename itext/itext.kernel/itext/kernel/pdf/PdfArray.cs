@@ -406,7 +406,6 @@ namespace iText.Kernel.Pdf
 	    }
 
 	    /// <param name="asDirect">true is to extract direct object always.</param>
-		/// <exception cref="iText.Kernel.PdfException"/>
 		public virtual PdfObject Get(int index, bool asDirect)
 		{
 			if (!asDirect)

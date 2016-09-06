@@ -161,7 +161,7 @@ namespace iText.Signatures {
                     pkcs = din.ReadObject();
                 }
                 catch (System.IO.IOException) {
-                    throw new ArgumentException(PdfException.CantDecodePkcs7SigneddataObject);
+                    throw new ArgumentException(PdfException.CannotDecodePkcs7SigneddataObject);
                 }
                 if (!(pkcs is Asn1Sequence)) {
                     throw new ArgumentException(PdfException.NotAValidPkcs7ObjectNotASequence);
@@ -262,7 +262,7 @@ namespace iText.Signatures {
                     }
                 }
                 if (signCert == null) {
-                    throw new PdfException(PdfException.CantFindSigningCertificateWithSerial1).SetMessageParams(issuer.ToString
+                    throw new PdfException(PdfException.CannotFindSigningCertificateWithSerial1).SetMessageParams(issuer.ToString
                         () + " / " + serialNumber.ToString(16));
                 }
                 SignCertificateChain();
@@ -940,8 +940,8 @@ namespace iText.Signatures {
         // Stefan Santesson
         // verification
         /// <summary>Verify the digest.</summary>
-        /// <exception cref="Java.Security.SignatureException">on error</exception>
         /// <returns><CODE>true</CODE> if the signature checks out, <CODE>false</CODE> otherwise</returns>
+        /// <exception cref="Java.Security.SignatureException">on error</exception>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual bool Verify() {
             if (verified) {
@@ -1000,8 +1000,7 @@ namespace iText.Signatures {
             String algOID = info.HashAlgorithm.ObjectID.Id;
             byte[] md = SignUtils.GetMessageDigest(DigestAlgorithms.GetDigest(algOID)).Digest(digest);
             byte[] imphashed = imprint.GetHashedMessage();
-            bool res = iText.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
-            return res;
+            return iText.IO.Util.JavaUtil.ArraysEquals(md, imphashed);
         }
 
         /// <summary>All the X.509 certificates in no particular order.</summary>
@@ -1054,7 +1053,6 @@ namespace iText.Signatures {
                 if (signCert.Equals(oc[k])) {
                     oc.JRemoveAt(k);
                     --k;
-                    continue;
                 }
             }
             bool found = true;

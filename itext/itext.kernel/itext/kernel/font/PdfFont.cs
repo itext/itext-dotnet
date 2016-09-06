@@ -445,7 +445,7 @@ namespace iText.Kernel.Font {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
                 .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1))) {
                 if (isException) {
-                    throw new PdfException(PdfException.DictionaryNotContainFontData).SetMessageParams(PdfName.TrueType.GetValue
+                    throw new PdfException(PdfException.DictionaryDoesntHave1FontData).SetMessageParams(PdfName.TrueType.GetValue
                         ());
                 }
                 return false;

@@ -80,7 +80,7 @@ namespace iText.Kernel.Font {
                             return new PdfType3Font(fontDictionary);
                         }
                         else {
-                            throw new PdfException(PdfException.DictionaryNotContainFontData);
+                            throw new PdfException(PdfException.DictionaryDoesntHaveSupportedFontData);
                         }
                     }
                 }
@@ -375,7 +375,7 @@ namespace iText.Kernel.Font {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !fontDic.Get(PdfName.Subtype).Equals(fontType
                 )) {
                 if (isException) {
-                    throw new PdfException(PdfException.DictionaryNotContainFontData).SetMessageParams(fontType.GetValue());
+                    throw new PdfException(PdfException.DictionaryDoesntHave1FontData).SetMessageParams(fontType.GetValue());
                 }
                 return false;
             }

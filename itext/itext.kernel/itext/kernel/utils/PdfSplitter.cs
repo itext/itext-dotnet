@@ -116,7 +116,6 @@ namespace iText.Kernel.Utils {
         /// the event listener which is called when another document is ready.
         /// You can close this document in this listener, for instance.
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void SplitByPageNumbers(IList<int> pageNumbers, PdfSplitter.IDocumentReadyListener documentReady
             ) {
             int currentPageNumber = 1;
@@ -139,15 +138,14 @@ namespace iText.Kernel.Utils {
         /// If the first element is not 1, then 1 is implied (i.e. the first split document will start from page 1 in any case).
         /// </param>
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfDocument> SplitByPageNumbers(IList<int> pageNumbers) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_157(splitDocuments));
+            SplitByPageNumbers(pageNumbers, new _IDocumentReadyListener_155(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_157 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_157(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_155 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_155(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -164,7 +162,6 @@ namespace iText.Kernel.Utils {
         /// the event listener which is called when another document is ready.
         /// You can close this document in this listener, for instance.
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void SplitByPageCount(int pageCount, PdfSplitter.IDocumentReadyListener documentReady) {
             for (int startPage = 1; startPage <= pdfDocument.GetNumberOfPages(); startPage += pageCount) {
                 int endPage = Math.Min(startPage + pageCount - 1, pdfDocument.GetNumberOfPages());
@@ -178,15 +175,14 @@ namespace iText.Kernel.Utils {
         /// <summary>Splits a document into smaller documents with no more than @pageCount pages each.</summary>
         /// <param name="pageCount">the biggest possible number of pages in a split document.</param>
         /// <returns>the list of resultant documents. By warned that they are not closed.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfDocument> SplitByPageCount(int pageCount) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
-            SplitByPageCount(pageCount, new _IDocumentReadyListener_196(splitDocuments));
+            SplitByPageCount(pageCount, new _IDocumentReadyListener_192(splitDocuments));
             return splitDocuments;
         }
 
-        private sealed class _IDocumentReadyListener_196 : PdfSplitter.IDocumentReadyListener {
-            public _IDocumentReadyListener_196(IList<PdfDocument> splitDocuments) {
+        private sealed class _IDocumentReadyListener_192 : PdfSplitter.IDocumentReadyListener {
+            public _IDocumentReadyListener_192(IList<PdfDocument> splitDocuments) {
                 this.splitDocuments = splitDocuments;
             }
 
@@ -203,7 +199,6 @@ namespace iText.Kernel.Utils {
         /// the list of the resultant documents for each of the specified page range.
         /// Be warned that these documents are not closed.
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfDocument> ExtractPageRanges(IList<PageRange> pageRanges) {
             IList<PdfDocument> splitDocuments = new List<PdfDocument>();
             foreach (PageRange currentPageRange in pageRanges) {
@@ -220,7 +215,6 @@ namespace iText.Kernel.Utils {
         /// the resultant document containing the pages specified by the provided page range.
         /// Be warned that this document is not closed.
         /// </returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfDocument ExtractPageRange(PageRange pageRange) {
             return ExtractPageRanges(JavaCollectionsUtil.SingletonList(pageRange))[0];
         }
@@ -263,7 +257,6 @@ namespace iText.Kernel.Utils {
         /// and places the entire hierarchy in a separate document ( outlines and pages ) .
         /// </summary>
         /// <param name="outlineTitles">list of outline titles .</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfDocument> SplitByOutlines(IList<String> outlineTitles) {
             if (outlineTitles == null || outlineTitles.Count == 0) {
                 return JavaCollectionsUtil.EmptyList<PdfDocument>();
@@ -331,7 +324,6 @@ namespace iText.Kernel.Utils {
 
         /// <summary>the next element in the entire hierarchy</summary>
         /// <param name="outline"></param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private PdfOutline GetAbsoluteTreeNextOutline(PdfOutline outline) {
             PdfObject nextPdfObject = outline.GetContent().Get(PdfName.Next);
             PdfOutline nextPdfOutline = null;

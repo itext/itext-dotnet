@@ -186,7 +186,7 @@ namespace iText.Kernel.Pdf {
 
         private void Write(PdfIndirectReference indirectReference) {
             if (document != null && !indirectReference.GetDocument().Equals(document)) {
-                throw new PdfException(PdfException.PdfIndirectObjectBelongToOtherPdfDocument);
+                throw new PdfException(PdfException.PdfIndirectObjectBelongsToOtherPdfDocument);
             }
             if (indirectReference.GetRefersTo() == null) {
                 Write(PdfNull.PDF_NULL);
@@ -357,7 +357,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CannotWritePdfStream, e, pdfStream);
+                throw new PdfException(PdfException.CannotWriteToPdfStream, e, pdfStream);
             }
         }
 

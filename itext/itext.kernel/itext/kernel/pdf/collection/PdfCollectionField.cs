@@ -220,7 +220,7 @@ namespace iText.Kernel.Pdf.Collection {
                     return new PdfNumber(System.Double.Parse(value.Trim(), System.Globalization.CultureInfo.InvariantCulture));
                 }
             }
-            throw new PdfException(PdfException.IsNotAnAcceptableValueForTheField).SetMessageParams(value, GetPdfObject
+            throw new PdfException(PdfException._1IsNotAnAcceptableValueForTheField2).SetMessageParams(value, GetPdfObject
                 ().GetAsName(PdfName.N).GetValue());
         }
 

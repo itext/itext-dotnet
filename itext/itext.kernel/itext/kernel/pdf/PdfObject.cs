@@ -117,14 +117,12 @@ namespace iText.Kernel.Pdf {
         public abstract byte GetObjectType();
 
         /// <summary>Flushes the object to the document.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush() {
             Flush(true);
         }
 
         /// <summary>Flushes the object to the document.</summary>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush(bool canBeInObjStm) {
             if (IsFlushed() || GetIndirectReference() == null) {
                 // TODO here we should take into account and log the case when object is MustBeIndirect, but has no indirect reference
@@ -273,7 +271,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>copied object.</returns>
         public virtual PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             if (document == null) {
-                throw new PdfException(PdfException.DocumentToCopyToCannotBeNull);
+                throw new PdfException(PdfException.DocumentForCopyToCannotBeNull);
             }
             if (indirectReference != null) {
                 // TODO checkState(MUST_BE_INDIRECT) now is always false, because indirectReference != null. See also DEVSIX-602
@@ -454,6 +452,7 @@ namespace iText.Kernel.Pdf {
         /// <li>copying to the other document</li>
         /// <li>cloning inside of the current document</li>
         /// </ol>
+        /// <p>
         /// This two cases are distinguished by the state of <code>document</code> parameter:
         /// the second case is processed if <code>document</code> is <code>null</code>.
         /// </summary>

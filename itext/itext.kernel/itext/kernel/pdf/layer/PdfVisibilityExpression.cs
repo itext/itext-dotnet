@@ -52,7 +52,6 @@ namespace iText.Kernel.Pdf.Layer {
     public class PdfVisibilityExpression : PdfObjectWrapper<PdfArray> {
         /// <summary>Constructs a new PdfVisibilityExpression instance by its raw PdfArray.</summary>
         /// <param name="visibilityExpressionArray">the array representing the visibility expression</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfVisibilityExpression(PdfArray visibilityExpressionArray)
             : base(visibilityExpressionArray) {
             PdfName @operator = visibilityExpressionArray.GetAsName(0);

@@ -1063,7 +1063,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method gets outlines of a current page</summary>
         /// <param name="updateOutlines"/>
         /// <returns>return all outlines of a current page</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual IList<PdfOutline> GetOutlines(bool updateOutlines) {
             GetDocument().GetOutlines(updateOutlines);
             return GetDocument().GetCatalog().GetPagesWithOutlines().Get(GetPdfObject());

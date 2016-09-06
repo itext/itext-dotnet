@@ -114,7 +114,7 @@ namespace iText.Barcodes {
             text = text.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
             int len = text.Length;
             if (len < 2) {
-                throw new ArgumentException(PdfException.CodabarMustHaveAtLeastAStartAndStopCharacter);
+                throw new ArgumentException(PdfException.CodabarMustHaveAtLeastStartAndStopCharacter);
             }
             if (CHARS.IndexOf(text[0]) < START_STOP_IDX || CHARS.IndexOf(text[len - 1]) < START_STOP_IDX) {
                 throw new ArgumentException(PdfException.CodabarMustHaveOneAbcdAsStartStopCharacter);
@@ -123,10 +123,10 @@ namespace iText.Barcodes {
             for (int k = 0; k < len; ++k) {
                 int idx = CHARS.IndexOf(text[k]);
                 if (idx >= START_STOP_IDX && k > 0 && k < len - 1) {
-                    throw new ArgumentException(PdfException.CodabarStartStopCharacterAreOnlyExtremes);
+                    throw new ArgumentException(PdfException.InCodabarStartStopCharactersAreOnlyAllowedAtTheExtremes);
                 }
                 if (idx < 0) {
-                    throw new ArgumentException(PdfException.CodabarCharacterOneIsIllegal);
+                    throw new ArgumentException(PdfException.IllegalCharacterInCodabarBarcode);
                 }
                 System.Array.Copy(BARS[idx], 0, bars, k * 8, 7);
             }

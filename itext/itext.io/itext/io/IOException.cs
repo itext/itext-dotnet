@@ -280,6 +280,7 @@ namespace iText.IO {
 
         public const String IccProfileContains0ComponentsWhileImageDataContains1Components = "ICC profile contains {0} components, while the image data contains {1} components.";
 
+        /// <summary>Object for more details</summary>
         protected internal Object obj;
 
         private IList<Object> messageParams;
@@ -319,7 +320,7 @@ namespace iText.IO {
             : base(message, cause) {
         }
 
-        /// <summary>Creates a new IOException.</summary>
+        /// <summary>Creates a new instance of IOException.</summary>
         /// <param name="message">the detail message.</param>
         /// <param name="cause">
         /// the cause (which is saved for later retrieval by

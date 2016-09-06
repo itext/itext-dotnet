@@ -46,443 +46,543 @@ using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.Kernel {
+    /// <summary>Exception class for exceptions in kernel module.</summary>
     public class PdfException : Exception {
-        public const String _1IsAnUnknownGraphicsStateDictionary = "{0} is.an.unknown.graphics.state.dictionary";
+        public const String _1IsAnUnknownGraphicsStateDictionary = "{0} is an unknown graphics state dictionary.";
 
-        public const String _1IsNotAValidPlaceableWindowsMetafile = "{0} is.not.a.valid.placeable.windows.metafile";
+        public const String _1IsNotAnAcceptableValueForTheField2 = "{0} is not an acceptable value for the field {1}.";
 
-        public const String AnnotShallHaveReferenceToPage = "annot.shall.have.reference.to.page";
+        public const String _1IsNotAValidPlaceableWindowsMetafile = "{0} is not a valid placeable windows metafile.";
 
-        public const String AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible = "append.mode.requires.a.document.without.errors.even.if.recovery.was.possible";
+        [Obsolete]
+        public const String AnnotShallHaveReferenceToPage = "Annotation shall have reference to page.";
 
-        public const String AuthenticatedAttributeIsMissingTheDigest = "authenticated.attribute.is.missing.the.digest";
+        public const String AnnotationShallHaveReferenceToPage = "Annotation shall have reference to page.";
 
-        public const String AvailableSpaceIsNotEnoughForSignature = "available.space.is.not.enough.for.signature";
+        public const String AppendModeRequiresADocumentWithoutErrorsEvenIfRecoveryWasPossible = "Append mode requires a document without errors, even if recovery is possible.";
+
+        public const String AuthenticatedAttributeIsMissingTheDigest = "Authenticated attribute is missing the digest.";
+
+        public const String AvailableSpaceIsNotEnoughForSignature = "Available space is not enough for signature.";
 
         public const String BadCertificateAndKey = "Bad public key certificate and/or private key.";
 
-        public const String BadUserPassword = "Bad user password. Password is not provided or provided wrong password. Correct password should be passed to PdfReader constructor with properties. See ReaderProperties.setPassword method.";
+        public const String BadUserPassword = "Bad user password. Password is not provided or wrong password provided. Correct password should be passed to PdfReader constructor with properties. See ReaderProperties#setPassword() method.";
 
-        public const String CannotAddKidToTheFlushedElement = "cannot.add.kid.to.the.flushed.element";
+        public const String CannotAddKidToTheFlushedElement = "Cannot add kid to the flushed element.";
 
-        public const String CannotAddNonDictionaryExtGStateToResources1 = "Cannot add graphic state to resources. The PdfObject type is {0}, but should be PdfDictionary";
+        public const String CannotAddNonDictionaryExtGStateToResources1 = "Cannot add graphic state to resources. The PdfObject type is {0}, but should be PdfDictionary.";
 
-        public const String CannotAddNonDictionaryPatternToResources1 = "Cannot add pattern to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream";
+        public const String CannotAddNonDictionaryPatternToResources1 = "Cannot add pattern to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream.";
 
-        public const String CannotAddNonDictionaryPropertiesToResources1 = "Cannot add properties to resources. The PdfObject type is {0}, but should be PdfDictionary";
+        public const String CannotAddNonDictionaryPropertiesToResources1 = "Cannot add properties to resources. The PdfObject type is {0}, but should be PdfDictionary.";
 
-        public const String CannotAddNonDictionaryShadingToResources1 = "Cannot add shading to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream";
+        public const String CannotAddNonDictionaryShadingToResources1 = "Cannot add shading to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream.";
 
-        public const String CannotAddNonStreamFormToResources1 = "Cannot add form to resources. The PdfObject type is {0}, but should be PdfStream";
+        public const String CannotAddNonStreamFormToResources1 = "Cannot add form to resources. The PdfObject type is {0}, but should be PdfStream.";
 
-        public const String CannotAddNonStreamImageToResources1 = "Cannot add image to resources. The PdfObject type is {0}, but should be PdfStream";
+        public const String CannotAddNonStreamImageToResources1 = "Cannot add image to resources. The PdfObject type is {0}, but should be PdfStream.";
 
-        public const String CannotCloseDocument = "cannot.close.document";
+        public const String CannotCloseDocument = "Cannot close document.";
 
-        public const String CannotCloseDocumentWithAlreadyFlushedPdfCatalog = "cannot.close.document.with.already.flushed.pdf.catalog";
+        public const String CannotCloseDocumentWithAlreadyFlushedPdfCatalog = "Cannot close document with already flushed PDF Catalog.";
 
-        public const String CannotConvertPdfArrayToRectanle = "cannot.convert.pdfarray.to.rectangle";
+        public const String CannotConvertPdfArrayToRectanle = "Cannot convert PdfArray to Rectangle.";
 
-        public const String CannotCopyFlushedObject = "cannot.copy.flushed.object";
+        public const String CannotCopyFlushedObject = "Cannot copy flushed object.";
 
-        public const String CannotCopyFlushedTag = "cannot.copy.flushed.tag";
+        public const String CannotCopyFlushedTag = "Cannot copy flushed tag.";
 
-        public const String CannotCopyObjectContent = "cannot.copy.object.content";
+        public const String CannotCopyObjectContent = "Cannot copy object content.";
 
-        public const String CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten = "cannot.copy.indirect.object.from.the.document.that.is.being.written";
+        public const String CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten = "Cannot copy indirect object from the document that is being written.";
 
-        public const String CannotCopyToDocumentOpenedInReadingMode = "cannot.copy.to.document.opened.in.reading.mode";
+        public const String CannotCopyToDocumentOpenedInReadingMode = "Cannot copy to document opened in reading mode.";
 
-        public const String CannotCreateLayoutImageByWmfImage = "Cannot create layout image by WmfImage instance. First convert the image into FormXObject and then use the corresponding layout image constructor";
+        public const String CannotCreateLayoutImageByWmfImage = "Cannot create layout image by WmfImage instance. First convert the image into FormXObject and then use the corresponding layout image constructor.";
 
         public const String CannotCreatePdfImageXObjectByWmfImage = "Cannot create PdfImageXObject instance by WmfImage. Use PdfFormXObject constructor instead.";
 
-        public const String CannotCreatePdfStreamByInputStreamWithoutPdfDocument = "cannot.create.pdfstream.by.inputstream.without.pdfdocument";
+        public const String CannotCreatePdfStreamByInputStreamWithoutPdfDocument = "Cannot create pdfstream by InputStream without PdfDocument.";
 
-        public const String CannotGetContentBytes = "cannot.get.content.bytes";
+        public const String CannotGetContentBytes = "Cannot get content bytes.";
 
-        public const String CannotGetPdfStreamBytes = "cannot.get.pdfstream.bytes";
+        public const String CannotGetPdfStreamBytes = "Cannot get PdfStream bytes.";
 
-        public const String CannotRetrieveMediaBoxAttribute = "Invalid pdf. There is no media box attribute for page or its parents.";
+        public const String CannotRetrieveMediaBoxAttribute = "Invalid PDF. There is no media box attribute for page or its parents.";
 
-        public const String CannotFindImageDataOrEI = "cannot.find.image.data.or.EI";
+        public const String CannotFindImageDataOrEI = "Cannot find image data or EI.";
 
-        public const String CannotFlushDocumentRootTagBeforeDocumentIsClosed = "cannot.flush.document.root.tag.before.document.is.closed";
+        public const String CannotFlushDocumentRootTagBeforeDocumentIsClosed = "Cannot flush document root tag before document is closed.";
 
-        public const String CannotFlushObject = "cannot.flush.object";
+        public const String CannotFlushObject = "Cannot flush object.";
 
-        public const String CannotMoveToFlushedKid = "cannot.move.to.flushed.kid";
+        public const String CannotMoveToFlushedKid = "Cannot move to flushed kid.";
 
-        public const String CannotMoveToMarkedContentReference = "cannot.move.to.marked.content.reference";
+        public const String CannotMoveToMarkedContentReference = "Cannot move to marked content reference.";
 
-        public const String CannotMoveToParentCurrentElementIsRoot = "cannot.move.to.parent.current.element.is.root";
+        public const String CannotMoveToParentCurrentElementIsRoot = "Cannot move to parent current element is root.";
 
-        public const String CannotOpenDocument = "cannot.open.document";
+        public const String CannotOpenDocument = "Cannot open document.";
 
-        public const String CannotParseContentStream = "could.not.parse.content.stream";
+        public const String CannotParseContentStream = "Cannot parse content stream.";
 
-        public const String CannotReadAStreamInOrderToAppendNewBytes = "cannot.read.a.stream.in.order.to.append.new.bytes.reason {0}";
+        public const String CannotReadAStreamInOrderToAppendNewBytes = "Cannot read a stream in order to append new bytes.";
 
-        public const String CannotReadPdfObject = "cannot.read.pdf.object";
+        public const String CannotReadPdfObject = "Cannot read PdfObject.";
 
-        public const String CannotRemoveDocumentRootTag = "cannot.remove.document.root.tag";
+        public const String CannotRemoveDocumentRootTag = "Cannot remove document root tag.";
 
-        public const String CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed = "cannot.remove.marked.content.reference.because.its.page.was.already.flushed";
+        public const String CannotRemoveMarkedContentReferenceBecauseItsPageWasAlreadyFlushed = "Cannot remove marked content reference, because its page has been already flushed.";
 
-        public const String CannotRemoveTagBecauseItsParentIsFlushed = "cannot.remove.tag.because.its.parent.is.flushed";
+        public const String CannotRemoveTagBecauseItsParentIsFlushed = "Cannot remove tag, because its parent is flushed.";
 
-        public const String CannotSetDataToPdfstreamWhichWasCreatedByInputstream = "cannot.set.data.to.pdfstream.which.was.created.by.inputstream";
+        [Obsolete]
+        public const String CannotSetDataToPdfstreamWhichWasCreatedByInputstream = "Cannot set data to PdfStream which was created by InputStream.";
 
-        public const String CannotSplitDocumentThatIsBeingWritten = "cannot.split.document.that.is.being.written";
+        public const String CannotSetDataToPdfstreamWhichWasCreatedByInputStream = "Cannot set data to PdfStream which was created by InputStream.";
 
-        public const String CannotWritePdfStream = "cannot.write.pdf.stream";
+        public const String CannotSplitDocumentThatIsBeingWritten = "Cannot split document that is being written.";
 
-        public const String CannotWriteObjectAfterItWasReleased = "Cannot write object after it was released. In normal situation the object must be read once again before being written";
+        [Obsolete]
+        public const String CannotWritePdfStream = "Cannot write pdf stream.";
 
-        public const String CantDecodePkcs7SigneddataObject = "can.t.decode.pkcs7signeddata.object";
+        public const String CannotWriteToPdfStream = "Cannot write to PdfStream.";
 
-        public const String CantFindSigningCertificateWithSerial1 = "can.t.find.signing.certificate.with.serial {0}";
+        public const String CannotWriteObjectAfterItWasReleased = "Cannot write object after it was released. In normal situation the object must be read once again before being written.";
 
-        public const String CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate = "Certificate is not provided. Document is encrypted with public key certificate, it should be passed to PdfReader constructor with properties. See ReaderProperties.setPublicKeySecurityParams method.";
+        [Obsolete]
+        public const String CantDecodePkcs7SigneddataObject = "Cannot decode PKCS#7 SignedData object.";
 
-        public const String CfNotFoundEncryption = "cf.not.found.encryption";
+        public const String CannotDecodePkcs7SigneddataObject = "Cannot decode PKCS#7 SignedData object.";
 
-        public const String CodabarCharacterOneIsIllegal = "the.character {0} is.illegal.in.codabar";
+        [Obsolete]
+        public const String CantFindSigningCertificateWithSerial1 = "Cannot find signing certificate with serial {0}.";
 
-        public const String CodabarMustHaveAtLeastAStartAndStopCharacter = "codabar.must.have.at.least.a.start.and.stop.character";
+        public const String CannotFindSigningCertificateWithSerial1 = "Cannot find signing certificate with serial {0}.";
 
-        public const String CodabarMustHaveOneAbcdAsStartStopCharacter = "codabar.must.have.one.of.abcd.as.start.stop.character";
+        public const String CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate = "Certificate is not provided. Document is encrypted with public key certificate, it should be passed to PdfReader constructor with properties. See ReaderProperties#setPublicKeySecurityParams() method.";
 
-        public const String CodabarStartStopCharacterAreOnlyExtremes = "in.codabar.start.stop.characters.are.only.allowed.at.the.extremes";
+        public const String CfNotFoundEncryption = "/CF not found (encryption)";
 
-        public const String ColorNotFound = "color.not.found";
+        [Obsolete]
+        public const String CodabarCharacterOneIsIllegal = "the character {0} is illegal in codabar.";
 
-        public const String ColorSpaceNotFound = "color.space.not.found";
+        [Obsolete]
+        public const String CodabarMustHaveAtLeastAStartAndStopCharacter = "Codabar must have at least start and stop character.";
 
-        public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters = "content.stream.must.not.invoke.operators.that.specify.colors.or.other.color.related.parameters.in.the.graphics.state";
+        public const String CodabarMustHaveAtLeastStartAndStopCharacter = "Codabar must have at least start and stop character.";
 
-        public const String DecodeParameterType1IsNotSupported = "decode.parameter.type {0} is.not.supported";
+        public const String CodabarMustHaveOneAbcdAsStartStopCharacter = "Codabar must have one of 'ABCD' as start/stop character.";
 
-        public const String DefaultcryptfilterNotFoundEncryption = "defaultcryptfilter.not.found.encryption";
+        [Obsolete]
+        public const String CodabarStartStopCharacterAreOnlyExtremes = "In codabar, start/stop characters are only allowed at the extremes.";
 
-        public const String DictionaryKey1IsNotAName = "dictionary.key {0} is.not.a.name";
+        public const String ColorNotFound = "Color not found.";
 
-        public const String DictionaryNotContainFontData = "dict.not.contain.font.data";
+        public const String ColorSpaceNotFound = "ColorSpace not found.";
 
-        public const String DocumentAlreadyPreClosed = "document.already.pre.closed";
+        public const String ContentStreamMustNotInvokeOperatorsThatSpecifyColorsOrOtherColorRelatedParameters = "Content stream must not invoke operators that specify colors or other color related parameters in the graphics state.";
 
-        public const String DocumentClosedImpossibleExecuteAction = "document.was.closed.it.is.impossible.execute.action";
+        public const String DecodeParameterType1IsNotSupported = "Decode parameter type {0} is not supported.";
 
-        public const String DocumentDoesntContainStructTreeRoot = "document.doesn't.contain.structtreeroot";
+        public const String DefaultcryptfilterNotFoundEncryption = "/DefaultCryptFilter not found (encryption).";
 
-        public const String DocumentHasNoPages = "document.has.no.pages";
+        public const String DictionaryKey1IsNotAName = "Dictionary key {0} is not a name.";
 
-        public const String DocumentHasNoCatalogObject = "document.has.no.catalog.object";
+        [Obsolete]
+        public const String DictionaryNotContainFontData = "Dictionary doesn't have font data.";
 
-        public const String DocumentMustBePreclosed = "document.must.be.preclosed";
+        public const String DictionaryDoesntHave1FontData = "Dictionary doesn't have {0} font data.";
 
-        public const String DocumentToCopyToCannotBeNull = "document.to.copy.to.cannot.be.null";
+        public const String DictionaryDoesntHaveSupportedFontData = "Dictionary doesn't have supported font data.";
 
-        public const String ElementCannotFitAnyArea = "element.cannot.fit.any.area";
+        public const String DocumentAlreadyPreClosed = "Document has been already pre closed.";
 
-        public const String EncryptionCanOnlyBeAddedBeforeOpeningDocument = "encryption.can.only.be.added.before.opening.the.document";
+        [Obsolete]
+        public const String DocumentClosedImpossibleExecuteAction = "Document was closed. It is impossible to execute action.";
 
-        public const String EndOfContentStreamReachedBeforeEndOfImageData = "end.of.content.stream.reached.before.end.of.image.data";
+        public const String DocumentClosedItIsImpossibleToExecuteAction = "Document was closed. It is impossible to execute action.";
 
-        public const String ErrorReadingObjectStream = "error.reading.objstm";
+        public const String DocumentDoesntContainStructTreeRoot = "Document doesn't contain StructTreeRoot.";
 
-        public const String FailedToGetTsaResponseFrom1 = "failed.to.get.tsa.response.from {0}";
+        public const String DocumentHasNoPages = "Document has no pages.";
 
-        public const String FieldFlatteningIsNotSupportedInAppendMode = "field.flattening.is.not.supported.in.append.mode";
+        [Obsolete]
+        public const String DocumentHasNoCatalogObject = "Document has no PDF Catalog object.";
 
-        public const String FieldIsAlreadySigned = "field.flattening.is.not.supported.in.append.mode";
+        public const String DocumentHasNoPdfCatalogObject = "Document has no PDF Catalog object.";
 
-        public const String FieldNamesCannotContainADot = "field.names.cannot.contain.a.dot";
+        [Obsolete]
+        public const String DocumentMustBePreclosed = "Document must be preClosed.";
 
-        public const String FieldTypeIsNotASignatureFieldType = "the.field.type.is.not.a.signature.field.type";
+        public const String DocumentMustBePreClosed = "Document must be preClosed.";
 
-        public const String Filter1IsNotSupported = "filter {0} is.not.supported";
+        [Obsolete]
+        public const String DocumentToCopyToCannotBeNull = "Document for copyTo cannot be null.";
 
-        public const String FilePosition0CrossReferenceEntryInThisXrefSubsection = "file.position {0} cross.reference.entry.in.this.xref.subsection";
+        public const String DocumentForCopyToCannotBeNull = "Document for copyTo cannot be null.";
 
-        public const String FilterCcittfaxdecodeIsOnlySupportedForImages = "filter.ccittfaxdecode.is.only.supported.for.images";
+        public const String ElementCannotFitAnyArea = "Element cannot fit any area.";
 
-        public const String FilterIsNotANameOrArray = "filter.is.not.a.name.or.array";
+        public const String EncryptionCanOnlyBeAddedBeforeOpeningDocument = "Encryption can only be added before opening the document.";
 
-        public const String FlushedPageCannotBeAddedOrInserted = "flushed.page.cannot.be.added.or.inserted";
+        public const String EndOfContentStreamReachedBeforeEndOfImageData = "End of content stream reached before end of image data.";
 
-        public const String FontAndSizeMustBeSetBeforeWritingAnyText = "font.and.size.must.be.set.before.writing.any.text";
+        [Obsolete]
+        public const String ErrorReadingObjectStream = "Error while reading Object Stream.";
 
-        public const String FontEmbeddingIssue = "font.embedding.issue";
+        public const String ErrorWhileReadingObjectStream = "Error while reading Object Stream.";
 
-        public const String FontSizeTooSmall = "font.size.too.small";
+        public const String FailedToGetTsaResponseFrom1 = "Failed to get TSA response from {0}.";
 
-        public const String FormXObjectMustHaveBbox = "form.xobject.must.have.bbox";
+        public const String FieldFlatteningIsNotSupportedInAppendMode = "Field flattening is not supported in append mode.";
 
-        public const String FunctionIsNotCompatibleWitColorSpace = "function.is.not.compatible.with.color.space";
+        [Obsolete]
+        public const String FieldIsAlreadySigned = "Field has been already signed.";
 
-        public const String GivenAccessibleElementIsNotConnectedToAnyTag = "given.accessible.element.is.not.connected.to.any.tag";
+        public const String FieldAlreadySigned = "Field has been already signed.";
 
-        public const String IllegalCharacterInAsciihexdecode = "illegal.character.in.asciihexdecode";
+        public const String FieldNamesCannotContainADot = "Field names cannot contain a dot.";
 
-        public const String IllegalCharacterInAscii85decode = "illegal.character.in.ascii85decode";
+        public const String FieldTypeIsNotASignatureFieldType = "Field type is not a signature field type.";
 
-        public const String IllegalLengthValue = "illegal.length.value";
+        public const String Filter1IsNotSupported = "Filter {0} is not supported.";
 
-        public const String IllegalPValue = "illegal.p.value";
+        [Obsolete]
+        public const String FilePosition0CrossReferenceEntryInThisXrefSubsection = "file position {0} cross reference entry in this xref subsection.";
 
-        public const String IllegalRValue = "illegal.r.value";
+        public const String FilePosition1CrossReferenceEntryInThisXrefSubsection = "file position {0} cross reference entry in this xref subsection.";
 
-        public const String IllegalVValue = "illegal.v.value";
+        public const String FilterCcittfaxdecodeIsOnlySupportedForImages = "Filter CCITTFaxDecode is only supported for images";
 
-        public const String InAPageLabelThePageNumbersMustBeGreaterOrEqualTo1 = "in.a.page.label.the.page.numbers.must.be.greater.or.equal.to.1";
+        public const String FilterIsNotANameOrArray = "filter is not a name or array.";
 
-        public const String InvalidHttpResponse1 = "invalid.http.response {0}";
+        public const String FlushedPageCannotBeAddedOrInserted = "Flushed page cannot be added or inserted.";
 
-        public const String InvalidTsa1ResponseCode2 = "invalid.tsa {0} response.code {1}";
+        public const String FontAndSizeMustBeSetBeforeWritingAnyText = "Font and size must be set before writing any text.";
 
-        public const String IncorrectNumberOfComponents = "incorrect.number.of.components";
+        public const String FontEmbeddingIssue = "Font embedding issue.";
 
-        public const String InlineLevelOrIllustrationElementCannotContainKids = "inline.level.or.illustration.element.cannot.contain.kids";
+        [Obsolete]
+        public const String FontSizeTooSmall = "Font size is too small.";
 
-        public const String InvalidCodewordSize = "invalid.codeword.size";
+        public const String FontSizeIsTooSmall = "Font size is too small.";
 
-        public const String InvalidCrossReferenceEntryInThisXrefSubsection = "invalid.cross.reference.entry.in.this.xref.subsection";
+        public const String FormXObjectMustHaveBbox = "Form XObject must have BBox.";
 
-        public const String InvalidIndirectReference1 = "invalid.indirect.reference {0}";
+        public const String FunctionIsNotCompatibleWitColorSpace = "Function is not compatible with ColorSpace.";
 
-        public const String InvalidMediaBoxValue = "Tne media box object has incorrect values";
+        public const String GivenAccessibleElementIsNotConnectedToAnyTag = "Given accessible element is not connected to any tag.";
 
-        public const String InvalidPageStructure1 = "invalid.page.structure {0}";
+        public const String IllegalCharacterInAsciihexdecode = "illegal character in ASCIIHexDecode.";
 
-        public const String InvalidPageStructurePagesPagesMustBePdfDictionary = "invalid.page.structure.pages.must.be.pdfdictionary";
+        public const String IllegalCharacterInAscii85decode = "Illegal character in ASCII85Decode.";
 
-        public const String InvalidRangeArray = "invalid.range.array";
+        public const String IllegalCharacterInCodabarBarcode = "Illegal character in Codabar Barcode.";
 
-        public const String InvalidOffsetForObject1 = "invalid.offset.for.object {0}";
+        public const String IllegalLengthValue = "Illegal length value.";
 
-        public const String InvalidXrefStream = "invalid.xref.stream";
+        public const String IllegalPValue = "Illegal P value.";
 
-        public const String InvalidXrefTable = "invalid.xref.table";
+        public const String IllegalRValue = "Illegal R value.";
 
-        public const String IoException = "io.exception";
+        public const String IllegalVValue = "Illegal V value.";
 
-        public const String IsNotAnAcceptableValueForTheField = "{0}.is.not.an.acceptable.value.for.the.field.{1}";
+        public const String InAPageLabelThePageNumbersMustBeGreaterOrEqualTo1 = "In a page label the page numbers must be greater or equal to 1.";
 
-        public const String IsNotWmfImage = "is.not.wmf.image";
+        public const String InCodabarStartStopCharactersAreOnlyAllowedAtTheExtremes = "In Codabar, start/stop characters are only allowed at the extremes.";
 
-        public const String LzwDecoderException = "lzw.decoder.exception";
+        public const String InvalidHttpResponse1 = "Invalid http response {0}.";
 
-        public const String LzwFlavourNotSupported = "lzw.flavour.not.supported";
+        public const String InvalidTsa1ResponseCode2 = "Invalid TSA {0} response code {1}.";
 
-        public const String MacroSegmentIdMustBeGtOrEqZero = "macrosegmentid.must.be.gt.eq.0";
+        public const String IncorrectNumberOfComponents = "Incorrect number of components.";
 
-        public const String MacroSegmentIdMustBeGtZero = "macrosegmentid.must.be.gt.0";
+        public const String InlineLevelOrIllustrationElementCannotContainKids = "Inline level or illustration element cannot contain kids.";
 
-        public const String MacroSegmentIdMustBeLtMacroSegmentCount = "macrosegmentid.must.be.lt.macrosegmentcount";
+        public const String InvalidCodewordSize = "Invalid codeword size.";
 
-        public const String MustBeATaggedDocument = "must.be.a.tagged.document";
+        public const String InvalidCrossReferenceEntryInThisXrefSubsection = "Invalid cross reference entry in this xref subsection.";
 
-        public const String NumberOfEntriesInThisXrefSubsectionNotFound = "number.of.entries.in.this.xref.subsection.not.found";
+        public const String InvalidIndirectReference1 = "Invalid indirect reference {0}.";
 
-        public const String NameAlreadyExistsInTheNameTree = "name.already.exist.in.the.name.tree";
+        public const String InvalidMediaBoxValue = "Tne media box object has incorrect values.";
 
-        public const String NoCompatibleEncryptionFound = "no.compatible.encryption.found";
+        public const String InvalidPageStructure1 = "Invalid page structure {0}.";
 
-        public const String NoCryptoDictionaryDefined = "no.crypto.dictionary.defined";
+        public const String InvalidPageStructurePagesPagesMustBePdfDictionary = "Invalid page structure. /Pages must be PdfDictionary.";
 
-        public const String NoKidWithSuchRole = "no.kid.with.such.role";
+        public const String InvalidRangeArray = "Invalid range array.";
 
-        public const String NotAPlaceableWindowsMetafile = "not.a.placeable.windows.metafile";
+        public const String InvalidOffsetForObject1 = "Invalid offset for object {0}.";
 
-        public const String NotAValidPkcs7ObjectNotASequence = "not.a.valid.pkcs.7.object.not.a.sequence";
+        public const String InvalidXrefStream = "Invalid xref stream.";
 
-        public const String NotAValidPkcs7ObjectNotSignedData = "not.a.valid.pkcs.7.object.not.signed.data";
+        public const String InvalidXrefTable = "Invalid xref table.";
 
-        public const String NoValidEncryptionMode = "no.valid.encryption.mode";
+        public const String IoException = "I/O exception.";
 
-        public const String ObjectMustBeIndirectToWorkWithThisWrapper = "object.must.be.indirect.to.work.with.this.wrapper";
+        [Obsolete]
+        public const String IsNotAnAcceptableValueForTheField = "{0} is not an acceptable value for the field {1}.";
 
-        public const String ObjectNumberOfTheFirstObjectInThisXrefSubsectionNotFound = "object.number.of.the.first.object.in.this.xref.subsection.not.found";
+        [Obsolete]
+        public const String IsNotWmfImage = "Not a WMF image.";
 
-        public const String OcspStatusIsRevoked = "ocsp.status.is.revoked";
+        public const String LzwDecoderException = "LZW decoder exception.";
 
-        public const String OcspStatusIsUnknown = "ocsp.status.is.unknown";
+        public const String LzwFlavourNotSupported = "LZW flavour not supported.";
 
-        public const String OnlyBmpCanBeWrappedInWmf = "only.bmp.can.be.wrapped.in.wmf";
+        public const String MacroSegmentIdMustBeGtOrEqZero = "macroSegmentId must be >= 0";
 
-        public const String OperatorEINotFoundAfterEndOfImageData = "operator.EI.not.found.after.end.of.image.data";
+        public const String MacroSegmentIdMustBeGtZero = "macroSegmentId must be > 0";
 
-        public const String Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3 = "page {0} cannot.be.added.to.document {1} because.it.belongs.to.document {2}";
+        public const String MacroSegmentIdMustBeLtMacroSegmentCount = "macroSegmentId must be < macroSemgentCount";
 
-        public const String PageIsNotSetForThePdfTagStructure = "page.is.not.set.for.the.pdf.tag.structure";
+        public const String MustBeATaggedDocument = "Must be a tagged document.";
 
-        public const String PageWasAlreadyFlushed = "the.page.was.already.flushed";
+        public const String NumberOfEntriesInThisXrefSubsectionNotFound = "Number of entries in this xref subsection not found.";
 
-        public const String PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing = "the.page.was.already.flushed.use.add.field.appearance.to.page.method.before.page.flushing";
+        public const String NameAlreadyExistsInTheNameTree = "Name already exists in the name tree.";
 
-        public const String PdfEncodings = "pdf.encodings";
+        public const String NoCompatibleEncryptionFound = "No compatible encryption found.";
 
-        public const String PdfEncryption = "pdf.encryption";
+        public const String NoCryptoDictionaryDefined = "No crypto dictionary defined.";
 
-        public const String PdfDecryption = "Exception occurred with pdf document decryption. One of the possible reasons is wrong password or wrong public key certificate and private key.";
+        public const String NoKidWithSuchRole = "No kid with such role.";
 
-        public const String PdfDocumentMustBeOpenedInStampingMode = "pdf.document.must.be.opened.in.stamping.mode";
+        public const String NotAPlaceableWindowsMetafile = "Not a placeable windows metafile.";
 
-        public const String PdfFormXobjectHasInvalidBbox = "pdf.form.xobject.has.invalid.bbox";
+        public const String NotAValidPkcs7ObjectNotASequence = "Not a valid PKCS#7 object - not a sequence";
 
-        public const String PdfObjectStreamReachMaxSize = "pdf.object.stream.reach.max.size";
+        public const String NotAValidPkcs7ObjectNotSignedData = "Not a valid PKCS#7 object - not signed data.";
 
-        public const String PdfPageShallHaveContent = "pdf.page.shall.have.content";
+        public const String NotAWmfImage = "Not a WMF image.";
 
-        public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "pdf.pages.tree.could.be.generated.only.once";
+        public const String NoValidEncryptionMode = "No valid encryption mode.";
 
-        public const String PdfStartxrefIsNotFollowedByANumber = "pdf.startxref.is.not.followed.by.a.number";
+        public const String NumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields = "The number of booleans in the array doesn't correspond with the number of fields.";
 
-        public const String PdfStartxrefNotFound = "pdf.startxref.not.found";
+        public const String ObjectMustBeIndirectToWorkWithThisWrapper = "Object must be indirect to work with this wrapper.";
 
-        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.0. There is a typo in the name of the constant. Use PdfIndirectObjectBelongToOtherPdfDocument instead."
+        public const String ObjectNumberOfTheFirstObjectInThisXrefSubsectionNotFound = "Object number of the first object in this xref subsection not found.";
+
+        public const String OcspStatusIsRevoked = "OCSP status is revoked.";
+
+        public const String OcspStatusIsUnknown = "OCSP status is unknown.";
+
+        public const String OnlyBmpCanBeWrappedInWmf = "Only BMP can be wrapped in WMF.";
+
+        public const String OperatorEINotFoundAfterEndOfImageData = "Operator EI not found after the end of image data.";
+
+        public const String Page1CannotBeAddedToDocument2BecauseItBelongsToDocument3 = "Page {0} cannot be added to document {1}, because it belongs to document {2}.";
+
+        public const String PageIsNotSetForThePdfTagStructure = "Page is not set for the pdf tag structure.";
+
+        [Obsolete]
+        public const String PageWasAlreadyFlushed = "The page has been already flushed.";
+
+        public const String PageAlreadyFlushed = "The page has been already flushed.";
+
+        [Obsolete]
+        public const String PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing = "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page flushing.";
+
+        public const String PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing = "The page has been already flushed. Use PdfAcroForm#addFieldAppearanceToPage() method before page flushing.";
+
+        public const String PdfEncodings = "PdfEncodings exception.";
+
+        public const String PdfEncryption = "PdfEncryption exception.";
+
+        public const String PdfDecryption = "Exception occurred with PDF document decryption. One of the possible reasons is wrong password or wrong public key certificate and private key.";
+
+        public const String PdfDocumentMustBeOpenedInStampingMode = "PdfDocument must be opened in stamping mode.";
+
+        public const String PdfFormXobjectHasInvalidBbox = "PdfFormXObject has invalid BBox.";
+
+        public const String PdfObjectStreamReachMaxSize = "PdfObjectStream reach max size.";
+
+        public const String PdfPageShallHaveContent = "PdfPage shall have content.";
+
+        public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "PdfPages tree could be generated only once.";
+
+        public const String PdfStartxrefIsNotFollowedByANumber = "PDF startxref is not followed by a number.";
+
+        public const String PdfStartxrefNotFound = "PDF startxref not found.";
+
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.0. <p> There is a typo in the name of the constant. Use PdfIndirectObjectBelongsToOtherPdfDocument instead."
             )]
-        public const String PdfInderectObjectBelongToOtherPdfDocument = "pdf.inderect.object.belong.to.other.pdf.document.Copy.object.to.current.pdf.document";
+        public const String PdfInderectObjectBelongToOtherPdfDocument = "pdf inderect object belong to other pdf document Copy object to current pdf document.";
 
-        public const String PdfIndirectObjectBelongToOtherPdfDocument = "pdf.indirect.object.belong.to.other.pdf.document.Copy.object.to.current.pdf.document";
+        public const String PdfIndirectObjectBelongsToOtherPdfDocument = "Pdf indirect object belongs to other PDF document. Copy object to current pdf document.";
 
-        public const String PdfVersionNotValid = "pdf.version.not.valid";
+        public const String PdfVersionNotValid = "PDF version is not valid.";
 
-        public const String PngFilterUnknown = "png.filter.unknown";
+        public const String PngFilterUnknown = "PNG filter unknown.";
 
-        public const String ResourcesCannotBeNull = "resources.cannot.be.null";
+        public const String ResourcesCannotBeNull = "Resources cannot be null.";
 
-        public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = "resources.do.not.contain.extgstate.entry.unable.to.process.operator {0}";
+        public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = "Resources do not contain ExtGState entry. Unable to process operator {0}.";
 
-        public const String RoleIsNotMappedWithAnyStandardRole = "role.is.not.mapped.with.any.standard.role";
+        public const String RoleIsNotMappedWithAnyStandardRole = "Role is not mapped with any standard role.";
 
-        public const String ShadingTypeNotFound = "shading.type.not.found";
+        public const String ShadingTypeNotFound = "Shading type not found.";
 
-        public const String SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument = "signature.with.name.1.is.not.the.last.it.doesnt.cover.whole.document";
+        public const String SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument = "Signature with name {0} is not the last. It doesn't cover the whole document.";
 
-        public const String StdcfNotFoundEncryption = "stdcf.not.found.encryption";
+        public const String StdcfNotFoundEncryption = "/StdCF not found (encryption)";
 
-        public const String StructParentIndexNotFoundInTaggedObject = "struct.parent.index.not.found.in.tagged.object";
+        public const String StructParentIndexNotFoundInTaggedObject = "StructParent index not found in tagged object.";
 
-        public const String StructureElementShallContainParentObject = "structure.element.shall.contain.parent.object";
+        public const String StructureElementShallContainParentObject = "StructureElement shall contain parent object.";
 
-        public const String TagCannotBeMovedToTheAnotherDocumentsTagStructure = "tag.cannot.be.moved.to.the.another.documents.tag.structure";
+        public const String TagCannotBeMovedToTheAnotherDocumentsTagStructure = "Tag cannot be moved to the another document's tag structure.";
 
-        public const String TagFromTheExistingTagStructureIsFlushedCannotAddCopiedPageTags = "tag.from.the.existing.tag.structure.is.flushed.cannot.add.copied.page.tags";
+        public const String TagFromTheExistingTagStructureIsFlushedCannotAddCopiedPageTags = "Tag from the existing tag structure is flushed. Cannot add copied page tags.";
 
         public const String TagStructureCopyingFailedItMightBeCorruptedInOneOfTheDocuments = "Tag structure copying failed: it might be corrupted in one of the documents.";
 
         public const String TagStructureFlushingFailedItMightBeCorrupted = "Tag structure flushing failed: it might be corrupted.";
 
-        public const String TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot = "tagtreepointer.is.in.invalid.state.it.points.at.flushed.element.use.movetoroot";
+        public const String TagTreePointerIsInInvalidStateItPointsAtFlushedElementUseMoveToRoot = "TagTreePointer is in invalid state: it points at flushed element. Use TagTreePointer#moveToRoot.";
 
-        public const String TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot = "tagtreepointer.is.in.invalid.state.it.points.at.removed.element.use.movetoroot";
+        public const String TagTreePointerIsInInvalidStateItPointsAtRemovedElementUseMoveToRoot = "TagTreePointer is in invalid state: it points at removed element use TagTreePointer#moveToRoot.";
 
-        public const String TextCannotBeNull = "text.cannot.be.null";
+        public const String TextCannotBeNull = "Text cannot be null.";
 
-        public const String TextIsTooBig = "text.is.too.big";
+        public const String TextIsTooBig = "Text is too big.";
 
-        public const String TextMustBeEven = "the.text.length.must.be.even";
+        public const String TextMustBeEven = "The text length must be even.";
 
-        public const String TwoBarcodeMustBeExternally = "the.two.barcodes.must.be.composed.externally";
+        public const String TwoBarcodeMustBeExternally = "The two barcodes must be composed externally.";
 
-        public const String TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields = "the.number.of.booleans.in.the.array.doesn.t.correspond.with.the.number.of.fields";
+        [Obsolete]
+        public const String TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields = "The number of booleans in the array doesn't correspond with the number of fields.";
 
-        public const String ThereAreIllegalCharactersForBarcode128In1 = "there.are.illegal.characters.for.barcode.128.in {0}";
+        public const String ThereAreIllegalCharactersForBarcode128In1 = "There are illegal characters for barcode 128 in {0}.";
 
-        public const String ThereIsNoAssociatePdfWriterForMakingIndirects = "there.is.no.associate.pdf.writer.for.making.indirects";
+        public const String ThereIsNoAssociatePdfWriterForMakingIndirects = "There is no associate PdfWriter for making indirects.";
 
-        public const String ThereIsNoFieldInTheDocumentWithSuchName1 = "there.is.no.field.in.the.document.with.such.name {0}";
+        public const String ThereIsNoFieldInTheDocumentWithSuchName1 = "There is no field in the document with such name: {0}.";
 
-        public const String ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime = "this.pkcs.7.object.has.multiple.signerinfos.only.one.is.supported.at.this.time";
+        public const String ThisPkcs7ObjectHasMultipleSignerinfosOnlyOneIsSupportedAtThisTime = "This PKCS#7 object has multiple SignerInfos. Only one is supported at this time.";
 
-        public const String ThisInstanceOfPdfSignerIsAlreadyClosed = "this.instance.of.PdfSigner.is.already.closed";
+        [Obsolete]
+        public const String ThisInstanceOfPdfSignerIsAlreadyClosed = "This instance of PdfSigner has been already closed.";
 
-        public const String Tsa1FailedToReturnTimeStampToken2 = "tsa {0} failed.to.return.time.stamp.token {1}";
+        public const String ThisInstanceOfPdfSignerAlreadyClosed = "This instance of PdfSigner has been already closed.";
 
-        public const String TrailerNotFound = "trailer.not.found";
+        public const String Tsa1FailedToReturnTimeStampToken2 = "TSA {0} failed to return time stamp token: {1}.";
 
-        public const String TrailerPrevEntryPointsToItsOwnCrossReferenceSection = "trailer.prev.entry.points.to.its.own.cross.reference.section";
+        public const String TrailerNotFound = "Trailer not found.";
 
-        public const String UnbalancedBeginEndMarkedContentOperators = "unbalanced.begin.end.marked.content.operators";
+        public const String TrailerPrevEntryPointsToItsOwnCrossReferenceSection = "Trailer prev entry points to its own cross reference section.";
 
-        public const String UnbalancedLayerOperators = "unbalanced.layer.operators";
+        public const String UnbalancedBeginEndMarkedContentOperators = "Unbalanced begin/end marked content operators.";
 
-        public const String UnbalancedSaveRestoreStateOperators = "unbalanced.save.restore.state.operators";
+        public const String UnbalancedLayerOperators = "Unbalanced layer operators.";
 
-        public const String UnexpectedCharacter1FoundAfterIDInInlineImage = "unexpected.character.1.found.after.ID.in.inline.image";
+        public const String UnbalancedSaveRestoreStateOperators = "Unbalanced save restore state operators.";
 
-        public const String UnexpectedCloseBracket = "unexpected.close.bracket";
+        public const String UnexpectedCharacter1FoundAfterIDInInlineImage = "Unexpected character {0} found after ID in inline image.";
 
-        public const String UnexpectedColorSpace1 = "unexpected.color.space {0}";
+        public const String UnexpectedCloseBracket = "Unexpected close bracket.";
 
-        public const String UnexpectedEndOfFile = "unexpected.end.of.file";
+        public const String UnexpectedColorSpace1 = "Unexpected ColorSpace: {0}.";
 
-        public const String UnexpectedGtGt = "unexpected.gt.gt";
+        public const String UnexpectedEndOfFile = "Unexpected end of file.";
 
-        public const String UnexpectedShadingType = "unexpected.shading.type";
+        public const String UnexpectedGtGt = "unexpected >>.";
 
-        public const String UnknownEncryptionTypeREq1 = "unknown.encryption.type.r.eq {0}";
+        public const String UnexpectedShadingType = "Unexpected shading type.";
 
-        public const String UnknownEncryptionTypeVEq1 = "unknown.encryption.type.v.eq {0}";
+        public const String UnknownEncryptionTypeREq1 = "Unknown encryption type R == {0}.";
 
-        public const String UnknownPdfException = "unknown.pdf.exception";
+        public const String UnknownEncryptionTypeVEq1 = "Unknown encryption type V == {0}.";
 
-        public const String UnknownHashAlgorithm1 = "unknown.hash.algorithm {0}";
+        public const String UnknownPdfException = "Unknown PdfException.";
 
-        public const String UnknownKeyAlgorithm1 = "unknown.key.algorithm {0}";
+        public const String UnknownHashAlgorithm1 = "Unknown hash algorithm: {0}.";
 
-        public const String UnknownColorFormatMustBeRGBorRRGGBB = "unknown.color.format.must.be.rgb.or.rrggbb";
+        public const String UnknownKeyAlgorithm1 = "Unknown key algorithm: {0}.";
 
-        public const String UnsupportedXObjectType = "Unsupported XObject type";
+        public const String UnknownColorFormatMustBeRGBorRRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
-        public const String VerificationAlreadyOutput = "verification.already.output";
+        public const String UnsupportedXObjectType = "Unsupported XObject type.";
 
-        public const String WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject = "when.adding.object.reference.to.the.tag.tree.it.must.be.connected.to.not.flushed.object";
+        public const String VerificationAlreadyOutput = "Verification already output.";
 
-        public const String WhitePointIsIncorrectlySpecified = "white.point.is.incorrectly.specified";
+        public const String WhenAddingObjectReferenceToTheTagTreeItMustBeConnectedToNotFlushedObject = "When adding object reference to the tag tree, it must be connected to not flushed object.";
 
-        public const String WmfImageException = "wmf.image.exception";
+        public const String WhitePointIsIncorrectlySpecified = "White point is incorrectly specified.";
 
-        public const String WrongFormFieldAddAnnotationToTheField = "wrong.form.field.add.annotation.to.the.field";
+        public const String WmfImageException = "WMF image exception.";
 
-        public const String WrongMediaBoxSize1 = "Wrong media box size: {0}";
+        public const String WrongFormFieldAddAnnotationToTheField = "Wrong form field. Add annotation to the field.";
 
-        public const String XrefSubsectionNotFound = "xref.subsection.not.found";
+        public const String WrongMediaBoxSize1 = "Wrong media box size: {0}.";
 
-        public const String YouCannotFlushPdfCatalogManually = "you.cannot.flush.pdf.catalog.manually";
+        public const String XrefSubsectionNotFound = "xref subsection not found.";
 
-        public const String YouHaveToDefineABooleanArrayForThisCollectionSortDictionary = "you.have.to.define.a.boolean.array.for.this.collection.sort.dictionary";
+        [Obsolete]
+        public const String YouCannotFlushPdfCatalogManually = "You cannot flush PdfCatalog manually.";
 
-        public const String YouMustSetAValueBeforeAddingAPrefix = "you.must.set.a.value.before.adding.a.prefix";
+        public const String YouHaveToDefineABooleanArrayForThisCollectionSortDictionary = "You have to define a boolean array for this collection sort dictionary.";
 
-        public const String YouNeedASingleBooleanForThisCollectionSortDictionary = "you.need.a.single.boolean.for.this.collection.sort.dictionary";
+        public const String YouMustSetAValueBeforeAddingAPrefix = "You must set a value before adding a prefix.";
 
+        public const String YouNeedASingleBooleanForThisCollectionSortDictionary = "You need a single boolean for this collection sort dictionary.";
+
+        /// <summary>Object for more details</summary>
         protected internal Object @object;
 
         private IList<Object> messageParams;
 
+        /// <summary>Creates a new instance of PdfException.</summary>
+        /// <param name="message">the detail message.</param>
         public PdfException(String message)
             : base(message) {
         }
 
+        /// <summary>Creates a new instance of PdfException.</summary>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public PdfException(Exception cause)
             : this(UnknownPdfException, cause) {
         }
 
-        public PdfException(String message, Object @object)
+        /// <summary>Creates a new instance of PdfException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="obj">an object for more details.</param>
+        public PdfException(String message, Object obj)
             : this(message) {
-            this.@object = @object;
+            this.@object = obj;
         }
 
+        /// <summary>Creates a new instance of PdfException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public PdfException(String message, Exception cause)
             : base(message, cause) {
         }
 
-        public PdfException(String message, Exception cause, Object @object)
+        /// <summary>Creates a new instance of PdfException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        /// <param name="obj">an object for more details.</param>
+        public PdfException(String message, Exception cause, Object obj)
             : this(message, cause) {
-            this.@object = @object;
+            this.@object = obj;
         }
 
         public override String Message {
@@ -496,12 +596,16 @@ namespace iText.Kernel {
             }
         }
 
+        /// <summary>Sets additional params for Exception message.</summary>
+        /// <param name="messageParams">additional params.</param>
+        /// <returns>object itself.</returns>
         public virtual iText.Kernel.PdfException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;
         }
 
+        /// <summary>Gets additional params for Exception message.</summary>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
             for (int i = 0; i < messageParams.Count; i++) {

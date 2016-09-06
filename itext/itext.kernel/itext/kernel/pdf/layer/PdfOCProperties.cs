@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Creates a new PdfOCProperties instance.</summary>
         /// <param name="document">the document the optional content belongs to</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfOCProperties(PdfDocument document)
             : this(((PdfDictionary)new PdfDictionary().MakeIndirect(document))) {
         }
@@ -77,7 +76,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// </summary>
         /// <param name="ocPropertiesDict">the dictionary of optional content properties, must have an indirect reference.
         ///     </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfOCProperties(PdfDictionary ocPropertiesDict)
             : base(ocPropertiesDict) {
             EnsureObjectIsAddedToDocument(ocPropertiesDict);
@@ -254,7 +252,6 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         /// <summary>Populates the /AS entry in the /D dictionary.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private void AddASEvent(PdfName @event, PdfName category) {
             PdfArray arr = new PdfArray();
             foreach (PdfLayer layer in layers) {
@@ -284,7 +281,6 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         /// <summary>Reads the layers from the document to be able to modify them in the future.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private void ReadLayersFromDictionary() {
             PdfArray ocgs = GetPdfObject().GetAsArray(PdfName.OCGs);
             if (ocgs == null || ocgs.IsEmpty()) {
@@ -329,7 +325,6 @@ namespace iText.Kernel.Pdf.Layer {
         }
 
         /// <summary>Reads the /Order in the /D entry and initialized the parent-child hierarchy.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private void ReadOrderFromDictionary(PdfLayer parent, PdfArray orderArray, IDictionary<PdfIndirectReference
             , PdfLayer> layerMap) {
             for (int i = 0; i < orderArray.Size(); i++) {

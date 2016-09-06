@@ -505,7 +505,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Sets the default color space.</summary>
         /// <param name="defaultCsKey"/>
         /// <param name="defaultCsValue"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue) {
             AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }

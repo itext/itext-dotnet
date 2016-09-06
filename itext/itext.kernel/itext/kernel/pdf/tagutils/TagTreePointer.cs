@@ -55,6 +55,7 @@ namespace iText.Kernel.Pdf.Tagutils {
     /// it's role and properties, etc. Also, using instance of this class, you can change tag position in the tag structure,
     /// you can flush current tag or remove it.
     /// <br/><br/>
+    /// <p>
     /// There could be any number of the instances of this class, simultaneously pointing to different (or the same) parts of
     /// the tag structure. Because of this, you can for example remove the tag at which another instance is currently pointing.
     /// In this case, this another instance becomes invalid, and invocation of any method on it will result in exception. To make
@@ -137,7 +138,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetPageForTagging(PdfPage page) {
             if (page.IsFlushed()) {
-                throw new PdfException(PdfException.PageWasAlreadyFlushed);
+                throw new PdfException(PdfException.PageAlreadyFlushed);
             }
             this.currentPage = page;
             return this;
@@ -337,6 +338,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagTreePointer</c>
         /// instance would move to connected kid instead of creating tag twice.
         /// But if it is added to some other parent, then connection will be removed.
+        /// <p>
         /// <br/><br/>
         /// This call is equivalent of calling sequentially
         /// <see cref="SetNextNewKidIndex(int)"/>
@@ -707,6 +709,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Moves this
         /// <c>TagTreePointer</c>
         /// instance to a tag, which is connected with the given accessible element.
+        /// <p>
         /// <br/><br/>
         /// The connection between the tag and the accessible element instance is used as a sign that tag is not yet finished
         /// and therefore should not be flushed or removed if page tags are flushed or removed. Also, any
@@ -764,6 +767,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// This method call moves this
         /// <c>TagTreePointer</c>
         /// to the current tag parent.
+        /// <p>
         /// <br /><br />
         /// If some of the tags to be flushed are still connected to the accessible elements, then these tags are considered
         /// as not yet finished ones, and they won't be flushed immediately, but they will be flushed, when the connection

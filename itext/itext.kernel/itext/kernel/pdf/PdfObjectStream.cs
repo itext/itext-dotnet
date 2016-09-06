@@ -83,7 +83,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Adds object to the object stream.</summary>
         /// <param name="object">object to add.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void AddObject(PdfObject @object) {
             if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
                 throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);

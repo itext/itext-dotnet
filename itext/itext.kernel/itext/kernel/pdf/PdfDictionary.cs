@@ -455,7 +455,6 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <param name="excludeKeys">list of objects to exclude when cloning dictionary.</param>
         /// <returns>cloned dictionary.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual iText.Kernel.Pdf.PdfDictionary Clone(IList<PdfName> excludeKeys) {
             IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject>();
             foreach (PdfName key in excludeKeys) {
@@ -522,7 +521,6 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfObject.CopyTo(PdfDocument, bool)"/>
         /// </param>
         /// <returns>copied dictionary.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual iText.Kernel.Pdf.PdfDictionary CopyTo(PdfDocument document, IList<PdfName> excludeKeys, bool
              allowDuplicating) {
             IDictionary<PdfName, PdfObject> excluded = new SortedDictionary<PdfName, PdfObject>();
@@ -539,7 +537,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <param name="asDirect">true is to extract direct object always.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfObject Get(PdfName key, bool asDirect) {
             if (!asDirect) {
                 return map.Get(key);

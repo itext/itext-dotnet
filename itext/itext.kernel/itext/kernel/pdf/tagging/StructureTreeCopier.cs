@@ -73,7 +73,6 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </summary>
         /// <param name="destDocument">document to copy structure to. Shall not be current document.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument callingDocument
             ) {
             if (!destDocument.IsTagged()) {
@@ -98,7 +97,6 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <param name="destDocument">document to copy structure to.</param>
         /// <param name="insertBeforePage">indicates where the structure to be inserted.</param>
         /// <param name="page2page">association between original page and copied page.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public static void CopyTo(PdfDocument destDocument, int insertBeforePage, IDictionary<PdfPage, PdfPage> page2page
             , PdfDocument callingDocument) {
             if (!destDocument.IsTagged()) {
@@ -161,7 +159,6 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <paramref name="destDocument"/>
         /// .
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private static void CopyTo(PdfDocument destDocument, IDictionary<PdfPage, PdfPage> page2page, PdfDocument 
             callingDocument, bool copyFromDestDocument) {
             CopyTo(destDocument, page2page, callingDocument, copyFromDestDocument, -1);

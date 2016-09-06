@@ -78,7 +78,6 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Creates a new layer by existing dictionary, which must be an indirect object.</summary>
         /// <param name="layerDictionary">the layer dictionary, must have an indirect reference.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfLayer(PdfDictionary layerDictionary)
             : base(layerDictionary) {
             EnsureObjectIsAddedToDocument(layerDictionary);
@@ -87,7 +86,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// <summary>Creates a new layer by its name and document.</summary>
         /// <param name="name">the layer name</param>
         /// <param name="document">the PdfDocument which the layer belongs to</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public PdfLayer(String name, PdfDocument document)
             : this(document) {
             SetName(name);
@@ -224,7 +222,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// resultant colletion if no intents are currently specified.
         /// </remarks>
         /// <returns>the collection of intents.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual ICollection<PdfName> GetIntents() {
             PdfObject intent = GetPdfObject().Get(PdfName.Intent);
             if (intent is PdfName) {
@@ -433,7 +430,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// making it indirect first if necessary.
         /// </summary>
         /// <returns>the indirect reference to the object representing the layer</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfIndirectReference GetIndirectReference() {
             GetPdfObject().MakeIndirect(GetDocument());
             return GetPdfObject().GetIndirectReference();
@@ -467,7 +463,6 @@ namespace iText.Kernel.Pdf.Layer {
         /// <param name="title">the title of the layer</param>
         /// <param name="document">the document this title layer belongs to</param>
         /// <returns>the created layer</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal static iText.Kernel.Pdf.Layer.PdfLayer CreateTitleSilent(String title, PdfDocument document
             ) {
             if (title == null) {
@@ -480,7 +475,6 @@ namespace iText.Kernel.Pdf.Layer {
 
         /// <summary>Gets the /Usage dictionary, creating a new one if necessary.</summary>
         /// <returns>the /Usage dictionary</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual PdfDictionary GetUsage() {
             PdfDictionary usage = GetPdfObject().GetAsDictionary(PdfName.Usage);
             if (usage == null) {

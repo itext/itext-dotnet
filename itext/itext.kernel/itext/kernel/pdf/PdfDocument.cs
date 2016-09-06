@@ -1510,7 +1510,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>checks whether a method is invoked at the closed document</summary>
         protected internal virtual void CheckClosingStatus() {
             if (closed) {
-                throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);
+                throw new PdfException(PdfException.DocumentClosedItIsImpossibleToExecuteAction);
             }
         }
 

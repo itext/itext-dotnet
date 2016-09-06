@@ -117,7 +117,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>Copying direct objects.</summary>
         /// <remarks>Copying direct objects. Objects of all types are added into document catalog.</remarks>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject1() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject1_1.pdf"));
@@ -170,7 +169,6 @@ namespace iText.Kernel.Pdf {
         /// <remarks>Copying objects, some of those are indirect. Objects of all types are added into document catalog.
         ///     </remarks>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject2() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject2_1.pdf"));
@@ -224,7 +222,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Copy objects recursively.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject3() {
  {
@@ -269,7 +266,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Copies stream.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject4() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject4_1.pdf"));
@@ -305,7 +301,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Copies page.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         [NUnit.Framework.Test]
         public virtual void CopyObject5() {
             PdfDocument pdfDoc1 = new PdfDocument(new PdfWriter(destinationFolder + "copyObject5_1.pdf"));
@@ -425,7 +420,7 @@ namespace iText.Kernel.Pdf {
             finally {
                 pdfDoc.Close();
             }
-            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DocumentToCopyToCannotBeNull);
+            NUnit.Framework.Assert.AreEqual(exceptionMessage, PdfException.DocumentForCopyToCannotBeNull);
         }
 
         /// <exception cref="System.IO.IOException"/>
