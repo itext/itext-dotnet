@@ -179,12 +179,12 @@ namespace iText.Kernel.Utils {
                     attrDict = (PdfDictionary)attrObj;
                 }
                 try {
-                    foreach (KeyValuePair<PdfName, PdfObject> entry in attrDict.EntrySet()) {
+                    foreach (PdfName key in attrDict.KeySet()) {
                         @out.Write(' ');
-                        String attrName = entry.Key.GetValue();
+                        String attrName = key.GetValue();
                         @out.Write(char.ToLower(attrName[0]) + attrName.Substring(1));
                         @out.Write("=\"");
-                        @out.Write(entry.Value.ToString());
+                        @out.Write(attrDict.Get(key, false).ToString());
                         @out.Write("\"");
                     }
                 }

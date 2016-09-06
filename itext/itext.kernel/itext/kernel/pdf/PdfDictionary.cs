@@ -314,20 +314,46 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Returns all the values of this map in a Collection.</summary>
+        /// <param name="asDirects">
+        /// if false, collection will contain
+        /// <see cref="PdfIndirectReference"/>
+        /// instances
+        /// for the indirect objects in dictionary, otherwise it will contain collection of direct objects.
+        /// </param>
+        /// <returns>a Collection holding all the values</returns>
+        public virtual ICollection<PdfObject> Values(bool asDirects) {
+            if (asDirects) {
+                return Values();
+            }
+            else {
+                return map.Values;
+            }
+        }
+
+        /// <summary>Returns all the values of this map in a Collection.</summary>
         /// <remarks>
         /// Returns all the values of this map in a Collection.
         /// <br/>
-        /// NOTE: returned collection will contain
+        /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
+        /// If you want to get
         /// <see cref="PdfIndirectReference"/>
-        /// instances
-        /// for the indirect objects in dictionary.
-        /// Use
-        /// <see cref="DirectValues()"/>
-        /// to get the collection of the actual objects.
+        /// instances for the indirect objects value,
+        /// you shall use
+        /// <see cref="Values(bool)"/>
+        /// method.
         /// </remarks>
         /// <returns>a Collection holding all the values</returns>
         public virtual ICollection<PdfObject> Values() {
-            return map.Values;
+            ICollection<PdfObject> directValues = new List<PdfObject>();
+            foreach (PdfObject value in map.Values) {
+                if (value.IsIndirectReference()) {
+                    directValues.Add(((PdfIndirectReference)value).GetRefersTo());
+                }
+                else {
+                    directValues.Add(value);
+                }
+            }
+            return directValues;
         }
 
         /// <summary>Returns all the values of this map in a Collection.</summary>
@@ -338,6 +364,7 @@ namespace iText.Kernel.Pdf {
         /// this method will resolve all indirect references in the dictionary and return actual objects in collection.
         /// </remarks>
         /// <returns>a Collection holding all the values</returns>
+        [System.ObsoleteAttribute(@"Use Values() instead.")]
         public virtual ICollection<PdfObject> DirectValues() {
             ICollection<PdfObject> directValues = new List<PdfObject>();
             foreach (PdfObject value in map.Values) {
@@ -355,17 +382,27 @@ namespace iText.Kernel.Pdf {
         /// <remarks>
         /// Returns a Set holding the key-value pairs as Map#Entry objects.
         /// <br/>
-        /// NOTE: returned collection will contain
+        /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
+        /// If you want to get
         /// <see cref="PdfIndirectReference"/>
-        /// instances
-        /// for the values that are indirect objects.
-        /// Use
-        /// <see cref="DirectEntrySet()"/>
-        /// to get the collection of the entries with actual objects as values.
+        /// instances for the indirect objects value,
+        /// you shall use
+        /// <see cref="Get(PdfName, bool)"/>
+        /// method.
         /// </remarks>
         /// <returns>a Set of Map.Entry objects</returns>
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> EntrySet() {
-            return map;
+            IDictionary<PdfName, PdfObject> directMap = new SortedDictionary<PdfName, PdfObject>();
+            foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
+                PdfObject value = entry.Value;
+                if (value.IsIndirectReference()) {
+                    directMap[entry.Key] = ((PdfIndirectReference)value).GetRefersTo();
+                }
+                else {
+                    directMap[entry.Key] = value;
+                }
+            }
+            return directMap;
         }
 
         /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
@@ -376,6 +413,7 @@ namespace iText.Kernel.Pdf {
         /// entries in the collection.
         /// </remarks>
         /// <returns>a Set of Map.Entry objects</returns>
+        [System.ObsoleteAttribute(@"Use EntrySet() instead.")]
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> DirectEntrySet() {
             IDictionary<PdfName, PdfObject> directMap = new SortedDictionary<PdfName, PdfObject>();
             foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
@@ -397,7 +435,7 @@ namespace iText.Kernel.Pdf {
         public override String ToString() {
             if (!IsFlushed()) {
                 String @string = "<<";
-                foreach (KeyValuePair<PdfName, PdfObject> entry in EntrySet()) {
+                foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
                     PdfIndirectReference indirectReference = entry.Value.GetIndirectReference();
                     @string = @string + entry.Key.ToString() + " " + (indirectReference == null ? entry.Value.ToString() : indirectReference
                         .ToString()) + " ";
@@ -534,7 +572,7 @@ namespace iText.Kernel.Pdf {
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
             base.CopyContent(from, document);
             iText.Kernel.Pdf.PdfDictionary dictionary = (iText.Kernel.Pdf.PdfDictionary)from;
-            foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.EntrySet()) {
+            foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.map) {
                 map[entry.Key] = entry.Value.ProcessCopying(document, false);
             }
         }

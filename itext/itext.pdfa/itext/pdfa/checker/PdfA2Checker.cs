@@ -173,7 +173,7 @@ namespace iText.Pdfa.Checker {
                     PdfDictionary attributes = ((PdfArray)deviceN.GetPdfObject()).GetAsDictionary(4);
                     PdfDictionary colorants = attributes.GetAsDictionary(PdfName.Colorants);
                     if (colorants != null) {
-                        foreach (KeyValuePair<PdfName, PdfObject> entry in colorants.DirectEntrySet()) {
+                        foreach (KeyValuePair<PdfName, PdfObject> entry in colorants.EntrySet()) {
                             PdfArray separation = (PdfArray)entry.Value;
                             CheckSeparationInsideDeviceN(separation, ((PdfArray)deviceN.GetPdfObject()).Get(2), ((PdfArray)deviceN.GetPdfObject
                                 ()).Get(3).GetIndirectReference());

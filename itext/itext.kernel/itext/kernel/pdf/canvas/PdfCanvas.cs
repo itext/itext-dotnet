@@ -1983,7 +1983,7 @@ namespace iText.Kernel.Pdf.Canvas {
             ConcatMatrix(a, b, c, d, e, f);
             PdfOutputStream os = contentStream.GetOutputStream();
             os.WriteBytes(BI);
-            foreach (KeyValuePair<PdfName, PdfObject> entry in imageXObject.GetPdfObject().DirectEntrySet()) {
+            foreach (KeyValuePair<PdfName, PdfObject> entry in imageXObject.GetPdfObject().EntrySet()) {
                 PdfName key = entry.Key;
                 if (!PdfName.Type.Equals(key) && !PdfName.Subtype.Equals(key) && !PdfName.Length.Equals(key)) {
                     os.Write(entry.Key).WriteSpace();

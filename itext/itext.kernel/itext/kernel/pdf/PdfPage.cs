@@ -1329,7 +1329,7 @@ namespace iText.Kernel.Pdf {
             if (objsCollection == null) {
                 return;
             }
-            foreach (PdfObject obj in objsCollection.DirectValues()) {
+            foreach (PdfObject obj in objsCollection.Values()) {
                 if (obj.IsFlushed()) {
                     continue;
                 }
@@ -1339,7 +1339,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void FlushAppearanceStreams(PdfDictionary appearanceStreamsDict) {
-            foreach (PdfObject val in appearanceStreamsDict.DirectValues()) {
+            foreach (PdfObject val in appearanceStreamsDict.Values()) {
                 if (val is PdfDictionary) {
                     PdfDictionary ap = (PdfDictionary)val;
                     if (ap.IsDictionary()) {

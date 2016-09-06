@@ -376,7 +376,7 @@ namespace iText.Pdfa.Checker {
             PdfDictionary shadings = resources.GetAsDictionary(PdfName.Shading);
             PdfDictionary patterns = resources.GetAsDictionary(PdfName.Pattern);
             if (xObjects != null) {
-                foreach (PdfObject xObject in xObjects.DirectValues()) {
+                foreach (PdfObject xObject in xObjects.Values()) {
                     PdfStream xObjStream = (PdfStream)xObject;
                     PdfObject subtype = null;
                     bool isFlushed = xObjStream.IsFlushed();
@@ -395,7 +395,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             if (shadings != null) {
-                foreach (PdfObject shading in shadings.DirectValues()) {
+                foreach (PdfObject shading in shadings.Values()) {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
                     if (!IsAlreadyChecked(shadingDict)) {
                         CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
@@ -404,7 +404,7 @@ namespace iText.Pdfa.Checker {
                 }
             }
             if (patterns != null) {
-                foreach (PdfObject p in patterns.DirectValues()) {
+                foreach (PdfObject p in patterns.Values()) {
                     if (p.IsStream()) {
                         PdfStream pStream = (PdfStream)p;
                         if (!IsAlreadyChecked(pStream)) {
@@ -433,7 +433,7 @@ namespace iText.Pdfa.Checker {
         }
 
         protected internal virtual void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict) {
-            foreach (PdfObject val in appearanceStreamsDict.DirectValues()) {
+            foreach (PdfObject val in appearanceStreamsDict.Values()) {
                 if (val is PdfDictionary) {
                     PdfDictionary ap = (PdfDictionary)val;
                     if (ap.IsDictionary()) {

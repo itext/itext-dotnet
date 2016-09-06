@@ -438,7 +438,7 @@ namespace iText.Kernel.Pdf {
         }
 
         private void MarkDictionaryContentToFlush(PdfDictionary dictionary) {
-            foreach (PdfObject item in dictionary.Values()) {
+            foreach (PdfObject item in dictionary.Values(false)) {
                 MarkObjectToFlush(item);
             }
         }
