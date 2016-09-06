@@ -558,9 +558,8 @@ namespace iText.Pdfa.Checker {
 
         protected PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
-            for (IEnumerator<PdfObject> iterator = array.GetDirectEnumerator(); iterator.MoveNext();) {
-                PdfDictionary field = (PdfDictionary)iterator.Current;
-                PdfArray kids = field.GetAsArray(PdfName.Kids);
+            foreach (PdfObject field in array) {
+                PdfArray kids = ((PdfDictionary)field).GetAsArray(PdfName.Kids);
                 fields.Add(field);
                 if (kids != null) {
                     fields.AddAll(GetFormFields(kids));

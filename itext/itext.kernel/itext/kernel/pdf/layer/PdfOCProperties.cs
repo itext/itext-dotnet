@@ -303,13 +303,15 @@ namespace iText.Kernel.Pdf.Layer {
             if (d != null && !d.IsEmpty()) {
                 PdfArray off = d.GetAsArray(PdfName.OFF);
                 if (off != null) {
-                    foreach (PdfObject offLayer in off) {
+                    for (int i = 0; i < off.Size(); i++) {
+                        PdfObject offLayer = off.Get(i, false);
                         layerMap.Get((PdfIndirectReference)offLayer).on = false;
                     }
                 }
                 PdfArray locked = d.GetAsArray(PdfName.Locked);
                 if (locked != null) {
-                    foreach (PdfObject lockedLayer in locked) {
+                    for (int i = 0; i < locked.Size(); i++) {
+                        PdfObject lockedLayer = locked.Get(i, false);
                         layerMap.Get((PdfIndirectReference)lockedLayer).locked = true;
                     }
                 }

@@ -212,11 +212,23 @@ namespace iText.Kernel.Pdf
 			return list.Contains(o);
 		}
 
+        /// <summary>
+        /// Returns an iterator over an array of PdfObject elements.
+        /// <br/>
+        /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
+        /// If you want to get {@link PdfIndirectReference} instances for the indirect objects value,
+        /// you shall use {@link #get(int, boolean)} method.
+        /// </summary>
+        /// <returns>an enumerator.</returns>
 		public IEnumerator<PdfObject> GetEnumerator()
 		{
-			return list.GetEnumerator();
+			return new PdfArrayDirectEnumerator(list.GetEnumerator());
 		}
 
+        /// <summary>
+        /// Returns an iterator over an array of PdfObject elements.
+        /// </summary>
+        [Obsolete("Use {@link #iterator()} instead")]
 	    public IEnumerator<PdfObject> GetDirectEnumerator() {
             return new PdfArrayDirectEnumerator(list.GetEnumerator());
 	    }

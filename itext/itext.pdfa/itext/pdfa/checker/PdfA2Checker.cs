@@ -476,16 +476,14 @@ namespace iText.Pdfa.Checker {
                 }
                 PdfArray configs = oCProperties.GetAsArray(PdfName.Configs);
                 if (configs != null) {
-                    for (IEnumerator<PdfObject> iterator = configs.GetDirectEnumerator(); iterator.MoveNext();) {
-                        PdfObject config = iterator.Current;
+                    foreach (PdfObject config in configs) {
                         configList.Add((PdfDictionary)config);
                     }
                 }
                 ICollection<PdfObject> ocgs = new HashSet<PdfObject>();
                 PdfArray ocgsArray = oCProperties.GetAsArray(PdfName.OCGs);
                 if (ocgsArray != null) {
-                    for (IEnumerator<PdfObject> iterator = ocgsArray.GetDirectEnumerator(); iterator.MoveNext();) {
-                        PdfObject ocg = iterator.Current;
+                    foreach (PdfObject ocg in ocgsArray) {
                         ocgs.Add(ocg);
                     }
                 }
@@ -877,8 +875,7 @@ namespace iText.Pdfa.Checker {
         }
 
         private void FillOrderRecursively(PdfArray orderArray, ICollection<PdfObject> order) {
-            for (IEnumerator<PdfObject> iterator = orderArray.GetDirectEnumerator(); iterator.MoveNext(); ) {
-                PdfObject orderItem = iterator.Current;
+            foreach (PdfObject orderItem in orderArray) {
                 if (!orderItem.IsArray()) {
                     order.Add(orderItem);
                 }

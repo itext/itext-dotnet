@@ -432,8 +432,8 @@ namespace iText.Kernel.Pdf {
         }
 
         private void MarkArrayContentToFlush(PdfArray array) {
-            foreach (PdfObject item in array) {
-                MarkObjectToFlush(item);
+            for (int i = 0; i < array.Size(); i++) {
+                MarkObjectToFlush(array.Get(i, false));
             }
         }
 
