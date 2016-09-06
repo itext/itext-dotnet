@@ -1975,9 +1975,10 @@ namespace iText.Forms.Fields {
         /// appearance after setting the new value.
         /// </remarks>
         /// <param name="font">the new font to be set</param>
-        public virtual void SetFont(PdfFont font) {
+        public virtual iText.Forms.Fields.PdfFormField SetFont(PdfFont font) {
             this.font = font;
             RegenerateField();
+            return this;
         }
 
         /// <summary>Basic setter for the <code>fontSize</code> property.</summary>
@@ -1986,9 +1987,10 @@ namespace iText.Forms.Fields {
         /// field appearance after setting the new value.
         /// </remarks>
         /// <param name="fontSize">the new font size to be set</param>
-        public virtual void SetFontSize(float fontSize) {
+        public virtual iText.Forms.Fields.PdfFormField SetFontSize(float fontSize) {
             this.fontSize = fontSize;
             RegenerateField();
+            return this;
         }
 
         /// <summary>Basic setter for the <code>fontSize</code> property.</summary>
@@ -1997,8 +1999,9 @@ namespace iText.Forms.Fields {
         /// field appearance after setting the new value.
         /// </remarks>
         /// <param name="fontSize">the new font size to be set</param>
-        public virtual void SetFontSize(int fontSize) {
+        public virtual iText.Forms.Fields.PdfFormField SetFontSize(int fontSize) {
             SetFontSize((float)fontSize);
+            return this;
         }
 
         /// <summary>
@@ -2011,10 +2014,11 @@ namespace iText.Forms.Fields {
         /// </remarks>
         /// <param name="font">the new font to be set</param>
         /// <param name="fontSize">the new font size to be set</param>
-        public virtual void SetFontAndSize(PdfFont font, int fontSize) {
+        public virtual iText.Forms.Fields.PdfFormField SetFontAndSize(PdfFont font, int fontSize) {
             this.font = font;
             this.fontSize = fontSize;
             RegenerateField();
+            return this;
         }
 
         /// <summary>Basic setter for the <code>backgroundColor</code> property.</summary>
@@ -2023,7 +2027,7 @@ namespace iText.Forms.Fields {
         /// the field appearance after setting the new value.
         /// </remarks>
         /// <param name="backgroundColor">the new color to be set</param>
-        public virtual void SetBackgroundColor(Color backgroundColor) {
+        public virtual iText.Forms.Fields.PdfFormField SetBackgroundColor(Color backgroundColor) {
             this.backgroundColor = backgroundColor;
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
@@ -2031,6 +2035,7 @@ namespace iText.Forms.Fields {
             }
             mk.Put(PdfName.BG, new PdfArray(backgroundColor.GetColorValue()));
             RegenerateField();
+            return this;
         }
 
         /// <summary>Basic setter for the <code>degRotation</code> property.</summary>
@@ -2039,7 +2044,7 @@ namespace iText.Forms.Fields {
         /// the field appearance after setting the new value.
         /// </remarks>
         /// <param name="degRotation">the new degRotation to be set</param>
-        public virtual void SetRotation(int degRotation) {
+        public virtual iText.Forms.Fields.PdfFormField SetRotation(int degRotation) {
             if (degRotation % 90 != 0) {
                 throw new ArgumentException("degRotation.must.be.a.multiple.of.90");
             }
@@ -2057,6 +2062,7 @@ namespace iText.Forms.Fields {
             mk.Put(PdfName.R, new PdfNumber(degRotation));
             this.rotation = degRotation;
             RegenerateField();
+            return this;
         }
 
         /// <summary>
@@ -2084,14 +2090,14 @@ namespace iText.Forms.Fields {
         /// method
         /// </remarks>
         /// <param name="checkType">the new checkbox marker</param>
-        public virtual void SetCheckType(int checkType) {
+        public virtual iText.Forms.Fields.PdfFormField SetCheckType(int checkType) {
             if (checkType < TYPE_CHECK || checkType > TYPE_STAR) {
                 checkType = TYPE_CROSS;
             }
             this.checkType = checkType;
             text = typeChars[checkType - 1];
             if (pdfAConformanceLevel != null) {
-                return;
+                return this;
             }
             try {
                 font = PdfFontFactory.CreateFont(FontConstants.ZAPFDINGBATS);
@@ -2099,6 +2105,7 @@ namespace iText.Forms.Fields {
             catch (System.IO.IOException e) {
                 throw new PdfException(e);
             }
+            return this;
         }
 
         /// <param name="visibility"/>
@@ -2775,7 +2782,7 @@ namespace iText.Forms.Fields {
             if (justification == null) {
                 justification = 0;
             }
-            float x = 0;
+            float x = 2;
             TextAlignment? textAlignment = TextAlignment.LEFT;
             if (justification == ALIGN_RIGHT) {
                 textAlignment = TextAlignment.RIGHT;
