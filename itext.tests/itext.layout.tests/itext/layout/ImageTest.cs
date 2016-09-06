@@ -7,6 +7,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -242,6 +243,60 @@ namespace iText.Layout {
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
             image.SetAutoScale(true);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest12_HorizontalAlignment_CENTER() {
+            String outFileName = destinationFolder + "imageTest12.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest12.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                ));
+            image.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest13_HorizontalAlignment_RIGHT() {
+            String outFileName = destinationFolder + "imageTest13.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest13.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                ));
+            image.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest14_HorizontalAlignment_LEFT() {
+            String outFileName = destinationFolder + "imageTest14.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest14.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
+                ));
+            image.SetHorizontalAlignment(HorizontalAlignment.LEFT);
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
