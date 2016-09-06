@@ -141,11 +141,11 @@ namespace iText.Forms.Fields {
 
         protected internal int checkType;
 
-        protected internal float borderWidth = 1;
+        protected internal float borderWidth = 0;
 
         protected internal Color backgroundColor;
 
-        protected internal Color borderColor = Color.BLACK;
+        protected internal Color borderColor;
 
         protected internal int rotation = 0;
 
@@ -2333,6 +2333,13 @@ namespace iText.Forms.Fields {
         /// <summary>Gets the border width for the field.</summary>
         /// <returns>the current border width.</returns>
         public virtual float GetBorderWidth() {
+            PdfDictionary bs = GetWidgets()[0].GetBorderStyle();
+            if (bs != null) {
+                PdfNumber w = bs.GetAsNumber(PdfName.W);
+                if (w != null) {
+                    borderWidth = w.FloatValue();
+                }
+            }
             return borderWidth;
         }
 
@@ -2346,17 +2353,18 @@ namespace iText.Forms.Fields {
             }
             bs.Put(PdfName.W, new PdfNumber(borderWidth));
             this.borderWidth = borderWidth;
-            //regenerateField();
+            RegenerateField();
             return this;
         }
 
-        public virtual iText.Forms.Fields.PdfFormField SetBorderStyle(PdfName style) {
-            PdfDictionary bs = GetWidgets()[0].GetBorderStyle();
-            if (bs == null) {
-                bs = new PdfDictionary();
-                Put(PdfName.BS, bs);
-            }
-            bs.Put(PdfName.S, style);
+        public virtual iText.Forms.Fields.PdfFormField SetBorderStyle(PdfDictionary style) {
+            //PdfDictionary bs = getWidgets().get(0).getBorderStyle();
+            GetWidgets()[0].SetBorderStyle(style);
+            //        if (bs == null) {
+            //            bs = new PdfDictionary();
+            //            put(PdfName.BS, bs);
+            //        }
+            //        bs.put(PdfName.S, style);
             RegenerateField();
             return this;
         }
@@ -2885,6 +2893,8 @@ namespace iText.Forms.Fields {
         protected internal virtual void DrawBorder(PdfCanvas canvas, PdfFormXObject xObject, float width, float height
             ) {
             canvas.SaveState();
+            float borderWidth = GetBorderWidth();
+            PdfDictionary bs = GetWidgets()[0].GetBorderStyle();
             if (borderWidth < 0) {
                 borderWidth = 0;
             }
@@ -2897,7 +2907,40 @@ namespace iText.Forms.Fields {
             }
             if (borderWidth > 0) {
                 borderWidth = Math.Max(1, borderWidth);
-                canvas.SetStrokeColor(borderColor).SetLineWidth(borderWidth).Rectangle(0, 0, width, height).Stroke();
+                canvas.SetStrokeColor(borderColor).SetLineWidth(borderWidth);
+                if (bs != null) {
+                    PdfName borderType = bs.GetAsName(PdfName.S);
+                    if (borderType != null && borderType.Equals(PdfName.D)) {
+                        PdfArray dashArray = bs.GetAsArray(PdfName.D);
+                        if (dashArray != null) {
+                            int unitsOn = dashArray.GetAsNumber(0) != null ? dashArray.GetAsNumber(0).IntValue() : 0;
+                            int unitsOff = dashArray.GetAsNumber(1) != null ? dashArray.GetAsNumber(1).IntValue() : 0;
+                            canvas.SetLineDash(unitsOn, unitsOff, 0);
+                        }
+                    }
+                }
+                canvas.Rectangle(0, 0, width, height).Stroke();
+            }
+            ApplyRotation(xObject, height, width);
+            canvas.RestoreState();
+        }
+
+        protected internal virtual void DrawRadioBorder(PdfCanvas canvas, PdfFormXObject xObject, float width, float
+             height) {
+            canvas.SaveState();
+            float borderWidth = GetBorderWidth();
+            float cx = width / 2;
+            float cy = height / 2;
+            if (borderWidth < 0) {
+                borderWidth = 0;
+            }
+            float r = (Math.Min(width, height) - borderWidth) / 2;
+            if (backgroundColor != null) {
+                canvas.SetFillColor(backgroundColor).Circle(cx, cy, r + borderWidth / 2).Fill();
+            }
+            if (borderWidth > 0 && borderColor != null) {
+                borderWidth = Math.Max(1, borderWidth);
+                canvas.SetStrokeColor(borderColor).SetLineWidth(borderWidth).Circle(cx, cy, r).Stroke();
             }
             ApplyRotation(xObject, height, width);
             canvas.RestoreState();
@@ -2913,11 +2956,11 @@ namespace iText.Forms.Fields {
             Rectangle rect = new Rectangle(0, 0, width, height);
             PdfFormXObject xObjectOn = new PdfFormXObject(rect);
             PdfFormXObject xObjectOff = new PdfFormXObject(rect);
-            DrawBorder(canvasOn, xObjectOn, width, height);
+            DrawRadioBorder(canvasOn, xObjectOn, width, height);
             DrawRadioField(canvasOn, width, height, true);
             PdfStream streamOff = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
             PdfCanvas canvasOff = new PdfCanvas(streamOff, new PdfResources(), GetDocument());
-            DrawBorder(canvasOff, xObjectOff, width, height);
+            DrawRadioBorder(canvasOff, xObjectOff, width, height);
             if (pdfAConformanceLevel != null && (pdfAConformanceLevel.GetPart().Equals("2") || pdfAConformanceLevel.GetPart
                 ().Equals("3"))) {
                 xObjectOn.GetResources();
