@@ -2584,19 +2584,22 @@ namespace iText.Forms.Fields {
             return array;
         }
 
-        protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, float fontSize, PdfResources
-             res) {
+        protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, float fontSize, Color color
+            , PdfResources res) {
             PdfStream stream = new PdfStream();
             PdfCanvas canvas = new PdfCanvas(stream, res, GetDocument());
-            canvas.SetFontAndSize(font, fontSize).ResetFillColorRgb();
+            canvas.SetFontAndSize(font, fontSize);
+            if (color != null) {
+                canvas.SetColor(color, true);
+            }
             return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GenerateDefaultAppearanceString(iText.Kernel.Font.PdfFont, float, iText.Kernel.Pdf.PdfResources) instead."
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GenerateDefaultAppearanceString(iText.Kernel.Font.PdfFont, int, iText.Kernel.Pdf.PdfResources) instead."
             )]
         protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, int fontSize, PdfResources
              res) {
-            return GenerateDefaultAppearanceString(font, (float)fontSize, res);
+            return GenerateDefaultAppearanceString(font, (float)fontSize, color, res);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -2752,7 +2755,7 @@ namespace iText.Forms.Fields {
             PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
-            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, resources));
+            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
             float height = rect.GetHeight();
             float width = rect.GetWidth();
             PdfFormXObject xObject = new PdfFormXObject(new Rectangle(0, 0, width, height));
@@ -2818,7 +2821,7 @@ namespace iText.Forms.Fields {
             PdfStream stream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
             PdfResources resources = appearance.GetResources();
             PdfCanvas canvas = new PdfCanvas(stream, resources, GetDocument());
-            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, resources));
+            SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, resources));
             float width = rect.GetWidth();
             float height = rect.GetHeight();
             IList<String> strings = font.SplitString(value, fontSize, width - 6);
@@ -2981,7 +2984,7 @@ namespace iText.Forms.Fields {
             xObjectOn.GetPdfObject().GetOutputStream().WriteBytes(streamOn.GetBytes());
             xObjectOn.GetResources().AddFont(GetDocument(), GetFont());
             SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize == 0 ? (float)DEFAULT_FONT_SIZE : fontSize
-                , xObjectOn.GetResources()));
+                , color, xObjectOn.GetResources()));
             xObjectOff.GetPdfObject().GetOutputStream().WriteBytes(streamOff.GetBytes());
             xObjectOff.GetResources().AddFont(GetDocument(), GetFont());
             PdfDictionary normalAppearance = new PdfDictionary();
@@ -3075,7 +3078,7 @@ namespace iText.Forms.Fields {
                 }
                 else {
                     DrawButton(canvas, 0, 0, width, height, text, font, fontSize);
-                    SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, new PdfResources()));
+                    SetDefaultAppearance(GenerateDefaultAppearanceString(font, fontSize, color, new PdfResources()));
                     xObject.GetResources().AddFont(GetDocument(), font);
                 }
             }
