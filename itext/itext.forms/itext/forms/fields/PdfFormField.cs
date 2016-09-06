@@ -2348,7 +2348,7 @@ namespace iText.Forms.Fields {
             }
             bs.Put(PdfName.W, new PdfNumber(borderWidth));
             this.borderWidth = borderWidth;
-            RegenerateField();
+            //regenerateField();
             return this;
         }
 
