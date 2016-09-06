@@ -98,7 +98,7 @@ namespace iText.IO.Font.Otf {
                     return true;
                 }
             }
-            if (markAttachmentClass != null && (flag >> 8) > 0) {
+            if (markAttachmentClass != null && markAttachmentClass.GetOtfClass(glyph) > 0 && (flag >> 8) > 0) {
                 return markAttachmentClass.GetOtfClass(glyph) != (flag >> 8);
             }
             return false;
