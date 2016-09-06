@@ -193,7 +193,7 @@ namespace iText.IO {
         public const String InvalidJpeg2000File = "Invalid JPEG2000 file.";
 
         [Obsolete]
-        public const String InvalidMagicValueForBmp = "Invalid magic value for bmp file. Must be 'BM'";
+        public const String InvalidMagicValueForBmpFile = "Invalid magic value for bmp file. Must be 'BM'";
 
         public const String InvalidMagicValueForBmpFileMustBeBM = "Invalid magic value for bmp file. Must be 'BM'";
 
