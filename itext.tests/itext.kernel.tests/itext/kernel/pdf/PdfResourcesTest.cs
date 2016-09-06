@@ -51,13 +51,13 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual("Gs3", n3.GetValue());
             PdfDictionary egsResources = page.GetPdfObject().GetAsDictionary(PdfName.Resources).GetAsDictionary(PdfName
                 .ExtGState);
-            PdfObject e1 = egsResources.Get(new PdfName("Gs1"), false);
+            PdfDictionary e1 = egsResources.GetAsDictionary(new PdfName("Gs1"));
             PdfName n1 = resources.AddExtGState(e1);
             NUnit.Framework.Assert.AreEqual("Gs1", n1.GetValue());
-            PdfObject e2 = egsResources.Get(new PdfName("Gs2"));
+            PdfDictionary e2 = egsResources.GetAsDictionary(new PdfName("Gs2"));
             PdfName n2 = resources.AddExtGState(e2);
             NUnit.Framework.Assert.AreEqual("Gs2", n2.GetValue());
-            PdfObject e4 = (PdfObject)e2.Clone();
+            PdfDictionary e4 = (PdfDictionary)e2.Clone();
             PdfName n4 = resources.AddExtGState(e4);
             NUnit.Framework.Assert.AreEqual("Gs4", n4.GetValue());
             document.Close();

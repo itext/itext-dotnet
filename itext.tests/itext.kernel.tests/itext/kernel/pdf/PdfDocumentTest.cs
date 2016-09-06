@@ -237,7 +237,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "datasheet.pdf"), new PdfWriter(destinationFolder
                  + "datasheet_mode.pdf"));
             PdfDictionary pdfObject = (PdfDictionary)pdfDocument.GetPdfObject(53);
-            pdfDocument.GetPage(1).GetResources().AddForm(pdfObject);
+            pdfDocument.GetPage(1).GetResources().AddForm((PdfStream)pdfObject);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "datasheet_mode.pdf", 
                 sourceFolder + "cmp_datasheet_mode.pdf", "d:/", "diff_"));

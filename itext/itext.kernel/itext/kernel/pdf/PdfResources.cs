@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf.Colorspace;
 using iText.Kernel.Pdf.Extgstate;
@@ -117,7 +118,40 @@ namespace iText.Kernel.Pdf {
             return AddResource(image, imageNamesGen);
         }
 
+        /// <summary>
+        /// Add
+        /// <see cref="PdfStream"/>
+        /// to the resources as image.
+        /// </summary>
+        /// <param name="image">
+        /// the
+        /// <see cref="PdfStream"/>
+        /// to add.
+        /// </param>
+        /// <returns>added image resources name.</returns>
+        public virtual PdfName AddImage(PdfStream image) {
+            return AddResource(image, imageNamesGen);
+        }
+
+        /// <summary>
+        /// Add
+        /// <see cref="PdfObject"/>
+        /// to the resources as image.
+        /// </summary>
+        /// <param name="image">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add. Should be
+        /// <see cref="PdfStream"/>
+        /// .
+        /// </param>
+        /// <returns>added image resources name.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddImage(PdfStream) instead.")]
         public virtual PdfName AddImage(PdfObject image) {
+            if (image.GetObjectType() != PdfObject.STREAM) {
+                throw new PdfException(PdfException.CannotAddNonStreamImageToResources1).SetMessageParams(image.GetType().
+                    ToString());
+            }
             return AddResource(image, imageNamesGen);
         }
 
@@ -125,7 +159,40 @@ namespace iText.Kernel.Pdf {
             return AddResource(form, formNamesGen);
         }
 
+        /// <summary>
+        /// Add
+        /// <see cref="PdfStream"/>
+        /// to the resources as form.
+        /// </summary>
+        /// <param name="form">
+        /// the
+        /// <see cref="PdfStream"/>
+        /// to add.
+        /// </param>
+        /// <returns>added form resources name.</returns>
+        public virtual PdfName AddForm(PdfStream form) {
+            return AddResource(form, formNamesGen);
+        }
+
+        /// <summary>
+        /// Add
+        /// <see cref="PdfObject"/>
+        /// to the resources as form.
+        /// </summary>
+        /// <param name="form">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add. Should be
+        /// <see cref="PdfStream"/>
+        /// .
+        /// </param>
+        /// <returns>added form resources name.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddForm(PdfStream) instead.")]
         public virtual PdfName AddForm(PdfObject form) {
+            if (form.GetObjectType() != PdfObject.STREAM) {
+                throw new PdfException(PdfException.CannotAddNonStreamFormToResources1).SetMessageParams(form.GetType().ToString
+                    ());
+            }
             return AddResource(form, formNamesGen);
         }
 
@@ -155,11 +222,29 @@ namespace iText.Kernel.Pdf {
             return AddResource(extGState, egsNamesGen);
         }
 
-        public virtual PdfName AddExtGState(PdfObject extGState) {
+        public virtual PdfName AddExtGState(PdfDictionary extGState) {
             return AddResource(extGState, egsNamesGen);
         }
 
+        [Obsolete]
+        public virtual PdfName AddExtGState(PdfObject extGState) {
+            if (extGState.GetObjectType() != PdfObject.DICTIONARY) {
+                throw new PdfException(PdfException.CannotAddNonDictionaryExtGStateToResources1).SetMessageParams(extGState
+                    .GetType().ToString());
+            }
+            return AddResource(extGState, egsNamesGen);
+        }
+
+        public virtual PdfName AddProperties(PdfDictionary properties) {
+            return AddResource(properties, propNamesGen);
+        }
+
+        [Obsolete]
         public virtual PdfName AddProperties(PdfObject properties) {
+            if (properties.GetObjectType() != PdfObject.DICTIONARY) {
+                throw new PdfException(PdfException.CannotAddNonDictionaryPropertiesToResources1).SetMessageParams(properties
+                    .GetType().ToString());
+            }
             return AddResource(properties, propNamesGen);
         }
 
@@ -175,7 +260,16 @@ namespace iText.Kernel.Pdf {
             return AddResource(pattern, patternNamesGen);
         }
 
+        public virtual PdfName AddPattern(PdfDictionary pattern) {
+            return AddResource(pattern, patternNamesGen);
+        }
+
+        [Obsolete]
         public virtual PdfName AddPattern(PdfObject pattern) {
+            if (pattern is PdfDictionary) {
+                throw new PdfException(PdfException.CannotAddNonDictionaryPatternToResources1).SetMessageParams(pattern.GetType
+                    ().ToString());
+            }
             return AddResource(pattern, patternNamesGen);
         }
 
@@ -183,7 +277,16 @@ namespace iText.Kernel.Pdf {
             return AddResource(shading, shadingNamesGen);
         }
 
+        public virtual PdfName AddShading(PdfDictionary shading) {
+            return AddResource(shading, shadingNamesGen);
+        }
+
+        [Obsolete]
         public virtual PdfName AddShading(PdfObject shading) {
+            if (shading is PdfDictionary) {
+                throw new PdfException(PdfException.CannotAddNonDictionaryShadingToResources1).SetMessageParams(shading.GetType
+                    ().ToString());
+            }
             return AddResource(shading, shadingNamesGen);
         }
 

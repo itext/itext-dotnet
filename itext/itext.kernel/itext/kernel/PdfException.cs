@@ -65,6 +65,18 @@ namespace iText.Kernel {
 
         public const String CannotAddKidToTheFlushedElement = "cannot.add.kid.to.the.flushed.element";
 
+        public const String CannotAddNonDictionaryExtGStateToResources1 = "Cannot add graphic state to resources. The PdfObject type is {0}, but should be PdfDictionary";
+
+        public const String CannotAddNonDictionaryPatternToResources1 = "Cannot add pattern to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream";
+
+        public const String CannotAddNonDictionaryPropertiesToResources1 = "Cannot add properties to resources. The PdfObject type is {0}, but should be PdfDictionary";
+
+        public const String CannotAddNonDictionaryShadingToResources1 = "Cannot add shading to resources. The PdfObject type is {0}, but should be PdfDictionary or PdfStream";
+
+        public const String CannotAddNonStreamFormToResources1 = "Cannot add form to resources. The PdfObject type is {0}, but should be PdfStream";
+
+        public const String CannotAddNonStreamImageToResources1 = "Cannot add image to resources. The PdfObject type is {0}, but should be PdfStream";
+
         public const String CannotCloseDocument = "cannot.close.document";
 
         public const String CannotCloseDocumentWithAlreadyFlushedPdfCatalog = "cannot.close.document.with.already.flushed.pdf.catalog";
