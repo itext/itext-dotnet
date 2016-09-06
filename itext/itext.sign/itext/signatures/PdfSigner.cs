@@ -700,9 +700,15 @@ namespace iText.Signatures {
                 }
                 ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
                 acroForm.AddField(sigField, document.GetPage(pagen));
-                acroForm.SetModified();
+                if (acroForm.GetPdfObject().IsIndirect()) {
+                    acroForm.SetModified();
+                }
+                else {
+                    // TODO: test this (ain't sure whether I need this)
+                    //Acroform dictionary is a Direct dictionary, for proper flushing, catalog needs to be marked as modified
+                    document.GetCatalog().SetModified();
+                }
             }
-            // TODO: test this (ain't sure whether I need this)
             exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
             PdfLiteral lit = new PdfLiteral(80);
             exclusionLocations[PdfName.ByteRange] = lit;
