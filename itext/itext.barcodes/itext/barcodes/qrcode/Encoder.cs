@@ -99,6 +99,15 @@ namespace iText.Barcodes.Qrcode {
             if (encoding == null) {
                 encoding = DEFAULT_BYTE_MODE_ENCODING;
             }
+            int desiredMinVersion = (hints == null || hints.Get(EncodeHintType.MIN_VERSION_NR) == null) ? 1 : (int)hints
+                .Get(EncodeHintType.MIN_VERSION_NR);
+            //Check if desired level is within bounds of [1,40]
+            if (desiredMinVersion < 1) {
+                desiredMinVersion = 1;
+            }
+            if (desiredMinVersion > 40) {
+                desiredMinVersion = 40;
+            }
             // Step 1: Choose the mode (encoding).
             Mode mode = ChooseMode(content, encoding);
             // Step 2: Append "bytes" into "dataBits" in appropriate encoding.
@@ -106,7 +115,7 @@ namespace iText.Barcodes.Qrcode {
             AppendBytes(content, mode, dataBits, encoding);
             // Step 3: Initialize QR code that can contain "dataBits".
             int numInputBytes = dataBits.SizeInBytes();
-            InitQRCode(numInputBytes, ecLevel, mode, qrCode);
+            InitQRCode(numInputBytes, ecLevel, desiredMinVersion, mode, qrCode);
             // Step 4: Build another bit vector that contains header and data.
             BitVector headerAndDataBits = new BitVector();
             // Step 4.5: Append ECI message if applicable
@@ -238,11 +247,12 @@ namespace iText.Barcodes.Qrcode {
         /// modify "qrCode".
         /// </remarks>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
-        private static void InitQRCode(int numInputBytes, ErrorCorrectionLevel ecLevel, Mode mode, QRCode qrCode) {
+        private static void InitQRCode(int numInputBytes, ErrorCorrectionLevel ecLevel, int desiredMinVersion, Mode
+             mode, QRCode qrCode) {
             qrCode.SetECLevel(ecLevel);
             qrCode.SetMode(mode);
             // In the following comments, we use numbers of Version 7-H.
-            for (int versionNum = 1; versionNum <= 40; versionNum++) {
+            for (int versionNum = desiredMinVersion; versionNum <= 40; versionNum++) {
                 Version version = Version.GetVersionForNumber(versionNum);
                 // numBytes = 196
                 int numBytes = version.GetTotalCodewords();

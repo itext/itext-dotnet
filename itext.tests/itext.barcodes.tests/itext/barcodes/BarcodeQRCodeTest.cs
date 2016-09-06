@@ -56,5 +56,27 @@ namespace iText.Barcodes {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BarcodeVersioningTest() {
+            String filename = "barcodeQRCodeVersioning.pdf";
+            PdfWriter writer = new PdfWriter(destinationFolder + filename);
+            PdfDocument document = new PdfDocument(writer);
+            for (int i = -9; i < 42; i += 10) {
+                PdfPage page1 = document.AddNewPage();
+                PdfCanvas canvas = new PdfCanvas(page1);
+                IDictionary<EncodeHintType, Object> hints = new Dictionary<EncodeHintType, Object>();
+                hints[EncodeHintType.CHARACTER_SET] = "UTF-8";
+                hints[EncodeHintType.MIN_VERSION_NR] = i;
+                BarcodeQRCode barcode1 = new BarcodeQRCode("дима", hints);
+                barcode1.PlaceBarcode(canvas, Color.GRAY, 3);
+            }
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
+                 + "cmp_" + filename, destinationFolder, "diff_"));
+        }
     }
 }

@@ -53,6 +53,10 @@ namespace iText.Barcodes.Qrcode {
         public static readonly iText.Barcodes.Qrcode.EncodeHintType CHARACTER_SET = new iText.Barcodes.Qrcode.EncodeHintType
             ();
 
+        /// <summary>Specifies the minimal version level to use, for example in QR Codes (type Integer).</summary>
+        public static readonly iText.Barcodes.Qrcode.EncodeHintType MIN_VERSION_NR = new iText.Barcodes.Qrcode.EncodeHintType
+            ();
+
         private EncodeHintType() {
         }
     }
