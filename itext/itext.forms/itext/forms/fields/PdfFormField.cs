@@ -2333,7 +2333,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>Sets the border width for the field.</summary>
         /// <param name="borderWidth">the new border width.</param>
-        public virtual void SetBorderWidth(float borderWidth) {
+        public virtual iText.Forms.Fields.PdfFormField SetBorderWidth(float borderWidth) {
             PdfDictionary bs = GetWidgets()[0].GetBorderStyle();
             if (bs == null) {
                 bs = new PdfDictionary();
@@ -2342,9 +2342,10 @@ namespace iText.Forms.Fields {
             bs.Put(PdfName.W, new PdfNumber(borderWidth));
             this.borderWidth = borderWidth;
             RegenerateField();
+            return this;
         }
 
-        public virtual void SetBorderStyle(PdfName style) {
+        public virtual iText.Forms.Fields.PdfFormField SetBorderStyle(PdfName style) {
             PdfDictionary bs = GetWidgets()[0].GetBorderStyle();
             if (bs == null) {
                 bs = new PdfDictionary();
@@ -2352,6 +2353,7 @@ namespace iText.Forms.Fields {
             }
             bs.Put(PdfName.S, style);
             RegenerateField();
+            return this;
         }
 
         /// <summary>Sets the Border Color.</summary>
