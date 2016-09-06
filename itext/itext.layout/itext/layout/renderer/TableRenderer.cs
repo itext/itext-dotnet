@@ -435,7 +435,9 @@ namespace iText.Layout.Renderer {
                             if (hasContent || cellWithBigRowspanAdded || splits[col_1].GetStatus() == LayoutResult.NOTHING) {
                                 currentRow[col_1] = null;
                                 CellRenderer cellOverflow = (CellRenderer)splits[col_1].GetOverflowRenderer();
-                                cellOverflow.SetBorders(cellOverflow.GetBorders()[2], 0);
+                                if (splits[col_1].GetStatus() != LayoutResult.NOTHING) {
+                                    cellOverflow.SetBorders(cellOverflow.GetBorders()[2], 0);
+                                }
                                 rows[targetOverflowRowIndex[col_1]][col_1] = (CellRenderer)cellOverflow.SetParent(splitResult[1]);
                             }
                             else {

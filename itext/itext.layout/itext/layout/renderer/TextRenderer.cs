@@ -255,18 +255,16 @@ namespace iText.Layout.Renderer {
                 } else {
                     // check if line height exceeds the allowed height
                     if (Math.Max(currentLineHeight, nonBreakablePartMaxHeight) > layoutBox.GetHeight()) {
+                        ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+                        ApplyMargins(occupiedArea.GetBBox(), margins, true);
                         // Force to place what we can
-                        if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                            if (line.start == -1) {
-                                line.start = currentTextPos;
-                            }
-                            line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
+                        if (line.start == -1) {
+                            line.start = currentTextPos;
                         }
+                        line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
 
                         // the line does not fit because of height - full overflow
                         iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
-                        ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-                        ApplyMargins(occupiedArea.GetBBox(), margins, true);
                         return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this);
                     } else {
                         // cannot fit a word as a whole
@@ -336,8 +334,8 @@ namespace iText.Layout.Renderer {
                                     wordSpacing) / TEXT_SPACE_COEFF;
                             }
                         }
-                        if (line.end <= 0) {
-                            return new TextLayoutResult(true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) ? LayoutResult.FULL : LayoutResult.NOTHING,
+                        if (line.end <= line.start) {
+                            return new TextLayoutResult(LayoutResult.NOTHING,
                                 occupiedArea, null, this, this);
                         } else {
                             result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null).SetWordHasBeenSplit

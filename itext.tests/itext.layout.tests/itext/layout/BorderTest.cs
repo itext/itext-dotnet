@@ -240,7 +240,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-818")]
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
@@ -249,8 +248,7 @@ namespace iText.Layout {
             Cell cell;
             // row 1, cell 1
             cell = new Cell().Add("1ORD");
-            cell.SetBorderLeft(new SolidBorder(Color.BLUE, 7));
-            // 5,6,7,8,9 - cycle
+            cell.SetBorderLeft(new SolidBorder(Color.BLUE, 5));
             table.AddCell(cell);
             // row 1, cell 2
             cell = new Cell().Add("ONE");
@@ -330,7 +328,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-818")]
         public virtual void ForcedPlacementTest01() {
             fileName = "forcedPlacementTest01.pdf";
             Document doc = CreateDocument();
