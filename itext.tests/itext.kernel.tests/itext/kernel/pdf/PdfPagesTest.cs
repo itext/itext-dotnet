@@ -77,6 +77,21 @@ namespace iText.Kernel.Pdf {
             VerifyPagesOrder(destinationFolder + filename, pageCount);
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ReversePagesTest2() {
+            String filename = "1000PagesDocument_reversed.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "1000PagesDocument.pdf"), new PdfWriter(
+                destinationFolder + filename));
+            for (int i = pdfDoc.GetNumberOfPages() - 1; i > 0; i--) {
+                PdfPage page = pdfDoc.RemovePage(i);
+                pdfDoc.AddPage(page);
+            }
+            pdfDoc.Close();
+            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff");
+        }
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void RandomObjectPagesTest() {
