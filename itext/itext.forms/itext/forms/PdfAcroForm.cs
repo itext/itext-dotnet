@@ -1167,14 +1167,7 @@ namespace iText.Forms {
             PdfArray kids = field.GetKids();
             if (kids != null) {
                 foreach (PdfObject kid in kids) {
-                    PdfDictionary fieldDict;
-                    if (kid.IsIndirectReference()) {
-                        fieldDict = (PdfDictionary)((PdfIndirectReference)kid).GetRefersTo();
-                    }
-                    else {
-                        fieldDict = (PdfDictionary)kid;
-                    }
-                    PdfFormField kidField = new PdfFormField(fieldDict);
+                    PdfFormField kidField = new PdfFormField((PdfDictionary)kid);
                     preparedFields.Add(kidField);
                     if (kidField.GetKids() != null) {
                         preparedFields.AddAll(PrepareFieldsForFlattening(kidField));

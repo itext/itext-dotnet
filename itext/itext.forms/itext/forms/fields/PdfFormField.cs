@@ -1277,9 +1277,6 @@ namespace iText.Forms.Fields {
         /// </returns>
         public static iText.Forms.Fields.PdfFormField MakeFormField(PdfObject pdfObject, PdfDocument document) {
             iText.Forms.Fields.PdfFormField field = null;
-            if (pdfObject.IsIndirectReference()) {
-                pdfObject = ((PdfIndirectReference)pdfObject).GetRefersTo();
-            }
             if (pdfObject.IsDictionary()) {
                 PdfDictionary dictionary = (PdfDictionary)pdfObject;
                 PdfName formType = dictionary.GetAsName(PdfName.FT);
@@ -2479,14 +2476,7 @@ namespace iText.Forms.Fields {
             PdfArray kids = GetKids();
             if (kids != null) {
                 foreach (PdfObject kid in kids) {
-                    PdfDictionary kidDic;
-                    if (kid.IsIndirectReference()) {
-                        kidDic = (PdfDictionary)((PdfIndirectReference)kid).GetRefersTo();
-                    }
-                    else {
-                        kidDic = (PdfDictionary)kid;
-                    }
-                    iText.Forms.Fields.PdfFormField fld = new iText.Forms.Fields.PdfFormField(kidDic);
+                    iText.Forms.Fields.PdfFormField fld = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
                     String[] states = fld.GetAppearanceStates();
                     foreach (String state in states) {
                         names.Add(state);

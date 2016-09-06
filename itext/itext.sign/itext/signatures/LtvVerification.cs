@@ -327,8 +327,8 @@ namespace iText.Signatures {
             if (all == null || toDelete == null) {
                 return;
             }
-            foreach (PdfObject pi in toDelete) {
-                PdfIndirectReference pir = pi.GetIndirectReference();
+            for (int i = 0; i < toDelete.Size(); i++) {
+                PdfIndirectReference pir = toDelete.Get(i, false).GetIndirectReference();
                 if (pir == null) {
                     continue;
                 }
