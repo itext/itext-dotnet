@@ -69,5 +69,9 @@ namespace iText.Pdfa {
             int result = stream.Read(buffer, offset, count);
             return result == 0 ? -1 : result;
         }
+
+        public static void RetainAll<T>(this ISet<T> set, ICollection<T> c) {
+            set.IntersectWith(c);
+        }
     }
 }
