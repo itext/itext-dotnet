@@ -51,6 +51,14 @@ using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Wrapper class that represent resource dictionary - that define named resources
+    /// used by content streams operators.
+    /// </summary>
+    /// <remarks>
+    /// Wrapper class that represent resource dictionary - that define named resources
+    /// used by content streams operators. (ISO 32000-1, 7.8.3 Resource Dictionaries)
+    /// </remarks>
     public class PdfResources : PdfObjectWrapper<PdfDictionary> {
         private const String F = "F";
 
@@ -98,28 +106,46 @@ namespace iText.Kernel.Pdf {
 
         private bool isModified = false;
 
+        /// <summary>Creates new instance from given dictionary.</summary>
+        /// <param name="pdfObject">
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// object from which the resource object will be created.
+        /// </param>
         public PdfResources(PdfDictionary pdfObject)
             : base(pdfObject) {
             BuildResources(pdfObject);
         }
 
+        /// <summary>Creates new instance from empty dictionary.</summary>
         public PdfResources()
             : this(new PdfDictionary()) {
         }
 
-        /// <summary>Add font to resources and register PdfFont in the document for further flushing.</summary>
-        /// <returns>font resource name.</returns>
+        /// <summary>Adds font to resources and register PdfFont in the document for further flushing.</summary>
+        /// <returns>added font resource name.</returns>
         public virtual PdfName AddFont(PdfDocument pdfDocument, PdfFont font) {
             pdfDocument.GetDocumentFonts().Add(font);
             return AddResource(font, fontNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// object to the resources.
+        /// </summary>
+        /// <param name="image">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfImageXObject"/>
+        /// to add.
+        /// </param>
+        /// <returns>added image resource name.</returns>
         public virtual PdfName AddImage(PdfImageXObject image) {
             return AddResource(image, imageNamesGen);
         }
 
         /// <summary>
-        /// Add
+        /// Adds
         /// <see cref="PdfStream"/>
         /// to the resources as image.
         /// </summary>
@@ -134,7 +160,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Add
+        /// Adds
         /// <see cref="PdfObject"/>
         /// to the resources as image.
         /// </summary>
@@ -155,12 +181,23 @@ namespace iText.Kernel.Pdf {
             return AddResource(image, imageNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// object to the resources.
+        /// </summary>
+        /// <param name="form">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
+        /// to add.
+        /// </param>
+        /// <returns>added form resource name.</returns>
         public virtual PdfName AddForm(PdfFormXObject form) {
             return AddResource(form, formNamesGen);
         }
 
         /// <summary>
-        /// Add
+        /// Adds
         /// <see cref="PdfStream"/>
         /// to the resources as form.
         /// </summary>
@@ -175,7 +212,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Add
+        /// Adds
         /// <see cref="PdfObject"/>
         /// to the resources as form.
         /// </summary>
@@ -218,15 +255,51 @@ namespace iText.Kernel.Pdf {
             return name;
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState"/>
+        /// object to the resources.
+        /// </summary>
+        /// <param name="extGState">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState"/>
+        /// to add.
+        /// </param>
+        /// <returns>added graphics state parameter dictionary resource name.</returns>
         public virtual PdfName AddExtGState(PdfExtGState extGState) {
             return AddResource(extGState, egsNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfDictionary"/>
+        /// to the resources as graphics state parameter dictionary.
+        /// </summary>
+        /// <param name="extGState">
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// to add.
+        /// </param>
+        /// <returns>added graphics state parameter dictionary resources name.</returns>
         public virtual PdfName AddExtGState(PdfDictionary extGState) {
             return AddResource(extGState, egsNamesGen);
         }
 
-        [Obsolete]
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfObject"/>
+        /// to the resources as graphics state parameter dictionary.
+        /// </summary>
+        /// <param name="extGState">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add. Should be
+        /// <see cref="PdfDictionary"/>
+        /// .
+        /// </param>
+        /// <returns>added graphics state parameter dictionary resources name.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddExtGState(PdfDictionary) instead."
+            )]
         public virtual PdfName AddExtGState(PdfObject extGState) {
             if (extGState.GetObjectType() != PdfObject.DICTIONARY) {
                 throw new PdfException(PdfException.CannotAddNonDictionaryExtGStateToResources1).SetMessageParams(extGState
@@ -235,11 +308,36 @@ namespace iText.Kernel.Pdf {
             return AddResource(extGState, egsNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfDictionary"/>
+        /// to the resources as properties list.
+        /// </summary>
+        /// <param name="properties">
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// to add.
+        /// </param>
+        /// <returns>added properties list resources name.</returns>
         public virtual PdfName AddProperties(PdfDictionary properties) {
             return AddResource(properties, propNamesGen);
         }
 
-        [Obsolete]
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfObject"/>
+        /// to the resources as properties list.
+        /// </summary>
+        /// <param name="properties">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add. Should be
+        /// <see cref="PdfDictionary"/>
+        /// .
+        /// </param>
+        /// <returns>added properties list resources name.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddProperties(PdfDictionary) instead."
+            )]
         public virtual PdfName AddProperties(PdfObject properties) {
             if (properties.GetObjectType() != PdfObject.DICTIONARY) {
                 throw new PdfException(PdfException.CannotAddNonDictionaryPropertiesToResources1).SetMessageParams(properties
@@ -248,23 +346,83 @@ namespace iText.Kernel.Pdf {
             return AddResource(properties, propNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
+        /// object to the resources.
+        /// </summary>
+        /// <param name="cs">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
+        /// to add.
+        /// </param>
+        /// <returns>added color space resource name.</returns>
         public virtual PdfName AddColorSpace(PdfColorSpace cs) {
             return AddResource(cs, csNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfObject"/>
+        /// to the resources as color space.
+        /// </summary>
+        /// <param name="colorSpace">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add.
+        /// </param>
+        /// <returns>added color space resources name.</returns>
         public virtual PdfName AddColorSpace(PdfObject colorSpace) {
             return AddResource(colorSpace, csNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfPattern"/>
+        /// object to the resources.
+        /// </summary>
+        /// <param name="pattern">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfPattern"/>
+        /// to add.
+        /// </param>
+        /// <returns>added pattern resource name.</returns>
         public virtual PdfName AddPattern(PdfPattern pattern) {
             return AddResource(pattern, patternNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfDictionary"/>
+        /// to the resources as pattern.
+        /// </summary>
+        /// <param name="pattern">
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// to add.
+        /// </param>
+        /// <returns>added pattern resources name.</returns>
         public virtual PdfName AddPattern(PdfDictionary pattern) {
             return AddResource(pattern, patternNamesGen);
         }
 
-        [Obsolete]
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfObject"/>
+        /// to the resources as pattern.
+        /// </summary>
+        /// <param name="pattern">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add. Should be
+        /// <see cref="PdfDictionary"/>
+        /// or
+        /// <see cref="PdfStream"/>
+        /// .
+        /// </param>
+        /// <returns>added pattern resources name.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddPattern(PdfDictionary) instead."
+            )]
         public virtual PdfName AddPattern(PdfObject pattern) {
             if (pattern is PdfDictionary) {
                 throw new PdfException(PdfException.CannotAddNonDictionaryPatternToResources1).SetMessageParams(pattern.GetType
@@ -273,15 +431,53 @@ namespace iText.Kernel.Pdf {
             return AddResource(pattern, patternNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfShading"/>
+        /// object to the resources.
+        /// </summary>
+        /// <param name="shading">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Colorspace.PdfShading"/>
+        /// to add.
+        /// </param>
+        /// <returns>added shading resource name.</returns>
         public virtual PdfName AddShading(PdfShading shading) {
             return AddResource(shading, shadingNamesGen);
         }
 
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfDictionary"/>
+        /// to the resources as shading dictionary.
+        /// </summary>
+        /// <param name="shading">
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// to add.
+        /// </param>
+        /// <returns>added shading dictionary resources name.</returns>
         public virtual PdfName AddShading(PdfDictionary shading) {
             return AddResource(shading, shadingNamesGen);
         }
 
-        [Obsolete]
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfObject"/>
+        /// to the resources as shading dictionary.
+        /// </summary>
+        /// <param name="shading">
+        /// the
+        /// <see cref="PdfObject"/>
+        /// to add. Should be
+        /// <see cref="PdfDictionary"/>
+        /// or
+        /// <see cref="PdfStream"/>
+        /// .
+        /// </param>
+        /// <returns>added shading dictionary resources name.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use more safe AddShading(PdfDictionary) instead."
+            )]
         public virtual PdfName AddShading(PdfObject shading) {
             if (shading is PdfDictionary) {
                 throw new PdfException(PdfException.CannotAddNonDictionaryShadingToResources1).SetMessageParams(shading.GetType
