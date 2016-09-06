@@ -18,6 +18,17 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.Exception"/>
+        private void CheckTokenValues(String data, params byte[][] expectedValues) {
+            RandomAccessSourceFactory factory = new RandomAccessSourceFactory();
+            PdfTokenizer tok = new PdfTokenizer(new RandomAccessFileOrArray(factory.CreateSource(data.GetBytes())));
+            for (int i = 0; i < expectedValues.Length; i++) {
+                tok.NextValidToken();
+                //System.out.println(tok.getTokenType() + " -> " + tok.getStringValue());
+                NUnit.Framework.Assert.AreEqual(expectedValues[i], tok.GetByteContent(), "Position " + i);
+            }
+        }
+
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TestOneNumber() {
             CheckTokenTypes("/Name1 70", PdfTokenizer.TokenType.Name, PdfTokenizer.TokenType.Number, PdfTokenizer.TokenType
@@ -42,6 +53,13 @@ namespace iText.Kernel.Pdf {
                 .EndDic, PdfTokenizer.TokenType.EndOfFile);
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NumberValueInTheEndTest() {
+            CheckTokenValues("123", new byte[] { 49, 50, 51 }, new byte[] {  });
+        }
+
+        //EndOfFile buffer
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EncodingTest() {

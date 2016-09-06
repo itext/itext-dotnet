@@ -340,6 +340,7 @@ namespace iText.IO.Source {
             if (level == 1) {
                 // if the level 1 check returns EOF, then we are still looking at a number - set the type back to Number
                 type = PdfTokenizer.TokenType.Number;
+                outBuf.Reset().Append(n1);
             }
         }
 
