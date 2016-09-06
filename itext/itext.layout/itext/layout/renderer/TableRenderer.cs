@@ -229,14 +229,18 @@ namespace iText.Layout.Renderer {
                     int col_1 = currentCellInfo.column;
                     CellRenderer cell = currentCellInfo.cellRenderer;
                     if (cell != null) {
-                        BuildBordersArrays(cell, row, ((Cell)cell.GetModelElement()).GetRowspan(), ((Cell)cell.GetModelElement()).
-                            GetColspan(), true);
+                        BuildBordersArrays(cell, row, true);
                     }
                     if (row + 1 < rows.Count) {
                         CellRenderer nextCell = rows[row + 1][col_1];
                         if (nextCell != null) {
-                            BuildBordersArrays(nextCell, row + 1, ((Cell)nextCell.GetModelElement()).GetRowspan(), ((Cell)nextCell.GetModelElement
-                                ()).GetColspan(), true);
+                            BuildBordersArrays(nextCell, row + 1, true);
+                        }
+                    }
+                    if (col_1 + 1 < rows[row].Length) {
+                        CellRenderer nextCell = rows[row][col_1 + 1];
+                        if (nextCell != null) {
+                            BuildBordersArrays(nextCell, row, true);
                         }
                     }
                     targetOverflowRowIndex[col_1] = currentCellInfo.finishRowInd;
@@ -940,7 +944,9 @@ namespace iText.Layout.Renderer {
             return true;
         }
 
-        private void BuildBordersArrays(CellRenderer cell, int row, int rowspan, int colspan, bool hasContent) {
+        private void BuildBordersArrays(CellRenderer cell, int row, bool hasContent) {
+            int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+            int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             int colN = ((Cell)cell.GetModelElement()).GetCol();
             Border[] cellBorders = cell.GetBorders();
             if (row + 1 - rowspan < 0) {

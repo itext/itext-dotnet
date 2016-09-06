@@ -104,7 +104,7 @@ namespace iText.Layout.Renderer {
                 catch (NoninvertibleTransformException e) {
                     throw new Exception(e.Message, e);
                 }
-                transform.Concatenate(AffineTransform.GetRotateInstance(0));
+                transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);
                 DeleteProperty(Property.ROTATION_ANGLE);
             }
