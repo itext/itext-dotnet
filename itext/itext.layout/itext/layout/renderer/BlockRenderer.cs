@@ -113,7 +113,7 @@ namespace iText.Layout.Renderer {
                             ()));
                         layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
                     }
-                    if (childRenderer.GetProperty<Object>(Property.WIDTH) != null) {
+                    if (childRenderer.GetOccupiedArea() != null) {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
@@ -200,7 +200,7 @@ namespace iText.Layout.Renderer {
                     ()));
                 if (result.GetStatus() == LayoutResult.FULL) {
                     layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
-                    if (childRenderer.GetProperty<Object>(Property.WIDTH) != null) {
+                    if (childRenderer.GetOccupiedArea() != null) {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
                     }
                 }
