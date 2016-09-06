@@ -286,8 +286,8 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
-                if (IsNotFittingHeight(layoutContext.GetArea())) {
-                    if (!layoutContext.GetArea().IsEmptyArea()) {
+                if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
+                    if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                         return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                     }
                 }

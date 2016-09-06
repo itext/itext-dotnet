@@ -223,7 +223,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
-                if (IsNotFittingHeight(layoutContext.GetArea())) {
+                if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                         return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                     }
@@ -382,11 +382,7 @@ namespace iText.Layout.Renderer {
                 foreach (Point point in rotatedPoints) {
                     point.SetLocation(point.GetX() + shift[0], point.GetY() + shift[1]);
                 }
-                // clip bounding box on the right side to make it fit in the layout area width
-                Point clipLineBeg = new Point(layoutBox.GetRight(), layoutBox.GetTop());
-                Point clipLineEnd = new Point(layoutBox.GetRight(), layoutBox.GetBottom());
-                IList<Point> newOccupiedAreaPoints = ClipPolygon(rotatedPoints, clipLineBeg, clipLineEnd);
-                Rectangle newBBox = CalculateBBox(newOccupiedAreaPoints);
+                Rectangle newBBox = CalculateBBox(rotatedPoints);
                 occupiedArea.GetBBox().SetWidth(newBBox.GetWidth());
                 occupiedArea.GetBBox().SetHeight(newBBox.GetHeight());
                 float heightDiff = height - newBBox.GetHeight();

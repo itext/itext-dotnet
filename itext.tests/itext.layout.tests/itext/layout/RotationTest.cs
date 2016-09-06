@@ -127,6 +127,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest01() {
             String outFileName = destinationFolder + "staticTextRotationTest01.pdf";
@@ -138,7 +139,7 @@ namespace iText.Layout {
                 p.Add(para2Text);
             }
             document.Add(p.SetRotationAngle((68 * Math.PI / 180)).SetBackgroundColor(Color.BLUE));
-            document.Add(new Paragraph("text line text line text line text line text line text line text line text line text line text line text line text line text line"
+            document.Add(new Paragraph("text line text line text line text line text line text line text line text line text line text line text line"
                 ));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -147,6 +148,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void StaticTextRotationTest02() {
             String outFileName = destinationFolder + "staticTextRotationTest02.pdf";
@@ -217,6 +219,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void SplitTextRotationTest02() {
             String outFileName = destinationFolder + "splitTextRotationTest02.pdf";
@@ -239,6 +242,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest01() {
             String fileName = "rotationInfiniteLoopTest01.pdf";
@@ -255,7 +259,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotationInfiniteLoopTest02() {
             String fileName = "rotationInfiniteLoopTest02.pdf";
@@ -290,8 +294,8 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-815")]
         public virtual void TableRotationTest03() {
             String outFileName = destinationFolder + "tableRotationTest03.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest03.pdf";
@@ -299,8 +303,9 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 25, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle
                 ((Math.PI / 2)))).AddCell(new Cell().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).
-                AddCell(new Cell().Add(new Paragraph("cell 2, 1").SetRotationAngle(-(Math.PI / 2)))).AddCell(new Cell(
-                ).Add(new Paragraph("cell 2, 2").SetRotationAngle((Math.PI))));
+                AddCell(new Cell().Add(new Paragraph("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph("cell 2, 2"))
+                ).AddCell(new Cell().Add(new Paragraph("cell 3, 1").SetRotationAngle(-(Math.PI / 2)))).AddCell(new Cell
+                ().Add(new Paragraph("cell 3, 2").SetRotationAngle((Math.PI))));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -344,7 +349,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void DivRotationTest02() {
             String outFileName = destinationFolder + "divRotationTest02.pdf";
@@ -445,12 +450,13 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void InnerRotationTest02() {
             String outFileName = destinationFolder + "innerRotationTest02.pdf";
             String cmpFileName = sourceFolder + cmpPrefix + "innerRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc);
+            Document doc = new Document(pdfDoc, new PageSize(6400, 6400));
             String longText = para1Text + para2Text + para3Text;
             String extremeLongText = longText + longText + longText;
             doc.Add(new Div().SetBackgroundColor(Color.GREEN).SetHeight(300).SetWidth(300).Add(new Div().SetBackgroundColor

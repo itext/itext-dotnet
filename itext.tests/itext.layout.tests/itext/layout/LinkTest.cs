@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using iText.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -8,6 +9,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class LinkTest : ExtendedITextTest {
@@ -131,6 +133,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
         public virtual void RotatedLinkInnerRotation() {
             String outFileName = destinationFolder + "rotatedLinkInnerRotation.pdf";
