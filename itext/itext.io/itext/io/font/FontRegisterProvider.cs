@@ -66,7 +66,7 @@ namespace iText.IO.Font {
         private readonly IDictionary<String, IList<String>> fontFamilies = new Dictionary<String, IList<String>>();
 
         /// <summary>Creates new FontRegisterProvider</summary>
-        public FontRegisterProvider() {
+        internal FontRegisterProvider() {
             fontNames[FontConstants.COURIER.ToLower(System.Globalization.CultureInfo.InvariantCulture)] = FontConstants
                 .COURIER;
             fontNames[FontConstants.COURIER_BOLD.ToLower(System.Globalization.CultureInfo.InvariantCulture)] = FontConstants
@@ -128,7 +128,7 @@ namespace iText.IO.Font {
         /// <param name="style">the style of this font</param>
         /// <returns>the Font constructed based on the parameters</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual FontProgram GetFont(String fontName, int style) {
+        internal virtual FontProgram GetFont(String fontName, int style) {
             return GetFont(fontName, style, true);
         }
 
@@ -141,7 +141,7 @@ namespace iText.IO.Font {
         /// </param>
         /// <returns>the Font constructed based on the parameters</returns>
         /// <exception cref="System.IO.IOException"/>
-        public virtual FontProgram GetFont(String fontName, int style, bool cached) {
+        internal virtual FontProgram GetFont(String fontName, int style, bool cached) {
             if (fontName == null) {
                 return null;
             }
@@ -199,37 +199,37 @@ namespace iText.IO.Font {
         /// <param name="familyName">the font family</param>
         /// <param name="fullName">the font name</param>
         /// <param name="path">the font path</param>
-        public virtual void RegisterFontFamily(String familyName, String fullName, String path) {
+        internal virtual void RegisterFontFamily(String familyName, String fullName, String path) {
             if (path != null) {
                 fontNames[fullName] = path;
             }
-            IList<String> tmp;
+            IList<String> family;
             lock (fontFamilies) {
-                tmp = fontFamilies.Get(familyName);
-                if (tmp == null) {
-                    tmp = new List<String>();
-                    fontFamilies[familyName] = tmp;
+                family = fontFamilies.Get(familyName);
+                if (family == null) {
+                    family = new List<String>();
+                    fontFamilies[familyName] = family;
                 }
             }
-            lock (tmp) {
-                if (!tmp.Contains(fullName)) {
+            lock (family) {
+                if (!family.Contains(fullName)) {
                     int fullNameLength = fullName.Length;
                     bool inserted = false;
-                    for (int j = 0; j < tmp.Count; ++j) {
-                        if (tmp[j].Length >= fullNameLength) {
-                            tmp.Add(j, fullName);
+                    for (int j = 0; j < family.Count; ++j) {
+                        if (family[j].Length >= fullNameLength) {
+                            family.Add(j, fullName);
                             inserted = true;
                             break;
                         }
                     }
                     if (!inserted) {
-                        tmp.Add(fullName);
+                        family.Add(fullName);
                         String newFullName = fullName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
                         if (newFullName.EndsWith("regular")) {
                             //remove "regular" at the end of the font name
                             newFullName = newFullName.JSubstring(0, newFullName.Length - 7).Trim();
                             //insert this font name at the first position for higher priority
-                            tmp.Add(0, fullName.JSubstring(0, newFullName.Length));
+                            family.Add(0, fullName.JSubstring(0, newFullName.Length));
                         }
                     }
                 }
@@ -238,14 +238,14 @@ namespace iText.IO.Font {
 
         /// <summary>Register a ttf- or a ttc-file.</summary>
         /// <param name="path">the path to a ttf- or ttc-file</param>
-        public virtual void RegisterFont(String path) {
+        internal virtual void RegisterFont(String path) {
             RegisterFont(path, null);
         }
 
         /// <summary>Register a font file and use an alias for the font contained in it.</summary>
         /// <param name="path">the path to a font file</param>
         /// <param name="alias">the alias you want to use for the font</param>
-        public virtual void RegisterFont(String path, String alias) {
+        internal virtual void RegisterFont(String path, String alias) {
             try {
                 if (path.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || path.ToLower(System.Globalization.CultureInfo.InvariantCulture
                     ).EndsWith(".otf") || path.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,")
@@ -343,7 +343,7 @@ namespace iText.IO.Font {
         // remove regular and correct last symbol
         // do this job to give higher priority to regular fonts in comparison with light, narrow, etc
         // Don't use this method for not regular fonts!
-        protected internal virtual bool SaveCopyOfRegularFont(String regularFontName, String path) {
+        internal virtual bool SaveCopyOfRegularFont(String regularFontName, String path) {
             //remove "regular" at the end of the font name
             String alias = regularFontName.JSubstring(0, regularFontName.Length - 7).Trim();
             if (!fontNames.ContainsKey(alias)) {
@@ -356,7 +356,7 @@ namespace iText.IO.Font {
         /// <summary>Register all the fonts in a directory.</summary>
         /// <param name="dir">the directory</param>
         /// <returns>the number of fonts registered</returns>
-        public virtual int RegisterFontDirectory(String dir) {
+        internal virtual int RegisterFontDirectory(String dir) {
             return RegisterFontDirectory(dir, false);
         }
 
@@ -364,7 +364,7 @@ namespace iText.IO.Font {
         /// <param name="dir">the directory</param>
         /// <param name="scanSubdirectories">recursively scan subdirectories if <code>true</true></param>
         /// <returns>the number of fonts registered</returns>
-        public virtual int RegisterFontDirectory(String dir, bool scanSubdirectories) {
+        internal virtual int RegisterFontDirectory(String dir, bool scanSubdirectories) {
             LOGGER.Debug(String.Format("Registering directory {0}, looking for fonts", dir));
             int count = 0;
             try {
@@ -408,7 +408,7 @@ namespace iText.IO.Font {
         /// Linux and Solaris.
         /// </remarks>
         /// <returns>the number of fonts registered</returns>
-        public virtual int RegisterSystemFontDirectories() {
+        internal virtual int RegisterSystemFontDirectories() {
             int count = 0;
             String[] withSubDirs = new String[] { FileUtil.GetFontsDir(), "/usr/share/X11/fonts", "/usr/X/lib/X11/fonts"
                 , "/usr/openwin/lib/X11/fonts", "/usr/share/fonts", "/usr/X11R6/lib/X11/fonts" };
@@ -424,20 +424,20 @@ namespace iText.IO.Font {
 
         /// <summary>Gets a set of registered font names.</summary>
         /// <returns>a set of registered fonts</returns>
-        public virtual ICollection<String> GetRegisteredFonts() {
+        internal virtual ICollection<String> GetRegisteredFonts() {
             return fontNames.Keys;
         }
 
         /// <summary>Gets a set of registered font names.</summary>
         /// <returns>a set of registered font families</returns>
-        public virtual ICollection<String> GetRegisteredFontFamilies() {
+        internal virtual ICollection<String> GetRegisteredFontFamilies() {
             return fontFamilies.Keys;
         }
 
         /// <summary>Checks if a certain font is registered.</summary>
         /// <param name="fontname">the name of the font that has to be checked.</param>
         /// <returns>true if the font is found</returns>
-        public virtual bool IsRegisteredFont(String fontname) {
+        internal virtual bool IsRegisteredFont(String fontname) {
             return fontNames.ContainsKey(fontname.ToLower(System.Globalization.CultureInfo.InvariantCulture));
         }
     }
