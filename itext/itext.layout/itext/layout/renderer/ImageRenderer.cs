@@ -148,8 +148,16 @@ namespace iText.Layout.Renderer {
                 TranslateImage(leftMargin, topMargin, t);
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
+            //Add properties after calculation
+            AddLayoutProperties();
             ApplyMargins(occupiedArea.GetBBox(), true);
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
+        }
+
+        private void AddLayoutProperties() {
+            //Add properties after calculation
+            SetProperty(Property.HEIGHT, height);
+            SetProperty(Property.WIDTH, width);
         }
 
         public override void Draw(DrawContext drawContext) {
