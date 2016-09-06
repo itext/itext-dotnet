@@ -315,7 +315,10 @@ namespace iText.Pdfa.Checker {
         /// for most of them we consider that iText always creates valid fonts.
         /// </remarks>
         /// <param name="pdfFont">font to be checked</param>
-        public abstract void CheckFont(PdfFont pdfFont);
+        public virtual void CheckFont(PdfFont pdfFont) {
+            //TODO iText 7.1: Mark as abstract
+            throw new Exception("You must override this method");
+        }
 
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
@@ -341,7 +344,10 @@ namespace iText.Pdfa.Checker {
 
         protected internal abstract void CheckMetaData(PdfDictionary catalog);
 
-        protected internal abstract void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
+        //TODO iText 7.1: Mark as abstract
+        protected internal virtual void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            throw new Exception("You must override this method");
+        }
 
         protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
 
@@ -355,7 +361,10 @@ namespace iText.Pdfa.Checker {
 
         protected internal abstract void CheckPdfString(PdfString @string);
 
-        protected internal abstract void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont);
+        //TODO iText 7.1: Mark as abstract
+        protected internal virtual void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            throw new Exception("You must override this method");
+        }
 
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
 
