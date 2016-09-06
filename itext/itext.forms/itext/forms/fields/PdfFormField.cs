@@ -2345,6 +2345,7 @@ namespace iText.Forms.Fields {
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
                 mk = new PdfDictionary();
+                Put(PdfName.MK, mk);
             }
             mk.Put(PdfName.BC, new PdfArray(color.GetColorValue()));
             RegenerateField();
