@@ -45,7 +45,24 @@ using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Action {
+    /// <summary>
+    /// A target dictionary locates the target in relation to the source,
+    /// in much the same way that a relative path describes the physical
+    /// relationship between two files in a file system.
+    /// </summary>
+    /// <remarks>
+    /// A target dictionary locates the target in relation to the source,
+    /// in much the same way that a relative path describes the physical
+    /// relationship between two files in a file system. Target dictionaries may be
+    /// nested recursively to specify one or more intermediate targets before reaching the final one.
+    /// </remarks>
     public class PdfTargetDictionary : PdfObjectWrapper<PdfDictionary> {
+        /// <summary>
+        /// Creates a new
+        /// <see cref="PdfTargetDictionary"/>
+        /// object by the underlying dictionary.
+        /// </summary>
+        /// <param name="pdfObject">the underlying dictionary object</param>
         public PdfTargetDictionary(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
@@ -61,71 +78,131 @@ namespace iText.Kernel.Pdf.Action {
             Put(PdfName.R, r).Put(PdfName.N, n).Put(PdfName.P, p).Put(PdfName.A, a).Put(PdfName.T, t.GetPdfObject());
         }
 
-        /// <summary>Sets the name of the file in the EmbeddedFiles name tree.</summary>
+        /// <summary>
+        /// Sets the name of the file in the EmbeddedFiles name tree for the child target located
+        /// in the EmbeddedFiles.
+        /// </summary>
         /// <param name="name">the name of the file</param>
-        /// <returns/>
+        /// <returns>this object wrapper</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetName(String name) {
             return Put(PdfName.N, new PdfString(name));
         }
 
-        /// <summary>Gets name of the file</summary>
-        /// <returns/>
+        /// <summary>
+        /// Gets name of the file in the EmbeddedFiles name tree for the child target located
+        /// in the EmbeddedFiles.
+        /// </summary>
+        /// <returns>the name of the child file for this target</returns>
         public virtual PdfString GetName() {
             return GetPdfObject().GetAsString(PdfName.N);
         }
 
-        /// <summary>Sets the page number in the current document containing the file attachment annotation.</summary>
-        /// <param name="pageNumber"/>
-        /// <returns/>
+        /// <summary>
+        /// Sets the page number in the current document containing the file attachment annotation for the
+        /// child target associates with a file attachment annotation.
+        /// </summary>
+        /// <param name="pageNumber">
+        /// the page number (zero-based) in the current document containing
+        /// the file attachment annotation
+        /// </param>
+        /// <returns>this object wrapper</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetPage(int pageNumber) {
             return Put(PdfName.P, new PdfNumber(pageNumber));
         }
 
-        /// <summary>Sets a named destination in the current document that provides the page number of the file attachment annotation.
-        ///     </summary>
-        /// <param name="namedDestination"/>
-        /// <returns/>
+        /// <summary>
+        /// Sets a named destination in the current document that provides the page number of the file
+        /// attachment annotation for the child target associated with a file attachment annotation.
+        /// </summary>
+        /// <param name="namedDestination">
+        /// a named destination in the current document that provides the page
+        /// number of the file attachment annotation
+        /// </param>
+        /// <returns>this object wrapper</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetPage(String namedDestination) {
             return Put(PdfName.P, new PdfString(namedDestination));
         }
 
-        /// <summary>Get the page number or a named destination that provides the page number containing the file attachment annotation
-        ///     </summary>
-        /// <returns/>
+        /// <summary>Get the contents of the /P entry of this target object.</summary>
+        /// <remarks>
+        /// Get the contents of the /P entry of this target object.
+        /// If the value is an integer, it specifies the page number (zero-based)
+        /// in the current document containing the file attachment annotation.
+        /// If the value is a string, it specifies a named destination in the current
+        /// document that provides the page number of the file attachment annotation.
+        /// </remarks>
+        /// <returns>the /P entry of target object</returns>
         public virtual PdfObject GetPage() {
             return GetPdfObject().Get(PdfName.P);
         }
 
-        /// <summary>Sets the index of the annotation in Annots array of the page specified by /P entry.</summary>
-        /// <param name="annotNumber"/>
-        /// <returns/>
-        public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(int annotNumber) {
-            return Put(PdfName.A, new PdfNumber(annotNumber));
+        /// <summary>
+        /// Sets the index of the annotation in Annots array of the page specified by /P entry
+        /// for the child target associated with a file attachment annotation.
+        /// </summary>
+        /// <param name="annotationIndex">the index (zero-based) of the annotation in the Annots array</param>
+        /// <returns>this object wrapper</returns>
+        public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(int annotationIndex) {
+            return Put(PdfName.A, new PdfNumber(annotationIndex));
         }
 
-        /// <summary>Sets the text value, which specifies the value of the /NM entry in the annotation dictionary.</summary>
-        /// <param name="annotationName"/>
-        /// <returns/>
+        /// <summary>
+        /// Sets the text value, which uniquely identifies an annotation (/NM entry) in an annotation dictionary
+        /// for the child target associated with a file attachment annotation.
+        /// </summary>
+        /// <param name="annotationName">specifies the value of NM in the annotation dictionary of the target annotation
+        ///     </param>
+        /// <returns>this object wrapper</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetAnnotation(String annotationName) {
             return Put(PdfName.A, new PdfString(annotationName));
         }
 
+        /// <summary>Gets the object in the /A entry of the underlying object.</summary>
+        /// <remarks>
+        /// Gets the object in the /A entry of the underlying object. If the value is an integer,
+        /// it specifies the index (zero-based) of the annotation in the Annots array of the page specified by P.
+        /// If the value is a text string, it specifies the value of NM in the annotation dictionary.
+        /// </remarks>
+        /// <returns>the /A entry in the target object</returns>
         public virtual PdfObject GetAnnotation() {
             return GetPdfObject().Get(PdfName.A);
         }
 
         /// <summary>Sets a target dictionary specifying additional path information to the target document.</summary>
-        /// <param name="target"/>
-        /// <returns/>
+        /// <remarks>
+        /// Sets a target dictionary specifying additional path information to the target document.
+        /// If this entry is absent, the current document is the target file containing the destination.
+        /// </remarks>
+        /// <param name="target">the additional path target dictionary</param>
+        /// <returns>this object wrapper</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary SetTarget(iText.Kernel.Pdf.Action.PdfTargetDictionary
              target) {
             return Put(PdfName.T, target.GetPdfObject());
         }
 
+        /// <summary>Get a target dictionary specifying additional path information to the target document.</summary>
+        /// <remarks>
+        /// Get a target dictionary specifying additional path information to the target document.
+        /// If the current target object is the final node in the target path, <code>null</code> is returned.
+        /// </remarks>
+        /// <returns>a target dictionary specifying additional path information to the target document</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary GetTarget() {
-            return new iText.Kernel.Pdf.Action.PdfTargetDictionary(GetPdfObject().GetAsDictionary(PdfName.T));
+            PdfDictionary targetDictObject = GetPdfObject().GetAsDictionary(PdfName.T);
+            return targetDictObject != null ? new iText.Kernel.Pdf.Action.PdfTargetDictionary(targetDictObject) : null;
         }
 
+        /// <summary>
+        /// This is a convenient method to put key-value pairs to the underlying
+        /// <see cref="iText.Kernel.Pdf.PdfObject"/>
+        /// .
+        /// </summary>
+        /// <param name="key">
+        /// the key, a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// instance
+        /// </param>
+        /// <param name="value">the value</param>
+        /// <returns>this object wrapper</returns>
         public virtual iText.Kernel.Pdf.Action.PdfTargetDictionary Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
