@@ -111,14 +111,17 @@ namespace iText.Kernel.Font {
             return s.ToString();
         }
 
-        internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first) {
+        internal static int[] ConvertSimpleWidthsArray(PdfArray widthsArray, int first, int missingWidth) {
             int[] res = new int[256];
+            for (int i = 0; i < res.Length; i++) {
+                res[i] = missingWidth;
+            }
             if (widthsArray == null) {
                 return res;
             }
-            for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {
-                PdfNumber number = widthsArray.GetAsNumber(i);
-                res[first + i] = number != null ? number.IntValue() : 0;
+            for (int i_1 = 0; i_1 < widthsArray.Size() && first + i_1 < 256; i_1++) {
+                PdfNumber number = widthsArray.GetAsNumber(i_1);
+                res[first + i_1] = number != null ? number.IntValue() : missingWidth;
             }
             return res;
         }

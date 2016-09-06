@@ -55,6 +55,8 @@ namespace iText.Kernel.Font {
 
         private PdfName subtype;
 
+        private int missingWidth = 0;
+
         private DocType1Font(String fontName)
             : base(fontName) {
         }
@@ -89,15 +91,16 @@ namespace iText.Kernel.Font {
             FillFontDescriptor(fontProgram, fontDesc);
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
-            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar);
+            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, fontProgram
+                .GetMissingWidth());
             fontProgram.avgWidth = 0;
             int glyphsWithWidths = 0;
             for (int i = 0; i < 256; i++) {
                 Glyph glyph = new Glyph(i, widths[i], fontEncoding.GetUnicode(i));
                 fontProgram.codeToGlyph[i] = glyph;
                 if (glyph.HasValidUnicode()) {
-                    // Workaround for fonts for embedded Document fonts with differences without base encoding
-                    if (!fontProgram.unicodeToGlyph.ContainsKey(glyph.GetUnicode()) || glyph.GetWidth() != 0) {
+                    //FontEncoding.codeToUnicode table has higher priority
+                    if (fontEncoding.ConvertToByte(glyph.GetUnicode()) == i) {
                         fontProgram.unicodeToGlyph[glyph.GetUnicode()] = glyph;
                     }
                 }
@@ -127,6 +130,10 @@ namespace iText.Kernel.Font {
 
         public virtual PdfName GetSubtype() {
             return subtype;
+        }
+
+        public virtual int GetMissingWidth() {
+            return missingWidth;
         }
 
         internal static void FillFontDescriptor(iText.Kernel.Font.DocType1Font font, PdfDictionary fontDesc) {
@@ -164,6 +171,10 @@ namespace iText.Kernel.Font {
             v = fontDesc.GetAsNumber(PdfName.FontWeight);
             if (v != null) {
                 font.SetFontWeight(v.IntValue());
+            }
+            v = fontDesc.GetAsNumber(PdfName.MissingWidth);
+            if (v != null) {
+                font.missingWidth = v.IntValue();
             }
             PdfName fontStretch = fontDesc.GetAsName(PdfName.FontStretch);
             if (fontStretch != null) {

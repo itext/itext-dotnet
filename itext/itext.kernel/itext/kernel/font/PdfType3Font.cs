@@ -99,7 +99,7 @@ namespace iText.Kernel.Font {
             }
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
-            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar);
+            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, 0);
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
                 fontMatrix[i] = ((PdfNumber)fontMatrixArray.Get(i)).GetValue();
