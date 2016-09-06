@@ -31,10 +31,10 @@ namespace iText.Kernel.Pdf {
     /// </remarks>
     public class PdfEncryptionTest : ExtendedITextTest {
         /// <summary>User password.</summary>
-        public static byte[] USER = "Hello".GetBytes();
+        public static byte[] USER = "Hello".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
 
         /// <summary>Owner password.</summary>
-        public static byte[] OWNER = "World".GetBytes();
+        public static byte[] OWNER = "World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
 
         internal const String author = "Alexander Chingarev";
 
@@ -242,7 +242,7 @@ namespace iText.Kernel.Pdf {
         public virtual void OpenEncryptedDocWithWrongPassword() {
             NUnit.Framework.Assert.That(() =>  {
                 PdfReader reader = new PdfReader(sourceFolder + "encryptedWithPasswordStandard40.pdf", new ReaderProperties
-                    ().SetPassword("wrong_password".GetBytes()));
+                    ().SetPassword("wrong_password".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1)));
                 PdfDocument doc = new PdfDocument(reader);
                 doc.Close();
             }
@@ -383,7 +383,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         private void WriteTextBytesOnPageContent(PdfPage page, String text) {
             page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
-                 + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes());
+                 + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
             page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(FontConstants.HELVETICA));
         }
 

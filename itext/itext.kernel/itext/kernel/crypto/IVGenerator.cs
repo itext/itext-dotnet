@@ -57,7 +57,7 @@ namespace iText.Kernel.Crypto {
             long time = SystemUtil.GetSystemTimeTicks();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem;
-            arcfour.PrepareARCFOURKey(s.GetBytes());
+            arcfour.PrepareARCFOURKey(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
         }
 
         /// <summary>Creates a new instance of IVGenerator</summary>

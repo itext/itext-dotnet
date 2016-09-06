@@ -261,7 +261,7 @@ namespace iText.Kernel.Pdf {
             long time = SystemUtil.GetSystemTimeTicks();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes());
+            return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
         }
 
         public static PdfObject CreateInfoId(byte[] id, bool modified) {

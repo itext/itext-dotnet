@@ -269,7 +269,7 @@ namespace iText.Kernel.Pdf
 		{
 			if (str != null)
 			{
-				return Append(str.GetBytes());
+				return Append(str.GetBytes(EncodingUtil.ISO_8859_1));
 			}
 			return this;
 		}

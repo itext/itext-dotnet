@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace iText.Pdfa {
     internal static class PdfAExtensions {
@@ -54,6 +55,10 @@ namespace iText.Pdfa {
 
         public static byte[] GetBytes(this String str) {
             return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
         }
 
         public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key) {

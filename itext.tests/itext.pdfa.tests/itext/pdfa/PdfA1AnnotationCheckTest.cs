@@ -115,7 +115,7 @@ namespace iText.Pdfa {
                 Rectangle rect = new Rectangle(100, 100, 100, 100);
                 PdfAnnotation annot = new PdfWidgetAnnotation(rect);
                 annot.SetFlag(PdfAnnotation.PRINT);
-                PdfStream s = new PdfStream("Hello World".GetBytes());
+                PdfStream s = new PdfStream("Hello World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
                 annot.SetDownAppearance(new PdfDictionary());
                 annot.SetNormalAppearance(s);
                 page.AddAnnotation(annot);

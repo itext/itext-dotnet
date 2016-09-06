@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Image;
@@ -1677,7 +1678,7 @@ namespace iText.Forms.Fields {
             return SetFieldFlags(flags);
         }
 
-        /// <summary>If true, the field can contain multiple lines of text; if false, the field???s text is restricted to a single line.
+        /// <summary>If true, the field can contain multiple lines of text; if false, the field's text is restricted to a single line.
         ///     </summary>
         /// <returns>whether the field can span over multiple lines.</returns>
         public virtual bool IsMultiline() {
@@ -1857,7 +1858,7 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Gets default appearance string containing a sequence of valid page-content graphics or text state operators that
-        /// define such properties as the field???s text size and color.
+        /// define such properties as the field's text size and color.
         /// </summary>
         /// <returns>
         /// the default appearance graphics, as a
@@ -1869,12 +1870,12 @@ namespace iText.Forms.Fields {
 
         /// <summary>
         /// Sets default appearance string containing a sequence of valid page-content graphics or text state operators that
-        /// define such properties as the field???s text size and color.
+        /// define such properties as the field's text size and color.
         /// </summary>
         /// <param name="defaultAppearance">a valid sequence of PDF content stream syntax</param>
         /// <returns>the edited field</returns>
         public virtual iText.Forms.Fields.PdfFormField SetDefaultAppearance(String defaultAppearance) {
-            byte[] b = defaultAppearance.GetBytes();
+            byte[] b = defaultAppearance.GetBytes(Encoding.UTF8);
             int len = b.Length;
             for (int k = 0; k < len; ++k) {
                 if (b[k] == '\n') {
@@ -2594,7 +2595,7 @@ namespace iText.Forms.Fields {
             return iText.IO.Util.JavaUtil.GetStringForBytes(stream.GetBytes());
         }
 
-        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GenerateDefaultAppearanceString(iText.Kernel.Font.PdfFont, int, iText.Kernel.Pdf.PdfResources) instead."
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use GenerateDefaultAppearanceString(iText.Kernel.Font.PdfFont, float, iText.Kernel.Colors.Color, iText.Kernel.Pdf.PdfResources) instead."
             )]
         protected internal virtual String GenerateDefaultAppearanceString(PdfFont font, int fontSize, PdfResources
              res) {
@@ -3242,7 +3243,8 @@ namespace iText.Forms.Fields {
             canvas.SaveState();
             canvas.ResetFillColorRgb();
             canvas.ConcatMatrix(width, 0, 0, height, 0, 0);
-            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes());
+            canvas.GetContentStream().GetOutputStream().WriteBytes(appearanceString.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                ));
             canvas.RestoreState();
         }
 

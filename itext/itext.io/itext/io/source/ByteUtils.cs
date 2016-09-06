@@ -140,7 +140,8 @@ namespace iText.IO.Source {
                         return zero;
                     }
                 }
-                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes();
+                byte[] result = DecimalFormatUtil.FormatNumber(d, "0.######").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                    );
                 if (buffer != null) {
                     buffer.Prepend(result);
                     return null;

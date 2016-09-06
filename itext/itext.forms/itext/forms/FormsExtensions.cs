@@ -46,6 +46,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace iText.Forms {
     internal static class FormsExtensions {
@@ -67,6 +68,10 @@ namespace iText.Forms {
 
         public static byte[] GetBytes(this String str) {
             return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
         }
 
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {

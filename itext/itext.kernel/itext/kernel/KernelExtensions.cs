@@ -99,6 +99,10 @@ namespace iText.Kernel {
             return Encoding.GetEncoding(encoding).GetBytes(str);
         }
 
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
+        }
+
         public static long Seek(this FileStream fs, long offset) {
             return fs.Seek(offset, SeekOrigin.Begin);
         }
