@@ -1,10 +1,12 @@
 using System;
+using iText.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class BorderTest : ExtendedITextTest {
@@ -240,6 +242,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
@@ -328,6 +331,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void ForcedPlacementTest01() {
             fileName = "forcedPlacementTest01.pdf";
             Document doc = CreateDocument();
