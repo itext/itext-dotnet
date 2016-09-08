@@ -502,7 +502,7 @@ namespace iText.Kernel.Pdf {
             this.isModified = isModified;
         }
 
-        /// <summary>Sets the default color space.</summary>
+        /// <summary>Sets the default color space (see ISO-320001 Paragraph 8.6.5.6).</summary>
         /// <param name="defaultCsKey">
         /// the name of Default Color Space. Should be
         /// <see cref="PdfName.DefaultGray"/>
@@ -523,23 +523,62 @@ namespace iText.Kernel.Pdf {
             AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }
 
+        /// <summary>Sets the value of default Gray Color Space (see ISO-320001 Paragraph 8.6.5.6).</summary>
+        /// <param name="defaultCs">the color space to set.</param>
         public virtual void SetDefaultGray(PdfColorSpace defaultCs) {
             AddResource(defaultCs.GetPdfObject(), PdfName.ColorSpace, PdfName.DefaultGray);
         }
 
+        /// <summary>Sets the value of default RGB Color Space (see ISO-320001 Paragraph 8.6.5.6).</summary>
+        /// <param name="defaultCs">the color space to set.</param>
         public virtual void SetDefaultRgb(PdfColorSpace defaultCs) {
             AddResource(defaultCs.GetPdfObject(), PdfName.ColorSpace, PdfName.DefaultRGB);
         }
 
+        /// <summary>Sets the value of default CMYK Color Space (see ISO-320001 Paragraph 8.6.5.6).</summary>
+        /// <param name="defaultCs">the color space to set.</param>
         public virtual void SetDefaultCmyk(PdfColorSpace defaultCs) {
             AddResource(defaultCs.GetPdfObject(), PdfName.ColorSpace, PdfName.DefaultCMYK);
         }
 
+        /// <summary>
+        /// Gets the mapped resource name of the
+        /// <see cref="PdfObject"/>
+        /// under the given wrapper.
+        /// </br>
+        /// </br>
+        /// Note: if the name for the object won't be found, then the name of object's Indirect Reference will be searched.
+        /// </summary>
+        /// <param name="resource">
+        /// the wrapper of the
+        /// <see cref="PdfObject"/>
+        /// , for which the name will be searched.
+        /// </param>
+        /// 
+        /// <returns>
+        /// the mapped resource name or
+        /// <see langword="null"/>
+        /// if object isn't added to resources.
+        /// </returns>
         public virtual PdfName GetResourceName<T>(PdfObjectWrapper<T> resource)
             where T : PdfObject {
             return GetResourceName(resource.GetPdfObject());
         }
 
+        /// <summary>
+        /// Gets the mapped resource name of the given
+        /// <see cref="PdfObject"/>
+        /// .
+        /// </br>
+        /// </br>
+        /// Note: if the name for the object won't be found, then the name of object's Indirect Reference will be searched.
+        /// </summary>
+        /// <param name="resource">the object, for which the name will be searched.</param>
+        /// <returns>
+        /// the mapped resource name or
+        /// <see langword="null"/>
+        /// if object isn't added to resources.
+        /// </returns>
         public virtual PdfName GetResourceName(PdfObject resource) {
             PdfName resName = resourceToName.Get(resource);
             if (resName == null) {
@@ -548,6 +587,8 @@ namespace iText.Kernel.Pdf {
             return resName;
         }
 
+        /// <summary>Gets the names of all the added resources.</summary>
+        /// <returns>the name of all the added resources.</returns>
         public virtual ICollection<PdfName> GetResourceNames() {
             ICollection<PdfName> names = new SortedSet<PdfName>();
             // TODO: isn't it better to use HashSet? Do we really need certain order?
@@ -557,22 +598,74 @@ namespace iText.Kernel.Pdf {
             return names;
         }
 
+        /// <summary>Gets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).</summary>
+        /// <returns>the array of predefined procedure set names.</returns>
         public virtual PdfArray GetProcSet() {
             return GetPdfObject().GetAsArray(PdfName.ProcSet);
         }
 
+        /// <summary>Sets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).</summary>
+        /// <param name="array">the array of predefined procedure set names to be set.</param>
         public virtual void SetProcSet(PdfArray array) {
             GetPdfObject().Put(PdfName.ProcSet, array);
         }
 
+        /// <summary>Gets the names of all resources of specified type.</summary>
+        /// <param name="resType">
+        /// the resource type. Should be
+        /// <see cref="PdfName.ColorSpace"/>
+        /// ,
+        /// <see cref="PdfName.ExtGState"/>
+        /// ,
+        /// <see cref="PdfName.Pattern"/>
+        /// ,
+        /// <see cref="PdfName.Shading"/>
+        /// ,
+        /// <see cref="PdfName.XObject"/>
+        /// ,
+        /// <see cref="PdfName.Font"/>
+        /// .
+        /// </param>
+        /// <returns>
+        /// set of resources name of corresponding type. May be empty.
+        /// Will be empty in case of incorrect resource type.
+        /// </returns>
         public virtual ICollection<PdfName> GetResourceNames(PdfName resType) {
             PdfDictionary resourceCategory = GetPdfObject().GetAsDictionary(resType);
             return resourceCategory == null ? new SortedSet<PdfName>() : resourceCategory.KeySet();
         }
 
         // TODO: TreeSet or HashSet enough?
-        public virtual PdfDictionary GetResource(PdfName pdfName) {
-            return GetPdfObject().GetAsDictionary(pdfName);
+        /// <summary>
+        /// Get the
+        /// <see cref="PdfDictionary"/>
+        /// object that that contain resources of specified type.
+        /// </summary>
+        /// <param name="resType">
+        /// the resource type. Should be
+        /// <see cref="PdfName.ColorSpace"/>
+        /// ,
+        /// <see cref="PdfName.ExtGState"/>
+        /// ,
+        /// <see cref="PdfName.Pattern"/>
+        /// ,
+        /// <see cref="PdfName.Shading"/>
+        /// ,
+        /// <see cref="PdfName.XObject"/>
+        /// ,
+        /// <see cref="PdfName.Font"/>
+        /// .
+        /// </param>
+        /// <returns>
+        /// the
+        /// <see cref="PdfDictionary"/>
+        /// object containing all resources of specified type,
+        /// or
+        /// <see langword="null"/>
+        /// in case of incorrect resource type.
+        /// </returns>
+        public virtual PdfDictionary GetResource(PdfName resType) {
+            return GetPdfObject().GetAsDictionary(resType);
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
@@ -676,11 +769,19 @@ namespace iText.Kernel.Pdf {
             /// class.
             /// </summary>
             /// <param name="resourceType">
-            /// Type of resource (
+            /// Type of resource. Should be
+            /// <see cref="PdfName.ColorSpace"/>
+            /// ,
+            /// <see cref="PdfName.ExtGState"/>
+            /// ,
+            /// <see cref="PdfName.Pattern"/>
+            /// ,
+            /// <see cref="PdfName.Shading"/>
+            /// ,
             /// <see cref="PdfName.XObject"/>
             /// ,
             /// <see cref="PdfName.Font"/>
-            /// etc).
+            /// .
             /// </param>
             /// <param name="prefix">Prefix used for generating names.</param>
             /// <param name="seed">
@@ -699,23 +800,52 @@ namespace iText.Kernel.Pdf {
             /// class.
             /// </summary>
             /// <param name="resourceType">
-            /// Type of resource (
+            /// Type of resource. Should be
+            /// <see cref="PdfName.ColorSpace"/>
+            /// ,
+            /// <see cref="PdfName.ExtGState"/>
+            /// ,
+            /// <see cref="PdfName.Pattern"/>
+            /// ,
+            /// <see cref="PdfName.Shading"/>
+            /// ,
             /// <see cref="PdfName.XObject"/>
             /// ,
             /// <see cref="PdfName.Font"/>
-            /// etc).
+            /// .
             /// </param>
             /// <param name="prefix">Prefix used for generating names.</param>
             public ResourceNameGenerator(PdfName resourceType, String prefix)
                 : this(resourceType, prefix, 1) {
             }
 
+            /// <summary>Gets the resource type of generator.</summary>
+            /// <returns>
+            /// Type of resource. May be
+            /// <see cref="PdfName.ColorSpace"/>
+            /// ,
+            /// <see cref="PdfName.ExtGState"/>
+            /// ,
+            /// <see cref="PdfName.Pattern"/>
+            /// ,
+            /// <see cref="PdfName.Shading"/>
+            /// ,
+            /// <see cref="PdfName.XObject"/>
+            /// ,
+            /// <see cref="PdfName.Font"/>
+            /// .
+            /// </returns>
             public virtual PdfName GetResourceType() {
                 return resourceType;
             }
 
             /// <summary>Generates new (unique) resource name.</summary>
-            /// <returns>New (unique) resource name.</returns>
+            /// <param name="resources">
+            /// the
+            /// <see cref="PdfResources"/>
+            /// object for which name will be generated.
+            /// </param>
+            /// <returns>new (unique) resource name.</returns>
             public virtual PdfName Generate(PdfResources resources) {
                 PdfName newName = new PdfName(prefix + counter++);
                 PdfDictionary r = resources.GetPdfObject();
