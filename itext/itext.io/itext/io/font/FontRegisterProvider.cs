@@ -309,18 +309,21 @@ namespace iText.IO.Font {
                 }
                 else {
                     if (path.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttc")) {
-                        if (alias != null) {
-                            LOGGER.Error("You can't define an alias for a true type collection.");
-                        }
-                        TrueTypeCollection ttc = new TrueTypeCollection(path, PdfEncodings.WINANSI);
+                        TrueTypeCollection ttc = new TrueTypeCollection(path);
                         for (int i = 0; i < ttc.GetTTCSize(); i++) {
-                            RegisterFont(path + "," + i);
+                            String fullPath = path + "," + i;
+                            if (alias != null) {
+                                RegisterFont(fullPath, alias + "," + i);
+                            }
+                            else {
+                                RegisterFont(fullPath);
+                            }
                         }
                     }
                     else {
                         if (path.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm") || path.ToLower(System.Globalization.CultureInfo.InvariantCulture
                             ).EndsWith(".pfm")) {
-                            FontProgram fontProgram = FontProgramFactory.CreateFont(path, false);
+                            FontProgram fontProgram = FontProgramFactory.CreateFont(path);
                             String fullName = fontProgram.GetFontNames().GetFullName()[0][3].ToLower(System.Globalization.CultureInfo.InvariantCulture
                                 );
                             String familyName = fontProgram.GetFontNames().GetFamilyName()[0][3].ToLower(System.Globalization.CultureInfo.InvariantCulture

@@ -983,7 +983,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void TestCheckTTCSize() {
-            TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc", "WinAnsi");
+            TrueTypeCollection collection = new TrueTypeCollection(fontsFolder + "uming.ttc");
             NUnit.Framework.Assert.IsTrue(collection.GetTTCSize() == 4);
         }
 
