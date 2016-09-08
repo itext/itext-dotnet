@@ -271,6 +271,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Btn = CreateDirectName("Btn");
 
+        public static readonly iText.Kernel.Pdf.PdfName Butt = CreateDirectName("Butt");
+
         public static readonly iText.Kernel.Pdf.PdfName ByteRange = CreateDirectName("ByteRange");
 
         public static readonly iText.Kernel.Pdf.PdfName C = CreateDirectName("C");
@@ -455,6 +457,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName DeviceRGB = CreateDirectName("DeviceRGB");
 
         public static readonly iText.Kernel.Pdf.PdfName DeviceRGBK = CreateDirectName("DeviceRGBK");
+
+        public static readonly iText.Kernel.Pdf.PdfName Diamond = CreateDirectName("Diamond");
 
         public static readonly iText.Kernel.Pdf.PdfName Difference = CreateDirectName("Difference");
 
@@ -879,6 +883,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName LJ = CreateDirectName("LJ");
 
+        public static readonly iText.Kernel.Pdf.PdfName LL = CreateDirectName("LL");
+
         public static readonly iText.Kernel.Pdf.PdfName LLE = CreateDirectName("LLE");
 
         public static readonly iText.Kernel.Pdf.PdfName LLO = CreateDirectName("LLO");
@@ -1218,6 +1224,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName RC = CreateDirectName("RC");
 
+        public static readonly iText.Kernel.Pdf.PdfName RClosedArrow = CreateDirectName("RClosedArrow");
+
         public static readonly iText.Kernel.Pdf.PdfName RD = CreateDirectName("RD");
 
         public static readonly iText.Kernel.Pdf.PdfName Reason = CreateDirectName("Reason");
@@ -1260,6 +1268,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName RO = CreateDirectName("RO");
 
         public static readonly iText.Kernel.Pdf.PdfName RoleMap = CreateDirectName("RoleMap");
+
+        public static readonly iText.Kernel.Pdf.PdfName ROpenArrow = CreateDirectName("ROpenArrow");
 
         public static readonly iText.Kernel.Pdf.PdfName Root = CreateDirectName("Root");
 
@@ -1325,6 +1335,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName SinglePage = CreateDirectName("SinglePage");
 
         public static readonly iText.Kernel.Pdf.PdfName Size = CreateDirectName("Size");
+
+        public static readonly iText.Kernel.Pdf.PdfName Slash = CreateDirectName("Slash");
 
         public static readonly iText.Kernel.Pdf.PdfName SM = CreateDirectName("SM");
 
@@ -1472,6 +1484,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName TOCI = CreateDirectName("TOCI");
 
         public static readonly iText.Kernel.Pdf.PdfName Toggle = CreateDirectName("Toggle");
+
+        public static readonly iText.Kernel.Pdf.PdfName Top = CreateDirectName("Top");
 
         public static readonly iText.Kernel.Pdf.PdfName TopSecret = CreateDirectName("TopSecret");
 

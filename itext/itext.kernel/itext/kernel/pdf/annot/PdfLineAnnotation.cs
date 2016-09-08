@@ -72,12 +72,12 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual float GetLeaderLine() {
-            PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LE);
+            PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LL);
             return n == null ? 0 : n.FloatValue();
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLine(float leaderLine) {
-            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LE, new PdfNumber(leaderLine));
+            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LL, new PdfNumber(leaderLine));
         }
 
         public virtual float GetLeaderLineExtension() {
