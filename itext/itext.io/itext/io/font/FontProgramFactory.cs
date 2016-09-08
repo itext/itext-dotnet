@@ -162,7 +162,7 @@ namespace iText.IO.Font {
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
         /// <param name="cached">
-        /// ttrue if the font comes from the cache or is added to
+        /// <code>true</code> if the font comes from the cache or is added to
         /// the cache if new, false if the font is always created new
         /// </param>
         /// <returns>returns a new font. This font may come from the cache</returns>
