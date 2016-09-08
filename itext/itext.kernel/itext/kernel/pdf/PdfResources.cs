@@ -503,22 +503,36 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Sets the default color space.</summary>
-        /// <param name="defaultCsKey"/>
-        /// <param name="defaultCsValue"/>
+        /// <param name="defaultCsKey">
+        /// the name of Default Color Space. Should be
+        /// <see cref="PdfName.DefaultGray"/>
+        /// ,
+        /// <see cref="PdfName.DefaultRGB"/>
+        /// , or
+        /// <see cref="PdfName.DefaultCMYK"/>
+        /// .
+        /// </param>
+        /// <param name="defaultCsValue">the value of the default color space to be set.</param>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.0. Use SetDefaultGray(iText.Kernel.Pdf.Colorspace.PdfColorSpace) ,SetDefaultRgb(iText.Kernel.Pdf.Colorspace.PdfColorSpace) or SetDefaultCmyk(iText.Kernel.Pdf.Colorspace.PdfColorSpace) instead."
+            )]
         public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue) {
+            if (!defaultCsKey.Equals(PdfName.DefaultCMYK) && !defaultCsKey.Equals(PdfName.DefaultGray) && !defaultCsKey
+                .Equals(PdfName.DefaultRGB)) {
+                throw new PdfException(PdfException.UnsupportedDefaultColorSpaceName);
+            }
             AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }
 
         public virtual void SetDefaultGray(PdfColorSpace defaultCs) {
-            SetDefaultColorSpace(PdfName.DefaultGray, defaultCs);
+            AddResource(defaultCs.GetPdfObject(), PdfName.ColorSpace, PdfName.DefaultGray);
         }
 
         public virtual void SetDefaultRgb(PdfColorSpace defaultCs) {
-            SetDefaultColorSpace(PdfName.DefaultRGB, defaultCs);
+            AddResource(defaultCs.GetPdfObject(), PdfName.ColorSpace, PdfName.DefaultRGB);
         }
 
         public virtual void SetDefaultCmyk(PdfColorSpace defaultCs) {
-            SetDefaultColorSpace(PdfName.DefaultCMYK, defaultCs);
+            AddResource(defaultCs.GetPdfObject(), PdfName.ColorSpace, PdfName.DefaultCMYK);
         }
 
         public virtual PdfName GetResourceName<T>(PdfObjectWrapper<T> resource)
