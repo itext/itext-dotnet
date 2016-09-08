@@ -537,7 +537,7 @@ namespace iText.Kernel.Pdf {
 
         public virtual PdfName GetResourceName<T>(PdfObjectWrapper<T> resource)
             where T : PdfObject {
-            return resourceToName.Get(resource.GetPdfObject());
+            return GetResourceName(resource.GetPdfObject());
         }
 
         public virtual PdfName GetResourceName(PdfObject resource) {
