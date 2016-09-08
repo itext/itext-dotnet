@@ -73,11 +73,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// The text label that will be displayed in the title bar of the annotation’s pop-up window
+        /// The text label that will be displayed in the title bar of the annotation's pop-up window
         /// when open and active.
         /// </summary>
         /// <remarks>
-        /// The text label that will be displayed in the title bar of the annotation’s pop-up window
+        /// The text label that will be displayed in the title bar of the annotation's pop-up window
         /// when open and active. This entry shall identify the user who added the annotation.
         /// </remarks>
         /// <returns>
@@ -91,11 +91,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// Sets the text label that will be displayed in the title bar of the annotation’s pop-up window
+        /// Sets the text label that will be displayed in the title bar of the annotation's pop-up window
         /// when open and active.
         /// </summary>
         /// <remarks>
-        /// Sets the text label that will be displayed in the title bar of the annotation’s pop-up window
+        /// Sets the text label that will be displayed in the title bar of the annotation's pop-up window
         /// when open and active. This entry shall identify the user who added the annotation.
         /// </remarks>
         /// <param name="text">
@@ -523,7 +523,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <ul>
         /// <li> for
         /// <see cref="PdfFreeTextAnnotation"/>
-        /// the inner rectangle is where the annotation’s text should be displayed;</li>
+        /// the inner rectangle is where the annotation's text should be displayed;</li>
         /// <li>
         /// for
         /// <see cref="PdfSquareAnnotation"/>
@@ -676,11 +676,11 @@ namespace iText.Kernel.Pdf.Annot {
         /// and polyline annotation (
         /// <see cref="PdfPolyGeomAnnotation"/>
         /// -
-        /// the annotation’s line endings, for
+        /// the annotation's line endings, for
         /// <see cref="PdfSquareAnnotation"/>
         /// and
         /// <see cref="PdfCircleAnnotation"/>
-        /// - the annotation’s
+        /// - the annotation's
         /// rectangle or ellipse, for
         /// <see cref="PdfRedactAnnotation"/>
         /// - the redacted region after the affected content has been removed.
@@ -801,11 +801,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation’s text:
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
         /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
         /// </summary>
         /// <remarks>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation’s text:
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
         /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
         /// </remarks>
         /// <returns>a code specifying the form of quadding (justification), returns the default value if not explicitly specified.
@@ -816,11 +816,11 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         /// <summary>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation’s text:
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
         /// 0 - Left-justified, 1 - Centered, 2 - Right-justified.
         /// </summary>
         /// <remarks>
-        /// A code specifying the form of quadding (justification) that is used in displaying the annotation’s text:
+        /// A code specifying the form of quadding (justification) that is used in displaying the annotation's text:
         /// 0 - Left-justified, 1 - Centered, 2 - Right-justified. Default value: 0 (left-justified).
         /// </remarks>
         /// <param name="justification">a code specifying the form of quadding (justification).</param>
