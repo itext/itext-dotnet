@@ -100,6 +100,23 @@ namespace iText.Kernel.Geom {
             return new iText.Kernel.Geom.Rectangle(llx, lly, urx - llx, ury - lly);
         }
 
+        /// <summary>Sets the rectangle by the coordinates, specifying its lower left and upper right points.</summary>
+        /// <remarks>
+        /// Sets the rectangle by the coordinates, specifying its lower left and upper right points. May be used in chain.
+        /// <br/>
+        /// <br/>
+        /// Note: this method will normalize coordinates, so the rectangle will have non negative width and height,
+        /// and its x and y coordinates specified lower left point.
+        /// </remarks>
+        /// <param name="llx">the X coordinate of lower left point</param>
+        /// <param name="lly">the Y coordinate of lower left point</param>
+        /// <param name="urx">the X coordinate of upper right point</param>
+        /// <param name="ury">the Y coordinate of upper right point</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle SetBbox(float llx, float lly, float urx, float ury) {
             // If llx is greater than urx, swap them (normalize)
             if (llx > urx) {
@@ -120,84 +137,148 @@ namespace iText.Kernel.Geom {
             return this;
         }
 
+        /// <summary>Gets the X coordinate of lower left point.</summary>
+        /// <returns>the X coordinate of lower left point.</returns>
         public virtual float GetX() {
             return x;
         }
 
+        /// <summary>Sets the X coordinate of lower left point.</summary>
+        /// <remarks>Sets the X coordinate of lower left point. May be used in chain.</remarks>
+        /// <param name="x">the X coordinate of lower left point to be set.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle SetX(float x) {
             this.x = x;
             return this;
         }
 
+        /// <summary>Gets the Y coordinate of lower left point.</summary>
+        /// <returns>the Y coordinate of lower left point.</returns>
         public virtual float GetY() {
             return y;
         }
 
+        /// <summary>Sets the Y coordinate of lower left point.</summary>
+        /// <remarks>Sets the Y coordinate of lower left point. May be used in chain.</remarks>
+        /// <param name="y">the Y coordinate of lower left point to be set.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle SetY(float y) {
             this.y = y;
             return this;
         }
 
+        /// <summary>Gets the width of rectangle.</summary>
+        /// <returns>the width of rectangle.</returns>
         public virtual float GetWidth() {
             return width;
         }
 
+        /// <summary>Sets the width of rectangle.</summary>
+        /// <remarks>Sets the width of rectangle. May be used in chain.</remarks>
+        /// <param name="width">the the width of rectangle to be set.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle SetWidth(float width) {
             this.width = width;
             return this;
         }
 
+        /// <summary>Gets the height of rectangle.</summary>
+        /// <returns>the height of rectangle.</returns>
         public virtual float GetHeight() {
             return height;
         }
 
+        /// <summary>Sets the height of rectangle.</summary>
+        /// <remarks>Sets the height of rectangle. May be used in chain.</remarks>
+        /// <param name="height">the the width of rectangle to be set.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle SetHeight(float height) {
             this.height = height;
             return this;
         }
 
+        /// <summary>Increases the height of rectangle by the given value.</summary>
+        /// <remarks>Increases the height of rectangle by the given value. May be used in chain.</remarks>
+        /// <param name="extra">the value of the extra height to be added.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle IncreaseHeight(float extra) {
             this.height += extra;
             return this;
         }
 
+        /// <summary>Decreases the height of rectangle by the given value.</summary>
+        /// <remarks>Decreases the height of rectangle by the given value. May be used in chain.</remarks>
+        /// <param name="extra">the value of the extra height to be subtracted.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle DecreaseHeight(float extra) {
             this.height -= extra;
             return this;
         }
 
-        /// <summary>
-        /// Gets llx, the same:
+        /// <summary>Gets the X coordinate of the left edge of the rectangle.</summary>
+        /// <remarks>
+        /// Gets the X coordinate of the left edge of the rectangle. Same as:
         /// <c>getX()</c>
         /// .
-        /// </summary>
+        /// </remarks>
+        /// <returns>the X coordinate of the left edge of the rectangle.</returns>
         public virtual float GetLeft() {
             return x;
         }
 
-        /// <summary>
-        /// Gets urx, the same to
+        /// <summary>Gets the X coordinate of the right edge of the rectangle.</summary>
+        /// <remarks>
+        /// Gets the X coordinate of the right edge of the rectangle. Same as:
         /// <c>getX() + getWidth()</c>
         /// .
-        /// </summary>
+        /// </remarks>
+        /// <returns>the X coordinate of the right edge of the rectangle.</returns>
         public virtual float GetRight() {
             return x + width;
         }
 
-        /// <summary>
-        /// Gets ury, the same to
+        /// <summary>Gets the Y coordinate of the upper edge of the rectangle.</summary>
+        /// <remarks>
+        /// Gets the Y coordinate of the upper edge of the rectangle. Same as:
         /// <c>getY() + getHeight()</c>
         /// .
-        /// </summary>
+        /// </remarks>
+        /// <returns>the Y coordinate of the upper edge of the rectangle.</returns>
         public virtual float GetTop() {
             return y + height;
         }
 
-        /// <summary>
-        /// Gets lly, the same to
+        /// <summary>Gets the Y coordinate of the lower edge of the rectangle.</summary>
+        /// <remarks>
+        /// Gets the Y coordinate of the lower edge of the rectangle. Same as:
         /// <c>getY()</c>
         /// .
-        /// </summary>
+        /// </remarks>
+        /// <returns>the Y coordinate of the lower edge of the rectangle.</returns>
         public virtual float GetBottom() {
             return y;
         }
@@ -246,6 +327,8 @@ namespace iText.Kernel.Geom {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
 
+        /// <summary>Gets the copy of this rectangle.</summary>
+        /// <returns>the copied rectangle.</returns>
         public virtual iText.Kernel.Geom.Rectangle Clone() {
             return new iText.Kernel.Geom.Rectangle(x, y, width, height);
         }
