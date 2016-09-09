@@ -75,7 +75,19 @@ namespace iText.Forms {
         }
 
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
-            T[] r = col.ToArray();
+            T[] r;
+            int colSize = col.Count;
+            if (colSize <= toArray.Length) {
+                col.CopyTo(toArray, 0);
+                if (colSize != toArray.Length) {
+                    toArray[colSize] = default(T);
+                }
+                r = toArray;
+            } else {
+                r = new T[colSize];
+                col.CopyTo(r, 0);
+            }
+
             return r;
         }
 
