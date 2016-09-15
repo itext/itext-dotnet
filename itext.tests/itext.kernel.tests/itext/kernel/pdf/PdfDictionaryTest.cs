@@ -61,7 +61,6 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-851")]
         public virtual void TestEntrySetRemove2() {
             PdfDocument doc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             PdfDictionary dict = new PdfDictionary();
@@ -78,11 +77,8 @@ namespace iText.Kernel.Pdf {
             dict2.Put(new PdfName("4"), ((PdfNumber)new PdfNumber(4).MakeIndirect(doc)));
             dict2.Put(new PdfName("5"), new PdfNumber(5));
             dict2.Put(new PdfName("6"), new PdfNumber(6));
-            foreach (KeyValuePair<PdfName, PdfObject> e in dict.EntrySet()) {
-                if (e.Value.GetIndirectReference() != null) {
-                    continue;
-                }
-                NUnit.Framework.Assert.IsTrue(dict2.EntrySet().Remove(e));
+            foreach (KeyValuePair<PdfName, PdfObject> e in dict2.EntrySet()) {
+                NUnit.Framework.Assert.IsTrue(dict.EntrySet().Remove(e));
             }
             NUnit.Framework.Assert.AreEqual(0, dict.EntrySet().Count);
             NUnit.Framework.Assert.AreEqual(0, dict.Values().Count);

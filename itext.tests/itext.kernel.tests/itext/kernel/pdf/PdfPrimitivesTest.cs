@@ -1,6 +1,9 @@
 using System;
 using System.Text;
+using iText.IO;
+using iText.IO.Source;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfPrimitivesTest : ExtendedITextTest {
@@ -198,6 +201,61 @@ namespace iText.Kernel.Pdf {
             for (int i = 0; i < 10000000; i++) {
                 new PdfName(rnd.NextString());
             }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualStrings() {
+            PdfString a = ((PdfString)new PdfString("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ()))));
+            PdfString b = new PdfString("abcd".GetBytes(Encoding.ASCII));
+            NUnit.Framework.Assert.IsTrue(a.Equals(b));
+            PdfString c = new PdfString("abcd", "UTF-8");
+            NUnit.Framework.Assert.IsFalse(c.Equals(a));
+        }
+
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER)]
+        public virtual void EqualNumbers() {
+            PdfNumber num1 = ((PdfNumber)new PdfNumber(1).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ()))));
+            PdfNumber num2 = new PdfNumber(2);
+            NUnit.Framework.Assert.IsFalse(num1.Equals(num2));
+            int hashCode = num1.GetHashCode();
+            num1.Increment();
+            NUnit.Framework.Assert.IsTrue(num1.Equals(num2));
+            NUnit.Framework.Assert.AreNotEqual(hashCode, num1.GetHashCode());
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualNames() {
+            PdfName a = ((PdfName)new PdfName("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ()))));
+            PdfName b = new PdfName("abcd");
+            NUnit.Framework.Assert.IsTrue(a.Equals(b));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualBoolean() {
+            PdfBoolean f = ((PdfBoolean)new PdfBoolean(false).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
+                ()))));
+            PdfBoolean t = new PdfBoolean(true);
+            NUnit.Framework.Assert.IsFalse(f.Equals(t));
+            NUnit.Framework.Assert.IsTrue(f.Equals(PdfBoolean.FALSE));
+            NUnit.Framework.Assert.IsTrue(t.Equals(PdfBoolean.TRUE));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualNulls() {
+            PdfNull a = ((PdfNull)new PdfNull().MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream()
+                ))));
+            NUnit.Framework.Assert.IsTrue(a.Equals(PdfNull.PDF_NULL));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void EqualLiterals() {
+            PdfLiteral a = new PdfLiteral("abcd");
+            PdfLiteral b = new PdfLiteral("abcd".GetBytes(Encoding.ASCII));
+            NUnit.Framework.Assert.IsTrue(a.Equals(b));
         }
 
         private PdfArray GeneratePdfArrayWithFloatNumbers(PdfDocument doc, bool indirects) {
