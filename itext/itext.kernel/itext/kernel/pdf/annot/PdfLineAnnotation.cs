@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -213,6 +214,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// a negative value indicates the opposite direction.
         /// </remarks>
         /// <returns>a float specifying the length of leader lines in default user space.</returns>
+        [System.ObsoleteAttribute(@"use GetLeaderLineLength() instead.")]
         public virtual float GetLeaderLine() {
             PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LL);
             return n == null ? 0 : n.FloatValue();
@@ -238,8 +240,53 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfLineAnnotation"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"use SetLeaderLineLength(float) instead.")]
         public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLine(float leaderLine) {
             return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LL, new PdfNumber(leaderLine));
+        }
+
+        /// <summary>
+        /// The length of leader lines in default user space that extend from each endpoint of the line perpendicular
+        /// to the line itself.
+        /// </summary>
+        /// <remarks>
+        /// The length of leader lines in default user space that extend from each endpoint of the line perpendicular
+        /// to the line itself. A positive value means that the leader lines appear in the direction that is clockwise
+        /// when traversing the line from its starting point to its ending point (as specified by
+        /// <see cref="iText.Kernel.Pdf.PdfName.L"/>
+        /// (see
+        /// <see cref="GetLine()"/>
+        /// );
+        /// a negative value indicates the opposite direction.
+        /// </remarks>
+        /// <returns>a float specifying the length of leader lines in default user space.</returns>
+        public virtual float GetLeaderLineLength() {
+            PdfNumber n = GetPdfObject().GetAsNumber(PdfName.LL);
+            return n == null ? 0 : n.FloatValue();
+        }
+
+        /// <summary>
+        /// Sets the length of leader lines in default user space that extend from each endpoint of the line perpendicular
+        /// to the line itself.
+        /// </summary>
+        /// <remarks>
+        /// Sets the length of leader lines in default user space that extend from each endpoint of the line perpendicular
+        /// to the line itself. A positive value means that the leader lines appear in the direction that is clockwise
+        /// when traversing the line from its starting point to its ending point (as specified by
+        /// <see cref="iText.Kernel.Pdf.PdfName.L"/>
+        /// (see
+        /// <see cref="GetLine()"/>
+        /// );
+        /// a negative value indicates the opposite direction.
+        /// </remarks>
+        /// <param name="leaderLineLength">a float specifying the length of leader lines in default user space.</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfLineAnnotation"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetLeaderLineLength(float leaderLineLength) {
+            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.LL, new PdfNumber(leaderLineLength));
         }
 
         /// <summary>
