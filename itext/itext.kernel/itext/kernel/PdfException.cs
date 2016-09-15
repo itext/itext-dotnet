@@ -507,7 +507,7 @@ namespace iText.Kernel {
 
         public const String UnknownColorFormatMustBeRGBorRRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
-        public const String UnsupportedDefaultColorSpaceName = "Unsupported default color space name.";
+        public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";
 
         public const String UnsupportedXObjectType = "Unsupported XObject type.";
 

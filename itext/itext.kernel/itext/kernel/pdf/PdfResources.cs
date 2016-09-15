@@ -518,7 +518,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SetDefaultColorSpace(PdfName defaultCsKey, PdfColorSpace defaultCsValue) {
             if (!defaultCsKey.Equals(PdfName.DefaultCMYK) && !defaultCsKey.Equals(PdfName.DefaultGray) && !defaultCsKey
                 .Equals(PdfName.DefaultRGB)) {
-                throw new PdfException(PdfException.UnsupportedDefaultColorSpaceName);
+                throw new PdfException(PdfException.UnsupportedDefaultColorSpaceName1).SetMessageParams(defaultCsKey.ToString
+                    ());
             }
             AddResource(defaultCsValue.GetPdfObject(), PdfName.ColorSpace, defaultCsKey);
         }
