@@ -363,6 +363,33 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>
+        /// Concatenates the 2x3 affine transformation matrix to the current matrix
+        /// in the content stream managed by this Canvas.
+        /// </summary>
+        /// <remarks>
+        /// Concatenates the 2x3 affine transformation matrix to the current matrix
+        /// in the content stream managed by this Canvas.
+        /// If an array not containing the 6 values of the matrix is passed,
+        /// The current canvas is returned unchanged.
+        /// </remarks>
+        /// <param name="array">affine transformation stored as a PdfArray with 6 values</param>
+        /// <returns>current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(PdfArray array) {
+            if (array.Size() != 6) {
+                //Throw exception or warning here
+                return this;
+            }
+            for (int i = 0; i < array.Size(); i++) {
+                if (!array.Get(i).IsNumber()) {
+                    return this;
+                }
+            }
+            return ConcatMatrix(array.GetAsNumber(0).DoubleValue(), array.GetAsNumber(1).DoubleValue(), array.GetAsNumber
+                (2).DoubleValue(), array.GetAsNumber(3).DoubleValue(), array.GetAsNumber(4).DoubleValue(), array.GetAsNumber
+                (5).DoubleValue());
+        }
+
+        /// <summary>
         /// Concatenates the affine transformation matrix to the current matrix
         /// in the content stream managed by this Canvas.
         /// </summary>

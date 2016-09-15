@@ -2056,6 +2056,7 @@ namespace iText.Forms.Fields {
             PdfDictionary mk = GetWidgets()[0].GetAppearanceCharacteristics();
             if (mk == null) {
                 mk = new PdfDictionary();
+                this.Put(PdfName.MK, mk);
             }
             mk.Put(PdfName.R, new PdfNumber(degRotation));
             this.rotation = degRotation;
@@ -2167,18 +2168,77 @@ namespace iText.Forms.Fields {
                     if (fontSize == 0) {
                         fontSize = (float)DEFAULT_FONT_SIZE;
                     }
-                    int rotation = 0;
+                    //Apply Page rotation, clockwise
+                    int pageRotation = 0;
                     if (page != null) {
-                        rotation = page.GetRotation();
+                        pageRotation = page.GetRotation();
                     }
                     PdfArray matrix = null;
-                    if (rotation != 0 && rotation % 90 == 0) {
-                        double angle = Math.PI * rotation / 180;
+                    if (pageRotation % 90 == 0) {
+                        //Cast angle to [0, 360]
+                        double angle = pageRotation % 360;
+                        //Get angle in radians
+                        angle = Math.PI * angle / 180;
+                        //Calculate origin offset
+                        double translationWidth = 0;
+                        double translationHeight = 0;
+                        if (angle >= Math.PI / 2 && angle <= Math.PI) {
+                            translationWidth = bBox.ToRectangle().GetWidth();
+                        }
+                        if (angle >= Math.PI) {
+                            translationHeight = bBox.ToRectangle().GetHeight();
+                        }
+                        //Store rotation and translation in the matrix
                         matrix = new PdfArray(new double[] { Math.Cos(angle), Math.Sin(angle), -Math.Sin(angle), Math.Cos(angle), 
-                            0, 0 });
+                            translationWidth, translationHeight });
                         Rectangle rect = bBox.ToRectangle();
-                        rect.SetWidth(bBox.ToRectangle().GetHeight());
-                        rect.SetHeight(bBox.ToRectangle().GetWidth());
+                        //If the angle is 90 or 270, height and width of the bounding box need to be switched
+                        if (angle == Math.PI / 2 || angle == 3 * Math.PI / 2) {
+                            rect.SetWidth(bBox.ToRectangle().GetHeight());
+                            rect.SetHeight(bBox.ToRectangle().GetWidth());
+                        }
+                        //Copy Bounding box
+                        bBox = new PdfArray(rect);
+                    }
+                    //Apply field rotation
+                    float rotation = 0;
+                    if (this.GetPdfObject().GetAsDictionary(PdfName.MK) != null && this.GetPdfObject().GetAsDictionary(PdfName
+                        .MK).Get(PdfName.R) != null) {
+                        rotation = this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
+                    }
+                    //rotation = this.rotation;
+                    //Field rotation is specified as counterclockwise
+                    //rotation *=-1;
+                    if (rotation % 90 == 0) {
+                        //Cast angle to [0, 360]
+                        double angle = rotation % 360;
+                        //Get angle in radians
+                        angle = Math.PI * angle / 180;
+                        //Calculate origin offset
+                        double translationWidth = 0;
+                        double translationHeight = 0;
+                        if (angle >= Math.PI / 2 && angle <= Math.PI) {
+                            translationWidth = bBox.ToRectangle().GetWidth();
+                        }
+                        if (angle >= Math.PI) {
+                            translationHeight = bBox.ToRectangle().GetHeight();
+                        }
+                        //Concatenate rotation and translation into the matrix
+                        Matrix currentMatrix = new Matrix(matrix.GetAsNumber(0).FloatValue(), matrix.GetAsNumber(1).FloatValue(), 
+                            matrix.GetAsNumber(2).FloatValue(), matrix.GetAsNumber(3).FloatValue(), matrix.GetAsNumber(4).FloatValue
+                            (), matrix.GetAsNumber(5).FloatValue());
+                        Matrix toConcatenate = new Matrix((float)Math.Cos(angle), (float)Math.Sin(angle), (float)(-Math.Sin(angle)
+                            ), (float)(Math.Cos(angle)), (float)translationWidth, (float)translationHeight);
+                        currentMatrix = currentMatrix.Multiply(toConcatenate);
+                        matrix = new PdfArray(new float[] { currentMatrix.Get(0), currentMatrix.Get(1), currentMatrix.Get(3), currentMatrix
+                            .Get(4), currentMatrix.Get(6), currentMatrix.Get(7) });
+                        Rectangle rect = bBox.ToRectangle();
+                        //If the angle is 90 or 270, height and width of the bounding box need to be switched
+                        if (angle == Math.PI / 2 || angle == 3 * Math.PI / 2) {
+                            rect.SetWidth(bBox.ToRectangle().GetHeight());
+                            rect.SetHeight(bBox.ToRectangle().GetWidth());
+                        }
+                        //Copy Bounding box
                         bBox = new PdfArray(rect);
                     }
                     PdfFormXObject appearance = null;
