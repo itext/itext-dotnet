@@ -2219,7 +2219,7 @@ namespace iText.Forms.Fields {
                     float fieldRotation = 0;
                     if (this.GetPdfObject().GetAsDictionary(PdfName.MK) != null && this.GetPdfObject().GetAsDictionary(PdfName
                         .MK).Get(PdfName.R) != null) {
-                        fieldRotation = this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
+                        fieldRotation = (float)this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
                         //Get relative field rotation
                         fieldRotation += pageRotation;
                     }
