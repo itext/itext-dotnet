@@ -2201,17 +2201,15 @@ namespace iText.Forms.Fields {
                         bBox = new PdfArray(rect);
                     }
                     //Apply field rotation
-                    float rotation = 0;
+                    float fieldRotation = 0;
                     if (this.GetPdfObject().GetAsDictionary(PdfName.MK) != null && this.GetPdfObject().GetAsDictionary(PdfName
                         .MK).Get(PdfName.R) != null) {
-                        rotation = this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
+                        fieldRotation = this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
                     }
-                    //rotation = this.rotation;
                     //Field rotation is specified as counterclockwise
-                    //rotation *=-1;
-                    if (rotation % 90 == 0) {
+                    if (fieldRotation % 90 == 0) {
                         //Cast angle to [0, 360]
-                        double angle = rotation % 360;
+                        double angle = fieldRotation % 360;
                         //Get angle in radians
                         angle = Math.PI * angle / 180;
                         //Calculate origin offset
