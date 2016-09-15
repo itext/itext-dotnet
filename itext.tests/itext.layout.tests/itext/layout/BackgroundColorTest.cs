@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
-using NUnit.Framework.Rules;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -27,9 +25,6 @@ namespace iText.Layout {
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
-
-        [Rule]
-        public ExpectedException thrown = ExpectedException.None();
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>

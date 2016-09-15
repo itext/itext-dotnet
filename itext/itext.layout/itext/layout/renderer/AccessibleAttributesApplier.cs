@@ -135,9 +135,9 @@ namespace iText.Layout.Renderer {
         }
 
         private static void ApplyCommonLayoutAttributes(AbstractRenderer renderer, PdfDictionary attributes) {
-            Color backgroundColor = renderer.GetPropertyAsColor(Property.BACKGROUND);
-            if (backgroundColor != null && backgroundColor is DeviceRgb) {
-                attributes.Put(PdfName.BackgroundColor, new PdfArray(backgroundColor.GetColorValue()));
+            Background background = renderer.GetProperty<Background>(Property.BACKGROUND);
+            if (background != null && background.GetColor() is DeviceRgb) {
+                attributes.Put(PdfName.BackgroundColor, new PdfArray(background.GetColor().GetColorValue()));
             }
             //TODO NOTE: applying border attributes for cells is temporarily turned off on purpose. Remove this 'if' in future.
             // The reason is that currently, we can't distinguish if all cells have same border style or not.
