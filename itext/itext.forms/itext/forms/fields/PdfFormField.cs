@@ -44,9 +44,11 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Image;
+using iText.IO.Log;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Kernel.Colors;
@@ -153,6 +155,8 @@ namespace iText.Forms.Fields {
 
         protected internal PdfAConformanceLevel pdfAConformanceLevel;
 
+        protected internal ILogger formFieldLogger;
+
         protected internal const String check = "0.8 0 0 0.8 0.3 0.5 cm 0 0 m\n" + "0.066 -0.026 l\n" + "0.137 -0.15 l\n"
              + "0.259 0.081 0.46 0.391 0.553 0.461 c\n" + "0.604 0.489 l\n" + "0.703 0.492 l\n" + "0.543 0.312 0.255 -0.205 0.154 -0.439 c\n"
              + "0.069 -0.399 l\n" + "0.035 -0.293 -0.039 -0.136 -0.091 -0.057 c\n" + "h\n" + "f\n";
@@ -189,6 +193,7 @@ namespace iText.Forms.Fields {
             : base(pdfObject) {
             EnsureObjectIsAddedToDocument(pdfObject);
             SetForbidRelease();
+            formFieldLogger = LoggerFactory.GetLogger(this.GetType());
         }
 
         /// <summary>
@@ -2199,6 +2204,11 @@ namespace iText.Forms.Fields {
                         }
                         //Copy Bounding box
                         bBox = new PdfArray(rect);
+                    }
+                    //Avoid NPE when handling corrupt pdfs
+                    if (matrix == null) {
+                        formFieldLogger.Error(LogMessageConstant.INCORRECT_PAGEROTATION);
+                        matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
                     }
                     //Apply field rotation
                     float fieldRotation = 0;
