@@ -67,6 +67,7 @@ namespace iText.Forms.Fields {
     /// This class represents a single field or field group in an
     /// <see cref="iText.Forms.PdfAcroForm">AcroForm</see>
     /// .
+    /// <p>
     /// <br /><br />
     /// To be able to be wrapped with this
     /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}"/>
@@ -2173,35 +2174,41 @@ namespace iText.Forms.Fields {
                     if (fontSize == 0) {
                         fontSize = (float)DEFAULT_FONT_SIZE;
                     }
-                    //Apply Page rotation, clockwise
+                    //Apply Page rotation
                     int pageRotation = 0;
                     if (page != null) {
                         pageRotation = page.GetRotation();
+                        //Clockwise, so negative
+                        pageRotation *= -1;
                     }
-                    PdfArray matrix = null;
+                    PdfArray matrix;
                     if (pageRotation % 90 == 0) {
-                        //Cast angle to [0, 360]
+                        //Cast angle to [-360, 360]
                         double angle = pageRotation % 360;
                         //Get angle in radians
-                        angle = Math.PI * angle / 180;
+                        angle = Math.ToRadians(angle);
+                        //rotate the bounding box
+                        Rectangle rect = bBox.ToRectangle();
                         //Calculate origin offset
                         double translationWidth = 0;
                         double translationHeight = 0;
-                        if (angle >= Math.PI / 2 && angle <= Math.PI) {
-                            translationWidth = bBox.ToRectangle().GetWidth();
+                        if (angle >= -1 * Math.PI && angle <= -1 * Math.PI / 2) {
+                            translationWidth = rect.GetWidth();
                         }
-                        if (angle >= Math.PI) {
-                            translationHeight = bBox.ToRectangle().GetHeight();
+                        if (angle <= -1 * Math.PI) {
+                            translationHeight = rect.GetHeight();
                         }
                         //Store rotation and translation in the matrix
-                        matrix = new PdfArray(new double[] { Math.Cos(angle), Math.Sin(angle), -Math.Sin(angle), Math.Cos(angle), 
+                        matrix = new PdfArray(new double[] { Math.Cos(angle), -Math.Sin(angle), Math.Sin(angle), Math.Cos(angle), 
                             translationWidth, translationHeight });
-                        Rectangle rect = bBox.ToRectangle();
-                        //If the angle is 90 or 270, height and width of the bounding box need to be switched
-                        if (angle == Math.PI / 2 || angle == 3 * Math.PI / 2) {
+                        //If the angle is a multiple of 90 and not a multiple of 180, height and width of the bounding box need to be switched
+                        if (angle % (Math.PI / 2) == 0 && angle % (Math.PI) != 0) {
                             rect.SetWidth(bBox.ToRectangle().GetHeight());
                             rect.SetHeight(bBox.ToRectangle().GetWidth());
                         }
+                        // Adapt origin
+                        rect.SetX(rect.GetX() + (float)translationWidth);
+                        rect.SetY(rect.GetY() + (float)translationHeight);
                         //Copy Bounding box
                         bBox = new PdfArray(rect);
                     }
@@ -2215,40 +2222,41 @@ namespace iText.Forms.Fields {
                     if (this.GetPdfObject().GetAsDictionary(PdfName.MK) != null && this.GetPdfObject().GetAsDictionary(PdfName
                         .MK).Get(PdfName.R) != null) {
                         fieldRotation = this.GetPdfObject().GetAsDictionary(PdfName.MK).GetAsFloat(PdfName.R);
+                        //Get relative field rotation
+                        fieldRotation += pageRotation;
                     }
-                    //Field rotation is specified as counterclockwise
                     if (fieldRotation % 90 == 0) {
-                        //Cast angle to [0, 360]
+                        //Cast angle to [-360, 360]
                         double angle = fieldRotation % 360;
                         //Get angle in radians
-                        angle = Math.PI * angle / 180;
+                        angle = Math.ToRadians(angle);
                         //Calculate origin offset
-                        double translationWidth = 0;
-                        double translationHeight = 0;
-                        if (angle >= Math.PI / 2 && angle <= Math.PI) {
-                            translationWidth = bBox.ToRectangle().GetWidth();
-                        }
-                        if (angle >= Math.PI) {
-                            translationHeight = bBox.ToRectangle().GetHeight();
-                        }
+                        double translationWidth = CalculateTranslationWidthAfterFieldRot(bBox.ToRectangle(), Math.ToRadians(pageRotation
+                            ), angle);
+                        double translationHeight = CalculateTranslationHeightAfterFieldRot(bBox.ToRectangle(), Math.ToRadians(pageRotation
+                            ), angle);
                         //Concatenate rotation and translation into the matrix
                         Matrix currentMatrix = new Matrix(matrix.GetAsNumber(0).FloatValue(), matrix.GetAsNumber(1).FloatValue(), 
                             matrix.GetAsNumber(2).FloatValue(), matrix.GetAsNumber(3).FloatValue(), matrix.GetAsNumber(4).FloatValue
                             (), matrix.GetAsNumber(5).FloatValue());
-                        Matrix toConcatenate = new Matrix((float)Math.Cos(angle), (float)Math.Sin(angle), (float)(-Math.Sin(angle)
-                            ), (float)(Math.Cos(angle)), (float)translationWidth, (float)translationHeight);
+                        Matrix toConcatenate = new Matrix((float)Math.Cos(angle), (float)(-Math.Sin(angle)), (float)(Math.Sin(angle
+                            )), (float)(Math.Cos(angle)), (float)translationWidth, (float)translationHeight);
                         currentMatrix = currentMatrix.Multiply(toConcatenate);
                         matrix = new PdfArray(new float[] { currentMatrix.Get(0), currentMatrix.Get(1), currentMatrix.Get(3), currentMatrix
                             .Get(4), currentMatrix.Get(6), currentMatrix.Get(7) });
+                        //Construct bounding box
                         Rectangle rect = bBox.ToRectangle();
-                        //If the angle is 90 or 270, height and width of the bounding box need to be switched
-                        if (angle == Math.PI / 2 || angle == 3 * Math.PI / 2) {
+                        //If the angle is a multiple of 90 and not a multiple of 180, height and width of the bounding box need to be switched
+                        if (angle % (Math.PI / 2) == 0 && angle % (Math.PI) != 0) {
                             rect.SetWidth(bBox.ToRectangle().GetHeight());
                             rect.SetHeight(bBox.ToRectangle().GetWidth());
                         }
+                        rect.SetX(rect.GetX() + (float)translationWidth);
+                        rect.SetY(rect.GetY() + (float)translationHeight);
                         //Copy Bounding box
                         bBox = new PdfArray(rect);
                     }
+                    //Create appearance
                     PdfFormXObject appearance = null;
                     if (asNormal != null) {
                         appearance = new PdfFormXObject(asNormal);
@@ -2262,6 +2270,7 @@ namespace iText.Forms.Fields {
                     if (matrix != null) {
                         appearance.Put(PdfName.Matrix, matrix);
                     }
+                    //Create text appearance
                     if (PdfName.Tx.Equals(type)) {
                         if (!IsMultiline()) {
                             DrawTextAppearance(bBox.ToRectangle(), localFont, fontSize, value, appearance);
@@ -2396,6 +2405,106 @@ namespace iText.Forms.Fields {
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Calculate the necessary height offset after applying field rotation
+        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
+        /// </summary>
+        /// <param name="bBox">bounding box rectangle before rotation</param>
+        /// <param name="pageRotation">rotation of the page</param>
+        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
+        /// <returns>translation value for height</returns>
+        private float CalculateTranslationHeightAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
+            ) {
+            if (relFieldRotation == 0) {
+                return 0.0f;
+            }
+            if (pageRotation == 0) {
+                if (relFieldRotation == Math.PI / 2) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI) {
+                    return bBox.GetHeight();
+                }
+            }
+            if (pageRotation == -Math.PI / 2) {
+                if (relFieldRotation == -Math.PI / 2) {
+                    return bBox.GetWidth() - bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI / 2) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI) {
+                    return bBox.GetWidth();
+                }
+            }
+            if (pageRotation == -Math.PI) {
+                if (relFieldRotation == -1 * Math.PI) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == -1 * Math.PI / 2) {
+                    return bBox.GetHeight() - bBox.GetWidth();
+                }
+                if (relFieldRotation == Math.PI / 2) {
+                    return bBox.GetWidth();
+                }
+            }
+            if (pageRotation == -3 * Math.PI / 2) {
+                if (relFieldRotation == -3 * Math.PI / 2) {
+                    return bBox.GetWidth();
+                }
+                if (relFieldRotation == -Math.PI) {
+                    return bBox.GetWidth();
+                }
+            }
+            return 0.0f;
+        }
+
+        /// <summary>
+        /// Calculate the necessary width offset after applying field rotation
+        /// so that the origin of the bounding box is the lower left corner with respect to the field text.
+        /// </summary>
+        /// <param name="bBox">bounding box rectangle before rotation</param>
+        /// <param name="pageRotation">rotation of the page</param>
+        /// <param name="relFieldRotation">rotation of the field relative to the page</param>
+        /// <returns>translation value for width</returns>
+        private float CalculateTranslationWidthAfterFieldRot(Rectangle bBox, double pageRotation, double relFieldRotation
+            ) {
+            if (relFieldRotation == 0) {
+                return 0.0f;
+            }
+            if (pageRotation == 0 && (relFieldRotation == Math.PI || relFieldRotation == 3 * Math.PI / 2)) {
+                return bBox.GetWidth();
+            }
+            if (pageRotation == -Math.PI / 2) {
+                if (relFieldRotation == -Math.PI / 2 || relFieldRotation == Math.PI) {
+                    return bBox.GetHeight();
+                }
+            }
+            if (pageRotation == -Math.PI) {
+                if (relFieldRotation == -1 * Math.PI) {
+                    return bBox.GetWidth();
+                }
+                if (relFieldRotation == -1 * Math.PI / 2) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == Math.PI / 2) {
+                    return -1 * (bBox.GetHeight() - bBox.GetWidth());
+                }
+            }
+            if (pageRotation == -3 * Math.PI / 2) {
+                if (relFieldRotation == -3 * Math.PI / 2) {
+                    return -1 * (bBox.GetWidth() - bBox.GetHeight());
+                }
+                if (relFieldRotation == -Math.PI) {
+                    return bBox.GetHeight();
+                }
+                if (relFieldRotation == -Math.PI / 2) {
+                    return bBox.GetWidth();
+                }
+            }
+            return 0.0f;
         }
 
         /// <summary>Gets the border width for the field.</summary>
