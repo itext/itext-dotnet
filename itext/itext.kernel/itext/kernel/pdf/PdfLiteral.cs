@@ -95,8 +95,8 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object o) {
-            return this == o || !(o == null || GetType() != o.GetType()) && iText.IO.Util.JavaUtil.ArraysEquals(content
-                , ((iText.Kernel.Pdf.PdfLiteral)o).content);
+            return this == o || o != null && GetType() == o.GetType() && iText.IO.Util.JavaUtil.ArraysEquals(content, 
+                ((iText.Kernel.Pdf.PdfLiteral)o).content);
         }
 
         public override int GetHashCode() {

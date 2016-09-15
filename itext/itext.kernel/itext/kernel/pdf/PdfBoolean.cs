@@ -137,8 +137,8 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object obj) {
-            return this == obj || !(obj == null || GetType() != obj.GetType()) && value == ((iText.Kernel.Pdf.PdfBoolean
-                )obj).value;
+            return this == obj || obj != null && GetType() == obj.GetType() && value == ((iText.Kernel.Pdf.PdfBoolean)
+                obj).value;
         }
 
         public override int GetHashCode() {

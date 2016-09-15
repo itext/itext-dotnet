@@ -122,7 +122,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object obj) {
-            return this == obj || !(obj == null || GetType() != obj.GetType());
+            return this == obj || obj != null && GetType() == obj.GetType();
         }
 
         public override int GetHashCode() {

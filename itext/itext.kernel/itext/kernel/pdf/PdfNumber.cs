@@ -178,7 +178,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public override bool Equals(Object o) {
-            return this == o || !(o == null || GetType() != o.GetType()) && iText.IO.Util.JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber
+            return this == o || o != null && GetType() == o.GetType() && iText.IO.Util.JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber
                 )o).value, value) == 0;
         }
 
