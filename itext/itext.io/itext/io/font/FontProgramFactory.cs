@@ -283,7 +283,7 @@ namespace iText.IO.Font {
                     fontKey = name;
                 }
                 else {
-                    fontKey = String.Format("{0}", ArrayUtil.HashCode(font));
+                    fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(font));
                 }
                 fontFound = FontCache.GetFont(fontKey);
                 if (fontFound != null) {
@@ -402,7 +402,7 @@ namespace iText.IO.Font {
                     fontKey = name;
                 }
                 else {
-                    fontKey = String.Format("{0}", ArrayUtil.HashCode(afm));
+                    fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(afm));
                 }
                 fontProgram = FontCache.GetFont(fontKey);
                 if (fontProgram != null) {
@@ -500,7 +500,8 @@ namespace iText.IO.Font {
         public static FontProgram CreateFont(byte[] ttc, int ttcIndex, bool cached) {
             String fontKey = null;
             if (cached) {
-                fontKey = String.Format("{0}{1}", ArrayUtil.HashCode(ttc), ttcIndex);
+                fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(ttc)) + iText.IO.Util.JavaUtil.IntegerToString
+                    (ttcIndex);
                 FontProgram fontFound = FontCache.GetFont(fontKey);
                 if (fontFound != null) {
                     return fontFound;
