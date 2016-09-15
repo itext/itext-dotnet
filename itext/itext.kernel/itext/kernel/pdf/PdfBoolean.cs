@@ -135,5 +135,14 @@ namespace iText.Kernel.Pdf {
             iText.Kernel.Pdf.PdfBoolean @bool = (iText.Kernel.Pdf.PdfBoolean)from;
             value = @bool.value;
         }
+
+        public override bool Equals(Object obj) {
+            return this == obj || !(obj == null || GetType() != obj.GetType()) && value == ((iText.Kernel.Pdf.PdfBoolean
+                )obj).value;
+        }
+
+        public override int GetHashCode() {
+            return (value ? 1 : 0);
+        }
     }
 }

@@ -94,6 +94,15 @@ namespace iText.Kernel.Pdf {
         protected internal override void GenerateContent() {
         }
 
+        public override bool Equals(Object o) {
+            return this == o || !(o == null || GetType() != o.GetType()) && iText.IO.Util.JavaUtil.ArraysEquals(content
+                , ((iText.Kernel.Pdf.PdfLiteral)o).content);
+        }
+
+        public override int GetHashCode() {
+            return content == null ? 0 : iText.IO.Util.JavaUtil.ArraysHashCode(content);
+        }
+
         protected internal override PdfObject NewInstance() {
             return new iText.Kernel.Pdf.PdfLiteral();
         }

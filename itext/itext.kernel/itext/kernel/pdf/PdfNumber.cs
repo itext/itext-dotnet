@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO;
+using iText.IO.Log;
 using iText.IO.Source;
 
 namespace iText.Kernel.Pdf {
@@ -49,6 +51,8 @@ namespace iText.Kernel.Pdf {
         private double value;
 
         private bool isDouble;
+
+        private bool changed = false;
 
         public PdfNumber(double value)
             : base() {
@@ -101,6 +105,7 @@ namespace iText.Kernel.Pdf {
             this.value = value;
             this.isDouble = false;
             this.content = null;
+            this.changed = true;
         }
 
         public virtual void SetValue(double value) {
@@ -170,6 +175,22 @@ namespace iText.Kernel.Pdf {
                     return iText.IO.Util.JavaUtil.GetStringForBytes(ByteUtils.GetIsoBytes(IntValue()));
                 }
             }
+        }
+
+        public override bool Equals(Object o) {
+            return this == o || !(o == null || GetType() != o.GetType()) && iText.IO.Util.JavaUtil.DoubleCompare(((iText.Kernel.Pdf.PdfNumber
+                )o).value, value) == 0;
+        }
+
+        public override int GetHashCode() {
+            if (changed) {
+                //if the instance was modified, hashCode also will be changed, it may cause inconsistency.
+                ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
+                logger.Warn(LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER);
+                changed = false;
+            }
+            long hash = iText.IO.Util.JavaUtil.DoubleToLongBits(value);
+            return (int)(hash ^ ((long)(((ulong)hash) >> 32)));
         }
 
         protected internal override PdfObject NewInstance() {
