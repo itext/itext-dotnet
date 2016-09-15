@@ -704,8 +704,8 @@ namespace iText.Signatures {
                     acroForm.SetModified();
                 }
                 else {
-                    // TODO: test this (ain't sure whether I need this)
-                    //Acroform dictionary is a Direct dictionary, for proper flushing, catalog needs to be marked as modified
+                    //Acroform dictionary is a Direct dictionary,
+                    //for proper flushing, catalog needs to be marked as modified
                     document.GetCatalog().SetModified();
                 }
             }
@@ -733,8 +733,9 @@ namespace iText.Signatures {
                 PdfDictionary docmdp = new PdfDictionary();
                 docmdp.Put(PdfName.DocMDP, cryptoDictionary.GetPdfObject());
                 document.GetCatalog().Put(PdfName.Perms, docmdp);
+                document.GetCatalog().SetModified();
             }
-            // TODO: setModified?
+            cryptoDictionary.GetPdfObject().Flush(false);
             document.Close();
             range = new long[exclusionLocations.Count * 2];
             long byteRangePosition = exclusionLocations.Get(PdfName.ByteRange).GetPosition();
