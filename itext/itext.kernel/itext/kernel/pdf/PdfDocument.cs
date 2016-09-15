@@ -1425,7 +1425,7 @@ namespace iText.Kernel.Pdf {
             tagStructureContext = new TagStructureContext(this);
         }
 
-        /// <summary>Save link annotation in temporary storage for further coping.</summary>
+        /// <summary>Save the link annotation in a temporary storage for further copying.</summary>
         /// <param name="page">
         /// just copied
         /// <see cref="PdfPage"/>
