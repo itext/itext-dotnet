@@ -344,16 +344,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>a Collection holding all the values</returns>
         public virtual ICollection<PdfObject> Values() {
-            ICollection<PdfObject> directValues = new List<PdfObject>();
-            foreach (PdfObject value in map.Values) {
-                if (value.IsIndirectReference()) {
-                    directValues.Add(((PdfIndirectReference)value).GetRefersTo());
-                }
-                else {
-                    directValues.Add(value);
-                }
-            }
-            return directValues;
+            return new PdfDictionaryValues(map.Values);
         }
 
         /// <summary>Returns all the values of this map in a Collection.</summary>
@@ -392,17 +383,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         /// <returns>a Set of Map.Entry objects</returns>
         public virtual ICollection<KeyValuePair<PdfName, PdfObject>> EntrySet() {
-            IDictionary<PdfName, PdfObject> directMap = new SortedDictionary<PdfName, PdfObject>();
-            foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
-                PdfObject value = entry.Value;
-                if (value.IsIndirectReference()) {
-                    directMap[entry.Key] = ((PdfIndirectReference)value).GetRefersTo();
-                }
-                else {
-                    directMap[entry.Key] = value;
-                }
-            }
-            return directMap;
+            return new PdfDictionaryEntrySet(map);
         }
 
         /// <summary>Returns a Set holding the key-value pairs as Map#Entry objects.</summary>
