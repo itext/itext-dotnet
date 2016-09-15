@@ -139,7 +139,7 @@ namespace iText.Kernel.Utils {
                 }
                 PdfOutputStream os = new PdfOutputStream(new IdelOutputStream());
                 os.Write(resources.Get(@ref).Clone());
-                length += os.GetCurrentPos() - 1;
+                length += os.GetCurrentPos();
             }
             return length;
         }
