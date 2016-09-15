@@ -266,7 +266,17 @@ namespace iText.Layout.Renderer {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// </returns>
         public virtual Color GetPropertyAsColor(int property) {
-            return this.GetProperty<Color>(property);
+            Object obj = this.GetProperty<Object>(property);
+
+            if (obj == null)
+                return null;
+
+            if (obj is Color) {
+                return (Color)obj;
+            } else if (obj is Background) {
+                return ((Background)obj).GetColor();
+            }
+            throw new InvalidOperationException("The type of property is unexpected.. property: " + property + ", class: " + obj.GetType());
         }
 
         /// <summary>Returns a property with a certain key, as a boolean value.</summary>
