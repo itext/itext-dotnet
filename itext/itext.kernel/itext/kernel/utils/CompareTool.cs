@@ -48,11 +48,11 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using iText.IO.Font;
-using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -939,7 +939,7 @@ namespace iText.Kernel.Utils {
                 }
             }
             sb.Append("]");
-            return diffPages.ToString();
+            return sb.ToString();
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -952,33 +952,21 @@ namespace iText.Kernel.Utils {
                 int pageNumber = entry.Key;
                 IList<Rectangle> rectangles = entry.Value;
                 if (rectangles != null && !rectangles.IsEmpty()) {
-                    //drawing rectangles manually, because we don't want to create dependency on itextpdf.canvas module for itextpdf.kernel
-                    PdfStream outStream = GetPageContentStream(pdfOutDoc.GetPage(pageNumber));
-                    PdfStream cmpStream = GetPageContentStream(pdfCmpDoc.GetPage(pageNumber));
-                    outStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("q\n"));
-                    outStream.GetOutputStream().WriteFloats(new float[] { 0.0f, 0.0f, 0.0f }).WriteSpace().WriteBytes(ByteUtils
-                        .GetIsoBytes("rg\n"));
-                    cmpStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("q\n"));
-                    cmpStream.GetOutputStream().WriteFloats(new float[] { 0.0f, 0.0f, 0.0f }).WriteSpace().WriteBytes(ByteUtils
-                        .GetIsoBytes("rg\n"));
+                    PdfCanvas outCanvas = new PdfCanvas(pdfOutDoc.GetPage(pageNumber));
+                    PdfCanvas cmpCanvas = new PdfCanvas(pdfCmpDoc.GetPage(pageNumber));
+                    outCanvas.SaveState();
+                    cmpCanvas.SaveState();
                     foreach (Rectangle rect in rectangles) {
-                        outStream.GetOutputStream().WriteFloats(new float[] { rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight
-                            () }).WriteSpace().WriteBytes(ByteUtils.GetIsoBytes("re\n")).WriteBytes(ByteUtils.GetIsoBytes("f\n"));
-                        cmpStream.GetOutputStream().WriteFloats(new float[] { rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight
-                            () }).WriteSpace().WriteBytes(ByteUtils.GetIsoBytes("re\n")).WriteBytes(ByteUtils.GetIsoBytes("f\n"));
+                        outCanvas.Rectangle(rect).Fill();
+                        cmpCanvas.Rectangle(rect).Fill();
                     }
-                    outStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("Q\n"));
-                    cmpStream.GetOutputStream().WriteBytes(ByteUtils.GetIsoBytes("Q\n"));
+                    outCanvas.RestoreState();
+                    cmpCanvas.RestoreState();
                 }
             }
             pdfOutDoc.Close();
             pdfCmpDoc.Close();
             Init(outPath + ignoredAreasPrefix + outPdfName, outPath + ignoredAreasPrefix + cmpPdfName);
-        }
-
-        private PdfStream GetPageContentStream(PdfPage page) {
-            PdfStream stream = page.GetContentStream(page.GetContentStreamCount() - 1);
-            return stream.GetOutputStream() == null ? page.NewContentStreamAfter() : stream;
         }
 
         private void PrepareOutputDirs(String outPath, String differenceImagePrefix) {
