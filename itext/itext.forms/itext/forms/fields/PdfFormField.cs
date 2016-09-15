@@ -2183,7 +2183,7 @@ namespace iText.Forms.Fields {
                         //Cast angle to [-360, 360]
                         double angle = pageRotation % 360;
                         //Get angle in radians
-                        angle = Math.ToRadians(angle);
+                        angle = DegreeToRadians(angle);
                         //rotate the bounding box
                         Rectangle rect = bBox.ToRectangle();
                         //Calculate origin offset
@@ -2227,11 +2227,11 @@ namespace iText.Forms.Fields {
                         //Cast angle to [-360, 360]
                         double angle = fieldRotation % 360;
                         //Get angle in radians
-                        angle = Math.ToRadians(angle);
+                        angle = DegreeToRadians(angle);
                         //Calculate origin offset
-                        double translationWidth = CalculateTranslationWidthAfterFieldRot(bBox.ToRectangle(), Math.ToRadians(pageRotation
+                        double translationWidth = CalculateTranslationWidthAfterFieldRot(bBox.ToRectangle(), DegreeToRadians(pageRotation
                             ), angle);
-                        double translationHeight = CalculateTranslationHeightAfterFieldRot(bBox.ToRectangle(), Math.ToRadians(pageRotation
+                        double translationHeight = CalculateTranslationHeightAfterFieldRot(bBox.ToRectangle(), DegreeToRadians(pageRotation
                             ), angle);
                         //Concatenate rotation and translation into the matrix
                         Matrix currentMatrix = new Matrix(matrix.GetAsNumber(0).FloatValue(), matrix.GetAsNumber(1).FloatValue(), 
@@ -3522,6 +3522,10 @@ namespace iText.Forms.Fields {
             }
             value = value.JSubstring(0, value.Length - 1);
             return value;
+        }
+
+        private static double DegreeToRadians(double angle) {
+            return Math.PI * angle / 180.0;
         }
     }
 }
