@@ -156,8 +156,6 @@ namespace iText.Forms.Fields {
 
         protected internal PdfAConformanceLevel pdfAConformanceLevel;
 
-        protected internal ILogger formFieldLogger;
-
         protected internal const String check = "0.8 0 0 0.8 0.3 0.5 cm 0 0 m\n" + "0.066 -0.026 l\n" + "0.137 -0.15 l\n"
              + "0.259 0.081 0.46 0.391 0.553 0.461 c\n" + "0.604 0.489 l\n" + "0.703 0.492 l\n" + "0.543 0.312 0.255 -0.205 0.154 -0.439 c\n"
              + "0.069 -0.399 l\n" + "0.035 -0.293 -0.039 -0.136 -0.091 -0.057 c\n" + "h\n" + "f\n";
@@ -194,7 +192,6 @@ namespace iText.Forms.Fields {
             : base(pdfObject) {
             EnsureObjectIsAddedToDocument(pdfObject);
             SetForbidRelease();
-            formFieldLogger = LoggerFactory.GetLogger(this.GetType());
         }
 
         /// <summary>
@@ -2214,7 +2211,8 @@ namespace iText.Forms.Fields {
                     }
                     else {
                         //Avoid NPE when handling corrupt pdfs
-                        formFieldLogger.Error(LogMessageConstant.INCORRECT_PAGEROTATION);
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
+                        logger.Error(LogMessageConstant.INCORRECT_PAGEROTATION);
                         matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
                     }
                     //Apply field rotation
