@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf {
                 return false;
             KeyValuePair<PdfName, PdfObject> toDelete = new KeyValuePair<PdfName, PdfObject>(null, null);
             foreach (KeyValuePair<PdfName, PdfObject> entry in collection)
-                if (item.Key.Equals(entry.Key) && EqualContent(item.Value, entry.Value))
+                if (item.Key.Equals(entry.Key) && PdfObject.EqualContent(item.Value, entry.Value))
                 {
                     toDelete = entry;
                     break;
@@ -89,18 +89,6 @@ namespace iText.Kernel.Pdf {
         public bool IsReadOnly
         {
             get { return collection.IsReadOnly; }
-        }
-
-
-        static bool EqualContent(PdfObject obj1, PdfObject obj2)
-        {
-            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference()
-                    ? ((PdfIndirectReference)obj1).GetRefersTo(true)
-                    : obj1;
-            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference()
-                    ? ((PdfIndirectReference)obj2).GetRefersTo(true)
-                    : obj2;
-            return direct1 != null && direct1.Equals(direct2);
         }
 
         private class DirectEnumerator : IEnumerator<KeyValuePair<PdfName, PdfObject>>

@@ -29,7 +29,7 @@ namespace iText.Kernel.Pdf {
                 return false;
             foreach (PdfObject pdfObject in this)
             {
-                if (EqualContent(item, pdfObject))
+                if (PdfObject.EqualContent(item, pdfObject))
                 {
                     return true;
                 }
@@ -84,17 +84,6 @@ namespace iText.Kernel.Pdf {
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        static bool EqualContent(PdfObject obj1, PdfObject obj2)
-        {
-            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference()
-                    ? ((PdfIndirectReference)obj1).GetRefersTo(true)
-                    : obj1;
-            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference()
-                    ? ((PdfIndirectReference)obj2).GetRefersTo(true)
-                    : obj2;
-            return direct1 != null && direct1.Equals(direct2);
         }
 
         private class DirectEnumerator : IEnumerator<PdfObject>

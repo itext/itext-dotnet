@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf
             if (o == null)
                 return false;
             foreach (PdfObject pdfObject in this)
-                if (EqualContent(o, pdfObject))
+                if (PdfObject.EqualContent(o, pdfObject))
                     return true;
             return false;
         }
@@ -253,7 +253,7 @@ namespace iText.Kernel.Pdf
                 return;
 		    PdfObject toDelete = null;
 		    foreach (PdfObject pdfObject in list)
-		        if (EqualContent(o, pdfObject))
+		        if (PdfObject.EqualContent(o, pdfObject))
 		        {
 		            toDelete = pdfObject;
                     break;
@@ -340,8 +340,17 @@ namespace iText.Kernel.Pdf
 		/// <seealso cref="System.Collections.IList{E}.IndexOf(System.Object)"/>
 		public virtual int IndexOf(PdfObject o)
 		{
-			return list.IndexOf(o);
-		}
+            if (o == null)
+                return list.IndexOf(null);
+            int index = 0;
+            foreach (PdfObject pdfObject in this)
+            {
+                if (PdfObject.EqualContent(o, pdfObject))
+                    return index;
+                index++;
+            }
+            return -1;
+        }
 
 		/// <summary>Returns a sublist of this PdfArray, starting at fromIndex (inclusive) and ending at toIndex (exclusive).
 		/// 	</summary>
@@ -595,17 +604,6 @@ namespace iText.Kernel.Pdf
 		{
 			list = null;
 		}
-
-        static bool EqualContent(PdfObject obj1, PdfObject obj2)
-        {
-            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference()
-                    ? ((PdfIndirectReference)obj1).GetRefersTo(true)
-                    : obj1;
-            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference()
-                    ? ((PdfIndirectReference)obj2).GetRefersTo(true)
-                    : obj2;
-            return direct1 != null && direct1.Equals(direct2);
-        }
 
         private class PdfArrayDirectEnumerator : IEnumerator<PdfObject>
         {

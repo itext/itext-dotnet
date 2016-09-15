@@ -486,5 +486,13 @@ namespace iText.Kernel.Pdf {
                 return obj.Clone();
             }
         }
+
+        internal static bool EqualContent(PdfObject obj1, PdfObject obj2) {
+            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference() ? ((PdfIndirectReference)obj1).GetRefersTo(
+                true) : obj1;
+            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference() ? ((PdfIndirectReference)obj2).GetRefersTo(
+                true) : obj2;
+            return direct1 != null && direct1.Equals(direct2);
+        }
     }
 }
