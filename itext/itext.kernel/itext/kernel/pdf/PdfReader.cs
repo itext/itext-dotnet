@@ -804,6 +804,22 @@ namespace iText.Kernel.Pdf {
                     tokens.NextValidToken();
                     int gen = tokens.GetIntValue();
                     tokens.NextValidToken();
+                    if (pos == 0L && gen == 65535 && num == 1) {
+                        // Very rarely can an XREF have an incorrect start number. (SUP-1557)
+                        // e.g.
+                        // xref
+                        // 1 13
+                        // 0000000000 65535 f
+                        // 0000000009 00000 n
+                        // 0000215136 00000 n
+                        // [...]
+                        // Because of how iText reads (and initializes) the XREF, this will lead to the XREF having two 0000 65535 entries.
+                        // This throws off the parsing and other operations you'd like to perform.
+                        // To fix this we reset our index and decrease the limit when we've encountered the magic entry at position 1.
+                        num = 0;
+                        end--;
+                        continue;
+                    }
                     PdfIndirectReference reference = xref.Get(num);
                     if (reference == null) {
                         reference = new PdfIndirectReference(pdfDocument, num, gen, pos);
