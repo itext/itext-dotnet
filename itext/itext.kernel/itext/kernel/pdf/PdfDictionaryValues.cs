@@ -1,92 +1,142 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
-    internal class PdfDictionaryValues : AbstractCollection<PdfObject> {
+
+    internal class PdfDictionaryValues : ICollection<PdfObject> {
         private readonly ICollection<PdfObject> collection;
 
         internal PdfDictionaryValues(ICollection<PdfObject> collection) {
             this.collection = collection;
         }
 
-        public override bool Add(PdfObject @object) {
-            return collection.Add(@object);
+        public void Add(PdfObject item)
+        {
+            collection.Add(item);
         }
 
-        public override bool Contains(Object o) {
-            if (collection.Contains(o)) {
-                return true;
-            }
-            if (o != null) {
-                if (((PdfObject)o).GetIndirectReference() != null && collection.Contains(((PdfObject)o).GetIndirectReference
-                    ())) {
-                    return true;
-                }
-                else {
-                    if (((PdfObject)o).IsIndirectReference() && collection.Contains(((PdfIndirectReference)o).GetRefersTo())) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public override bool Remove(Object o) {
-            if (collection.Remove(o)) {
-                return true;
-            }
-            if (o != null) {
-                if (((PdfObject)o).GetIndirectReference() != null && collection.Remove(((PdfObject)o).GetIndirectReference
-                    ())) {
-                    return true;
-                }
-                else {
-                    if (((PdfObject)o).IsIndirectReference() && collection.Remove(((PdfIndirectReference)o).GetRefersTo())) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public override int Count {
-            get {
-                return collection.Count;
-            }
-        }
-
-        public override void Clear() {
+        public void Clear()
+        {
             collection.Clear();
         }
 
-        public override IEnumerator<PdfObject> Iterator() {
-            return new PdfDictionaryValues.DirectIterator(this);
+        public bool Contains(PdfObject item)
+        {
+            if (collection.Contains(item))
+                return true;
+            if (item == null)
+                return false;
+            foreach (PdfObject pdfObject in this)
+            {
+                if (EqualContent(item, pdfObject))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
-        private class DirectIterator : IEnumerator<PdfObject> {
-            internal IEnumerator<PdfObject> parentIterator = this._enclosing.collection.Iterator();
+        public void CopyTo(PdfObject[] array, int arrayIndex)
+        {
+            int count = collection.Count;
+            if (count == 0)
+                return;
+            if (array == null)
+                throw new ArgumentNullException("array");
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, "arrayIndex mut not be negtive");
+            if (arrayIndex >= array.Length || count > array.Length - arrayIndex)
+                throw new ArgumentException("arrayIndex", "array too small");
 
-            public override bool HasNext() {
-                return this.parentIterator.HasNext();
+            int index = arrayIndex;
+            foreach (PdfObject item in this)
+            {
+                if (--count < 0)
+                    break;
+                array[index++] = item;
+            }
+        }
+
+        public bool Remove(PdfObject item)
+        {
+            //Actually we will get exception:
+            // System.NotSupportedException : Mutating a value collection derived from a dictionary is not allowed.
+            return collection.Remove(item);
+        }
+
+        public int Count
+        {
+            get { return collection.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return collection.IsReadOnly; }
+        }
+
+
+        public IEnumerator<PdfObject> GetEnumerator()
+        {
+            return new DirectEnumerator(collection.GetEnumerator());
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        static bool EqualContent(PdfObject obj1, PdfObject obj2)
+        {
+            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference()
+                    ? ((PdfIndirectReference)obj1).GetRefersTo(true)
+                    : obj1;
+            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference()
+                    ? ((PdfIndirectReference)obj2).GetRefersTo(true)
+                    : obj2;
+            return direct1 != null && direct1.Equals(direct2);
+        }
+
+        private class DirectEnumerator : IEnumerator<PdfObject>
+        {
+            private IEnumerator<PdfObject> parentEnumerator;
+
+            public DirectEnumerator(IEnumerator<PdfObject> parentEnumerator)
+            {
+                this.parentEnumerator = parentEnumerator;
             }
 
-            public override PdfObject Next() {
-                PdfObject obj = this.parentIterator.Next();
-                if (obj.IsIndirectReference()) {
-                    obj = ((PdfIndirectReference)obj).GetRefersTo(true);
+            public void Dispose()
+            {
+                parentEnumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                if (parentEnumerator.MoveNext())
+                {
+                    PdfObject obj = parentEnumerator.Current;
+                    if (obj != null && obj.IsIndirectReference())
+                    {
+                        obj = ((PdfIndirectReference)obj).GetRefersTo(true);
+                    }
+                    Current = obj;
+                    return true;
                 }
-                return obj;
+                return false;
             }
 
-            public override void Remove() {
-                this.parentIterator.Remove();
+            public void Reset()
+            {
+                parentEnumerator.Reset();
             }
 
-            internal DirectIterator(PdfDictionaryValues _enclosing) {
-                this._enclosing = _enclosing;
-            }
+            public PdfObject Current { get; private set; }
 
-            private readonly PdfDictionaryValues _enclosing;
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
         }
     }
 }

@@ -3,99 +3,146 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
-    internal class PdfDictionaryEntrySet : AbstractSet<KeyValuePair<PdfName, PdfObject>> {
-        private readonly ICollection<KeyValuePair<PdfName, PdfObject>> set;
+    internal class PdfDictionaryEntrySet : ICollection<KeyValuePair<PdfName, PdfObject>>
+    {
+        private readonly ICollection<KeyValuePair<PdfName, PdfObject>> collection;
 
-        internal PdfDictionaryEntrySet(ICollection<KeyValuePair<PdfName, PdfObject>> set) {
-            this.set = set;
+        internal PdfDictionaryEntrySet(ICollection<KeyValuePair<PdfName, PdfObject>> collection) {
+            this.collection = collection;
         }
 
-        public override IEnumerator<KeyValuePair<PdfName, PdfObject>> Iterator() {
-            return new PdfDictionaryEntrySet.DirectIterator(this);
+        public IEnumerator<KeyValuePair<PdfName, PdfObject>> GetEnumerator()
+        {
+            return new DirectEnumerator(collection.GetEnumerator());
         }
 
-        public override int Count {
-            get {
-                return set.Count;
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(KeyValuePair<PdfName, PdfObject> item)
+        {
+            collection.Add(item);
+        }
+
+        public void Clear()
+        {
+            collection.Clear();
+        }
+
+        public bool Contains(KeyValuePair<PdfName, PdfObject> item)
+        {
+            if (collection.Contains(item))
+                return true;
+            if (item.Value == null)
+                return false;
+            foreach (KeyValuePair<PdfName, PdfObject> entry in this)
+                if (item.Key.Equals(entry.Key) && item.Value.Equals(entry.Value))
+                    return true;
+            return false;
+        }
+
+        public void CopyTo(KeyValuePair<PdfName, PdfObject>[] array, int arrayIndex)
+        {
+            int count = collection.Count;
+            if (count == 0)
+                return;
+            if (array == null)
+                throw new ArgumentNullException("array");
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException("arrayIndex", arrayIndex, "arrayIndex mut not be negtive");
+            if (arrayIndex >= array.Length || count > array.Length - arrayIndex)
+                throw new ArgumentException("arrayIndex", "array too small");
+
+            int index = arrayIndex;
+            foreach (KeyValuePair<PdfName, PdfObject> item in this)
+            {
+                if (--count < 0)
+                    break;
+                array[index++] = item;
             }
         }
 
-        public override void Clear() {
-            set.Clear();
-        }
-
-        private class DirectIterator : IEnumerator<KeyValuePair<PdfName, PdfObject>> {
-            internal IEnumerator<KeyValuePair<PdfName, PdfObject>> parentIterator = this._enclosing.set.Iterator();
-
-            public override bool HasNext() {
-                return this.parentIterator.HasNext();
-            }
-
-            public override KeyValuePair<PdfName, PdfObject> Next() {
-                return new PdfDictionaryEntrySet.DirectEntry(this, this.parentIterator.Next());
-            }
-
-            public override void Remove() {
-                this.parentIterator.Remove();
-            }
-
-            internal DirectIterator(PdfDictionaryEntrySet _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfDictionaryEntrySet _enclosing;
-        }
-
-        private class DirectEntry : KeyValuePair<PdfName, PdfObject> {
-            internal KeyValuePair<PdfName, PdfObject> entry;
-
-            public DirectEntry(PdfDictionaryEntrySet _enclosing, KeyValuePair<PdfName, PdfObject> entry) {
-                this._enclosing = _enclosing;
-                this.entry = entry;
-            }
-
-            public virtual PdfName Key {
-                get {
-                    return this.entry.Key;
+        public bool Remove(KeyValuePair<PdfName, PdfObject> item)
+        {
+            if (collection.Remove(item))
+                return true;
+            if (item.Value == null)
+                return false;
+            KeyValuePair<PdfName, PdfObject> toDelete = new KeyValuePair<PdfName, PdfObject>(null, null);
+            foreach (KeyValuePair<PdfName, PdfObject> entry in collection)
+                if (item.Key.Equals(entry.Key) && EqualContent(item.Value, entry.Value))
+                {
+                    toDelete = entry;
+                    break;
                 }
+
+            return toDelete.Key != null && collection.Remove(toDelete);
+        }
+
+        public int Count
+        {
+            get { return collection.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return collection.IsReadOnly; }
+        }
+
+
+        static bool EqualContent(PdfObject obj1, PdfObject obj2)
+        {
+            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference()
+                    ? ((PdfIndirectReference)obj1).GetRefersTo(true)
+                    : obj1;
+            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference()
+                    ? ((PdfIndirectReference)obj2).GetRefersTo(true)
+                    : obj2;
+            return direct1 != null && direct1.Equals(direct2);
+        }
+
+        private class DirectEnumerator : IEnumerator<KeyValuePair<PdfName, PdfObject>>
+        {
+            private IEnumerator<KeyValuePair<PdfName, PdfObject>> parentEnumerator;
+
+            public DirectEnumerator(IEnumerator<KeyValuePair<PdfName, PdfObject>> parentEnumerator)
+            {
+                this.parentEnumerator = parentEnumerator;
             }
 
-            public virtual PdfObject Value {
-                get {
-                    PdfObject obj = this.entry.Value;
-                    if (obj.IsIndirectReference()) {
-                        obj = ((PdfIndirectReference)obj).GetRefersTo(true);
+            public void Dispose()
+            {
+                parentEnumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                if (parentEnumerator.MoveNext())
+                {
+                    KeyValuePair<PdfName, PdfObject> current = parentEnumerator.Current;
+                    if (current.Value != null && current.Value.IsIndirectReference())
+                    {
+                        current = new KeyValuePair<PdfName, PdfObject>(current.Key, ((PdfIndirectReference)current.Value).GetRefersTo(true));
                     }
-                    return obj;
-                }
-            }
-
-            public virtual PdfObject SetValue(PdfObject value) {
-                return this.entry.SetValue(value);
-            }
-
-            public override bool Equals(Object o) {
-                if (!(o is DictionaryEntry)) {
-                    return false;
-                }
-                DictionaryEntry e = (DictionaryEntry)o;
-                Object k1 = this.Key;
-                Object k2 = e.Key;
-                if (k1 != null && k1.Equals(k2)) {
-                    Object v1 = this.Value;
-                    Object v2 = e.Value;
-                    if (v1 != null && v1.Equals(v2)) {
-                        return true;
-                    }
+                    Current = current;
+                    return true;
                 }
                 return false;
             }
 
-            public override int GetHashCode() {
-                return Objects.HashCode(this.Key) ^ Objects.HashCode(this.Value);
+            public void Reset()
+            {
+                parentEnumerator.Reset();
             }
 
-            private readonly PdfDictionaryEntrySet _enclosing;
+            public KeyValuePair<PdfName, PdfObject> Current { get; private set; }
+
+            object IEnumerator.Current
+            {
+                get { return Current; }
+            }
         }
     }
 }
