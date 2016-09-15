@@ -202,7 +202,10 @@ namespace iText.Forms {
                 mergedField.Put(PdfName.Kids, kids);
             }
             mergedField.AddKid(existingField).AddKid(newField);
-            mergedField.Put(PdfName.V, existingField.GetPdfObject().Get(PdfName.V));
+            PdfObject value = existingField.GetValue();
+            if (value != null) {
+                mergedField.Put(PdfName.V, existingField.GetPdfObject().Get(PdfName.V));
+            }
             return mergedField;
         }
 
