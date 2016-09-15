@@ -46,6 +46,10 @@ using System.IO;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>
+    /// Specify the colour characteristics of output devices on which the document might be rendered
+    /// See ISO 32000-1 14.11.5: Output Intents.
+    /// </summary>
     public class PdfOutputIntent : PdfObjectWrapper<PdfDictionary> {
         /// <summary>Creates output intent dictionary.</summary>
         /// <remarks>

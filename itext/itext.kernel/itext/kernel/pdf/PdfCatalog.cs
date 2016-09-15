@@ -332,7 +332,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="key">Name of the destination.</param>
         /// <param name="value">
         /// An object destination refers to. Must be an array or a dictionary with key /D and array.
-        /// See PdfSpec 12.3.2.3 for more info.
+        /// See ISO 32000-1 12.3.2.3 for more info.
         /// </param>
         internal virtual void AddNamedDestination(String key, PdfObject value) {
             AddNameToNameTree(key, value, PdfName.Dests);
@@ -350,10 +350,14 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method returns a complete outline tree of the whole document.</summary>
         /// <param name="updateOutlines">
-        /// - if this flag is true, the method read the whole document and creates outline tree.
+        /// if the flag is true, the method read the whole document and creates outline tree.
         /// If false the method gets cached outline tree (if it was cached via calling getOutlines method before).
         /// </param>
-        /// <returns/>
+        /// <returns>
+        /// fully initialized
+        /// <see cref="PdfOutline"/>
+        /// object.
+        /// </returns>
         internal virtual PdfOutline GetOutlines(bool updateOutlines) {
             if (outlines != null && !updateOutlines) {
                 return outlines;

@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Kernel.Pdf {
+    /// <summary>Type of object to conform.</summary>
     public enum IsoKey {
         CANVAS_STACK,
         DRAWMODE_FILL,
