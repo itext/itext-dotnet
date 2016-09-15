@@ -38,9 +38,9 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot0() {
-            String srcFilePattern = "FormFlatteningDefaultAppearance_0.0_";
-            String destPattern = "FormFlatteningDefaultAppearance_0.0_";
-            for (float i = 0; i < 360; i += 90) {
+            String srcFilePattern = "FormFlatteningDefaultAppearance_0_";
+            String destPattern = "FormFlatteningDefaultAppearance_0_";
+            for (int i = 0; i < 360; i += 90) {
                 String src = sourceFolder + srcFilePattern + i + ".pdf";
                 String dest = destinationFolder + destPattern + i + "_flattened.pdf";
                 String cmp = sourceFolder + "cmp_" + srcFilePattern + i + ".pdf";
@@ -63,9 +63,9 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot90() {
-            String srcFilePattern = "FormFlatteningDefaultAppearance_90.0_";
-            String destPattern = "FormFlatteningDefaultAppearance_90.0_";
-            for (float i = 0; i < 360; i += 90) {
+            String srcFilePattern = "FormFlatteningDefaultAppearance_90_";
+            String destPattern = "FormFlatteningDefaultAppearance_90_";
+            for (int i = 0; i < 360; i += 90) {
                 String src = sourceFolder + srcFilePattern + i + ".pdf";
                 String dest = destinationFolder + destPattern + i + "_flattened.pdf";
                 String cmp = sourceFolder + "cmp_" + srcFilePattern + i + ".pdf";
@@ -88,9 +88,9 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot180() {
-            String srcFilePattern = "FormFlatteningDefaultAppearance_180.0_";
-            String destPattern = "FormFlatteningDefaultAppearance_180.0_";
-            for (float i = 0; i < 360; i += 90) {
+            String srcFilePattern = "FormFlatteningDefaultAppearance_180_";
+            String destPattern = "FormFlatteningDefaultAppearance_180_";
+            for (int i = 0; i < 360; i += 90) {
                 String src = sourceFolder + srcFilePattern + i + ".pdf";
                 String dest = destinationFolder + destPattern + i + "_flattened.pdf";
                 String cmp = sourceFolder + "cmp_" + srcFilePattern + i + ".pdf";
@@ -113,9 +113,9 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFlatteningTest_DefaultAppearanceGeneration_Rot270() {
-            String srcFilePattern = "FormFlatteningDefaultAppearance_270.0_";
-            String destPattern = "FormFlatteningDefaultAppearance_270.0_";
-            for (float i = 0; i < 360; i += 90) {
+            String srcFilePattern = "FormFlatteningDefaultAppearance_270_";
+            String destPattern = "FormFlatteningDefaultAppearance_270_";
+            for (int i = 0; i < 360; i += 90) {
                 String src = sourceFolder + srcFilePattern + i + ".pdf";
                 String dest = destinationFolder + destPattern + i + "_flattened.pdf";
                 String cmp = sourceFolder + "cmp_" + srcFilePattern + i + ".pdf";
