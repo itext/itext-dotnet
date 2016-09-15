@@ -2205,8 +2205,8 @@ namespace iText.Forms.Fields {
                         //Copy Bounding box
                         bBox = new PdfArray(rect);
                     }
-                    //Avoid NPE when handling corrupt pdfs
-                    if (matrix == null) {
+                    else {
+                        //Avoid NPE when handling corrupt pdfs
                         formFieldLogger.Error(LogMessageConstant.INCORRECT_PAGEROTATION);
                         matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
                     }
