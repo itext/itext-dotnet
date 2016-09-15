@@ -229,7 +229,7 @@ namespace iText.Kernel.Pdf
         /// <returns>an enumerator.</returns>
 		public IEnumerator<PdfObject> GetEnumerator()
 		{
-			return new PdfArrayDirectEnumerator(list.GetEnumerator());
+			return new PdfArrayDirectIterator(list.GetEnumerator());
 		}
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace iText.Kernel.Pdf
         /// </summary>
         [Obsolete("Use {@link #iterator()} instead")]
 	    public IEnumerator<PdfObject> GetDirectEnumerator() {
-            return new PdfArrayDirectEnumerator(list.GetEnumerator());
+            return new PdfArrayDirectIterator(list.GetEnumerator());
 	    }
 
 	    public virtual void Add(PdfObject pdfObject)
@@ -604,47 +604,5 @@ namespace iText.Kernel.Pdf
 		{
 			list = null;
 		}
-
-        private class PdfArrayDirectEnumerator : IEnumerator<PdfObject>
-        {
-            private IEnumerator<PdfObject> parentEnumerator;
-
-            public PdfArrayDirectEnumerator(IEnumerator<PdfObject> parentEnumerator)
-            {
-                this.parentEnumerator = parentEnumerator;
-            }
-
-            public void Dispose()
-            {
-                parentEnumerator.Dispose();
-            }
-
-            public bool MoveNext()
-            {
-                if (parentEnumerator.MoveNext())
-                {
-                    PdfObject obj = parentEnumerator.Current;
-                    if (obj.IsIndirectReference())
-                    {
-                        obj = ((PdfIndirectReference)obj).GetRefersTo(true);
-                    }
-                    Current = obj;
-                    return true;
-                }
-                return false;
-            }
-
-            public void Reset()
-            {
-                parentEnumerator.Reset();
-            }
-
-            public PdfObject Current { get; private set; }
-
-            object IEnumerator.Current
-            {
-                get { return Current; }
-            }
-        }
 	}
 }
