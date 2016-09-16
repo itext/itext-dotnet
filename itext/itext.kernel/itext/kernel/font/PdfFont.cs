@@ -77,13 +77,38 @@ namespace iText.Kernel.Font {
 
         protected internal PdfFont()
             : base(new PdfDictionary()) {
-            MarkObjectAsIndirect(GetPdfObject());
             GetPdfObject().Put(PdfName.Type, PdfName.Font);
         }
 
+        /// <summary>Get glyph by unicode</summary>
+        /// <param name="unicode">a unicode code point</param>
+        /// <returns>
+        /// 
+        /// <seealso>Glyph</seealso>
+        /// if it exists or .NOTDEF if supported, otherwise
+        /// <see langword="null"/>
+        /// .
+        /// </returns>
         public abstract Glyph GetGlyph(int unicode);
 
+        /// <summary>Check whether font contains glyph with specified unicode.</summary>
+        /// <param name="unicode">a unicode code point</param>
+        /// <returns>
+        /// true if font contains glyph, represented with the unicode code point,
+        /// otherwise false.
+        /// </returns>
+        [System.ObsoleteAttribute(@"Use ContainsGlyph(int) instead.")]
         public virtual bool ContainsGlyph(char unicode) {
+            return ContainsGlyph((int)unicode);
+        }
+
+        /// <summary>Check whether font contains glyph with specified unicode.</summary>
+        /// <param name="unicode">a unicode code point</param>
+        /// <returns>
+        /// true if font contains glyph, represented with the unicode code point,
+        /// otherwise false.
+        /// </returns>
+        public virtual bool ContainsGlyph(int unicode) {
             Glyph glyph = GetGlyph(unicode);
             if (glyph != null) {
                 if (GetFontProgram() != null && GetFontProgram().IsFontSpecific()) {
@@ -352,7 +377,12 @@ namespace iText.Kernel.Font {
             subsetRanges.Add(range);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use SplitString(System.String, float, float) instead")]
         public virtual IList<String> SplitString(String text, int fontSize, float maxWidth) {
+            return SplitString(text, (float)fontSize, maxWidth);
+        }
+
+        public virtual IList<String> SplitString(String text, float fontSize, float maxWidth) {
             IList<String> resultString = new List<String>();
             int lastWhiteSpace = 0;
             int startPos = 0;
@@ -382,6 +412,21 @@ namespace iText.Kernel.Font {
             return resultString;
         }
 
+        /// <summary>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
+        /// Basically this means that before flushing you need to explicitly call
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// For example: wrapperInstance.makeIndirect(document).flush();
+        /// Note that not every wrapper require this, only those that have such warning in documentation.
+        /// </summary>
+        public override void Flush() {
+            base.Flush();
+        }
+
         protected internal abstract PdfDictionary GetFontDescriptor(String fontName);
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {
@@ -400,7 +445,7 @@ namespace iText.Kernel.Font {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
                 .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1))) {
                 if (isException) {
-                    throw new PdfException(PdfException.DictionaryNotContainFontData).SetMessageParams(PdfName.TrueType.GetValue
+                    throw new PdfException(PdfException.DictionaryDoesntHave1FontData).SetMessageParams(PdfName.TrueType.GetValue
                         ());
                 }
                 return false;
@@ -437,8 +482,7 @@ namespace iText.Kernel.Font {
         /// <see langword="null"/>
         /// , if there is an error reading the font.
         /// </returns>
-        /// <exception>
-        /// PdfException
+        /// <exception cref="iText.Kernel.PdfException">
         /// Method will throw exception if
         /// <paramref name="fontStreamBytes"/>
         /// is
@@ -450,6 +494,7 @@ namespace iText.Kernel.Font {
                 throw new PdfException(PdfException.FontEmbeddingIssue);
             }
             PdfStream fontStream = new PdfStream(fontStreamBytes);
+            MakeObjectIndirect(fontStream);
             for (int k = 0; k < fontStreamLengths.Length; ++k) {
                 fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
             }
@@ -483,6 +528,32 @@ namespace iText.Kernel.Font {
                 s[k * 2 + 1] = r[1];
             }
             return s;
+        }
+
+        /// <summary>Helper method for making an object indirect, if the object already is indirect.</summary>
+        /// <remarks>
+        /// Helper method for making an object indirect, if the object already is indirect.
+        /// Useful for FontDescriptor and FontFile to make possible immediate flushing.
+        /// If there is no PdfDocument, mark the object as
+        /// <c>MUST_BE_INDIRECT</c>
+        /// .
+        /// </remarks>
+        /// <param name="obj">an object to make indirect.</param>
+        /// <returns>
+        /// if current object isn't indirect, returns
+        /// <see langword="false"/>
+        /// , otherwise
+        /// <c>tree</c>
+        /// </returns>
+        internal virtual bool MakeObjectIndirect(PdfObject obj) {
+            if (GetPdfObject().GetIndirectReference() != null) {
+                obj.MakeIndirect(GetPdfObject().GetIndirectReference().GetDocument());
+                return true;
+            }
+            else {
+                MarkObjectAsIndirect(obj);
+                return false;
+            }
         }
     }
 }

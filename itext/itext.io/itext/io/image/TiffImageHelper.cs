@@ -472,7 +472,7 @@ namespace iText.IO.Image {
                     // Assume that the TIFFTAG_JPEGIFBYTECOUNT tag is optional, since it's obsolete and
                     // is often missing
                     if ((!dir.IsTagPresent(TIFFConstants.TIFFTAG_JPEGIFOFFSET))) {
-                        throw new iText.IO.IOException(iText.IO.IOException.MissingTagSForOjpegCompression);
+                        throw new iText.IO.IOException(iText.IO.IOException.MissingTagsForOjpegCompression);
                     }
                     int jpegOffset = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_JPEGIFOFFSET);
                     int jpegLength = (int)s.Length() - jpegOffset;

@@ -58,6 +58,10 @@ namespace iText.Kernel.Crypto.Securityhandler {
             : base(encryptionDictionary, certificateKey, certificate, encryptMetadata) {
         }
 
+        public override void SetHashKeyForNextObject(int objNumber, int objGeneration) {
+        }
+
+        // in AES256 we don't recalculate nextObjectKey
         protected internal override String GetDigestAlgorithm() {
             return "SHA-256";
         }
@@ -80,6 +84,7 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 stdcf.Put(PdfName.EncryptMetadata, PdfBoolean.FALSE);
             }
             stdcf.Put(PdfName.CFM, PdfName.AESV3);
+            stdcf.Put(PdfName.Length, new PdfNumber(256));
             PdfDictionary cf = new PdfDictionary();
             cf.Put(PdfName.DefaultCryptFilter, stdcf);
             encryptionDictionary.Put(PdfName.CF, cf);

@@ -39,12 +39,9 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void AddOutlinesWithNamedDestinations01() {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "iphone_user_guide.pdf", FileMode.Open, FileAccess.Read
-                ));
             String filename = destinationFolder + "outlinesWithNamedDestinations01.pdf";
-            FileStream fos = new FileStream(filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"), new PdfWriter(
+                filename));
             PdfArray array1 = new PdfArray();
             array1.Add(pdfDoc.GetPage(2).GetPdfObject());
             array1.Add(PdfName.XYZ);
@@ -94,8 +91,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void RemoveUnusedObjectsInWriterModeTest() {
             String filename = "removeUnusedObjectsInWriter.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
-            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filename));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
             PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
@@ -105,8 +101,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(pdfDocument.GetXref().Size(), 8);
             //on closing, all unused objects shall not be written to resultant document
             pdfDocument.Close();
-            PdfReader testerReader = new PdfReader(destinationFolder + filename);
-            PdfDocument testerDocument = new PdfDocument(testerReader);
+            PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filename));
             NUnit.Framework.Assert.AreEqual(testerDocument.GetXref().Size(), 6);
             testerDocument.Close();
         }
@@ -117,8 +112,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoveUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_1.pdf";
             String filenameOut = "removeUnusedObjectsInStamping.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
-            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
             PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
@@ -126,14 +120,12 @@ namespace iText.Kernel.Pdf {
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
             ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
             pdfDocument.Close();
-            PdfReader reader = new PdfReader(destinationFolder + filenameIn);
-            PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder + filenameOut, FileMode.Create
-                )));
+            PdfDocument doc = new PdfDocument(new PdfReader(destinationFolder + filenameIn), new PdfWriter(destinationFolder
+                 + filenameOut));
             NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
             //on closing, all unused objects shall not be written to resultant document
             doc.Close();
-            PdfReader testerReader = new PdfReader(destinationFolder + filenameOut);
-            PdfDocument testerDocument = new PdfDocument(testerReader);
+            PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filenameOut));
             NUnit.Framework.Assert.AreEqual(testerDocument.GetXref().Size(), 6);
             testerDocument.Close();
         }
@@ -143,8 +135,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AddUnusedObjectsInWriterModeTest() {
             String filename = "addUnusedObjectsInWriter.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filename, FileMode.Create));
-            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filename));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
             PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
@@ -154,8 +145,7 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(pdfDocument.GetXref().Size(), 8);
             pdfDocument.SetFlushUnusedObjects(true);
             pdfDocument.Close();
-            PdfReader testerReader = new PdfReader(destinationFolder + filename);
-            PdfDocument testerDocument = new PdfDocument(testerReader);
+            PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filename));
             NUnit.Framework.Assert.AreEqual(testerDocument.GetXref().Size(), 8);
             testerDocument.Close();
         }
@@ -166,8 +156,7 @@ namespace iText.Kernel.Pdf {
         public virtual void AddUnusedObjectsInStampingModeTest() {
             String filenameIn = "docWithUnusedObjects_2.pdf";
             String filenameOut = "addUnusedObjectsInStamping.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
-            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
             PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
@@ -175,14 +164,12 @@ namespace iText.Kernel.Pdf {
             unusedDictionary.Put(new PdfName("testName"), unusedArray);
             ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
             pdfDocument.Close();
-            PdfReader reader = new PdfReader(destinationFolder + filenameIn);
-            PdfDocument doc = new PdfDocument(reader, new PdfWriter(new FileStream(destinationFolder + filenameOut, FileMode.Create
-                )));
+            PdfDocument doc = new PdfDocument(new PdfReader(destinationFolder + filenameIn), new PdfWriter(destinationFolder
+                 + filenameOut));
             NUnit.Framework.Assert.AreEqual(doc.GetXref().Size(), 8);
             doc.SetFlushUnusedObjects(true);
             doc.Close();
-            PdfReader testerReader = new PdfReader(destinationFolder + filenameOut);
-            PdfDocument testerDocument = new PdfDocument(testerReader);
+            PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filenameOut));
             NUnit.Framework.Assert.AreEqual(testerDocument.GetXref().Size(), 8);
             testerDocument.Close();
         }
@@ -192,8 +179,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void AddUnusedStreamObjectsTest() {
             String filenameIn = "docWithUnusedObjects_3.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(destinationFolder + filenameIn, FileMode.Create));
-            PdfDocument pdfDocument = new PdfDocument(writer);
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + filenameIn));
             pdfDocument.AddNewPage();
             PdfDictionary unusedDictionary = new PdfDictionary();
             PdfArray unusedArray = ((PdfArray)new PdfArray().MakeIndirect(pdfDocument));
@@ -204,8 +190,7 @@ namespace iText.Kernel.Pdf {
             ((PdfDictionary)unusedDictionary.MakeIndirect(pdfDocument)).Flush();
             pdfDocument.SetFlushUnusedObjects(true);
             pdfDocument.Close();
-            PdfReader testerReader = new PdfReader(destinationFolder + filenameIn);
-            PdfDocument testerDocument = new PdfDocument(testerReader);
+            PdfDocument testerDocument = new PdfDocument(new PdfReader(destinationFolder + filenameIn));
             NUnit.Framework.Assert.AreEqual(testerDocument.GetXref().Size(), 9);
             testerDocument.Close();
         }
@@ -249,11 +234,10 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void CheckAndResolveCircularReferences() {
-            PdfReader pdfReader = new PdfReader(sourceFolder + "datasheet.pdf");
-            PdfDocument pdfDocument = new PdfDocument(pdfReader, new PdfWriter(destinationFolder + "datasheet_mode.pdf"
-                ));
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "datasheet.pdf"), new PdfWriter(destinationFolder
+                 + "datasheet_mode.pdf"));
             PdfDictionary pdfObject = (PdfDictionary)pdfDocument.GetPdfObject(53);
-            pdfDocument.GetPage(1).GetResources().AddForm(pdfObject);
+            pdfDocument.GetPage(1).GetResources().AddForm((PdfStream)pdfObject);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "datasheet_mode.pdf", 
                 sourceFolder + "cmp_datasheet_mode.pdf", "d:/", "diff_"));
@@ -262,8 +246,8 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ReadEncryptedDocumentWithFullCompression() {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "source.pdf", FileMode.Open, FileAccess.Read
-                ), new ReaderProperties().SetPassword("123".GetBytes()));
+            PdfReader reader = new PdfReader(sourceFolder + "source.pdf", new ReaderProperties().SetPassword("123".GetBytes
+                ()));
             PdfDocument pdfDocument = new PdfDocument(reader);
             PdfDictionary form = pdfDocument.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
             PdfDictionary field = form.GetAsArray(PdfName.Fields).GetAsDictionary(0);

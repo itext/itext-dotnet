@@ -50,7 +50,7 @@ using iText.Kernel;
 namespace iText.Kernel.Pdf {
     /// <summary>
     /// Algorithm for construction
-    /// <seealso>PdfPages</seealso>
+    /// <see cref="PdfPages"/>
     /// tree
     /// </summary>
     internal class PdfPagesTree {
@@ -221,7 +221,8 @@ namespace iText.Kernel.Pdf {
         /// <param name="index">one-base index of the page</param>
         /// <param name="pdfPage">
         /// 
-        /// <seealso>PdfPage</seealso>
+        /// <see cref="PdfPage"/>
+        /// to insert.
         /// </param>
         public virtual void AddPage(int index, PdfPage pdfPage) {
             --index;
@@ -268,7 +269,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Generate PdfPages tree.</summary>
         /// <returns>
         /// root
-        /// <seealso>PdfPages</seealso>
+        /// <see cref="PdfPages"/>
         /// </returns>
         /// <exception cref="iText.Kernel.PdfException">in case empty document</exception>
         protected internal virtual PdfObject GenerateTree() {

@@ -64,16 +64,37 @@ namespace iText.Kernel.Utils {
         protected internal IDictionary<PdfDictionary, IDictionary<int, String>> parsedTags = new Dictionary<PdfDictionary
             , IDictionary<int, String>>();
 
+        /// <summary>
+        /// Constructs a
+        /// <see cref="TaggedPdfReaderTool"/>
+        /// via a given
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// .
+        /// </summary>
+        /// <param name="document">the document to read tag structure from</param>
         public TaggedPdfReaderTool(PdfDocument document) {
-            // key - page dictionary; value pairs of mcid and text in them
+            // key - page dictionary; value - a mapping of mcids to text in them
             this.document = document;
         }
 
+        /// <summary>Checks if a character value should be escaped/unescaped.</summary>
+        /// <param name="c">a character value</param>
+        /// <returns>true if it's OK to escape or unescape this value</returns>
+        public static bool IsValidCharacterValue(int c) {
+            return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000 && c <= 0xFFFD || c >=
+                 0x10000 && c <= 0x10FFFF);
+        }
+
+        /// <summary>Converts the current tag structure into an XML file with default encoding (UTF-8).</summary>
+        /// <param name="os">the output stream to save XML file to</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os) {
             ConvertToXml(os, "UTF-8");
         }
 
+        /// <summary>Converts the current tag structure into an XML file with provided encoding.</summary>
+        /// <param name="os">the output stream to save XML file to</param>
+        /// <param name="charset">the charset of the resultant XML file</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os, String charset) {
             @out = new StreamWriter(os, System.Text.Encoding.GetEncoding(charset));
@@ -94,12 +115,14 @@ namespace iText.Kernel.Utils {
             @out.Close();
         }
 
+        /// <summary>Sets the name of the root tag of the resultant XML file</summary>
+        /// <param name="rootTagName">the name of the root tag</param>
+        /// <returns>this object</returns>
         public virtual iText.Kernel.Utils.TaggedPdfReaderTool SetRootTag(String rootTagName) {
             this.rootTag = rootTagName;
             return this;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void InspectKids(IList<IPdfStructElem> kids) {
             if (kids == null) {
                 return;
@@ -109,39 +132,42 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void InspectKid(IPdfStructElem kid) {
-            if (kid is PdfStructElem) {
-                PdfStructElem structElemKid = (PdfStructElem)kid;
-                PdfName s = structElemKid.GetRole();
-                String tagN = s.GetValue();
-                String tag = FixTagName(tagN);
-                @out.Write("<");
-                @out.Write(tag);
-                InspectAttributes(structElemKid);
-                @out.Write(">" + Environment.NewLine);
-                PdfString alt = (structElemKid).GetAlt();
-                if (alt != null) {
-                    @out.Write("<alt><![CDATA[");
-                    @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
-                    @out.Write("]]></alt>" + Environment.NewLine);
-                }
-                InspectKids(structElemKid.GetKids());
-                @out.Write("</");
-                @out.Write(tag);
-                @out.Write(">" + Environment.NewLine);
-            }
-            else {
-                if (kid is PdfMcr) {
-                    ParseTag((PdfMcr)kid);
+            try {
+                if (kid is PdfStructElem) {
+                    PdfStructElem structElemKid = (PdfStructElem)kid;
+                    PdfName s = structElemKid.GetRole();
+                    String tagN = s.GetValue();
+                    String tag = FixTagName(tagN);
+                    @out.Write("<");
+                    @out.Write(tag);
+                    InspectAttributes(structElemKid);
+                    @out.Write(">" + Environment.NewLine);
+                    PdfString alt = (structElemKid).GetAlt();
+                    if (alt != null) {
+                        @out.Write("<alt><![CDATA[");
+                        @out.Write(iText.IO.Util.StringUtil.ReplaceAll(alt.GetValue(), "[\\000]*", ""));
+                        @out.Write("]]></alt>" + Environment.NewLine);
+                    }
+                    InspectKids(structElemKid.GetKids());
+                    @out.Write("</");
+                    @out.Write(tag);
+                    @out.Write(">" + Environment.NewLine);
                 }
                 else {
-                    @out.Write(" <flushedKid/> ");
+                    if (kid is PdfMcr) {
+                        ParseTag((PdfMcr)kid);
+                    }
+                    else {
+                        @out.Write(" <flushedKid/> ");
+                    }
                 }
+            }
+            catch (System.IO.IOException e) {
+                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void InspectAttributes(PdfStructElem kid) {
             PdfObject attrObj = kid.GetAttributes(false);
             if (attrObj != null) {
@@ -152,18 +178,22 @@ namespace iText.Kernel.Utils {
                 else {
                     attrDict = (PdfDictionary)attrObj;
                 }
-                foreach (KeyValuePair<PdfName, PdfObject> entry in attrDict.EntrySet()) {
-                    @out.Write(' ');
-                    String attrName = entry.Key.GetValue();
-                    @out.Write(char.ToLower(attrName[0]) + attrName.Substring(1));
-                    @out.Write("=\"");
-                    @out.Write(entry.Value.ToString());
-                    @out.Write("\"");
+                try {
+                    foreach (PdfName key in attrDict.KeySet()) {
+                        @out.Write(' ');
+                        String attrName = key.GetValue();
+                        @out.Write(char.ToLower(attrName[0]) + attrName.Substring(1));
+                        @out.Write("=\"");
+                        @out.Write(attrDict.Get(key, false).ToString());
+                        @out.Write("\"");
+                    }
+                }
+                catch (System.IO.IOException e) {
+                    throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
                 }
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ParseTag(PdfMcr kid) {
             int mcid = kid.GetMcid();
             PdfDictionary pageDic = kid.GetPageObject();
@@ -189,7 +219,12 @@ namespace iText.Kernel.Utils {
                     tagContent = subtype.ToString();
                 }
             }
-            @out.Write(EscapeXML(tagContent, true));
+            try {
+                @out.Write(EscapeXML(tagContent, true));
+            }
+            catch (System.IO.IOException e) {
+                throw new iText.IO.IOException(iText.IO.IOException.UnknownIOException, e);
+            }
         }
 
         protected internal static String FixTagName(String tag) {
@@ -220,13 +255,11 @@ namespace iText.Kernel.Utils {
 
         /// <summary>
         /// NOTE: copied from itext5 XMLUtils class
-        /// <p>
         /// Escapes a string with the appropriated XML codes.
         /// </summary>
         /// <param name="s">the string to be escaped</param>
         /// <param name="onlyASCII">codes above 127 will always be escaped with &amp;#nn; if <CODE>true</CODE></param>
         /// <returns>the escaped string</returns>
-        /// <since>5.0.6</since>
         protected internal static String EscapeXML(String s, bool onlyASCII) {
             char[] cc = s.ToCharArray();
             int len = cc.Length;
@@ -273,14 +306,6 @@ namespace iText.Kernel.Utils {
                 }
             }
             return sb.ToString();
-        }
-
-        /// <summary>Checks if a character value should be escaped/unescaped.</summary>
-        /// <param name="c">a character value</param>
-        /// <returns>true if it's OK to escape or unescape this value</returns>
-        public static bool IsValidCharacterValue(int c) {
-            return (c == 0x9 || c == 0xA || c == 0xD || c >= 0x20 && c <= 0xD7FF || c >= 0xE000 && c <= 0xFFFD || c >=
-                 0x10000 && c <= 0x10FFFF);
         }
 
         private class MarkedContentEventListener : IEventListener {

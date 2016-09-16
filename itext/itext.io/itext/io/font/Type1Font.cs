@@ -131,7 +131,7 @@ namespace iText.IO.Font {
 
         public override int GetKerning(Glyph first, Glyph second) {
             if (first.HasValidUnicode() && second.HasValidUnicode()) {
-                long record = ((long)first.GetUnicode() << 32) + (int)second.GetUnicode();
+                long record = ((long)first.GetUnicode() << 32) + second.GetUnicode();
                 if (kernPairs.ContainsKey(record)) {
                     return (int)kernPairs.Get(record);
                 }
@@ -163,7 +163,7 @@ namespace iText.IO.Font {
         /// <param name="name">Glyph name</param>
         /// <returns>Glyph instance if found, otherwise null.</returns>
         public virtual Glyph GetGlyph(String name) {
-            int unicode = (int)AdobeGlyphList.NameToUnicode(name);
+            int unicode = AdobeGlyphList.NameToUnicode(name);
             if (unicode != -1) {
                 return GetGlyph((int)unicode);
             }
@@ -406,7 +406,7 @@ namespace iText.IO.Font {
                         }
                     }
                 }
-                int unicode = (int)AdobeGlyphList.NameToUnicode(N);
+                int unicode = AdobeGlyphList.NameToUnicode(N);
                 Glyph glyph = new Glyph(C, WX, unicode, B);
                 if (C >= 0) {
                     codeToGlyph[C] = glyph;
@@ -433,10 +433,7 @@ namespace iText.IO.Font {
             // nonbreakingspace;00A0
             // space;0020
             if (!unicodeToGlyph.ContainsKey(0x00A0)) {
-                Glyph space = null;
-                if (unicodeToGlyph.ContainsKey(0x0020)) {
-                    space = unicodeToGlyph.Get(0x0020);
-                }
+                Glyph space = unicodeToGlyph.Get(0x0020);
                 if (space != null) {
                     unicodeToGlyph[0x00A0] = new Glyph(space.GetCode(), space.GetWidth(), 0x00A0, space.GetBbox());
                 }
@@ -470,8 +467,8 @@ namespace iText.IO.Font {
                         String first = tok.NextToken();
                         String second = tok.NextToken();
                         int? width = (int)float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
-                        int firstUni = (int)AdobeGlyphList.NameToUnicode(first);
-                        int secondUni = (int)AdobeGlyphList.NameToUnicode(second);
+                        int firstUni = AdobeGlyphList.NameToUnicode(first);
+                        int secondUni = AdobeGlyphList.NameToUnicode(second);
                         if (firstUni != -1 && secondUni != -1) {
                             long record = ((long)firstUni << 32) + secondUni;
                             kernPairs[record] = width;

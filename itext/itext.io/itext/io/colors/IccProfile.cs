@@ -69,8 +69,8 @@ namespace iText.IO.Colors {
             icc.numComponents = nc;
             // invalid ICC
             if (nc != numComponents) {
-                throw new iText.IO.IOException(iText.IO.IOException.WrongNumberOfComponentsInIccProfile).SetMessageParams(
-                    nc, numComponents);
+                throw new iText.IO.IOException(iText.IO.IOException.IccProfileContains0ComponentsWhileImageDataContains1Components
+                    ).SetMessageParams(nc, numComponents);
             }
             return icc;
         }

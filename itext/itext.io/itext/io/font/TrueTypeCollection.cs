@@ -50,32 +50,52 @@ namespace iText.IO.Font {
     public class TrueTypeCollection {
         protected internal RandomAccessFileOrArray raf;
 
-        internal String encoding;
+        private int TTCSize = 0;
 
-        internal int TTCSize = 0;
+        private String ttcPath;
 
-        internal String ttcPath;
+        private byte[] ttc;
 
-        internal byte[] ttc;
-
-        internal bool cached = false;
+        private bool cached = true;
 
         /// <exception cref="System.IO.IOException"/>
-        public TrueTypeCollection(byte[] ttc, String encoding) {
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use TrueTypeCollection(byte[]) instead")]
+        public TrueTypeCollection(byte[] ttc, String encoding)
+            : this(ttc) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="TrueTypeCollection"/>
+        /// instance by its bytes.
+        /// </summary>
+        /// <param name="ttc">the byte contents of the collection</param>
+        /// <exception cref="System.IO.IOException">in case the input in mal-formatted</exception>
+        public TrueTypeCollection(byte[] ttc) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
             this.ttc = ttc;
-            this.encoding = encoding;
             InitFontSize();
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public TrueTypeCollection(String ttcPath, String encoding) {
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use TrueTypeCollection(System.String) instead")]
+        public TrueTypeCollection(String ttcPath, String encoding)
+            : this(ttcPath) {
+        }
+
+        /// <summary>
+        /// Creates a new
+        /// <see cref="TrueTypeCollection"/>
+        /// instance by its file path.
+        /// </summary>
+        /// <param name="ttcPath">the path of the collection</param>
+        /// <exception cref="System.IO.IOException">in case the input in mal-formatted</exception>
+        public TrueTypeCollection(String ttcPath) {
             if (!FileUtil.FileExists(ttcPath)) {
                 throw new iText.IO.IOException(iText.IO.IOException.FontFile1NotFound).SetMessageParams(ttcPath);
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
             this.ttcPath = ttcPath;
-            this.encoding = encoding;
             InitFontSize();
         }
 
@@ -85,7 +105,7 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public virtual FontProgram GetFontByTccIndex(int ttcIndex) {
             if (ttcIndex > TTCSize - 1) {
-                throw new iText.IO.IOException(iText.IO.IOException.TTCIndexDoesNotExistInFile);
+                throw new iText.IO.IOException(iText.IO.IOException.TtcIndexDoesNotExistInThisTtcFile);
             }
             if (ttcPath != null) {
                 return FontProgramFactory.CreateFont(ttcPath, ttcIndex, cached);
@@ -101,10 +121,22 @@ namespace iText.IO.Font {
             return TTCSize;
         }
 
+        /// <summary>
+        /// Indicates if fonts created by the call to
+        /// <see cref="GetFontByTccIndex(int)"/>
+        /// will be cached or not.
+        /// </summary>
+        /// <returns><code>true</code> if the created fonts will be cached, <code>false</code> otherwise</returns>
         public virtual bool IsCached() {
             return cached;
         }
 
+        /// <summary>
+        /// Sets if fonts created by the call to
+        /// <see cref="GetFontByTccIndex(int)"/>
+        /// will be cached or not.
+        /// </summary>
+        /// <param name="cached"><code>true</code> if the created fonts will be cached, <code>false</code> otherwise</param>
         public virtual void SetCached(bool cached) {
             this.cached = cached;
         }

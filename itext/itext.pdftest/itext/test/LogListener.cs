@@ -77,34 +77,30 @@ namespace iText.Test
 
         private void CheckLogMessages(ITest testDetails)
         {
-			LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
+            int checkedMessages = 0;
+            LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
             if (attributes.Length > 0)
             {
                 for (int i = 0; i < attributes.Length; i++)
                 {
                     LogMessageAttribute logMessage = attributes[i];
-                    if (!logMessage.Ignore)
+                    int foundCount = Contains(logMessage.GetMessageTemplate());
+                    if (foundCount != logMessage.Count && !logMessage.Ignore) {
+                        Assert.Fail("{0} Expected to find {1}, but found {2} messages with the following content: \"{3}\"",
+                            testDetails.FullName, logMessage.Count, foundCount, logMessage.GetMessageTemplate());
+                    }
+                    else
                     {
-                        int foundedCount = Contains(logMessage.GetMessageTemplate());
-                        if (foundedCount != logMessage.Count)
-                        {
-                            Assert.Fail("{0} Some log messages are not found in test execution - {1} messages",
-                                testDetails.FullName,
-                                logMessage.Count - foundedCount);
-
-                        }
+                        checkedMessages += foundCount;
                     }
                 }
             }
-            else
+            
+            if (GetSize() > checkedMessages)
             {
-                if (GetSize() > 0)
-                {
-                    Assert.Fail("{0}: The test does not check the message logging - {1} messages",
-                        testDetails.FullName,
-                        GetSize());
-                }
-
+                Assert.Fail("{0}: The test does not check the message logging - {1} messages",
+                    testDetails.FullName,
+                    GetSize() - checkedMessages);
             }
         }
 

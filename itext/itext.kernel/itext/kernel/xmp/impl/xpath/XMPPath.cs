@@ -82,7 +82,7 @@ namespace iText.Kernel.XMP.Impl.XPath {
             return segments.Count;
         }
 
-        /// <summary>Serializes the normalized XMP-path.</summary>
+        /// <summary>Return a single String explaining which certificate was verified, how and why.</summary>
         /// <seealso cref="System.Object.ToString()"/>
         public override String ToString() {
             StringBuilder result = new StringBuilder();

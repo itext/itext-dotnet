@@ -52,18 +52,50 @@ using iText.Layout.Layout;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
+    /// <summary>
+    /// This class represents the
+    /// <see cref="IRenderer">renderer</see>
+    /// object for a
+    /// <see cref="iText.Layout.Element.Paragraph"/>
+    /// object. It will draw the glyphs of the textual content on the
+    /// <see cref="DrawContext"/>
+    /// .
+    /// </summary>
     public class ParagraphRenderer : BlockRenderer {
         protected internal float previousDescent = 0;
 
         protected internal IList<LineRenderer> lines = null;
 
+        /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.Paragraph"/>
+        /// which this object should manage
+        /// </param>
         public ParagraphRenderer(Paragraph modelElement)
             : base(modelElement) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
+            bool anythingPlaced = false;
+            bool firstLineInBox = true;
+            LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
+            if (0 == childRenderers.Count) {
+                anythingPlaced = true;
+                currentRenderer = null;
+                SetProperty(Property.MARGIN_TOP, 0);
+                SetProperty(Property.MARGIN_RIGHT, 0);
+                SetProperty(Property.MARGIN_BOTTOM, 0);
+                SetProperty(Property.MARGIN_LEFT, 0);
+                SetProperty(Property.PADDING_TOP, 0);
+                SetProperty(Property.PADDING_RIGHT, 0);
+                SetProperty(Property.PADDING_BOTTOM, 0);
+                SetProperty(Property.PADDING_LEFT, 0);
+                SetProperty(Property.BORDER, Border.NO_BORDER);
+            }
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
@@ -94,29 +126,9 @@ namespace iText.Layout.Renderer {
                 GetHeight(), parentBBox.GetWidth(), 0));
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
-            bool anythingPlaced = false;
-            bool firstLineInBox = true;
             lines = new List<LineRenderer>();
-            LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             foreach (IRenderer child in childRenderers) {
                 currentRenderer.AddChild(child);
-            }
-            if (0 == childRenderers.Count) {
-                anythingPlaced = true;
-                currentRenderer = null;
-                // TODO is this really needed??
-                SetProperty(Property.MARGIN_TOP, 0);
-                SetProperty(Property.MARGIN_RIGHT, 0);
-                SetProperty(Property.MARGIN_BOTTOM, 0);
-                SetProperty(Property.MARGIN_LEFT, 0);
-                SetProperty(Property.PADDING_TOP, 0);
-                SetProperty(Property.PADDING_RIGHT, 0);
-                SetProperty(Property.PADDING_BOTTOM, 0);
-                SetProperty(Property.PADDING_LEFT, 0);
-                SetProperty(Property.BORDER, Border.NO_BORDER);
-                margins = GetMargins();
-                borders = GetBorders();
-                paddings = GetPaddings();
             }
             float lastYLine = layoutBox.GetY() + layoutBox.GetHeight();
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
@@ -190,7 +202,8 @@ namespace iText.Layout.Renderer {
                     else {
                         bool keepTogether = IsKeepTogether();
                         if (keepTogether) {
-                            return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+                            return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, null == result.GetCauseOfNothing()
+                                 ? this : result.GetCauseOfNothing());
                         }
                         else {
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
@@ -212,12 +225,25 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), currentRenderer.GetOccupiedArea(
+                                        ).GetBBox()));
                                     parent.SetProperty(Property.FULL, true);
                                     lines.Add(currentRenderer);
-                                    return new LayoutResult(LayoutResult.FULL, occupiedArea, null, this);
+                                    // Force placement of children we have and do not force placement of the others
+                                    if (LayoutResult.PARTIAL == result.GetStatus()) {
+                                        IRenderer childNotRendered = result.GetCauseOfNothing();
+                                        int firstNotRendered = currentRenderer.childRenderers.IndexOf(childNotRendered);
+                                        currentRenderer.childRenderers.RetainAll(currentRenderer.childRenderers.SubList(0, firstNotRendered));
+                                        split[1].childRenderers.RemoveAll(split[1].childRenderers.SubList(0, firstNotRendered));
+                                        return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, split[1]);
+                                    }
+                                    else {
+                                        return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this);
+                                    }
                                 }
                                 else {
-                                    return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+                                    return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, null == result.GetCauseOfNothing()
+                                         ? this : result.GetCauseOfNothing());
                                 }
                             }
                         }
@@ -260,19 +286,21 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
-                if (IsNotFittingHeight(layoutContext.GetArea())) {
-                    if (!layoutContext.GetArea().IsEmptyArea()) {
-                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+                if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
+                    if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                     }
                 }
             }
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.ParagraphRenderer((Paragraph)modelElement);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override T1 GetDefaultProperty<T1>(int property) {
             if ((property == Property.MARGIN_TOP || property == Property.MARGIN_BOTTOM) && parent is CellRenderer) {
                 return (T1)(Object)0f;
@@ -280,31 +308,7 @@ namespace iText.Layout.Renderer {
             return base.GetDefaultProperty<T1>(property);
         }
 
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
-            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer
-                ();
-            // Reset first line indent in case of overflow.
-            float firstLineIndent = (float)this.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
-            if (firstLineIndent != 0) {
-                overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
-            }
-            return overflowRenderer;
-        }
-
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
-            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
-        }
-
-        protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {
-            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
-            splitRenderer.occupiedArea = occupiedArea.Clone();
-            splitRenderer.parent = parent;
-            splitRenderer.isLastRendererForModelElement = false;
-            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
-            overflowRenderer.parent = parent;
-            return new iText.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
-        }
-
+        /// <summary><inheritDoc/></summary>
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             if (lines != null && lines.Count > 0) {
@@ -320,6 +324,7 @@ namespace iText.Layout.Renderer {
             return sb.ToString();
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void DrawChildren(DrawContext drawContext) {
             if (lines != null) {
                 foreach (LineRenderer line in lines) {
@@ -328,6 +333,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         public override void Move(float dxRight, float dyUp) {
             occupiedArea.GetBBox().MoveRight(dxRight);
             occupiedArea.GetBBox().MoveUp(dyUp);
@@ -341,6 +347,46 @@ namespace iText.Layout.Renderer {
                 return null;
             }
             return lines[0].GetFirstYLineRecursively();
+        }
+
+        [Obsolete]
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer() {
+            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
+        }
+
+        [Obsolete]
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer() {
+            return (iText.Layout.Renderer.ParagraphRenderer)GetNextRenderer();
+        }
+
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateOverflowRenderer(IRenderer parent
+            ) {
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer();
+            overflowRenderer.parent = parent;
+            FixOverflowRenderer(overflowRenderer);
+            return overflowRenderer;
+        }
+
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer(IRenderer parent) {
+            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
+            splitRenderer.parent = parent;
+            return splitRenderer;
+        }
+
+        protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {
+            iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer(parent);
+            splitRenderer.occupiedArea = occupiedArea.Clone();
+            splitRenderer.isLastRendererForModelElement = false;
+            iText.Layout.Renderer.ParagraphRenderer overflowRenderer = CreateOverflowRenderer(parent);
+            return new iText.Layout.Renderer.ParagraphRenderer[] { splitRenderer, overflowRenderer };
+        }
+
+        private void FixOverflowRenderer(iText.Layout.Renderer.ParagraphRenderer overflowRenderer) {
+            // Reset first line indent in case of overflow.
+            float firstLineIndent = (float)overflowRenderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
+            if (firstLineIndent != 0) {
+                overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
+            }
         }
     }
 }

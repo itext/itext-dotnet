@@ -124,18 +124,42 @@ namespace iText.Layout.Element {
             return cellRenderer == null ? MakeNewRenderer() : cellRenderer;
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="row">the number of the row</see>
+        /// in which the cell is located.
+        /// </summary>
+        /// <returns>the row number</returns>
         public virtual int GetRow() {
             return row;
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="row">the number of the column</see>
+        /// in which the cell is located.
+        /// </summary>
+        /// <returns>the column number</returns>
         public virtual int GetCol() {
             return col;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="rowspan">rowspan</see>
+        /// of the cell.
+        /// </summary>
+        /// <returns>the rowspan</returns>
         public virtual int GetRowspan() {
             return rowspan;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="colspan">colspan</see>
+        /// of the cell.
+        /// </summary>
+        /// <returns>the colspan</returns>
         public virtual int GetColspan() {
             return colspan;
         }

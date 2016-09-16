@@ -252,7 +252,7 @@ namespace iText.IO.Font {
                     String order = tok.NextToken();
                     String name = tok.NextToken();
                     char uni = (char)System.Convert.ToInt32(tok.NextToken(), 16);
-                    int uniName = (int)AdobeGlyphList.NameToUnicode(name);
+                    int uniName = AdobeGlyphList.NameToUnicode(name);
                     int orderK;
                     if (order.StartsWith("'")) {
                         orderK = order[1];
@@ -361,6 +361,10 @@ namespace iText.IO.Font {
                 case "macroman":
                 case "macromanencoding": {
                     return PdfEncodings.MACROMAN;
+                }
+
+                case "zapfdingbatsencoding": {
+                    return PdfEncodings.ZAPFDINGBATS;
                 }
 
                 default: {

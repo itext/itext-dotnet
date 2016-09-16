@@ -231,8 +231,8 @@ namespace iText.Kernel.Pdf {
             if (CheckState(READ_ONLY)) {
                 states.Append("ReadOnly; ");
             }
-            return String.Format("{0} {1} R{2}", GetObjNumber(), GetGenNumber(), states.JSubstring(0, states.Length - 
-                1));
+            return String.Format("{0} {1} R{2}", iText.IO.Util.JavaUtil.IntegerToString(GetObjNumber()), iText.IO.Util.JavaUtil.IntegerToString
+                (GetGenNumber()), states.JSubstring(0, states.Length - 1));
         }
 
         /// <summary>Gets a PdfWriter associated with the document object belongs to.</summary>

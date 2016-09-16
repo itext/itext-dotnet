@@ -68,7 +68,7 @@ namespace iText.IO.Util {
         public static Stream OpenStream(Uri url) {
             Stream isp;
             if (url.IsFile) {
-                isp = new FileStream(url.AbsolutePath, FileMode.Open, FileAccess.Read);
+                isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);
             } else {
                 WebRequest req = WebRequest.Create(url);
                 req.Credentials = CredentialCache.DefaultCredentials;

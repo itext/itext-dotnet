@@ -43,8 +43,10 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Log;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
@@ -52,6 +54,14 @@ using iText.Kernel.Pdf.Colorspace;
 using iText.Pdfa;
 
 namespace iText.Pdfa.Checker {
+    /// <summary>
+    /// PdfA1Checker defines the requirements of the PDF/A-1 standard and contains
+    /// method implementations from the abstract
+    /// <see cref="PdfAChecker"/>
+    /// class.
+    /// <p>
+    /// The specification implemented by this class is ISO 19005-1
+    /// </summary>
     public class PdfA1Checker : PdfAChecker {
         protected internal static readonly ICollection<PdfName> forbiddenAnnotations = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.Sound, PdfName.Movie, PdfName.FileAttachment));
@@ -70,6 +80,11 @@ namespace iText.Pdfa.Checker {
         protected internal static readonly ICollection<PdfName> allowedRenderingIntents = new HashSet<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList
             (PdfName.RelativeColorimetric, PdfName.AbsoluteColorimetric, PdfName.Perceptual, PdfName.Saturation));
 
+        /// <summary>Creates a PdfA1Checker with the required conformance level</summary>
+        /// <param name="conformanceLevel">
+        /// the required conformance level, <code>a</code> or
+        /// <code>b</code>
+        /// </param>
         public PdfA1Checker(PdfAConformanceLevel conformanceLevel)
             : base(conformanceLevel) {
         }
@@ -209,6 +224,41 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        public override void CheckFont(PdfFont pdfFont) {
+            if (!pdfFont.IsEmbedded()) {
+                throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1).SetMessageParams
+                    (pdfFont.GetFontProgram().GetFontNames().GetFontName());
+            }
+            if (pdfFont is PdfTrueTypeFont) {
+                PdfTrueTypeFont trueTypeFont = (PdfTrueTypeFont)pdfFont;
+                bool symbolic = trueTypeFont.GetFontEncoding().IsFontSpecific();
+                if (symbolic) {
+                    CheckSymbolicTrueTypeFont(trueTypeFont);
+                }
+                else {
+                    CheckNonSymbolicTrueTypeFont(trueTypeFont);
+                }
+            }
+        }
+
+        protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
+            // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN) || trueTypeFont.GetFontEncoding
+                ().HasDifferences()) {
+                throw new PdfAConformanceException(PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry
+                    , trueTypeFont);
+            }
+        }
+
+        protected internal override void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            if (trueTypeFont.GetFontEncoding().HasDifferences()) {
+                throw new PdfAConformanceException(PdfAConformanceException.AllSymbolicTrueTypeFontsShallNotSpecifyEncoding
+                    );
+            }
+        }
+
+        // if symbolic font encoding doesn't have differences, itext7 won't write encoding for such font
         protected internal override void CheckImage(PdfStream image, PdfDictionary currentColorSpaces) {
             PdfColorSpace colorSpace = null;
             if (IsAlreadyChecked(image)) {
@@ -259,6 +309,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.AGroupObjectWithAnSKeyWithAValueOfTransparencyShallNotBeIncludedInAFormXobject
                     );
             }
+            CheckResources(form.GetAsDictionary(PdfName.Resources));
         }
 
         protected internal override void CheckLogicalStructure(PdfDictionary catalog) {
@@ -400,6 +451,7 @@ namespace iText.Pdfa.Checker {
                     throw new PdfAConformanceException(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue
                         );
                 }
+                CheckResourcesOfAppearanceStreams(ap);
             }
             if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic.ContainsKey(PdfName.A)
                 )) {
@@ -426,6 +478,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.NeedAppearancesFlagOfTheInteractiveFormDictionaryShallEitherNotBePresentedOrShallBeFalse
                     );
             }
+            CheckResources(form.GetAsDictionary(PdfName.DR));
             PdfArray fields = form.GetAsArray(PdfName.Fields);
             if (fields != null) {
                 fields = GetFormFields(fields);
@@ -435,6 +488,7 @@ namespace iText.Pdfa.Checker {
                         throw new PdfAConformanceException(PdfAConformanceException.WidgetAnnotationDictionaryOrFieldDictionaryShallNotIncludeAOrAAEntry
                             );
                     }
+                    CheckResources(fieldDic.GetAsDictionary(PdfName.DR));
                 }
             }
         }
@@ -497,13 +551,10 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        private PdfArray GetFormFields(PdfArray array) {
+        protected internal virtual PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
-            // explicit iteration to resolve indirect references on get().
-            // TODO DEVSIX-591
-            for (int i = 0; i < array.Size(); i++) {
-                PdfDictionary field = array.GetAsDictionary(i);
-                PdfArray kids = field.GetAsArray(PdfName.Kids);
+            foreach (PdfObject field in array) {
+                PdfArray kids = ((PdfDictionary)field).GetAsArray(PdfName.Kids);
                 fields.Add(field);
                 if (kids != null) {
                     fields.AddAll(GetFormFields(kids));

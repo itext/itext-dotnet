@@ -189,7 +189,7 @@ namespace iText.Signatures {
             con.Method = "POST";
             if ((tsaUsername != null) && !tsaUsername.Equals("")) {
                 string authInfo = tsaUsername + ":" + tsaPassword;
-                authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo), Base64FormattingOptions.None);
+                authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo), Base64FormattingOptions.None);
                 con.Headers["Authorization"] = "Basic " + authInfo;
             }
             Stream outp = con.GetRequestStream();

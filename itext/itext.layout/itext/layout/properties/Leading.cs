@@ -105,5 +105,9 @@ namespace iText.Layout.Properties {
             return obj is iText.Layout.Properties.Leading && type == ((iText.Layout.Properties.Leading)obj).type && value
                  == ((iText.Layout.Properties.Leading)obj).value;
         }
+
+        public override int GetHashCode() {
+            return iText.IO.Util.JavaUtil.ArraysHashCode(type, value);
+        }
     }
 }

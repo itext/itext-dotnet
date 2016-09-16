@@ -54,7 +54,7 @@ using iText.Layout.Splitting;
 namespace iText.Layout {
     /// <summary>A generic abstract root element for a PDF layout object hierarchy.</summary>
     /// 
-    public abstract class RootElement<T> : ElementPropertyContainer<T>
+    public abstract class RootElement<T> : ElementPropertyContainer<T>, IDisposable
         where T : IPropertyContainer {
         protected internal bool immediateFlush = true;
 
@@ -277,32 +277,31 @@ namespace iText.Layout {
             }
             div.SetProperty(Property.ROTATION_POINT_X, x);
             div.SetProperty(Property.ROTATION_POINT_Y, y);
-            float divWidth = AbstractRenderer.INF;
-            float divHeight = AbstractRenderer.INF;
+            float divSize = 5e3f;
             float divX = x;
             float divY = y;
             if (textAlign == TextAlignment.CENTER) {
-                divX = x - divWidth / 2;
+                divX = x - divSize / 2;
                 p.SetHorizontalAlignment(HorizontalAlignment.CENTER);
             }
             else {
                 if (textAlign == TextAlignment.RIGHT) {
-                    divX = x - divWidth;
+                    divX = x - divSize;
                     p.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
                 }
             }
             if (vertAlign == VerticalAlignment.MIDDLE) {
-                divY = y - divHeight / 2;
+                divY = y - divSize / 2;
             }
             else {
                 if (vertAlign == VerticalAlignment.TOP) {
-                    divY = y - divHeight;
+                    divY = y - divSize;
                 }
             }
             if (pageNumber == 0) {
                 pageNumber = 1;
             }
-            div.SetFixedPosition(pageNumber, divX, divY, divWidth).SetHeight(divHeight);
+            div.SetFixedPosition(pageNumber, divX, divY, divSize).SetHeight(divSize);
             if (p.GetProperty<Leading>(Property.LEADING) == null) {
                 p.SetMultipliedLeading(1);
             }
@@ -313,5 +312,11 @@ namespace iText.Layout {
         }
 
         protected internal abstract RootRenderer EnsureRootRendererNotNull();
+
+        public abstract void Close();
+
+        void System.IDisposable.Dispose() {
+            Close();
+        }
     }
 }

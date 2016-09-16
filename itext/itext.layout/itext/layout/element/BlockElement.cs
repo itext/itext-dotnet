@@ -273,19 +273,54 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
-        /// <summary>Sets the rotation radAngle.</summary>
-        /// <param name="radAngle">the new rotation radAngle, as a <code>float</code></param>
+        /// <summary>
+        /// Returns whether the end of this
+        /// <see cref="BlockElement{T}"/>
+        /// and the start of the next sibling of this element
+        /// should be placed in the same area.
+        /// </summary>
+        /// <returns>
+        /// the current value of the
+        /// <see cref="iText.Layout.Properties.Property.KEEP_WITH_NEXT"/>
+        /// property
+        /// </returns>
+        public virtual bool? IsKeepWithNext() {
+            return this.GetProperty<bool?>(Property.KEEP_WITH_NEXT);
+        }
+
+        /// <summary>
+        /// Sets whether the end of this
+        /// <see cref="BlockElement{T}"/>
+        /// and the start of the next sibling of this element
+        /// should be placed in the same area.
+        /// Note that this will only work for high-level elements, i.e. elements added to the
+        /// <see cref="iText.Layout.RootElement{T}"/>
+        /// .
+        /// </summary>
+        /// <param name="keepWithNext">
+        /// the new value of the
+        /// <see cref="iText.Layout.Properties.Property.KEEP_WITH_NEXT"/>
+        /// property
+        /// </param>
         /// <returns>this element</returns>
-        public virtual T SetRotationAngle(float radAngle) {
-            SetProperty(Property.ROTATION_ANGLE, radAngle);
+        public virtual T SetKeepWithNext(bool keepWithNext) {
+            SetProperty(Property.KEEP_WITH_NEXT, keepWithNext);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the rotation radAngle.</summary>
+        /// <param name="angleInRadians">the new rotation radAngle, as a <code>float</code>, in radians</param>
+        /// <returns>this element</returns>
+        public virtual T SetRotationAngle(float angleInRadians) {
+            SetProperty(Property.ROTATION_ANGLE, angleInRadians);
             return (T)(Object)this;
         }
 
         /// <summary>Sets the rotation angle.</summary>
-        /// <param name="angle">the new rotation angle, as a <code>double</code></param>
+        /// <param name="angleInRadians">the new rotation angle, as a <code>double</code>, in radians</param>
         /// <returns>this element</returns>
-        public virtual T SetRotationAngle(double angle) {
-            SetProperty(Property.ROTATION_ANGLE, (float)angle);
+        public virtual T SetRotationAngle(double angleInRadians) {
+            SetProperty(Property.ROTATION_ANGLE, (float)angleInRadians);
             return (T)(Object)this;
         }
 

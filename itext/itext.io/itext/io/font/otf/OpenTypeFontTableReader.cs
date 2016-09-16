@@ -159,6 +159,10 @@ namespace iText.IO.Font.Otf {
             return gdef.IsSkip(glyph, flag);
         }
 
+        public virtual int GetGlyphClass(int glyphCode) {
+            return gdef.GetGlyphClassTable().GetOtfClass(glyphCode);
+        }
+
         public virtual int GetUnitsPerEm() {
             return unitsPerEm;
         }

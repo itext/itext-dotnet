@@ -18,8 +18,7 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void CreateEmptyDocumentWithXmp() {
             String filename = "emptyDocumentWithXmp.pdf";
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos, new WriterProperties().AddXmpMetadata());
+            PdfWriter writer = new PdfWriter(destinationFolder + filename, new WriterProperties().AddXmpMetadata());
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor("Alexander Chingarev").SetCreator("iText 7").SetTitle("Empty iText 7 Document"
                 );
@@ -51,12 +50,13 @@ namespace iText.Kernel.Pdf {
             pdfDoc.GetDocumentInfo().GetPdfObject().Remove(PdfName.ModDate);
             PdfPage page = pdfDoc.AddNewPage();
             page.Flush();
-            pdfDoc.SetXmpMetadata("abc".GetBytes());
+            pdfDoc.SetXmpMetadata("abc".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
             pdfDoc.Close();
             PdfReader reader = new PdfReader(new MemoryStream(fos.ToArray()));
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            NUnit.Framework.Assert.AreEqual("abc".GetBytes(), pdfDocument.GetXmpMetadata());
+            NUnit.Framework.Assert.AreEqual("abc".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1), pdfDocument.GetXmpMetadata
+                ());
             NUnit.Framework.Assert.IsNotNull(pdfDocument.GetPage(1));
             reader.Close();
         }

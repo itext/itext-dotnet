@@ -44,7 +44,7 @@
   <ItemGroup>
     <ProjectReference Include="..\itext.forms\itext.forms.csproj">
       <Project>{E2828AC4-3C63-4B2A-B5AD-5F98862775BE}</Project>
-      <Name>forms</Name>
+      <Name>itext.forms</Name>
     </ProjectReference>
     <ProjectReference Include="..\itext.io\itext.io.csproj">
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>

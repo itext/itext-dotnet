@@ -44,18 +44,82 @@ address: sales@itextpdf.com
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the result of a line
+    /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+    /// .
+    /// </summary>
     public class LineLayoutResult : LayoutResult {
+        /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// The
+        /// <see cref="LayoutResult.causeOfNothing"/>
+        /// will be set as null.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             )
             : base(status, occupiedArea, splitRenderer, overflowRenderer) {
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="LayoutResult.NOTHING"/>
+        /// </param>
+        public LineLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause)
+            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
+        }
+
+        /// <summary>Indicates whether split was forced by new line symbol in rendered text.</summary>
+        /// <remarks>
+        /// Indicates whether split was forced by new line symbol in rendered text.
+        /// The value will be set as true if, for example,
+        /// the rendered text of one of the child renderers contains '\n' symbol.
+        /// </remarks>
+        /// <returns>whether split was forced by new line or not</returns>
         public virtual bool IsSplitForcedByNewline() {
             return splitForcedByNewline;
         }
 
+        /// <summary>
+        /// Sets
+        /// <see cref="SetSplitForcedByNewline(bool)"/>
+        /// </summary>
+        /// <param name="isSplitForcedByNewline">indicates that split was forced by new line symbol in rendered text.</param>
+        /// <returns>
+        /// 
+        /// <see cref="LineLayoutResult">this layout result</see>
+        /// the setting was applied on.
+        /// </returns>
+        /// <seealso cref="SetSplitForcedByNewline(bool)"/>
         public virtual iText.Layout.Layout.LineLayoutResult SetSplitForcedByNewline(bool isSplitForcedByNewline) {
             this.splitForcedByNewline = isSplitForcedByNewline;
             return this;

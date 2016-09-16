@@ -120,5 +120,13 @@ namespace iText.Kernel.Pdf {
 
         protected internal override void CopyContent(PdfObject from, PdfDocument document) {
         }
+
+        public override bool Equals(Object obj) {
+            return this == obj || obj != null && GetType() == obj.GetType();
+        }
+
+        public override int GetHashCode() {
+            return 0;
+        }
     }
 }

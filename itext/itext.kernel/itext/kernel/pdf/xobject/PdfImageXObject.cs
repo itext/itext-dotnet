@@ -52,6 +52,8 @@ using iText.Kernel.Pdf.Canvas.Wmf;
 using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf.Xobject {
+    /// <summary>A wrapper for Image XObject.</summary>
+    /// <remarks>A wrapper for Image XObject. ISO 32000-1, 8.9 Images.</remarks>
     public class PdfImageXObject : PdfXObject {
         private float width;
 
@@ -73,20 +75,57 @@ namespace iText.Kernel.Pdf.Xobject {
 
         private int stride;
 
+        /// <summary>Creates Image XObject by image.</summary>
+        /// <param name="image">
+        /// 
+        /// <see cref="iText.IO.Image.ImageData"/>
+        /// with actual image data.
+        /// </param>
         public PdfImageXObject(ImageData image)
             : this(image, null) {
         }
 
+        /// <summary>Creates Image XObject by image.</summary>
+        /// <param name="image">
+        /// 
+        /// <see cref="iText.IO.Image.ImageData"/>
+        /// with actual image data.
+        /// </param>
+        /// <param name="imageMask">
+        /// 
+        /// <see cref="PdfImageXObject"/>
+        /// with image mask.
+        /// </param>
         public PdfImageXObject(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject imageMask)
             : this(CreatePdfStream(CheckImageType(image), imageMask)) {
             mask = image.IsMask();
             softMask = image.IsSoftMask();
         }
 
-        public PdfImageXObject(PdfStream pdfObject)
-            : base(pdfObject) {
+        /// <summary>
+        /// Create
+        /// <see cref="PdfImageXObject"/>
+        /// instance by
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// .
+        /// Note, this constructor doesn't perform any additional checks
+        /// </summary>
+        /// <param name="pdfStream">
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// with Image XObject.
+        /// </param>
+        /// <seealso cref="PdfXObject.MakeXObject(iText.Kernel.Pdf.PdfStream)"/>
+        public PdfImageXObject(PdfStream pdfStream)
+            : base(pdfStream) {
         }
 
+        /// <summary>
+        /// Gets width of image,
+        /// <c>Width</c>
+        /// key.
+        /// </summary>
+        /// <returns>float value.</returns>
         public override float GetWidth() {
             if (!IsFlushed()) {
                 return GetPdfObject().GetAsNumber(PdfName.Width).FloatValue();
@@ -96,6 +135,12 @@ namespace iText.Kernel.Pdf.Xobject {
             }
         }
 
+        /// <summary>
+        /// Gets height of image,
+        /// <c>Height</c>
+        /// key.
+        /// </summary>
+        /// <returns>float value.</returns>
         public override float GetHeight() {
             if (!IsFlushed()) {
                 return GetPdfObject().GetAsNumber(PdfName.Height).FloatValue();
@@ -105,6 +150,17 @@ namespace iText.Kernel.Pdf.Xobject {
             }
         }
 
+        /// <summary>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
+        /// Basically this means that before flushing you need to explicitly call
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// For example: wrapperInstance.makeIndirect(document).flush();
+        /// Note, that not every wrapper require this, only those that have such warning in documentation.
+        /// </summary>
         public override void Flush() {
             if (!IsFlushed()) {
                 width = GetPdfObject().GetAsNumber(PdfName.Width).FloatValue();
@@ -113,6 +169,13 @@ namespace iText.Kernel.Pdf.Xobject {
             }
         }
 
+        /// <summary>Copy Image XObject to the specified document.</summary>
+        /// <param name="document">target document</param>
+        /// <returns>
+        /// just created instance of
+        /// <see cref="PdfImageXObject"/>
+        /// .
+        /// </returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject CopyTo(PdfDocument document) {
             iText.Kernel.Pdf.Xobject.PdfImageXObject image = new iText.Kernel.Pdf.Xobject.PdfImageXObject(((PdfStream)
                 GetPdfObject().CopyTo(document)));
@@ -123,10 +186,29 @@ namespace iText.Kernel.Pdf.Xobject {
             return image;
         }
 
+        /// <summary>Gets decoded image bytes.</summary>
+        /// <returns>byte array.</returns>
         public virtual byte[] GetImageBytes() {
             return GetImageBytes(true);
         }
 
+        /// <summary>Gets image bytes.</summary>
+        /// <remarks>
+        /// Gets image bytes.
+        /// Note,
+        /// <see cref="iText.Kernel.Pdf.PdfName.DCTDecode"/>
+        /// ,
+        /// <see cref="iText.Kernel.Pdf.PdfName.JBIG2Decode"/>
+        /// and
+        /// <see cref="iText.Kernel.Pdf.PdfName.JPXDecode"/>
+        /// filters will be ignored.
+        /// </remarks>
+        /// <param name="decoded">
+        /// if
+        /// <see langword="true"/>
+        /// , decodes stream bytes.
+        /// </param>
+        /// <returns>byte array.</returns>
         public virtual byte[] GetImageBytes(bool decoded) {
             byte[] bytes;
             bytes = GetPdfObject().GetBytes(false);
@@ -150,11 +232,126 @@ namespace iText.Kernel.Pdf.Xobject {
             return bytes;
         }
 
+        /// <summary>
+        /// Identifies the type of the image that is stored in the bytes of this
+        /// <see cref="PdfImageXObject"/>
+        /// .
+        /// Note that this has nothing to do with the original type of the image. For instance, the return value
+        /// of this method will never be
+        /// <see cref="iText.IO.Image.ImageType.PNG"/>
+        /// as we loose this information when converting a
+        /// PNG image into something that can be put into a PDF file.
+        /// The possible values are:
+        /// <see cref="iText.IO.Image.ImageType.JPEG"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.JPEG2000"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.JBIG2"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.TIFF"/>
+        /// ,
+        /// <see cref="iText.IO.Image.ImageType.PNG"/>
+        /// </summary>
+        /// <returns>the identified type of image</returns>
+        public virtual ImageType IdentifyImageType() {
+            PdfObject filter = GetPdfObject().Get(PdfName.Filter);
+            PdfArray filters = new PdfArray();
+            if (filter != null) {
+                if (filter.GetObjectType() == PdfObject.NAME) {
+                    filters.Add(filter);
+                }
+                else {
+                    if (filter.GetObjectType() == PdfObject.ARRAY) {
+                        filters = ((PdfArray)filter);
+                    }
+                }
+            }
+            for (int i = filters.Size() - 1; i >= 0; i--) {
+                PdfName filterName = (PdfName)filters.Get(i);
+                if (PdfName.DCTDecode.Equals(filterName)) {
+                    return ImageType.JPEG;
+                }
+                else {
+                    if (PdfName.JBIG2Decode.Equals(filterName)) {
+                        return ImageType.JBIG2;
+                    }
+                    else {
+                        if (PdfName.JPXDecode.Equals(filterName)) {
+                            return ImageType.JPEG2000;
+                        }
+                    }
+                }
+            }
+            // None of the previous types match
+            PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
+            PrepareAndFindColorspace(colorspace);
+            if (pngColorType < 0) {
+                return ImageType.TIFF;
+            }
+            else {
+                return ImageType.PNG;
+            }
+        }
+
+        /// <summary>
+        /// Identifies recommended file extension to store the bytes of this
+        /// <see cref="PdfImageXObject"/>
+        /// .
+        /// Possible values are: 'png', 'jpg', 'jp2', 'tif', 'jbig2'.
+        /// This extension can later be used together with the result of
+        /// <see cref="GetImageBytes()"/>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="System.String"/>
+        /// with recommended file extension
+        /// </returns>
+        /// <seealso cref="IdentifyImageType()"/>
+        public virtual String IdentifyImageFileExtension() {
+            ImageType bytesType = IdentifyImageType();
+            switch (bytesType) {
+                case ImageType.PNG: {
+                    return "png";
+                }
+
+                case ImageType.JPEG: {
+                    return "jpg";
+                }
+
+                case ImageType.JPEG2000: {
+                    return "jp2";
+                }
+
+                case ImageType.TIFF: {
+                    return "tif";
+                }
+
+                case ImageType.JBIG2: {
+                    return "jbig2";
+                }
+
+                default: {
+                    throw new InvalidOperationException("Should have never happened. This type of image is not allowed for ImageXObject"
+                        );
+                }
+            }
+        }
+
+        /// <summary>Puts the value into Image XObject dictionary and associates it with the specified key.</summary>
+        /// <remarks>
+        /// Puts the value into Image XObject dictionary and associates it with the specified key.
+        /// If the key is already present, it will override the old value with the specified one.
+        /// </remarks>
+        /// <param name="key">key to insert or to override</param>
+        /// <param name="value">the value to associate with the specified key</param>
+        /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Xobject.PdfImageXObject Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
             return this;
         }
 
+        [Obsolete]
         protected internal static PdfStream CreatePdfStream(ImageData image, iText.Kernel.Pdf.Xobject.PdfImageXObject
              imageMask) {
             PdfStream stream;
@@ -336,8 +533,13 @@ namespace iText.Kernel.Pdf.Xobject {
                             array.Add(new PdfNumber((float)obj));
                         }
                         else {
-                            //TODO instance of was removed due to autoport
-                            array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
+                            if (obj is Object[]) {
+                                array.Add(CreateArray(stream, (Object[])obj));
+                            }
+                            else {
+                                //TODO instance of was removed due to autoport
+                                array.Add(CreateDictionaryFromMap(stream, (IDictionary<String, Object>)obj));
+                            }
                         }
                     }
                 }
@@ -345,19 +547,22 @@ namespace iText.Kernel.Pdf.Xobject {
             return array;
         }
 
-        /// <exception cref="System.IO.IOException"/>
-        private byte[] DecodeTiffAndPngBytes(byte[] imageBytes) {
+        private void PrepareAndFindColorspace(PdfObject colorspace) {
             pngColorType = -1;
-            PdfArray decode = GetPdfObject().GetAsArray(PdfName.Decode);
             width = GetPdfObject().GetAsNumber(PdfName.Width).IntValue();
             height = GetPdfObject().GetAsNumber(PdfName.Height).IntValue();
             bpc = GetPdfObject().GetAsNumber(PdfName.BitsPerComponent).IntValue();
             pngBitDepth = bpc;
-            PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
             palette = null;
             icc = null;
             stride = 0;
             FindColorspace(colorspace, true);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private byte[] DecodeTiffAndPngBytes(byte[] imageBytes) {
+            PdfObject colorspace = GetPdfObject().Get(PdfName.ColorSpace);
+            PrepareAndFindColorspace(colorspace);
             MemoryStream ms = new MemoryStream();
             if (pngColorType < 0) {
                 if (bpc != 8) {
@@ -413,6 +618,7 @@ namespace iText.Kernel.Pdf.Xobject {
             }
             else {
                 PngWriter png = new PngWriter(ms);
+                PdfArray decode = GetPdfObject().GetAsArray(PdfName.Decode);
                 if (decode != null) {
                     if (pngBitDepth == 1) {
                         // if the decode array is 1,0, then we need to invert the image

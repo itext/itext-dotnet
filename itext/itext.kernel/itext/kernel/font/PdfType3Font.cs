@@ -99,14 +99,14 @@ namespace iText.Kernel.Font {
             }
             PdfNumber firstCharNumber = fontDictionary.GetAsNumber(PdfName.FirstChar);
             int firstChar = firstCharNumber != null ? Math.Max(firstCharNumber.IntValue(), 0) : 0;
-            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar);
+            int[] widths = FontUtil.ConvertSimpleWidthsArray(fontDictionary.GetAsArray(PdfName.Widths), firstChar, 0);
             double[] fontMatrix = new double[6];
             for (int i = 0; i < fontMatrixArray.Size(); i++) {
                 fontMatrix[i] = ((PdfNumber)fontMatrixArray.Get(i)).GetValue();
             }
             SetFontMatrix(fontMatrix);
             foreach (PdfName glyphName in charProcsDic.KeySet()) {
-                int unicode = (int)AdobeGlyphList.NameToUnicode(glyphName.GetValue());
+                int unicode = AdobeGlyphList.NameToUnicode(glyphName.GetValue());
                 if (unicode != -1 && fontEncoding.CanEncode(unicode)) {
                     int code = fontEncoding.ConvertToByte(unicode);
                     ((Type3FontProgram)GetFontProgram()).AddGlyph(code, unicode, widths[code], null, new Type3Glyph(charProcsDic
@@ -216,6 +216,7 @@ namespace iText.Kernel.Font {
                 if (fontEncoding.CanDecode(i)) {
                     Type3Glyph glyph = GetType3Glyph(fontEncoding.GetUnicode(i));
                     charProcs.Put(new PdfName(fontEncoding.GetDifference(i)), glyph.GetContentStream());
+                    glyph.GetContentStream().Flush();
                 }
             }
             GetPdfObject().Put(PdfName.CharProcs, charProcs);

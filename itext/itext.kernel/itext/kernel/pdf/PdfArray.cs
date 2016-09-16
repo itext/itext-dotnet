@@ -209,16 +209,35 @@ namespace iText.Kernel.Pdf
 
 		public virtual bool Contains(PdfObject o)
 		{
-			return list.Contains(o);
-		}
+            if (list.Contains(o))
+                return true;
+            if (o == null)
+                return false;
+            foreach (PdfObject pdfObject in this)
+                if (PdfObject.EqualContent(o, pdfObject))
+                    return true;
+            return false;
+        }
 
+        /// <summary>
+        /// Returns an iterator over an array of PdfObject elements.
+        /// <br/>
+        /// <b>NOTE:</b> since 7.0.1 it returns collection of direct objects.
+        /// If you want to get {@link PdfIndirectReference} instances for the indirect objects value,
+        /// you shall use {@link #get(int, boolean)} method.
+        /// </summary>
+        /// <returns>an enumerator.</returns>
 		public IEnumerator<PdfObject> GetEnumerator()
 		{
-			return list.GetEnumerator();
+			return new PdfArrayDirectIterator(list.GetEnumerator());
 		}
 
+        /// <summary>
+        /// Returns an iterator over an array of PdfObject elements.
+        /// </summary>
+        [Obsolete("Use {@link #iterator()} instead")]
 	    public IEnumerator<PdfObject> GetDirectEnumerator() {
-            return new PdfArrayDirectEnumerator(list.GetEnumerator());
+            return new PdfArrayDirectIterator(list.GetEnumerator());
 	    }
 
 	    public virtual void Add(PdfObject pdfObject)
@@ -228,8 +247,20 @@ namespace iText.Kernel.Pdf
 
 		public virtual void Remove(PdfObject o)
 		{
-			list.Remove(o);
-		}
+            if (list.Remove(o))
+                return;
+            if (o == null)
+                return;
+		    PdfObject toDelete = null;
+		    foreach (PdfObject pdfObject in list)
+		        if (PdfObject.EqualContent(o, pdfObject))
+		        {
+		            toDelete = pdfObject;
+                    break;
+		        }
+		    if (toDelete != null)
+		        list.Remove(toDelete);
+        }
 
 		/// <summary>Adds the Collection of PdfObjects.</summary>
 		/// <param name="c">the Collection of PdfObjects to be added</param>
@@ -283,8 +314,8 @@ namespace iText.Kernel.Pdf
 			return list[index] = element;
 		}
 
-		/// <summary>Adds the specified PdfObject qt the specified index.</summary>
-		/// <remarks>Adds the specified PdfObject qt the specified index. All objects after this index will be shifted by 1.
+		/// <summary>Adds the specified PdfObject at the specified index.</summary>
+		/// <remarks>Adds the specified PdfObject at the specified index. All objects after this index will be shifted by 1.
 		/// 	</remarks>
 		/// <param name="index">position to insert the PdfObject</param>
 		/// <param name="element">PdfObject to be added</param>
@@ -309,8 +340,17 @@ namespace iText.Kernel.Pdf
 		/// <seealso cref="System.Collections.IList{E}.IndexOf(System.Object)"/>
 		public virtual int IndexOf(PdfObject o)
 		{
-			return list.IndexOf(o);
-		}
+            if (o == null)
+                return list.IndexOf(null);
+            int index = 0;
+            foreach (PdfObject pdfObject in this)
+            {
+                if (PdfObject.EqualContent(o, pdfObject))
+                    return index;
+                index++;
+            }
+            return -1;
+        }
 
 		/// <summary>Returns a sublist of this PdfArray, starting at fromIndex (inclusive) and ending at toIndex (exclusive).
 		/// 	</summary>
@@ -394,7 +434,6 @@ namespace iText.Kernel.Pdf
 	    }
 
 	    /// <param name="asDirect">true is to extract direct object always.</param>
-		/// <exception cref="iText.Kernel.PdfException"/>
 		public virtual PdfObject Get(int index, bool asDirect)
 		{
 			if (!asDirect)
@@ -565,47 +604,5 @@ namespace iText.Kernel.Pdf
 		{
 			list = null;
 		}
-
-        private class PdfArrayDirectEnumerator : IEnumerator<PdfObject>
-        {
-            private IEnumerator<PdfObject> parentEnumerator;
-
-            public PdfArrayDirectEnumerator(IEnumerator<PdfObject> parentEnumerator)
-            {
-                this.parentEnumerator = parentEnumerator;
-            }
-
-            public void Dispose()
-            {
-                parentEnumerator.Dispose();
-            }
-
-            public bool MoveNext()
-            {
-                if (parentEnumerator.MoveNext())
-                {
-                    PdfObject obj = parentEnumerator.Current;
-                    if (obj.IsIndirectReference())
-                    {
-                        obj = ((PdfIndirectReference)obj).GetRefersTo(true);
-                    }
-                    Current = obj;
-                    return true;
-                }
-                return false;
-            }
-
-            public void Reset()
-            {
-                parentEnumerator.Reset();
-            }
-
-            public PdfObject Current { get; private set; }
-
-            object IEnumerator.Current
-            {
-                get { return Current; }
-            }
-        }
 	}
 }

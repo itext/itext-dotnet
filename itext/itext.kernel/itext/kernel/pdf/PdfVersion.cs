@@ -45,14 +45,14 @@ using System;
 using System.Collections.Generic;
 
 namespace iText.Kernel.Pdf {
-    /// <summary>Enum listing all official PDF versions.</summary>
+    /// <summary>This class represents all official PDF versions.</summary>
     public class PdfVersion : IComparable<iText.Kernel.Pdf.PdfVersion> {
         private static readonly IList<iText.Kernel.Pdf.PdfVersion> values = new List<iText.Kernel.Pdf.PdfVersion>(
             );
 
         public static readonly iText.Kernel.Pdf.PdfVersion PDF_1_0 = CreatePdfVersion(1, 0);
 
-        public static readonly iText.Kernel.Pdf.PdfVersion PDF_1_1 = CreatePdfVersion(1, 0);
+        public static readonly iText.Kernel.Pdf.PdfVersion PDF_1_1 = CreatePdfVersion(1, 1);
 
         public static readonly iText.Kernel.Pdf.PdfVersion PDF_1_2 = CreatePdfVersion(1, 2);
 
@@ -72,7 +72,7 @@ namespace iText.Kernel.Pdf {
 
         private int minor;
 
-        /// <summary>Creates a PdfVersion enum.</summary>
+        /// <summary>Creates a PdfVersion class.</summary>
         /// <param name="major">major version number</param>
         /// <param name="minor">minor version number</param>
         private PdfVersion(int major, int minor) {
@@ -89,7 +89,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Creates a PdfVersion enum from a String object if the specified version
+        /// Creates a PdfVersion class from a String object if the specified version
         /// can be found.
         /// </summary>
         /// <param name="value">version number</param>
@@ -104,7 +104,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
-        /// Creates a PdfVersion enum from a
+        /// Creates a PdfVersion class from a
         /// <see cref="PdfName"/>
         /// object if the specified version
         /// can be found.

@@ -46,26 +46,68 @@ using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
     public class GrooveBorder : Border3D {
+        /// <summary>Creates a GrooveBorder instance with the specified width.</summary>
+        /// <remarks>
+        /// Creates a GrooveBorder instance with the specified width. The color is set to the default:
+        /// <see cref="Border3D#GRAY">gray</see>
+        /// .
+        /// </remarks>
+        /// <param name="width">width of the border</param>
         public GrooveBorder(float width)
             : base(width) {
         }
 
+        /// <summary>
+        /// Creates a GrooveBorder instance with the specified width and the
+        /// <see cref="iText.Kernel.Colors.DeviceRgb">rgb color</see>
+        /// .
+        /// </summary>
+        /// <param name="width">width of the border</param>
+        /// <param name="color">
+        /// the
+        /// <see cref="iText.Kernel.Colors.DeviceRgb">rgb color</see>
+        /// of the border
+        /// </param>
         public GrooveBorder(DeviceRgb color, float width)
             : base(color, width) {
         }
 
+        /// <summary>
+        /// Creates a GrooveBorder instance with the specified width and the
+        /// <see cref="iText.Kernel.Colors.DeviceCmyk">cmyk color</see>
+        /// .
+        /// </summary>
+        /// <param name="width">width of the border</param>
+        /// <param name="color">
+        /// the
+        /// <see cref="iText.Kernel.Colors.DeviceCmyk">cmyk color</see>
+        /// of the border
+        /// </param>
         public GrooveBorder(DeviceCmyk color, float width)
             : base(color, width) {
         }
 
+        /// <summary>
+        /// Creates a GrooveBorder instance with the specified width and the
+        /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>
+        /// .
+        /// </summary>
+        /// <param name="width">width of the border</param>
+        /// <param name="color">
+        /// the
+        /// <see cref="iText.Kernel.Colors.DeviceGray">gray color</see>
+        /// of the border
+        /// </param>
         public GrooveBorder(DeviceGray color, float width)
             : base(color, width) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border._3D_GROOVE;
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void SetInnerHalfColor(PdfCanvas canvas, Border.Side side) {
             switch (side) {
                 case Border.Side.TOP:
@@ -82,6 +124,7 @@ namespace iText.Layout.Borders {
             }
         }
 
+        /// <summary><inheritDoc/></summary>
         protected internal override void SetOuterHalfColor(PdfCanvas canvas, Border.Side side) {
             switch (side) {
                 case Border.Side.TOP:

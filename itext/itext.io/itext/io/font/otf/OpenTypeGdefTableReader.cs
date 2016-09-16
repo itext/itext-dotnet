@@ -45,12 +45,6 @@ using iText.IO.Source;
 
 namespace iText.IO.Font.Otf {
     public class OpenTypeGdefTableReader {
-        private readonly int GLYPH_SKIP_BASE = 1;
-
-        private readonly int GLYPH_SKIP_MARK = 2;
-
-        private readonly int GLYPH_SKIP_LIGATURE = 3;
-
         private readonly int FLAG_IGNORE_BASE = 2;
 
         private readonly int FLAG_IGNORE_LIGATURE = 4;
@@ -94,20 +88,24 @@ namespace iText.IO.Font.Otf {
         public virtual bool IsSkip(int glyph, int flag) {
             if (glyphClass != null && (flag & (FLAG_IGNORE_BASE | FLAG_IGNORE_LIGATURE | FLAG_IGNORE_MARK)) != 0) {
                 int cla = glyphClass.GetOtfClass(glyph);
-                if (cla == GLYPH_SKIP_BASE && (flag & FLAG_IGNORE_BASE) != 0) {
+                if (cla == OtfClass.GLYPH_BASE && (flag & FLAG_IGNORE_BASE) != 0) {
                     return true;
                 }
-                if (cla == GLYPH_SKIP_MARK && (flag & FLAG_IGNORE_MARK) != 0) {
+                if (cla == OtfClass.GLYPH_MARK && (flag & FLAG_IGNORE_MARK) != 0) {
                     return true;
                 }
-                if (cla == GLYPH_SKIP_LIGATURE && (flag & FLAG_IGNORE_LIGATURE) != 0) {
+                if (cla == OtfClass.GLYPH_LIGATURE && (flag & FLAG_IGNORE_LIGATURE) != 0) {
                     return true;
                 }
             }
-            if (markAttachmentClass != null && (flag >> 8) > 0) {
+            if (markAttachmentClass != null && markAttachmentClass.GetOtfClass(glyph) > 0 && (flag >> 8) > 0) {
                 return markAttachmentClass.GetOtfClass(glyph) != (flag >> 8);
             }
             return false;
+        }
+
+        public virtual OtfClass GetGlyphClassTable() {
+            return glyphClass;
         }
     }
 }

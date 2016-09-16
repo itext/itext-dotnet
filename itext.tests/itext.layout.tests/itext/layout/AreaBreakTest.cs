@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -25,7 +24,7 @@ namespace iText.Layout {
         public virtual void PageBreakTest1() {
             String outFileName = destinationFolder + "pageBreak1.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak1.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new AreaBreak());
             document.Close();
@@ -39,7 +38,7 @@ namespace iText.Layout {
         public virtual void PageBreakTest2() {
             String outFileName = destinationFolder + "pageBreak2.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak2.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello World!")).Add(new AreaBreak(new PageSize(200, 200)));
             document.Close();
@@ -53,7 +52,7 @@ namespace iText.Layout {
         public virtual void PageBreakTest03() {
             String outFileName = destinationFolder + "pageBreak3.pdf";
             String cmpFileName = sourceFolder + "cmp_pageBreak3.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.SetRenderer(new ColumnDocumentRenderer(document, new Rectangle[] { new Rectangle(30, 30, 200, 600
                 ), new Rectangle(300, 30, 200, 600) }));

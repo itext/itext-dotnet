@@ -261,7 +261,7 @@ namespace iText.Kernel.Pdf {
             long time = SystemUtil.GetSystemTimeTicks();
             long mem = SystemUtil.GetFreeMemory();
             String s = time + "+" + mem + "+" + (seq++);
-            return md5.Digest(s.GetBytes());
+            return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
         }
 
         public static PdfObject CreateInfoId(byte[] id, bool modified) {
@@ -369,6 +369,21 @@ namespace iText.Kernel.Pdf {
                     ());
             }
             return userPassword;
+        }
+
+        /// <summary>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
+        /// Basically this means that before flushing you need to explicitly call
+        /// <see cref="PdfObjectWrapper{T}.MakeIndirect(PdfDocument)"/>
+        /// .
+        /// For example: wrapperInstance.makeIndirect(document).flush();
+        /// Note that not every wrapper require this, only those that have such warning in documentation.
+        /// </summary>
+        public override void Flush() {
+            base.Flush();
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {

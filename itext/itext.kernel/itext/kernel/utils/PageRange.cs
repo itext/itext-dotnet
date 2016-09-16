@@ -46,16 +46,29 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace iText.Kernel.Utils {
+    /// <summary>
+    /// Class representing a page range, for instance a page range can contain
+    /// pages 5, then pages 10 through 15, then page 18, then page 21 and so on.
+    /// </summary>
     public class PageRange {
         private IList<int> sequenceStarts = new List<int>();
 
         private IList<int> sequenceEnds = new List<int>();
 
+        /// <summary>
+        /// Constructs an empty
+        /// <see cref="PageRange"/>
+        /// instance.
+        /// </summary>
         public PageRange() {
         }
 
-        /// <summary>You can call specify the page range in a string form, for example: "1-12, 15, 45-66".</summary>
-        /// <param name="pageRange">the page range.</param>
+        /// <summary>
+        /// Constructs a
+        /// <see cref="PageRange"/>
+        /// instance from a range in a string form, for example: "1-12, 15, 45-66".
+        /// </summary>
+        /// <param name="pageRange">the page range</param>
         public PageRange(String pageRange) {
             pageRange = iText.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
             Regex sequencePattern = iText.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)");
@@ -76,18 +89,27 @@ namespace iText.Kernel.Utils {
             }
         }
 
+        /// <summary>Adds a page sequence to the range.</summary>
+        /// <param name="startPageNumber">the starting page number of the sequence</param>
+        /// <param name="endPageNumber">the finishing page number of the sequnce</param>
+        /// <returns>this range, already modified</returns>
         public virtual iText.Kernel.Utils.PageRange AddPageSequence(int startPageNumber, int endPageNumber) {
             sequenceStarts.Add(startPageNumber);
             sequenceEnds.Add(endPageNumber);
             return this;
         }
 
+        /// <summary>Adds a single page to the range.</summary>
+        /// <param name="pageNumber">the page number to add</param>
+        /// <returns>this range, already modified</returns>
         public virtual iText.Kernel.Utils.PageRange AddSinglePage(int pageNumber) {
             sequenceStarts.Add(pageNumber);
             sequenceEnds.Add(pageNumber);
             return this;
         }
 
+        /// <summary>Gets the list if pages that have been added to the range so far.</summary>
+        /// <returns>the list containing page numbers added to the range</returns>
         public virtual IList<int> GetAllPages() {
             IList<int> allPages = new List<int>();
             for (int ind = 0; ind < sequenceStarts.Count; ind++) {
@@ -98,6 +120,9 @@ namespace iText.Kernel.Utils {
             return allPages;
         }
 
+        /// <summary>Checks if a given page is present in the range built so far.</summary>
+        /// <param name="pageNumber">the page number to check</param>
+        /// <returns><code>true</code> if the page is present in this range, <code>false</code> otherwise</returns>
         public virtual bool IsPageInRange(int pageNumber) {
             for (int ind = 0; ind < sequenceStarts.Count; ind++) {
                 if (sequenceStarts[ind] <= pageNumber && pageNumber <= sequenceEnds[ind]) {
@@ -107,6 +132,7 @@ namespace iText.Kernel.Utils {
             return false;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override bool Equals(Object obj) {
             if (!(obj is iText.Kernel.Utils.PageRange)) {
                 return false;
@@ -115,6 +141,7 @@ namespace iText.Kernel.Utils {
             return sequenceStarts.Equals(other.sequenceStarts) && sequenceEnds.Equals(other.sequenceEnds);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             return sequenceStarts.GetHashCode() * 31 + sequenceEnds.GetHashCode();
         }

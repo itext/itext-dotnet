@@ -24,8 +24,7 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode01Test() {
             String filename = "barcode39_01.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             Barcode1D barcode = new Barcode39(document);
@@ -43,9 +42,8 @@ namespace iText.Barcodes {
         [NUnit.Framework.Test]
         public virtual void Barcode02Test() {
             String filename = "barcode39_02.pdf";
-            PdfWriter writer = new PdfWriter(destinationFolder + filename);
-            PdfReader reader = new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf");
-            PdfDocument document = new PdfDocument(reader, writer);
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "DocumentWithTrueTypeFont1.pdf"), new 
+                PdfWriter(destinationFolder + filename));
             PdfCanvas canvas = new PdfCanvas(document.GetLastPage());
             Barcode1D barcode = new Barcode39(document);
             barcode.SetCode("9781935182610");
@@ -58,8 +56,7 @@ namespace iText.Barcodes {
 
         [NUnit.Framework.Test]
         public virtual void Barcode03Test() {
-            PdfWriter writer = new PdfWriter(new ByteArrayOutputStream());
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
             Barcode39 barcode = new Barcode39(document);
             try {
                 Barcode39.GetBarsCode39("9781935*182610");

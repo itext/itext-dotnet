@@ -673,6 +673,8 @@ namespace iText.Forms.Xfa
 			{
 				datasetsNode = (XElement)xfaNodes["datasets"];
 				datasetsSom = new Xml2SomDatasets(datasetsNode.FirstNode);
+                XElement dataNode = FindDataNode(datasetsNode);
+                datasetsSom = new Xml2SomDatasets(dataNode != null ? dataNode : datasetsNode.FirstNode);
 			}
 			if (datasetsNode == null)
 			{
@@ -713,6 +715,12 @@ namespace iText.Forms.Xfa
 			}
 			return result;
 		}
+
+        private XElement FindDataNode(XElement datasetsNode)
+	    {
+	        return datasetsNode.Element("{xfa}data");
+	    }
+
 
         private class UpperCaseUTF8Encoding : UTF8Encoding
         {

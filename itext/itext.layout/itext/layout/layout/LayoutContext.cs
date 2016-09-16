@@ -44,17 +44,34 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the context for content
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+    /// .
+    /// </summary>
     public class LayoutContext {
+        /// <summary>
+        /// The
+        /// <see cref="LayoutArea">area</see>
+        /// the content to be placed on.
+        /// </summary>
         protected internal LayoutArea area;
 
         public LayoutContext(LayoutArea area) {
             this.area = area;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="LayoutArea">area</see>
+        /// the content to be placed on.
+        /// </summary>
+        /// <returns>the area for content layouting.</returns>
         public virtual LayoutArea GetArea() {
             return area;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override String ToString() {
             return area.ToString();
         }

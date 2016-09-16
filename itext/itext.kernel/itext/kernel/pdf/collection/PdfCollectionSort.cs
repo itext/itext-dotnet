@@ -86,7 +86,7 @@ namespace iText.Kernel.Pdf.Collection {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsArray()) {
                 if (((PdfArray)obj).Size() != ascending.Length) {
-                    throw new PdfException(PdfException.TheNumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields);
+                    throw new PdfException(PdfException.NumberOfBooleansInTheArrayDoesntCorrespondWithTheNumberOfFields);
                 }
                 GetPdfObject().Put(PdfName.A, new PdfArray(ascending));
                 return this;

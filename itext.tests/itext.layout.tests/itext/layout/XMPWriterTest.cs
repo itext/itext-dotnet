@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -26,8 +25,7 @@ namespace iText.Layout {
         public virtual void CreatePdfTest() {
             String fileName = "xmp_metadata.pdf";
             // step 1
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "xmp_metadata.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "xmp_metadata.pdf"));
             Document document = new Document(pdfDocument);
             // step 2
             ByteArrayOutputStream os = new ByteArrayOutputStream();

@@ -45,22 +45,65 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Colors;
 using iText.Kernel.Colors;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Colorspace;
 
 namespace iText.Pdfa.Checker {
+    /// <summary>
+    /// An abstract class that will run through all necessary checks defined in the
+    /// different PDF/A standards and levels.
+    /// </summary>
+    /// <remarks>
+    /// An abstract class that will run through all necessary checks defined in the
+    /// different PDF/A standards and levels. A number of common checks are executed
+    /// in this class, while standard-dependent specifications are implemented in the
+    /// available subclasses. The standard that is followed is the series of ISO
+    /// 19005 specifications, currently generations 1 through 3. The ZUGFeRD standard
+    /// is derived from ISO 19005-3.
+    /// While it is possible to subclass this method and implement its abstract
+    /// methods in client code, this is not encouraged and will have little effect.
+    /// It is not possible to plug custom implementations into iText, because iText
+    /// should always refuse to create non-compliant PDF/A, which would be possible
+    /// with client code implementations. Any future generations of the PDF/A
+    /// standard and its derivates will get their own implementation in the
+    /// iText 7 - pdfa project.
+    /// </remarks>
     public abstract class PdfAChecker {
+        /// <summary>
+        /// The Red-Green-Blue color profile as defined by the International Color
+        /// Consortium.
+        /// </summary>
         public const String ICC_COLOR_SPACE_RGB = "RGB ";
 
+        /// <summary>
+        /// The Cyan-Magenta-Yellow-Key (black) color profile as defined by the
+        /// International Color Consortium.
+        /// </summary>
         public const String ICC_COLOR_SPACE_CMYK = "CMYK";
 
+        /// <summary>
+        /// The Grayscale color profile as defined by the International Color
+        /// Consortium.
+        /// </summary>
         public const String ICC_COLOR_SPACE_GRAY = "GRAY";
 
+        /// <summary>The Output device class</summary>
         public const String ICC_DEVICE_CLASS_OUTPUT_PROFILE = "prtr";
 
+        /// <summary>The Monitor device class</summary>
         public const String ICC_DEVICE_CLASS_MONITOR_PROFILE = "mntr";
 
+        /// <summary>The maximum Graphics State stack depth in PDF/A documents, i.e.</summary>
+        /// <remarks>
+        /// The maximum Graphics State stack depth in PDF/A documents, i.e. the
+        /// maximum number of graphics state operators with code <code>q</code> that
+        /// may be opened (i.e. not yet closed by a corresponding <code>Q</code>) at
+        /// any point in a content stream sequence.
+        /// Defined as 28 by PDF/A-1 section 6.1.12, by referring to the PDF spec
+        /// Appendix C table 1 "architectural limits".
+        /// </remarks>
         public const int maxGsStackDepth = 28;
 
         protected internal PdfAConformanceLevel conformanceLevel;
@@ -93,6 +136,17 @@ namespace iText.Pdfa.Checker {
             this.conformanceLevel = conformanceLevel;
         }
 
+        /// <summary>
+        /// This method checks a number of document-wide requirements of the PDF/A
+        /// standard.
+        /// </summary>
+        /// <remarks>
+        /// This method checks a number of document-wide requirements of the PDF/A
+        /// standard. The algorithms of some of these checks vary with the PDF/A
+        /// level and thus are implemented in subclasses; others are implemented
+        /// as private methods in this class.
+        /// </remarks>
+        /// <param name="catalog"/>
         public virtual void CheckDocument(PdfCatalog catalog) {
             PdfDictionary catalogDict = catalog.GetPdfObject();
             SetPdfAOutputIntentColorSpace(catalogDict);
@@ -108,10 +162,20 @@ namespace iText.Pdfa.Checker {
             CheckColorsUsages();
         }
 
+        /// <summary>
+        /// This method checks all requirements that must be fulfilled by a page in a
+        /// PDF/A document.
+        /// </summary>
+        /// <param name="page">the page that must be checked</param>
         public virtual void CheckSinglePage(PdfPage page) {
             CheckPage(page);
         }
 
+        /// <summary>
+        /// This method checks the requirements that must be fulfilled by a COS
+        /// object in a PDF/A document.
+        /// </summary>
+        /// <param name="obj">the COS object that must be checked</param>
         public virtual void CheckPdfObject(PdfObject obj) {
             switch (obj.GetObjectType()) {
                 case PdfObject.NUMBER: {
@@ -120,10 +184,7 @@ namespace iText.Pdfa.Checker {
                 }
 
                 case PdfObject.STREAM: {
-                    PdfStream stream = (PdfStream)obj;
-                    //form xObjects, annotation appearance streams, patterns and type3 glyphs may have their own resources dictionary
-                    CheckResources(stream.GetAsDictionary(PdfName.Resources));
-                    CheckPdfStream(stream);
+                    CheckPdfStream((PdfStream)obj);
                     break;
                 }
 
@@ -143,26 +204,121 @@ namespace iText.Pdfa.Checker {
             }
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// for this file.
+        /// </summary>
+        /// <returns>the defined conformance level for this document.</returns>
         public virtual PdfAConformanceLevel GetConformanceLevel() {
             return conformanceLevel;
         }
 
+        /// <summary>
+        /// Remembers which objects have already been checked, in order to avoid
+        /// redundant checks.
+        /// </summary>
+        /// <param name="object">the object to check</param>
+        /// <returns>whether or not the object has already been checked</returns>
         public virtual bool ObjectIsChecked(PdfObject @object) {
             return checkedObjects.Contains(@object);
         }
 
+        /// <summary>
+        /// This method checks compliance of the tag structure elements, such as struct elements
+        /// or parent tree entries.
+        /// </summary>
+        /// <param name="obj">an object that represents tag structure element.</param>
+        public virtual void CheckTagStructureElement(PdfObject obj) {
+            // We don't check tag structure as there are no strict constraints,
+            // so we just mark tag structure elements to be able to flush them
+            checkedObjects.Add(obj);
+        }
+
+        /// <summary>
+        /// This method checks compliance with the graphics state architectural
+        /// limitation, explained by
+        /// <see cref="maxGsStackDepth"/>
+        /// .
+        /// </summary>
+        /// <param name="stackOperation">the operation to check the graphics state counter for</param>
         public abstract void CheckCanvasStack(char stackOperation);
 
+        /// <summary>
+        /// This method checks compliance with the inline image restrictions in the
+        /// PDF/A specs, specifically filter parameters.
+        /// </summary>
+        /// <param name="inlineImage">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfStream"/>
+        /// containing the inline image
+        /// </param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
         public abstract void CheckInlineImage(PdfStream inlineImage, PdfDictionary currentColorSpaces);
 
+        /// <summary>
+        /// This method checks compliance with the color restrictions imposed by the
+        /// available color spaces in the document.
+        /// </summary>
+        /// <param name="color">the color to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="fill">whether the color is used for fill or stroke operations</param>
         public abstract void CheckColor(Color color, PdfDictionary currentColorSpaces, bool? fill);
 
+        /// <summary>
+        /// This method performs a range of checks on the given color space, depending
+        /// on the type and properties of that color space.
+        /// </summary>
+        /// <param name="colorSpace">the color space to check</param>
+        /// <param name="currentColorSpaces">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
+        /// containing the color spaces used in the document
+        /// </param>
+        /// <param name="checkAlternate">whether or not to also check the parent color space</param>
+        /// <param name="fill">whether the color space is used for fill or stroke operations</param>
         public abstract void CheckColorSpace(PdfColorSpace colorSpace, PdfDictionary currentColorSpaces, bool checkAlternate
             , bool? fill);
 
+        /// <summary>
+        /// Checks whether the rendering intent of the document is within the allowed
+        /// range of intents.
+        /// </summary>
+        /// <remarks>
+        /// Checks whether the rendering intent of the document is within the allowed
+        /// range of intents. This is defined in ISO 19005-1 section 6.2.9, and
+        /// unchanged in newer generations of the PDF/A specification.
+        /// </remarks>
+        /// <param name="intent">the intent to be analyzed</param>
         public abstract void CheckRenderingIntent(PdfName intent);
 
+        /// <summary>
+        /// Performs a number of checks on the graphics state, among others ISO
+        /// 19005-1 section 6.2.8 and 6.4 and ISO 19005-2 section 6.2.5 and 6.2.10.
+        /// </summary>
+        /// <param name="extGState">the graphics state to be checked</param>
         public abstract void CheckExtGState(CanvasGraphicsState extGState);
+
+        /// <summary>Performs a number of checks on the font.</summary>
+        /// <remarks>
+        /// Performs a number of checks on the font. See ISO 19005-1 section 6.3,
+        /// ISO 19005-2 and ISO 19005-3 section 6.2.11.
+        /// Be aware that not all constraints defined in the ISO are checked in this method,
+        /// for most of them we consider that iText always creates valid fonts.
+        /// </remarks>
+        /// <param name="pdfFont">font to be checked</param>
+        public virtual void CheckFont(PdfFont pdfFont) {
+            //TODO iText 7.1: Mark as abstract
+            throw new Exception("You must override this method");
+        }
 
         protected internal abstract ICollection<PdfName> GetForbiddenActions();
 
@@ -188,6 +344,11 @@ namespace iText.Pdfa.Checker {
 
         protected internal abstract void CheckMetaData(PdfDictionary catalog);
 
+        //TODO iText 7.1: Mark as abstract
+        protected internal virtual void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            throw new Exception("You must override this method");
+        }
+
         protected internal abstract void CheckOutputIntents(PdfDictionary catalog);
 
         protected internal abstract void CheckPageObject(PdfDictionary page, PdfDictionary pageResources);
@@ -200,6 +361,11 @@ namespace iText.Pdfa.Checker {
 
         protected internal abstract void CheckPdfString(PdfString @string);
 
+        //TODO iText 7.1: Mark as abstract
+        protected internal virtual void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
+            throw new Exception("You must override this method");
+        }
+
         protected internal abstract void CheckTrailer(PdfDictionary trailer);
 
         protected internal virtual void CheckResources(PdfDictionary resources) {
@@ -208,11 +374,17 @@ namespace iText.Pdfa.Checker {
             }
             PdfDictionary xObjects = resources.GetAsDictionary(PdfName.XObject);
             PdfDictionary shadings = resources.GetAsDictionary(PdfName.Shading);
+            PdfDictionary patterns = resources.GetAsDictionary(PdfName.Pattern);
             if (xObjects != null) {
                 foreach (PdfObject xObject in xObjects.Values()) {
                     PdfStream xObjStream = (PdfStream)xObject;
-                    PdfObject subtype = xObjStream.Get(PdfName.Subtype);
-                    if (PdfName.Image.Equals(subtype)) {
+                    PdfObject subtype = null;
+                    bool isFlushed = xObjStream.IsFlushed();
+                    if (!isFlushed) {
+                        subtype = xObjStream.Get(PdfName.Subtype);
+                    }
+                    if (PdfName.Image.Equals(subtype) || isFlushed) {
+                        // if flushed still may be need to check colorspace in given context
                         CheckImage(xObjStream, resources.GetAsDictionary(PdfName.ColorSpace));
                     }
                     else {
@@ -225,8 +397,20 @@ namespace iText.Pdfa.Checker {
             if (shadings != null) {
                 foreach (PdfObject shading in shadings.Values()) {
                     PdfDictionary shadingDict = (PdfDictionary)shading;
-                    CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
-                        (PdfName.ColorSpace), true, null);
+                    if (!IsAlreadyChecked(shadingDict)) {
+                        CheckColorSpace(PdfColorSpace.MakeColorSpace(shadingDict.Get(PdfName.ColorSpace)), resources.GetAsDictionary
+                            (PdfName.ColorSpace), true, null);
+                    }
+                }
+            }
+            if (patterns != null) {
+                foreach (PdfObject p in patterns.Values()) {
+                    if (p.IsStream()) {
+                        PdfStream pStream = (PdfStream)p;
+                        if (!IsAlreadyChecked(pStream)) {
+                            CheckResources(pStream.GetAsDictionary(PdfName.Resources));
+                        }
+                    }
                 }
             }
         }
@@ -246,6 +430,24 @@ namespace iText.Pdfa.Checker {
             }
             checkedObjects.Add(dictionary);
             return false;
+        }
+
+        protected internal virtual void CheckResourcesOfAppearanceStreams(PdfDictionary appearanceStreamsDict) {
+            foreach (PdfObject val in appearanceStreamsDict.Values()) {
+                if (val is PdfDictionary) {
+                    PdfDictionary ap = (PdfDictionary)val;
+                    if (ap.IsDictionary()) {
+                        CheckResourcesOfAppearanceStreams(ap);
+                    }
+                    else {
+                        if (ap.IsStream()) {
+                            if (!IsAlreadyChecked(ap)) {
+                                CheckResources(ap.GetAsDictionary(PdfName.Resources));
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void CheckPages(PdfDocument document) {
@@ -271,27 +473,14 @@ namespace iText.Pdfa.Checker {
         }
 
         private void CheckOpenAction(PdfObject openAction) {
-            if (openAction == null) {
-                return;
-            }
-            if (openAction.IsDictionary()) {
+            if (openAction != null && openAction.IsDictionary()) {
                 CheckAction((PdfDictionary)openAction);
-            }
-            else {
-                if (openAction.IsArray()) {
-                    PdfArray actions = (PdfArray)openAction;
-                    foreach (PdfObject action in actions) {
-                        CheckAction((PdfDictionary)action);
-                    }
-                }
             }
         }
 
         private void CheckAnnotations(PdfDictionary page) {
             PdfArray annots = page.GetAsArray(PdfName.Annots);
             if (annots != null) {
-                // explicit iteration to resolve indirect references on get().
-                // TODO DEVSIX-591
                 for (int i = 0; i < annots.Size(); i++) {
                     PdfDictionary annot = annots.GetAsDictionary(i);
                     CheckAnnotation(annot);

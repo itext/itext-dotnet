@@ -55,16 +55,16 @@ namespace iText.IO.Image {
         }
 
         private class ZeroBoxSizeException : System.IO.IOException {
-            public ZeroBoxSizeException(String s)
+            internal ZeroBoxSizeException(String s)
                 : base(s) {
             }
         }
 
+        private const int JPIP_JPIP = 0x6a706970;
+
         private const int JP2_JP = 0x6a502020;
 
         private const int JP2_IHDR = 0x69686472;
-
-        private const int JPIP_JPIP = 0x6a706970;
 
         private const int JP2_FTYP = 0x66747970;
 

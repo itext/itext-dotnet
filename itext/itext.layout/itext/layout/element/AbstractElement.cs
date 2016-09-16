@@ -140,15 +140,38 @@ namespace iText.Layout.Element {
             }
         }
 
+        /// <summary>Returns <code>true</code> if this list contains no elements.</summary>
+        /// <returns><code>true</code> if this list contains no elements</returns>
         public virtual bool IsEmpty() {
             return 0 == childElements.Count;
         }
 
+        /// <summary>Sets an action on this Element.</summary>
+        /// <remarks>
+        /// Sets an action on this Element. An action is a general PDF concept that
+        /// signifies anything that makes the document interactive, e.g. a hyperlink
+        /// or a button.
+        /// </remarks>
+        /// <param name="action">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.Action.PdfAction"/>
+        /// that should be performed
+        /// </param>
+        /// <returns>this Element</returns>
         public virtual T SetAction(PdfAction action) {
             SetProperty(Property.ACTION, action);
             return (T)(Object)this;
         }
 
+        /// <summary>Explicitly sets the page number this element should be put on.</summary>
+        /// <remarks>
+        /// Explicitly sets the page number this element should be put on. The location
+        /// on the page will be the same as if it were added at the end of the document,
+        /// but it will be located on the specified page.
+        /// This method should be used very carefully in client code.
+        /// </remarks>
+        /// <param name="pageNumber">the page number of the page this element should be placed on</param>
+        /// <returns>this Element</returns>
         public virtual T SetPageNumber(int pageNumber) {
             SetProperty(Property.PAGE_NUMBER, pageNumber);
             return (T)(Object)this;

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Collection;
@@ -73,7 +74,7 @@ namespace iText.Kernel.Pdf {
             //This HashMap contents all pages of the document and outlines associated to them
             //This flag determines if Outline tree of the document has been built via calling getOutlines method. If this flag is false all outline operations will be ignored
             if (pdfObject == null) {
-                throw new PdfException(PdfException.DocumentHasNoCatalogObject);
+                throw new PdfException(PdfException.DocumentHasNoPdfCatalogObject);
             }
             EnsureObjectIsAddedToDocument(pdfObject);
             GetPdfObject().Put(PdfName.Type, PdfName.Catalog);
@@ -134,7 +135,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>PdfCatalog will be flushed in PdfDocument.close().</summary>
         /// <remarks>PdfCatalog will be flushed in PdfDocument.close(). User mustn't flush PdfCatalog!</remarks>
         public override void Flush() {
-            throw new PdfException(PdfException.YouCannotFlushPdfCatalogManually);
+            ILogger logger = LoggerFactory.GetLogger(typeof(PdfDocument));
+            logger.Warn("PdfCatalog cannot be flushed manually");
         }
 
         public virtual iText.Kernel.Pdf.PdfCatalog SetOpenAction(PdfDestination destination) {
@@ -330,9 +332,8 @@ namespace iText.Kernel.Pdf {
         /// <param name="key">Name of the destination.</param>
         /// <param name="value">
         /// An object destination refers to. Must be an array or a dictionary with key /D and array.
-        /// See PdfSpec 12.3.2.3 for more info.
+        /// See ISO 32000-1 12.3.2.3 for more info.
         /// </param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual void AddNamedDestination(String key, PdfObject value) {
             AddNameToNameTree(key, value, PdfName.Dests);
         }
@@ -349,11 +350,14 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method returns a complete outline tree of the whole document.</summary>
         /// <param name="updateOutlines">
-        /// - if this flag is true, the method read the whole document and creates outline tree.
+        /// if the flag is true, the method read the whole document and creates outline tree.
         /// If false the method gets cached outline tree (if it was cached via calling getOutlines method before).
         /// </param>
-        /// <returns/>
-        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <returns>
+        /// fully initialized
+        /// <see cref="PdfOutline"/>
+        /// object.
+        /// </returns>
         internal virtual PdfOutline GetOutlines(bool updateOutlines) {
             if (outlines != null && !updateOutlines) {
                 return outlines;
@@ -401,7 +405,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method removes all outlines associated with a given page</summary>
         /// <param name="page"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual void RemoveOutlines(PdfPage page) {
             if (GetDocument().GetWriter() == null) {
                 return;
@@ -409,8 +412,10 @@ namespace iText.Kernel.Pdf {
             if (HasOutlines()) {
                 GetOutlines(false);
                 if (pagesWithOutlines.Count > 0) {
-                    foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject())) {
-                        outline.RemoveOutline();
+                    if (pagesWithOutlines.Get(page.GetPdfObject()) != null) {
+                        foreach (PdfOutline outline in pagesWithOutlines.Get(page.GetPdfObject())) {
+                            outline.RemoveOutline();
+                        }
                     }
                 }
             }
@@ -418,7 +423,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method sets the root outline element in the catalog.</summary>
         /// <param name="outline"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         internal virtual void AddRootOutline(PdfOutline outline) {
             if (!outlineMode) {
                 return;

@@ -181,9 +181,11 @@ namespace iText.Kernel.Font {
                     builder.Append((char)(int)uni);
                 }
                 else {
-                    Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
-                    if (glyph != null && glyph.GetChars() != null) {
-                        builder.Append(glyph.GetChars());
+                    if (fontEncoding.GetBaseEncoding() == null) {
+                        Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
+                        if (glyph != null && glyph.GetChars() != null) {
+                            builder.Append(glyph.GetChars());
+                        }
                     }
                 }
             }
@@ -194,7 +196,16 @@ namespace iText.Kernel.Font {
             float width = 0;
             byte[] contentBytes = content.GetValueBytes();
             foreach (byte b in contentBytes) {
-                Glyph glyph = fontProgram.GetGlyphByCode(b & 0xff);
+                Glyph glyph = null;
+                int uni = fontEncoding.GetUnicode(b & 0xff);
+                if (uni > -1) {
+                    glyph = GetGlyph(uni);
+                }
+                else {
+                    if (fontEncoding.GetBaseEncoding() == null) {
+                        glyph = fontProgram.GetGlyphByCode(b & 0xff);
+                    }
+                }
                 width += glyph != null ? glyph.GetWidth() : 0;
             }
             return width;
@@ -319,7 +330,9 @@ namespace iText.Kernel.Font {
             PdfDictionary fontDescriptor = !IsBuiltInFont() ? GetFontDescriptor(fontName) : null;
             if (fontDescriptor != null) {
                 GetPdfObject().Put(PdfName.FontDescriptor, fontDescriptor);
-                fontDescriptor.Flush();
+                if (fontDescriptor.GetIndirectReference() != null) {
+                    fontDescriptor.Flush();
+                }
             }
         }
 
@@ -341,7 +354,7 @@ namespace iText.Kernel.Font {
             FontMetrics fontMetrics = fontProgram.GetFontMetrics();
             FontNames fontNames = fontProgram.GetFontNames();
             PdfDictionary fontDescriptor = new PdfDictionary();
-            MarkObjectAsIndirect(fontDescriptor);
+            MakeObjectIndirect(fontDescriptor);
             fontDescriptor.Put(PdfName.Type, PdfName.FontDescriptor);
             fontDescriptor.Put(PdfName.FontName, new PdfName(fontName));
             fontDescriptor.Put(PdfName.Ascent, new PdfNumber(fontMetrics.GetTypoAscender()));
@@ -363,11 +376,15 @@ namespace iText.Kernel.Font {
                 [0].Length >= 4) {
                 fontDescriptor.Put(PdfName.FontFamily, new PdfString(fontNames.GetFamilyName()[0][3]));
             }
+            //add font stream and flush it immediately
             AddFontStream(fontDescriptor);
             int flags = fontProgram.GetPdfFontFlags();
-            if (!fontEncoding.IsFontSpecific()) {
-                flags &= ~64;
+            if (fontProgram.IsFontSpecific() != fontEncoding.IsFontSpecific()) {
+                flags &= ~(4 | 32);
+                // reset both flags
+                flags |= fontEncoding.IsFontSpecific() ? 4 : 32;
             }
+            // set based on font encoding
             fontDescriptor.Put(PdfName.Flags, new PdfNumber(flags));
             return fontDescriptor;
         }

@@ -46,6 +46,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace iText.Forms {
     internal static class FormsExtensions {
@@ -69,8 +70,24 @@ namespace iText.Forms {
             return System.Text.Encoding.UTF8.GetBytes(str);
         }
 
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
+        }
+
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
-            T[] r = col.ToArray();
+            T[] r;
+            int colSize = col.Count;
+            if (colSize <= toArray.Length) {
+                col.CopyTo(toArray, 0);
+                if (colSize != toArray.Length) {
+                    toArray[colSize] = default(T);
+                }
+                r = toArray;
+            } else {
+                r = new T[colSize];
+                col.CopyTo(r, 0);
+            }
+
             return r;
         }
 

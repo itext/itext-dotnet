@@ -75,7 +75,7 @@ namespace iText.Layout.Renderer {
             LayoutArea occupiedArea = layoutContext.GetArea().Clone();
             occupiedArea.GetBBox().SetHeight(0);
             occupiedArea.GetBBox().SetWidth(0);
-            return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, null).SetAreaBreak(areaBreak);
+            return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, null, this).SetAreaBreak(areaBreak);
         }
 
         public virtual void Draw(DrawContext drawContext) {

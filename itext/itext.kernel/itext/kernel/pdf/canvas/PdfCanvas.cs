@@ -363,6 +363,33 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>
+        /// Concatenates the 2x3 affine transformation matrix to the current matrix
+        /// in the content stream managed by this Canvas.
+        /// </summary>
+        /// <remarks>
+        /// Concatenates the 2x3 affine transformation matrix to the current matrix
+        /// in the content stream managed by this Canvas.
+        /// If an array not containing the 6 values of the matrix is passed,
+        /// The current canvas is returned unchanged.
+        /// </remarks>
+        /// <param name="array">affine transformation stored as a PdfArray with 6 values</param>
+        /// <returns>current canvas</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ConcatMatrix(PdfArray array) {
+            if (array.Size() != 6) {
+                //Throw exception or warning here
+                return this;
+            }
+            for (int i = 0; i < array.Size(); i++) {
+                if (!array.Get(i).IsNumber()) {
+                    return this;
+                }
+            }
+            return ConcatMatrix(array.GetAsNumber(0).DoubleValue(), array.GetAsNumber(1).DoubleValue(), array.GetAsNumber
+                (2).DoubleValue(), array.GetAsNumber(3).DoubleValue(), array.GetAsNumber(4).DoubleValue(), array.GetAsNumber
+                (5).DoubleValue());
+        }
+
+        /// <summary>
         /// Concatenates the affine transformation matrix to the current matrix
         /// in the content stream managed by this Canvas.
         /// </summary>
@@ -411,7 +438,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetFontAndSize(PdfFont font, float size) {
             if (size < 0.0001f && size > -0.0001f) {
-                throw new PdfException(PdfException.FontSizeTooSmall, size);
+                throw new PdfException(PdfException.FontSizeIsTooSmall, size);
             }
             currentGs.SetFontSize(size);
             font.MakeIndirect(document);
@@ -620,8 +647,38 @@ namespace iText.Kernel.Pdf.Canvas {
                         float xPlacement = float.NaN;
                         float yPlacement = float.NaN;
                         if (glyph.HasPlacement()) {
-                            xPlacement = -GetSubrangeWidth(text, i + glyph.GetAnchorDelta(), i) + glyph.GetXPlacement() * fontSize;
-                            yPlacement = glyph.GetYAdvance() * fontSize;
+ {
+                                float xPlacementAddition = 0;
+                                int currentGlyphIndex = i;
+                                Glyph currentGlyph = text.Get(i);
+                                while (currentGlyph != null && currentGlyph.GetXPlacement() != 0) {
+                                    xPlacementAddition += currentGlyph.GetXPlacement();
+                                    if (currentGlyph.GetAnchorDelta() == 0) {
+                                        break;
+                                    }
+                                    else {
+                                        currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                        currentGlyph = text.Get(currentGlyphIndex);
+                                    }
+                                }
+                                xPlacement = -GetSubrangeWidth(text, currentGlyphIndex, i) + xPlacementAddition * fontSize;
+                            }
+ {
+                                float yPlacementAddition = 0;
+                                int currentGlyphIndex = i;
+                                Glyph currentGlyph = text.Get(i);
+                                while (currentGlyph != null && currentGlyph.GetYPlacement() != 0) {
+                                    yPlacementAddition += currentGlyph.GetYPlacement();
+                                    if (currentGlyph.GetAnchorDelta() == 0) {
+                                        break;
+                                    }
+                                    else {
+                                        currentGlyph = text.Get(currentGlyphIndex + currentGlyph.GetAnchorDelta());
+                                        currentGlyphIndex += currentGlyph.GetAnchorDelta();
+                                    }
+                                }
+                                yPlacement = glyph.GetYAdvance() * fontSize + yPlacementAddition * fontSize;
+                            }
                             contentStream.GetOutputStream().WriteFloat(xPlacement, true).WriteSpace().WriteFloat(yPlacement, true).WriteSpace
                                 ().WriteBytes(Td);
                         }
@@ -1570,7 +1627,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="rect"/>
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfXObject AddImage(ImageData image, iText.Kernel.Geom.Rectangle rect, bool asInline) {
             return AddImage(image, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY(), asInline);
         }
@@ -1581,7 +1637,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y"/>
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfXObject AddImage(ImageData image, float x, float y, bool asInline) {
             if (image.GetOriginalType() == ImageType.WMF) {
                 WmfImageHelper wmf = new WmfImageHelper(image);
@@ -1640,7 +1695,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="asInline">true if to add image as in-line.</param>
         /// <param name="dummy"/>
         /// <returns>created XObject or null in case of in-line image (asInline = true).</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfXObject AddImage(ImageData image, float x, float y, float height, bool asInline, bool dummy
             ) {
             return AddImage(image, height / image.GetHeight() * image.GetWidth(), 0, 0, height, x, y, asInline);
@@ -2001,7 +2055,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="x"/>
         /// <param name="y"/>
         /// <returns>current canvas.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y) {
             return AddForm(form, 1, 0, 0, 1, x, y);
         }
@@ -2014,7 +2067,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="form"/>
         /// <param name="rect"/>
         /// <returns>current canvas.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, iText.Kernel.Geom.Rectangle rect) {
             return AddForm(form, rect.GetWidth(), 0, 0, rect.GetHeight(), rect.GetX(), rect.GetY());
         }
@@ -2029,7 +2081,6 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="y"/>
         /// <param name="width"/>
         /// <returns>current canvas.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private iText.Kernel.Pdf.Canvas.PdfCanvas AddForm(PdfFormXObject form, float x, float y, float width) {
             PdfArray bbox = form.GetPdfObject().GetAsArray(PdfName.BBox);
             if (bbox == null) {

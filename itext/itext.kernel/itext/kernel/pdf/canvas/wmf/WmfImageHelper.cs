@@ -83,7 +83,6 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
         }
 
         /// <summary>This method checks if the image is a valid WMF and processes some parameters.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         private void ProcessParameters() {
             Stream @is = null;
             try {

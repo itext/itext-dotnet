@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using iText.IO;
 using iText.Kernel;
+using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -27,9 +29,7 @@ namespace iText.Kernel.Pdf {
         public virtual void SimplePagesTest() {
             String filename = "simplePagesTest.pdf";
             int pageCount = 111;
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = 0; i < pageCount; i++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(i + 1));
@@ -66,9 +66,7 @@ namespace iText.Kernel.Pdf {
         public virtual void ReversePagesTest() {
             String filename = "reversePagesTest.pdf";
             int pageCount = 111;
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i = pageCount; i > 0; i--) {
                 PdfPage page = new PdfPage(pdfDoc, pdfDoc.GetDefaultPageSize());
                 pdfDoc.AddPage(1, page);
@@ -77,6 +75,21 @@ namespace iText.Kernel.Pdf {
             }
             pdfDoc.Close();
             VerifyPagesOrder(destinationFolder + filename, pageCount);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ReversePagesTest2() {
+            String filename = "1000PagesDocument_reversed.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "1000PagesDocument.pdf"), new PdfWriter(
+                destinationFolder + filename));
+            for (int i = pdfDoc.GetNumberOfPages() - 1; i > 0; i--) {
+                PdfPage page = pdfDoc.RemovePage(i);
+                pdfDoc.AddPage(page);
+            }
+            pdfDoc.Close();
+            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -95,9 +108,7 @@ namespace iText.Kernel.Pdf {
                 indexes[index] = indexes[i_1];
                 indexes[i_1] = a;
             }
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument document = new PdfDocument(writer);
+            PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage[] pages = new PdfPage[pageCount];
             for (int i_2 = 0; i_2 < indexes.Length; i_2++) {
                 PdfPage page = document.AddNewPage();
@@ -134,9 +145,7 @@ namespace iText.Kernel.Pdf {
                 indexes[index] = indexes[i_1];
                 indexes[i_1] = a;
             }
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             for (int i_2 = 0; i_2 < indexes.Length; i_2++) {
                 PdfPage page = pdfDoc.AddNewPage();
                 page.GetPdfObject().Put(PageNum, new PdfNumber(indexes[i_2]));
@@ -208,9 +217,7 @@ namespace iText.Kernel.Pdf {
         public virtual void RemoveFlushedPage() {
             String filename = "removeFlushedPage.pdf";
             int pageCount = 10;
-            FileStream fos = new FileStream(destinationFolder + filename, FileMode.Create);
-            PdfWriter writer = new PdfWriter(fos);
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename));
             PdfPage removedPage = pdfDoc.AddNewPage();
             int removedPageObjectNumber = removedPage.GetPdfObject().GetIndirectReference().GetObjNumber();
             removedPage.Flush();
@@ -239,7 +246,7 @@ namespace iText.Kernel.Pdf {
                 NUnit.Framework.Assert.AreEqual(i, number.IntValue(), "Page number");
             }
             NUnit.Framework.Assert.AreEqual(numOfPages, pdfDocument.GetNumberOfPages(), "Number of pages");
-            reader.Close();
+            pdfDocument.Close();
         }
 
         internal virtual int VerifyIntegrity(PdfPagesTree pagesTree) {
@@ -254,17 +261,17 @@ namespace iText.Kernel.Pdf {
             return -1;
         }
 
-        //    @Test@Ignore
-        //    public void testInheritedResources() throws IOException {
-        //        String inputFileName1 = sourceFolder + "veraPDF-A003-a-pass.pdf";
-        //        PdfReader reader1 = new PdfReader(inputFileName1);
-        //        PdfDocument inputPdfDoc1 = new PdfDocument(reader1);
-        //        PdfPage page = inputPdfDoc1.getPage(1);
-        //        List<PdfFont> list = page.getResources().getFonts(true);
-        //        Assert.assertEquals(1, list.size());
-        //        Assert.assertEquals("ASJKFO+Arial-BoldMT", list.get(0).getFontProgram().getFontNames().getFontName());
-        //    }
-        //
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void TestInheritedResources() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"));
+            PdfPage page = pdfDocument.GetPage(1);
+            PdfDictionary dict = page.GetResources().GetResource(PdfName.ExtGState);
+            NUnit.Framework.Assert.AreEqual(2, dict.Size());
+            PdfExtGState gState = new PdfExtGState((PdfDictionary)dict.Get(new PdfName("Gs1")));
+            NUnit.Framework.Assert.AreEqual(10, gState.GetLineWidth());
+        }
+
         //    @Test(expected = PdfException.class)
         //    public void testCircularReferencesInResources() throws IOException {
         //        String inputFileName1 = sourceFolder + "circularReferencesInResources.pdf";
@@ -274,24 +281,23 @@ namespace iText.Kernel.Pdf {
         //        List<PdfFont> list = page.getResources().getFonts(true);
         //    }
         //
-        //    @Test@Ignore
-        //    public void testInheritedResourcesUpdate() throws IOException {
-        //        String inputFileName1 = sourceFolder + "veraPDF-A003-a-pass.pdf";
-        //        PdfReader reader1 = new PdfReader(inputFileName1);
-        //
-        //        FileOutputStream fos = new FileOutputStream(destinationFolder + "veraPDF-A003-a-pass_new.pdf");
-        //        PdfWriter writer = new PdfWriter(fos);
-        //        writer.setCompressionLevel(PdfOutputStream.NO_COMPRESSION);
-        //        PdfDocument pdfDoc = new PdfDocument(reader1, writer);
-        //        pdfDoc.getPage(1).getResources().getFonts(true);
-        //        PdfFont f = PdfFont.createFont((PdfDictionary) pdfDoc.getPdfObject(6));
-        //        pdfDoc.getPage(1).getResources().addFont(pdfDoc, f);
-        //        int fontCount = pdfDoc.getPage(1).getResources().getFonts(false).size();
-        //        pdfDoc.getPage(1).flush();
-        //        pdfDoc.close();
-        //
-        //        Assert.assertEquals(2, fontCount);
-        //    }
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestInheritedResourcesUpdate() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "simpleInheritedResources.pdf"), new PdfWriter
+                (destinationFolder + "updateInheritedResources.pdf").SetCompressionLevel(CompressionConstants.NO_COMPRESSION
+                ));
+            PdfName newGsName = pdfDoc.GetPage(1).GetResources().AddExtGState(new PdfExtGState().SetLineWidth(30));
+            int gsCount = pdfDoc.GetPage(1).GetResources().GetResource(PdfName.ExtGState).Size();
+            pdfDoc.Close();
+            String compareResult = new CompareTool().CompareByContent(destinationFolder + "updateInheritedResources.pdf"
+                , sourceFolder + "cmp_" + "updateInheritedResources.pdf", destinationFolder, "diff");
+            NUnit.Framework.Assert.AreEqual(3, gsCount);
+            NUnit.Framework.Assert.AreEqual("Gs3", newGsName.GetValue());
+            NUnit.Framework.Assert.IsNull(compareResult);
+        }
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void GetPageByDictionary() {
@@ -321,6 +327,20 @@ namespace iText.Kernel.Pdf {
             PdfDictionary kid = (PdfDictionary)field.GetAsArray(PdfName.Kids).Get(0);
             NUnit.Framework.Assert.AreEqual(6, kid.KeySet().Count);
             NUnit.Framework.Assert.AreEqual(3, fields.Size());
+            pdfDoc.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void GetPageSizeWithInheritedMediaBox() {
+            double eps = 0.0000001;
+            String filename = sourceFolder + "inheritedMediaBox.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(filename));
+            NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetPage(1).GetPageSize().GetLeft(), eps);
+            NUnit.Framework.Assert.AreEqual(0, pdfDoc.GetPage(1).GetPageSize().GetBottom(), eps);
+            NUnit.Framework.Assert.AreEqual(595, pdfDoc.GetPage(1).GetPageSize().GetRight(), eps);
+            NUnit.Framework.Assert.AreEqual(842, pdfDoc.GetPage(1).GetPageSize().GetTop(), eps);
+            pdfDoc.Close();
         }
     }
 }

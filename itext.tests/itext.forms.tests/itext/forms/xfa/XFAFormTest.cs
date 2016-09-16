@@ -24,7 +24,7 @@ namespace iText.Forms.Xfa {
         public virtual void CreateEmptyXFAFormTest01() {
             String outFileName = destinationFolder + "createEmptyXFAFormTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest01.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
             XfaForm xfa = new XfaForm(doc);
             XfaForm.SetXfaForm(xfa, doc);
             doc.AddNewPage();
@@ -39,7 +39,7 @@ namespace iText.Forms.Xfa {
         public virtual void CreateEmptyXFAFormTest02() {
             String outFileName = destinationFolder + "createEmptyXFAFormTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_createEmptyXFAFormTest02.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
             XfaForm xfa = new XfaForm();
             XfaForm.SetXfaForm(xfa, doc);
             doc.AddNewPage();
@@ -54,7 +54,7 @@ namespace iText.Forms.Xfa {
         public virtual void CreateXFAFormTest() {
             String outFileName = destinationFolder + "createXFAFormTest.pdf";
             String cmpFileName = sourceFolder + "cmp_createXFAFormTest.pdf";
-            PdfDocument doc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument doc = new PdfDocument(new PdfWriter(outFileName));
             XfaForm xfa = new XfaForm(new FileStream(XML, FileMode.Open, FileAccess.Read));
             xfa.Write(doc);
             doc.AddNewPage();

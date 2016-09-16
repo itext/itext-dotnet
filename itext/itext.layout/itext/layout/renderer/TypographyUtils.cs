@@ -55,16 +55,49 @@ namespace iText.Layout.Renderer {
     internal class TypographyUtils {
         private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
 
-        private const String TYPOGRAPHY_PACKAGE = "com.itextpdf.typography.";
+        private const String TYPOGRAPHY_PACKAGE = "iText.Typography.";
+
+        private const String SHAPER = "Shaping.Shaper,iText.Typography";
+
+        private const String BIDI_CHARACTER_MAP = "Bidi.BidiCharacterMap,iText.Typography";
+
+        private const String BIDI_BRACKET_MAP = "Bidi.BidiBracketMap,iText.Typography";
+
+        private const String BIDI_ALGORITHM = "Bidi.BidiAlgorithm,iText.Typography";
+
+        private const String APPLY_OTF_SCRIPT = "ApplyOtfScript";
+
+        private const String APPLY_KERNING = "ApplyKerning";
+
+        private const String GET_SUPPORTED_SCRIPTS = "GetSupportedScripts";
+
+        private const String GET_CHARACTER_TYPES = "GetCharacterTypes";
+
+        private const String GET_BRACKET_TYPES = "GetBracketTypes";
+
+        private const String GET_BRACKET_VALUES = "GetBracketValues";
+
+        private const String GET_PAIRED_BRACKET = "GetPairedBracket";
+
+        private const String GET_LEVELS = "GetLevels";
+
+        private const String COMPUTE_REORDERING = "ComputeReordering";
+
+        private const String INVERSE_REORDERING = "InverseReordering";
 
         private static readonly ICollection<UnicodeScript> SUPPORTED_SCRIPTS;
 
         private static readonly bool TYPOGRAPHY_MODULE_INITIALIZED;
 
+        private static IDictionary<String, Type> cachedClasses = new Dictionary<String, Type>();
+
+        private static IDictionary<TypographyUtils.TypographyMethodSignature, MemberInfo> cachedMethods = new Dictionary
+            <TypographyUtils.TypographyMethodSignature, MemberInfo>();
+
         static TypographyUtils() {
             bool moduleFound = false;
             try {
-                Type type = System.Type.GetType("com.itextpdf.typography.shaping.Shaper");
+                Type type = System.Type.GetType(TYPOGRAPHY_PACKAGE + SHAPER);
                 if (type != null) {
                     moduleFound = true;
                 }
@@ -86,24 +119,24 @@ namespace iText.Layout.Renderer {
                     );
             }
             else {
-                CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyOtfScript", new Type[] { typeof(TrueTypeFont), typeof(
-                    GlyphLine), typeof(UnicodeScript?) }, fontProgram, text, script);
+                CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
+                    ), typeof(UnicodeScript?) }, fontProgram, text, script);
             }
         }
 
-        //Shaper.applyOtfScript((TrueTypeFont)font.getFontProgram(), text, script);
+        //            Shaper.applyOtfScript((TrueTypeFont)fontProgram, text, script);
         internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
                     );
             }
             else {
-                CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "applyKerning", new Type[] { typeof(FontProgram), typeof(
-                    GlyphLine) }, fontProgram, text);
+                CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
+                     }, fontProgram, text);
             }
         }
 
-        //Shaper.applyKerning(font.getFontProgram(), text);
+        //            Shaper.applyKerning(fontProgram, text);
         internal static byte[] GetBidiLevels(BaseDirection baseDirection, int[] unicodeIds) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
@@ -129,22 +162,22 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 int len = unicodeIds.Length;
-                byte[] types = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiCharacterMap", "getCharacterTypes", new Type
-                    [] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
-                //byte[] types = BidiCharacterMap.getCharacterTypes(unicodeIds, 0, text.end - text.start;
-                byte[] pairTypes = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getBracketTypes", new Type
-                    [] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
-                //byte[] pairTypes = BidiBracketMap.getBracketTypes(unicodeIds, 0, text.end - text.start);
-                int[] pairValues = (int[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getBracketValues", new Type
-                    [] { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
-                //int[] pairValues = BidiBracketMap.getBracketValues(unicodeIds, 0, text.end - text.start);
-                Object bidiReorder = CallConstructor(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", new Type[] { typeof(byte[]
-                    ), typeof(byte[]), typeof(int[]), typeof(byte) }, types, pairTypes, pairValues, direction);
-                //BidiAlgorithm bidiReorder = new BidiAlgorithm(types, pairTypes, pairValues, direction);
-                return (byte[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", "getLevels", bidiReorder, new Type[] 
-                    { typeof(int[]) }, new int[] { len });
+                byte[] types = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_CHARACTER_MAP, GET_CHARACTER_TYPES, new Type[]
+                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+                //            byte[] types = BidiCharacterMap.getCharacterTypes(unicodeIds, 0, len);
+                byte[] pairTypes = (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_BRACKET_TYPES, new Type[]
+                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+                //            byte[] pairTypes = BidiBracketMap.getBracketTypes(unicodeIds, 0, len);
+                int[] pairValues = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_BRACKET_VALUES, new Type[]
+                     { typeof(int[]), typeof(int), typeof(int) }, unicodeIds, 0, len);
+                //            int[] pairValues = BidiBracketMap.getBracketValues(unicodeIds, 0, len);
+                Object bidiReorder = CallConstructor(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, new Type[] { typeof(byte[]), typeof(
+                    byte[]), typeof(int[]), typeof(byte) }, types, pairTypes, pairValues, direction);
+                //            BidiAlgorithm bidiReorder = new BidiAlgorithm(types, pairTypes, pairValues, direction);
+                return (byte[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, GET_LEVELS, bidiReorder, new Type[] { typeof(
+                    int[]) }, new int[] { len });
             }
-            //levels = bidiReorder.getLevels(new int[]{text.end - text.start});
+            //            return bidiReorder.getLevels(new int[]{len});
             return null;
         }
 
@@ -158,21 +191,37 @@ namespace iText.Layout.Renderer {
                 if (levels == null) {
                     return null;
                 }
-                int[] reorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiAlgorithm", "computeReordering", new Type
-                    [] { typeof(byte[]) }, lineLevels);
-                //int[] reorder = BidiAlgorithm.computeReordering(lineLevels);
+                int[] reorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, COMPUTE_REORDERING, new Type[] { typeof(
+                    byte[]) }, lineLevels);
+                //            int[] reorder = BidiAlgorithm.computeReordering(lineLevels);
+                int[] inverseReorder = (int[])CallMethod(TYPOGRAPHY_PACKAGE + BIDI_ALGORITHM, INVERSE_REORDERING, new Type
+                    [] { typeof(int[]) }, reorder);
+                //            int[] inverseReorder = BidiAlgorithm.inverseReordering(reorder);
                 IList<LineRenderer.RendererGlyph> reorderedLine = new List<LineRenderer.RendererGlyph>(lineLevels.Length);
                 for (int i = 0; i < line.Count; i++) {
                     reorderedLine.Add(line[reorder[i]]);
                     // Mirror RTL glyphs
                     if (levels[reorder[i]] % 2 == 1) {
                         if (reorderedLine[i].glyph.HasValidUnicode()) {
-                            int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + "bidi.BidiBracketMap", "getPairedBracket", new Type
-                                [] { typeof(int) }, reorderedLine[i].glyph.GetUnicode());
-                            PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
-                            //BidiBracketMap.getPairedBracket(reorderedLine.get(i).getUnicode())
-                            reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
+                            int unicode = reorderedLine[i].glyph.GetUnicode();
+                            int pairedBracket = (int)CallMethod(TYPOGRAPHY_PACKAGE + BIDI_BRACKET_MAP, GET_PAIRED_BRACKET, new Type[] 
+                                { typeof(int) }, unicode);
+                            //                        int pairedBracket = BidiBracketMap.getPairedBracket(reorderedLine.get(i).glyph.getUnicode());
+                            if (pairedBracket != unicode) {
+                                PdfFont font = reorderedLine[i].renderer.GetPropertyAsFont(Property.FONT);
+                                reorderedLine[i] = new LineRenderer.RendererGlyph(font.GetGlyph(pairedBracket), reorderedLine[i].renderer);
+                            }
                         }
+                    }
+                }
+                // fix anchorDelta
+                for (int i_1 = 0; i_1 < reorderedLine.Count; i_1++) {
+                    Glyph glyph = reorderedLine[i_1].glyph;
+                    if (glyph.HasPlacement()) {
+                        int oldAnchor = reorder[i_1] + glyph.GetAnchorDelta();
+                        int newPos = inverseReorder[oldAnchor];
+                        int newAnchorDelta = newPos - i_1;
+                        glyph.SetAnchorDelta((short)newAnchorDelta);
                     }
                 }
                 line.Clear();
@@ -193,12 +242,13 @@ namespace iText.Layout.Renderer {
                     return SUPPORTED_SCRIPTS;
                 }
                 else {
-                    return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + "shaping.Shaper", "getSupportedScripts"
-                        , new Type[] {  });
+                    return (ICollection<UnicodeScript>)CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, GET_SUPPORTED_SCRIPTS, new Type
+                        [] {  });
                 }
             }
         }
 
+        //            return (Collection<Character.UnicodeScript>) Shaper.getSupportedScripts();
         internal static bool IsTypographyModuleInitialized() {
             return TYPOGRAPHY_MODULE_INITIALIZED;
         }
@@ -211,7 +261,7 @@ namespace iText.Layout.Renderer {
         private static Object CallMethod(String className, String methodName, Object target, Type[] parameterTypes
             , params Object[] args) {
             try {
-                MethodInfo method = System.Type.GetType(className).GetMethod(methodName, parameterTypes);
+                MethodInfo method = FindMethod(className, methodName, parameterTypes);
                 return method.Invoke(target, args);
             }
             catch (MissingMethodException) {
@@ -228,7 +278,7 @@ namespace iText.Layout.Renderer {
 
         private static Object CallConstructor(String className, Type[] parameterTypes, params Object[] args) {
             try {
-                ConstructorInfo constructor = System.Type.GetType(className).GetConstructor(parameterTypes);
+                ConstructorInfo constructor = FindConstructor(className, parameterTypes);
                 return constructor.Invoke(args);
             }
             catch (MissingMethodException) {
@@ -241,6 +291,84 @@ namespace iText.Layout.Renderer {
                 throw new Exception(exc.ToString(), exc);
             }
             return null;
+        }
+
+        /// <exception cref="System.MissingMethodException"/>
+        /// <exception cref="System.TypeLoadException"/>
+        private static MethodInfo FindMethod(String className, String methodName, Type[] parameterTypes) {
+            TypographyUtils.TypographyMethodSignature tm = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
+                , methodName);
+            MethodInfo m = (MethodInfo)cachedMethods.Get(tm);
+            if (m == null) {
+                m = FindClass(className).GetMethod(methodName, parameterTypes);
+                cachedMethods[tm] = m;
+            }
+            return m;
+        }
+
+        /// <exception cref="System.MissingMethodException"/>
+        /// <exception cref="System.TypeLoadException"/>
+        private static ConstructorInfo FindConstructor(String className, Type[] parameterTypes) {
+            TypographyUtils.TypographyMethodSignature tc = new TypographyUtils.TypographyMethodSignature(className, parameterTypes
+                );
+            ConstructorInfo c = (ConstructorInfo)cachedMethods.Get(tc);
+            if (c == null) {
+                c = FindClass(className).GetConstructor(parameterTypes);
+                cachedMethods[tc] = c;
+            }
+            return c;
+        }
+
+        /// <exception cref="System.TypeLoadException"/>
+        private static Type FindClass(String className) {
+            Type c = cachedClasses.Get(className);
+            if (c == null) {
+                c = System.Type.GetType(className);
+                cachedClasses[className] = c;
+            }
+            return c;
+        }
+
+        private class TypographyMethodSignature {
+            protected internal readonly String className;
+
+            protected internal Type[] parameterTypes;
+
+            private readonly String methodName;
+
+            internal TypographyMethodSignature(String className, Type[] parameterTypes)
+                : this(className, parameterTypes, null) {
+            }
+
+            internal TypographyMethodSignature(String className, Type[] parameterTypes, String methodName) {
+                this.methodName = methodName;
+                this.className = className;
+                this.parameterTypes = parameterTypes;
+            }
+
+            public override bool Equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || GetType() != o.GetType()) {
+                    return false;
+                }
+                TypographyUtils.TypographyMethodSignature that = (TypographyUtils.TypographyMethodSignature)o;
+                if (!className.Equals(that.className)) {
+                    return false;
+                }
+                if (!iText.IO.Util.JavaUtil.ArraysEquals(parameterTypes, that.parameterTypes)) {
+                    return false;
+                }
+                return methodName != null ? methodName.Equals(that.methodName) : that.methodName == null;
+            }
+
+            public override int GetHashCode() {
+                int result = className.GetHashCode();
+                result = 31 * result + iText.IO.Util.JavaUtil.ArraysHashCode(parameterTypes);
+                result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
+                return result;
+            }
         }
     }
 }

@@ -131,7 +131,6 @@ namespace iText.Kernel.Utils {
         /// </remarks>
         /// <param name="res">The resources that can be excluded when counting the bytes.</param>
         /// <returns>The number of bytes needed for an object.</returns>
-        /// <exception cref="System.IO.IOException"/>
         public virtual long GetLength(IDictionary<int, PdfObject> res) {
             long length = 0;
             foreach (int @ref in resources.Keys) {
@@ -140,7 +139,7 @@ namespace iText.Kernel.Utils {
                 }
                 PdfOutputStream os = new PdfOutputStream(new IdelOutputStream());
                 os.Write(resources.Get(@ref).Clone());
-                length += os.GetCurrentPos() - 1;
+                length += os.GetCurrentPos();
             }
             return length;
         }

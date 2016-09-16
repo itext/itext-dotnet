@@ -314,7 +314,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
         }
 
-        private class TextChunkLocationDefaultImp : LocationTextExtractionStrategy.ITextChunkLocation {
+        public class TextChunkLocationDefaultImp : LocationTextExtractionStrategy.ITextChunkLocation {
             /// <summary>the starting location of the chunk</summary>
             private readonly Vector startLocation;
 

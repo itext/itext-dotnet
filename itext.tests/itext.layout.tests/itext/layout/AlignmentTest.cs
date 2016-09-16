@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -29,7 +28,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest01() {
             String outFileName = destinationFolder + "justifyAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
@@ -48,7 +47,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest02() {
             String outFileName = destinationFolder + "justifyAlignmentTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             paragraph.Add(new Text("Hello World!")).Add(new Text(" ")).Add(new Text("Hello People! ")).Add("End");
@@ -64,7 +63,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest03() {
             String outFileName = destinationFolder + "justifyAlignmentTest03.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest03.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
@@ -83,7 +82,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentTest04() {
             String outFileName = destinationFolder + "justifyAlignmentTest04.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentTest04.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             for (int i = 0; i < 21; i++) {
@@ -102,7 +101,7 @@ namespace iText.Layout {
         public virtual void JustifyAlignmentForcedNewlinesTest01() {
             String outFileName = destinationFolder + "justifyAlignmentForcedNewlinesTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAlignmentForcedNewlinesTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED);
             paragraph.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
@@ -123,7 +122,7 @@ namespace iText.Layout {
         public virtual void JustifyAllTest01() {
             String outFileName = destinationFolder + "justifyAllTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_justifyAllTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph paragraph = new Paragraph().SetTextAlignment(TextAlignment.JUSTIFIED_ALL);
             paragraph.Add("Video provides a powerful way to help you prove your point. When you click Online Video, you can paste in the embed code for the video you want to add. You can also type a keyword to search online for the video that best fits your document.\n"
@@ -144,7 +143,7 @@ namespace iText.Layout {
         public virtual void BlockAlignmentTest01() {
             String outFileName = destinationFolder + "blockAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_blockAlignmentTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.GREEK_LOWER);
             for (int i = 0; i < 10; i++) {
@@ -168,7 +167,7 @@ namespace iText.Layout {
         public virtual void BlockAlignmentTest02() {
             String outFileName = destinationFolder + "blockAlignmentTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_blockAlignmentTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Div div = new Div();
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"
@@ -192,8 +191,7 @@ namespace iText.Layout {
         public virtual void ImageAlignmentTest01() {
             String outFileName = destinationFolder + "imageAlignmentTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_imageAlignmentTest01.pdf";
-            FileStream file = new FileStream(outFileName, FileMode.Create);
-            PdfWriter writer = new PdfWriter(file);
+            PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreateJpeg(UrlUtil.ToURL(sourceFolder + "Desert.jpg"

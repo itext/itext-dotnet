@@ -73,7 +73,7 @@ namespace iText.IO.Source {
         /// <exception cref="System.IO.IOException"/>
         public virtual int Get(long position) {
             // TODO: test to make sure we are handling the length properly (i.e. is raf.length() the last byte in the file, or one past the last byte?)
-            if (position > raf.Length) {
+            if (position > length) {
                 return -1;
             }
             // Not thread safe!

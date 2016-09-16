@@ -55,7 +55,7 @@ namespace iText.IO.Font.Cmap {
             String fullName = FontConstants.CMAP_RESOURCE_PATH + location;
             Stream inp = ResourceUtil.GetResourceStream(fullName);
             if (inp == null) {
-                throw new iText.IO.IOException(iText.IO.IOException.TheCmap1WasNotFound).SetMessageParams(fullName);
+                throw new iText.IO.IOException(iText.IO.IOException.Cmap1WasNotFound).SetMessageParams(fullName);
             }
             return new PdfTokenizer(new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(inp)));
         }

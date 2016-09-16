@@ -144,7 +144,7 @@ namespace iText.Kernel.Pdf.Tagging {
         public PdfStructElem(PdfDocument document, PdfName role, PdfAnnotation annot)
             : this(document, role) {
             if (annot.GetPage() == null) {
-                throw new PdfException(PdfException.AnnotShallHaveReferenceToPage);
+                throw new PdfException(PdfException.AnnotationShallHaveReferenceToPage);
             }
             GetPdfObject().Put(PdfName.Pg, annot.GetPage().GetPdfObject());
         }
@@ -172,7 +172,6 @@ namespace iText.Kernel.Pdf.Tagging {
         /// The attributes dictionary will be stored inside element.
         /// </param>
         /// <returns>attributes dictionary.</returns>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual PdfObject GetAttributes(bool createNewIfNull) {
             PdfObject attributes = GetPdfObject().Get(PdfName.A);
             if (attributes == null && createNewIfNull) {
@@ -369,7 +368,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override void Flush() {
-            //TODO log that to prevent undefined behaviour, use StructTreeRoot#flushStructElem method
+            GetDocument().CheckIsoConformance(GetPdfObject(), IsoKey.TAG_STRUCTURE_ELEMENT);
             base.Flush();
         }
 
@@ -431,9 +430,6 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         private IPdfStructElem ConvertPdfObjectToIPdfStructElem(PdfObject obj) {
-            if (obj.IsIndirectReference()) {
-                obj = ((PdfIndirectReference)obj).GetRefersTo();
-            }
             IPdfStructElem elem = null;
             switch (obj.GetObjectType()) {
                 case PdfObject.DICTIONARY: {

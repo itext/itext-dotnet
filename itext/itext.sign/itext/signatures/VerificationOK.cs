@@ -71,7 +71,7 @@ namespace iText.Signatures {
             this.message = message;
         }
 
-        /// <summary>A single String explaining which certificate was verified, how and why.</summary>
+        /// <summary>Return a single String explaining which certificate was verified, how and why.</summary>
         /// <seealso cref="System.Object.ToString()"/>
         public override String ToString() {
             StringBuilder sb = new StringBuilder();

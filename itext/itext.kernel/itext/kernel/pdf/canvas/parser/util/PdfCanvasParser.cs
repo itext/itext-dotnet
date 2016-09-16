@@ -160,7 +160,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Util {
                 if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndArray) {
                     break;
                 }
-                if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic) {
+                if (tokeniser.GetTokenType() == PdfTokenizer.TokenType.EndDic && obj.GetObjectType() != PdfObject.DICTIONARY
+                    ) {
                     tokeniser.ThrowError(PdfException.UnexpectedGtGt);
                 }
                 array.Add(obj);

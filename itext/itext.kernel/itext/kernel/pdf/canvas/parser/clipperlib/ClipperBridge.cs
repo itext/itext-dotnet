@@ -272,7 +272,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.ClipperLib {
             return fillType;
         }
 
-        [Obsolete]
+        [System.ObsoleteAttribute(@"close will be boolean . Visibility will be changed to internal.")]
         public static void AddContour(Path path, IList<IntPoint> contour, bool? close) {
             IList<Point> floatContour = ConvertToFloatPoints(contour);
             Point point = floatContour[0];

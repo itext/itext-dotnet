@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
 using System.IO;
 using iText.IO;
 using iText.IO.Log;
@@ -156,13 +155,13 @@ namespace iText.Kernel.Pdf {
 
         private void Write(PdfDictionary pdfDictionary) {
             WriteBytes(openDict);
-            foreach (KeyValuePair<PdfName, PdfObject> entry in pdfDictionary.EntrySet()) {
+            foreach (PdfName key in pdfDictionary.KeySet()) {
                 bool isAlreadyWriteSpace = false;
-                Write(entry.Key);
-                PdfObject value = entry.Value;
+                Write(key);
+                PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                    logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, entry.Key));
+                    logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key));
                     value = PdfNull.PDF_NULL;
                 }
                 if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject.LITERAL || value.GetObjectType
@@ -187,7 +186,7 @@ namespace iText.Kernel.Pdf {
 
         private void Write(PdfIndirectReference indirectReference) {
             if (document != null && !indirectReference.GetDocument().Equals(document)) {
-                throw new PdfException(PdfException.PdfInderectObjectBelongToOtherPdfDocument);
+                throw new PdfException(PdfException.PdfIndirectObjectBelongsToOtherPdfDocument);
             }
             if (indirectReference.GetRefersTo() == null) {
                 Write(PdfNull.PDF_NULL);
@@ -358,7 +357,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.CannotWritePdfStream, e, pdfStream);
+                throw new PdfException(PdfException.CannotWriteToPdfStream, e, pdfStream);
             }
         }
 

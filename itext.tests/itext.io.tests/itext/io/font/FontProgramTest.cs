@@ -1,13 +1,16 @@
+using System;
+
 namespace iText.IO.Font {
     public class FontProgramTest {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ExceptionMessageTest() {
+            String font = "some-font.ttf";
             try {
-                FontProgramFactory.CreateFont("some-font.ttf");
+                FontProgramFactory.CreateFont(font);
             }
             catch (iText.IO.IOException ex) {
-                NUnit.Framework.Assert.AreEqual("font.file some-font.ttf not.found", ex.Message);
+                NUnit.Framework.Assert.AreEqual(String.Format(iText.IO.IOException.FontFile1NotFound, font), ex.Message);
             }
         }
 

@@ -67,7 +67,6 @@ namespace iText.Forms.Fields {
 
         protected internal PdfTextFormField(PdfDictionary pdfObject)
             : base(pdfObject) {
-            SetBorderWidth(0);
         }
 
         /// <summary>Returns <code>Tx</code>, the form type for textual form fields.</summary>

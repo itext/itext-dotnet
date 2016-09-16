@@ -81,7 +81,7 @@ namespace iText.Kernel.Font {
             newFont = false;
             CheckFontDictionary(fontDictionary, PdfName.TrueType);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, false);
             fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);
             embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
             subset = false;
@@ -103,8 +103,8 @@ namespace iText.Kernel.Font {
             return null;
         }
 
-        //TODO make subtype class member and simplify this method
         public override void Flush() {
+            //TODO make subtype class member and simplify this method
             if (newFont) {
                 PdfName subtype;
                 String fontName;
@@ -204,6 +204,9 @@ namespace iText.Kernel.Font {
                 }
                 if (fontStream != null) {
                     fontDescriptor.Put(fontFileName, fontStream);
+                    if (fontStream.GetIndirectReference() != null) {
+                        fontStream.Flush();
+                    }
                 }
             }
         }

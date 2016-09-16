@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using iText.Forms.Fields;
+using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -22,8 +22,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void FormFieldTest01() {
-            PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
-            PdfDocument pdfDoc = new PdfDocument(reader);
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, false);
             IDictionary<String, PdfFormField> fields = form.GetFormFields();
             PdfFormField field = fields.Get("Text1");
@@ -37,8 +36,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void FormFieldTest02() {
             String filename = destinationFolder + "formFieldTest02.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect = new Rectangle(210, 490, 150, 22);
             PdfTextFormField field = PdfFormField.CreateText(pdfDoc, rect, "fieldName", "some value");
@@ -56,10 +54,9 @@ namespace iText.Forms {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FormFieldTest03() {
-            PdfReader reader = new PdfReader(sourceFolder + "formFieldFile.pdf");
             String filename = destinationFolder + "formFieldTest03.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
-            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "formFieldFile.pdf"), new PdfWriter(filename
+                ));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             PdfPage page = pdfDoc.GetFirstPage();
             Rectangle rect = new Rectangle(210, 490, 150, 22);
@@ -79,8 +76,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void ChoiceFieldTest01() {
             String filename = destinationFolder + "choiceFieldTest01.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect = new Rectangle(210, 490, 150, 20);
             String[] options = new String[] { "First Item", "Second Item", "Third Item", "Fourth Item" };
@@ -104,8 +100,7 @@ namespace iText.Forms {
         [NUnit.Framework.Test]
         public virtual void ButtonFieldTest01() {
             String filename = destinationFolder + "buttonFieldTest01.pdf";
-            PdfWriter writer = new PdfWriter(new FileStream(filename, FileMode.Create));
-            PdfDocument pdfDoc = new PdfDocument(writer);
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             Rectangle rect = new Rectangle(36, 700, 20, 20);
             Rectangle rect1 = new Rectangle(36, 680, 20, 20);
@@ -134,7 +129,7 @@ namespace iText.Forms {
         public virtual void ButtonFieldTest02() {
             String filename = destinationFolder + "buttonFieldTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFolder + "buttonFieldTest02_input.pdf"), new PdfWriter
-                (new FileStream(filename, FileMode.Create)));
+                (filename));
             PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
             ((PdfButtonFormField)form.GetField("push")).SetImage(sourceFolder + "Desert.jpg");
             pdfDoc.Close();
@@ -144,6 +139,40 @@ namespace iText.Forms {
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void RealFontSizeRegenerateAppearanceTest() {
+            String sourceFilename = sourceFolder + "defaultAppearanceRealFontSize.pdf";
+            String destFilename = destinationFolder + "realFontSizeRegenerateAppearance.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(sourceFilename), new PdfWriter(destFilename));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            form.GetField("fieldName").RegenerateField();
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(destFilename, sourceFolder + "cmp_realFontSizeRegenerateAppearance.pdf"
+                , destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddFieldWithKidsTest() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfFormField root = PdfFormField.CreateEmptyField(pdfDoc);
+            root.SetFieldName("root");
+            PdfFormField child = PdfFormField.CreateEmptyField(pdfDoc);
+            child.SetFieldName("child");
+            root.AddKid(child);
+            PdfTextFormField text1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 700, 200, 20), "text1", "test"
+                );
+            child.AddKid(text1);
+            form.AddField(root);
+            NUnit.Framework.Assert.AreEqual(3, form.GetFormFields().Count);
         }
     }
 }

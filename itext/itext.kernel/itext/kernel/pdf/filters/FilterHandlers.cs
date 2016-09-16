@@ -66,7 +66,7 @@ namespace iText.Kernel.Pdf.Filters {
             // it may also be better to split the sub-classes out into a separate package
             IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler>();
             map[PdfName.FlateDecode] = new FlateDecodeFilter();
-            map[PdfName.FL] = new FlateDecodeFilter();
+            map[PdfName.Fl] = new FlateDecodeFilter();
             map[PdfName.ASCIIHexDecode] = new ASCIIHexDecodeFilter();
             map[PdfName.AHx] = new ASCIIHexDecodeFilter();
             map[PdfName.ASCII85Decode] = new ASCII85DecodeFilter();

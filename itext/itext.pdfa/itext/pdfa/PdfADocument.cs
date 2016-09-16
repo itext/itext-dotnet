@@ -53,19 +53,59 @@ using iText.Kernel.XMP;
 using iText.Pdfa.Checker;
 
 namespace iText.Pdfa {
+    /// <summary>
+    /// This class extends
+    /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+    /// and is in charge of creating files
+    /// that comply with the PDF/A standard.
+    /// Client code is still responsible for making sure the file is actually PDF/A
+    /// compliant: multiple steps must be undertaken (depending on the
+    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+    /// ) to ensure that the PDF/A standard is followed.
+    /// This class will throw exceptions, mostly
+    /// <see cref="PdfAConformanceException"/>
+    /// ,
+    /// and thus refuse to output a PDF/A file if at any point the document does not
+    /// adhere to the PDF/A guidelines specified by the
+    /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+    /// .
+    /// </summary>
     public class PdfADocument : PdfDocument {
         protected internal PdfAChecker checker;
 
+        /// <summary>Constructs a new PdfADocument for writing purposes, i.e.</summary>
+        /// <remarks>
+        /// Constructs a new PdfADocument for writing purposes, i.e. from scratch. A
+        /// PDF/A file has a conformance level, and must have an explicit output
+        /// intent.
+        /// </remarks>
+        /// <param name="writer">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfWriter"/>
+        /// object to write to
+        /// </param>
+        /// <param name="conformanceLevel">the generation and strictness level of the PDF/A that must be followed.</param>
+        /// <param name="outputIntent">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfOutputIntent"/>
+        /// </param>
         public PdfADocument(PdfWriter writer, PdfAConformanceLevel conformanceLevel, PdfOutputIntent outputIntent)
             : base(writer) {
             SetChecker(conformanceLevel);
             AddOutputIntent(outputIntent);
         }
 
+        /// <summary>Opens a PDF/A document in the stamping mode.</summary>
+        /// <param name="reader">PDF reader.</param>
+        /// <param name="writer">PDF writer.</param>
         public PdfADocument(PdfReader reader, PdfWriter writer)
             : this(reader, writer, new StampingProperties()) {
         }
 
+        /// <summary>Open a PDF/A document in stamping mode.</summary>
+        /// <param name="reader">PDF reader.</param>
+        /// <param name="writer">PDF writer.</param>
+        /// <param name="properties">properties of the stamping process</param>
         public PdfADocument(PdfReader reader, PdfWriter writer, StampingProperties properties)
             : base(reader, writer, properties) {
             byte[] existingXmpMetadata = GetXmpMetadata();
@@ -195,11 +235,39 @@ namespace iText.Pdfa {
                     checker.CheckSinglePage((PdfPage)obj);
                     break;
                 }
+
+                case IsoKey.TAG_STRUCTURE_ELEMENT: {
+                    checker.CheckTagStructureElement((PdfObject)obj);
+                    break;
+                }
             }
         }
 
+        /// <summary>
+        /// Gets the PdfAConformanceLevel set in the constructor or in the metadata
+        /// of the
+        /// <see cref="iText.Kernel.Pdf.PdfReader"/>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfAConformanceLevel"/>
+        /// </returns>
         public virtual PdfAConformanceLevel GetConformanceLevel() {
             return checker.GetConformanceLevel();
+        }
+
+        protected override void AddCustomMetadataExtensions(XMPMeta xmpMeta) {
+            if (this.IsTagged()) {
+                try {
+                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
+                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
+                }
+                catch (XMPException exc) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
+                    logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
+                }
+            }
         }
 
         protected override void UpdateXmpMetadata() {
@@ -208,10 +276,7 @@ namespace iText.Pdfa {
                 xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.PART, checker.GetConformanceLevel().GetPart());
                 xmpMeta.SetProperty(XMPConst.NS_PDFA_ID, XMPConst.CONFORMANCE, checker.GetConformanceLevel().GetConformance
                     ());
-                if (this.IsTagged()) {
-                    XMPMeta taggedExtensionMeta = XMPMetaFactory.ParseFromString(PdfAXMPUtil.PDF_UA_EXTENSION);
-                    XMPUtils.AppendProperties(taggedExtensionMeta, xmpMeta, true, false);
-                }
+                AddCustomMetadataExtensions(xmpMeta);
                 SetXmpMetadata(xmpMeta);
             }
             catch (XMPException e) {
@@ -236,10 +301,7 @@ namespace iText.Pdfa {
         //TODO log unsuccessful call
         protected override void FlushFonts() {
             foreach (PdfFont pdfFont in GetDocumentFonts()) {
-                if (!pdfFont.IsEmbedded()) {
-                    throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1).SetMessageParams
-                        (pdfFont.GetFontProgram().GetFontNames().GetFontName());
-                }
+                checker.CheckFont(pdfFont);
             }
             base.FlushFonts();
         }

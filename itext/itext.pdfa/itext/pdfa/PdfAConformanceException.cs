@@ -104,7 +104,7 @@ namespace iText.Pdfa {
 
         public const String CatalogShallIncludeMarkInfoDictionaryWithMarkedTrueValue = "catalog.dictionary.shall.include.a.markinfo.dictionary.whose.entry.marked.shall.have.a.value.of.true";
 
-        public const String CatalogShallContainLangEntry = "catalog.dictionary.shall.contain.lang.entry";
+        public const String CatalogShallContainLangEntry = "catalog.dictionary.should.contain.lang.entry";
 
         public const String CatalogShallContainMetadataEntry = "catalog.dictionary.shall.contain.metadata.entry";
 
@@ -253,6 +253,12 @@ namespace iText.Pdfa {
         public const String ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries = "value.of.name.entry.shall.be.unique.among.all.optional.content.configuration.dictionaries";
 
         public const String WidgetAnnotationDictionaryOrFieldDictionaryShallNotIncludeAOrAAEntry = "widget.annotation.dictionary.or.field.dictionary.shall.not.include.a.or.aa.entry";
+
+        public const String AllNonSymbolicTrueTypeFontShallSpecifyMacRomanEncodingOrWinAnsiEncoding = "All non-symbolic TrueType fonts shall specify MacRomanEncoding or WinAnsiEncoding as the value of the Encoding entry in the font dictionary.";
+
+        public const String AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry = "All non-symbolic TrueType fonts shall specify MacRomanEncoding or WinAnsiEncoding as the value of the Encoding entry in the font dictionary. This also means that Encoding entry in the font dictionary shall not be an encoding dictionary.";
+
+        public const String AllSymbolicTrueTypeFontsShallNotSpecifyEncoding = "All symbolic TrueType fonts shall not specify an Encoding entry in the font dictionary.";
 
         /// <summary>Creates a PdfAConformanceException.</summary>
         /// <param name="message">the error message</param>

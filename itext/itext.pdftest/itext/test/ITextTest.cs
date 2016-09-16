@@ -49,6 +49,10 @@ using iText.IO.Util;
 using NUnit.Framework;
 
 namespace iText.Test {
+    /// <summary>
+    /// This is a generic class for testing. Subclassing it, or its subclasses is considered a good practice of
+    /// creating your own tests.
+    /// </summary>
     public abstract class ITextTest {
         //protected readonly ILogger LOGGER = LoggerFactory.GetLogger(gett);
 
@@ -58,28 +62,31 @@ namespace iText.Test {
             ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itext.font_asian.dll");
         }
 
+        /// <summary>
+        /// Creates a folder with a given path, including all necessary nonexistent parent directories.     * 
+        /// If a folder is already present, no action is performed.     * 
+        /// </summary>
+        /// <param name="path">the path of the folder to create</param>
         public static void CreateDestinationFolder(String path) {
             Directory.CreateDirectory(path);
         }
 
+        /// <summary>
+        /// Creates a directory with given path if it does not exist and clears the contents
+        /// of the directory in case it exists.
+        /// </summary>
+        /// <param name="path">the path of the directory to be created/cleared</param>
         public static void CreateOrClearDestinationFolder(String path) {
             Directory.CreateDirectory(path);
-            foreach (String f in Directory.GetFiles(path)) {
-                File.Delete(f);
-            }
+            DeleteDirectoryContents(path, false);
         }
 
+        /// <summary>
+        /// Removes the directory with given path along with its content including all the subdirectories.
+        /// </summary>
+        /// <param name="path">the path of the directory to be removed</param>
         public static void DeleteDirectory(String path) {
-            if (Directory.Exists(path)) {
-                foreach (string d in Directory.GetDirectories(path)) {
-                    DeleteDirectory(d);
-                    Directory.Delete(d);
-                }
-                foreach (string f in Directory.GetFiles(path)) {
-                    File.Delete(f);
-                }
-                Directory.Delete(path);
-            }
+            DeleteDirectoryContents(path, true);
         }
 
         protected virtual byte[] ReadFile(String filename) {
@@ -97,6 +104,21 @@ namespace iText.Test {
                 buf.Append((char) b);
             }
             return buf.ToString();
+        }
+
+        private static void DeleteDirectoryContents(String path, bool removeParentDirectory) {
+            if (Directory.Exists(path)) {
+                foreach (string d in Directory.GetDirectories(path)) {
+                    DeleteDirectoryContents(d, false);
+                    Directory.Delete(d);
+                }
+                foreach (string f in Directory.GetFiles(path)) {
+                    File.Delete(f);
+                }
+                if (removeParentDirectory) {
+                    Directory.Delete(path);
+                }
+            }
         }
     }
 }

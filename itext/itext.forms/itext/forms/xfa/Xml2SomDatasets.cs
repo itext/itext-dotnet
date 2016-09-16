@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace iText.Forms.Xfa
@@ -162,29 +161,21 @@ namespace iText.Forms.Xfa
 					    String s = EscapeSom(((XElement) n2).Name.LocalName);
 						int? i = ss.Get(s);
 						if (i == null)
-						{
-							i = 0;
-						}
-						else
-						{
-							i += 1;
-						}
-						ss[s] = i;
-						if (HasChildren(n2))
-						{
-							stack.Push(s + "[" + i.ToString() + "]");
-							ProcessDatasetsInternal(n2);
-							stack.Pop();
-						}
-						else
-						{
-							stack.Push(s + "[" + i.ToString() + "]");
-							String unstack = PrintStack();
-							order.Add(unstack);
-							InverseSearchAdd(unstack);
-							name2Node[unstack] = n2;
-							stack.Pop();
-						}
+                            i = 0;
+                        else
+                            i = i + 1;
+                        ss[s] = i;
+                        stack.Push(string.Format("{0}[{1}]", s, i));
+                        if (HasChildren(n2))
+                        {
+                            ProcessDatasetsInternal(n2);
+                        }
+                        String unstack = PrintStack();
+                        order.Add(unstack);
+                        InverseSearchAdd(unstack);
+                        name2Node[unstack] = n2;
+                        stack.Pop();
+
 					}
 				    n2 = n2 is XElement ? ((XElement) n2).NextNode : (n2 is XText ? ((XText)n2).NextNode : null);
 				}

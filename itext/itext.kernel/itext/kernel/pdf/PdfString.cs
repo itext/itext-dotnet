@@ -70,8 +70,6 @@ namespace iText.Kernel.Pdf {
     /// <see cref="PdfObject"/>
     /// </summary>
     public class PdfString : PdfPrimitiveObject {
-        private static String defaultCharset = "UTF-8";
-
         protected internal String value;
 
         protected internal String encoding;
@@ -156,9 +154,13 @@ namespace iText.Kernel.Pdf {
         /// Sets the encoding of this string.
         /// NOTE. Byte content will be removed.
         /// </remarks>
+        [System.ObsoleteAttribute(@"Create a new instance with PdfString(System.String, System.String) instead.")]
         public virtual void SetEncoding(String encoding) {
+            if (value == null) {
+                GenerateValue();
+                this.content = null;
+            }
             this.encoding = encoding;
-            this.content = null;
         }
 
         /// <summary>
@@ -240,6 +242,26 @@ namespace iText.Kernel.Pdf {
             return (iText.Kernel.Pdf.PdfString)base.CopyTo(document, allowDuplicating);
         }
 
+        public override bool Equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || GetType() != o.GetType()) {
+                return false;
+            }
+            iText.Kernel.Pdf.PdfString that = (iText.Kernel.Pdf.PdfString)o;
+            String v1 = GetValue();
+            String v2 = that.GetValue();
+            if (v1 != null && v1.Equals(v2)) {
+                String e1 = GetEncoding();
+                String e2 = that.GetEncoding();
+                if ((e1 == null && e2 == null) || (e1 != null && e1.Equals(e2))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public override String ToString() {
             if (value == null) {
                 return iText.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent(content, hexWriting));
@@ -247,6 +269,13 @@ namespace iText.Kernel.Pdf {
             else {
                 return GetValue();
             }
+        }
+
+        public override int GetHashCode() {
+            String v = GetValue();
+            String e = GetEncoding();
+            int result = v != null ? v.GetHashCode() : 0;
+            return 31 * result + (e != null ? e.GetHashCode() : 0);
         }
 
         protected internal virtual void GenerateValue() {

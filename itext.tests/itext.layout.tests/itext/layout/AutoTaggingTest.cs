@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Text;
 using iText.IO.Font;
 using iText.IO.Image;
@@ -32,8 +31,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TextInParagraphTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "textInParagraphTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "textInParagraphTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
@@ -51,8 +49,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ImageTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "imageTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + imageName));
@@ -67,8 +64,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void DivTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "divTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "divTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Div div = new Div();
@@ -91,8 +87,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
@@ -120,8 +115,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest02.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
@@ -140,8 +134,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest03.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest03.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
@@ -166,8 +159,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest04() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest04.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest04.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -195,8 +187,7 @@ namespace iText.Layout {
         public virtual void TableTest05() {
             String outFileName = destinationFolder + "tableTest05.pdf";
             String cmpFileName = sourceFolder + "cmp_tableTest05.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest05.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest05.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -225,8 +216,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void TableTest06() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "tableTest06.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest06.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
@@ -257,8 +247,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ListTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "listTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             List list = new List();
@@ -276,8 +265,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ArtifactTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "artifactTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             String watermarkText = "WATERMARK";
@@ -299,8 +287,7 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void ArtifactTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "artifactTest02.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "artifactTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             document.Add(new Paragraph("Hello world"));
@@ -328,8 +315,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest01() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest01.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Paragraph p = CreateParagraph1();
@@ -359,8 +345,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest02() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest02.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest02.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
@@ -398,8 +383,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void FlushingTest03() {
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + "flushingTest03.pdf"
-                , FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "flushingTest03.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);

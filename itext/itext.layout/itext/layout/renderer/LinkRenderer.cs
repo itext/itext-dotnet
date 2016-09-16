@@ -42,18 +42,35 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
-using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LinkRenderer : TextRenderer {
+        /// <summary>Creates a LinkRenderer from its corresponding layout object.</summary>
+        /// <param name="link">
+        /// the
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// which this object should manage
+        /// </param>
         public LinkRenderer(Link link)
             : this(link, link.GetText()) {
         }
 
+        /// <summary>
+        /// Creates a LinkRenderer from its corresponding layout object, with a custom
+        /// text to replace the contents of the
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// .
+        /// </summary>
+        /// <param name="linkElement">
+        /// the
+        /// <see cref="iText.Layout.Element.Link"/>
+        /// which this object should manage
+        /// </param>
+        /// <param name="text">the replacement text</param>
         public LinkRenderer(Link linkElement, String text)
             : base(linkElement, text) {
         }
@@ -65,14 +82,8 @@ namespace iText.Layout.Renderer {
                 ApplyAbsolutePositioningTranslation(false);
             }
             PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
-            linkAnnotation.SetRectangle(new PdfArray(occupiedArea.GetBBox()));
-            Border border = this.GetProperty<Border>(Property.BORDER);
-            if (border != null) {
-                linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
-            }
-            else {
-                linkAnnotation.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
-            }
+            Rectangle pdfBBox = CalculateAbsolutePdfBBox();
+            linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
             if (isRelativePosition) {
                 ApplyAbsolutePositioningTranslation(true);
             }

@@ -47,8 +47,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument1_" + (this.partNumber
-                        ++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument1_" + (this.partNumber++).ToString(
+                        ) + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -81,8 +81,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument2_" + (this.partNumber
-                        ++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument2_" + (this.partNumber++).ToString(
+                        ) + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -133,8 +133,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitDocument3_" + (this.partNumber
-                        ++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument3_" + (this.partNumber++).ToString(
+                        ) + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();
@@ -187,8 +187,8 @@ namespace iText.Kernel.Utils {
 
             protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
                 try {
-                    return new PdfWriter(new FileStream(PdfSplitterTest.destinationFolder + "splitBySize_part" + (this.partNumber
-                        ++).ToString() + ".pdf", FileMode.Create));
+                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitBySize_part" + (this.partNumber++).ToString
+                        () + ".pdf");
                 }
                 catch (FileNotFoundException) {
                     throw new Exception();

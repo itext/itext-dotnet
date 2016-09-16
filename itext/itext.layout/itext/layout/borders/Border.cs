@@ -46,39 +46,83 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
+    /// <summary>Represents a border.</summary>
     public abstract class Border {
+        /// <summary>The null Border, i.e.</summary>
+        /// <remarks>The null Border, i.e. the presence of such border is equivalent to the absence of the border</remarks>
         public static readonly iText.Layout.Borders.Border NO_BORDER = null;
 
+        /// <summary>The solid border.</summary>
+        /// <seealso cref="SolidBorder"/>
         public const int SOLID = 0;
 
+        /// <summary>The dashed border.</summary>
+        /// <seealso cref="DashedBorder"/>
         public const int DASHED = 1;
 
+        /// <summary>The dotted border.</summary>
+        /// <seealso cref="DottedBorder"/>
         public const int DOTTED = 2;
 
+        /// <summary>The double border.</summary>
+        /// <seealso cref="DoubleBorder"/>
         public const int DOUBLE = 3;
 
+        /// <summary>The round-dots border.</summary>
+        /// <seealso cref="RoundDotsBorder"/>
         public const int ROUND_DOTS = 4;
 
+        /// <summary>The 3D groove border.</summary>
+        /// <seealso cref="GrooveBorder"/>
         public const int _3D_GROOVE = 5;
 
+        /// <summary>The 3D inset border.</summary>
+        /// <seealso cref="InsetBorder"/>
         public const int _3D_INSET = 6;
 
+        /// <summary>The 3D outset border.</summary>
+        /// <seealso cref="OutsetBorder"/>
         public const int _3D_OUTSET = 7;
 
+        /// <summary>The 3D ridge border.</summary>
+        /// <seealso cref="RidgeBorder"/>
         public const int _3D_RIDGE = 8;
 
+        /// <summary>The color of the border.</summary>
+        /// <seealso cref="iText.Kernel.Colors.Color"/>
         protected internal Color color;
 
+        /// <summary>The width of the border.</summary>
         protected internal float width;
 
+        /// <summary>The type of the border.</summary>
         protected internal int type;
 
+        /// <summary>The hash value for the border.</summary>
         private int hash;
 
+        /// <summary>
+        /// Creates a
+        /// <see cref="Border">border</see>
+        /// with the given width.
+        /// The
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// to be set by default is black
+        /// </summary>
+        /// <param name="width">the width which the border should have</param>
         protected internal Border(float width)
             : this(Color.BLACK, width) {
         }
 
+        /// <summary>
+        /// Creates a
+        /// <see cref="Border">border</see>
+        /// with given width and
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// .
+        /// </summary>
+        /// <param name="color">the color which the border should have</param>
+        /// <param name="width">the width which the border should have</param>
         protected internal Border(Color color, float width) {
             this.color = color;
             this.width = width;
@@ -116,18 +160,66 @@ namespace iText.Layout.Borders {
         public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
             , float borderWidthAfter);
 
+        /// <summary>Draws the border of a cell.</summary>
+        /// <param name="canvas">PdfCanvas to be written to</param>
+        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
         public abstract void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2);
 
+        /// <summary>
+        /// Returns the type of the
+        /// <see cref="Border">border</see>
+        /// </summary>
         public abstract int GetBorderType();
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// </returns>
         public virtual Color GetColor() {
             return color;
         }
 
+        /// <summary>
+        /// Gets the width of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        /// <returns>the width</returns>
         public virtual float GetWidth() {
             return width;
         }
 
+        /// <summary>
+        /// Sets the
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        public virtual void SetColor(Color color) {
+            this.color = color;
+        }
+
+        /// <summary>
+        /// Sets the width of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        public virtual void SetWidth(float width) {
+            this.width = width;
+        }
+
+        /// <summary>Indicates whether the border is equal to the given border.</summary>
+        /// <remarks>
+        /// Indicates whether the border is equal to the given border.
+        /// The border type, width and color are considered during the comparison.
+        /// </remarks>
         public override bool Equals(Object anObject) {
             if (this == anObject) {
                 return true;
@@ -145,6 +237,7 @@ namespace iText.Layout.Borders {
             return true;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
             int h = hash;
             if (h == 0) {
@@ -154,6 +247,22 @@ namespace iText.Layout.Borders {
             return h;
         }
 
+        /// <summary>
+        /// Returns the
+        /// <see cref="Side">side</see>
+        /// corresponded to the line between two points.
+        /// Notice that we consider the rectangle traversal to be clockwise.
+        /// If the rectangle sides are not parallel to the corresponding page sides
+        /// the result is Side.NONE
+        /// </summary>
+        /// <param name="x1">the abscissa of the left-bottom point</param>
+        /// <param name="y1">the ordinate of the left-bottom point</param>
+        /// <param name="x2">the abscissa of the right-top point</param>
+        /// <param name="y1">the ordinate of the right-top point</param>
+        /// <returns>
+        /// the corresponded
+        /// <see cref="Side">side</see>
+        /// </returns>
         protected internal virtual Border.Side GetBorderSide(float x1, float y1, float x2, float y2) {
             bool isLeft = false;
             bool isRight = false;
@@ -188,6 +297,12 @@ namespace iText.Layout.Borders {
             return Border.Side.NONE;
         }
 
+        /// <summary>Enumerates the different sides of the rectangle.</summary>
+        /// <remarks>
+        /// Enumerates the different sides of the rectangle.
+        /// The rectangle sides are expected to be parallel to corresponding page sides
+        /// Otherwise the result is Side.NONE
+        /// </remarks>
         protected internal enum Side {
             NONE,
             TOP,

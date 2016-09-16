@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using iText.IO.Source;
-using iText.IO.Util;
 using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
@@ -52,10 +52,6 @@ namespace iText.Kernel.Pdf {
         private const int INITIAL_CAPACITY = 32;
 
         private const int MAX_GENERATION = 65535;
-
-        private const String objectOffsetFormatter = "0000000000";
-
-        private const String objectGenerationFormatter = "00000";
 
         private static readonly byte[] freeXRefEntry = ByteUtils.GetIsoBytes("f \n");
 
@@ -125,6 +121,13 @@ namespace iText.Kernel.Pdf {
             return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
         }
 
+        //For Object streams
+        internal virtual PdfIndirectReference CreateNewIndirectReference(PdfDocument document) {
+            PdfIndirectReference reference = new PdfIndirectReference(document, ++count);
+            Add(reference);
+            return ((PdfIndirectReference)reference.SetState(PdfObject.MODIFIED));
+        }
+
         protected internal virtual void FreeReference(PdfIndirectReference reference) {
             reference.SetOffset(0);
             reference.SetState(PdfObject.FREE);
@@ -148,7 +151,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Writes cross reference table and trailer to PDF.</summary>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         protected internal virtual void WriteXrefTableAndTrailer(PdfDocument document, PdfObject fileId, PdfObject
              crypto) {
             PdfWriter writer = document.GetWriter();
@@ -282,9 +284,10 @@ namespace iText.Kernel.Pdf {
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
                     for (int i_2 = first; i_2 < first + len; i_2++) {
                         PdfIndirectReference reference = xrefTable.Get(i_2);
-                        writer.WriteString(DecimalFormatUtil.FormatNumber(reference.GetOffset(), objectOffsetFormatter)).WriteSpace
-                            ().WriteString(DecimalFormatUtil.FormatNumber(reference.GetGenNumber(), objectGenerationFormatter)).WriteSpace
-                            ();
+                        StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
+                        StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
+                        writer.WriteString(off.JSubstring(off.Length - 10, off.Length)).WriteSpace().WriteString(gen.JSubstring(gen
+                            .Length - 5, gen.Length)).WriteSpace();
                         if (reference.IsFree()) {
                             writer.WriteBytes(freeXRefEntry);
                         }

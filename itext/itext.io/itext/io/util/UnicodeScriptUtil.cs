@@ -43,10 +43,7 @@ address: sales@itextpdf.com
 */
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace iText.IO.Util {
     /// <summary>
@@ -56,7 +53,7 @@ namespace iText.IO.Util {
     public static class UnicodeScriptUtil {
         public const int MAX_CODE_POINT = 0X10FFFF;
 
-        private static readonly UnicodeScript[] scripts = {
+        private static readonly UnicodeScript[] Scripts = {
             UnicodeScript.COMMON,
             UnicodeScript.LATIN,
             UnicodeScript.COMMON,
@@ -376,7 +373,7 @@ namespace iText.IO.Util {
             UnicodeScript.UNKNOWN
         };
 
-        public static readonly int[] scriptStarts = {
+        public static readonly int[] ScriptStarts = {
             0x0000, // 0000..0040; COMMON
             0x0041, // 0041..005A; LATIN
             0x005B, // 005B..0060; COMMON
@@ -711,7 +708,7 @@ namespace iText.IO.Util {
         */
 
         public static UnicodeScript Of(int codePoint) {
-            if (!isValidCodePoint(codePoint))
+            if (!IsValidCodePoint(codePoint))
                 throw new Exception();
             char ch = Convert.ToChar(codePoint);
             UnicodeCategory type = CharUnicodeInfo.GetUnicodeCategory(ch);
@@ -719,14 +716,14 @@ namespace iText.IO.Util {
             if (type == 0) {
                 return UnicodeScript.UNKNOWN;
             }
-            int index = Array.BinarySearch(scriptStarts, codePoint);
+            int index = Array.BinarySearch(ScriptStarts, codePoint);
             if (index < 0) {
                 index = -index - 2;
             }
-            return scripts[index];
+            return Scripts[index];
         }
 
-        public static bool isValidCodePoint(int codePoint) {
+        public static bool IsValidCodePoint(int codePoint) {
             // Optimized form of:
             //     codePoint >= MIN_CODE_POINT && codePoint <= MAX_CODE_POINT
             int plane = (int) ((uint) codePoint >> 16);

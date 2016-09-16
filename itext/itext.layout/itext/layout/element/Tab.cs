@@ -44,6 +44,16 @@ address: sales@itextpdf.com
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
+    /// <summary>
+    /// This class represents the empty space from a
+    /// <see cref="Text"/>
+    /// to the following
+    /// <see cref="TabStop"/>
+    /// , if any. Using this class will not have any effect unless
+    /// there are
+    /// <see cref="TabStop"/>
+    /// objects defined for the enveloping element.
+    /// </summary>
     public class Tab : AbstractElement<Tab>, ILeafElement {
         protected internal override IRenderer MakeNewRenderer() {
             return new TabRenderer(this);

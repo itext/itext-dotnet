@@ -1,9 +1,10 @@
 using System;
-using System.IO;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -28,7 +29,7 @@ namespace iText.Layout {
         public virtual void RelativePositioningTest01() {
             String outFileName = destinationFolder + "relativePositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(300).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
@@ -46,7 +47,7 @@ namespace iText.Layout {
         public virtual void RelativePositioningTest02() {
             String outFileName = destinationFolder + "relativePositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(180).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
@@ -64,7 +65,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest01() {
             String outFileName = destinationFolder + "fixedPositioningTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             List list = new List(ListNumberingType.ROMAN_UPPER).SetFixedPosition(2, 300, 300, 50).SetBackgroundColor(Color
                 .BLUE).SetHeight(100);
@@ -81,7 +82,7 @@ namespace iText.Layout {
         public virtual void FixedPositioningTest02() {
             String outFileName = destinationFolder + "fixedPositioningTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_fixedPositioningTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.GetPdfDocument().AddNewPage();
             new PdfCanvas(document.GetPdfDocument().GetPage(1)).SetFillColor(Color.BLACK).Rectangle(300, 300, 100, 100
@@ -100,7 +101,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest01() {
             String outFileName = destinationFolder + "showTextAlignedTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest01.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             pdfDocument.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetLastPage());
@@ -165,7 +166,7 @@ namespace iText.Layout {
         public virtual void ShowTextAlignedTest02() {
             String outFileName = destinationFolder + "showTextAlignedTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_showTextAlignedTest02.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             String watermarkText = "WATERMARK";
             Paragraph watermark = new Paragraph(watermarkText);
@@ -177,6 +178,26 @@ namespace iText.Layout {
             document.Add(new Paragraph(textContent + textContent + textContent));
             document.Add(new Paragraph(textContent + textContent + textContent));
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ShowTextAlignedTest03() {
+            String outFileName = destinationFolder + "showTextAlignedTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_showTextAlignedTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(sourceFolder + "bruno.jpg"));
+            float width = img.GetImageScaledWidth();
+            float height = img.GetImageScaledHeight();
+            PdfFormXObject template = new PdfFormXObject(new Rectangle(width, height));
+            iText.Layout.Canvas canvas = new iText.Layout.Canvas(template, pdfDoc);
+            canvas.Add(img).ShowTextAligned("HELLO BRUNO", width / 2, height / 2, TextAlignment.CENTER);
+            doc.Add(new iText.Layout.Element.Image(template));
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

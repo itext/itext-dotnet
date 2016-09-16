@@ -46,13 +46,29 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Action {
+    /// <summary>This class is a wrapper of media clip data dictionary that defines the data for a media object that can be played.
+    ///     </summary>
     public class PdfMediaClipData : PdfObjectWrapper<PdfDictionary> {
         private static readonly PdfString TEMPACCESS = new PdfString("TEMPACCESS");
 
+        /// <summary>
+        /// Constructs a new
+        /// <see cref="PdfMediaClipData"/>
+        /// wrapper using an existing dictionary.
+        /// </summary>
+        /// <param name="pdfObject">the dictionary to construct the wrapper from</param>
         public PdfMediaClipData(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
+        /// <summary>
+        /// Constructs a new
+        /// <see cref="PdfMediaClipData"/>
+        /// wrapper around a newly created dictionary.
+        /// </summary>
+        /// <param name="file">the name of the file to create a media clip for</param>
+        /// <param name="fs">a file specification that specifies the actual media data</param>
+        /// <param name="mimeType">an ASCII string identifying the type of data</param>
         public PdfMediaClipData(String file, PdfFileSpec fs, String mimeType)
             : this(new PdfDictionary()) {
             PdfDictionary dic = new PdfDictionary();
@@ -66,6 +82,22 @@ namespace iText.Kernel.Pdf.Action {
             GetPdfObject().Put(PdfName.D, fs.GetPdfObject());
         }
 
+        /// <summary>
+        /// To manually flush a
+        /// <c>PdfObject</c>
+        /// behind this wrapper, you have to ensure
+        /// that this object is added to the document, i.e. it has an indirect reference.
+        /// Basically this means that before flushing you need to explicitly call
+        /// <see cref="iText.Kernel.Pdf.PdfObjectWrapper{T}.MakeIndirect(iText.Kernel.Pdf.PdfDocument)"/>
+        /// .
+        /// For example: wrapperInstance.makeIndirect(document).flush();
+        /// Note that not every wrapper require this, only those that have such warning in documentation.
+        /// </summary>
+        public override void Flush() {
+            base.Flush();
+        }
+
+        /// <summary><inheritDoc/></summary>
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return true;
         }

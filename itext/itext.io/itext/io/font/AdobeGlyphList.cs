@@ -114,7 +114,7 @@ namespace iText.IO.Font {
         }
 
         // empty on purpose
-        public static int? NameToUnicode(String name) {
+        public static int NameToUnicode(String name) {
             int v = -1;
             if (names2unicode.ContainsKey(name)) {
                 v = (int)names2unicode.Get(name);

@@ -62,6 +62,8 @@ namespace iText.Layout.Properties {
 
         public const int ACTION = 1;
 
+        public const int APPEARANCE_STREAM_LAYOUT = 82;
+
         public const int AREA_BREAK_TYPE = 2;
 
         public const int AUTO_SCALE = 3;
@@ -124,6 +126,8 @@ namespace iText.Layout.Properties {
         public const int ITALIC_SIMULATION = 31;
 
         public const int KEEP_TOGETHER = 32;
+
+        public const int KEEP_WITH_NEXT = 81;
 
         public const int LEADING = 33;
 
@@ -201,7 +205,11 @@ namespace iText.Layout.Properties {
 
         public const int TEXT_ALIGNMENT = 70;
 
-        /// <summary>Use values from .</summary>
+        /// <summary>
+        /// Use values from
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.TextRenderingMode"/>
+        /// .
+        /// </summary>
         public const int TEXT_RENDERING_MODE = 71;
 
         public const int TEXT_RISE = 72;
@@ -232,10 +240,11 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 80;
+        private const int MAX_INHERITED_PROPERTY_ID = 82;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.APPEARANCE_STREAM_LAYOUT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
@@ -263,8 +272,16 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.WORD_SPACING] = true;
         }
 
+        /// <summary>
+        /// This method checks whether a Property, in order to be picked up by the
+        /// rendering engine, must be defined on the current element or renderer
+        /// (<code>return false</code>), or may be defined in one of its parent
+        /// elements or renderers (<code>return true</code>).
+        /// </summary>
+        /// <param name="property">the ID, defined in this class, of the property to check</param>
+        /// <returns>whether the property type is inheritable</returns>
         public static bool IsPropertyInherited(int property) {
-            return property >= 0 && property < MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES[property];
+            return property >= 0 && property <= MAX_INHERITED_PROPERTY_ID && INHERITED_PROPERTIES[property];
         }
     }
 }

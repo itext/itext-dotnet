@@ -17,14 +17,14 @@
 using System;
 
 namespace iText.Layout.Hyphenation {
-    /// <summary>
-    /// <p>An hyphenation exception.</p>
+    /// <summary>A hyphenation exception.</summary>
+    /// <remarks>
+    /// A hyphenation exception.
     /// <p>This work was authored by Carlos Villegas (cav@uniscope.co.jp).</p>
-    /// </summary>
+    /// </remarks>
     public class HyphenationException : Exception {
         /// <summary>Construct a hyphenation exception.</summary>
         /// <param name="msg">a message string</param>
-        /// <seealso cref="System.Exception.Throwable(System.String)"/>
         public HyphenationException(String msg)
             : base(msg) {
         }

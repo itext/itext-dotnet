@@ -75,10 +75,14 @@ namespace iText.Layout.Element {
             this.text = text;
         }
 
+        /// <summary>Gets the contents of the Text object that will be rendered.</summary>
+        /// <returns>the string with the contents</returns>
         public virtual String GetText() {
             return text;
         }
 
+        /// <summary>Sets the contents of the Text object.</summary>
+        /// <param name="text">the new contents</param>
         public virtual void SetText(String text) {
             this.text = text;
         }

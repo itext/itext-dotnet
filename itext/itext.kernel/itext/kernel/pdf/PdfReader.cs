@@ -122,7 +122,6 @@ namespace iText.Kernel.Pdf {
         /// </param>
         /// <param name="properties">properties of the created reader</param>
         /// <exception cref="System.IO.IOException">on error</exception>
-        /// <exception cref="iText.Kernel.PdfException">on error</exception>
         public PdfReader(Stream @is, ReaderProperties properties)
             : this(new RandomAccessSourceFactory().CreateSource(@is), properties) {
         }
@@ -135,7 +134,6 @@ namespace iText.Kernel.Pdf {
         /// if user doesn't want to close stream, he should set closeStream=false;
         /// </param>
         /// <exception cref="System.IO.IOException">on error</exception>
-        /// <exception cref="iText.Kernel.PdfException">on error</exception>
         public PdfReader(Stream @is)
             : this(@is, new ReaderProperties()) {
         }
@@ -212,7 +210,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="decode">true if to get decoded stream bytes, false if to leave it originally encoded.</param>
         /// <returns>byte[]</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual byte[] ReadStreamBytes(PdfStream stream, bool decode) {
             byte[] b = ReadStreamBytesRaw(stream);
             if (decode && b != null) {
@@ -288,7 +285,6 @@ namespace iText.Kernel.Pdf {
         /// <param name="decode">true if to get decoded stream, false if to leave it originally encoded.</param>
         /// <returns>InputStream</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual Stream ReadStream(PdfStream stream, bool decode) {
             byte[] bytes = ReadStreamBytes(stream, decode);
             return bytes != null ? new MemoryStream(bytes) : null;
@@ -473,6 +469,9 @@ namespace iText.Kernel.Pdf {
             encrypted = true;
             PdfName filter = enc.GetAsName(PdfName.Filter);
             if (PdfName.Adobe_PubSec.Equals(filter)) {
+                if (properties.certificate == null) {
+                    throw new PdfException(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate);
+                }
                 decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate);
             }
             else {
@@ -516,7 +515,7 @@ namespace iText.Kernel.Pdf {
                     address[k] = tokens.GetIntValue() + first;
                 }
                 if (!ok) {
-                    throw new PdfException(PdfException.ErrorReadingObjectStream);
+                    throw new PdfException(PdfException.ErrorWhileReadingObjectStream);
                 }
                 for (int k_1 = 0; k_1 < n; ++k_1) {
                     tokens.Seek(address[k_1]);
@@ -602,7 +601,7 @@ namespace iText.Kernel.Pdf {
                         pdfString.SetDecryptInfoNum(currentIndirectReference.GetObjNumber());
                         pdfString.SetDecryptInfoGen(currentIndirectReference.GetGenNumber());
                     }
-                    return properties.password == null || objStm ? pdfString : pdfString.Decrypt(decrypt);
+                    return !IsEncrypted() || objStm ? pdfString : pdfString.Decrypt(decrypt);
                 }
 
                 case PdfTokenizer.TokenType.Name: {
@@ -805,6 +804,22 @@ namespace iText.Kernel.Pdf {
                     tokens.NextValidToken();
                     int gen = tokens.GetIntValue();
                     tokens.NextValidToken();
+                    if (pos == 0L && gen == 65535 && num == 1) {
+                        // Very rarely can an XREF have an incorrect start number. (SUP-1557)
+                        // e.g.
+                        // xref
+                        // 1 13
+                        // 0000000000 65535 f
+                        // 0000000009 00000 n
+                        // 0000215136 00000 n
+                        // [...]
+                        // Because of how iText reads (and initializes) the XREF, this will lead to the XREF having two 0000 65535 entries.
+                        // This throws off the parsing and other operations you'd like to perform.
+                        // To fix this we reset our index and decrease the limit when we've encountered the magic entry at position 1.
+                        num = 0;
+                        end--;
+                        continue;
+                    }
                     PdfIndirectReference reference = xref.Get(num);
                     if (reference == null) {
                         reference = new PdfIndirectReference(pdfDocument, num, gen, pos);
@@ -821,7 +836,7 @@ namespace iText.Kernel.Pdf {
                     if (tokens.TokenValueEqualsTo(PdfTokenizer.N)) {
                         if (xref.Get(num) == null) {
                             if (pos == 0) {
-                                tokens.ThrowError(PdfException.FilePosition0CrossReferenceEntryInThisXrefSubsection);
+                                tokens.ThrowError(PdfException.FilePosition1CrossReferenceEntryInThisXrefSubsection);
                             }
                             xref.Add(reference);
                         }

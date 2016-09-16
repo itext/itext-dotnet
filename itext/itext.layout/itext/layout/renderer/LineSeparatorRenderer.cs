@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout.Element;
 using iText.Layout.Layout;
@@ -48,32 +49,60 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class LineSeparatorRenderer : BlockRenderer {
+        /// <summary>Creates a LineSeparatorRenderer from its corresponding layout object.</summary>
+        /// <param name="lineSeparator">
+        /// the
+        /// <see cref="iText.Layout.Element.LineSeparator"/>
+        /// which this object should manage
+        /// </param>
         public LineSeparatorRenderer(LineSeparator lineSeparator)
             : base(lineSeparator) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+                parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
+            }
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             float height = lineDrawer != null ? lineDrawer.GetLineWidth() : 0;
-            occupiedArea = layoutContext.GetArea().Clone();
+            occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), parentBBox.Clone());
             ApplyMargins(occupiedArea.GetBBox(), false);
-            if (occupiedArea.GetBBox().GetHeight() < height) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, this);
+            float? calculatedWidth = RetrieveWidth(layoutContext.GetArea().GetBBox().GetWidth());
+            if (calculatedWidth == null) {
+                calculatedWidth = occupiedArea.GetBBox().GetWidth();
             }
-            occupiedArea.GetBBox().MoveUp(occupiedArea.GetBBox().GetHeight() - height).SetHeight(height);
+            if ((occupiedArea.GetBBox().GetHeight() < height || occupiedArea.GetBBox().GetWidth() < calculatedWidth) &&
+                 !HasOwnProperty(Property.FORCED_PLACEMENT)) {
+                return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
+            }
+            occupiedArea.GetBBox().SetWidth((float)calculatedWidth).MoveUp(occupiedArea.GetBBox().GetHeight() - height
+                ).SetHeight(height);
             ApplyMargins(occupiedArea.GetBBox(), true);
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
+                ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
+                if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
+                    if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                    }
+                }
+            }
             return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null);
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.LineSeparatorRenderer((LineSeparator)modelElement);
         }
 
-        public override void Draw(DrawContext drawContext) {
-            base.Draw(drawContext);
+        /// <summary><inheritDoc/></summary>
+        public override void DrawChildren(DrawContext drawContext) {
             ILineDrawer lineDrawer = this.GetProperty<ILineDrawer>(Property.LINE_DRAWER);
             if (lineDrawer != null) {
-                lineDrawer.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
+                Rectangle area = GetOccupiedAreaBBox();
+                ApplyMargins(area, false);
+                lineDrawer.Draw(drawContext.GetCanvas(), area);
             }
         }
     }

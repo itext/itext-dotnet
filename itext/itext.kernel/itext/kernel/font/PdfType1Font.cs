@@ -74,7 +74,10 @@ namespace iText.Kernel.Font {
             newFont = false;
             CheckFontDictionary(fontDictionary, PdfName.Type1);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
-            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni);
+            //if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
+            bool fillStandardEncoding = !fontDictionary.ContainsKey(PdfName.FontDescriptor);
+            fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, fillStandardEncoding
+                );
             fontProgram = DocType1Font.CreateFontProgram(fontDictionary, fontEncoding, toUni);
             if (fontProgram is IDocFontProgram) {
                 embedded = ((IDocFontProgram)fontProgram).GetFontFile() != null;
@@ -134,6 +137,7 @@ namespace iText.Kernel.Font {
                 if (fontProgram is IDocFontProgram) {
                     IDocFontProgram docType1Font = (IDocFontProgram)fontProgram;
                     fontDescriptor.Put(docType1Font.GetFontFileName(), docType1Font.GetFontFile());
+                    docType1Font.GetFontFile().Flush();
                     if (docType1Font.GetSubtype() != null) {
                         fontDescriptor.Put(PdfName.Subtype, docType1Font.GetSubtype());
                     }
@@ -147,6 +151,9 @@ namespace iText.Kernel.Font {
                             fontStream.Put(new PdfName("Length" + (k + 1)), new PdfNumber(fontStreamLengths[k]));
                         }
                         fontDescriptor.Put(PdfName.FontFile, fontStream);
+                        if (MakeObjectIndirect(fontStream)) {
+                            fontStream.Flush();
+                        }
                     }
                 }
             }

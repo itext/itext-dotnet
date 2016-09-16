@@ -72,8 +72,8 @@ namespace iText.Kernel.Pdf.Canvas.Draw {
 
         public virtual void Draw(PdfCanvas canvas, Rectangle drawArea) {
             canvas.SaveState().SetLineWidth(lineWidth).SetStrokeColor(color).SetLineDash(2, 2).MoveTo(drawArea.GetX(), 
-                drawArea.GetY() + drawArea.GetHeight() / 2).LineTo(drawArea.GetX() + drawArea.GetWidth(), drawArea.GetY
-                () + drawArea.GetHeight() / 2).Stroke().RestoreState();
+                drawArea.GetY() + lineWidth / 2).LineTo(drawArea.GetX() + drawArea.GetWidth(), drawArea.GetY() + lineWidth
+                 / 2).Stroke().RestoreState();
         }
 
         /// <summary>Gets line width in points</summary>

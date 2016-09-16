@@ -26,9 +26,9 @@ namespace iText.Kernel.Utils {
             String filename1 = sourceFolder + "helveticaTest.pdf";
             String filename2 = sourceFolder + "timesRomanTest.pdf";
             String resultFile = destinationFolder + "mergedResult01.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
-            PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(filename);
+            PdfReader reader1 = new PdfReader(filename1);
+            PdfReader reader2 = new PdfReader(filename2);
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -56,9 +56,9 @@ namespace iText.Kernel.Utils {
             String filename1 = sourceFolder + "doc2.pdf";
             String filename2 = sourceFolder + "doc3.pdf";
             String resultFile = destinationFolder + "mergedResult02.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
-            PdfReader reader2 = new PdfReader(new FileStream(filename2, FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(filename);
+            PdfReader reader1 = new PdfReader(filename1);
+            PdfReader reader2 = new PdfReader(filename2);
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -85,8 +85,8 @@ namespace iText.Kernel.Utils {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
             String resultFile = destinationFolder + "mergedResult03.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(filename);
+            PdfReader reader1 = new PdfReader(filename1);
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);
@@ -119,8 +119,8 @@ namespace iText.Kernel.Utils {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
             String resultFile = destinationFolder + "mergedResult04.pdf";
-            PdfReader reader = new PdfReader(new FileStream(filename, FileMode.Open, FileAccess.Read));
-            PdfReader reader1 = new PdfReader(new FileStream(filename1, FileMode.Open, FileAccess.Read));
+            PdfReader reader = new PdfReader(filename);
+            PdfReader reader1 = new PdfReader(filename1);
             FileStream fos1 = new FileStream(resultFile, FileMode.Create);
             PdfWriter writer1 = new PdfWriter(fos1);
             PdfDocument pdfDoc = new PdfDocument(reader);

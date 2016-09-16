@@ -45,27 +45,87 @@ using System;
 
 namespace iText.Kernel.Geom {
     public class AffineTransform {
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_IDENTITY = 0;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_TRANSLATION = 1;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_UNIFORM_SCALE = 2;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_GENERAL_SCALE = 4;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_QUADRANT_ROTATION = 8;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_GENERAL_ROTATION = 16;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_GENERAL_TRANSFORM = 32;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_FLIP = 64;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_MASK_SCALE = TYPE_UNIFORM_SCALE | TYPE_GENERAL_SCALE;
 
+        /// <summary>The type of affine transformation.</summary>
+        /// <remarks>
+        /// The type of affine transformation. See
+        /// <see cref="GetTransformType()"/>
+        /// .
+        /// </remarks>
         public const int TYPE_MASK_ROTATION = TYPE_QUADRANT_ROTATION | TYPE_GENERAL_ROTATION;
 
-        /// <summary>The <code>TYPE_UNKNOWN</code> is an initial type value</summary>
+        /// <summary>The <code>TYPE_UNKNOWN</code> is an initial type value.</summary>
         internal const int TYPE_UNKNOWN = -1;
 
         /// <summary>The min value equivalent to zero.</summary>
@@ -139,25 +199,42 @@ namespace iText.Kernel.Geom {
             }
         }
 
-        /*
-        * Method returns type of affine transformation.
-        *
-        * Transform matrix is
-        *   m00 m01 m02
-        *   m10 m11 m12
-        *
-        * According analytic geometry new basis vectors are (m00, m01) and (m10, m11),
-        * translation vector is (m02, m12). Original basis vectors are (1, 0) and (0, 1).
-        * Type transformations classification:
-        *   TYPE_IDENTITY - new basis equals original one and zero translation
-        *   TYPE_TRANSLATION - translation vector isn't zero
-        *   TYPE_UNIFORM_SCALE - vectors length of new basis equals
-        *   TYPE_GENERAL_SCALE - vectors length of new basis doesn't equal
-        *   TYPE_FLIP - new basis vector orientation differ from original one
-        *   TYPE_QUADRANT_ROTATION - new basis is rotated by 90, 180, 270, or 360 degrees
-        *   TYPE_GENERAL_ROTATION - new basis is rotated by arbitrary angle
-        *   TYPE_GENERAL_TRANSFORM - transformation can't be inversed
-        */
+        /// <summary>Method returns type of affine transformation.</summary>
+        /// <remarks>
+        /// Method returns type of affine transformation.
+        /// Transform matrix is
+        /// m00 m01 m02
+        /// m10 m11 m12
+        /// According analytic geometry new basis vectors are (m00, m01) and (m10, m11),
+        /// translation vector is (m02, m12). Original basis vectors are (1, 0) and (0, 1).
+        /// Type transformations classification:
+        /// <ul>
+        /// <li>
+        /// <see cref="TYPE_IDENTITY"/>
+        /// - new basis equals original one and zero translation</li>
+        /// <li>
+        /// <see cref="TYPE_TRANSLATION"/>
+        /// - translation vector isn't zero</li>
+        /// <li>
+        /// <see cref="TYPE_UNIFORM_SCALE"/>
+        /// - vectors length of new basis equals</li>
+        /// <li>
+        /// <see cref="TYPE_GENERAL_SCALE"/>
+        /// - vectors length of new basis doesn't equal</li>
+        /// <li>
+        /// <see cref="TYPE_FLIP"/>
+        /// - new basis vector orientation differ from original one</li>
+        /// <li>
+        /// <see cref="TYPE_QUADRANT_ROTATION"/>
+        /// - new basis is rotated by 90, 180, 270, or 360 degrees</li>
+        /// <li>
+        /// <see cref="TYPE_GENERAL_ROTATION"/>
+        /// - new basis is rotated by arbitrary angle</li>
+        /// <li>
+        /// <see cref="TYPE_GENERAL_TRANSFORM"/>
+        /// - transformation can't be inversed</li>
+        /// </ul>
+        /// </remarks>
         public virtual int GetTransformType() {
             if (this.type != TYPE_UNKNOWN) {
                 return this.type;

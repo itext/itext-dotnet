@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace iText.IO.Util {
@@ -65,6 +66,10 @@ namespace iText.IO.Util {
 
         public static String Group(Match match, int index) {
             return match.Groups[index].Value;
+        }
+
+        public static String Normalize(String s, NormalizationForm form) {
+            return s.Normalize(form);
         }
     }
 }

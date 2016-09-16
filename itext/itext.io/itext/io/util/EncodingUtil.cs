@@ -51,6 +51,9 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public static class EncodingUtil {
+
+        public static Encoding ISO_8859_1 = Encoding.GetEncoding("ISO-8859-1");
+
         /// <exception cref="java.nio.charset.CharacterCodingException"/>
         public static byte[] ConvertToBytes(char[] chars, String encoding) {
             Encoding encw = IanaEncodings.GetEncodingEncoding(encoding);

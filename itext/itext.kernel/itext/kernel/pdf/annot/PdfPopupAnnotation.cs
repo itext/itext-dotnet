@@ -65,6 +65,9 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual PdfAnnotation GetParent() {
+            if (parent == null) {
+                parent = MakeAnnotation(GetParentObject());
+            }
             return parent;
         }
 

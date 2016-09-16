@@ -310,7 +310,7 @@ namespace iText.Signatures {
                         throw new ArgumentException(PdfException.FieldTypeIsNotASignatureFieldType);
                     }
                     if (field.GetValue() != null) {
-                        throw new ArgumentException(PdfException.FieldIsAlreadySigned);
+                        throw new ArgumentException(PdfException.FieldAlreadySigned);
                     }
                     appearance.SetFieldName(fieldName);
                     IList<PdfWidgetAnnotation> widgets = field.GetWidgets();
@@ -378,7 +378,7 @@ namespace iText.Signatures {
             <ICrlClient> crlList, IOcspClient ocspClient, ITSAClient tsaClient, int estimatedSize, PdfSigner.CryptoStandard
              sigtype) {
             if (closed) {
-                throw new PdfException(PdfException.ThisInstanceOfPdfSignerIsAlreadyClosed);
+                throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
             }
             ICollection<byte[]> crlBytes = null;
             int i = 0;
@@ -454,7 +454,7 @@ namespace iText.Signatures {
         public virtual void SignExternalContainer(IExternalSignatureContainer externalSignatureContainer, int estimatedSize
             ) {
             if (closed) {
-                throw new PdfException(PdfException.ThisInstanceOfPdfSignerIsAlreadyClosed);
+                throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
             }
             PdfSignature dic = new PdfSignature();
             PdfSignatureAppearance appearance = GetSignatureAppearance();
@@ -498,7 +498,7 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         public virtual void Timestamp(ITSAClient tsa, String signatureName) {
             if (closed) {
-                throw new PdfException(PdfException.ThisInstanceOfPdfSignerIsAlreadyClosed);
+                throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
             }
             int contentEstimated = tsa.GetTokenSizeEstimate();
             AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
@@ -700,9 +700,15 @@ namespace iText.Signatures {
                 }
                 ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
                 acroForm.AddField(sigField, document.GetPage(pagen));
-                acroForm.SetModified();
+                if (acroForm.GetPdfObject().IsIndirect()) {
+                    acroForm.SetModified();
+                }
+                else {
+                    //Acroform dictionary is a Direct dictionary,
+                    //for proper flushing, catalog needs to be marked as modified
+                    document.GetCatalog().SetModified();
+                }
             }
-            // TODO: test this (ain't sure whether I need this)
             exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
             PdfLiteral lit = new PdfLiteral(80);
             exclusionLocations[PdfName.ByteRange] = lit;
@@ -727,8 +733,9 @@ namespace iText.Signatures {
                 PdfDictionary docmdp = new PdfDictionary();
                 docmdp.Put(PdfName.DocMDP, cryptoDictionary.GetPdfObject());
                 document.GetCatalog().Put(PdfName.Perms, docmdp);
+                document.GetCatalog().SetModified();
             }
-            // TODO: setModified?
+            cryptoDictionary.GetPdfObject().Flush(false);
             document.Close();
             range = new long[exclusionLocations.Count * 2];
             long byteRangePosition = exclusionLocations.Get(PdfName.ByteRange).GetPosition();
@@ -827,7 +834,7 @@ namespace iText.Signatures {
         protected internal virtual void Close(PdfDictionary update) {
             try {
                 if (!preClosed) {
-                    throw new PdfException(PdfException.DocumentMustBePreclosed);
+                    throw new PdfException(PdfException.DocumentMustBePreClosed);
                 }
                 MemoryStream bous = new MemoryStream();
                 PdfOutputStream os = new PdfOutputStream(bous);

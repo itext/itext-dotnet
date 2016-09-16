@@ -45,10 +45,17 @@ using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
     public class DivRenderer : BlockRenderer {
+        /// <summary>Creates a DivRenderer from its corresponding layout object.</summary>
+        /// <param name="modelElement">
+        /// the
+        /// <see cref="iText.Layout.Element.Div"/>
+        /// which this object should manage
+        /// </param>
         public DivRenderer(Div modelElement)
             : base(modelElement) {
         }
 
+        /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.DivRenderer((Div)modelElement);
         }

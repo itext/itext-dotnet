@@ -18,7 +18,8 @@ namespace iText.IO.Source {
                     continue;
                 }
                 byte[] actuals = ByteUtils.GetIsoBytes(d);
-                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.##").GetBytes();
+                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.##").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                    );
                 String message = "Expects: " + iText.IO.Util.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.IO.Util.JavaUtil.GetStringForBytes
                     (actuals) + " \\\\ " + d;
                 NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
@@ -35,7 +36,8 @@ namespace iText.IO.Source {
                     continue;
                 }
                 byte[] actuals = ByteUtils.GetIsoBytes(d);
-                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.#####").GetBytes();
+                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0.#####").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1
+                    );
                 String message = "Expects: " + iText.IO.Util.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.IO.Util.JavaUtil.GetStringForBytes
                     (actuals) + " \\\\ " + d;
                 NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);
@@ -52,7 +54,7 @@ namespace iText.IO.Source {
                 }
                 d = Round(d, 0);
                 byte[] actuals = ByteUtils.GetIsoBytes(d);
-                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0").GetBytes();
+                byte[] expecteds = DecimalFormatUtil.FormatNumber(d, "0").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
                 String message = "Expects: " + iText.IO.Util.JavaUtil.GetStringForBytes(expecteds) + ", actual: " + iText.IO.Util.JavaUtil.GetStringForBytes
                     (actuals) + " \\\\ " + d;
                 NUnit.Framework.Assert.AreEqual(expecteds, actuals, message);

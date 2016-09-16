@@ -99,6 +99,10 @@ namespace iText.Kernel {
             return Encoding.GetEncoding(encoding).GetBytes(str);
         }
 
+        public static byte[] GetBytes(this String str, Encoding encoding) {
+            return encoding.GetBytes(str);
+        }
+
         public static long Seek(this FileStream fs, long offset) {
             return fs.Seek(offset, SeekOrigin.Begin);
         }
@@ -151,7 +155,19 @@ namespace iText.Kernel {
         }
 
         public static T[] ToArray<T>(this ICollection<T> col, T[] toArray) {
-            T[] r = col.ToArray();
+            T[] r;
+            int colSize = col.Count;
+            if (colSize <= toArray.Length) {
+                col.CopyTo(toArray, 0);
+                if (colSize != toArray.Length) {
+                    toArray[colSize] = default(T);
+                }
+                r = toArray;
+            } else {
+                r = new T[colSize];
+                col.CopyTo(r, 0);
+            }
+             
             return r;
         }
 
@@ -231,6 +247,10 @@ namespace iText.Kernel {
 
         public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             return dictionary.ContainsKey(key);
+        }
+
+        public static Stack<T> Clone<T>(this Stack<T> stack) {
+            return new Stack<T>(new Stack<T>(stack)); // create stack twice to retain the original order
         }
 
         public static void Update(this IDigest dgst, byte[] input) {

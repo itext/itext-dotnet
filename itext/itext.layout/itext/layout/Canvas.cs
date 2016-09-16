@@ -159,6 +159,18 @@ namespace iText.Layout {
             return page != null;
         }
 
+        /// <summary>
+        /// Performs an entire recalculation of the element flow on the canvas,
+        /// taking into account all its current child elements.
+        /// </summary>
+        /// <remarks>
+        /// Performs an entire recalculation of the element flow on the canvas,
+        /// taking into account all its current child elements. May become very
+        /// resource-intensive for large documents.
+        /// Do not use when you have set
+        /// <see cref="RootElement{T}.immediateFlush"/>
+        /// to <code>true</code>.
+        /// </remarks>
         public virtual void Relayout() {
             if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");
@@ -175,6 +187,23 @@ namespace iText.Layout {
         /// </summary>
         public virtual void Flush() {
             rootRenderer.Flush();
+        }
+
+        /// <summary>
+        /// Closes the
+        /// <see cref="Canvas"/>
+        /// . Although not completely necessary in all cases, it is still recommended to call this
+        /// method when you are done working with
+        /// <see cref="Canvas"/>
+        /// object, as due to some properties set there might be some
+        /// 'hanging' elements, which are waiting other elements to be added and processed.
+        /// <see cref="Close()"/>
+        /// tells the
+        /// <see cref="Canvas"/>
+        /// that no more elements will be added and it is time to finish processing all the elements.
+        /// </summary>
+        public override void Close() {
+            rootRenderer.Close();
         }
 
         protected internal override RootRenderer EnsureRootRendererNotNull() {

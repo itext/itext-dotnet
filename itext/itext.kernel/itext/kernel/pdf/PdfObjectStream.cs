@@ -57,7 +57,8 @@ namespace iText.Kernel.Pdf {
 
         public PdfObjectStream(PdfDocument doc)
             : base() {
-            MakeIndirect(doc);
+            //avoid reuse existed references
+            MakeIndirect(doc, doc.GetXref().CreateNewIndirectReference(doc));
             GetOutputStream().document = doc;
             Put(PdfName.Type, PdfName.ObjStm);
             Put(PdfName.N, size);
@@ -82,7 +83,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Adds object to the object stream.</summary>
         /// <param name="object">object to add.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public virtual void AddObject(PdfObject @object) {
             if (size.IntValue() == MAX_OBJ_STREAM_SIZE) {
                 throw new PdfException(PdfException.PdfObjectStreamReachMaxSize);

@@ -117,21 +117,24 @@ namespace iText.Kernel.Pdf {
         public abstract byte GetObjectType();
 
         /// <summary>Flushes the object to the document.</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush() {
             Flush(true);
         }
 
         /// <summary>Flushes the object to the document.</summary>
         /// <param name="canBeInObjStm">indicates whether object can be placed into object stream.</param>
-        /// <exception cref="iText.Kernel.PdfException"/>
         public void Flush(bool canBeInObjStm) {
             if (IsFlushed() || GetIndirectReference() == null) {
+                // TODO here we should take into account and log the case when object is MustBeIndirect, but has no indirect reference
+                // TODO DEVSIX-744
                 //            Logger logger = LoggerFactory.getLogger(PdfObject.class);
                 //            if (isFlushed()) {
                 //                logger.warn("Meaningless call, the object has already flushed");
+                //            } else if (isIndirect()){
+                //                logger.warn("Meaningless call, the object will be transformed into indirect on closing, but at the moment it doesn't have an indirect reference and therefore couldn't be flushed. " +
+                //                        "To flush it now call makeIndirect(PdfDocument) method before calling flush() method.");
                 //            } else {
-                //                logger.warn("Meaningless call, the object is direct object.");
+                //                logger.warn("Meaningless call, the object is direct object. It will be flushed along with the indirect object that contains it.");
                 //            }
                 return;
             }
@@ -268,9 +271,10 @@ namespace iText.Kernel.Pdf {
         /// <returns>copied object.</returns>
         public virtual PdfObject CopyTo(PdfDocument document, bool allowDuplicating) {
             if (document == null) {
-                throw new PdfException(PdfException.DocumentToCopyToCannotBeNull);
+                throw new PdfException(PdfException.DocumentForCopyToCannotBeNull);
             }
             if (indirectReference != null) {
+                // TODO checkState(MUST_BE_INDIRECT) now is always false, because indirectReference != null. See also DEVSIX-602
                 if (indirectReference.GetWriter() != null || CheckState(MUST_BE_INDIRECT)) {
                     throw new PdfException(PdfException.CannotCopyIndirectObjectFromTheDocumentThatIsBeingWritten);
                 }
@@ -448,6 +452,7 @@ namespace iText.Kernel.Pdf {
         /// <li>copying to the other document</li>
         /// <li>cloning inside of the current document</li>
         /// </ol>
+        /// <p>
         /// This two cases are distinguished by the state of <code>document</code> parameter:
         /// the second case is processed if <code>document</code> is <code>null</code>.
         /// </summary>
@@ -480,6 +485,14 @@ namespace iText.Kernel.Pdf {
                 }
                 return obj.Clone();
             }
+        }
+
+        internal static bool EqualContent(PdfObject obj1, PdfObject obj2) {
+            PdfObject direct1 = obj1 != null && obj1.IsIndirectReference() ? ((PdfIndirectReference)obj1).GetRefersTo(
+                true) : obj1;
+            PdfObject direct2 = obj2 != null && obj2.IsIndirectReference() ? ((PdfIndirectReference)obj2).GetRefersTo(
+                true) : obj2;
+            return direct1 != null && direct1.Equals(direct2);
         }
     }
 }

@@ -118,7 +118,7 @@ namespace iText.IO.Codec {
             stream.Seek(0L);
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian)) {
-                throw new iText.IO.IOException(iText.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d);
+                throw new iText.IO.IOException(iText.IO.IOException.BadEndiannessTag0x4949Or0x4d4d);
             }
             isBigEndian = endian == 0x4d4d;
             int magic = ReadUnsignedShort(stream);
@@ -129,7 +129,7 @@ namespace iText.IO.Codec {
             ifd_offset = ReadUnsignedInt(stream);
             for (int i = 0; i < directory; i++) {
                 if (ifd_offset == 0L) {
-                    throw new iText.IO.IOException(iText.IO.IOException.DirectoryNumberTooLarge);
+                    throw new iText.IO.IOException(iText.IO.IOException.DirectoryNumberIsTooLarge);
                 }
                 stream.Seek(ifd_offset);
                 int entries = ReadUnsignedShort(stream);
@@ -162,7 +162,7 @@ namespace iText.IO.Codec {
             stream.Seek(0L);
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian)) {
-                throw new iText.IO.IOException(iText.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d);
+                throw new iText.IO.IOException(iText.IO.IOException.BadEndiannessTag0x4949Or0x4d4d);
             }
             isBigEndian = endian == 0x4d4d;
             // Seek to the first IFD.
@@ -374,15 +374,12 @@ namespace iText.IO.Codec {
         /// or null if the tag is not present.
         /// </summary>
         public virtual TIFFField GetField(int tag) {
-            int i = -1;
-            if (fieldIndex.ContainsKey(tag)) {
-                i = (int)fieldIndex.Get(tag);
-            }
-            if (i == -1) {
+            int? i = fieldIndex.Get(tag);
+            if (i == null) {
                 return null;
             }
             else {
-                return fields[i];
+                return fields[(int)i];
             }
         }
 
@@ -624,7 +621,7 @@ namespace iText.IO.Codec {
             stream.Seek(0L);
             int endian = stream.ReadUnsignedShort();
             if (!IsValidEndianTag(endian)) {
-                throw new iText.IO.IOException(iText.IO.IOException.BadEndiannessTagNot0x4949Or0x4d4d);
+                throw new iText.IO.IOException(iText.IO.IOException.BadEndiannessTag0x4949Or0x4d4d);
             }
             bool isBigEndian = endian == 0x4d4d;
             int magic = ReadUnsignedShort(stream, isBigEndian);

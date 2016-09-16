@@ -54,8 +54,8 @@ namespace iText.IO.Font {
         [Obsolete]
         public const String CMAP_RESOURCE_PATH = FontConstants.RESOURCE_PATH + "cmap/";
 
-        private static readonly IDictionary<String, IDictionary<String, Object>> allFonts = new Dictionary<String, 
-            IDictionary<String, Object>>();
+        private static readonly IDictionary<String, IDictionary<String, Object>> allCidFonts = new Dictionary<String
+            , IDictionary<String, Object>>();
 
         private static readonly IDictionary<String, ICollection<String>> registryNames = new Dictionary<String, ICollection
             <String>>();
@@ -77,7 +77,7 @@ namespace iText.IO.Font {
             try {
                 LoadRegistry();
                 foreach (String font in registryNames.Get(FONTS_PROP)) {
-                    allFonts[font] = ReadFontProperties(font);
+                    allCidFonts[font] = ReadFontProperties(font);
                 }
             }
             catch (Exception) {
@@ -110,7 +110,7 @@ namespace iText.IO.Font {
             foreach (KeyValuePair<String, ICollection<String>> e in registryNames) {
                 if (e.Value.Contains(cmap)) {
                     String registry = e.Key;
-                    foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allFonts) {
+                    foreach (KeyValuePair<String, IDictionary<String, Object>> e1 in allCidFonts) {
                         if (registry.Equals(e1.Value.Get(REGISTRY_PROP))) {
                             return e1.Key;
                         }
@@ -125,8 +125,13 @@ namespace iText.IO.Font {
             return registryNames.Get(registry);
         }
 
+        public static IDictionary<String, IDictionary<String, Object>> GetAllPredefinedCidFonts() {
+            return allCidFonts;
+        }
+
+        [System.ObsoleteAttribute(@"Use GetAllPredefinedCidFonts() instead.")]
         public static IDictionary<String, IDictionary<String, Object>> GetAllFonts() {
-            return allFonts;
+            return allCidFonts;
         }
 
         public static IDictionary<String, ICollection<String>> GetRegistryNames() {
@@ -156,10 +161,7 @@ namespace iText.IO.Font {
         public static FontProgram GetFont(String fontName) {
             String key = GetFontCacheKey(fontName);
             FontProgram font = null;
-            if (fontCache.ContainsKey(key)) {
-                font = fontCache.Get(key);
-            }
-            return font;
+            return fontCache.Get(key);
         }
 
         public static FontProgram SaveFont(FontProgram font, String fontName) {

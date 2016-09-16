@@ -65,21 +65,129 @@ namespace iText.Kernel.Pdf.Annot {
             : base(pdfObject) {
         }
 
+        /// <summary>Creates a text markup annotation of highlight style subtype.</summary>
+        /// <remarks>
+        /// Creates a text markup annotation of highlight style subtype.
+        /// <p>
+        /// IMPORTANT NOTE on <b>quadPoints</b> argument:
+        /// According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
+        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
+        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
+        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
+        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
+        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
+        /// just as Acrobat and probably most other viewers expect.
+        /// </remarks>
+        /// <param name="rect">
+        /// the annotation rectangle, defining the location of the annotation on the page
+        /// in default user space units.
+        /// </param>
+        /// <param name="quadPoints">
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Each quadrilateral shall encompasses a word or group of contiguous words in the text underlying
+        /// the annotation. The text is oriented with respect to the edge connecting first two vertices.
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfTextMarkupAnnotation"/>
+        /// of Highlight type.
+        /// </returns>
         public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateHighLight(Rectangle rect, float[] quadPoints
             ) {
             return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupHighlight, quadPoints);
         }
 
+        /// <summary>Creates a text markup annotation of underline style subtype.</summary>
+        /// <remarks>
+        /// Creates a text markup annotation of underline style subtype.
+        /// <p>
+        /// IMPORTANT NOTE on <b>quadPoints</b> argument:
+        /// According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
+        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
+        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
+        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
+        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
+        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
+        /// just as Acrobat and probably most other viewers expect.
+        /// </remarks>
+        /// <param name="rect">
+        /// the annotation rectangle, defining the location of the annotation on the page
+        /// in default user space units.
+        /// </param>
+        /// <param name="quadPoints">
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Each quadrilateral shall encompasses a word or group of contiguous words in the text underlying
+        /// the annotation. The text is oriented with respect to the edge connecting first two vertices.
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfTextMarkupAnnotation"/>
+        /// of Underline type.
+        /// </returns>
         public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateUnderline(Rectangle rect, float[] quadPoints
             ) {
             return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupUnderline, quadPoints);
         }
 
+        /// <summary>Creates a text markup annotation of strikeout style subtype.</summary>
+        /// <remarks>
+        /// Creates a text markup annotation of strikeout style subtype.
+        /// <p>
+        /// IMPORTANT NOTE on <b>quadPoints</b> argument:
+        /// According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
+        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
+        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
+        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
+        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
+        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
+        /// just as Acrobat and probably most other viewers expect.
+        /// </remarks>
+        /// <param name="rect">
+        /// the annotation rectangle, defining the location of the annotation on the page
+        /// in default user space units.
+        /// </param>
+        /// <param name="quadPoints">
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Each quadrilateral shall encompasses a word or group of contiguous words in the text underlying
+        /// the annotation. The text is oriented with respect to the edge connecting first two vertices.
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfTextMarkupAnnotation"/>
+        /// of Strikeout type.
+        /// </returns>
         public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateStrikeout(Rectangle rect, float[] quadPoints
             ) {
             return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupStrikeout, quadPoints);
         }
 
+        /// <summary>Creates a text markup annotation of squiggly-underline type.</summary>
+        /// <remarks>
+        /// Creates a text markup annotation of squiggly-underline type.
+        /// <p>
+        /// IMPORTANT NOTE on <b>quadPoints</b> argument:
+        /// According to Table 179 in ISO 32000-1, the QuadPoints array lists the vertices in counterclockwise
+        /// order and the text orientation is defined by the first and second vertex. This basically means QuadPoints is
+        /// specified as lower-left, lower-right, top-right, top-left. HOWEVER, Adobe's interpretation
+        /// (tested at least with Acrobat 10, Acrobat 11, Reader 11) is top-left, top-right, lower-left, lower-right (Z-shaped order).
+        /// This means that if the QuadPoints array is specified according to the standard, the rendering is not as expected.
+        /// Other viewers seem to follow Adobe's interpretation. Hence we recommend to use and expect QuadPoints array in Z-order,
+        /// just as Acrobat and probably most other viewers expect.
+        /// </remarks>
+        /// <param name="rect">
+        /// the annotation rectangle, defining the location of the annotation on the page
+        /// in default user space units.
+        /// </param>
+        /// <param name="quadPoints">
+        /// An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.
+        /// Each quadrilateral shall encompasses a word or group of contiguous words in the text underlying
+        /// the annotation. The text is oriented with respect to the edge connecting first two vertices.
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="PdfTextMarkupAnnotation"/>
+        /// of squiggly-underline type.
+        /// </returns>
         public static iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation CreateSquiggly(Rectangle rect, float[] quadPoints
             ) {
             return new iText.Kernel.Pdf.Annot.PdfTextMarkupAnnotation(rect, MarkupSquiggly, quadPoints);

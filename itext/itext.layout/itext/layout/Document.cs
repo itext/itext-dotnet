@@ -55,6 +55,7 @@ namespace iText.Layout {
     /// mainly operates high-level operations e.g. setting page size and rotation,
     /// adding elements, and writing text at specific coordinates. It has no
     /// knowledge of the actual PDF concepts and syntax.
+    /// <p>
     /// A
     /// <see cref="Document"/>
     /// 's rendering behavior can be modified by extending
@@ -123,9 +124,9 @@ namespace iText.Layout {
         }
 
         /// <summary>Closes the document and associated PdfDocument.</summary>
-        public virtual void Close() {
-            if (rootRenderer != null && !immediateFlush) {
-                rootRenderer.Flush();
+        public override void Close() {
+            if (rootRenderer != null) {
+                rootRenderer.Close();
             }
             pdfDocument.Close();
         }
@@ -192,6 +193,7 @@ namespace iText.Layout {
         /// Performs an entire recalculation of the document flow, taking into
         /// account all its current child elements. May become very
         /// resource-intensive for large documents.
+        /// <p>
         /// Do not use when you have set
         /// <see cref="RootElement{T}.immediateFlush"/>
         /// to <code>true</code>.
@@ -216,34 +218,50 @@ namespace iText.Layout {
             return rootRenderer;
         }
 
+        /// <summary>Gets the left margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the left margin value</returns>
         public virtual float GetLeftMargin() {
             return leftMargin;
         }
 
+        /// <summary>Sets the left margin, measured in points</summary>
+        /// <param name="leftMargin">a <code>float</code> containing the new left margin value</param>
         public virtual void SetLeftMargin(float leftMargin) {
             this.leftMargin = leftMargin;
         }
 
+        /// <summary>Gets the right margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the right margin value</returns>
         public virtual float GetRightMargin() {
             return rightMargin;
         }
 
+        /// <summary>Sets the right margin, measured in points</summary>
+        /// <param name="rightMargin">a <code>float</code> containing the new right margin value</param>
         public virtual void SetRightMargin(float rightMargin) {
             this.rightMargin = rightMargin;
         }
 
+        /// <summary>Gets the top margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the top margin value</returns>
         public virtual float GetTopMargin() {
             return topMargin;
         }
 
+        /// <summary>Sets the top margin, measured in points</summary>
+        /// <param name="topMargin">a <code>float</code> containing the new top margin value</param>
         public virtual void SetTopMargin(float topMargin) {
             this.topMargin = topMargin;
         }
 
+        /// <summary>Gets the bottom margin, measured in points</summary>
+        /// <returns>a <code>float</code> containing the bottom margin value</returns>
         public virtual float GetBottomMargin() {
             return bottomMargin;
         }
 
+        /// <summary>Sets the bottom margin, measured in points</summary>
+        /// <param name="bottomMargin">a <code>float</code> containing the new bottom margin value</param>
         public virtual void SetBottomMargin(float bottomMargin) {
             this.bottomMargin = bottomMargin;
         }
@@ -279,11 +297,10 @@ namespace iText.Layout {
                 () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
         }
 
-        /// <summary>checks whether a method is invoked at the closed document</summary>
-        /// <exception cref="iText.Kernel.PdfException"/>
+        /// <summary>Checks whether a method is invoked at the closed document</summary>
         protected internal virtual void CheckClosingStatus() {
             if (GetPdfDocument().IsClosed()) {
-                throw new PdfException(PdfException.DocumentClosedImpossibleExecuteAction);
+                throw new PdfException(PdfException.DocumentClosedItIsImpossibleToExecuteAction);
             }
         }
     }

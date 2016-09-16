@@ -84,26 +84,35 @@ namespace iText.Layout.Renderer
 					}
 				}
 			}
+            IList<int> unicodeIdsReorderingList = null;
 			if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI)
 			{
-				IList<int> unicodeIdsLst = new List<int>();
+                unicodeIdsReorderingList = new List<int>();
+                bool newLineFound = false;
+
 				foreach (IRenderer child in childRenderers)
 				{
+                    if (newLineFound)
+                    {
+                        break;
+                    }
 					if (child is TextRenderer)
 					{
 						GlyphLine text = ((TextRenderer)child).GetText();
 						for (int i = text.start; i < text.end; i++)
 						{
-							System.Diagnostics.Debug.Assert(text.Get(i).GetChars().Length > 0);
+                            if (TextRenderer.IsNewLine(text, i))
+                            {
+                                newLineFound = true;
+                                break;
+                            }
 							// we assume all the chars will have the same bidi group
 							// we also assume pairing symbols won't get merged with other ones
-							int unicode = text.Get(i).GetChars()[0];
-							unicodeIdsLst.Add(unicode);
-						}
+                            unicodeIdsReorderingList.Add(text.Get(i).GetUnicode());
+                        }
 					}
 				}
-				levels = TypographyUtils.GetBidiLevels((BaseDirection)baseDirection, ArrayUtil.ToArray(unicodeIdsLst
-					));
+                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels((BaseDirection) baseDirection, ArrayUtil.ToArray(unicodeIdsReorderingList)) : null;
 			}
 			bool anythingPlaced = false;
 			TabStop nextTabStop = null;
@@ -184,10 +193,21 @@ namespace iText.Layout.Renderer
 					{
 						childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth);
 					}
-					nextTabStop = null;
-					curWidth += tabWidth;
-				}
-				curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                    float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
+                    if (nextTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < nextTabStop.GetTabPosition())
+                    {
+                        curWidth = nextTabStop.GetTabPosition();
+                    }
+                    else
+                    {
+                        curWidth += tabAndNextElemWidth;
+                    }
+                    nextTabStop = null;
+                }
+                else
+                {
+                    curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                }
 				occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
 					.GetHeight() - maxHeight, curWidth, maxHeight));
 				if (childResult.GetStatus() != LayoutResult.FULL)
@@ -237,13 +257,12 @@ namespace iText.Layout.Renderer
 							split[1] = null;
 						}
 					}
-					result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult
-						.NOTHING, occupiedArea, split[0], split[1]);
-					if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult
-						 && ((TextLayoutResult)childResult).IsSplitForcedByNewline())
-					{
-						result.SetSplitForcedByNewline(true);
-					}
+					result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING, occupiedArea, split[0], split[1],
+                           childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing() : this);
+
+                    if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult && ((TextLayoutResult) childResult).IsSplitForcedByNewline()) {
+                        result.SetSplitForcedByNewline(true);
+                    }
 					break;
 				}
 				else
@@ -260,7 +279,7 @@ namespace iText.Layout.Renderer
 				}
 				else
 				{
-					result = new LineLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this);
+					result = new LineLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
 				}
 			}
 			// Consider for now that all the children have the same font, and that after reordering text pieces
@@ -392,6 +411,18 @@ namespace iText.Layout.Renderer
 							overflow.levels = new byte[levels.Length - lineLevels.Length];
 							System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.
 								Length);
+                            if (overflow.levels.Length == 0)
+                            {
+                                overflow.levels = null;
+                            }
+                        }
+                    }
+                    else if (result.GetStatus() == LayoutResult.NOTHING)
+                    {
+                        if (levels != null)
+                        {
+                            ((LineRenderer)result.GetOverflowRenderer()).levels = levels;
+
 						}
 					}
 				}
@@ -567,7 +598,6 @@ namespace iText.Layout.Renderer
 			splitRenderer.AddAllProperties(GetOwnProperties());
 			LineRenderer overflowRenderer = CreateOverflowRenderer();
 			overflowRenderer.parent = parent;
-			overflowRenderer.levels = levels;
 			overflowRenderer.AddAllProperties(GetOwnProperties());
 			return new LineRenderer[] { splitRenderer, overflowRenderer };
 		}

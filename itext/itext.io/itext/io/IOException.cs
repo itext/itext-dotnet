@@ -46,217 +46,294 @@ using System.Collections.Generic;
 using iText.IO.Util;
 
 namespace iText.IO {
+    /// <summary>Exception class for exceptions in io module.</summary>
     public class IOException : Exception {
-        public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit.samples.are.not.supported.for.horizontal.differencing.predictor";
+        public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit samples are not supported for horizontal differencing predictor.";
 
-        public const String _1CorruptedJfifMarker = "{0} corrupted.jfif.marker";
+        public const String _1CorruptedJfifMarker = "{0} corrupted jfif marker.";
 
-        public const String _1IsNotAValidJpegFile = "{0} is.not.a.valid.jpeg.file";
+        public const String _1IsNotAValidJpegFile = "{0} is not a valid jpeg file.";
 
-        public const String _1MustHave8BitsPerComponent = "{0} must.have.8.bits.per.component";
+        public const String _1MustHave8BitsPerComponent = "{0} must have 8 bits per component.";
 
-        public const String _1UnsupportedJpegMarker2 = "{0} unsupported.jpeg.marker {1}";
+        public const String _1UnsupportedJpegMarker2 = "{0} unsupported jpeg marker {1}.";
 
-        public const String _1IsNotAnAfmOrPfmFontFile = "{0} is.not.an.afm.or.pfm.font.file";
+        public const String _1IsNotAnAfmOrPfmFontFile = "{0} is not an afm or pfm font file.";
 
         public const String _1NotFoundAsFileOrResource = "{0} not found as file or resource.";
 
-        public const String AllFillBitsPrecedingEolCodeMustBe0 = "all.fill.bits.preceding.eol.code.must.be.0";
+        public const String AllFillBitsPrecedingEolCodeMustBe0 = "All fill bits preceding eol code must be 0.";
 
-        public const String BadEndiannessTagNot0x4949Or0x4d4d = "bad.endianness.tag.not.0x4949.or.0x4d4d";
+        [Obsolete]
+        public const String BadEndiannessTagNot0x4949Or0x4d4d = "Bad endianness tag not 0x4949 or 0x4d4d.";
 
-        public const String BadMagicNumberShouldBe42 = "bad.magic.number.should.be.42";
+        public const String BadEndiannessTag0x4949Or0x4d4d = "Bad endianness tag: 0x4949 or 0x4d4d.";
 
-        public const String BitsPerComponentMustBe1_2_4or8 = "bits.per.component.must.be.1.2.4.or.8";
+        public const String BadMagicNumberShouldBe42 = "Bad magic number. Should be 42.";
 
-        public const String BitsPerSample1IsNotSupported = "bits.per.sample {0} is.not.supported";
+        public const String BitsPerComponentMustBe1_2_4or8 = "Bits per component must be 1, 2, 4 or 8.";
 
-        public const String BmpImageException = "bmp.image.exception";
+        public const String BitsPerSample1IsNotSupported = "Bits per sample {0} is not supported.";
 
-        public const String BytesCanBeAssignedToByteArrayOutputStreamOnly = "bytes.can.be.assigned.to.bytearrayoutputstream.only";
+        public const String BmpImageException = "Bmp image exception.";
 
-        public const String BytesCanBeResetInByteArrayOutputStreamOnly = "bytes.can.be.reset.in.bytearrayoutputstream.only";
+        public const String BytesCanBeAssignedToByteArrayOutputStreamOnly = "Bytes can be assigned to ByteArrayOutputStream only.";
 
-        public const String CannotGetTiffImageColor = "cannot.get.tiff.image.color";
+        public const String BytesCanBeResetInByteArrayOutputStreamOnly = "Bytes can be reset in ByteArrayOutputStream only.";
 
-        public const String CannotFind1Frame = "cannot.find {0} frame";
+        public const String CannotGetTiffImageColor = "Cannot get TIFF image color.";
 
-        public const String CannotHandleBoxSizesHigherThan2_32 = "cannot.handle.box.sizes.higher.than.2.32";
+        public const String CannotFind1Frame = "Cannot find {0} frame.";
 
-        public const String CannotInflateTiffImage = "cannot.inflate.tiff.image";
+        public const String CannotHandleBoxSizesHigherThan2_32 = "Cannot handle box sizes higher than 2^32.";
 
-        public const String CannotReadTiffImage = "cannot.read.tiff.image";
+        public const String CannotInflateTiffImage = "Cannot inflate TIFF image.";
 
-        public const String CannotWriteByte = "cannot.write.byte";
+        public const String CannotReadTiffImage = "Cannot read TIFF image.";
 
-        public const String CannotWriteBytes = "cannot.write.bytes";
+        public const String CannotWriteByte = "Cannot write byte.";
 
-        public const String CannotWriteFloatNumber = "cannot.write.float.number";
+        public const String CannotWriteBytes = "Cannot write bytes.";
 
-        public const String CannotWriteIntNumber = "cannot.write.int.number";
+        public const String CannotWriteFloatNumber = "Cannot write float number.";
 
-        public const String CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d = "ccitt.compression.type.must.be.ccittg4.ccittg3.1d.or.ccittg3.2d";
+        public const String CannotWriteIntNumber = "Cannot write int number.";
 
+        public const String CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d = "CCITT compression type must be CCITTG4, CCITTG3_1D or CCITTG3_2D.";
+
+        [Obsolete]
         public const String TheCmap1WasNotFound = "The CMap {0} was not found";
 
-        public const String ComponentsMustBe1_3Or4 = "components.must.be.1.3.or.4";
+        public const String Cmap1WasNotFound = "The CMap {0} was not found.";
 
-        public const String Compression1IsNotSupported = "compression {0} is.not.supported";
+        public const String ComponentsMustBe1_3Or4 = "Components must be 1, 3 or 4.";
 
-        public const String ColorDepthIsNotSupported = "the.color.depth {0} is.not.supported";
+        public const String Compression1IsNotSupported = "Compression {0} is not supported.";
 
-        public const String ColorSpaceIsNotSupported = "the.color.space {0} is.not.supported";
+        public const String ColorDepthIsNotSupported = "The color depth {0} is not supported.";
 
-        public const String CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips = "compression.jpeg.is.only.supported.with.a.single.strip.this.image.has {0} strips";
+        public const String ColorSpaceIsNotSupported = "The color space {0} is not supported.";
 
+        public const String CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips = "Compression jpeg is only supported with a single strip. This image has {0} strips.";
+
+        [Obsolete]
         public const String DirectoryNumberTooLarge = "directory.number.too.large";
 
-        public const String EolCodeWordEncounteredInBlackRun = "eol.code.word.encountered.in.black.run";
+        public const String DirectoryNumberIsTooLarge = "Directory number is too large.";
 
-        public const String EolCodeWordEncounteredInWhiteRun = "eol.code.word.encountered.in.white.run";
+        public const String EolCodeWordEncounteredInBlackRun = "EOL code word encountered in Black run.";
 
-        public const String ErrorAtFilePointer1 = "error.at.file.pointer {0}";
+        public const String EolCodeWordEncounteredInWhiteRun = "EOL code word encountered in White run.";
 
-        public const String ErrorReadingString = "error.reading.string";
+        public const String ErrorAtFilePointer1 = "Error at file pointer {0}.";
 
-        public const String ErrorWithJpMarker = "error.with.jp.marker";
+        public const String ErrorReadingString = "Error reading string.";
 
-        public const String ExpectedFtypMarker = "expected.ftyp.marker";
+        public const String ErrorWithJpMarker = "Error with JP marker.";
 
-        public const String ExpectedIhdrMarker = "expected.ihdr.marker";
+        public const String ExpectedFtypMarker = "Expected FTYP marker.";
 
-        public const String ExpectedJpMarker = "expected.jp.marker";
+        public const String ExpectedIhdrMarker = "Expected IHDR marker.";
 
-        public const String ExpectedJp2hMarker = "expected.jp2h.marker";
+        public const String ExpectedJpMarker = "Expected JP marker.";
 
-        public const String ExtraSamplesAreNotSupported = "extra.samples.are.not.supported";
+        public const String ExpectedJp2hMarker = "Expected JP2H marker.";
 
-        public const String FdfStartxrefNotFound = "fdf.startxref.not.found";
+        public const String ExtraSamplesAreNotSupported = "Extra samples are not supported.";
 
-        public const String FirstScanlineMustBe1dEncoded = "first.scanline.must.be.1d.encoded";
+        public const String FdfStartxrefNotFound = "FDF startxref not found.";
 
-        public const String FontFile1NotFound = "font.file {0} not.found";
+        public const String FirstScanlineMustBe1dEncoded = "First scanline must be 1D encoded.";
 
-        public const String ImageFormatCannotBeRecognized = "image.format.cannot.be.recognized";
+        public const String FontFile1NotFound = "Font file {0} not found.";
 
-        public const String GifImageException = "gif.image.exception";
+        public const String ImageFormatCannotBeRecognized = "Image format cannot be recognized.";
 
-        public const String GtNotExpected = "gt.not.expected";
+        public const String GifImageException = "GIF image exception.";
 
-        public const String GifSignatureNotFound = "gif.signature.not.found";
+        public const String GtNotExpected = "'>' not expected.";
 
-        public const String IllegalValueForPredictorInTiffFile = "illegal.value.for.predictor.in.tiff.file";
+        public const String GifSignatureNotFound = "GIF signature not found.";
 
-        public const String Font1IsNotRecognized = "font {0} is.not.recognized";
+        public const String IllegalValueForPredictorInTiffFile = "Illegal value for predictor in TIFF file.";
 
-        public const String FontIsNotRecognized = "font.is.not.recognized";
+        [Obsolete]
+        public const String Font1IsNotRecognized = "Font {0} is not recognized";
 
-        public const String ImageCanNotBeAnImageMask = "image.can.not.be.an.image.mask";
+        [Obsolete]
+        public const String FontIsNotRecognized = "Font is not recognized";
 
-        public const String ImageMaskCannotContainAnotherImageMask = "image.mask.cannot.contain.another.image.mask";
+        [Obsolete]
+        public const String ImageCanNotBeAnImageMask = "Image can not be an image mask.";
 
-        public const String ImageMaskIsNotAMaskDidYouDoMakeMask = "image.mask.is.not.a.mask.did.you.do.makemask";
+        public const String ImageIsNotMaskYouMustCallImageDataMakeMask = "Image is not a mask. You must call ImageData#makeMask().";
 
-        public const String IncompletePalette = "incomplete.palette";
+        public const String ImageMaskCannotContainAnotherImageMask = "Image mask cannot contain another image mask.";
 
-        public const String InvalidTTCFile = "{0} is.not.a.valid.ttc.file";
+        [Obsolete]
+        public const String ImageMaskIsNotAMaskDidYouDoMakeMask = "Image is not a mask. You must call ImageData#makeMask().";
 
-        public const String InvalidBmpFileCompression = "invalid.bmp.file.compression";
+        public const String IncompletePalette = "Incomplete palette.";
 
-        public const String InvalidCodeEncountered = "invalid.code.encountered";
+        [Obsolete]
+        public const String InvalidTTCFile = "{0} is not a valid TTC file.";
 
-        public const String InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData = "invalid.code.encountered.while.decoding.2d.group.3.compressed.data";
+        public const String InvalidTtcFile = "{0} is not a valid TTC file.";
 
-        public const String InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData = "invalid.code.encountered.while.decoding.2d.group.4.compressed.data";
+        public const String InvalidBmpFileCompression = "Invalid BMP file compression.";
 
-        public const String InvalidIccProfile = "invalid.icc.profile";
+        public const String InvalidCodeEncountered = "Invalid code encountered.";
 
-        public const String InvalidJpeg2000File = "invalid.jpeg2000.file";
+        public const String InvalidCodeEncounteredWhileDecoding2dGroup3CompressedData = "Invalid code encountered while decoding 2D group 3 compressed data.";
 
-        public const String InvalidMagicValueForBmpFile = "invalid.magic.value.for.bmp.file";
+        public const String InvalidCodeEncounteredWhileDecoding2dGroup4CompressedData = "Invalid code encountered while decoding 2D group 4 compressed data.";
 
-        public const String IoException = "io.exception";
+        public const String InvalidIccProfile = "Invalid ICC profile.";
 
-        public const String Jbig2ImageException = "jbig2.image.exception";
+        public const String InvalidJpeg2000File = "Invalid JPEG2000 file.";
 
-        public const String JpegImageException = "jpeg.image.exception";
+        [Obsolete]
+        public const String InvalidMagicValueForBmpFile = "Invalid magic value for bmp file. Must be 'BM'";
 
-        public const String Jpeg2000ImageException = "jpeg2000.image.exception";
+        public const String InvalidMagicValueForBmpFileMustBeBM = "Invalid magic value for bmp file. Must be 'BM'";
 
-        public const String MissingTagSForOjpegCompression = "missing.tag.s.for.ojpeg.compression";
+        public const String IoException = "I/O exception.";
 
-        public const String NValueIsNotSupported = "N.value.1.is.not.supported";
+        public const String Jbig2ImageException = "JBIG2 image exception.";
 
-        public const String PageNumberMustBeGtEq1 = "page.number.must.be.gt.eq {0}";
+        public const String JpegImageException = "JPEG image exception.";
 
-        public const String PdfEncodings = "pdf.encodings";
+        public const String Jpeg2000ImageException = "JPEG2000 image exception.";
 
-        public const String PdfHeaderNotFound = "pdf.header.not.found";
+        [Obsolete]
+        public const String MissingTagSForOjpegCompression = "Missing tag(s) for OJPEG compression";
 
-        public const String PdfStartxrefNotFound = "pdf.startxref.not.found";
+        public const String MissingTagsForOjpegCompression = "Missing tag(s) for OJPEG compression";
 
-        public const String Photometric1IsNotSupported = "photometric.1.is.not.supported";
+        public const String NValueIsNotSupported = "N value {1} is not supported.";
 
-        public const String PlanarImagesAreNotSupported = "planar.images.are.not.supported";
+        public const String PageNumberMustBeGtEq1 = "Page number must be >= 1.";
 
-        public const String PngFilterUnknown = "png.filter.unknown";
+        [System.ObsoleteAttribute(@"because naming clash with Com itextpdf io font PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
+            )]
+        public const String PdfEncodings = "Pdf encodings.";
 
-        public const String PngImageException = "png.image.exception";
+        public const String CharacterCodeException = "Character code exception.";
 
-        public const String PrematureEofWhileReadingJpg = "premature.eof.while.reading.jpg";
+        public const String PdfHeaderNotFound = "PDF header not found.";
 
-        public const String ScanlineMustBeginWithEolCodeWord = "scanline.must.begin.with.eol.code.word";
+        public const String PdfStartxrefNotFound = "PDF startxref not found.";
 
-        public const String Tiff50StyleLzwCodesAreNotSupported = "tiff.5.0.style.lzw.codes.are.not.supported";
+        public const String Photometric1IsNotSupported = "Photometric {0} is not supported.";
 
-        public const String TiffFillOrderTagMustBeEither1Or2 = "tiff.fill.order.tag.must.be.either.1.or.2";
+        public const String PlanarImagesAreNotSupported = "Planar images are not supported.";
 
-        public const String TiffImageException = "tiff.image.exception";
+        [Obsolete]
+        public const String PngFilterUnknown = "PNG filter unknown.";
 
-        public const String TTCIndexDoesNotExistInFile = "ttc.index.doesn't.exist.in.ttc.file";
+        public const String UnknownPngFilter = "Unknown PNG filter.";
 
-        public const String TilesAreNotSupported = "tiles.are.not.supported";
+        public const String PngImageException = "PNG image exception.";
 
-        public const String TransparencyLengthMustBeEqualTo2WithCcittImages = "transparency.length.must.be.equal.to.2.with.ccitt.images";
+        [Obsolete]
+        public const String PrematureEofWhileReadingJpg = "Premature EOF while reading JPEG.";
 
-        public const String UnexpectedCloseBracket = "unexpected.close.bracket";
+        public const String PrematureEofWhileReadingJpeg = "Premature EOF while reading JPEG.";
 
-        public const String UnexpectedGtGt = "unexpected.gt.gt";
+        public const String ScanlineMustBeginWithEolCodeWord = "Scanline must begin with EOL code word.";
 
-        public const String UnknownCompressionType1 = "unknown.compression.type {0}";
+        public const String ThisImageCanNotBeAnImageMask = "This image can not be an image mask.";
 
-        public const String UnknownIOException = "unknown.io.exception";
+        public const String Tiff50StyleLzwCodesAreNotSupported = "TIFF 5.0-style LZW codes are not supported.";
 
-        public const String UnsupportedBoxSizeEqEq0 = "unsupported.box.size.eq.eq.0";
+        public const String TiffFillOrderTagMustBeEither1Or2 = "TIFF_FILL_ORDER tag must be either 1 or 2.";
 
-        public const String WrongNumberOfComponentsInIccProfile = "icc.profile.contains {0} components.the.image.data.contains {2} components";
+        public const String TiffImageException = "TIFF image exception.";
 
+        [Obsolete]
+        public const String TTCIndexDoesNotExistInFile = "TTC index doesn't exist in ttc file.";
+
+        public const String TtcIndexDoesNotExistInThisTtcFile = "TTC index doesn't exist in this TTC file.";
+
+        public const String TilesAreNotSupported = "Tiles are not supported.";
+
+        public const String TransparencyLengthMustBeEqualTo2WithCcittImages = "Transparency length must be equal to 2 with CCITT images";
+
+        public const String TypeOfFont1IsNotRecognized = "Type of font {0} is not recognized.";
+
+        public const String TypeOfFontIsNotRecognized = "Type of font is not recognized.";
+
+        public const String UnexpectedCloseBracket = "Unexpected close bracket.";
+
+        public const String UnexpectedGtGt = "Unexpected '>>'.";
+
+        public const String UnknownCompressionType1 = "Unknown compression type {0}.";
+
+        public const String UnknownIOException = "Unknown I/O exception.";
+
+        public const String UnsupportedBoxSizeEqEq0 = "Unsupported box size == 0.";
+
+        public const String UnsupportedEncodingException = "Unsupported encoding exception.";
+
+        [Obsolete]
+        public const String WrongNumberOfComponentsInIccProfile = "ICC profile contains {0} components the image data contains {1} components.";
+
+        public const String IccProfileContains0ComponentsWhileImageDataContains1Components = "ICC profile contains {0} components, while the image data contains {1} components.";
+
+        /// <summary>Object for more details</summary>
         protected internal Object obj;
 
         private IList<Object> messageParams;
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
         public IOException(String message)
             : base(message) {
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public IOException(Exception cause)
             : this(UnknownIOException, cause) {
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="obj">an object for more details.</param>
         public IOException(String message, Object obj)
             : this(message) {
             this.obj = obj;
         }
 
+        /// <summary>Creates a new IOException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
         public IOException(String message, Exception cause)
             : base(message, cause) {
         }
 
+        /// <summary>Creates a new instance of IOException.</summary>
+        /// <param name="message">the detail message.</param>
+        /// <param name="cause">
+        /// the cause (which is saved for later retrieval by
+        /// <see cref="System.Exception.InnerException()"/>
+        /// method).
+        /// </param>
+        /// <param name="obj">an object for more details.</param>
         public IOException(String message, Exception cause, Object obj)
             : this(message, cause) {
             this.obj = obj;
         }
 
+        /// <summary><inheritDoc/></summary>
         public override String Message {
             get {
                 if (messageParams == null || messageParams.Count == 0) {
@@ -268,12 +345,16 @@ namespace iText.IO {
             }
         }
 
+        /// <summary>Sets additional params for Exception message.</summary>
+        /// <param name="messageParams">additional params.</param>
+        /// <returns>object itself.</returns>
         public virtual iText.IO.IOException SetMessageParams(params Object[] messageParams) {
             this.messageParams = new List<Object>();
             this.messageParams.AddAll(messageParams);
             return this;
         }
 
+        /// <summary>Gets additional params for Exception message.</summary>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
             for (int i = 0; i < messageParams.Count; i++) {

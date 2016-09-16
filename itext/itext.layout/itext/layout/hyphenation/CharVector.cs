@@ -72,6 +72,8 @@ namespace iText.Layout.Hyphenation {
             n = a.Length;
         }
 
+        /// <summary>Copy constructor</summary>
+        /// <param name="cv">the CharVector that should be cloned</param>
         public CharVector(iText.Layout.Hyphenation.CharVector cv) {
             this.array = (char[])cv.array.Clone();
             this.blockSize = cv.blockSize;

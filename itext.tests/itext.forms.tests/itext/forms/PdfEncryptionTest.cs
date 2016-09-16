@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using iText.Kernel.Pdf;
 
 namespace iText.Forms {
@@ -9,8 +8,8 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptedDocumentWithFormFields() {
-            PdfReader reader = new PdfReader(new FileStream(sourceFolder + "encryptedDocumentWithFormFields.pdf", FileMode.Open
-                , FileAccess.Read), new ReaderProperties().SetPassword("12345".GetBytes()));
+            PdfReader reader = new PdfReader(sourceFolder + "encryptedDocumentWithFormFields.pdf", new ReaderProperties
+                ().SetPassword("12345".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1)));
             PdfDocument pdfDocument = new PdfDocument(reader);
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
             acroForm.GetField("personal.name").GetPdfObject();

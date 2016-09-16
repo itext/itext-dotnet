@@ -46,51 +46,194 @@ using iText.Layout.Element;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Layout {
+    /// <summary>
+    /// Represents the result of content
+    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+    /// .
+    /// </summary>
     public class LayoutResult {
+        /// <summary>
+        /// The status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// which indicates that the content was fully placed.
+        /// </summary>
         public const int FULL = 1;
 
+        /// <summary>
+        /// The status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// which indicates that the content was placed partially.
+        /// </summary>
         public const int PARTIAL = 2;
 
+        /// <summary>
+        /// The status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// which indicates that the content was not placed.
+        /// </summary>
         public const int NOTHING = 3;
 
+        /// <summary>
+        /// The status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// which indicates whether the content was added or not
+        /// and, if yes, was it added fully or partially.
+        /// </summary>
         protected internal int status;
 
+        /// <summary>
+        /// The area occupied by the content during its
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// which indicates whether the content was added or not and, if yes, was it added fully or partially.
+        /// </summary>
         protected internal LayoutArea occupiedArea;
 
+        /// <summary>
+        /// The split renderer created during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// This renderer will be used to draw the splitted part of content.
+        /// </summary>
         protected internal IRenderer splitRenderer;
 
+        /// <summary>
+        /// The overflow renderer created during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// This renderer will be used to draw the overflowed part of content.
+        /// </summary>
         protected internal IRenderer overflowRenderer;
 
         protected internal AreaBreak areaBreak;
 
+        /// <summary>
+        /// The first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// .
+        /// </summary>
+        protected internal IRenderer causeOfNothing;
+
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// The
+        /// <see cref="causeOfNothing"/>
+        /// will be set as null.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             ) {
             this.status = status;
             this.occupiedArea = occupiedArea;
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
+            causeOfNothing = null;
         }
 
+        /// <summary>
+        /// Creates the
+        /// <see cref="LayoutResult"/>
+        /// result of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// }.
+        /// </summary>
+        /// <param name="status">
+        /// the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// </param>
+        /// <param name="occupiedArea">the area occupied by the content</param>
+        /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
+        /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
+        /// <param name="cause">
+        /// the first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// </param>
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause)
+            : this(status, occupiedArea, splitRenderer, overflowRenderer) {
+            causeOfNothing = cause;
+        }
+
+        /// <summary>
+        /// Gets the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// .
+        /// </summary>
+        /// <returns>the status</returns>
         public virtual int GetStatus() {
             return status;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="LayoutArea">layout area</see>
+        /// occupied by the content during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="LayoutArea">layout area</see>
+        /// occupied by the content
+        /// </returns>
         public virtual LayoutArea GetOccupiedArea() {
             return occupiedArea;
         }
 
+        /// <summary>
+        /// Gets the split
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
+        /// created during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
+        /// </returns>
         public virtual IRenderer GetSplitRenderer() {
             return splitRenderer;
         }
 
+        /// <summary>
+        /// Sets the split
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
+        /// .
+        /// </summary>
         public virtual void SetSplitRenderer(IRenderer splitRenderer) {
             this.splitRenderer = splitRenderer;
         }
 
+        /// <summary>
+        /// Gets the overflow renderer created during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
+        /// .
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
+        /// </returns>
         public virtual IRenderer GetOverflowRenderer() {
             return overflowRenderer;
         }
 
+        /// <summary>
+        /// Sets the overflow
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
+        /// .
+        /// </summary>
         public virtual void SetOverflowRenderer(IRenderer overflowRenderer) {
             this.overflowRenderer = overflowRenderer;
         }
@@ -104,6 +247,21 @@ namespace iText.Layout.Layout {
             return this;
         }
 
+        /// <summary>
+        /// Gets the first renderer to produce
+        /// <see cref="NOTHING"/>
+        /// during
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Layout.Renderer.IRenderer">renderer</see>
+        /// </returns>
+        public virtual IRenderer GetCauseOfNothing() {
+            return causeOfNothing;
+        }
+
+        /// <summary><inheritDoc/></summary>
         public override String ToString() {
             String status;
             switch (GetStatus()) {

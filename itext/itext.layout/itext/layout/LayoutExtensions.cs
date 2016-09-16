@@ -87,6 +87,34 @@ namespace iText.Layout {
             }
         }
 
+        public static bool RemoveAll<T>(this IList<T> list, ICollection<T> c)
+        {
+            bool modefied = false;
+            foreach (T item in c)
+            {
+                if (list.Remove(item)) modefied = true;
+            }
+            return modefied;
+        }
+
+        // Removes from this list all of its elements that are not contained in the specified collection.
+        public static bool RetainAll<T>(this IList<T> list, ICollection<T> c) {
+            bool modified = false;
+            int j = 0;
+            for (int i = 0; i < list.Count; ++i) {
+                if (c.Contains(list[i])) {
+                    list[j++] = list[i];
+                }
+            }
+            if (j != list.Count) {
+                modified = true;
+                for (int i = list.Count - 1; i >= j; --i) {
+                    list.RemoveAt(i);
+                }
+            }
+            return modified;
+        }
+
         public static void Add<T>(this IList<T> list, int index, T elem) {
             list.Insert(index, elem);
         }
@@ -136,6 +164,14 @@ namespace iText.Layout {
 
         public static String[] Split(this String str, String regex) {
             return str.Split(regex.ToCharArray());
+        }
+
+        public static T JRemoveFirst<T>(this LinkedList<T> list)
+        {
+            T value = list.First.Value;
+            list.RemoveFirst();
+
+            return value;
         }
     }
 }
