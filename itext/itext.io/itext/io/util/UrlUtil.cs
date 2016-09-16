@@ -86,5 +86,23 @@ namespace iText.IO.Util {
 
             return isp;
         }
+
+        /// <summary>
+        /// This method makes a normalized URI from a given filename. 
+        /// </summary>
+        /// <param name="filename">a given filename</param>
+        /// <returns>a valid Uri</returns>
+        public static Uri ToNormalizedURI(String filename) {
+            return new Uri(filename);
+        }
+
+        /// <summary>
+        /// This method makes a normalized URI from a given file. 
+        /// </summary>
+        /// <param name="filename">a given file</param>
+        /// <returns>a valid Uri</returns>
+        public static Uri ToNormalizedURI(FileInfo file) {
+            return new Uri(file.FullName);
+        }
     }
 }

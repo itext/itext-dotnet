@@ -80,7 +80,7 @@ namespace iText.Signatures {
         /// a list of <code>VerificationOK</code> objects.
         /// The list will be empty if the certificate couldn't be verified.
         /// </returns>
-        /// <seealso cref="com.itextpdf.text.pdf.security.RootStoreVerifier#verify(java.security.cert.X509Certificate,java.security.cert.X509Certificate,java.util.Date)
+        /// <seealso cref="iText.Text.Pdf.Security.RootStoreVerifier.Verify(Org.BouncyCastle.X509.X509Certificate, Org.BouncyCastle.X509.X509Certificate, System.DateTime)
         ///     "/>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>

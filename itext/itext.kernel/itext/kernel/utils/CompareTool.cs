@@ -87,7 +87,7 @@ namespace iText.Kernel.Utils {
 
         private const String unexpectedNumberOfPages = "Unexpected number of pages for <filename>.";
 
-        private const String differentPages = "File <filename> differs on page <pagenumber>.";
+        private const String differentPages = "File file:///<filename> differs on page <pagenumber>.";
 
         private const String undefinedGsPath = "Path to GhostScript is not specified. Please use -DgsExec=<path_to_ghostscript> (e.g. -DgsExec=\"C:/Program Files/gs/gs9.14/bin/gswin32c.exe\")";
 
@@ -855,6 +855,7 @@ namespace iText.Kernel.Utils {
                 outPath = outPath + "/";
             }
             PrepareOutputDirs(outPath, differenceImagePrefix);
+            System.Console.Out.WriteLine("Comparing visually..........");
             if (ignoredAreas != null && !ignoredAreas.IsEmpty()) {
                 CreateIgnoredAreasPdfs(outPath, ignoredAreas);
             }
@@ -889,15 +890,15 @@ namespace iText.Kernel.Utils {
                 if (equalPages != null && equalPages.Contains(i)) {
                     continue;
                 }
-                System.Console.Out.Write("Comparing page " + iText.IO.Util.JavaUtil.IntegerToString(i + 1) + " (" + imageFiles
-                    [i].FullName + ")...");
+                System.Console.Out.WriteLine("Comparing page " + iText.IO.Util.JavaUtil.IntegerToString(i + 1) + ": file:///"
+                     + UrlUtil.ToNormalizedURI(imageFiles[i]).AbsolutePath + " ...");
                 FileStream is1 = new FileStream(imageFiles[i].FullName, FileMode.Open, FileAccess.Read);
                 FileStream is2 = new FileStream(cmpImageFiles[i].FullName, FileMode.Open, FileAccess.Read);
                 bool cmpResult = CompareStreams(is1, is2);
                 is1.Close();
                 is2.Close();
                 if (!cmpResult) {
-                    differentPagesFail = " Page is different!";
+                    differentPagesFail = "Page is different!";
                     diffPages.Add(i + 1);
                     if (compareExecIsOk) {
                         String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].FullName).Replace("<image2>", cmpImageFiles
@@ -915,8 +916,8 @@ namespace iText.Kernel.Utils {
                 }
             }
             if (differentPagesFail != null) {
-                String errorMessage = differentPages.Replace("<filename>", outPdf).Replace("<pagenumber>", ListDiffPagesAsString
-                    (diffPages));
+                String errorMessage = differentPages.Replace("<filename>", UrlUtil.ToNormalizedURI(outPdf).AbsolutePath).Replace
+                    ("<pagenumber>", ListDiffPagesAsString(diffPages));
                 if (!compareExecIsOk) {
                     errorMessage += "\nYou can optionally specify path to ImageMagick compare tool (e.g. -DcompareExec=\"C:/Program Files/ImageMagick-6.5.4-2/compare.exe\") to visualize differences.";
                 }
@@ -1013,11 +1014,19 @@ namespace iText.Kernel.Utils {
             return null;
         }
 
+        private void PrintOutCmpDirectories() {
+            System.Console.Out.WriteLine("Out file folder: file:///" + UrlUtil.ToNormalizedURI(new FileInfo(outPdf).DirectoryName
+                ).AbsolutePath);
+            System.Console.Out.WriteLine("Cmp file folder: file:///" + UrlUtil.ToNormalizedURI(new FileInfo(cmpPdf).DirectoryName
+                ).AbsolutePath);
+        }
+
         /// <exception cref="System.Exception"/>
         /// <exception cref="System.IO.IOException"/>
         private String CompareByContent(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
             >> ignoredAreas) {
-            System.Console.Out.Write("[itext] INFO  Comparing by content..........");
+            PrintOutCmpDirectories();
+            System.Console.Out.Write("Comparing by content..........");
             PdfDocument outDocument;
             try {
                 outDocument = new PdfDocument(new PdfReader(outPdf, GetOutReaderProperties()));
@@ -1167,13 +1176,11 @@ namespace iText.Kernel.Utils {
             return true;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool CompareDictionariesExtended(PdfDictionary outDict, PdfDictionary cmpDict, CompareTool.ObjectPath
              currentPath, CompareTool.CompareResult compareResult) {
             return CompareDictionariesExtended(outDict, cmpDict, currentPath, compareResult, null);
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool CompareDictionariesExtended(PdfDictionary outDict, PdfDictionary cmpDict, CompareTool.ObjectPath
              currentPath, CompareTool.CompareResult compareResult, ICollection<PdfName> excludedKeys) {
             if (cmpDict != null && outDict == null || outDict != null && cmpDict == null) {
@@ -1236,7 +1243,6 @@ namespace iText.Kernel.Utils {
             return dictsAreSame;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool CompareObjects(PdfObject outObj, PdfObject cmpObj, CompareTool.ObjectPath currentPath, CompareTool.CompareResult
              compareResult) {
             PdfObject outDirectObj = null;
@@ -1381,7 +1387,6 @@ namespace iText.Kernel.Utils {
             return true;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool CompareStreamsExtended(PdfStream outStream, PdfStream cmpStream, CompareTool.ObjectPath currentPath
             , CompareTool.CompareResult compareResult) {
             bool toDecode = PdfName.FlateDecode.Equals(outStream.Get(PdfName.Filter));
@@ -1452,7 +1457,6 @@ namespace iText.Kernel.Utils {
             return errorMessage;
         }
 
-        /// <exception cref="System.IO.IOException"/>
         private bool CompareArraysExtended(PdfArray outArray, PdfArray cmpArray, CompareTool.ObjectPath currentPath
             , CompareTool.CompareResult compareResult) {
             if (outArray == null) {
