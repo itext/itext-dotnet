@@ -20,7 +20,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String[] images = new String[] { sourceFolder + "WP_20140410_001.bmp", sourceFolder
              + "WP_20140410_001.JPC", sourceFolder + "WP_20140410_001.jpg", sourceFolder + "WP_20140410_001.tif" };
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }

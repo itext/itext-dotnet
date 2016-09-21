@@ -13,7 +13,7 @@ namespace iText.Forms.Xfa {
 
         public static readonly String XML = sourceFolder + "xfa.xml";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }

@@ -8,7 +8,7 @@ namespace iText.Kernel.Utils {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/utils/CompareToolTest/";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

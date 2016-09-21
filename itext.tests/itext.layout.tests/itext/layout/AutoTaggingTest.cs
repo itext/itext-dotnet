@@ -20,7 +20,7 @@ namespace iText.Layout {
 
         public const String imageName = "Desert.jpg";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

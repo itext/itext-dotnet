@@ -19,7 +19,7 @@ namespace iText.Kernel.Pdf {
 
         internal static readonly PdfName PageNum5 = new PdfName("PageNum");
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void Setup() {
             CreateDestinationFolder(destinationFolder);
         }

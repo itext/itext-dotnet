@@ -21,7 +21,7 @@ namespace iText.Layout {
 
         internal String cmpFileName;
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }

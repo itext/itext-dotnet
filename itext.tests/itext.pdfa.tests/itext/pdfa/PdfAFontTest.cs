@@ -15,7 +15,7 @@ namespace iText.Pdfa {
 
         internal static readonly String outputDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/pdfa/PdfAFontTest/";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(outputDir);
         }
