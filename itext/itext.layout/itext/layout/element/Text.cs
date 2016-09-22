@@ -121,7 +121,7 @@ namespace iText.Layout.Element {
         public virtual iText.Layout.Element.Text SetSkew(float alpha, float beta) {
             alpha = (float)Math.Tan(alpha * Math.PI / 180);
             beta = (float)Math.Tan(beta * Math.PI / 180);
-            SetProperty(Property.SKEW, new float[] { alpha, beta });
+            SetProperty(Property.SKEW, new float?[] { alpha, beta });
             return this;
         }
 

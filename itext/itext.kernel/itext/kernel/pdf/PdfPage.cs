@@ -1105,7 +1105,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants? numberingStyle, String
              labelPrefix) {
             return SetPageLabel(numberingStyle, labelPrefix, 1);
         }
@@ -1125,7 +1125,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants? numberingStyle, String
              labelPrefix, int firstPage) {
             if (firstPage < 1) {
                 throw new PdfException(PdfException.InAPageLabelThePageNumbersMustBeGreaterOrEqualTo1);

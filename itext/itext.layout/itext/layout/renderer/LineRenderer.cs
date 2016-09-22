@@ -666,7 +666,7 @@ namespace iText.Layout.Renderer
 			{
 				nextTabStopEntry = tabStops.HigherEntry(curWidth);
 			}
-            if (!nextTabStopEntry.Equals(default(KeyValuePair<float, TabStop>)))
+            if (nextTabStopEntry !=null)
 			{
 				nextTabStop = ((KeyValuePair<float, TabStop>)nextTabStopEntry).Value;
 			}

@@ -53,7 +53,7 @@ namespace iText.Test {
 
         protected Type sampleClass;
 
-        private RunnerParams sampleClassParams;
+        protected RunnerParams sampleClassParams;
 
         private String errorMessage;
 
@@ -126,7 +126,8 @@ namespace iText.Test {
                 return null;
             }
             int i = dest.LastIndexOf("/");
-            return "../../cmpfiles/" + dest.Substring(14, (i + 1) - 14) + "cmp_" + dest.Substring(i + 1);
+            int j = dest.LastIndexOf("/chapter");
+            return "../../cmpfiles/" + dest.Substring(j, (i + 1) - j) + "cmp_" + dest.Substring(i + 1);
         }
 
         protected internal virtual String GetOutPath(String dest) {
