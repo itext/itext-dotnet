@@ -121,6 +121,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HighlightNotDefTest() {
+            String input = sourceFolder + "notdefWidth.pdf";
+            String output = outputPath + "notdefWidth_highlighted.pdf";
+            String cmp = sourceFolder + "cmp_notdefWidth.pdf";
+            ParseAndHighlight(input, output, false);
+            NUnit.Framework.Assert.AreEqual(null, new CompareTool().CompareByContent(output, cmp, outputPath, "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         private void ParseAndHighlight(String input, String output, bool singleCharacters) {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(input), new PdfWriter(output));
             HighlightItemsTest.MyEventListener myEventListener = singleCharacters ? new HighlightItemsTest.MyCharacterEventListener
