@@ -361,7 +361,7 @@ namespace iText.Kernel.Font {
                     builder.Append(glyph.GetChars());
                 }
                 else {
-                    builder.Append('?');
+                    builder.Append('\ufffd');
                 }
             }
             return builder.ToString();
