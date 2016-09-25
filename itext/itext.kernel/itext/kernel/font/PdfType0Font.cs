@@ -620,7 +620,7 @@ namespace iText.Kernel.Font {
             return toUnicode;
         }
 
-        //TODO optimize memory ussage
+        //TODO optimize memory usage
         private static String ToHex4(char ch) {
             String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
             return s.Substring(s.Length - 4);
