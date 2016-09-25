@@ -91,7 +91,7 @@ namespace iText.IO.Util {
         }
 
         public static String IntegerToHexString(int i) {
-            return Convert.ToString(i, 16);
+            return i.ToString("x");
         }
 
         public static String IntegerToOctalString(int i) {

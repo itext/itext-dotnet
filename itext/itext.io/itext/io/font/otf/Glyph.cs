@@ -279,11 +279,16 @@ namespace iText.IO.Font.Otf
 
 		public override String ToString()
 		{
-			return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", code, chars != null
-				 ? iText.IO.Util.JavaUtil.ArraysToString(chars) : "null", unicode, width);
-		}
+			return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null
+				 ? iText.IO.Util.JavaUtil.ArraysToString(chars) : "null", ToHex(unicode), width);
+        }
 
-		private static int CodePoint(char[] a)
+        private static String ToHex(int ch) {
+            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
+            return s.Substring(Math.Min(4, s.Length - 4));
+        }
+
+        private static int CodePoint(char[] a)
 		{
 			if (a != null)
 			{
