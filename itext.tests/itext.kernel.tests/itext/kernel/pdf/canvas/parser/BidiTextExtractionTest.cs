@@ -74,5 +74,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 ().SetRightToLeftRunDirection(true));
             NUnit.Framework.Assert.AreEqual(expectedText, actualText);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("see DEVSIX-854")]
+        public virtual void Test05() {
+            // Not correct since iText cannot detect reordering automatically when no /ReversedChars is present.
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "in05.pdf"));
+            String expectedText = "\u0642\u0633\u0651\u0645 \u0639\u0644\u0645\u0627\u0621 \u0627\u0644\u0622\u062B\u0627\u0631";
+            String actualText = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), new LocationTextExtractionStrategy
+                ().SetRightToLeftRunDirection(true));
+            NUnit.Framework.Assert.AreEqual(expectedText, actualText);
+        }
     }
 }
