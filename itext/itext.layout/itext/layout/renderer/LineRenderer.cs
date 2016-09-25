@@ -324,7 +324,6 @@ namespace iText.Layout.Renderer
 					{
 						children.Clear();
 						int pos = 0;
-						IList<int[]> reversedRanges = new List<int[]>();
 						int initialPos = 0;
 						bool reversed = false;
 						int offset = 0;
@@ -340,20 +339,18 @@ namespace iText.Layout.Renderer
 							IList<Glyph> replacementGlyphs = new List<Glyph>();
 							while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_1)
 							{
-								if (pos < lineGlyphs.Count - 1)
+								if (pos + 1 < lineGlyphs.Count)
 								{
-									if (reorder[pos] == reorder[pos + 1] + 1)
-									{
-										reversed = true;
+									if (reorder[pos] == reorder[pos + 1] + 1 &&
+                                        !TextRenderer.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextRenderer.IsSpaceGlyph(lineGlyphs[pos].glyph)) {
+                                        reversed = true;
 									}
 									else
 									{
 										if (reversed)
 										{
-											IList<int[]> reversedRange = new List<int[]>();
-											reversedRange.Add(new int[] { initialPos - offset, pos - offset });
-											newRenderer.SetProperty(Property.REVERSED, reversedRange);
-											reversedRanges.Add(new int[] { initialPos - offset, pos - offset });
+                                            IList<int[]> reversedRange = CreateOrGetReversedProperty(newRenderer);
+                                            reversedRange.Add(new int[] { initialPos - offset, pos - offset });
 											reversed = false;
 										}
 										initialPos = pos + 1;
@@ -364,36 +361,15 @@ namespace iText.Layout.Renderer
 							}
 							if (reversed)
 							{
-								IList<int[]> reversedRange = new List<int[]>();
-								reversedRange.Add(new int[] { initialPos - offset, pos - 1 - offset });
-								newRenderer.SetProperty(Property.REVERSED, reversedRange
-									);
-								reversedRanges.Add(new int[] { initialPos - offset, pos - 1 - offset });
+								IList<int[]> reversedRange = CreateOrGetReversedProperty(newRenderer);
+                                reversedRange.Add(new int[] { initialPos - offset, pos - 1 - offset });
 								reversed = false;
 								initialPos = pos;
 							}
 							offset = initialPos;
 							gl.SetGlyphs(replacementGlyphs);
 						}
-						if (reversed)
-						{
-							if (children.Count == 1)
-							{
-								offset = 0;
-							}
-							IList<int[]> reversedRange = new List<int[]>();
-							reversedRange.Add(new int[] { initialPos - offset, pos - offset - 1 });
-							lineGlyphs[pos - 1].renderer.SetProperty(Property.REVERSED
-								, reversedRange);
-							reversedRanges.Add(new int[] { initialPos - offset, pos - 1 - offset });
-						}
-						if (!reversedRanges.IsEmpty())
-						{
-							if (children.Count == 1)
-							{
-								lineGlyphs[0].renderer.SetProperty(Property.REVERSED, reversedRanges);
-							}
-						}
+						
 						float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
 						foreach (IRenderer child_1 in children)
 						{
@@ -650,9 +626,16 @@ namespace iText.Layout.Renderer
 				}
 			}
 			return false;
-		}
+        }
 
-		private IRenderer GetLastChildRenderer()
+        private List<int[]> CreateOrGetReversedProperty(TextRenderer newRenderer) {
+            if (!newRenderer.HasOwnProperty(Property.REVERSED)) {
+                newRenderer.SetProperty(Property.REVERSED, new List<int[]>());
+            }
+            return newRenderer.GetOwnProperty<List<int[]>>(Property.REVERSED);
+        }
+
+        private IRenderer GetLastChildRenderer()
 		{
 			return childRenderers[childRenderers.Count - 1];
 		}

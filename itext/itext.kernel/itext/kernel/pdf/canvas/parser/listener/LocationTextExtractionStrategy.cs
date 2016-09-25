@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Util;
@@ -55,6 +56,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <summary>set to true for debugging</summary>
         private static bool DUMP_STATE = false;
 
+        private const float DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION = 2;
+
         /// <summary>a summary of all found text</summary>
         private readonly IList<LocationTextExtractionStrategy.TextChunk> locationalResult = new List<LocationTextExtractionStrategy.TextChunk
             >();
@@ -63,15 +66,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         private bool useActualText = false;
 
+        private bool rightToLeftRunDirection = false;
+
         private TextRenderInfo lastTextRenderInfo;
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_80()) {
+            : this(new _ITextChunkLocationStrategy_86()) {
         }
 
-        private sealed class _ITextChunkLocationStrategy_80 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_80() {
+        private sealed class _ITextChunkLocationStrategy_86 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public _ITextChunkLocationStrategy_86() {
             }
 
             public LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment
@@ -103,6 +108,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetUseActualText(bool
              useActualText) {
             this.useActualText = useActualText;
+            return this;
+        }
+
+        /// <summary>Sets if text flows from left to right or from right to left.</summary>
+        /// <remarks>
+        /// Sets if text flows from left to right or from right to left.
+        /// Call this method with <code>true</code> argument for extracting Arabic, Hebrew or other
+        /// text with right-to-left writing direction.
+        /// </remarks>
+        /// <param name="rightToLeftRunDirection">value specifying whether the direction should be right to left</param>
+        /// <returns>this object</returns>
+        public virtual iText.Kernel.Pdf.Canvas.Parser.Listener.LocationTextExtractionStrategy SetRightToLeftRunDirection
+            (bool rightToLeftRunDirection) {
+            this.rightToLeftRunDirection = rightToLeftRunDirection;
             return this;
         }
 
@@ -166,7 +185,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 DumpState();
             }
             IList<LocationTextExtractionStrategy.TextChunk> textChunks = locationalResult;
-            JavaCollectionsUtil.Sort(textChunks);
+            if (rightToLeftRunDirection) {
+                JavaCollectionsUtil.Sort(textChunks, new LocationTextExtractionStrategy.TextChunkComparator(new LocationTextExtractionStrategy.TextChunkLocationComparator
+                    (false)));
+            }
+            else {
+                JavaCollectionsUtil.Sort(textChunks);
+            }
             StringBuilder sb = new StringBuilder();
             LocationTextExtractionStrategy.TextChunk lastChunk = null;
             foreach (LocationTextExtractionStrategy.TextChunk chunk in textChunks) {
@@ -315,6 +340,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         }
 
         public class TextChunkLocationDefaultImp : LocationTextExtractionStrategy.ITextChunkLocation {
+            private static readonly LocationTextExtractionStrategy.TextChunkLocationComparator defaultComparator = new 
+                LocationTextExtractionStrategy.TextChunkLocationComparator();
+
             /// <summary>the starting location of the chunk</summary>
             private readonly Vector startLocation;
 
@@ -401,8 +429,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             /// <param name="as">the location to compare to</param>
             /// <returns>true is this location is on the the same line as the other</returns>
             public virtual bool SameLine(LocationTextExtractionStrategy.ITextChunkLocation @as) {
-                return OrientationMagnitude() == @as.OrientationMagnitude() && DistPerpendicular() == @as.DistPerpendicular
-                    ();
+                if (OrientationMagnitude() != @as.OrientationMagnitude()) {
+                    return false;
+                }
+                float distPerpendicularDiff = DistPerpendicular() - @as.DistPerpendicular();
+                if (distPerpendicularDiff == 0) {
+                    return true;
+                }
+                LineSegment mySegment = new LineSegment(startLocation, endLocation);
+                LineSegment otherSegment = new LineSegment(@as.GetStartLocation(), @as.GetEndLocation());
+                return Math.Abs(distPerpendicularDiff) <= DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION && (mySegment.GetLength
+                    () == 0 || otherSegment.GetLength() == 0);
             }
 
             /// <summary>
@@ -422,6 +459,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
 
             public virtual bool IsAtWordBoundary(LocationTextExtractionStrategy.ITextChunkLocation previous) {
+                /*
+                * Here we handle a very specific case which in PDF may look like:
+                * -.232 Tc [( P)-226.2(r)-231.8(e)-230.8(f)-238(a)-238.9(c)-228.9(e)]TJ
+                * The font's charSpace width is 0.232 and it's compensated with charSpacing of 0.232.
+                * And a resultant TextChunk.charSpaceWidth comes to TextChunk constructor as 0.
+                * In this case every chunk is considered as a word boundary and space is added.
+                * We should consider charSpaceWidth equal (or close) to zero as a no-space.
+                */
                 if (GetCharSpaceWidth() < 0.1f) {
                     return false;
                 }
@@ -435,27 +480,60 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
 
             public virtual int CompareTo(LocationTextExtractionStrategy.ITextChunkLocation other) {
-                if (this == other) {
+                return defaultComparator.Compare(this, other);
+            }
+        }
+
+        private class TextChunkComparator : IComparer<LocationTextExtractionStrategy.TextChunk> {
+            private IComparer<LocationTextExtractionStrategy.ITextChunkLocation> locationComparator;
+
+            public TextChunkComparator(IComparer<LocationTextExtractionStrategy.ITextChunkLocation> locationComparator
+                ) {
+                this.locationComparator = locationComparator;
+            }
+
+            public virtual int Compare(LocationTextExtractionStrategy.TextChunk o1, LocationTextExtractionStrategy.TextChunk
+                 o2) {
+                return locationComparator.Compare(o1.location, o2.location);
+            }
+        }
+
+        private class TextChunkLocationComparator : IComparer<LocationTextExtractionStrategy.ITextChunkLocation> {
+            private bool leftToRight = true;
+
+            public TextChunkLocationComparator() {
+            }
+
+            public TextChunkLocationComparator(bool leftToRight) {
+                this.leftToRight = leftToRight;
+            }
+
+            public virtual int Compare(LocationTextExtractionStrategy.ITextChunkLocation first, LocationTextExtractionStrategy.ITextChunkLocation
+                 second) {
+                if (first == second) {
                     return 0;
                 }
                 // not really needed, but just in case
-                LineSegment mySegment = new LineSegment(startLocation, endLocation);
-                LineSegment otherSegment = new LineSegment(other.GetStartLocation(), other.GetEndLocation());
-                if (other.GetStartLocation().Equals(other.GetEndLocation()) && mySegment.ContainsSegment(otherSegment) || 
-                    startLocation.Equals(endLocation) && otherSegment.ContainsSegment(mySegment)) {
+                LineSegment mySegment = new LineSegment(first.GetStartLocation(), first.GetEndLocation());
+                LineSegment otherSegment = new LineSegment(second.GetStartLocation(), second.GetEndLocation());
+                if (second.GetStartLocation().Equals(second.GetEndLocation()) && mySegment.ContainsSegment(otherSegment) ||
+                     first.GetStartLocation().Equals(first.GetEndLocation()) && otherSegment.ContainsSegment(mySegment)) {
                     // Return 0 to save order due to stable sort. This handles situation of mark glyphs that have zero width
                     return 0;
                 }
                 int result;
-                result = iText.IO.Util.JavaUtil.IntegerCompare(OrientationMagnitude(), other.OrientationMagnitude());
+                result = iText.IO.Util.JavaUtil.IntegerCompare(first.OrientationMagnitude(), second.OrientationMagnitude()
+                    );
                 if (result != 0) {
                     return result;
                 }
-                result = iText.IO.Util.JavaUtil.IntegerCompare(DistPerpendicular(), other.DistPerpendicular());
-                if (result != 0) {
-                    return result;
+                int distPerpendicularDiff = first.DistPerpendicular() - second.DistPerpendicular();
+                if (Math.Abs(distPerpendicularDiff) > DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION || distPerpendicularDiff
+                     != 0 && (mySegment.GetLength() > 0 && otherSegment.GetLength() > 0)) {
+                    return distPerpendicularDiff;
                 }
-                return iText.IO.Util.JavaUtil.FloatCompare(DistParallelStart(), other.DistParallelStart());
+                return leftToRight ? iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelStart(), second.DistParallelStart
+                    ()) : -iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelEnd(), second.DistParallelEnd());
             }
         }
     }

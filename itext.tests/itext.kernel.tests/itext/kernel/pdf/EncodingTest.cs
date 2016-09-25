@@ -198,17 +198,20 @@ namespace iText.Kernel.Pdf {
                 builder.Append((char)i);
             }
             String str = builder.ToString();
-            canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText(str).EndText();
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(str).EndText().RestoreState
+                ();
             str = "";
             for (int i_1 = 101; i_1 <= 190; i_1++) {
                 str += (char)i_1;
             }
-            canvas.SaveState().BeginText().MoveText(36, 746).SetFontAndSize(font, 36).ShowText(str).EndText();
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 746).ShowText(str).EndText().RestoreState
+                ();
             str = "";
             for (int i_2 = 191; i_2 <= 254; i_2++) {
                 str += (char)i_2;
             }
-            canvas.BeginText().MoveText(36, 766).ShowText(str).EndText().RestoreState();
+            canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 766).ShowText(str).EndText().RestoreState
+                ();
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outputFolder + fileName, sourceFolder + "cmp_"
                  + fileName, outputFolder, "diff_"));

@@ -618,6 +618,18 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">text to show.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text) {
+            return ShowText(text, new ActualTextIterator(text));
+        }
+
+        /// <summary>Shows text (operator Tj).</summary>
+        /// <param name="text">text to show.</param>
+        /// <param name="iterator">
+        /// iterator over parts of the glyph line that should be wrapped into some marked content groups,
+        /// e.g. /ActualText or /ReversedChars
+        /// </param>
+        /// <returns>current canvas.</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
+            > iterator) {
             document.CheckShowTextIsoConformance(currentGs, resources);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
@@ -626,13 +638,19 @@ namespace iText.Kernel.Pdf.Canvas {
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
-            for (ActualTextIterator iterator = new ActualTextIterator(text); iterator.HasNext(); ) {
-                GlyphLine.GlyphLinePart glyphLinePart = iterator.Next();
+            bool hasNext = iterator.MoveNext();
+            while (hasNext) { 
+                GlyphLine.GlyphLinePart glyphLinePart = iterator.Current;
                 if (glyphLinePart.actualText != null) {
                     PdfDictionary properties = new PdfDictionary();
                     properties.Put(PdfName.ActualText, new PdfString(glyphLinePart.actualText, PdfEncodings.UNICODE_BIG).SetHexWriting
                         (true));
                     BeginMarkedContent(PdfName.Span, properties);
+                }
+                else {
+                    if (glyphLinePart.reversed) {
+                        BeginMarkedContent(PdfName.ReversedChars);
+                    }
                 }
                 int sub = glyphLinePart.start;
                 for (int i = glyphLinePart.start; i < glyphLinePart.end; i++) {
@@ -704,7 +722,13 @@ namespace iText.Kernel.Pdf.Canvas {
                 if (glyphLinePart.actualText != null) {
                     EndMarkedContent();
                 }
-                if (glyphLinePart.end > sub && iterator.HasNext()) {
+                else {
+                    if (glyphLinePart.reversed) {
+                        EndMarkedContent();
+                    }
+                }
+                hasNext = iterator.MoveNext();
+                if (glyphLinePart.end > sub && hasNext) {
                     contentStream.GetOutputStream().WriteFloat(GetSubrangeWidth(text, sub, glyphLinePart.end - 1), true).WriteSpace
                         ().WriteFloat(0).WriteSpace().WriteBytes(Td);
                 }

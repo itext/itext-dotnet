@@ -173,6 +173,7 @@ namespace iText.Kernel.Font {
         }
 
         public override String Decode(PdfString content) {
+            // TODO refactor using decodeIntoGlyphLine?
             byte[] contentBytes = content.GetValueBytes();
             StringBuilder builder = new StringBuilder(contentBytes.Length);
             foreach (byte b in contentBytes) {
@@ -192,7 +193,27 @@ namespace iText.Kernel.Font {
             return builder.ToString();
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override GlyphLine DecodeIntoGlyphLine(PdfString content) {
+            byte[] contentBytes = content.GetValueBytes();
+            IList<Glyph> glyphs = new List<Glyph>(contentBytes.Length);
+            foreach (byte b in contentBytes) {
+                int code = b & 0xff;
+                int uni = fontEncoding.GetUnicode(code);
+                if (uni > -1) {
+                    glyphs.Add(GetGlyph(uni));
+                }
+                else {
+                    if (fontEncoding.GetBaseEncoding() == null) {
+                        glyphs.Add(fontProgram.GetGlyphByCode(code));
+                    }
+                }
+            }
+            return new GlyphLine(glyphs);
+        }
+
         public override float GetContentWidth(PdfString content) {
+            // TODO refactor using decodeIntoGlyphLine?
             float width = 0;
             byte[] contentBytes = content.GetValueBytes();
             foreach (byte b in contentBytes) {

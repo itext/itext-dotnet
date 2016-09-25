@@ -275,15 +275,34 @@ namespace iText.IO.Font.Otf
 			iText.IO.Font.Otf.Glyph other = (iText.IO.Font.Otf.Glyph)obj;
 			return iText.IO.Util.JavaUtil.ArraysEquals(chars, other.chars) && code == other
 				.code && width == other.width;
-		}
+        }
 
-		public override String ToString()
+        /// <summary>
+        /// Gets a Unicode string corresponding to this glyph. In general case it might consist of many characters.
+        /// If this glyph does not have a valid unicode (<see cref="HasValidUnicode"/>, then a string consisting of a special  
+        /// Unicode '\ufffd' character is returned.
+        /// </summary>
+        /// <returns>the Unicode string that corresponds to this glyph</returns>
+        public virtual String GetUnicodeString() {
+            if (chars != null) {
+                return new String(chars);
+            } else {
+                return '\ufffd'.ToString();
+            }
+        }
+
+        public override String ToString()
 		{
-			return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", code, chars != null
-				 ? iText.IO.Util.JavaUtil.ArraysToString(chars) : "null", unicode, width);
-		}
+			return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null
+				 ? iText.IO.Util.JavaUtil.ArraysToString(chars) : "null", ToHex(unicode), width);
+        }
 
-		private static int CodePoint(char[] a)
+        private static String ToHex(int ch) {
+            String s = "0000" + iText.IO.Util.JavaUtil.IntegerToHexString(ch);
+            return s.Substring(Math.Min(4, s.Length - 4));
+        }
+
+        private static int CodePoint(char[] a)
 		{
 			if (a != null)
 			{

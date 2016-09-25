@@ -108,14 +108,7 @@ namespace iText.IO.Font.Otf {
                 }
                 else {
                     for (int i = part.start; i < part.end; i++) {
-                        if (glyphs[i].GetChars() != null) {
-                            str.Append(glyphs[i].GetChars());
-                        }
-                        else {
-                            if (glyphs[i].HasValidUnicode()) {
-                                str.Append(TextUtil.ConvertFromUtf32(glyphs[i].GetUnicode()));
-                            }
-                        }
+                        str.Append(glyphs[i].GetUnicodeString());
                     }
                 }
             }
@@ -318,10 +311,21 @@ namespace iText.IO.Font.Otf {
 
             public String actualText;
 
+            public bool reversed;
+
+            public GlyphLinePart(int start, int end)
+                : this(start, end, null) {
+            }
+
             public GlyphLinePart(int start, int end, String actualText) {
                 this.start = start;
                 this.end = end;
                 this.actualText = actualText;
+            }
+
+            public virtual GlyphLine.GlyphLinePart SetReversed(bool reversed) {
+                this.reversed = reversed;
+                return this;
             }
         }
 

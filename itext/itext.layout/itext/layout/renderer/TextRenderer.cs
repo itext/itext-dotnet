@@ -231,10 +231,9 @@ namespace iText.Layout.Renderer {
                         // we will have to split the word anyway.
                         break;
                     }
-                    if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters
-                        .IsSplitCharacter(text, ind + 1) && (char.IsWhiteSpace((char)text.Get(ind +
-                         1).GetUnicode()) || char.IsSeparator((char)text.Get(ind + 1).GetUnicode())
-                        )) {
+                    if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || 
+                        splitCharacters.IsSplitCharacter(text, ind + 1) &&
+                         IsSpaceGlyph(text.Get(ind + 1))) {
                         nonBreakablePartEnd = ind;
                         break;
                     }
@@ -553,21 +552,34 @@ namespace iText.Layout.Renderer {
                 bool appearanceStreamLayout = GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT) == true;
 
                 if (HasOwnProperty(Property.REVERSED)) {
-                    //We should mark a RTL written text
-                    IDictionary<GlyphLine, bool?> outputs = GetOutputChunks();
-                    foreach (KeyValuePair<GlyphLine, bool?> output in outputs) {
-                        GlyphLine o = output.Key.Filter(filter);
-                        bool writeReversedChars = !appearanceStreamLayout && (bool)output.Value;
-                        if (writeReversedChars) {
-                            canvas.OpenTag(new CanvasTag(PdfName.ReversedChars));
+                    bool writeReversedChars = !appearanceStreamLayout;
+                    IList<int[]> reversedRanges = GetOwnProperty<IList<int[]>>(Property.REVERSED);
+                    List<int> removedIds = new List<int>();
+                    for (int i = line.start; i < line.end; i++) {
+                        if (!filter.Accept(line.Get(i))) {
+                            removedIds.Add(i);
                         }
-                        if (appearanceStreamLayout) {
-                            o.SetActualText(o.start, o.end, null);
+                    }
+                    if (reversedRanges != null) {
+                        foreach (int[] range in reversedRanges) {
+                            int shift = removedIds.BinarySearch(range[0]);
+                            if (shift < 0) {
+                                shift = -shift - 1;
+                            }
+                            range[0] -= shift;
+                            shift = removedIds.BinarySearch(range[1] - 1);
+                            if (shift < 0) {
+                                shift = -shift - 1;
+                            }
+                            range[1] -= shift;
                         }
-                        canvas.ShowText(o);
-                        if (writeReversedChars) {
-                            canvas.CloseTag();
-                        }
+                    }
+                    line = line.Filter(filter);
+                    if (writeReversedChars) {
+                        canvas.ShowText(line, new ReversedCharsIterator(reversedRanges, line).
+                                SetUseReversed(writeReversedChars));
+                    } else {
+                        canvas.ShowText(line);
                     }
                 } else {
                     if (appearanceStreamLayout) {
@@ -797,6 +809,10 @@ namespace iText.Layout.Renderer {
             return unicode == '\n' || unicode == '\r';
         }
 
+        internal static bool IsSpaceGlyph(Glyph glyph) {
+            return char.IsWhiteSpace((char)glyph.GetUnicode()) || char.IsSeparator((char)glyph.GetUnicode());
+        }
+
         private TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
             if (text.Get(currentTextPos).HasValidUnicode() && text.Get(currentTextPos).GetUnicode() == '\r') {
                 int next = currentTextPos + 1 < text.end ? text.Get(currentTextPos + 1).GetUnicode() : -1;
@@ -916,35 +932,6 @@ namespace iText.Layout.Renderer {
                 this.GetPropertyAsFloat(Property.WORD_SPACING));
         }
 
-        /// <summary>This method return a LinkedHashMap with glyphlines as its keys.</summary>
-        /// <remarks>
-        /// This method return a LinkedHashMap with glyphlines as its keys. Values are boolean flags indicating if a
-        /// glyphline is written in a reversed order (right to left text).
-        /// </remarks>
-        private IDictionary<GlyphLine, bool?> GetOutputChunks() {
-            IList<int[]> reversedRange = this.GetProperty<IList<int[]>>(Property.REVERSED);
-            IDictionary<GlyphLine, bool?> outputs = new LinkedDictionary<GlyphLine, bool?>();
-            if (reversedRange != null) {
-                if (reversedRange[0][0] > 0) {
-                    outputs[line.Copy(0, reversedRange[0][0])] = false;
-                }
-                for (int i = 0; i < reversedRange.Count; i++) {
-                    int[] range = reversedRange[i];
-                    outputs[line.Copy(range[0], range[1] + 1)] = true;
-                    if (i != reversedRange.Count - 1) {
-                        outputs[line.Copy(range[1] + 1, reversedRange[i + 1][0])] = false;
-                    }
-                }
-                int lastIndex = reversedRange[reversedRange.Count - 1][1];
-                if (lastIndex < line.Size()) {
-                    outputs[line.Copy(lastIndex + 1, line.Size())] = false;
-                }
-            } else {
-                outputs[line] = false;
-            }
-            return outputs;
-        }
-
         private static bool NoPrint(Glyph g) {
             if (!g.HasValidUnicode()) {
                 return false;
@@ -1021,6 +1008,86 @@ namespace iText.Layout.Renderer {
                 GlyphLine glyphLine = ConvertToGlyphLine(strToBeConverted);
                 SetText(glyphLine, glyphLine.start, glyphLine.end);
                 strToBeConverted = null;
+            }
+        }
+
+        private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
+            private IList<int> outStart;
+            private IList<int> outEnd;
+            private IList<bool> reversed;
+            private int currentInd = 0;
+            private bool useReversed;
+
+            public ReversedCharsIterator(IList<int[]> reversedRange, GlyphLine line) {
+                outStart = new List<int>();
+                outEnd = new List<int>();
+                reversed = new List<bool>();
+                if (reversedRange != null) {
+                    if (reversedRange[0][0] > 0) {
+                        outStart.Add(0);
+                        outEnd.Add(reversedRange[0][0]);
+                        reversed.Add(false);
+                    }
+                    for (int i = 0; i < reversedRange.Count; i++) {
+                        int[] range = reversedRange[i];
+                        outStart.Add(range[0]);
+                        outEnd.Add(range[1] + 1);
+                        reversed.Add(true);
+                        if (i != reversedRange.Count - 1) {
+                            outStart.Add(range[1] + 1);
+                            outEnd.Add(reversedRange[i + 1][0]);
+                            reversed.Add(false);
+                        }
+                    }
+                    int lastIndex = reversedRange[reversedRange.Count - 1][1];
+                    if (lastIndex < line.Size() - 1) {
+                        outStart.Add(lastIndex + 1);
+                        outEnd.Add(line.Size());
+                        reversed.Add(false);
+                    }
+                } else {
+                    outStart.Add(line.start);
+                    outEnd.Add(line.end);
+                    reversed.Add(false);
+                }
+            }
+
+            public virtual ReversedCharsIterator SetUseReversed(bool useReversed) {
+                this.useReversed = useReversed;
+                return this;
+            }
+
+            public virtual bool HasNext() {
+                return currentInd < outStart.Count;
+            }
+
+            public virtual GlyphLine.GlyphLinePart Next() {
+                GlyphLine.GlyphLinePart part = new GlyphLine.GlyphLinePart(outStart[currentInd], outEnd[currentInd]).
+                        SetReversed(useReversed && reversed[currentInd]);
+                currentInd++;
+                return part;
+            }
+
+            public void Dispose() {
+                
+            }
+
+            public bool MoveNext() {
+                if (!HasNext())
+                    return false;
+
+                Current = Next();
+                return true;
+            }
+
+            public void Reset() {
+                currentInd = 0;
+            }
+
+            public GlyphLine.GlyphLinePart Current { get; private set; }
+
+            object IEnumerator.Current {
+                get { return Current; }
             }
         }
     }
