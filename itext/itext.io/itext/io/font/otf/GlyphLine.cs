@@ -108,7 +108,7 @@ namespace iText.IO.Font.Otf {
                 }
                 else {
                     for (int i = part.start; i < part.end; i++) {
-                        str.Append(glyphs[i].GetUnicodeString());
+                        str.Append(glyphs[i].GetUnicodeChars());
                     }
                 }
             }

@@ -125,7 +125,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 else {
                     StringBuilder sb = new StringBuilder(gl.end - gl.start);
                     for (int i = gl.end - 1; i >= gl.start; i--) {
-                        sb.Append(gl.Get(i).GetUnicodeString());
+                        sb.Append(gl.Get(i).GetUnicodeChars());
                     }
                     text = sb.ToString();
                 }

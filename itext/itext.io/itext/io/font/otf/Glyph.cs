@@ -49,6 +49,10 @@ namespace iText.IO.Font.Otf
 {
 	public class Glyph
 	{
+        private static char REPLACEMENT_CHARACTER = '\ufffd';
+        private static char[] REPLACEMENT_CHARACTERS = new char[] { REPLACEMENT_CHARACTER };
+        private static String REPLACEMENT_CHARACTER_STRING = REPLACEMENT_CHARACTER.ToString();
+
 		private readonly int code;
 
 		private readonly int width;
@@ -287,7 +291,20 @@ namespace iText.IO.Font.Otf
             if (chars != null) {
                 return new String(chars);
             } else {
-                return '\ufffd'.ToString();
+                return REPLACEMENT_CHARACTER_STRING;
+            }
+        }
+        
+        /// <summary>
+        /// Gets Unicode char sequence corresponding to this glyph. In general case it might consist of many characters. 
+        /// If this glyph does not have a valid unicode (<see cref="HasValidUnicode"/>), then a special Unicode '\ufffd' character is returned.
+        /// </summary>
+        /// <returns>the Unicode char sequence that corresponds to this glyph</returns>
+        public char[] GetUnicodeChars() {
+            if (chars != null) {
+                return chars;
+            } else {
+                return REPLACEMENT_CHARACTERS;
             }
         }
 
