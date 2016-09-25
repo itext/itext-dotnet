@@ -206,25 +206,43 @@ namespace iText.IO.Image
                             pxv = bm.GetPixel(i, j).ToArgb();
                             byte alpha = smask[smaskPtr++] = (byte)((pxv >> 24) & 0xff);
                             /* bugfix by Chris Nokleberg */
-                            if (!shades)
-                            {
-                                if (alpha != 0 && alpha != 255)
-                                {
+                            if (!shades) {
+                                if (alpha != 0 && alpha != 255) {
                                     shades = true;
                                 }
-                                else if (transparency == null)
-                                {
-                                    if (alpha == 0)
-                                    {
+                                else if (transparency == null) {
+                                    if (alpha == 0) {
                                         transparentPixel = pxv & 0xffffff;
                                         transparency = new int[6];
                                         transparency[0] = transparency[1] = (transparentPixel >> 16) & 0xff;
                                         transparency[2] = transparency[3] = (transparentPixel >> 8) & 0xff;
                                         transparency[4] = transparency[5] = transparentPixel & 0xff;
+                                        // Added by Michael Klink
+                                        // Check whether this value for transparent pixels
+                                        // has already been used for a non-transparent one
+                                        // before this position
+                                        for (int prevPixelI = 0; prevPixelI <= i; prevPixelI++) {
+                                            for (int prevPixelJ = 0;
+                                                prevPixelJ < (prevPixelI == i ? j : h);
+                                                prevPixelJ++) {
+                                                int prevPxV = bm.GetPixel(prevPixelI, prevPixelJ).ToArgb();
+                                                if ((prevPxV & 0xffffff) == transparentPixel) {
+                                                    // found a prior use of the transparentPixel color
+                                                    // and, therefore, cannot make use of this color
+                                                    // for transparency; we could still use an image
+                                                    // mask but for simplicity let's use a soft mask
+                                                    // which already is implemented here
+                                                    shades = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                else if ((pxv & 0xffffff) != transparentPixel)
-                                {
+                                else if (((pxv & 0xffffff) != transparentPixel) && (alpha == 0)) {
+                                    shades = true;
+                                }
+                                else if (((pxv & 0xffffff) == transparentPixel) && (alpha != 0)) {
                                     shades = true;
                                 }
                             }
