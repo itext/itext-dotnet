@@ -395,7 +395,7 @@ namespace iText.Kernel.Font {
                 return new GlyphLine(JavaCollectionsUtil.EmptyList<Glyph>());
             }
             IList<Glyph> glyphs = new List<Glyph>();
-            //number of cids must be even. With i < cids.length() - 1 we garantee, that we will not process the last odd index.
+            //number of cids must be even. With i < cids.length() - 1 we guarantee, that we will not process the last odd index.
             for (int i = 0; i < cids.Length - 1; i += 2) {
                 int code = (cids[i] << 8) + cids[i + 1];
                 Glyph glyph = fontProgram.GetGlyphByCode(cmapEncoding.GetCidCode(code));

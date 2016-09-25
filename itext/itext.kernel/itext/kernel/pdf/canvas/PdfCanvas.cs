@@ -638,9 +638,9 @@ namespace iText.Kernel.Pdf.Canvas {
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
-            bool hasNext = iterator.MoveNext();
-            while (hasNext) { 
-                GlyphLine.GlyphLinePart glyphLinePart = iterator.Current;
+            IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
+            for (int partIndex = 0; partIndex < glyphLineParts.Count; ++partIndex) {
+                GlyphLine.GlyphLinePart glyphLinePart = glyphLineParts[partIndex];
                 if (glyphLinePart.actualText != null) {
                     PdfDictionary properties = new PdfDictionary();
                     properties.Put(PdfName.ActualText, new PdfString(glyphLinePart.actualText, PdfEncodings.UNICODE_BIG).SetHexWriting
@@ -727,8 +727,7 @@ namespace iText.Kernel.Pdf.Canvas {
                         EndMarkedContent();
                     }
                 }
-                hasNext = iterator.MoveNext();
-                if (glyphLinePart.end > sub && hasNext) {
+                if (glyphLinePart.end > sub && partIndex + 1 < glyphLineParts.Count) {
                     contentStream.GetOutputStream().WriteFloat(GetSubrangeWidth(text, sub, glyphLinePart.end - 1), true).WriteSpace
                         ().WriteFloat(0).WriteSpace().WriteBytes(Td);
                 }
@@ -2304,6 +2303,14 @@ namespace iText.Kernel.Pdf.Canvas {
                     break;
                 }
             }
+        }
+
+        private static IList<T> EnumeratorToList<T>(IEnumerator<T> enumerator) {
+            IList<T> list = new List<T>();
+            while (enumerator.MoveNext()) {
+                list.Add(enumerator.Current);
+            }
+            return list;
         }
     }
 }
