@@ -284,10 +284,20 @@ namespace iText.Kernel.Pdf {
             return new PdfLiteral(buf.ToByteArray());
         }
 
+        /// <summary>Gets the encryption permissions.</summary>
+        /// <remarks>
+        /// Gets the encryption permissions. It can be used directly in
+        /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>
+        /// .
+        /// See ISO 32000-1, Table 22 for more details.
+        /// </remarks>
+        /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
         public virtual long? GetPermissions() {
             return permissions;
         }
 
+        /// <summary>Gets encryption algorithm and access permissions.</summary>
+        /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
             return cryptoMode;
         }

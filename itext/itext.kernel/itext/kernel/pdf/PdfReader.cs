@@ -51,6 +51,7 @@ using iText.Kernel;
 using iText.Kernel.Pdf.Filters;
 
 namespace iText.Kernel.Pdf {
+    /// <summary>Reads a PDF document.</summary>
     public class PdfReader : IDisposable {
         private const String endstream1 = "endstream";
 
@@ -154,20 +155,51 @@ namespace iText.Kernel.Pdf {
             : this(filename, new ReaderProperties()) {
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>
+        /// Close
+        /// <see cref="iText.IO.Source.PdfTokenizer"/>
+        /// .
+        /// </summary>
+        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual void Close() {
             tokens.Close();
         }
 
+        /// <summary>
+        /// The iText is not responsible if you decide to change the
+        /// value of this parameter.
+        /// </summary>
         public virtual iText.Kernel.Pdf.PdfReader SetUnethicalReading(bool unethicalReading) {
             this.unethicalReading = unethicalReading;
             return this;
         }
 
+        /// <summary>
+        /// Gets whether
+        /// <see cref="Close()"/>
+        /// method shall close input stream.
+        /// </summary>
+        /// <returns>
+        /// true, if
+        /// <see cref="Close()"/>
+        /// method will close input stream,
+        /// otherwise false.
+        /// </returns>
         public virtual bool IsCloseStream() {
             return tokens.IsCloseStream();
         }
 
+        /// <summary>
+        /// Sets whether
+        /// <see cref="Close()"/>
+        /// method shall close input stream.
+        /// </summary>
+        /// <param name="closeStream">
+        /// true, if
+        /// <see cref="Close()"/>
+        /// method shall close input stream,
+        /// otherwise false.
+        /// </param>
         public virtual void SetCloseStream(bool closeStream) {
             tokens.SetCloseStream(closeStream);
         }
@@ -206,10 +238,14 @@ namespace iText.Kernel.Pdf {
             return lastXref;
         }
 
-        /// <summary>Reads and gets stream bytes.</summary>
+        /// <summary>Reads, decrypt and optionally decode stream bytes.</summary>
+        /// <remarks>
+        /// Reads, decrypt and optionally decode stream bytes.
+        /// Note, this method doesn't store actual bytes in any internal structures.
+        /// </remarks>
         /// <param name="decode">true if to get decoded stream bytes, false if to leave it originally encoded.</param>
-        /// <returns>byte[]</returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <returns>byte[] array.</returns>
+        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual byte[] ReadStreamBytes(PdfStream stream, bool decode) {
             byte[] b = ReadStreamBytesRaw(stream);
             if (decode && b != null) {
@@ -220,7 +256,13 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Reads and decrypt stream bytes.</summary>
+        /// <remarks>
+        /// Reads and decrypt stream bytes.
+        /// Note, this method doesn't store actual bytes in any internal structures.
+        /// </remarks>
+        /// <returns>byte[] array.</returns>
+        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual byte[] ReadStreamBytesRaw(PdfStream stream) {
             PdfName type = stream.GetAsName(PdfName.Type);
             if (!PdfName.XRefStm.Equals(type) && !PdfName.ObjStm.Equals(type)) {
@@ -277,20 +319,25 @@ namespace iText.Kernel.Pdf {
             return bytes;
         }
 
-        /// <summary>Gets the input stream associated with PdfStream.</summary>
-        /// <remarks>
-        /// Gets the input stream associated with PdfStream.
+        /// <summary>
+        /// Reads, decrypt and optionally decode stream bytes into
+        /// <see cref="System.IO.MemoryStream"/>
+        /// .
         /// User is responsible for closing returned stream.
-        /// </remarks>
+        /// </summary>
         /// <param name="decode">true if to get decoded stream, false if to leave it originally encoded.</param>
-        /// <returns>InputStream</returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <returns>
+        /// InputStream or
+        /// <see langword="null"/>
+        /// if reading was failed.
+        /// </returns>
+        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual Stream ReadStream(PdfStream stream, bool decode) {
             byte[] bytes = ReadStreamBytes(stream, decode);
             return bytes != null ? new MemoryStream(bytes) : null;
         }
 
-        /// <summary>Decode a byte[] applying the filters specified in the provided dictionary using default filter handlers.
+        /// <summary>Decode bytes applying the filters specified in the provided dictionary using default filter handlers.
         ///     </summary>
         /// <param name="b">the bytes to decode</param>
         /// <param name="streamDictionary">the dictionary that contains filter information</param>
@@ -385,15 +432,41 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Provides the size of the opened file.</summary>
         /// <returns>The size of the opened file.</returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">on error.</exception>
         public virtual long GetFileLength() {
             return tokens.GetSafeFile().Length();
         }
 
+        /// <summary>
+        /// Checks if the document was opened with the owner password so that the end application
+        /// can decide what level of access restrictions to apply.
+        /// </summary>
+        /// <remarks>
+        /// Checks if the document was opened with the owner password so that the end application
+        /// can decide what level of access restrictions to apply. If the document is not encrypted
+        /// it will return
+        /// <see langword="true"/>
+        /// .
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the document was opened with the owner password or if it's not encrypted,
+        /// <see langword="false"/>
+        /// if the document was opened with the user password.
+        /// </returns>
         public virtual bool IsOpenedWithFullPermission() {
             return !encrypted || decrypt.IsOpenedWithFullPermission() || unethicalReading;
         }
 
+        /// <summary>Gets the encryption permissions.</summary>
+        /// <remarks>
+        /// Gets the encryption permissions. It can be used directly in
+        /// <see cref="WriterProperties.SetStandardEncryption(byte[], byte[], int, int)"/>
+        /// .
+        /// See ISO 32000-1, Table 22 for more details.
+        /// </remarks>
+        /// <returns>the encryption permissions, an unsigned 32-bit quantity.</returns>
         public virtual long GetPermissions() {
             long perm = 0;
             if (encrypted && decrypt.GetPermissions() != null) {
@@ -402,6 +475,8 @@ namespace iText.Kernel.Pdf {
             return perm;
         }
 
+        /// <summary>Gets encryption algorithm and access permissions.</summary>
+        /// <seealso cref="EncryptionConstants"/>
         public virtual int GetCryptoMode() {
             if (decrypt == null) {
                 return -1;
@@ -437,6 +512,27 @@ namespace iText.Kernel.Pdf {
             return decrypt.ComputeUserPassword(properties.password);
         }
 
+        /// <summary>
+        /// Gets file ID, either
+        /// <see cref="PdfName.ID"/>
+        /// key of trailer or a newly generated id.
+        /// </summary>
+        /// <returns>byte array represents file ID.</returns>
+        /// <seealso cref="PdfEncryption.GenerateNewDocumentId()"/>
+        public virtual byte[] GetOriginalFileId() {
+            PdfArray id = trailer.GetAsArray(PdfName.ID);
+            if (id != null) {
+                return ByteUtils.GetIsoBytes(id.GetAsString(0).GetValue());
+            }
+            else {
+                return PdfEncryption.GenerateNewDocumentId();
+            }
+        }
+
+        public virtual bool IsEncrypted() {
+            return encrypted;
+        }
+
         /// <summary>Parses the entire PDF</summary>
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void ReadPdf() {
@@ -456,29 +552,6 @@ namespace iText.Kernel.Pdf {
                 RebuildXref();
             }
             ReadDecryptObj();
-        }
-
-        private void ReadDecryptObj() {
-            if (encrypted) {
-                return;
-            }
-            PdfDictionary enc = trailer.GetAsDictionary(PdfName.Encrypt);
-            if (enc == null) {
-                return;
-            }
-            encrypted = true;
-            PdfName filter = enc.GetAsName(PdfName.Filter);
-            if (PdfName.Adobe_PubSec.Equals(filter)) {
-                if (properties.certificate == null) {
-                    throw new PdfException(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate);
-                }
-                decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate);
-            }
-            else {
-                if (PdfName.Standard.Equals(filter)) {
-                    decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId());
-                }
-            }
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -1087,18 +1160,27 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        public virtual byte[] GetOriginalFileId() {
-            PdfArray id = trailer.GetAsArray(PdfName.ID);
-            if (id != null) {
-                return ByteUtils.GetIsoBytes(id.GetAsString(0).GetValue());
+        private void ReadDecryptObj() {
+            if (encrypted) {
+                return;
+            }
+            PdfDictionary enc = trailer.GetAsDictionary(PdfName.Encrypt);
+            if (enc == null) {
+                return;
+            }
+            encrypted = true;
+            PdfName filter = enc.GetAsName(PdfName.Filter);
+            if (PdfName.Adobe_PubSec.Equals(filter)) {
+                if (properties.certificate == null) {
+                    throw new PdfException(PdfException.CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate);
+                }
+                decrypt = new PdfEncryption(enc, properties.certificateKey, properties.certificate);
             }
             else {
-                return PdfEncryption.GenerateNewDocumentId();
+                if (PdfName.Standard.Equals(filter)) {
+                    decrypt = new PdfEncryption(enc, properties.password, GetOriginalFileId());
+                }
             }
-        }
-
-        public virtual bool IsEncrypted() {
-            return encrypted;
         }
 
         /// <summary>Utility method that checks the provided byte source to see if it has junk bytes at the beginning.
