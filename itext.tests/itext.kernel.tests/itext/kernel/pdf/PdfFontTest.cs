@@ -842,7 +842,7 @@ namespace iText.Kernel.Pdf {
         public virtual void CreateWrongPfb() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
-            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm), null);
+            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm, false), null);
             byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes();
             NUnit.Framework.Assert.IsTrue(streamContent == null, "Empty stream content expected");
         }
@@ -853,7 +853,8 @@ namespace iText.Kernel.Pdf {
         public virtual void AutoDetect1() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected");
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm, false) is Type1Font, "Type1 font expected"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>

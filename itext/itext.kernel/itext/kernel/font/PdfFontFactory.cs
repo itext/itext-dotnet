@@ -446,7 +446,7 @@ namespace iText.Kernel.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
-            FontProgram fp = FontProgramFactory.CreateFont(null, fontProgram, cached);
+            FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
         }
 
