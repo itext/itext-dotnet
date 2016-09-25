@@ -55,6 +55,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         /// <summary>set to true for debugging</summary>
         private static bool DUMP_STATE = false;
 
+        private const float DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION = 2;
+
         /// <summary>a summary of all found text</summary>
         private readonly IList<LocationTextExtractionStrategy.TextChunk> locationalResult = new List<LocationTextExtractionStrategy.TextChunk
             >();
@@ -67,11 +69,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_80()) {
+            : this(new _ITextChunkLocationStrategy_83()) {
         }
 
-        private sealed class _ITextChunkLocationStrategy_80 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_80() {
+        private sealed class _ITextChunkLocationStrategy_83 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public _ITextChunkLocationStrategy_83() {
             }
 
             public LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment
@@ -401,8 +403,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             /// <param name="as">the location to compare to</param>
             /// <returns>true is this location is on the the same line as the other</returns>
             public virtual bool SameLine(LocationTextExtractionStrategy.ITextChunkLocation @as) {
-                return OrientationMagnitude() == @as.OrientationMagnitude() && DistPerpendicular() == @as.DistPerpendicular
-                    ();
+                if (OrientationMagnitude() != @as.OrientationMagnitude()) {
+                    return false;
+                }
+                float distPerpendicularDiff = DistPerpendicular() - @as.DistPerpendicular();
+                if (distPerpendicularDiff == 0) {
+                    return true;
+                }
+                LineSegment mySegment = new LineSegment(startLocation, endLocation);
+                LineSegment otherSegment = new LineSegment(@as.GetStartLocation(), @as.GetEndLocation());
+                return Math.Abs(distPerpendicularDiff) <= DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION && (mySegment.GetLength
+                    () == 0 || otherSegment.GetLength() == 0);
             }
 
             /// <summary>
@@ -422,6 +433,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             }
 
             public virtual bool IsAtWordBoundary(LocationTextExtractionStrategy.ITextChunkLocation previous) {
+                /*
+                * Here we handle a very specific case which in PDF may look like:
+                * -.232 Tc [( P)-226.2(r)-231.8(e)-230.8(f)-238(a)-238.9(c)-228.9(e)]TJ
+                * The font's charSpace width is 0.232 and it's compensated with charSpacing of 0.232.
+                * And a resultant TextChunk.charSpaceWidth comes to TextChunk constructor as 0.
+                * In this case every chunk is considered as a word boundary and space is added.
+                * We should consider charSpaceWidth equal (or close) to zero as a no-space.
+                */
                 if (GetCharSpaceWidth() < 0.1f) {
                     return false;
                 }
