@@ -61,8 +61,8 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
-            occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.
-                Clone().MoveDown(-layoutBox.GetHeight()).SetHeight(0));
+            occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveDown(-layoutBox
+                .GetHeight()).SetHeight(0));
             float curWidth = 0;
             maxAscent = 0;
             maxDescent = 0;
@@ -82,7 +82,6 @@ namespace iText.Layout.Renderer {
             if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {
                 unicodeIdsReorderingList = new List<int>();
                 bool newLineFound = false;
-
                 foreach (IRenderer child in childRenderers) {
                     if (newLineFound) {
                         break;
@@ -108,18 +107,18 @@ namespace iText.Layout.Renderer {
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult childResult;
-                Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox
-                    .GetWidth() - curWidth, layoutBox.GetHeight());
+                Rectangle bbox = new Rectangle(layoutBox.GetX() + curWidth, layoutBox.GetY(), layoutBox.GetWidth() - curWidth
+                    , layoutBox.GetHeight());
                 if (childRenderer is TextRenderer) {
                     // Delete these properties in case of relayout. We might have applied them during justify().
                     childRenderer.DeleteOwnProperty(Property.CHARACTER_SPACING);
                     childRenderer.DeleteOwnProperty(Property.WORD_SPACING);
-                } else {
+                }
+                else {
                     if (childRenderer is TabRenderer) {
                         if (nextTabStop != null) {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
-                            tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber
-                                (), bbox)));
+                            tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
                         }
                         nextTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
@@ -135,19 +134,19 @@ namespace iText.Layout.Renderer {
                 if (!anythingPlaced && childRenderer is TextRenderer) {
                     ((TextRenderer)childRenderer).TrimFirst();
                 }
-                if (nextTabStop != null && nextTabStop.GetTabAlignment() == TabAlignment.ANCHOR &&
-                     childRenderer is TextRenderer) {
-                    childRenderer.SetProperty(Property.TAB_ANCHOR, nextTabStop
-                        .GetTabAnchor());
+                if (nextTabStop != null && nextTabStop.GetTabAlignment() == TabAlignment.ANCHOR && childRenderer is TextRenderer
+                    ) {
+                    childRenderer.SetProperty(Property.TAB_ANCHOR, nextTabStop.GetTabAnchor());
                 }
-                childResult = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea
-                    (layoutContext.GetArea().GetPageNumber(), bbox)));
+                childResult = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea(
+                    ).GetPageNumber(), bbox)));
                 float childAscent = 0;
                 float childDescent = 0;
                 if (childRenderer is TextRenderer) {
                     childAscent = ((TextRenderer)childRenderer).GetAscent();
                     childDescent = ((TextRenderer)childRenderer).GetDescent();
-                } else {
+                }
+                else {
                     if (childRenderer is ImageRenderer) {
                         childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
                     }
@@ -157,71 +156,68 @@ namespace iText.Layout.Renderer {
                 float maxHeight = maxAscent - maxDescent;
                 if (nextTabStop != null) {
                     IRenderer tabRenderer = childRenderers[childPos - 1];
-                    float tabWidth = CalculateTab(layoutBox, curWidth, nextTabStop, childRenderer, childResult
-                        , tabRenderer);
-                    tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber
-                        (), bbox)));
+                    float tabWidth = CalculateTab(layoutBox, curWidth, nextTabStop, childRenderer, childResult, tabRenderer);
+                    tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                     childResult.GetOccupiedArea().GetBBox().MoveRight(tabWidth);
                     if (childResult.GetSplitRenderer() != null) {
                         childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth);
                     }
                     float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
-                    if (nextTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < nextTabStop.GetTabPosition()) {
+                    if (nextTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < nextTabStop.GetTabPosition
+                        ()) {
                         curWidth = nextTabStop.GetTabPosition();
-                    } else {
+                    }
+                    else {
                         curWidth += tabAndNextElemWidth;
                     }
                     nextTabStop = null;
-                } else {
+                }
+                else {
                     curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
                 }
-                occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
-                    .GetHeight() - maxHeight, curWidth, maxHeight));
+                occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
+                    curWidth, maxHeight));
                 if (childResult.GetStatus() != LayoutResult.FULL) {
                     LineRenderer[] split = Split();
-                    split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos)
-                        );
+                    split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                     bool wordWasSplitAndItWillFitOntoNextLine = false;
-                    if (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit
-                        ()) {
+                    if (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsWordHasBeenSplit()) {
                         LayoutResult newLayoutResult = childRenderer.Layout(layoutContext);
-                        if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit
-                            ()) {
+                        if (newLayoutResult is TextLayoutResult && !((TextLayoutResult)newLayoutResult).IsWordHasBeenSplit()) {
                             wordWasSplitAndItWillFitOntoNextLine = true;
                         }
                     }
                     if (wordWasSplitAndItWillFitOntoNextLine) {
                         split[1].childRenderers.Add(childRenderer);
-                        split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers
-                            .Count));
-                    } else {
+                        split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
+                    }
+                    else {
                         if (childResult.GetStatus() == LayoutResult.PARTIAL) {
                             split[0].AddChild(childResult.GetSplitRenderer());
                             anythingPlaced = true;
                         }
-                        if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult.GetOverflowRenderer
-                            () is ImageRenderer) {
-                            ((ImageRenderer)childResult.GetOverflowRenderer()).AutoScale(layoutContext.GetArea
-                                ());
+                        if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult.GetOverflowRenderer() is ImageRenderer) {
+                            ((ImageRenderer)childResult.GetOverflowRenderer()).AutoScale(layoutContext.GetArea());
                         }
                         if (null != childResult.GetOverflowRenderer()) {
                             split[1].childRenderers.Add(childResult.GetOverflowRenderer());
                         }
-                        split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers
-                            .Count));
+                        split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                         // no sense to process empty renderer
                         if (split[1].childRenderers.Count == 0) {
                             split[1] = null;
                         }
                     }
-                    result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING, occupiedArea, split[0], split[1],
-                           childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing() : this);
-
-                    if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline()) {
+                    result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING, occupiedArea, 
+                        split[0], split[1], childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing() : 
+                        this);
+                    if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult && ((TextLayoutResult
+                        )childResult).IsSplitForcedByNewline()) {
                         result.SetSplitForcedByNewline(true);
                     }
                     break;
-                } else {
+                }
+                else {
                     anythingPlaced = true;
                     childPos++;
                 }
@@ -229,7 +225,8 @@ namespace iText.Layout.Renderer {
             if (result == null) {
                 if (anythingPlaced) {
                     result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, null, null);
-                } else {
+                }
+                else {
                     result = new LineLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
             }
@@ -239,20 +236,19 @@ namespace iText.Layout.Renderer {
                 IList<IRenderer> children = null;
                 if (result.GetStatus() == LayoutResult.PARTIAL) {
                     children = result.GetSplitRenderer().GetChildRenderers();
-                } else {
+                }
+                else {
                     if (result.GetStatus() == LayoutResult.FULL) {
                         children = GetChildRenderers();
                     }
                 }
                 if (children != null) {
-                    IList<LineRenderer.RendererGlyph> lineGlyphs = new List<LineRenderer.RendererGlyph
-                        >();
+                    IList<LineRenderer.RendererGlyph> lineGlyphs = new List<LineRenderer.RendererGlyph>();
                     foreach (IRenderer child in children) {
                         if (child is TextRenderer) {
                             GlyphLine childLine = ((TextRenderer)child).line;
                             for (int i = childLine.start; i < childLine.end; i++) {
-                                lineGlyphs.Add(new LineRenderer.RendererGlyph(childLine.Get(i), (TextRenderer)child
-                                    ));
+                                lineGlyphs.Add(new LineRenderer.RendererGlyph(childLine.Get(i), (TextRenderer)child));
                             }
                         }
                     }
@@ -272,16 +268,17 @@ namespace iText.Layout.Renderer {
                             TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_1);
                             newRenderer.DeleteOwnProperty(Property.REVERSED);
                             children.Add(newRenderer);
-                            ((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)
-                                children[children.Count - 1]).line);
+                            ((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)children[children.Count -
+                                 1]).line);
                             GlyphLine gl = ((TextRenderer)children[children.Count - 1]).line;
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
                             while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_1) {
                                 if (pos + 1 < lineGlyphs.Count) {
-                                    if (reorder[pos] == reorder[pos + 1] + 1 &&
-                                        !TextRenderer.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextRenderer.IsSpaceGlyph(lineGlyphs[pos].glyph)) {
+                                    if (reorder[pos] == reorder[pos + 1] + 1 && !TextRenderer.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextRenderer
+                                        .IsSpaceGlyph(lineGlyphs[pos].glyph)) {
                                         reversed = true;
-                                    } else {
+                                    }
+                                    else {
                                         if (reversed) {
                                             IList<int[]> reversedRange = CreateOrGetReversedProperty(newRenderer);
                                             reversedRange.Add(new int[] { initialPos - offset, pos - offset });
@@ -302,12 +299,10 @@ namespace iText.Layout.Renderer {
                             offset = initialPos;
                             gl.SetGlyphs(replacementGlyphs);
                         }
-
                         float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
                         foreach (IRenderer child_1 in children) {
                             float currentWidth = ((TextRenderer)child_1).CalculateLineWidth();
-                            ((TextRenderer)child_1).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth
-                                );
+                            ((TextRenderer)child_1).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             currentXPos += currentWidth;
                         }
                     }
@@ -315,23 +310,24 @@ namespace iText.Layout.Renderer {
                         LineRenderer overflow = (LineRenderer)result.GetOverflowRenderer();
                         if (levels != null) {
                             overflow.levels = new byte[levels.Length - lineLevels.Length];
-                            System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.
-                                Length);
+                            System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.Length);
                             if (overflow.levels.Length == 0) {
                                 overflow.levels = null;
                             }
                         }
-                    } else if (result.GetStatus() == LayoutResult.NOTHING) {
-                        if (levels != null) {
-                            ((LineRenderer)result.GetOverflowRenderer()).levels = levels;
-
+                    }
+                    else {
+                        if (result.GetStatus() == LayoutResult.NOTHING) {
+                            if (levels != null) {
+                                ((LineRenderer)result.GetOverflowRenderer()).levels = levels;
+                            }
                         }
                     }
                 }
             }
             if (anythingPlaced) {
-                LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer
-                    )result.GetSplitRenderer();
+                LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer)result.GetSplitRenderer
+                    ();
                 processed.AdjustChildrenYLine().TrimLast();
             }
             return result;
@@ -352,16 +348,16 @@ namespace iText.Layout.Renderer {
         public virtual float GetLeadingValue(Leading leading) {
             switch (leading.GetLeadingType()) {
                 case Leading.FIXED: {
-                        return leading.GetValue();
-                    }
+                    return leading.GetValue();
+                }
 
                 case Leading.MULTIPLIED: {
-                        return occupiedArea.GetBBox().GetHeight() * leading.GetValue();
-                    }
+                    return occupiedArea.GetBBox().GetHeight() * leading.GetValue();
+                }
 
                 default: {
-                        throw new InvalidOperationException();
-                    }
+                    throw new InvalidOperationException();
+                }
             }
         }
 
@@ -375,13 +371,11 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual void Justify(float width) {
             float ratio = (float)this.GetPropertyAsFloat(Property.SPACING_RATIO);
-            float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().
-                GetOccupiedArea().GetBBox().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox
-                ().GetWidth();
+            float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().GetOccupiedArea().GetBBox
+                ().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox().GetWidth();
             int numberOfSpaces = GetNumberOfSpaces();
             int baseCharsCount = BaseCharactersCount();
-            float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount
-                 - 1));
+            float baseFactor = freeWidth / (ratio * numberOfSpaces + (1 - ratio) * (baseCharsCount - 1));
             float wordSpacing = ratio * baseFactor;
             float characterSpacing = (1 - ratio) * baseFactor;
             float lastRightPos = occupiedArea.GetBBox().GetX();
@@ -477,16 +471,16 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual LineRenderer AdjustChildrenYLine() {
-            float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight
-                () - maxAscent;
+            float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is TextRenderer) {
                     ((TextRenderer)renderer).MoveYLineTo(actualYLine);
-                } else {
+                }
+                else {
                     if (renderer is ImageRenderer) {
-                        renderer.GetOccupiedArea().GetBBox().SetY(occupiedArea.GetBBox().GetY() - maxDescent
-                            );
-                    } else {
+                        renderer.GetOccupiedArea().GetBBox().SetY(occupiedArea.GetBBox().GetY() - maxDescent);
+                    }
+                    else {
                         renderer.GetOccupiedArea().GetBBox().SetY(occupiedArea.GetBBox().GetY());
                     }
                 }
@@ -495,8 +489,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual LineRenderer TrimLast() {
-            IRenderer lastRenderer = childRenderers.Count > 0 ? childRenderers[childRenderers
-                .Count - 1] : null;
+            IRenderer lastRenderer = childRenderers.Count > 0 ? childRenderers[childRenderers.Count - 1] : null;
             if (lastRenderer is TextRenderer) {
                 float trimmedSpace = ((TextRenderer)lastRenderer).TrimLast();
                 occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() - trimmedSpace);
@@ -525,8 +518,9 @@ namespace iText.Layout.Renderer {
         }
 
         private TabStop GetNextTabStop(float curWidth) {
-            SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float, TabStop>>(Property.TAB_STOPS);
             KeyValuePair<float, TabStop>? nextTabStopEntry = null;
+            SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float, TabStop>>(Property.TAB_STOPS
+                );
             TabStop nextTabStop = null;
             if (tabStops != null) {
                 nextTabStopEntry = tabStops.HigherEntry(curWidth);
@@ -543,15 +537,15 @@ namespace iText.Layout.Renderer {
         /// Returns null, if processing is finished and layout can be performed for the tab renderer;
         /// otherwise, in case when the tab should be processed after the next element in the line, this method returns corresponding tab stop.
         /// </remarks>
-        private TabStop CalculateTab(IRenderer childRenderer, float curWidth, float lineWidth
-            ) {
+        private TabStop CalculateTab(IRenderer childRenderer, float curWidth, float lineWidth) {
             TabStop nextTabStop = GetNextTabStop(curWidth);
             if (nextTabStop == null) {
                 ProcessDefaultTab(childRenderer, curWidth, lineWidth);
                 return null;
             }
             childRenderer.SetProperty(Property.TAB_LEADER, nextTabStop.GetTabLeader());
-            childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.GetTabPosition() - curWidth));
+            childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.GetTabPosition() - curWidth
+                ));
             childRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
             if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT) {
                 return null;
@@ -560,14 +554,13 @@ namespace iText.Layout.Renderer {
         }
 
         /// <summary>Calculates and sets tab size with the account of the element that is next in the line after the tab.
-        /// 	</summary>
+        ///     </summary>
         /// <remarks>
         /// Calculates and sets tab size with the account of the element that is next in the line after the tab.
         /// Returns resulting width of the tab.
         /// </remarks>
-        private float CalculateTab(Rectangle layoutBox, float curWidth, TabStop tabStop,
-            IRenderer nextElementRenderer, LayoutResult nextElementResult, IRenderer tabRenderer
-            ) {
+        private float CalculateTab(Rectangle layoutBox, float curWidth, TabStop tabStop, IRenderer nextElementRenderer
+            , LayoutResult nextElementResult, IRenderer tabRenderer) {
             float childWidth = 0;
             if (nextElementRenderer != null) {
                 childWidth = nextElementRenderer.GetOccupiedArea().GetBBox().GetWidth();
@@ -575,27 +568,26 @@ namespace iText.Layout.Renderer {
             float tabWidth = 0;
             switch (tabStop.GetTabAlignment()) {
                 case TabAlignment.RIGHT: {
-                        tabWidth = tabStop.GetTabPosition() - curWidth - childWidth;
-                        break;
-                    }
+                    tabWidth = tabStop.GetTabPosition() - curWidth - childWidth;
+                    break;
+                }
 
                 case TabAlignment.CENTER: {
-                        tabWidth = tabStop.GetTabPosition() - curWidth - childWidth / 2;
-                        break;
-                    }
+                    tabWidth = tabStop.GetTabPosition() - curWidth - childWidth / 2;
+                    break;
+                }
 
                 case TabAlignment.ANCHOR: {
-                        float anchorPosition = -1;
-                        if (nextElementRenderer is TextRenderer) {
-                            anchorPosition = ((TextRenderer)nextElementRenderer).GetTabAnchorCharacterPosition
-                                ();
-                        }
-                        if (anchorPosition == -1) {
-                            anchorPosition = childWidth;
-                        }
-                        tabWidth = tabStop.GetTabPosition() - curWidth - anchorPosition;
-                        break;
+                    float anchorPosition = -1;
+                    if (nextElementRenderer is TextRenderer) {
+                        anchorPosition = ((TextRenderer)nextElementRenderer).GetTabAnchorCharacterPosition();
                     }
+                    if (anchorPosition == -1) {
+                        anchorPosition = childWidth;
+                    }
+                    tabWidth = tabStop.GetTabPosition() - curWidth - anchorPosition;
+                    break;
+                }
             }
             if (tabWidth < 0) {
                 tabWidth = 0;
@@ -608,15 +600,13 @@ namespace iText.Layout.Renderer {
             return tabWidth;
         }
 
-        private void ProcessDefaultTab(IRenderer tabRenderer, float curWidth, float lineWidth
-            ) {
+        private void ProcessDefaultTab(IRenderer tabRenderer, float curWidth, float lineWidth) {
             float? tabDefault = this.GetPropertyAsFloat(Property.TAB_DEFAULT);
             float? tabWidth = tabDefault - curWidth % tabDefault;
             if (curWidth + tabWidth > lineWidth) {
                 tabWidth = lineWidth - curWidth;
             }
-            tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue
-                ((float)tabWidth));
+            tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue((float)tabWidth));
             tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
         }
 
