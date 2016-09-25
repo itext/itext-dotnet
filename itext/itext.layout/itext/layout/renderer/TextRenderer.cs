@@ -231,7 +231,7 @@ namespace iText.Layout.Renderer {
                         // we will have to split the word anyway.
                         break;
                     }
-                    if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || 
+                    if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end ||
                         splitCharacters.IsSplitCharacter(text, ind + 1) &&
                          IsSpaceGlyph(text.Get(ind + 1))) {
                         nonBreakablePartEnd = ind;
@@ -1069,7 +1069,7 @@ namespace iText.Layout.Renderer {
             }
 
             public void Dispose() {
-                
+
             }
 
             public bool MoveNext() {
