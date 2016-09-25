@@ -470,9 +470,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 if (result != 0) {
                     return result;
                 }
-                result = iText.IO.Util.JavaUtil.IntegerCompare(DistPerpendicular(), other.DistPerpendicular());
-                if (result != 0) {
-                    return result;
+                int distPerpendicularDiff = DistPerpendicular() - other.DistPerpendicular();
+                if (Math.Abs(distPerpendicularDiff) > DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION || distPerpendicularDiff
+                     != 0 && (mySegment.GetLength() > 0 && otherSegment.GetLength() > 0)) {
+                    return distPerpendicularDiff;
                 }
                 return iText.IO.Util.JavaUtil.FloatCompare(DistParallelStart(), other.DistParallelStart());
             }
