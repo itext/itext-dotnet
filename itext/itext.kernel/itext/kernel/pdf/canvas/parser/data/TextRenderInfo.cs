@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -116,7 +117,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>the text to render</returns>
         public virtual String GetText() {
             if (text == null) {
-                text = gs.GetFont().Decode(@string);
+                GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
+                text = gl.ToUnicodeString(gl.start, gl.end);
             }
             return text;
         }

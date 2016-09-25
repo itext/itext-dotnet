@@ -368,6 +368,7 @@ namespace iText.Kernel.Font {
         }
 
         public override String Decode(PdfString content) {
+            // TODO refactor using decodeIntoGlyphLine?
             String cids = content.GetValue();
             if (cids.Length == 1) {
                 return "";
@@ -387,7 +388,29 @@ namespace iText.Kernel.Font {
             return builder.ToString();
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override GlyphLine DecodeIntoGlyphLine(PdfString content) {
+            String cids = content.GetValue();
+            if (cids.Length == 1) {
+                return new GlyphLine(JavaCollectionsUtil.EmptyList<Glyph>());
+            }
+            IList<Glyph> glyphs = new List<Glyph>();
+            //number of cids must be even. With i < cids.length() - 1 we garantee, that we will not process the last odd index.
+            for (int i = 0; i < cids.Length - 1; i += 2) {
+                int code = (cids[i] << 8) + cids[i + 1];
+                Glyph glyph = fontProgram.GetGlyphByCode(cmapEncoding.GetCidCode(code));
+                if (glyph != null && glyph.GetChars() != null) {
+                    glyphs.Add(glyph);
+                }
+                else {
+                    glyphs.Add(new Glyph(0, -1));
+                }
+            }
+            return new GlyphLine(glyphs);
+        }
+
         public override float GetContentWidth(PdfString content) {
+            // TODO refactor using decodeIntoGlyphLine?
             String cids = content.GetValue();
             Glyph notdef = fontProgram.GetGlyphByCode(0);
             float width = 0;

@@ -115,6 +115,9 @@ namespace iText.IO.Font.Otf {
                             if (glyphs[i].HasValidUnicode()) {
                                 str.Append(TextUtil.ConvertFromUtf32(glyphs[i].GetUnicode()));
                             }
+                            else {
+                                str.Append('\ufffd');
+                            }
                         }
                     }
                 }

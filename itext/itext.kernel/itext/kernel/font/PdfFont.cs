@@ -140,6 +140,20 @@ namespace iText.Kernel.Font {
 
         public abstract String Decode(PdfString content);
 
+        /// <summary>
+        /// Decodes a given
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// containing encoded string (e.g. from content stream) into a
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// </summary>
+        /// <param name="content">the encoded string</param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// containing the glyphs encoded by the passed string
+        /// </returns>
+        public abstract GlyphLine DecodeIntoGlyphLine(PdfString content);
+
         public abstract float GetContentWidth(PdfString content);
 
         public abstract byte[] ConvertToBytes(Glyph glyph);
