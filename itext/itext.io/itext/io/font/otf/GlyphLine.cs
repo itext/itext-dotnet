@@ -108,17 +108,7 @@ namespace iText.IO.Font.Otf {
                 }
                 else {
                     for (int i = part.start; i < part.end; i++) {
-                        if (glyphs[i].GetChars() != null) {
-                            str.Append(glyphs[i].GetChars());
-                        }
-                        else {
-                            if (glyphs[i].HasValidUnicode()) {
-                                str.Append(TextUtil.ConvertFromUtf32(glyphs[i].GetUnicode()));
-                            }
-                            else {
-                                str.Append('\ufffd');
-                            }
-                        }
+                        str.Append(glyphs[i].GetUnicodeString());
                     }
                 }
             }
