@@ -152,9 +152,9 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>
-        /// instance from the TrueTypeCollection represented by its byte contents.
+        /// instance from the TrueType Collection represented by its byte contents.
         /// </summary>
-        /// <param name="ttc">the byte contents of the TrueTypeCollection</param>
+        /// <param name="ttc">the byte contents of the TrueType Collection</param>
         /// <param name="ttcIndex">the index of the font in the collection, zero-based</param>
         /// <param name="encoding">
         /// the encoding of the font to be created. See
@@ -167,7 +167,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the contents of the TrueTypeCollection is mal-formed or an error occurred during reading the font
+        /// <exception cref="System.IO.IOException">in case the contents of the TrueType Collection is mal-formed or an error occurred during reading the font
         ///     </exception>
         public static PdfFont CreateTtcFont(byte[] ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
             FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
@@ -177,7 +177,7 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>
-        /// instance from the TrueTypeCollection given by the path to the .ttc file.
+        /// instance from the TrueType Collection given by the path to the .ttc file.
         /// </summary>
         /// <param name="ttc">the path of the .ttc file</param>
         /// <param name="ttcIndex">the index of the font in the collection, zero-based</param>
@@ -193,7 +193,7 @@ namespace iText.Kernel.Font {
         /// instance
         /// </returns>
         /// <exception cref="System.IO.IOException">
-        /// in case the file is not found, contents of the TrueTypeCollection is mal-formed
+        /// in case the file is not found, contents of the TrueType Collection is mal-formed
         /// or an error occurred during reading the font
         /// </exception>
         public static PdfFont CreateTtcFont(String ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
@@ -590,7 +590,7 @@ namespace iText.Kernel.Font {
         /// <summary>Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.</summary>
         /// <remarks>
         /// Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.
-        /// In case if TrueTypeCollection (.ttc), an additional parameter may be specified defining the index of the font
+        /// In case if TrueType Collection (.ttc), an additional parameter may be specified defining the index of the font
         /// to be registered, e.g. "path/to/font/collection.ttc,0". The index is zero-based.
         /// </remarks>
         /// <param name="path">the path to a font file</param>

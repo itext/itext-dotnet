@@ -75,7 +75,7 @@ namespace iText.IO.Font {
         /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -101,7 +101,7 @@ namespace iText.IO.Font {
         /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -128,7 +128,7 @@ namespace iText.IO.Font {
         /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -149,12 +149,12 @@ namespace iText.IO.Font {
         /// <summary>Creates a new font program.</summary>
         /// <remarks>
         /// Creates a new font program. This font program can be one of the 14 built in fonts,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
         /// a CJK font from the Adobe Asian Font Pack.
         /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
@@ -269,7 +269,7 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
         }
 
-        /// <summary>Creates a new Type1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
+        /// <summary>Creates a new Type 1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
         /// <param name="afm">the contents of the AFM or PFM metrics file</param>
         /// <param name="pfb">the contents of the PFB file</param>
         /// <returns>
@@ -282,7 +282,7 @@ namespace iText.IO.Font {
             return CreateType1Font(afm, pfb, DEFAULT_CACHED);
         }
 
-        /// <summary>Creates a new Type1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
+        /// <summary>Creates a new Type 1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
         /// <param name="afm">the contents of the AFM or PFM metrics file</param>
         /// <param name="pfb">the contents of the PFB file</param>
         /// <param name="cached">
@@ -300,7 +300,7 @@ namespace iText.IO.Font {
             return CreateType1Font(null, null, afm, pfb, cached);
         }
 
-        /// <summary>Creates a new Type1 font by the corresponding AFM/PFM and PFB files</summary>
+        /// <summary>Creates a new Type 1 font by the corresponding AFM/PFM and PFB files</summary>
         /// <param name="metricsPath">path to the AFM or PFM metrics file</param>
         /// <param name="binaryPath">path to the contents of the PFB file</param>
         /// <returns>
@@ -313,7 +313,7 @@ namespace iText.IO.Font {
             return CreateType1Font(metricsPath, binaryPath, DEFAULT_CACHED);
         }
 
-        /// <summary>Creates a new Type1 font by the corresponding AFM/PFM and PFB files</summary>
+        /// <summary>Creates a new Type 1 font by the corresponding AFM/PFM and PFB files</summary>
         /// <param name="metricsPath">path to the AFM or PFM metrics file</param>
         /// <param name="binaryPath">path to the contents of the PFB file</param>
         /// <param name="cached">
@@ -331,8 +331,8 @@ namespace iText.IO.Font {
             return CreateType1Font(metricsPath, binaryPath, null, null, cached);
         }
 
-        /// <summary>Creates a new True Type font program from ttc (TrueTypeCollection) file.</summary>
-        /// <param name="ttc">location  of true type collection file (*.ttc)</param>
+        /// <summary>Creates a new TrueType font program from ttc (TrueType Collection) file.</summary>
+        /// <param name="ttc">location  of TrueType Collection file (*.ttc)</param>
         /// <param name="ttcIndex">the index of the font file from the collection to be read</param>
         /// <param name="cached">
         /// true if the font comes from the cache or is added to
@@ -356,8 +356,8 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontBuilt, ttc + ttcIndex) : fontBuilt;
         }
 
-        /// <summary>Creates a new True Type font program from ttc (TrueTypeCollection) file bytes.</summary>
-        /// <param name="ttc">the content of a TrueTypeCollection file (*.ttc)</param>
+        /// <summary>Creates a new TrueType font program from ttc (TrueType Collection) file bytes.</summary>
+        /// <param name="ttc">the content of a TrueType Collection file (*.ttc)</param>
         /// <param name="ttcIndex">the index of the font file from the collection to be read</param>
         /// <param name="cached">
         /// true if the font comes from the cache or is added to
@@ -410,7 +410,7 @@ namespace iText.IO.Font {
         /// <summary>Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.</summary>
         /// <remarks>
         /// Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.
-        /// In case if TrueTypeCollection (.ttc), an additional parameter may be specified defining the index of the font
+        /// In case if TrueType Collection (.ttc), an additional parameter may be specified defining the index of the font
         /// to be registered, e.g. "path/to/font/collection.ttc,0". The index is zero-based.
         /// </remarks>
         /// <param name="path">the path to a font file</param>
