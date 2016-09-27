@@ -415,7 +415,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (selectedEntry != null) {
                         UnicodeScript selectScript = ((KeyValuePair<UnicodeScript, int?>)selectedEntry).Key;
-                        if (selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW && parent is LineRenderer
+                        if ((selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW) && parent is LineRenderer
                             ) {
                             SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
                         }
