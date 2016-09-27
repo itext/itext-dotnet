@@ -144,7 +144,7 @@ namespace iText.Signatures {
         /// <returns>an OCSP request</returns>
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
+        /// <exception cref="Org.BouncyCastle.Operator.OperatorException"/>
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger serialNumber) {
             //Add provider BC
@@ -158,7 +158,7 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
+        /// <exception cref="Org.BouncyCastle.Operator.OperatorException"/>
         private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
             if (checkCert == null || rootCert == null) {
                 return null;

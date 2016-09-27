@@ -48,6 +48,7 @@ using System.IO;
 using  Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.Tsp;
@@ -66,6 +67,20 @@ namespace iText.Signatures {
     /// and verifying a PKCS#7 signature.
     /// </summary>
     public class PdfPKCS7 {
+        private SignaturePolicyIdentifier signaturePolicyIdentifier;
+
+        /// <summary>Holds value of property signName.</summary>
+        private String signName;
+
+        /// <summary>Holds value of property reason.</summary>
+        private String reason;
+
+        /// <summary>Holds value of property location.</summary>
+        private String location;
+
+        /// <summary>Holds value of property signDate.</summary>
+        private DateTime signDate;
+
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
         /// <param name="privKey">the private key</param>
         /// <param name="certChain">the certificate chain</param>
@@ -78,6 +93,8 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
         public PdfPKCS7(ICipherParameters privKey, X509Certificate[] certChain, String hashAlgorithm, bool hasRSAdata
             ) {
+            // Encryption provider
+            // Signature info
             // Constructors for creating new signatures
             // message digest
             digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
@@ -383,20 +400,14 @@ namespace iText.Signatures {
             }
         }
 
-        /// <summary>Holds value of property signName.</summary>
-        private String signName;
+        public virtual void SetSignaturePolicy(SignaturePolicyInfo signaturePolicy) {
+            this.signaturePolicyIdentifier = signaturePolicy.ToSignaturePolicyIdentifier();
+        }
 
-        /// <summary>Holds value of property reason.</summary>
-        private String reason;
+        public virtual void SetSignaturePolicy(SignaturePolicyIdentifier signaturePolicy) {
+            this.signaturePolicyIdentifier = signaturePolicy;
+        }
 
-        /// <summary>Holds value of property location.</summary>
-        private String location;
-
-        /// <summary>Holds value of property signDate.</summary>
-        private DateTime signDate;
-
-        // Encryption provider
-        // Signature info
         /// <summary>Getter for property sigName.</summary>
         /// <returns>Value of property sigName.</returns>
         public virtual String GetSignName() {
@@ -911,6 +922,10 @@ namespace iText.Signatures {
                     aaV2.Add(new DerOctetString(dig));
                     v.Add(new DerSet(new DerSequence(new DerSequence(new DerSequence(aaV2)))));
                     attribute.Add(new DerSequence(v));
+                }
+                if (signaturePolicyIdentifier != null) {
+                    attribute.Add(new Org.BouncyCastle.Asn1.Cms.Attribute(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdAAEtsSigPolicyID
+                        , new DerSet(signaturePolicyIdentifier)));
                 }
                 return new DerSet(attribute);
             }
