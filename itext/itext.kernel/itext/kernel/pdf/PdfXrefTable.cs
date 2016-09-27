@@ -137,6 +137,7 @@ namespace iText.Kernel.Pdf {
                 }
                 if (reference.GetGenNumber() < MAX_GENERATION) {
                     freeReferences.Add(reference.GetObjNumber());
+                    EnsureCount(Math.Max(this.count, reference.GetObjNumber()));
                     xref[reference.GetObjNumber()] = null;
                 }
             }
