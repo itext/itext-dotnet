@@ -178,7 +178,7 @@ namespace iText.Layout.Renderer {
         /// <see langword="false"/>
         /// otherwise
         /// </returns>
-        public bool HasOwnOrModelProperty(int property) {
+        public virtual bool HasOwnOrModelProperty(int property) {
             return properties.ContainsKey(property) || (null != GetModelElement() && GetModelElement().HasProperty(property
                 ));
         }
@@ -286,6 +286,12 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<bool?>(property);
         }
 
+        /// <summary>Returns a string representation of the renderer.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="System.String"/>
+        /// </returns>
+        /// <seealso cref="System.Object.ToString()"/>
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             foreach (IRenderer renderer in childRenderers) {
@@ -733,7 +739,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        [Obsolete("Use {@link #isNotFittingLayoutArea(LayoutArea)} instead.")]
+        [System.ObsoleteAttribute(@"Use IsNotFittingLayoutArea(iText.Layout.Layout.LayoutArea) instead.")]
         protected internal virtual bool IsNotFittingHeight(LayoutArea layoutArea) {
             return IsNotFittingLayoutArea(layoutArea);
         }
@@ -847,18 +853,25 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-
         /// <summary>
+        /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,
+        /// e.g.
+        /// </summary>
+        /// <remarks>
         /// Calculates the bounding box of the content in the coordinate system of the pdf entity on which content is placed,
         /// e.g. document page or form xObject. This is particularly useful for the cases when element is nested in the rotated
         /// element.
-        /// </summary>
-        /// <returns>a <see cref="Rectangle"/> which is a bbox of the content not relative to the parent's layout area but rather to
-        /// the some pdf entity coordinate system.</returns>
-        protected Rectangle CalculateAbsolutePdfBBox() {
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// which is a bbox of the content not relative to the parent's layout area but rather to
+        /// the some pdf entity coordinate system.
+        /// </returns>
+        protected internal virtual Rectangle CalculateAbsolutePdfBBox() {
             Rectangle contentBox = GetOccupiedAreaBBox();
             IList<Point> contentBoxPoints = RectangleToPointsList(contentBox);
-            AbstractRenderer renderer = this;
+            iText.Layout.Renderer.AbstractRenderer renderer = this;
             while (renderer.parent != null) {
                 if (renderer is BlockRenderer) {
                     float? angle = renderer.GetProperty<float?>(Property.ROTATION_ANGLE);
@@ -868,20 +881,15 @@ namespace iText.Layout.Renderer {
                         TransformPoints(contentBoxPoints, rotationTransform);
                     }
                 }
-
-                renderer = (AbstractRenderer)renderer.parent;
+                renderer = (iText.Layout.Renderer.AbstractRenderer)renderer.parent;
             }
-
             return CalculateBBox(contentBoxPoints);
         }
 
-        /**
-         * Calculates bounding box around points.
-         * @param points list of the points calculated bbox will enclose.
-         * @return array of float values which denote left, bottom, right, top lines of bbox in this specific order
-         */
-
-        protected Rectangle CalculateBBox(IList<Point> points) {
+        /// <summary>Calculates bounding box around points.</summary>
+        /// <param name="points">list of the points calculated bbox will enclose.</param>
+        /// <returns>array of float values which denote left, bottom, right, top lines of bbox in this specific order</returns>
+        protected internal virtual Rectangle CalculateBBox(IList<Point> points) {
             double minX = double.MaxValue;
             double minY = double.MaxValue;
             double maxX = -double.MaxValue;
@@ -895,7 +903,7 @@ namespace iText.Layout.Renderer {
             return new Rectangle((float)minX, (float)minY, (float)(maxX - minX), (float)(maxY - minY));
         }
 
-        protected IList<Point> RectangleToPointsList(Rectangle rect) {
+        protected internal virtual IList<Point> RectangleToPointsList(Rectangle rect) {
             IList<Point> points = new List<Point>();
             points.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(new Point(rect.GetLeft(), rect.GetBottom()), new Point(rect
                 .GetRight(), rect.GetBottom()), new Point(rect.GetRight(), rect.GetTop()), new Point(rect.GetLeft(), rect
@@ -903,16 +911,15 @@ namespace iText.Layout.Renderer {
             return points;
         }
 
-        protected IList<Point> TransformPoints(IList<Point> points, AffineTransform transform) {
+        protected internal virtual IList<Point> TransformPoints(IList<Point> points, AffineTransform transform) {
             foreach (Point point in points) {
                 transform.Transform(point, point);
             }
-
             return points;
         }
 
         public abstract IRenderer GetNextRenderer();
 
-        public abstract LayoutResult Layout(LayoutContext layoutContext);
+        public abstract LayoutResult Layout(LayoutContext arg1);
     }
 }
