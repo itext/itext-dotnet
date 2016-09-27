@@ -52,6 +52,7 @@ using System.Text;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
@@ -229,6 +230,10 @@ namespace iText.Signatures {
                 return true;
             }
             return false;
+        }
+
+        internal static IEnumerable CreateSigPolicyQualifiers(params SigPolicyQualifierInfo[] sigPolicyQualifierInfo) {
+            return sigPolicyQualifierInfo;
         }
 
         internal static DateTime GetTimeStampDate(TimeStampToken timeStampToken) {
