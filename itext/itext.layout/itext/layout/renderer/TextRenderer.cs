@@ -204,7 +204,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (tabAnchorCharacter != null && tabAnchorCharacter == text.Get(ind).GetUnicode()) {
                         tabAnchorCharacterPosition = currentLineWidth + nonBreakablePartFullWidth;
-                        tabAnchorCharacter = (char?)null;
+                        tabAnchorCharacter = null;
                     }
                     float glyphWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, wordSpacing) / TEXT_SPACE_COEFF;
                     float xAdvance = previousCharPos != -1 ? text.Get(previousCharPos).GetXAdvance() : 0;
@@ -389,45 +389,47 @@ namespace iText.Layout.Renderer {
             if (!otfFeaturesApplied) {
                 if (script == null && TypographyUtils.IsTypographyModuleInitialized()) {
                     // Try to autodetect complex script.
-                    IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript,
-                        int?>();
                     ICollection<UnicodeScript> supportedScripts = TypographyUtils.GetSupportedScripts();
+                    IDictionary<UnicodeScript, int?> scriptFrequency = new Dictionary<UnicodeScript, int?>();
                     for (int i = text.start; i < text.end; i++) {
                         int unicode = text.Get(i).GetUnicode();
-                        UnicodeScript? glyphScript = unicode > -1 ? iText.IO.Util.UnicodeScriptUtil.Of
-                            (unicode) : (UnicodeScript?)null;
-                        if (glyphScript != null) {
-                            if (scriptFrequency.ContainsKey((UnicodeScript)glyphScript)) {
-                                scriptFrequency[(UnicodeScript)glyphScript] = scriptFrequency.Get((UnicodeScript)glyphScript) + 1;
-                            } else {
-                                scriptFrequency[(UnicodeScript)glyphScript] = 1;
+                        if (unicode > -1) {
+                            UnicodeScript glyphScript = iText.IO.Util.UnicodeScriptUtil.Of(unicode);
+                            if (scriptFrequency.ContainsKey(glyphScript)) {
+                                scriptFrequency[glyphScript] = scriptFrequency.Get(glyphScript) + 1;
+                            }
+                            else {
+                                scriptFrequency[glyphScript] = 1;
                             }
                         }
                     }
                     int? max = 0;
-                    UnicodeScript? selectScript = null;
+                    KeyValuePair<UnicodeScript, int?>? selectedEntry = null;
                     foreach (KeyValuePair<UnicodeScript, int?> entry in scriptFrequency) {
                         UnicodeScript? entryScript = entry.Key;
                         if (entry.Value > max && !UnicodeScript.COMMON.Equals(entryScript) && !UnicodeScript.UNKNOWN.Equals(entryScript
                             ) && !UnicodeScript.INHERITED.Equals(entryScript)) {
                             max = entry.Value;
-                            selectScript = entryScript;
+                            selectedEntry = entry;
                         }
                     }
-                    if (selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW && parent is LineRenderer
-                        ) {
-                        SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
-                    }
-                    if (selectScript != null && supportedScripts != null && supportedScripts.Contains
-                        ((UnicodeScript)selectScript)) {
-                        script = selectScript;
+                    if (selectedEntry != null) {
+                        UnicodeScript selectScript = ((KeyValuePair<UnicodeScript, int?>)selectedEntry).Key;
+                        if (selectScript == UnicodeScript.ARABIC || selectScript == UnicodeScript.HEBREW && parent is LineRenderer
+                            ) {
+                            SetProperty(Property.BASE_DIRECTION, BaseDirection.DEFAULT_BIDI);
+                        }
+                        if (supportedScripts != null && supportedScripts.Contains(selectScript)) {
+                            script = selectScript;
+                        }
                     }
                 }
                 PdfFont font = GetPropertyAsFont(Property.FONT);
                 if (IsOtfFont(font) && script != null) {
                     TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
                 }
-                FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO);
+                FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
+                    );
                 if (fontKerning == FontKerning.YES) {
                     TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
                 }
@@ -474,7 +476,7 @@ namespace iText.Layout.Renderer {
                 float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
                 float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
                 float? horizontalScaling = this.GetProperty<float?>(Property.HORIZONTAL_SCALING);
-                float?[] skew = this.GetProperty<float?[]>(Property.SKEW);
+                float[] skew = this.GetProperty<float[]>(Property.SKEW);
                 bool italicSimulation = true.Equals(GetPropertyAsBoolean(Property.ITALIC_SIMULATION));
                 bool boldSimulation = true.Equals(GetPropertyAsBoolean(Property.BOLD_SIMULATION));
                 float? strokeWidth = null;
@@ -493,8 +495,9 @@ namespace iText.Layout.Renderer {
                 }
                 canvas.SaveState().BeginText().SetFontAndSize(font, fontSize);
                 if (skew != null && skew.Length == 2) {
-                    canvas.SetTextMatrix(1, (float)skew[0], (float)skew[1], 1, leftBBoxX, GetYLine());
-                } else {
+                    canvas.SetTextMatrix(1, skew[0], skew[1], 1, leftBBoxX, GetYLine());
+                }
+                else {
                     if (italicSimulation) {
                         canvas.SetTextMatrix(1, 0, ITALIC_ANGLE, 1, leftBBoxX, GetYLine());
                     }
@@ -536,13 +539,11 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_546();
-
-                bool appearanceStreamLayout = GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT) == true;
-
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_564();
+                bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
-                    IList<int[]> reversedRanges = GetOwnProperty<IList<int[]>>(Property.REVERSED);
+                    IList<int[]> reversedRanges = this.GetOwnProperty<IList<int[]>>(Property.REVERSED);
                     List<int> removedIds = new List<int>();
                     for (int i = line.start; i < line.end; i++) {
                         if (!filter.Accept(line.Get(i))) {
@@ -610,8 +611,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_546 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_546() {
+        private sealed class _IGlyphLineFilter_564 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_564() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -976,8 +977,8 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
-            return g.HasValidUnicode() && (char.IsLetter((char)g.GetUnicode()) || char.IsDigit
-                ((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode());
+            return g.HasValidUnicode() && (char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) ||
+                 '\u00ad' == g.GetUnicode());
         }
 
         private bool IsWhitespaceGlyph(Glyph g) {
@@ -1048,30 +1049,35 @@ namespace iText.Layout.Renderer {
             }
 
             public virtual GlyphLine.GlyphLinePart Next() {
-                GlyphLine.GlyphLinePart part = new GlyphLine.GlyphLinePart(outStart[currentInd], outEnd[currentInd]).
-                        SetReversed(useReversed && reversed[currentInd]);
+                GlyphLine.GlyphLinePart part = new GlyphLine.GlyphLinePart(outStart[currentInd], outEnd[currentInd]).SetReversed
+                    (useReversed && reversed[currentInd]);
                 currentInd++;
                 return part;
             }
 
-            public void Dispose() {
-
+            public virtual void Remove() {
+                throw new InvalidOperationException("Operation not supported");
             }
 
+            public void Dispose() {
+                
+            }
+            
             public bool MoveNext() {
-                if (!HasNext())
+                if (!HasNext()) {
                     return false;
-
+                }
+                
                 Current = Next();
                 return true;
             }
-
+            
             public void Reset() {
-                currentInd = 0;
+                throw new System.NotSupportedException();
             }
-
+            
             public GlyphLine.GlyphLinePart Current { get; private set; }
-
+            
             object IEnumerator.Current {
                 get { return Current; }
             }
