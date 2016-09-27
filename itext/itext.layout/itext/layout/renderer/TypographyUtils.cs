@@ -137,7 +137,7 @@ namespace iText.Layout.Renderer {
         }
 
         //            Shaper.applyKerning(fontProgram, text);
-        internal static byte[] GetBidiLevels(BaseDirection baseDirection, int[] unicodeIds) {
+        internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
                 logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
                     );

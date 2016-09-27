@@ -655,9 +655,21 @@ namespace iText.Layout {
         /// </summary>
         /// <param name="baseDirection">base direction</param>
         /// <returns>this element</returns>
-        public virtual T SetBaseDirection(BaseDirection baseDirection) {
+        public virtual T SetBaseDirection(BaseDirection? baseDirection) {
             SetProperty(Property.BASE_DIRECTION, baseDirection);
             return (T)(Object)this;
+        }
+
+        /// <summary>
+        /// This attribute specifies the base direction of directionally neutral text
+        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
+        /// in an element's content and attribute values.
+        /// </summary>
+        /// <param name="baseDirection">base direction</param>
+        /// <returns>this element</returns>
+        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
+        public virtual T SetBaseDirection(BaseDirection baseDirection) {
+            return SetBaseDirection((BaseDirection?)baseDirection);
         }
 
         /// <summary>

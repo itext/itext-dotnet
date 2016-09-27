@@ -125,7 +125,7 @@ namespace iText.Layout {
             return 0 == queue.Count();
         }
 
-        public static KeyValuePair<K, V> HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) {
+        public static KeyValuePair<K, V>? HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) {
             List<K> list = dict.Keys.ToList();
             int index = list.BinarySearch(key, dict.Comparer);
             if (index < 0) {
@@ -134,7 +134,7 @@ namespace iText.Layout {
                 index++;
             }
             if (index == list.Count) {
-                return default(KeyValuePair<K, V>);
+                return null;
             } else {
                 return new KeyValuePair<K, V>(list[index], dict[list[index]]);
             }

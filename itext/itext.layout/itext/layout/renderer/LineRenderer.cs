@@ -67,7 +67,7 @@ namespace iText.Layout.Renderer {
             maxAscent = 0;
             maxDescent = 0;
             int childPos = 0;
-            BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION, BaseDirection.NO_BIDI);
+            BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is TextRenderer) {
                     renderer.SetParent(this);
@@ -99,7 +99,8 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels((BaseDirection)baseDirection, ArrayUtil.ToArray(unicodeIdsReorderingList)) : null;
+                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToArray
+                    (unicodeIdsReorderingList)) : null;
             }
             bool anythingPlaced = false;
             TabStop nextTabStop = null;
@@ -379,11 +380,8 @@ namespace iText.Layout.Renderer {
             float wordSpacing = ratio * baseFactor;
             float characterSpacing = (1 - ratio) * baseFactor;
             float lastRightPos = occupiedArea.GetBBox().GetX();
-            IEnumerator<IRenderer> iterator = childRenderers.GetEnumerator();
-            // true only if the collection is empty
-            bool isLastTextRenderer = !iterator.MoveNext();
-            while (!isLastTextRenderer) {
-                IRenderer child = iterator.Current;
+            for (int i = 0; i < childRenderers.Count; ++i) {
+                IRenderer child = childRenderers[i];
                 float childX = child.GetOccupiedArea().GetBBox().GetX();
                 child.Move(lastRightPos - childX, 0);
                 childX = lastRightPos;
@@ -391,12 +389,10 @@ namespace iText.Layout.Renderer {
                     float childHSCale = (float)((TextRenderer)child).GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
                     child.SetProperty(Property.CHARACTER_SPACING, characterSpacing / childHSCale);
                     child.SetProperty(Property.WORD_SPACING, wordSpacing / childHSCale);
-                    isLastTextRenderer = !iterator.MoveNext();
-                    float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() -
-                         1) : ((TextRenderer)child).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer
-                        )child).GetNumberOfSpaces();
-                    child.GetOccupiedArea().GetBBox().SetWidth(child.GetOccupiedArea().GetBBox().GetWidth
-                        () + widthAddition);
+                    bool isLastTextRenderer = i + 1 == childRenderers.Count;
+                    float widthAddition = (isLastTextRenderer ? (((TextRenderer)child).LineLength() - 1) : ((TextRenderer)child
+                        ).LineLength()) * characterSpacing + wordSpacing * ((TextRenderer)child).GetNumberOfSpaces();
+                    child.GetOccupiedArea().GetBBox().SetWidth(child.GetOccupiedArea().GetBBox().GetWidth() + widthAddition);
                 }
                 lastRightPos = childX + child.GetOccupiedArea().GetBBox().GetWidth();
             }
@@ -506,11 +502,11 @@ namespace iText.Layout.Renderer {
             return false;
         }
 
-        private List<int[]> CreateOrGetReversedProperty(TextRenderer newRenderer) {
+        private IList<int[]> CreateOrGetReversedProperty(TextRenderer newRenderer) {
             if (!newRenderer.HasOwnProperty(Property.REVERSED)) {
                 newRenderer.SetProperty(Property.REVERSED, new List<int[]>());
             }
-            return newRenderer.GetOwnProperty<List<int[]>>(Property.REVERSED);
+            return newRenderer.GetOwnProperty<IList<int[]>>(Property.REVERSED);
         }
 
         private IRenderer GetLastChildRenderer() {
@@ -518,14 +514,14 @@ namespace iText.Layout.Renderer {
         }
 
         private TabStop GetNextTabStop(float curWidth) {
-            KeyValuePair<float, TabStop>? nextTabStopEntry = null;
             SortedDictionary<float, TabStop> tabStops = this.GetProperty<SortedDictionary<float, TabStop>>(Property.TAB_STOPS
                 );
+            KeyValuePair<float, TabStop>? nextTabStopEntry = null;
             TabStop nextTabStop = null;
             if (tabStops != null) {
                 nextTabStopEntry = tabStops.HigherEntry(curWidth);
             }
-            if (!nextTabStopEntry.Equals(default(KeyValuePair<float, TabStop>))) {
+            if (nextTabStopEntry != null) {
                 nextTabStop = ((KeyValuePair<float, TabStop>)nextTabStopEntry).Value;
             }
             return nextTabStop;
