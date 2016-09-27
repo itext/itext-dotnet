@@ -135,7 +135,8 @@ namespace iText.Signatures {
             }
             signaturePolicyIdentifier = new SignaturePolicyIdentifier(new SignaturePolicyId(DerObjectIdentifier.GetInstance
                 (new DerObjectIdentifier(this.policyIdentifier.Replace("urn:oid:", ""))), new OtherHashAlgAndValue(new 
-                AlgorithmIdentifier(algId), new DerOctetString(this.policyHash)), spqi));
+                AlgorithmIdentifier(algId), new DerOctetString(this.policyHash)), SignUtils.CreateSigPolicyQualifiers(
+                spqi)));
             return signaturePolicyIdentifier;
         }
     }
