@@ -1105,7 +1105,43 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String
+        [Obsolete("Use SetPageLabel(PageLabelNumberingStyleConstants?, String) overload instead. Will be removed in 7.1.")]
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String labelPrefix) {
+            return SetPageLabel((PageLabelNumberingStyleConstants?)numberingStyle, labelPrefix, 1);
+        }
+
+        /// <summary>This method adds or replaces a page label.</summary>
+        /// <param name="numberingStyle">
+        /// The numbering style that shall be used for the numeric portion of each page label.
+        /// May be NULL
+        /// </param>
+        /// <param name="labelPrefix">The label prefix for page labels in this range. May be NULL</param>
+        /// <param name="firstPage">
+        /// The value of the numeric portion for the first page label in the range. Must be greater or
+        /// equal 1.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        [Obsolete("Use SetPageLabel(PageLabelNumberingStyleConstants?, String, int) overload instead. Will be removed in 7.1.")]
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String labelPrefix, int firstPage) {
+            return SetPageLabel((PageLabelNumberingStyleConstants?)numberingStyle, labelPrefix, firstPage);
+        }
+
+        /// <summary>This method adds or replaces a page label.</summary>
+        /// <param name="numberingStyle">
+        /// The numbering style that shall be used for the numeric portion of each page label.
+        /// May be NULL
+        /// </param>
+        /// <param name="labelPrefix">The label prefix for page labels in this range. May be NULL</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants? numberingStyle, String
              labelPrefix) {
             return SetPageLabel(numberingStyle, labelPrefix, 1);
         }
@@ -1125,7 +1161,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="PdfPage"/>
         /// instance.
         /// </returns>
-        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String
+        public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants? numberingStyle, String
              labelPrefix, int firstPage) {
             if (firstPage < 1) {
                 throw new PdfException(PdfException.InAPageLabelThePageNumbersMustBeGreaterOrEqualTo1);
