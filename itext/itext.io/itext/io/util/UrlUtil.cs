@@ -93,7 +93,7 @@ namespace iText.IO.Util {
         /// <param name="filename">a given filename</param>
         /// <returns>a valid Uri</returns>
         public static Uri ToNormalizedURI(String filename) {
-            return new Uri(filename);
+            return ToNormalizedURI(new FileInfo(filename));
         }
 
         /// <summary>
