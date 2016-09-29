@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace iText.IO.Util {
@@ -52,6 +53,19 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </remarks>
     public sealed class TextUtil {
+
+        private static HashSet<char> javaNonUnicodeCategoryWhiteSpaceChars = new HashSet<char> {
+                '\t', //  U+0009 HORIZONTAL TABULATION
+                '\n', // U+000A LINE FEED
+                '\u000B', // U+000B VERTICAL TABULATION
+                '\f', // U+000C FORM FEED
+                '\r', // U+000D CARRIAGE RETURN
+                '\u001C', // U+001C FILE SEPARATOR
+                '\u001D', // U+001D GROUP SEPARATOR
+                '\u001E', // U+001E RECORD SEPARATOR
+                '\u001F', // U+001F UNIT SEPARATOR
+            };
+
         private TextUtil() {
         }
 
@@ -181,6 +195,22 @@ namespace iText.IO.Util {
             }
             codePoint -= 0x10000;
             return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 + 0xdc00) };
+        }
+
+        public static bool IsWhiteSpace(char ch) {
+            if (ch == '\u00A0' || ch == '\u2007' || ch == '\u202F') {
+                // non-breaking space char
+                return false;
+            }
+
+            UnicodeCategory category = Char.GetUnicodeCategory(ch);
+            if (category == UnicodeCategory.SpaceSeparator || category == UnicodeCategory.LineSeparator ||
+                category == UnicodeCategory.ParagraphSeparator) {
+
+                return true;
+            }
+
+            return javaNonUnicodeCategoryWhiteSpaceChars.Contains(ch);
         }
     }
 }
