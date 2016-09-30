@@ -651,8 +651,8 @@ namespace iText.Layout.Renderer {
             ConvertWaitingStringToGlyphLine();
             if (text != null) {
                 Glyph glyph;
-                while (text.start < text.end && (glyph = text.Get(text.start)).HasValidUnicode() && iText.IO.Util.TextUtil.IsWhiteSpace
-                    ((char)glyph.GetUnicode()) && !IsNewLine(text, text.start)) {
+                while (text.start < text.end && (glyph = text.Get(text.start)).HasValidUnicode() && IsSpaceGlyph(glyph) &&
+                     !IsNewLine(text, text.start)) {
                     text.start++;
                 }
             }
@@ -677,8 +677,7 @@ namespace iText.Layout.Renderer {
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!currentGlyph.HasValidUnicode() || !iText.IO.Util.TextUtil.IsWhiteSpace((char)currentGlyph.GetUnicode(
-                    ))) {
+                if (!currentGlyph.HasValidUnicode() || !IsSpaceGlyph(currentGlyph)) {
                     break;
                 }
                 float currentCharWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, wordSpacing) / TEXT_SPACE_COEFF;
