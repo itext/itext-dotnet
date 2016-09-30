@@ -384,16 +384,74 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;
         }
 
+        /// <summary>Creates a FontProgram from the font file that has been previously registered.</summary>
+        /// <param name="fontName">
+        /// either a font alias, if the font file has been registered with an alias,
+        /// or just a font name otherwise
+        /// </param>
+        /// <param name="style">
+        /// the style of the font to look for. Possible values are listed in
+        /// <see cref="FontConstants"/>
+        /// .
+        /// See
+        /// <see cref="FontConstants.BOLD"/>
+        /// ,
+        /// <see cref="FontConstants.ITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.NORMAL"/>
+        /// ,
+        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.UNDEFINED"/>
+        /// </param>
+        /// <param name="cached">whether to try to get the font program from cache</param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName, int style, bool cached) {
             return fontRegisterProvider.GetFont(fontName, style, cached);
         }
 
+        /// <summary>Creates a FontProgram from the font file that has been previously registered.</summary>
+        /// <param name="fontName">
+        /// either a font alias, if the font file has been registered with an alias,
+        /// or just a font name otherwise
+        /// </param>
+        /// <param name="style">
+        /// the style of the font to look for. Possible values are listed in
+        /// <see cref="FontConstants"/>
+        /// .
+        /// See
+        /// <see cref="FontConstants.BOLD"/>
+        /// ,
+        /// <see cref="FontConstants.ITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.NORMAL"/>
+        /// ,
+        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.UNDEFINED"/>
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName, int style) {
             return fontRegisterProvider.GetFont(fontName, style);
         }
 
+        /// <summary>Creates a FontProgram from the font file that has been previously registered.</summary>
+        /// <param name="fontName">
+        /// either a font alias, if the font file has been registered with an alias,
+        /// or just a font name otherwise
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName) {
             return fontRegisterProvider.GetFont(fontName, FontConstants.UNDEFINED);

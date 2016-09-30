@@ -151,11 +151,9 @@ namespace iText.IO.Font {
                 lock (family) {
                     // some bugs were fixed here by Daniel Marczisovszky
                     int s = style == FontConstants.UNDEFINED ? FontConstants.NORMAL : style;
-                    int fs = FontConstants.NORMAL;
-                    bool found = false;
                     foreach (String f in family) {
                         String lcf = f.ToLower(System.Globalization.CultureInfo.InvariantCulture);
-                        fs = FontConstants.NORMAL;
+                        int fs = FontConstants.NORMAL;
                         if (lcf.Contains("bold")) {
                             fs |= FontConstants.BOLD;
                         }
@@ -164,12 +162,8 @@ namespace iText.IO.Font {
                         }
                         if ((s & FontConstants.BOLDITALIC) == fs) {
                             fontName = f;
-                            found = true;
                             break;
                         }
-                    }
-                    if (style != FontConstants.UNDEFINED && found) {
-                        style &= ~fs;
                     }
                 }
             }
@@ -180,17 +174,8 @@ namespace iText.IO.Font {
         protected internal virtual FontProgram GetFontProgram(String fontName, bool cached) {
             FontProgram fontProgram = null;
             fontName = fontNames.Get(fontName.ToLower(System.Globalization.CultureInfo.InvariantCulture));
-            // the font is not registered as truetype font
             if (fontName != null) {
                 fontProgram = FontProgramFactory.CreateFont(fontName, cached);
-            }
-            if (fontProgram == null) {
-                try {
-                    // the font is a type 1 font or CJK font
-                    fontProgram = FontProgramFactory.CreateFont(fontName, cached);
-                }
-                catch (iText.IO.IOException) {
-                }
             }
             return fontProgram;
         }
@@ -236,7 +221,11 @@ namespace iText.IO.Font {
             }
         }
 
-        /// <summary>Register a ttf- or a ttc-file.</summary>
+        /// <summary>Register a font file, either .ttf or .otf, .afm or a font from TrueType Collection.</summary>
+        /// <remarks>
+        /// Register a font file, either .ttf or .otf, .afm or a font from TrueType Collection.
+        /// If a TrueType Collection is registered, an additional index of the font program can be specified
+        /// </remarks>
         /// <param name="path">the path to a ttf- or ttc-file</param>
         internal virtual void RegisterFont(String path) {
             RegisterFont(path, null);
