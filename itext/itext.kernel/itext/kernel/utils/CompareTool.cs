@@ -2052,8 +2052,15 @@ namespace iText.Kernel.Utils {
                 baseNode.SetAttribute("out", String.Format("{0} {1} obj", baseOutObject.GetObjNumber(), baseOutObject.GetGenNumber
                     ()));
                 element.AppendChild(baseNode);
-                foreach (CompareTool.ObjectPath.LocalPathItem pathItem in path) {
-                    element.AppendChild(pathItem.ToXmlNode(document));
+                Stack<CompareTool.ObjectPath.LocalPathItem> pathClone = (Stack<CompareTool.ObjectPath.LocalPathItem>)path.
+                    Clone();
+                IList<CompareTool.ObjectPath.LocalPathItem> localPathItems = new List<CompareTool.ObjectPath.LocalPathItem
+                    >(path.Count);
+                for (int i = 0; i < path.Count; ++i) {
+                    localPathItems.Add(pathClone.Pop());
+                }
+                for (int i_1 = localPathItems.Count - 1; i_1 >= 0; --i_1) {
+                    element.AppendChild(localPathItems[i_1].ToXmlNode(document));
                 }
                 return element;
             }
@@ -2063,9 +2070,16 @@ namespace iText.Kernel.Utils {
                 StringBuilder sb = new StringBuilder();
                 sb.Append(String.Format("Base cmp object: {0} obj. Base out object: {1} obj", baseCmpObject, baseOutObject
                     ));
-                foreach (CompareTool.ObjectPath.LocalPathItem pathItem in path) {
+                Stack<CompareTool.ObjectPath.LocalPathItem> pathClone = (Stack<CompareTool.ObjectPath.LocalPathItem>)path.
+                    Clone();
+                IList<CompareTool.ObjectPath.LocalPathItem> localPathItems = new List<CompareTool.ObjectPath.LocalPathItem
+                    >(path.Count);
+                for (int i = 0; i < path.Count; ++i) {
+                    localPathItems.Add(pathClone.Pop());
+                }
+                for (int i_1 = localPathItems.Count - 1; i_1 >= 0; --i_1) {
                     sb.Append("\n");
-                    sb.Append(pathItem.ToString());
+                    sb.Append(localPathItems[i_1].ToString());
                 }
                 return sb.ToString();
             }
