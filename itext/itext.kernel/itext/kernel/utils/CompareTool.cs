@@ -1529,30 +1529,61 @@ namespace iText.Kernel.Utils {
             else {
                 String cmpStr = cmpString.ToUnicodeString();
                 String outStr = outString.ToUnicodeString();
+                String errorMessage = "";
                 if (cmpStr.Length != outStr.Length) {
-                    if (compareResult != null && currentPath != null) {
-                        compareResult.AddError(currentPath, String.Format("PdfString. Lengths are different. Expected: {0}. Found: {1}"
-                            , cmpStr.Length, outStr.Length));
-                    }
+                    errorMessage += String.Format("PdfString. Lengths are different. Expected: {0}. Found: {1}", cmpStr.Length
+                        , outStr.Length) + "\n";
                 }
                 else {
-                    for (int i = 0; i < cmpStr.Length; i++) {
-                        if (cmpStr[i] != outStr[i]) {
-                            int l = Math.Max(0, i - 10);
-                            int r = Math.Min(cmpStr.Length, i + 10);
-                            if (compareResult != null && currentPath != null) {
-                                currentPath.PushOffsetToPath(i);
-                                compareResult.AddError(currentPath, String.Format("PdfString. Characters differ at position {0}. Expected: {1} ({2}). Found: {3} ({4})."
-                                    , i, char.ToString(cmpStr[i]), cmpStr.JSubstring(l, r).Replace("\n", "\\n"), char.ToString(outStr[i]), 
-                                    outStr.JSubstring(l, r).Replace("\n", "\\n")));
-                                currentPath.Pop();
-                            }
-                            break;
-                        }
-                    }
+                    errorMessage += "PdfString. Chars are different.\n";
+                }
+                String stringDifference = FindStringDifference(outStr, cmpStr);
+                if (stringDifference != null) {
+                    errorMessage += stringDifference;
+                }
+                if (compareResult != null && currentPath != null) {
+                    compareResult.AddError(currentPath, errorMessage);
                 }
                 return false;
             }
+        }
+
+        private String FindStringDifference(String outString, String cmpString) {
+            int numberOfDifferentChars = 0;
+            int firstDifferenceOffset = 0;
+            int minLength = Math.Min(cmpString.Length, outString.Length);
+            for (int i = 0; i < minLength; i++) {
+                if (cmpString[i] != cmpString[i]) {
+                    ++numberOfDifferentChars;
+                    if (numberOfDifferentChars == 1) {
+                        firstDifferenceOffset = i;
+                    }
+                }
+            }
+            String errorMessage = null;
+            if (numberOfDifferentChars > 0) {
+                int diffBytesAreaL = 10;
+                int diffBytesAreaR = 10;
+                int lCmp = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
+                int rCmp = Math.Min(cmpString.Length, firstDifferenceOffset + diffBytesAreaR);
+                int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
+                int rOut = Math.Min(outString.Length, firstDifferenceOffset + diffBytesAreaR);
+                String cmpByte = cmpString[firstDifferenceOffset].ToString();
+                String cmpByteNeighbours = iText.IO.Util.StringUtil.ReplaceAll(cmpString.JSubstring(lCmp, rCmp), "\\r|\\n"
+                    , " ");
+                String outByte = outString[firstDifferenceOffset].ToString();
+                String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), "\\r|\\n"
+                    , " ");
+                errorMessage = String.Format("First chars difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different chars: {5}"
+                    , iText.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours
+                    , outByte, outBytesNeighbours, numberOfDifferentChars);
+            }
+            else {
+                // lengths are different
+                errorMessage = String.Format("Chars of the shorter string are the same as the first {0} chars of the longer one."
+                    , minLength);
+            }
+            return errorMessage;
         }
 
         private byte[] ConvertPdfStringToBytes(PdfString pdfString) {
