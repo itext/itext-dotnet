@@ -60,6 +60,9 @@ namespace iText.Barcodes.Qrcode {
 
         private readonly int height;
 
+        /// <summary>Create a ByteMatix of given width and height, with the values initialized to 0</summary>
+        /// <param name="width">width of the matrix</param>
+        /// <param name="height">height of the matrix</param>
         public ByteMatrix(int width, int height) {
             bytes = new byte[height][];
             for (int i = 0; i < height; i++) {
@@ -69,18 +72,25 @@ namespace iText.Barcodes.Qrcode {
             this.height = height;
         }
 
+        /// <returns>height of the matrix</returns>
         public int GetHeight() {
             return height;
         }
 
+        /// <returns>width of the matrix</returns>
         public int GetWidth() {
             return width;
         }
 
+        /// <summary>Get the value of the byte at (x,y)</summary>
+        /// <param name="x">the width coordinate</param>
+        /// <param name="y">the height coordinate</param>
+        /// <returns>the byte value at position (x,y)</returns>
         public byte Get(int x, int y) {
             return bytes[y][x];
         }
 
+        /// <returns>matrix as byte[][]</returns>
         public byte[][] GetArray() {
             return bytes;
         }
@@ -101,6 +111,7 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
+        /// <returns>String representation</returns>
         public override String ToString() {
             StringBuilder result = new StringBuilder(2 * width * height + 2);
             for (int y = 0; y < height; ++y) {

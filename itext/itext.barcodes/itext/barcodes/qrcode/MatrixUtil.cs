@@ -223,8 +223,18 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Embed version information if need be. On success, modify the matrix and return true.
-        // See 8.10 of JISX0510:2004 (p.47) for how to embed version information.
+        //
+        //
+        /// <summary>Embed version information if need be.</summary>
+        /// <remarks>
+        /// Embed version information if need be.
+        /// For version &lt; 7, version info is not necessary
+        /// On success, the matrix is modified
+        /// See 8.10 of JISX0510:2004 (p.47) for how to embed version information.
+        /// </remarks>
+        /// <param name="version">QR code version</param>
+        /// <param name="matrix">Byte matrix representing the QR code</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MaybeEmbedVersionInfo(int version, ByteMatrix matrix) {
             if (version < 7) {
@@ -249,9 +259,16 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Embed "dataBits" using "getMaskPattern". On success, modify the matrix and return true.
-        // For debugging purposes, it skips masking process if "getMaskPattern" is -1.
-        // See 8.7 of JISX0510:2004 (p.38) for how to embed data bits.
+        /// <summary>Embed "dataBits" using "getMaskPattern".</summary>
+        /// <remarks>
+        /// Embed "dataBits" using "getMaskPattern". On success, the matrix is modified
+        /// For debugging purposes, it skips masking process if "getMaskPattern" is -1.
+        /// See 8.7 of JISX0510:2004 (p.38) for how to embed data bits.
+        /// </remarks>
+        /// <param name="dataBits">data bits to embed in the QR code</param>
+        /// <param name="maskPattern">masking pattern to apply to the data bits</param>
+        /// <param name="matrix">Byte matrix representing the QR code</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void EmbedDataBits(BitVector dataBits, int maskPattern, ByteMatrix matrix) {
             int bitIndex = 0;
@@ -303,11 +320,16 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Return the position of the most significant bit set (to one) in the "value". The most
-        // significant bit is position 32. If there is no bit set, return 0. Examples:
-        // - findMSBSet(0) => 0
-        // - findMSBSet(1) => 1
-        // - findMSBSet(255) => 8
+        /// <summary>Return the position of the most significant bit set (to one) in the "value".</summary>
+        /// <remarks>
+        /// Return the position of the most significant bit set (to one) in the "value".
+        /// The most significant bit is position 32. If there is no bit set, return 0. Examples:
+        /// - findMSBSet(0) =&gt; 0
+        /// - findMSBSet(1) =&gt; 1
+        /// - findMSBSet(255) =&gt; 8
+        /// </remarks>
+        /// <param name="value">bitstring as integer</param>
+        /// <returns>the position of the most significant bit set to 1 in the bit-representation of value</returns>
         public static int FindMSBSet(int value) {
             int numDigits = 0;
             while (value != 0) {
@@ -345,6 +367,8 @@ namespace iText.Barcodes.Qrcode {
         /// Since all coefficients in the polynomials are 1 or 0, we can do the calculation by bit
         /// operations. We don't care if cofficients are positive or negative.
         /// </remarks>
+        /// <param name="value">the bitstring to calculate the BCH Code from</param>
+        /// <param name="poly">the polynomial in GF[2^n] to use</param>
         public static int CalculateBCHCode(int value, int poly) {
             // If poly is "1 1111 0010 0101" (version info poly), msbSetInPoly is 13. We'll subtract 1
             // from 13 to make it 12.
@@ -358,9 +382,18 @@ namespace iText.Barcodes.Qrcode {
             return value;
         }
 
-        // Make bit vector of type information. On success, store the result in "bits" and return true.
-        // Encode error correction level and mask pattern. See 8.9 of
-        // JISX0510:2004 (p.45) for details.
+        //
+        //
+        //
+        /// <summary>Make bit vector of type information.</summary>
+        /// <remarks>
+        /// Make bit vector of type information. On success, store the result in "bits".
+        /// Encode error correction level and mask pattern. See 8.9 of JISX0510:2004 (p.45) for details.
+        /// </remarks>
+        /// <param name="ecLevel">error correction level of the QR code</param>
+        /// <param name="maskPattern">masking pattern to use</param>
+        /// <param name="bits">Vactor of bits to contain the result</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MakeTypeInfoBits(ErrorCorrectionLevel ecLevel, int maskPattern, BitVector bits) {
             if (!QRCode.IsValidMaskPattern(maskPattern)) {
@@ -379,8 +412,16 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Make bit vector of version information. On success, store the result in "bits" and return true.
-        // See 8.10 of JISX0510:2004 (p.45) for details.
+        //
+        //
+        /// <summary>Make bit vector of version information.</summary>
+        /// <remarks>
+        /// Make bit vector of version information. On success, store the result in "bits".
+        /// See 8.10 of JISX0510:2004 (p.45) for details.
+        /// </remarks>
+        /// <param name="version">Version of the QR-code</param>
+        /// <param name="bits">Vector of bits to contain the result</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void MakeVersionInfoBits(int version, BitVector bits) {
             bits.AppendBits(version, 6);
