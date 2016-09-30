@@ -1535,9 +1535,9 @@ namespace iText.Kernel.Utils {
                         , outStr.Length) + "\n";
                 }
                 else {
-                    errorMessage += "PdfString. Chars are different.\n";
+                    errorMessage += "PdfString. Characters are different.\n";
                 }
-                String stringDifference = FindStringDifference(outStr, cmpStr);
+                String stringDifference = FindStringDifference(outStr, cmpStr, currentPath);
                 if (stringDifference != null) {
                     errorMessage += stringDifference;
                 }
@@ -1548,22 +1548,24 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private String FindStringDifference(String outString, String cmpString) {
+        private String FindStringDifference(String outString, String cmpString, CompareTool.ObjectPath currentPath
+            ) {
             int numberOfDifferentChars = 0;
             int firstDifferenceOffset = 0;
             int minLength = Math.Min(cmpString.Length, outString.Length);
             for (int i = 0; i < minLength; i++) {
-                if (cmpString[i] != cmpString[i]) {
+                if (cmpString[i] != outString[i]) {
                     ++numberOfDifferentChars;
                     if (numberOfDifferentChars == 1) {
                         firstDifferenceOffset = i;
+                        currentPath.PushOffsetToPath(i);
                     }
                 }
             }
             String errorMessage = null;
             if (numberOfDifferentChars > 0) {
-                int diffBytesAreaL = 10;
-                int diffBytesAreaR = 10;
+                int diffBytesAreaL = 15;
+                int diffBytesAreaR = 15;
                 int lCmp = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
                 int rCmp = Math.Min(cmpString.Length, firstDifferenceOffset + diffBytesAreaR);
                 int lOut = Math.Max(0, firstDifferenceOffset - diffBytesAreaL);
@@ -1574,13 +1576,13 @@ namespace iText.Kernel.Utils {
                 String outByte = outString[firstDifferenceOffset].ToString();
                 String outBytesNeighbours = iText.IO.Util.StringUtil.ReplaceAll(outString.JSubstring(lOut, rOut), "\\r|\\n"
                     , " ");
-                errorMessage = String.Format("First chars difference is encountered at index {0}. Expected: {1} ({2}). Found: {3} ({4}). Total number of different chars: {5}"
+                errorMessage = String.Format("First characters difference is encountered at index {0}.\nExpected: {1} ({2}).\nFound: {3} ({4}).\nTotal number of different characters: {5}"
                     , iText.IO.Util.JavaUtil.IntegerToString(System.Convert.ToInt32(firstDifferenceOffset)), cmpByte, cmpByteNeighbours
                     , outByte, outBytesNeighbours, numberOfDifferentChars);
             }
             else {
                 // lengths are different
-                errorMessage = String.Format("Chars of the shorter string are the same as the first {0} chars of the longer one."
+                errorMessage = String.Format("All characters of the shorter string are the same as the first {0} characters of the longer one."
                     , minLength);
             }
             return errorMessage;
