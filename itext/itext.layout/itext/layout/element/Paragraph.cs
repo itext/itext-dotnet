@@ -51,11 +51,11 @@ using iText.Layout.Renderer;
 namespace iText.Layout.Element {
     /// <summary>
     /// A layout element that represents a self-contained block of textual and
-    /// grpahical information.
+    /// graphical information.
     /// </summary>
     /// <remarks>
     /// A layout element that represents a self-contained block of textual and
-    /// grpahical information.
+    /// graphical information.
     /// It is a
     /// <see cref="BlockElement{T}"/>
     /// which essentially acts as a container for
