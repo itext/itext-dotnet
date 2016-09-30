@@ -20,6 +20,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Xml;
+using iText.IO.Util;
 
 namespace iText.Layout.Hyphenation {
     /// <summary>
@@ -120,7 +121,7 @@ namespace iText.Layout.Hyphenation {
             bool space = false;
             int i;
             for (i = 0; i < chars.Length; i++) {
-                if (char.IsWhiteSpace(chars[i])) {
+                if (TextUtil.IsWhiteSpace(chars[i])) {
                     space = true;
                 } else {
                     break;
@@ -140,7 +141,7 @@ namespace iText.Layout.Hyphenation {
             }
             space = false;
             for (i = 0; i < chars.Length; i++) {
-                if (char.IsWhiteSpace(chars[i])) {
+                if (TextUtil.IsWhiteSpace(chars[i])) {
                     space = true;
                     break;
                 }
