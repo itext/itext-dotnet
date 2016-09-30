@@ -139,6 +139,9 @@ namespace iText.Barcodes.Qrcode {
             return result_1;
         }
 
+        /// <summary>GF addition or subtraction (they are identical for a GF(2^n)</summary>
+        /// <param name="other">the other GF-poly</param>
+        /// <returns>new GF256Poly obtained by summing this GF and other</returns>
         internal iText.Barcodes.Qrcode.GF256Poly AddOrSubtract(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
@@ -166,6 +169,9 @@ namespace iText.Barcodes.Qrcode {
             return new iText.Barcodes.Qrcode.GF256Poly(field, sumDiff);
         }
 
+        /// <summary>GF multiplication</summary>
+        /// <param name="other">the other GF-poly</param>
+        /// <returns>new GF-poly obtained by multiplying this  with other</returns>
         internal iText.Barcodes.Qrcode.GF256Poly Multiply(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
@@ -187,6 +193,9 @@ namespace iText.Barcodes.Qrcode {
             return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
 
+        /// <summary>GF scalar multiplication</summary>
+        /// <param name="scalar">scalar</param>
+        /// <returns>new GF-poly obtained by multiplying every element of this with the scalar.</returns>
         internal iText.Barcodes.Qrcode.GF256Poly Multiply(int scalar) {
             if (scalar == 0) {
                 return field.GetZero();
