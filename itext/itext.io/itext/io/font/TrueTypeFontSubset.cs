@@ -55,7 +55,7 @@ namespace iText.IO.Font {
 
         internal static readonly String[] tableNamesCmap = new String[] { "cmap", "OS/2" };
 
-        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2", "name" };
+        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2", "name", "post" };
 
         internal static readonly int[] entrySelectors = new int[] { 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3
             , 4, 4, 4, 4, 4 };
