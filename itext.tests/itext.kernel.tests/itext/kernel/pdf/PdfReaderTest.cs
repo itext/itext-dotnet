@@ -1062,6 +1062,28 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void IncorrectXrefSizeInTrailer() {
+            String filename = sourceFolder + "HelloWorldIncorrectXRefSizeInTrailer.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument document = new PdfDocument(reader);
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Need rebuildXref()");
+            NUnit.Framework.Assert.IsNotNull(document.GetTrailer().Get(PdfName.ID), "Invalid trailer");
+            document.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void IncorrectXrefSizeInTrailerAppend() {
+            String filename = sourceFolder + "10PagesDocumentAppendedIncorrectXRefSize.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument document = new PdfDocument(reader);
+            NUnit.Framework.Assert.IsFalse(reader.HasRebuiltXref(), "Need rebuildXref()");
+            NUnit.Framework.Assert.IsNotNull(document.GetTrailer().Get(PdfName.ID), "Invalid trailer");
+            document.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Timeout(1000)]
         [NUnit.Framework.Test]
         public virtual void StreamLengthCorrection1() {

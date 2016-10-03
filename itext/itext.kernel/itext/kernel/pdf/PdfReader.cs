@@ -845,7 +845,7 @@ namespace iText.Kernel.Pdf {
                 trailer2 = ReadXrefSection();
             }
             int? xrefSize = trailer.GetAsInt(PdfName.Size);
-            if (xrefSize == null || xrefSize != pdfDocument.GetXref().Size()) {
+            if (xrefSize == null) {
                 throw new PdfException(PdfException.InvalidXrefTable);
             }
         }
