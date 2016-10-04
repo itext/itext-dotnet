@@ -133,6 +133,10 @@ namespace iText.Kernel.Pdf {
 
         protected internal TagStructureContext tagStructureContext;
 
+        private static long lastDocumentId = new long();
+
+        private long documentId;
+
         /// <summary>Yet not copied link annotations from the other documents.</summary>
         /// <remarks>
         /// Yet not copied link annotations from the other documents.
@@ -148,6 +152,7 @@ namespace iText.Kernel.Pdf {
             if (reader == null) {
                 throw new ArgumentNullException("reader");
             }
+            documentId = IncrementDocumentId();
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -164,6 +169,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
+            documentId = IncrementDocumentId();
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -192,6 +198,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
+            documentId = IncrementDocumentId();
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
@@ -1999,6 +2006,53 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
+        }
+
+        private long GetDocumentId() {
+            return documentId;
+        }
+
+        /// <summary>A structure storing documentId, object number and generation number.</summary>
+        /// <remarks>
+        /// A structure storing documentId, object number and generation number. This structure is using to calculate
+        /// an unique object key during the copy process.
+        /// </remarks>
+        protected internal class IndirectRefDescription {
+            private long docId;
+
+            private int objNr;
+
+            private int genNr;
+
+            public IndirectRefDescription(PdfIndirectReference reference) {
+                this.docId = reference.GetDocument().GetDocumentId();
+                this.objNr = reference.GetObjNumber();
+                this.genNr = reference.GetGenNumber();
+            }
+
+            public override int GetHashCode() {
+                int result = (int)docId;
+                result *= 31;
+                result += objNr;
+                result *= 31;
+                result += genNr;
+                return result;
+            }
+
+            public override bool Equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || GetType() != o.GetType()) {
+                    return false;
+                }
+                PdfDocument.IndirectRefDescription that = (PdfDocument.IndirectRefDescription)o;
+                return docId == that.docId && objNr == that.objNr && genNr == that.genNr;
+            }
+        }
+
+        private long IncrementDocumentId() {
+            return System.Threading.Interlocked.Increment(ref lastDocumentId);
         }
 
         void System.IDisposable.Dispose() {
