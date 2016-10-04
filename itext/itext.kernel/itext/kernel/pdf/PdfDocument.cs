@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal TagStructureContext tagStructureContext;
 
-        protected internal static long lastDocumentId = 0;
+        private static long lastDocumentId = 0;
 
         protected internal long documentId;
 
