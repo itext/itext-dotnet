@@ -132,7 +132,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal TagStructureContext tagStructureContext;
 
-        private static long lastDocumentId = 0;
+        private static long lastDocumentId = new long();
 
         protected internal long documentId;
 
@@ -1206,10 +1206,6 @@ namespace iText.Kernel.Pdf {
             this.userProperties = userProperties;
         }
 
-        protected internal virtual long GetDocumentId() {
-            return documentId;
-        }
-
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
@@ -1731,6 +1727,10 @@ namespace iText.Kernel.Pdf {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
         }
 
+        private long GetDocumentId() {
+            return documentId;
+        }
+
         /// <summary>A structure storing documentId, object number and generation number.</summary>
         /// <remarks>
         /// A structure storing documentId, object number and generation number. This structure is using to calculate
@@ -1743,10 +1743,10 @@ namespace iText.Kernel.Pdf {
 
             private int genNr;
 
-            public IndirectRefDescription(long docId, int objNr, int genNr) {
-                this.docId = docId;
-                this.objNr = objNr;
-                this.genNr = genNr;
+            public IndirectRefDescription(PdfIndirectReference reference) {
+                this.docId = reference.GetDocument().GetDocumentId();
+                this.objNr = reference.GetObjNumber();
+                this.genNr = reference.GetGenNumber();
             }
 
             public override int GetHashCode() {

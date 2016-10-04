@@ -81,7 +81,8 @@ namespace iText.Kernel.Pdf {
         private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializedContentToObjectRef = new 
             Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference>();
 
-        private Dictionary<int, byte[]> objectRefToSerializedContent = new Dictionary<int, byte[]>();
+        private Dictionary<PdfDocument.IndirectRefDescription, byte[]> objectRefToSerializedContent = new Dictionary
+            <PdfDocument.IndirectRefDescription, byte[]>();
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
@@ -294,8 +295,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument.IndirectRefDescription copiedObjectKey = null;
             bool tryToFindDuplicate = !allowDuplicating && indirectReference != null;
             if (tryToFindDuplicate) {
-                copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference.GetDocument().GetDocumentId(), 
-                    indirectReference.GetObjNumber(), indirectReference.GetGenNumber());
+                copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 PdfIndirectReference copiedIndirectReference = copiedObjects.Get(copiedObjectKey);
                 if (copiedIndirectReference != null) {
                     return copiedIndirectReference.GetRefersTo();
@@ -311,7 +311,7 @@ namespace iText.Kernel.Pdf {
                 PdfIndirectReference copiedObjectRef = TryToFindPreviouslyCopiedEqualObject(obj);
                 if (copiedObjectRef != null) {
                     PdfIndirectReference copiedIndirectReference = copiedObjects.Get(new PdfDocument.IndirectRefDescription(copiedObjectRef
-                        .GetDocument().GetDocumentId(), copiedObjectRef.GetObjNumber(), copiedObjectRef.GetGenNumber()));
+                        ));
                     copiedObjects[copiedObjectKey] = copiedIndirectReference;
                     return copiedIndirectReference.GetRefersTo();
                 }
@@ -319,8 +319,7 @@ namespace iText.Kernel.Pdf {
             PdfObject newObject = obj.NewInstance();
             if (indirectReference != null) {
                 if (copiedObjectKey == null) {
-                    copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference.GetDocument().GetDocumentId(), 
-                        indirectReference.GetObjNumber(), indirectReference.GetGenNumber());
+                    copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 }
                 PdfIndirectReference indRef = newObject.MakeIndirect(document).GetIndirectReference();
                 copiedObjects[copiedObjectKey] = indRef;
@@ -394,6 +393,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Calculates hash code for the indirect reference taking into account the document it belongs to.</summary>
         /// <param name="indRef">object to be hashed.</param>
         /// <returns>calculated hash code.</returns>
+        [Obsolete]
         protected internal static int CalculateIndRefKey(PdfIndirectReference indRef) {
             int result = indRef.GetHashCode();
             result = 31 * result + indRef.GetDocument().GetHashCode();
@@ -502,9 +502,10 @@ namespace iText.Kernel.Pdf {
 
             private IDigest md5;
 
-            private Dictionary<int, byte[]> objToSerializedContent;
+            private Dictionary<PdfDocument.IndirectRefDescription, byte[]> objToSerializedContent;
 
-            internal SerializedPdfObject(PdfObject obj, Dictionary<int, byte[]> objToSerializedContent) {
+            internal SerializedPdfObject(PdfObject obj, Dictionary<PdfDocument.IndirectRefDescription, byte[]> objToSerializedContent
+                ) {
                 System.Diagnostics.Debug.Assert(obj.IsDictionary() || obj.IsStream());
                 this.objToSerializedContent = objToSerializedContent;
                 try {
@@ -533,10 +534,10 @@ namespace iText.Kernel.Pdf {
                 }
                 PdfIndirectReference reference = null;
                 ByteBufferOutputStream savedBb = null;
-                int indRefKey = -1;
+                PdfDocument.IndirectRefDescription indRefKey = null;
                 if (obj.IsIndirectReference()) {
                     reference = (PdfIndirectReference)obj;
-                    indRefKey = CalculateIndRefKey(reference);
+                    indRefKey = new PdfDocument.IndirectRefDescription(reference);
                     byte[] cached = objToSerializedContent.Get(indRefKey);
                     if (cached != null) {
                         bb.Append(cached);
