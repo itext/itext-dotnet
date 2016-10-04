@@ -1206,7 +1206,7 @@ namespace iText.Kernel.Pdf {
             this.userProperties = userProperties;
         }
 
-        public virtual long GetDocumentId() {
+        protected internal virtual long GetDocumentId() {
             return documentId;
         }
 
@@ -1736,7 +1736,7 @@ namespace iText.Kernel.Pdf {
         /// A structure storing documentId, object number and generation number. This structure is using to calculate
         /// an unique object key during the copy process.
         /// </remarks>
-        public class IndirectRefDescription {
+        protected internal class IndirectRefDescription {
             private long docId;
 
             private int objNr;
@@ -1751,7 +1751,11 @@ namespace iText.Kernel.Pdf {
 
             public override int GetHashCode() {
                 int result = (int)docId;
-                return 31 * (result + objNr + genNr);
+                result *= 31;
+                result += objNr;
+                result *= 31;
+                result += genNr;
+                return result;
             }
 
             public override bool Equals(Object o) {
