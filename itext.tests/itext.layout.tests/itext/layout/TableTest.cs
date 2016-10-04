@@ -852,5 +852,31 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageInTableTest_HA() {
+            String testName = "imageInTableTest_HA.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+                )));
+            iText.Layout.Element.Image imageL = new iText.Layout.Element.Image(xObject);
+            imageL.SetHorizontalAlignment(HorizontalAlignment.LEFT);
+            iText.Layout.Element.Image imageC = new iText.Layout.Element.Image(xObject);
+            imageC.SetHorizontalAlignment(HorizontalAlignment.CENTER);
+            iText.Layout.Element.Image imageR = new iText.Layout.Element.Image(xObject);
+            imageR.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
+            doc.Add(new Paragraph("Table"));
+            Table table = new Table(1).AddCell(new Cell().Add(imageL)).AddCell(new Cell().Add(imageC)).AddCell(new Cell
+                ().Add(imageR));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
     }
 }
