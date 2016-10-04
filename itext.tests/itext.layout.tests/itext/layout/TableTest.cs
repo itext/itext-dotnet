@@ -681,6 +681,30 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("")]
+        public virtual void BigRowspanTest05() {
+            String testName = "bigRowspanTest05.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String textContent = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
+                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
+            String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
+                 + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent
+                ))).AddCell(new Cell(2, 1).Add(new Paragraph("cell 4, 2\n" + longTextContent))).AddCell(new Cell().Add
+                (new Paragraph("cell 5, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + textContent
+                ))).AddCell(new Cell().Add(new Paragraph("cell 9, 2\n" + textContent)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void DifferentPageOrientationTest01() {
             String testName = "differentPageOrientationTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -823,32 +847,6 @@ namespace iText.Layout {
             doc.Add(new AreaBreak());
             doc.Add(new Paragraph("Table with setKeepTogether(false):"));
             table.SetKeepTogether(false);
-            doc.Add(table);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , testName + "_diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void ImageInTableTest_HA() {
-            String testName = "imageInTableTest_HA.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc);
-            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
-                )));
-            iText.Layout.Element.Image imageL = new iText.Layout.Element.Image(xObject);
-            imageL.SetHorizontalAlignment(HorizontalAlignment.LEFT);
-            iText.Layout.Element.Image imageC = new iText.Layout.Element.Image(xObject);
-            imageC.SetHorizontalAlignment(HorizontalAlignment.CENTER);
-            iText.Layout.Element.Image imageR = new iText.Layout.Element.Image(xObject);
-            imageR.SetHorizontalAlignment(HorizontalAlignment.RIGHT);
-            doc.Add(new Paragraph("Table"));
-            Table table = new Table(1).AddCell(new Cell().Add(imageL)).AddCell(new Cell().Add(imageC)).AddCell(new Cell
-                ().Add(imageR));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
