@@ -34,7 +34,7 @@ namespace iText.Layout {
         private const String para3Text = "From the 1890s to the 1900s (decade) in New York City, the Sicilian Mafia developed into the Five Points Gang and were very powerful in the"
              + " Little Italy of the Lower East Side. They were often in conflict with the Jewish Eastmans of the same area.";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

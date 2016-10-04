@@ -57,7 +57,7 @@ namespace iText.Kernel {
         private static String AGPL = " (AGPL-version)";
 
         /// <summary>The iText version instance.</summary>
-        private static Version version = null;
+        private static iText.Kernel.Version version = null;
 
         /// <summary>This String contains the name of the product.</summary>
         /// <remarks>
@@ -94,9 +94,9 @@ namespace iText.Kernel {
         /// Note that iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        public static Version GetInstance() {
+        public static iText.Kernel.Version GetInstance() {
             if (version == null) {
-                version = new Version();
+                version = new iText.Kernel.Version();
                 lock (version) {
                     try {
                         String licenseKeyClassFullName = "iText.License.LicenseKey, itext.licensekey";

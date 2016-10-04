@@ -603,7 +603,8 @@ namespace iText.Kernel.Pdf.Xobject {
                 wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_XRESOLUTION, new int[] { 300, 1 }));
                 wr.AddField(new TiffWriter.FieldRational(TIFFConstants.TIFFTAG_YRESOLUTION, new int[] { 300, 1 }));
                 wr.AddField(new TiffWriter.FieldShort(TIFFConstants.TIFFTAG_RESOLUTIONUNIT, TIFFConstants.RESUNIT_INCH));
-                wr.AddField(new TiffWriter.FieldAscii(TIFFConstants.TIFFTAG_SOFTWARE, Version.GetInstance().GetVersion()));
+                wr.AddField(new TiffWriter.FieldAscii(TIFFConstants.TIFFTAG_SOFTWARE, iText.Kernel.Version.GetInstance().GetVersion
+                    ()));
                 MemoryStream comp = new MemoryStream();
                 TiffWriter.CompressLZW(comp, 2, imageBytes, (int)height, 4, stride);
                 byte[] buf = comp.ToArray();

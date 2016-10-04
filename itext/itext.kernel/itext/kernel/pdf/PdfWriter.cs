@@ -74,8 +74,8 @@ namespace iText.Kernel.Pdf {
         /// It stores hashes of the indirect reference from the source document and the corresponding
         /// indirect references of the copied objects from the new document.
         /// </remarks>
-        protected internal IDictionary<int, PdfIndirectReference> copiedObjects = new Dictionary<int, PdfIndirectReference
-            >();
+        protected internal IDictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference> copiedObjects = new 
+            Dictionary<PdfDocument.IndirectRefDescription, PdfIndirectReference>();
 
         /// <summary>Is used in smart mode to store serialized objects content.</summary>
         private Dictionary<PdfWriter.SerializedPdfObject, PdfIndirectReference> serializedContentToObjectRef = new 
@@ -291,11 +291,12 @@ namespace iText.Kernel.Pdf {
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();
-            int copyObjectKey = 0;
+            PdfDocument.IndirectRefDescription copiedObjectKey = null;
             bool tryToFindDuplicate = !allowDuplicating && indirectReference != null;
             if (tryToFindDuplicate) {
-                copyObjectKey = CalculateIndRefKey(indirectReference);
-                PdfIndirectReference copiedIndirectReference = copiedObjects.Get(copyObjectKey);
+                copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference.GetDocument().GetDocumentId(), 
+                    indirectReference.GetObjNumber(), indirectReference.GetGenNumber());
+                PdfIndirectReference copiedIndirectReference = copiedObjects.Get(copiedObjectKey);
                 if (copiedIndirectReference != null) {
                     return copiedIndirectReference.GetRefersTo();
                 }
@@ -309,18 +310,20 @@ namespace iText.Kernel.Pdf {
             if (properties.smartMode && tryToFindDuplicate && !CheckTypeOfPdfDictionary(obj, PdfName.Page)) {
                 PdfIndirectReference copiedObjectRef = TryToFindPreviouslyCopiedEqualObject(obj);
                 if (copiedObjectRef != null) {
-                    PdfIndirectReference copiedIndirectReference = copiedObjects.Get(CalculateIndRefKey(copiedObjectRef));
-                    copiedObjects[copyObjectKey] = copiedIndirectReference;
+                    PdfIndirectReference copiedIndirectReference = copiedObjects.Get(new PdfDocument.IndirectRefDescription(copiedObjectRef
+                        .GetDocument().GetDocumentId(), copiedObjectRef.GetObjNumber(), copiedObjectRef.GetGenNumber()));
+                    copiedObjects[copiedObjectKey] = copiedIndirectReference;
                     return copiedIndirectReference.GetRefersTo();
                 }
             }
             PdfObject newObject = obj.NewInstance();
             if (indirectReference != null) {
-                if (copyObjectKey == 0) {
-                    copyObjectKey = CalculateIndRefKey(indirectReference);
+                if (copiedObjectKey == null) {
+                    copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference.GetDocument().GetDocumentId(), 
+                        indirectReference.GetObjNumber(), indirectReference.GetGenNumber());
                 }
                 PdfIndirectReference indRef = newObject.MakeIndirect(document).GetIndirectReference();
-                copiedObjects[copyObjectKey] = indRef;
+                copiedObjects[copiedObjectKey] = indRef;
             }
             newObject.CopyContent(obj, document);
             return newObject;

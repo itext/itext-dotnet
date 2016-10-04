@@ -159,7 +159,7 @@ namespace iText.Signatures {
         /// <param name="imprint">data imprint to be time-stamped</param>
         /// <returns>encoded, TSA signed data of the timeStampToken</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Bouncycastle.Tsp.TSPException"/>
+        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
         public virtual byte[] GetTimeStampToken(byte[] imprint) {
             byte[] respBytes = null;
             // Setup the time stamp request

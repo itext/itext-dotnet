@@ -2254,5 +2254,13 @@ namespace iText.Kernel.Pdf.Canvas {
                 }
             }
         }
+
+        private static IList<T> EnumeratorToList<T>(IEnumerator<T> enumerator) {
+            IList<T> list = new List<T>();
+            while (enumerator.MoveNext()) {
+                list.Add(enumerator.Current);
+            }
+            return list;
+        }
     }
 }

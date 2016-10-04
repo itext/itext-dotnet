@@ -1,14 +1,17 @@
 using System;
+using NUnit.Framework;
+using NUnit.Framework.Runners;
 using iText.Test;
 
 namespace iText.Kernel.Utils {
+    [FixMethodOrder(MethodSorters.DEFAULT)]
     public class CompareToolTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/utils/CompareToolTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/utils/CompareToolTest/";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void SetUp() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

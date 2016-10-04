@@ -19,7 +19,7 @@ namespace iText.Kernel.Pdf {
 
         internal const String title = "Empty iText 6 Document";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }

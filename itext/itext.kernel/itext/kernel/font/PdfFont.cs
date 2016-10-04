@@ -389,7 +389,7 @@ namespace iText.Kernel.Font {
             float tokenLength = 0;
             for (int i = 0; i < text.Length; i++) {
                 char ch = text[i];
-                if (char.IsWhiteSpace(ch)) {
+                if (iText.IO.Util.TextUtil.IsWhiteSpace(ch)) {
                     lastWhiteSpace = i;
                 }
                 tokenLength += GetWidth(ch, fontSize);

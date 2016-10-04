@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Source;
-using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
@@ -333,7 +332,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         protected internal static void WriteKeyInfo(PdfWriter writer) {
             String platform = " for .NET";
-            Version version = Version.GetInstance();
+            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
             String k = version.GetKey();
             if (k == null) {
                 k = "iText";
