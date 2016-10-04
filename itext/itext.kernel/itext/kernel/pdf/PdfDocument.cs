@@ -134,7 +134,7 @@ namespace iText.Kernel.Pdf {
 
         private static long lastDocumentId = new long();
 
-        protected internal long documentId;
+        private long documentId;
 
         /// <summary>Yet not copied link annotations from the other documents.</summary>
         /// <remarks>
