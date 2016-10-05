@@ -81,17 +81,40 @@ namespace iText.Barcodes.Qrcode {
         /// <remarks>
         /// Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
         /// internally by chooseMode(). On success, store the result in "qrCode".
+        /// <p>
         /// We recommend you to use QRCode.EC_LEVEL_L (the lowest level) for
         /// "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
         /// strong error correction for this purpose.
+        /// <p>
         /// Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
         /// with which clients can specify the encoding mode. For now, we don't need the functionality.
         /// </remarks>
+        /// <param name="content">String to encode</param>
+        /// <param name="ecLevel">Error-correction level to use</param>
+        /// <param name="qrCode">QR code to store the result in</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void Encode(String content, ErrorCorrectionLevel ecLevel, QRCode qrCode) {
             Encode(content, ecLevel, null, qrCode);
         }
 
+        /// <summary>Encode "bytes" with the error correction level "ecLevel".</summary>
+        /// <remarks>
+        /// Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
+        /// internally by chooseMode(). On success, store the result in "qrCode".
+        /// <p>
+        /// We recommend you to use QRCode.EC_LEVEL_L (the lowest level) for
+        /// "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
+        /// strong error correction for this purpose.
+        /// <p>
+        /// Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
+        /// with which clients can specify the encoding mode. For now, we don't need the functionality.
+        /// </remarks>
+        /// <param name="content">String to encode</param>
+        /// <param name="ecLevel">Error-correction level to use</param>
+        /// <param name="hints">Optional Map containing  encoding and suggested minimum version to use</param>
+        /// <param name="qrCode">QR code to store the result in</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void Encode(String content, ErrorCorrectionLevel ecLevel, IDictionary<EncodeHintType, Object
             > hints, QRCode qrCode) {
@@ -159,6 +182,9 @@ namespace iText.Barcodes.Qrcode {
             return -1;
         }
 
+        /// <summary>Choose the best mode by examining the content.</summary>
+        /// <param name="content">content to examine</param>
+        /// <returns>mode to use</returns>
         public static Mode ChooseMode(String content) {
             return ChooseMode(content, null);
         }
@@ -168,8 +194,10 @@ namespace iText.Barcodes.Qrcode {
         /// Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
         /// if it is Shift_JIS, and the input is only double-byte Kanji, then we return
         /// <see cref="Mode.KANJI"/>
-        /// .
         /// </remarks>
+        /// <param name="content">content to examine</param>
+        /// <param name="encoding">hint for the encoding to use</param>
+        /// <returns>mode to use</returns>
         public static Mode ChooseMode(String content, String encoding) {
             if ("Shift_JIS".Equals(encoding)) {
                 // Choose Kanji mode if all input are double-byte characters

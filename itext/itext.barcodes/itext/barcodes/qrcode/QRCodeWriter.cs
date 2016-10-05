@@ -50,11 +50,29 @@ namespace iText.Barcodes.Qrcode {
     public sealed class QRCodeWriter {
         private const int QUIET_ZONE_SIZE = 4;
 
+        /// <summary>Encode a string into a QR code with dimensions width x height, using error-correction level L and the smallest version for which he contents fit into the QR-code?
+        ///     </summary>
+        /// <param name="contents">String to encode into the QR code</param>
+        /// <param name="width">width of the QR-code</param>
+        /// <param name="height">height of the QR-code</param>
+        /// <returns>2D Greyscale map containing the visual representation of the QR-code, stored as a Bytematrix</returns>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height) {
             return Encode(contents, width, height, null);
         }
 
+        /// <summary>Encode a string into a QR code with dimensions width x height.</summary>
+        /// <remarks>
+        /// Encode a string into a QR code with dimensions width x height. Hints contains suggestions for error-correction level and version.
+        /// The default error-correction level is L, the default version is the smallest version for which the contents will fit into the QR-code.
+        /// </remarks>
+        /// <param name="contents">String to encode into the QR code</param>
+        /// <param name="width">width of the QR-code</param>
+        /// <param name="height">height of the QR-code</param>
+        /// <param name="hints">Map containing suggestions for error-correction level and version</param>
+        /// <returns>2D Greyscale map containing the visual representation of the QR-code, stored as a Bytematrix</returns>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType, Object> hints
             ) {

@@ -82,22 +82,28 @@ namespace iText.Barcodes.Qrcode {
             this.totalCodewords = total;
         }
 
+        /// <returns>the version number</returns>
         public int GetVersionNumber() {
             return versionNumber;
         }
 
+        /// <returns>int[] containing the positions of the alignment pattern centers</returns>
         public int[] GetAlignmentPatternCenters() {
             return alignmentPatternCenters;
         }
 
+        /// <returns>total number of code words</returns>
         public int GetTotalCodewords() {
             return totalCodewords;
         }
 
+        /// <returns>the square dimension for the current version number</returns>
         public int GetDimensionForVersion() {
             return 17 + 4 * versionNumber;
         }
 
+        /// <param name="ecLevel">error correction level</param>
+        /// <returns>the number of EC blocks for the given error correction level</returns>
         public Version.ECBlocks GetECBlocksForLevel(ErrorCorrectionLevel ecLevel) {
             return ecBlocks[ecLevel.Ordinal()];
         }
@@ -121,6 +127,8 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
+        /// <param name="versionNumber">Version number</param>
+        /// <returns>the version for the given version number</returns>
         public static iText.Barcodes.Qrcode.Version GetVersionForNumber(int versionNumber) {
             if (versionNumber < 1 || versionNumber > 40) {
                 throw new ArgumentException();

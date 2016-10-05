@@ -382,9 +382,6 @@ namespace iText.Barcodes.Qrcode {
             return value;
         }
 
-        //
-        //
-        //
         /// <summary>Make bit vector of type information.</summary>
         /// <remarks>
         /// Make bit vector of type information. On success, store the result in "bits".

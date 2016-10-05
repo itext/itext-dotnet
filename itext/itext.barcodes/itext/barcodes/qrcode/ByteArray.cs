@@ -80,18 +80,26 @@ namespace iText.Barcodes.Qrcode {
             return bytes[index] & 0xff;
         }
 
+        /// <summary>Set the value at "index" to "value"</summary>
+        /// <param name="index">position in the byte-array</param>
+        /// <param name="value">new value</param>
         public void Set(int index, int value) {
             bytes[index] = (byte)value;
         }
 
+        /// <returns>size of the array</returns>
         public int Size() {
             return size;
         }
 
+        /// <returns>true if size is equal to 0, false otherwise</returns>
         public bool IsEmpty() {
             return size == 0;
         }
 
+        /// <summary>Append a byte to the end of the array.</summary>
+        /// <remarks>Append a byte to the end of the array. If the array is too small, it's capacity is doubled.</remarks>
+        /// <param name="value">byte to append.</param>
         public void AppendByte(int value) {
             if (size == 0 || size >= bytes.Length) {
                 int newSize = Math.Max(INITIAL_SIZE, size << 1);
@@ -101,6 +109,8 @@ namespace iText.Barcodes.Qrcode {
             size++;
         }
 
+        /// <summary>Increase the capacity of the array to "capacity" if the current capacity is smaller</summary>
+        /// <param name="capacity">the new capacity</param>
         public void Reserve(int capacity) {
             if (bytes == null || bytes.Length < capacity) {
                 byte[] newArray = new byte[capacity];
@@ -111,7 +121,10 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Copy count bytes from array source starting at offset.
+        /// <summary>Copy count bytes from array source starting at offset.</summary>
+        /// <param name="source">source of the copied bytes</param>
+        /// <param name="offset">offset to start at</param>
+        /// <param name="count">number of bytes to copy</param>
         public void Set(byte[] source, int offset, int count) {
             bytes = new byte[count];
             size = count;

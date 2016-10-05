@@ -95,14 +95,24 @@ namespace iText.Barcodes.Qrcode {
             return bytes;
         }
 
+        /// <summary>Set the value of the byte at (x,y)</summary>
+        /// <param name="x">the width coordinate</param>
+        /// <param name="y">the height coordinate</param>
+        /// <param name="value">the new byte value</param>
         public void Set(int x, int y, byte value) {
             bytes[y][x] = value;
         }
 
+        /// <summary>Set the value of the byte at (x,y)</summary>
+        /// <param name="x">the width coordinate</param>
+        /// <param name="y">the height coordinate</param>
+        /// <param name="value">the new byte value</param>
         public void Set(int x, int y, int value) {
             bytes[y][x] = (byte)value;
         }
 
+        /// <summary>Resets the contents of the entire matrix to value</summary>
+        /// <param name="value">new value of every element</param>
         public void Clear(byte value) {
             for (int y = 0; y < height; ++y) {
                 for (int x = 0; x < width; ++x) {
