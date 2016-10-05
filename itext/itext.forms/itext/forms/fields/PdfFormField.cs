@@ -1393,6 +1393,7 @@ namespace iText.Forms.Fields {
             else {
                 RegenerateField();
             }
+            this.SetModified();
             return this;
         }
 
