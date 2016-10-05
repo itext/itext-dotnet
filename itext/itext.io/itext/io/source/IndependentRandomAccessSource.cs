@@ -51,7 +51,7 @@ namespace iText.IO.Source {
         /// <summary>The source</summary>
         private readonly IRandomAccessSource source;
 
-        /// <summary>Constructs a new OffsetRandomAccessSource</summary>
+        /// <summary>Constructs a new IndependentRandomAccessSource object</summary>
         /// <param name="source">the source</param>
         public IndependentRandomAccessSource(IRandomAccessSource source) {
             this.source = source;

@@ -46,6 +46,7 @@ using System.IO;
 using System.Text;
 
 namespace iText.IO.Source {
+    /// <summary>Class that is used to unify reading from random access files and arrays.</summary>
     public class RandomAccessFileOrArray {
         /// <summary>When true the file access is not done through a memory mapped file.</summary>
         /// <remarks>
@@ -76,6 +77,12 @@ namespace iText.IO.Source {
             return new iText.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource(byteSource));
         }
 
+        /// <summary>Creates the view of the byte source of this object.</summary>
+        /// <remarks>
+        /// Creates the view of the byte source of this object. Closing the view won't affect this object.
+        /// Closing source will have adverse effect on the view.
+        /// </remarks>
+        /// <returns>the byte source view.</returns>
         public virtual IRandomAccessSource CreateSourceView() {
             return new IndependentRandomAccessSource(byteSource);
         }
@@ -101,7 +108,7 @@ namespace iText.IO.Source {
 
         /// <summary>Reads a single byte</summary>
         /// <returns>the byte, or -1 if EOF is reached</returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">in case of any reading error.</exception>
         public virtual int Read() {
             if (isBack) {
                 isBack = false;
@@ -110,7 +117,12 @@ namespace iText.IO.Source {
             return byteSource.Get(byteSourcePosition++);
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Reads the specified amount of bytes to the buffer applying the offset.</summary>
+        /// <param name="b">destination buffer</param>
+        /// <param name="off">offset at which to start storing characters</param>
+        /// <param name="len">maximum number of characters to read</param>
+        /// <returns>the number of bytes actually read or -1 in case of EOF</returns>
+        /// <exception cref="System.IO.IOException">in case of any I/O error</exception>
         public virtual int Read(byte[] b, int off, int len) {
             if (len == 0) {
                 return 0;
@@ -135,16 +147,23 @@ namespace iText.IO.Source {
             return count;
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Reads the bytes to the buffer.</summary>
+        /// <remarks>Reads the bytes to the buffer. This method will try to read as many bytes as the buffer can hold.
+        ///     </remarks>
+        /// <param name="b">the destination buffer</param>
+        /// <returns>the number of bytes actually read</returns>
+        /// <exception cref="System.IO.IOException">in</exception>
         public virtual int Read(byte[] b) {
             return Read(b, 0, b.Length);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ReadFully(byte[] b) {
             ReadFully(b, 0, b.Length);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ReadFully(byte[] b, int off, int len) {
             int n = 0;
@@ -158,7 +177,14 @@ namespace iText.IO.Source {
             while (n < len);
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Make an attempt to skip the specified amount of bytes in source.</summary>
+        /// <remarks>
+        /// Make an attempt to skip the specified amount of bytes in source.
+        /// However it may skip less amount of bytes. Possibly zero.
+        /// </remarks>
+        /// <param name="n">the number of bytes to skip</param>
+        /// <returns>the actual number of bytes skipped</returns>
+        /// <exception cref="System.IO.IOException">in case of any I/O error</exception>
         public virtual long Skip(long n) {
             if (n <= 0) {
                 return 0;
@@ -184,37 +210,48 @@ namespace iText.IO.Source {
                 newpos = len;
             }
             Seek(newpos);
-            /* return the actual number of bytes skipped */
             return newpos - pos + adj;
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual int SkipBytes(int n) {
             return (int)Skip(n);
         }
 
+        /// <summary>Closes the underlying source.</summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
             isBack = false;
             byteSource.Close();
         }
 
+        /// <summary>Gets the total amount of bytes in the source.</summary>
+        /// <returns>source's size.</returns>
         /// <exception cref="System.IO.IOException"/>
         public virtual long Length() {
             return byteSource.Length();
         }
 
+        /// <summary>Sets the current position in the source to the specified index.</summary>
+        /// <param name="pos">the position to set</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Seek(long pos) {
             byteSourcePosition = pos;
             isBack = false;
         }
 
-        /// <exception cref="System.IO.IOException"/>
+        /// <summary>Gets the current position of the source considering the pushed byte to the source.</summary>
+        /// <returns>
+        /// the index of last read byte in the source in
+        /// or the index of last read byte in source - 1 in case byte was pushed.
+        /// </returns>
+        /// <exception cref="System.IO.IOException">in case of any I/O error.</exception>
         public virtual long GetPosition() {
             return byteSourcePosition - (isBack ? 1 : 0);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual bool ReadBoolean() {
             int ch = this.Read();
@@ -224,6 +261,7 @@ namespace iText.IO.Source {
             return (ch != 0);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual byte ReadByte() {
             int ch = this.Read();
@@ -233,6 +271,7 @@ namespace iText.IO.Source {
             return (byte)(ch);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual int ReadUnsignedByte() {
             int ch = this.Read();
@@ -242,6 +281,7 @@ namespace iText.IO.Source {
             return ch;
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual short ReadShort() {
             int ch1 = this.Read();
@@ -298,6 +338,7 @@ namespace iText.IO.Source {
             return (short)((ch2 << 8) + ch1);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual int ReadUnsignedShort() {
             int ch1 = this.Read();
@@ -351,6 +392,7 @@ namespace iText.IO.Source {
             return (ch2 << 8) + ch1;
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual char ReadChar() {
             int ch1 = this.Read();
@@ -401,6 +443,7 @@ namespace iText.IO.Source {
             return (char)((ch2 << 8) + ch2);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual int ReadInt() {
             int ch1 = this.Read();
@@ -524,6 +567,7 @@ namespace iText.IO.Source {
             return ((ch4 << 24) + (ch3 << 16) + (ch2 << 8) + ch1);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual long ReadLong() {
             return ((long)(ReadInt()) << 32) + (ReadInt() & 0xFFFFFFFFL);
@@ -536,6 +580,7 @@ namespace iText.IO.Source {
             return ((long)i2 << 32) + (i1 & 0xFFFFFFFFL);
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual float ReadFloat() {
             return iText.IO.Util.JavaUtil.IntBitsToFloat(ReadInt());
@@ -546,6 +591,7 @@ namespace iText.IO.Source {
             return iText.IO.Util.JavaUtil.IntBitsToFloat(ReadIntLE());
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual double ReadDouble() {
             return iText.IO.Util.JavaUtil.LongBitsToDouble(ReadLong());
@@ -556,6 +602,7 @@ namespace iText.IO.Source {
             return iText.IO.Util.JavaUtil.LongBitsToDouble(ReadLongLE());
         }
 
+        /// <summary><inheritDoc/></summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual String ReadLine() {
             StringBuilder input = new StringBuilder();
@@ -593,8 +640,7 @@ namespace iText.IO.Source {
         /// <summary>
         /// Reads a
         /// <c>String</c>
-        /// from the font file as bytes using the given
-        /// encoding.
+        /// from the font file as bytes using the given encoding.
         /// </summary>
         /// <param name="length">the length of bytes to read</param>
         /// <param name="encoding">the given encoding</param>

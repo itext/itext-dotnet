@@ -52,22 +52,25 @@ namespace iText.IO.Source {
         /// <summary>Gets a byte at the specified position</summary>
         /// <param name="position">byte position</param>
         /// <returns>the byte, or -1 if EOF is reached</returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">in case of any reading error.</exception>
         int Get(long position);
 
-        /// <summary>Gets an array at the specified position.</summary>
+        /// <summary>Read an array of bytes of specified length from the specified position of source to the buffer applying the offset.
+        ///     </summary>
         /// <remarks>
-        /// Gets an array at the specified position.  If the number of bytes requested cannot be read, the bytes that can be
-        /// read will be placed in bytes and the number actually read will be returned.
+        /// Read an array of bytes of specified length from the specified position of source to the buffer applying the offset.
+        /// If the number of bytes requested cannot be read, all the possible bytes will be read to the buffer,
+        /// and the number of actually read bytes will be returned.
         /// </remarks>
         /// <param name="position">the position in the RandomAccessSource to read from</param>
         /// <param name="bytes">output buffer</param>
         /// <param name="off">offset into the output buffer where results will be placed</param>
         /// <param name="len">the number of bytes to read</param>
         /// <returns>the number of bytes actually read, or -1 if the file is at EOF</returns>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">in case of any I/O error.</exception>
         int Get(long position, byte[] bytes, int off, int len);
 
+        /// <summary>Gets the length of the source</summary>
         /// <returns>the length of this source</returns>
         long Length();
 
