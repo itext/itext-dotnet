@@ -528,7 +528,7 @@ namespace iText.Kernel.Pdf {
             xObject.GetPdfObject().MergeDifferent(dictionary);
             //Copy inherited resources
             if (!xObject.GetPdfObject().ContainsKey(PdfName.Resources)) {
-                PdfObject copyResource = ((PdfDictionary)GetResources().GetPdfObject().CopyTo(toDocument, false));
+                PdfObject copyResource = ((PdfDictionary)GetResources().GetPdfObject().CopyTo(toDocument, true));
                 xObject.GetPdfObject().Put(PdfName.Resources, copyResource);
             }
             return xObject;
