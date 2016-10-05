@@ -2017,7 +2017,7 @@ namespace iText.Kernel.Pdf {
         /// A structure storing documentId, object number and generation number. This structure is using to calculate
         /// an unique object key during the copy process.
         /// </remarks>
-        protected internal class IndirectRefDescription {
+        internal class IndirectRefDescription {
             private long docId;
 
             private int objNr;
