@@ -2024,7 +2024,7 @@ namespace iText.Kernel.Pdf {
 
             private int genNr;
 
-            public IndirectRefDescription(PdfIndirectReference reference) {
+            internal IndirectRefDescription(PdfIndirectReference reference) {
                 this.docId = reference.GetDocument().GetDocumentId();
                 this.objNr = reference.GetObjNumber();
                 this.genNr = reference.GetGenNumber();
