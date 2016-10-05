@@ -6,7 +6,6 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms {
-    /// <summary>Created by SamuelHuylebroeck on 10/4/2016.</summary>
     public class FormFieldAppendTest : ExtendedITextTest {
         public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/FormFieldAppendTest/";
 
@@ -60,8 +59,7 @@ namespace iText.Forms {
             }
             doc.Close();
             Flatten(temp, filename);
-            FileInfo toDelete = new FileInfo(temp);
-            toDelete.Delete();
+            new FileInfo(temp).Delete();
             CompareTool compareTool = new CompareTool();
             String errorMessage = compareTool.CompareByContent(filename, sourceFolder + "cmp_formFillingAppend_form_filled.pdf"
                 , destinationFolder, "diff_");
