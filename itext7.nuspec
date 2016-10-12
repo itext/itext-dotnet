@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>itext</id>
+    <id>itext7</id>
     <version>$version$</version>
     <title>iText 7 Community</title>
     <authors>iText Software</authors>
@@ -15,7 +15,7 @@
     <releaseNotes>http://itextpdf.com/itext7release</releaseNotes>
     <copyright>Copyright (c) 1998-2016 iText Group NV</copyright>
     <language>en-US</language>
-    <tags>itext itextsharp c# .net csharp pdf</tags>
+    <tags>itext itext7 itextsharp c# .net csharp pdf</tags>
   </metadata>
   <files>
 	<file src="itext\itext.io\bin\Release\itext.io.dll" target="lib\net40" />
