@@ -57,7 +57,14 @@ namespace iText.IO.Util {
         }
 
         public static Regex RegexCompile(String s) {
-            return new Regex(s);
+            return RegexCompile(s, RegexOptions.Compiled);
+        }
+
+        public static Regex RegexCompile(String s, RegexOptions options) {
+            Regex regex = new Regex(s, RegexOptions.Compiled | options);
+            //This is needed so the method throw an exception in case of invalid regular expression.
+            regex.IsMatch("");
+            return regex;
         }
 
         public static Match Match(Regex r, String s) {
@@ -66,6 +73,10 @@ namespace iText.IO.Util {
 
         public static String Group(Match match, int index) {
             return match.Groups[index].Value;
+        }
+
+        public static String Group(Match match) {
+            return Group(match, 0);
         }
 
         public static String Normalize(String s, NormalizationForm form) {
