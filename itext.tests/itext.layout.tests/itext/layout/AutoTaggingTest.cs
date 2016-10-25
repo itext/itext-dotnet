@@ -98,7 +98,7 @@ namespace iText.Layout {
             table.AddCell(image);
             table.AddCell(CreateParagraph2());
             table.AddCell(image);
-            table.AddCell(new Paragraph("abcdefghijklkmnopqrstuvwxyz").SetFontColor(Color.GREEN));
+            table.AddCell(new Paragraph("abcdefghijklmnopqrstuvwxyz").SetFontColor(Color.GREEN));
             table.AddCell("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                  + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -415,7 +415,7 @@ namespace iText.Layout {
 
         private Paragraph CreateParagraph2() {
             Paragraph p;
-            String alphabet = "abcdefghijklkmnopqrstuvwxyz";
+            String alphabet = "abcdefghijklmnopqrstuvwxyz";
             StringBuilder longTextBuilder = new StringBuilder();
             for (int i = 0; i < 26; ++i) {
                 longTextBuilder.Append(alphabet);

@@ -55,7 +55,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
+        [LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
         public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
@@ -65,9 +65,9 @@ namespace iText.Layout {
             document.Add(new Paragraph());
             document.Add(new Paragraph().SetBackgroundColor(Color.GREEN));
             document.Add(new Paragraph().SetBorder(new SolidBorder(Color.BLUE, 3)));
-            document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right?"));
-            document.Add(new Paragraph().SetHeight(50));
-            document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right?"));
+            document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right? Or not?"));
+            document.Add(new Paragraph().SetHeight(50).SetBorder(new SolidBorder(1)));
+            document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right? Or not?"));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

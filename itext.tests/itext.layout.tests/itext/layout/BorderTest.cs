@@ -1,6 +1,7 @@
 using System;
 using iText.IO;
 using iText.Kernel.Colors;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -56,6 +57,90 @@ namespace iText.Layout {
             roundDotsBorderItem.SetBorderLeft(new RoundDotsBorder(Color.BLUE, 5));
             list.Add(roundDotsBorderItem);
             doc.Add(list);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void IncompleteTableTest01() {
+            fileName = "incompleteTableTest01.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            Cell cell;
+            // row 1, cell 1
+            cell = new Cell().Add("One");
+            table.AddCell(cell);
+            // row 1 and 2, cell 2
+            cell = new Cell(2, 1).Add("Two");
+            table.AddCell(cell);
+            // row 2, cell 1
+            cell = new Cell().Add("Three");
+            table.AddCell(cell);
+            // row 3, cell 1
+            cell = new Cell().Add("Four");
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleBorderTest02() {
+            fileName = "simpleBorderTest02.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            Cell cell;
+            // row 1, cell 1
+            cell = new Cell().Add("One");
+            cell.SetBorderTop(new SolidBorder(20));
+            cell.SetBorderBottom(new SolidBorder(20));
+            table.AddCell(cell);
+            // row 2, cell 1
+            cell = new Cell().Add("Two");
+            cell.SetBorderTop(new SolidBorder(30));
+            cell.SetBorderBottom(new SolidBorder(40));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleBorderTest03() {
+            fileName = "simpleBorderTest03.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.AddCell(new Cell().Add("1"));
+            table.AddCell(new Cell(2, 1).Add("2"));
+            table.AddCell(new Cell().Add("3"));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-796")]
+        [NUnit.Framework.Test]
+        public virtual void SimpleBorderTest04() {
+            fileName = "simpleBorderTest04.pdf";
+            Document doc = CreateDocument();
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            String textHelloWorld = "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n";
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.RED, 2f));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textHelloWorld)));
+            for (int i = 0; i < 2; i++) {
+                table.AddCell(new Cell().Add(new Paragraph(textByron)));
+            }
+            table.AddCell(new Cell(1, 2).Add(textByron));
+            doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
 
@@ -225,15 +310,180 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-798")]
         public virtual void WideBorderTest02() {
             fileName = "wideBorderTest02.pdf";
-            Document doc = CreateDocument();
-            Table table = new Table(1);
-            table.SetWidthPercent(50);
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument, new PageSize(842, 842));
+            Table table = new Table(3);
+            table.SetBorder(new SolidBorder(Color.GREEN, 91f));
+            Cell cell;
+            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 70f));
+            table.AddCell(cell);
+            cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 70f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 70f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 45f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 40f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 35f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.BLUE, 5f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 45f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 64f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 102f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 11f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 12f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 44f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 27f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 16f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 59));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 20f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 20f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 20f));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WideBorderTest03() {
+            fileName = "wideBorderTest03.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument, new PageSize(842, 400));
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 90f));
             Cell cell;
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 100f));
+            cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 120f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
@@ -272,7 +522,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-818")]
         public virtual void SplitCellsTest01() {
             fileName = "splitCellsTest01.pdf";
             Document doc = CreateDocument();
@@ -298,17 +547,12 @@ namespace iText.Layout {
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.";
             Table table = new Table(2);
+            table.SetBorderTop(new DottedBorder(Color.MAGENTA, 3f));
+            table.SetBorderRight(new DottedBorder(Color.RED, 3f));
+            table.SetBorderBottom(new DottedBorder(Color.BLUE, 3f));
+            table.SetBorderLeft(new DottedBorder(Color.GRAY, 3f));
             Cell cell;
             cell = new Cell().Add("Some text");
             cell.SetBorderRight(new SolidBorder(Color.RED, 2f));
@@ -319,11 +563,58 @@ namespace iText.Layout {
             cell = new Cell().Add(longText);
             cell.SetBorderBottom(new SolidBorder(Color.RED, 5f));
             table.AddCell(cell);
-            table.AddCell(new Cell().Add("Hello").SetBorderBottom(new SolidBorder(Color.BLUE, 5f)));
+            cell = new Cell().Add("Hello");
+            cell.SetBorderBottom(new SolidBorder(Color.BLUE, 5f));
+            table.AddCell(cell);
             cell = new Cell().Add("Some text.");
             cell.SetBorderTop(new SolidBorder(Color.GREEN, 6f));
             table.AddCell(cell);
-            table.AddCell(new Cell().Add("World").SetBorderTop(new SolidBorder(Color.YELLOW, 6f)));
+            cell = new Cell().Add("World");
+            cell.SetBorderTop(new SolidBorder(Color.YELLOW, 6f));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest02() {
+            fileName = "splitCellsTest02.pdf";
+            Document doc = CreateDocument();
+            String text = "And it's Arsenal, \n" + "Arsenal FC, \n" + "We're by far the greatest team, \n" + "The world has ever seen.... \n";
+            Table table = new Table(2);
+            Cell cell;
+            for (int i = 0; i < 38; i++) {
+                cell = new Cell().Add(text);
+                cell.SetBorder(new SolidBorder(Color.RED, 2f));
+                cell.SetBorderBottom(Border.NO_BORDER);
+                table.AddCell(cell);
+            }
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorder(new SolidBorder(Color.YELLOW, 3));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderTest01() {
+            fileName = "tableWithHeaderTest01.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.YELLOW, 30));
+            Cell cell;
+            cell = new Cell().Add("Header with narrow border").SetBorder(new SolidBorder(Color.GREEN, 0.5f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Header with wide border").SetBorder(new SolidBorder(Color.GREEN, 65f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5f));
+            table.AddCell(cell);
+            cell = new Cell().Add("World").SetBorder(new SolidBorder(Color.MAGENTA, 5f));
+            table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

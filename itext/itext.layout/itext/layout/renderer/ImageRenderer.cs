@@ -53,7 +53,7 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer {
-        private float height;
+        private float? height;
 
         private float? width;
 
@@ -88,12 +88,25 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             width = RetrieveWidth(layoutBox.GetWidth());
+            height = RetrieveHeight();
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
             imageWidth = xObject.GetWidth();
             imageHeight = xObject.GetHeight();
-            width = width == null ? imageWidth : width;
-            height = (float)width / imageWidth * imageHeight;
+            if (width == null && height == null) {
+                width = imageWidth;
+                height = (float)width / imageWidth * imageHeight;
+            }
+            else {
+                if (width == null) {
+                    width = (float)height / imageHeight * imageWidth;
+                }
+                else {
+                    if (height == null) {
+                        height = (float)width / imageWidth * imageHeight;
+                    }
+                }
+            }
             fixedXPosition = this.GetPropertyAsFloat(Property.X);
             fixedYPosition = this.GetPropertyAsFloat(Property.Y);
             float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
@@ -139,8 +152,8 @@ namespace iText.Layout.Renderer {
                     return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
             }
-            occupiedArea.GetBBox().MoveDown(height);
-            occupiedArea.GetBBox().SetHeight(height);
+            occupiedArea.GetBBox().MoveDown((float)height);
+            occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
             float leftMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
             float topMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_TOP);
@@ -223,7 +236,7 @@ namespace iText.Layout.Renderer {
                 if (this.GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight()) {
                     SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetHeight() / (float)this.GetPropertyAsFloat
                         (Property.HEIGHT) * (this.GetProperty<UnitValue>(Property.WIDTH)).GetValue()));
-                    SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(area.GetBBox().GetHeight()));
+                    SetProperty(Property.HEIGHT, area.GetBBox().GetHeight());
                 }
             }
             return this;
@@ -244,9 +257,9 @@ namespace iText.Layout.Renderer {
             if (angle != 0) {
                 AffineTransform t = AffineTransform.GetRotateInstance(angle);
                 Point p00 = t.Transform(new Point(0, 0), new Point());
-                Point p01 = t.Transform(new Point(0, height), new Point());
+                Point p01 = t.Transform(new Point(0, (float)height), new Point());
                 Point p10 = t.Transform(new Point((float)width, 0), new Point());
-                Point p11 = t.Transform(new Point((float)width, height), new Point());
+                Point p11 = t.Transform(new Point((float)width, (float)height), new Point());
                 double[] xValues = new double[] { p01.GetX(), p10.GetX(), p11.GetX() };
                 double[] yValues = new double[] { p01.GetY(), p10.GetY(), p11.GetY() };
                 double minX = p00.GetX();
@@ -272,7 +285,7 @@ namespace iText.Layout.Renderer {
             float scaleCoeff = 1;
             // hasProperty(Property) checks only properties field, cannot use it
             if (true.Equals(GetPropertyAsBoolean(Property.AUTO_SCALE))) {
-                scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / height);
+                scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / (float)height);
                 height *= scaleCoeff;
                 width *= scaleCoeff;
             }
@@ -286,7 +299,7 @@ namespace iText.Layout.Renderer {
                 else {
                     if (null != GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT) && (bool)GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT
                         )) {
-                        scaleCoeff = maxHeight / height;
+                        scaleCoeff = maxHeight / (float)height;
                         height = maxHeight;
                         width *= scaleCoeff;
                     }
