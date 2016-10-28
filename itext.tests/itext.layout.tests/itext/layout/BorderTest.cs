@@ -303,11 +303,9 @@ namespace iText.Layout {
             cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.RED, 70f));
             table.AddCell(cell);
-            //
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.RED, 70f));
             table.AddCell(cell);
-            //
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
             table.AddCell(cell);
