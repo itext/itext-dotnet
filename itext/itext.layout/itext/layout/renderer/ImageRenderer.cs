@@ -53,7 +53,7 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer {
-        private float height;
+        private float? height;
 
         private float? width;
 
@@ -88,12 +88,25 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             width = RetrieveWidth(layoutBox.GetWidth());
+            height = RetrieveHeight();
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
             imageWidth = xObject.GetWidth();
             imageHeight = xObject.GetHeight();
-            width = width == null ? imageWidth : width;
-            height = (float)width / imageWidth * imageHeight;
+            if (width == null && height == null) {
+                width = imageWidth;
+                height = (float)width / imageWidth * imageHeight;
+            }
+            else {
+                if (width == null) {
+                    width = (float)height / imageHeight * imageWidth;
+                }
+                else {
+                    if (height == null) {
+                        height = (float)width / imageWidth * imageHeight;
+                    }
+                }
+            }
             fixedXPosition = this.GetPropertyAsFloat(Property.X);
             fixedYPosition = this.GetPropertyAsFloat(Property.Y);
             float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
@@ -223,7 +236,7 @@ namespace iText.Layout.Renderer {
                 if (this.GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight()) {
                     SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetHeight() / (float)this.GetPropertyAsFloat
                         (Property.HEIGHT) * (this.GetProperty<UnitValue>(Property.WIDTH)).GetValue()));
-                    SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(area.GetBBox().GetHeight()));
+                    SetProperty(Property.HEIGHT, area.GetBBox().GetHeight());
                 }
             }
             return this;
