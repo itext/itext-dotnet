@@ -669,6 +669,42 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsDictionary(resType);
         }
 
+        /// <summary>
+        /// Get the
+        /// <see cref="PdfObject"/>
+        /// object with specified type and name.
+        /// </summary>
+        /// <param name="resType">
+        /// the resource type. Should be
+        /// <see cref="PdfName.ColorSpace"/>
+        /// ,
+        /// <see cref="PdfName.ExtGState"/>
+        /// ,
+        /// <see cref="PdfName.Pattern"/>
+        /// ,
+        /// <see cref="PdfName.Shading"/>
+        /// ,
+        /// <see cref="PdfName.XObject"/>
+        /// ,
+        /// <see cref="PdfName.Font"/>
+        /// .
+        /// </param>
+        /// <param name="resName">the name of the resource object.</param>
+        /// <returns>
+        /// the
+        /// <see cref="PdfObject"/>
+        /// with specified name in the resources of specified type or
+        /// <see langword="null"/>
+        /// in case of incorrect type or missing resource with such name.
+        /// </returns>
+        public virtual PdfObject GetResourceObject(PdfName resType, PdfName resName) {
+            PdfDictionary resource = GetResource(resType);
+            if (resource != null) {
+                return resource.Get(resName);
+            }
+            return null;
+        }
+
         protected internal override bool IsWrappedObjectMustBeIndirect() {
             return false;
         }
