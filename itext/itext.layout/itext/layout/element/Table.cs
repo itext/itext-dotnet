@@ -71,7 +71,7 @@ namespace iText.Layout.Element {
 
         private IList<Cell[]> rows;
 
-        private float[] columnWidths;
+        private UnitValue[] columnWidths;
 
         private int currentColumn = 0;
 
@@ -112,14 +112,51 @@ namespace iText.Layout.Element {
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("the.widths.array.in.pdfptable.constructor.can.not.have.zero.length");
             }
-            this.columnWidths = new float[columnWidths.Length];
+            this.columnWidths = new UnitValue[columnWidths.Length];
             float width = 0;
             for (int i = 0; i < columnWidths.Length; i++) {
-                this.columnWidths[i] = columnWidths[i];
+                this.columnWidths[i] = UnitValue.CreatePointValue(columnWidths[i]);
                 width += columnWidths[i];
             }
             base.SetWidth(width);
             InitializeRows();
+        }
+
+        /// <summary>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with the relative column widths.
+        /// </summary>
+        /// <param name="columnWidths">the relative column widths</param>
+        /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
+        public Table(UnitValue[] columnWidths, bool largeTable) {
+            this.isComplete = !largeTable;
+            if (columnWidths == null) {
+                throw new ArgumentNullException("the.widths.array.in.table.constructor.can.not.be.null");
+            }
+            if (columnWidths.Length == 0) {
+                throw new ArgumentException("the.widths.array.in.pdfptable.constructor.can.not.have.zero.length");
+            }
+            this.columnWidths = new UnitValue[columnWidths.Length];
+            float totalWidth = 0;
+            for (int i = 0; i < columnWidths.Length; i++) {
+                this.columnWidths[i] = columnWidths[i];
+                if (columnWidths[i].IsPointValue()) {
+                    totalWidth += columnWidths[i].GetValue();
+                }
+            }
+            base.SetWidth(totalWidth);
+            InitializeRows();
+        }
+
+        /// <summary>
+        /// Constructs a
+        /// <c>Table</c>
+        /// with the relative column widths.
+        /// </summary>
+        /// <param name="columnWidths">the relative column widths</param>
+        public Table(UnitValue[] columnWidths)
+            : this(columnWidths, false) {
         }
 
         /// <summary>
@@ -146,9 +183,9 @@ namespace iText.Layout.Element {
             if (numColumns <= 0) {
                 throw new ArgumentException("the.number.of.columns.in.pdfptable.constructor.must.be.greater.than.zero");
             }
-            this.columnWidths = new float[numColumns];
+            this.columnWidths = new UnitValue[numColumns];
             for (int k = 0; k < numColumns; ++k) {
-                this.columnWidths[k] = 1;
+                this.columnWidths[k] = UnitValue.CreatePointValue(1);
             }
             base.SetWidth(UnitValue.CreatePercentValue(100));
             InitializeRows();
@@ -184,7 +221,7 @@ namespace iText.Layout.Element {
         /// <summary>Returns the column width for the specified column.</summary>
         /// <param name="column">index of the column</param>
         /// <returns>the width of the column</returns>
-        public virtual float GetColumnWidth(int column) {
+        public virtual UnitValue GetColumnWidth(int column) {
             return columnWidths[column];
         }
 
@@ -665,10 +702,10 @@ namespace iText.Layout.Element {
             float total = 0;
             int numCols = GetNumberOfColumns();
             for (int k = 0; k < numCols; ++k) {
-                total += columnWidths[k];
+                total += columnWidths[k].GetValue();
             }
             for (int k_1 = 0; k_1 < numCols; ++k_1) {
-                columnWidths[k_1] = width.GetValue() * columnWidths[k_1] / total;
+                columnWidths[k_1] = UnitValue.CreatePointValue(width.GetValue() * columnWidths[k_1].GetValue() / total);
             }
         }
 

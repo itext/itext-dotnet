@@ -579,6 +579,25 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SimpleTableTest22() {
+            String testName = "tableTest22.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(new UnitValue[] { UnitValue.CreatePointValue(30), UnitValue.CreatePointValue(30), 
+                UnitValue.CreatePercentValue(30), UnitValue.CreatePercentValue(30) }).AddCell(new Cell().Add(new Paragraph
+                ("cell 1, 1"))).AddCell(new Cell().Add(new Paragraph("cell 1, 2"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 1, 4")));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void BigRowspanTest01() {
             String testName = "bigRowspanTest01.pdf";
             String outFileName = destinationFolder + testName;

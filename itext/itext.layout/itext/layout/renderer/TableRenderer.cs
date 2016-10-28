@@ -204,6 +204,13 @@ namespace iText.Layout.Renderer {
             if (tableWidth == null || tableWidth == 0) {
                 tableWidth = layoutBox.GetWidth();
             }
+            float freeAreaWidth = layoutBox.GetWidth() - tableWidth;
+            for (int i_1 = 0; i_1 < tableModel.GetNumberOfColumns(); i_1++) {
+                UnitValue columnWidth = tableModel.GetColumnWidth(i_1);
+                if (columnWidth.IsPercentValue()) {
+                    tableWidth += (freeAreaWidth) * columnWidth.GetValue() / 100;
+                }
+            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight() - topTableBorderWidth / 2, (float)tableWidth, 0));
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
@@ -250,7 +257,7 @@ namespace iText.Layout.Renderer {
             layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, rightTableBorderWidth / 2, 0, leftTableBorderWidth
                  / 2, false);
             columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftTableBorderWidth, rightTableBorderWidth
-                );
+                , layoutBox.GetWidth());
             LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
@@ -343,15 +350,15 @@ namespace iText.Layout.Renderer {
                     bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
                     float cellWidth = 0;
                     float colOffset = 0;
-                    for (int i = col_1; i < col_1 + colspan; i++) {
-                        cellWidth += columnWidths[i];
+                    for (int i = col_1; i_1 < col_1 + colspan; i_1++) {
+                        cellWidth += columnWidths[i_1];
                     }
-                    for (int i_1 = 0; i_1 < col_1; i_1++) {
-                        colOffset += columnWidths[i_1];
+                    for (int i_2 = 0; i_2 < col_1; i_2++) {
+                        colOffset += columnWidths[i_2];
                     }
                     float rowspanOffset = 0;
-                    for (int i_2 = row - 1; i_2 > currentCellInfo.finishRowInd - rowspan && i_2 >= 0; i_2--) {
-                        rowspanOffset += (float)heights[i_2];
+                    for (int i_3 = row - 1; i_3 > currentCellInfo.finishRowInd - rowspan && i_3 >= 0; i_3--) {
+                        rowspanOffset += (float)heights[i_3];
                     }
                     float cellLayoutBoxHeight = rowspanOffset + (!currentCellHasBigRowspan || hasContent ? layoutBox.GetHeight
                         () : 0);
@@ -440,16 +447,16 @@ namespace iText.Layout.Renderer {
                                                     else {
                                                         horizontalBorders[row + 1][addCol_1] = addRenderer.GetBorders()[2];
                                                         if (addCol_1 == 0) {
-                                                            for (int i_3 = row; i_3 >= 0; i_3--) {
-                                                                if (!CheckAndReplaceBorderInArray(verticalBorders, addCol_1, i_3, addRenderer.GetBorders()[3])) {
+                                                            for (int i_4 = row; i_4 >= 0; i_4--) {
+                                                                if (!CheckAndReplaceBorderInArray(verticalBorders, addCol_1, i_4, addRenderer.GetBorders()[3])) {
                                                                     break;
                                                                 }
                                                             }
                                                         }
                                                         else {
                                                             if (addCol_1 == numberOfColumns - 1) {
-                                                                for (int i_3 = row; i_3 >= 0; i_3--) {
-                                                                    if (!CheckAndReplaceBorderInArray(verticalBorders, addCol_1 + 1, i_3, addRenderer.GetBorders()[1])) {
+                                                                for (int i_4 = row; i_4 >= 0; i_4--) {
+                                                                    if (!CheckAndReplaceBorderInArray(verticalBorders, addCol_1 + 1, i_4, addRenderer.GetBorders()[1])) {
                                                                         break;
                                                                     }
                                                                 }
@@ -521,8 +528,8 @@ namespace iText.Layout.Renderer {
                                 lastAddedRow[col_1].occupiedArea.GetBBox().ApplyMargins<Rectangle>(0, 0, (collapsedBorderWidth - cellBottomBorderWidth
                                     ) / 2, 0, true);
                                 int cellRowStartIndex = heights.Count - (int)lastAddedRow[col_1].GetPropertyAsInteger(Property.ROWSPAN);
-                                for (int i = cellRowStartIndex > 0 ? cellRowStartIndex : 0; i < heights.Count; i++) {
-                                    currentCellHeight += heights[i];
+                                for (int i = cellRowStartIndex > 0 ? cellRowStartIndex : 0; i_1 < heights.Count; i_1++) {
+                                    currentCellHeight += heights[i_1];
                                 }
                                 if (currentCellHeight < lastAddedRow[col_1].occupiedArea.GetBBox().GetHeight()) {
                                     bottomBorderWidthDifference = Math.Max(bottomBorderWidthDifference, (collapsedBorderWidth - cellBottomBorderWidth
@@ -543,8 +550,8 @@ namespace iText.Layout.Renderer {
                                 }
                                 float height = 0;
                                 int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
-                                for (int i = k; i > ((k == row + 1) ? targetOverflowRowIndex[col_1] : k) - rowspan && i >= 0; i--) {
-                                    height += (float)heights[i];
+                                for (int i = k; i_1 > ((k == row + 1) ? targetOverflowRowIndex[col_1] : k) - rowspan && i_1 >= 0; i_1--) {
+                                    height += (float)heights[i_1];
                                 }
                                 int rowN = k + 1;
                                 if (k == row && !hasContent) {
@@ -640,16 +647,16 @@ namespace iText.Layout.Renderer {
                                 childRenderers.Add(currentRow[col_3]);
                                 // shift all cells in the column up
                                 int i = row;
-                                for (; i < row + minRowspan && i + 1 < rows.Count && rows[i + 1][col_3] != null; i++) {
-                                    rows[i][col_3] = rows[i + 1][col_3];
-                                    rows[i + 1][col_3] = null;
+                                for (; i_1 < row + minRowspan && i_1 + 1 < rows.Count && rows[i_1 + 1][col_3] != null; i_1++) {
+                                    rows[i_1][col_3] = rows[i_1 + 1][col_3];
+                                    rows[i_1 + 1][col_3] = null;
                                 }
                                 // the number of cells behind is less then minRowspan-1
                                 // so we should process the last cell in the column as in the case 1 == minRowspan
-                                if (i != row + minRowspan - 1 && null != rows[i][col_3]) {
-                                    Cell overflowCell = ((Cell)rows[i][col_3].GetModelElement());
-                                    rows[i][col_3].isLastRendererForModelElement = false;
-                                    rows[i][col_3] = null;
+                                if (i_1 != row + minRowspan - 1 && null != rows[i_1][col_3]) {
+                                    Cell overflowCell = ((Cell)rows[i_1][col_3].GetModelElement());
+                                    rows[i_1][col_3].isLastRendererForModelElement = false;
+                                    rows[i_1][col_3] = null;
                                     rows[targetOverflowRowIndex[col_3]][col_3] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
                                 }
                             }
@@ -848,11 +855,19 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth, float leftBorderWidth
-            , float rightBorderWidth) {
+            , float rightBorderWidth, float layoutBoxWidth) {
             float[] columnWidths = new float[tableModel.GetNumberOfColumns()];
             float widthSum = 0;
             for (int i = 0; i < tableModel.GetNumberOfColumns(); i++) {
-                columnWidths[i] = tableModel.GetColumnWidth(i);
+                float columnWidth = 0;
+                UnitValue columnUnitWidth = tableModel.GetColumnWidth(i);
+                if (columnUnitWidth.IsPointValue()) {
+                    columnWidth = columnUnitWidth.GetValue();
+                }
+                else {
+                    columnWidth = (layoutBoxWidth - tableWidth) * columnUnitWidth.GetValue() / 100;
+                }
+                columnWidths[i] = columnWidth;
                 widthSum += columnWidths[i];
             }
             for (int i_1 = 0; i_1 < tableModel.GetNumberOfColumns(); i_1++) {
