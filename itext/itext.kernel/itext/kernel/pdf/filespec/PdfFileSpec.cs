@@ -65,6 +65,17 @@ namespace iText.Kernel.Pdf.Filespec {
                 (doc);
         }
 
+        /// <summary>Attach and embed a file to a PdfDocument.</summary>
+        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <param name="fileStore">byte[] containing the file</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">mime-type of the file</param>
+        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        ///     </param>
+        /// <param name="isUnicodeFileName"/>
+        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             , bool isUnicodeFileName) {
