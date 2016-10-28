@@ -128,6 +128,11 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal override Rectangle ApplyBorderBox(Rectangle rect, Border[] borders, bool reverse) {
+            // Do nothing here. Applying border box for tables is indeed difficult operation and is done on #layout()
+            return rect;
+        }
+
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea();
@@ -147,7 +152,42 @@ namespace iText.Layout.Renderer {
             // value is the previous row number of the cell
             IDictionary<int, int?> rowMoves = new Dictionary<int, int?>();
             ApplyMargins(layoutBox, false);
-            ApplyBorderBox(layoutBox, false);
+            Border[] borders;
+            float leftBorderWidth = -1;
+            float rightBorderWidth = -1;
+            float topBorderWidth = -1;
+            float bottomBorderWidth = -1;
+            // Find left, right and top borders widths
+            // Notice that we consider only the first row's left and right border widths,
+            // i.e. the borders still can be drawn outside the layout area.
+            int row = 0;
+            while (row < rows.Count || -1 == leftBorderWidth || -1 == rightBorderWidth) {
+                CellRenderer[] currentRow = rows[row];
+                if (0 == row) {
+                    for (int i = 0; i < currentRow.Length; i++) {
+                        if (null != currentRow[i]) {
+                            borders = currentRow[i].GetBorders();
+                            topBorderWidth = Math.Max(null == borders[0] ? 0 : borders[0].GetWidth(), topBorderWidth);
+                        }
+                    }
+                }
+                if (currentRow.Length != 0 && currentRow[0] != null) {
+                    borders = currentRow[0].GetBorders();
+                    leftBorderWidth = Math.Max(null == borders[3] ? 0 : borders[3].GetWidth(), leftBorderWidth);
+                }
+                if (currentRow.Length != 0 && currentRow[currentRow.Length - 1] != null) {
+                    borders = currentRow[currentRow.Length - 1].GetBorders();
+                    rightBorderWidth = Math.Max(null == borders[1] ? 0 : borders[1].GetWidth(), rightBorderWidth);
+                }
+                row++;
+            }
+            borders = GetBorders();
+            leftBorderWidth = Math.Max(null == borders[3] ? 0 : borders[3].GetWidth(), leftBorderWidth);
+            rightBorderWidth = Math.Max(null == borders[1] ? 0 : borders[1].GetWidth(), rightBorderWidth);
+            topBorderWidth = Math.Max(null == borders[0] ? 0 : borders[0].GetWidth(), topBorderWidth);
+            // Apply top border
+            layoutBox.ApplyMargins(topBorderWidth / 2, 0, 0, 0, false);
+            layoutBox.MoveRight(leftBorderWidth / 2);
             if (IsPositioned()) {
                 float x = (float)this.GetPropertyAsFloat(Property.X);
                 float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
@@ -192,13 +232,14 @@ namespace iText.Layout.Renderer {
                 footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
             }
-            columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth);
+            columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftBorderWidth, rightBorderWidth
+                );
             LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
             int[] targetOverflowRowIndex = new int[tableModel.GetNumberOfColumns()];
             horizontalBorders.Add(tableModel.GetLastRowBottomBorder());
-            for (int row = 0; row < rows.Count; row++) {
+            for (row = 0; row < rows.Count; row++) {
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
                 if (row == 1 && true.Equals(this.GetOwnProperty<bool?>(Property.FORCED_PLACEMENT))) {
@@ -222,19 +263,31 @@ namespace iText.Layout.Renderer {
                         cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
                     }
                 }
+                float currentRowBottomWidth = 0;
+                // Notice that some cells can have rowspan different from one and these cell's are not considered here.
+                foreach (TableRenderer.CellRendererInfo currentCellInfo in cellProcessingQueue) {
+                    Border currentCellBottomBorder = currentCellInfo.cellRenderer.GetBorders()[2];
+                    currentRowBottomWidth = Math.Max(null == currentCellBottomBorder ? 0 : currentCellBottomBorder.GetWidth(), 
+                        currentRowBottomWidth);
+                }
+                currentRowBottomWidth = Math.Max(currentRowBottomWidth, bottomBorderWidth);
+                // Apply bottom border on the row
+                layoutBox.ApplyMargins(0, 0, currentRowBottomWidth / 2, 0, false);
                 // the element which was the first to cause Layout.Nothing
                 IRenderer firstCauseOfNothing = null;
                 while (cellProcessingQueue.Count > 0) {
-                    TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.JRemoveFirst();
-                    int col_1 = currentCellInfo.column;
-                    CellRenderer cell = currentCellInfo.cellRenderer;
+                    TableRenderer.CellRendererInfo currentCellInfo_1 = cellProcessingQueue.JRemoveFirst();
+                    int col_1 = currentCellInfo_1.column;
+                    CellRenderer cell = currentCellInfo_1.cellRenderer;
                     if (cell != null) {
                         BuildBordersArrays(cell, row, true);
                     }
                     if (row + 1 < rows.Count) {
-                        CellRenderer nextCell = rows[row + 1][col_1];
-                        if (nextCell != null) {
-                            BuildBordersArrays(nextCell, row + 1, true);
+                        for (int j = 0; j < ((Cell)cell.GetModelElement()).GetColspan(); j++) {
+                            CellRenderer nextCell = rows[row + 1][col_1 + j];
+                            if (nextCell != null) {
+                                BuildBordersArrays(nextCell, row + 1, true);
+                            }
                         }
                     }
                     if (col_1 + 1 < rows[row].Length) {
@@ -243,9 +296,9 @@ namespace iText.Layout.Renderer {
                             BuildBordersArrays(nextCell, row, true);
                         }
                     }
-                    targetOverflowRowIndex[col_1] = currentCellInfo.finishRowInd;
+                    targetOverflowRowIndex[col_1] = currentCellInfo_1.finishRowInd;
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
-                    bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
+                    bool currentCellHasBigRowspan = (row != currentCellInfo_1.finishRowInd);
                     int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                     int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                     float cellWidth = 0;
@@ -257,7 +310,7 @@ namespace iText.Layout.Renderer {
                         colOffset += columnWidths[i_1];
                     }
                     float rowspanOffset = 0;
-                    for (int i_2 = row - 1; i_2 > currentCellInfo.finishRowInd - rowspan && i_2 >= 0; i_2--) {
+                    for (int i_2 = row - 1; i_2 > currentCellInfo_1.finishRowInd - rowspan && i_2 >= 0; i_2--) {
                         rowspanOffset += (float)heights[i_2];
                     }
                     float cellLayoutBoxHeight = rowspanOffset + (!currentCellHasBigRowspan || hasContent ? layoutBox.GetHeight
@@ -269,7 +322,18 @@ namespace iText.Layout.Renderer {
                     LayoutArea cellArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), cellLayoutBox);
                     VerticalAlignment? verticalAlignment = cell.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, null);
+                    //                // Increase bottom border widths up to the biggest to CellRenderer#layout() on correct layout area
+                    //                Border bottomBorder = cell.getBorders()[2];
+                    //                float cellBottomWidth = 0;
+                    //                if (bottomBorder != null) {
+                    //                    cellBottomWidth = bottomBorder.getWidth();
+                    //                    bottomBorder.setWidth(currentRowBottomWidth);
+                    //                }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
+                    //                if (bottomBorder != null) {
+                    //                    bottomBorder.setWidth(cellBottomWidth);
+                    //                }
+                    //
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
@@ -287,9 +351,9 @@ namespace iText.Layout.Renderer {
                             currentRow[col_1] = (CellRenderer)cellResult.GetSplitRenderer();
                         }
                         else {
-                            rows[currentCellInfo.finishRowInd][col_1] = null;
+                            rows[currentCellInfo_1.finishRowInd][col_1] = null;
                             currentRow[col_1] = cell;
-                            rowMoves[col_1] = currentCellInfo.finishRowInd;
+                            rowMoves[col_1] = currentCellInfo_1.finishRowInd;
                         }
                     }
                     else {
@@ -436,8 +500,12 @@ namespace iText.Layout.Renderer {
                                 currentRow[col_1] = null;
                                 CellRenderer cellOverflow = (CellRenderer)splits[col_1].GetOverflowRenderer();
                                 if (splits[col_1].GetStatus() != LayoutResult.NOTHING) {
-                                    cellOverflow.SetBorders((Border)this.GetProperty(Property.BORDER), 0);
-                                    horizontalBorders[row + 1][col_1] = (Border)this.GetProperty(Property.BORDER);
+                                    //                                cellOverflow.setBorders(cellOverflow.getBorders()[2], 0);
+                                    // TODO
+                                    cellOverflow.SetBorders(GetBorders()[0] == null ? (Border)((Cell)cellOverflow.GetModelElement()).GetDefaultProperty
+                                        (Property.BORDER) : GetBorders()[0], 0);
+                                    horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? (Border)((Cell)cellOverflow.GetModelElement(
+                                        )).GetDefaultProperty(Property.BORDER) : GetBorders()[2];
                                 }
                                 rows[targetOverflowRowIndex[col_1]][col_1] = (CellRenderer)cellOverflow.SetParent(splitResult[1]);
                             }
@@ -447,10 +515,14 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             if (hasContent && currentRow[col_1] != null) {
+                                // columnsWithCellToBeEnlarged[col] = true;
+                                // TODO
                                 columnsWithCellToBeEnlarged[col_1] = true;
-                                horizontalBorders[row + 1][col_1] = (Border)new Cell().GetDefaultProperty(Property.BORDER);
+                                horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? (Border)((Cell)currentRow[col_1].GetModelElement
+                                    ()).GetDefaultProperty(Property.BORDER) : GetBorders()[2];
                                 // for the future
-                                ((Cell)currentRow[col_1].GetModelElement()).SetBorderTop((Border)this.GetProperty(Property.BORDER));
+                                ((Cell)currentRow[col_1].GetModelElement()).SetBorderTop(GetBorders()[0] == null ? (Border)((Cell)currentRow
+                                    [col_1].GetModelElement()).GetDefaultProperty(Property.BORDER) : GetBorders()[0]);
                             }
                         }
                     }
@@ -501,7 +573,9 @@ namespace iText.Layout.Renderer {
                     else {
                         AdjustFooterAndFixOccupiedArea(layoutBox);
                     }
-                    ApplyBorderBox(occupiedArea.GetBBox(), true);
+                    // apply top and bottom borders
+                    ApplyMargins(occupiedArea.GetBBox(), new float[] { topBorderWidth / 2, 0, currentRowBottomWidth / 2, 0 }, 
+                        true);
                     ApplyMargins(occupiedArea.GetBBox(), true);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
                     foreach (KeyValuePair<int, int?> entry in rowMoves) {
@@ -531,13 +605,19 @@ namespace iText.Layout.Renderer {
                     childRenderers.AddAll(currChildRenderers);
                     currChildRenderers.Clear();
                 }
+                // Apply bottom border on the row
+                ApplyMargins(occupiedArea.GetBBox(), new float[] { 0, 0, currentRowBottomWidth / 2, 0 }, true);
+                ApplyMargins(layoutBox, new float[] { 0, 0, currentRowBottomWidth / 2, 0 }, true);
             }
             if (IsPositioned()) {
                 float y = (float)this.GetPropertyAsFloat(Property.Y);
                 float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
                 Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
             }
-            ApplyBorderBox(occupiedArea.GetBBox(), true);
+            // TODO TODO TODO
+            // Apply top border
+            ApplyMargins(occupiedArea.GetBBox(), new float[] { topBorderWidth / 2, 0, 0, 0 }, true);
+            occupiedArea.GetBBox().MoveLeft(leftBorderWidth / 2);
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) {
                 footerRenderer = null;
@@ -647,6 +727,7 @@ namespace iText.Layout.Renderer {
                     tagPointer.MoveToParent();
                 }
             }
+            CollapseBorders();
             DrawBorders(drawContext);
             if (footerRenderer != null) {
                 bool lastFooter = isLastRendererForModelElement && modelElement.IsComplete() && !modelElement.IsSkipLastFooter
@@ -682,7 +763,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth) {
+        protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth, float leftBorderWidth
+            , float rightBorderWidth) {
             float[] columnWidths = new float[tableModel.GetNumberOfColumns()];
             float widthSum = 0;
             for (int i = 0; i < tableModel.GetNumberOfColumns(); i++) {
@@ -690,7 +772,7 @@ namespace iText.Layout.Renderer {
                 widthSum += columnWidths[i];
             }
             for (int i_1 = 0; i_1 < tableModel.GetNumberOfColumns(); i_1++) {
-                columnWidths[i_1] *= tableWidth / widthSum;
+                columnWidths[i_1] *= (tableWidth - leftBorderWidth / 2 - rightBorderWidth / 2) / widthSum;
             }
             return columnWidths;
         }
@@ -759,6 +841,86 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
+        protected internal virtual void CollapseBorders() {
+            // Notice that during #layout() we've already determined the result borders width
+            // and reserved enough space for them.
+            // Im this method we change collapsed cell borders with table borders where it is needed.
+            Border[] tableBorders = GetBorders();
+            float topWidth = tableBorders[0] != null ? tableBorders[0].GetWidth() : 0;
+            float rightWidth = tableBorders[1] != null ? tableBorders[1].GetWidth() : 0;
+            float bottomWidth = tableBorders[2] != null ? tableBorders[2].GetWidth() : 0;
+            float leftWidth = tableBorders[3] != null ? tableBorders[3].GetWidth() : 0;
+            IList<Border> cellBorders;
+            if (null != horizontalBorders && 0 != horizontalBorders.Count) {
+                cellBorders = horizontalBorders[0];
+                if (null != cellBorders) {
+                    for (int i = 0; i < cellBorders.Count; i++) {
+                        if (null != cellBorders[i]) {
+                            if (cellBorders[i].GetWidth() <= topWidth) {
+                                cellBorders[i] = tableBorders[0];
+                            }
+                        }
+                        else {
+                            if (null != tableBorders[0]) {
+                                cellBorders[i] = tableBorders[0];
+                            }
+                        }
+                    }
+                }
+                cellBorders = horizontalBorders[horizontalBorders.Count - 1];
+                if (null != cellBorders) {
+                    for (int i = 0; i < cellBorders.Count; i++) {
+                        if (null != cellBorders[i]) {
+                            if (cellBorders[i].GetWidth() <= bottomWidth) {
+                                cellBorders[i] = tableBorders[2];
+                            }
+                        }
+                        else {
+                            if (null != tableBorders[2]) {
+                                cellBorders[i] = tableBorders[2];
+                            }
+                        }
+                    }
+                }
+            }
+            if (null != verticalBorders && 0 != verticalBorders.Count) {
+                cellBorders = verticalBorders[0];
+                if (null != cellBorders) {
+                    for (int i = 0; i < cellBorders.Count; i++) {
+                        if (null != cellBorders[i]) {
+                            if (cellBorders[i].GetWidth() <= leftWidth) {
+                                cellBorders[i] = tableBorders[3];
+                            }
+                        }
+                        else {
+                            if (null != tableBorders[3]) {
+                                cellBorders[i] = tableBorders[3];
+                            }
+                        }
+                    }
+                }
+                cellBorders = verticalBorders[verticalBorders.Count - 1];
+                if (null != cellBorders) {
+                    for (int i = 0; i < cellBorders.Count; i++) {
+                        if (null != cellBorders[i]) {
+                            if (cellBorders[i].GetWidth() <= rightWidth) {
+                                cellBorders[i] = tableBorders[1];
+                            }
+                        }
+                        else {
+                            if (null != tableBorders[1]) {
+                                cellBorders[i] = tableBorders[1];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void DrawBorder(DrawContext drawContext) {
+        }
+
+        // Do nothing here. Itext7 handle cell and table borders collapse and draw result borders on #drawBorders() method
         protected internal virtual void DrawBorders(DrawContext drawContext) {
             if (occupiedArea.GetBBox().GetHeight() < EPS) {
                 return;
@@ -789,16 +951,23 @@ namespace iText.Layout.Renderer {
                 float x1 = startX;
                 float x2 = x1 + columnWidths[0];
                 if (i == 0) {
-                    Border border = borders[0];
-                    if (border != null) {
-                        y1 -= border.GetWidth() / 2;
+                    if (verticalBorders != null && verticalBorders.Count > 0 && verticalBorders[0].Count > 0 && verticalBorders
+                        [verticalBorders.Count - 1].Count > 0) {
+                        Border firstBorder = verticalBorders[0][0];
+                        if (firstBorder != null) {
+                            x1 -= firstBorder.GetWidth() / 2;
+                        }
                     }
                 }
                 else {
                     if (i == horizontalBorders.Count - 1) {
-                        Border border = borders[0];
-                        if (border != null) {
-                            y1 += border.GetWidth() / 2;
+                        if (verticalBorders != null && verticalBorders.Count > 0 && verticalBorders[0].Count > 0 && verticalBorders
+                            [verticalBorders.Count - 1] != null && verticalBorders[verticalBorders.Count - 1].Count > 0 && verticalBorders
+                            [0] != null) {
+                            Border firstBorder = verticalBorders[0][verticalBorders[0].Count - 1];
+                            if (firstBorder != null) {
+                                x1 -= firstBorder.GetWidth() / 2;
+                            }
                         }
                     }
                 }
@@ -823,23 +992,22 @@ namespace iText.Layout.Renderer {
                 Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
                 if (lastBorder != null) {
                     if (verticalBorders != null && verticalBorders[j] != null && verticalBorders[j].Count > 0) {
+                        if (i == 0) {
+                            if (verticalBorders[j][i] != null) {
+                                x2 += verticalBorders[j][i].GetWidth() / 2;
+                            }
+                        }
+                        else {
+                            if (i == horizontalBorders.Count - 1 && verticalBorders[j].Count >= i - 1 && verticalBorders[j][i - 1] != 
+                                null) {
+                                x2 += verticalBorders[j][i - 1].GetWidth() / 2;
+                            }
+                        }
                     }
-                    //                    if (i == 0) {
-                    //                        if (verticalBorders.get(j).get(i) != null)
-                    //                            x2 += verticalBorders.get(j).get(i).getWidth() / 2;
-                    //                    } else if(i == horizontalBorders.size() - 1 && verticalBorders.get(j).size() >= i - 1 && verticalBorders.get(j).get(i - 1) != null) {
-                    //                        x2 += verticalBorders.get(j).get(i - 1).getWidth() / 2;
-                    //                    }
                     lastBorder.DrawCellBorder(drawContext.GetCanvas(), x1, y1, x2, y1);
                 }
                 if (i < heights.Count) {
                     y1 -= (float)heights[i];
-                }
-                if (i == 0) {
-                    Border border = borders[0];
-                    if (border != null) {
-                        y1 += border.GetWidth() / 2;
-                    }
                 }
             }
             float x1_1 = startX;
@@ -849,20 +1017,6 @@ namespace iText.Layout.Renderer {
                 float y2 = y1;
                 if (!heights.IsEmpty()) {
                     y2 = y1 - (float)heights[0];
-                }
-                if (i_1 == 0) {
-                    Border firstBorder = borders[0];
-                    if (firstBorder != null) {
-                        x1_1 += firstBorder.GetWidth() / 2;
-                    }
-                }
-                else {
-                    if (i_1 == verticalBorders.Count - 1) {
-                        Border firstBorder = borders[0];
-                        if (firstBorder != null) {
-                            x1_1 -= firstBorder.GetWidth() / 2;
-                        }
-                    }
                 }
                 int j;
                 for (j = 1; j < borders.Count; j++) {
@@ -892,12 +1046,6 @@ namespace iText.Layout.Renderer {
                 }
                 if (i_1 < columnWidths.Length) {
                     x1_1 += columnWidths[i_1];
-                }
-                if (i_1 == 0) {
-                    Border firstBorder = borders[0];
-                    if (firstBorder != null) {
-                        x1_1 -= firstBorder.GetWidth() / 2;
-                    }
                 }
             }
             if (isTagged) {
@@ -965,8 +1113,8 @@ namespace iText.Layout.Renderer {
         }
 
         private void BuildBordersArrays(CellRenderer cell, int row, bool hasContent) {
-            int colspan = cell.GetPropertyAsInteger(Property.COLSPAN);
-            int rowspan = cell.GetPropertyAsInteger(Property.ROWSPAN);
+            int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+            int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
             int colN = ((Cell)cell.GetModelElement()).GetCol();
             Border[] cellBorders = cell.GetBorders();
             if (row + 1 - rowspan < 0) {

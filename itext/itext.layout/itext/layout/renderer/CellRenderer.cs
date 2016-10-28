@@ -93,8 +93,8 @@ namespace iText.Layout.Renderer {
             PdfCanvas canvas = drawContext.GetCanvas();
             Matrix ctm = canvas.GetGraphicsState().GetCtm();
             // Avoid rotation
-            float? angle = GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            bool avoidRotation = null != angle && null != GetProperty(Property.BACKGROUND);
+            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            bool avoidRotation = null != angle && null != this.GetProperty<Background>(Property.BACKGROUND);
             if (avoidRotation) {
                 AffineTransform transform = new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6)
                     , ctm.Get(7));
@@ -102,7 +102,7 @@ namespace iText.Layout.Renderer {
                     transform = transform.CreateInverse();
                 }
                 catch (NoninvertibleTransformException e) {
-                    throw new Exception(e);
+                    throw new Exception(e.Message, e);
                 }
                 transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);
@@ -127,14 +127,7 @@ namespace iText.Layout.Renderer {
             float rightWidth = borders[1] != null ? borders[1].GetWidth() : 0;
             float bottomWidth = borders[2] != null ? borders[2].GetWidth() : 0;
             float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
-            float topWidthFactor = ((Cell)this.GetModelElement()).GetRow() == 0 ? 1 : 2;
-            float rightWidthFactor = ((Cell)this.GetModelElement()).GetCol() == ((TableRenderer)this.parent).rows[((Cell
-                )this.GetModelElement()).GetRow()].Length - 1 ? 1 : 2;
-            float bottomWidthFactor = ((Cell)this.GetModelElement()).GetRow() == ((TableRenderer)this.parent).rows.Count
-                 - 1 ? 1 : 2;
-            float leftWidthFactor = ((Cell)this.GetModelElement()).GetCol() == 0 ? 1 : 2;
-            return rect.ApplyMargins<Rectangle>(topWidth / topWidthFactor, rightWidth / rightWidthFactor, bottomWidth 
-                / bottomWidthFactor, leftWidth / leftWidthFactor, reverse);
+            return rect.ApplyMargins<Rectangle>(topWidth / 2, rightWidth / 2, bottomWidth / 2, leftWidth / 2, reverse);
         }
 
         /// <summary><inheritDoc/></summary>

@@ -228,13 +228,26 @@ namespace iText.Layout {
         [NUnit.Framework.Ignore("DEVSIX-798")]
         public virtual void WideBorderTest02() {
             fileName = "wideBorderTest02.pdf";
-            Document doc = CreateDocument();
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            //, new PageSize(595, 450));
             Table table = new Table(3);
-            table.SetBorder(new SolidBorder(Color.GREEN, 1));
-            //        table.setWidthPercent(50);
+            //1
+            table.SetBorder(new SolidBorder(Color.GREEN, 20f));
             Cell cell;
+            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 70f));
+            table.AddCell(cell);
+            cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 70f));
+            table.AddCell(cell);
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            cell.SetBorder(new SolidBorder(Color.RED, 70f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
             table.AddCell(cell);
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
@@ -242,32 +255,183 @@ namespace iText.Layout {
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 50f));
-            table.AddCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell(1, 2).add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //
+            //
+            //        cell = new Cell(2, 1).add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell(1, 2).add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 45f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 40f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 35f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.BLUE, 5f));
+            //        table.addCell(cell);
+            //
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
+            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
+            //        table.addCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
@@ -297,20 +461,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void CollapseBordersTest01() {
-            fileName = "collapseBordersTest01.pdf";
-            Document doc = CreateDocument();
-            Table table = new Table(1);
-            table.SetBorder(new SolidBorder(Color.GREEN, 1));
-            Cell cell = new Cell().Add("Hello").SetBorder(new SolidBorder(Color.RED, 1));
-            table.AddCell(cell);
-            doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-818")]
         public virtual void SplitCellsTest01() {
             fileName = "splitCellsTest01.pdf";
@@ -329,38 +479,48 @@ namespace iText.Layout {
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
+                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.";
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
-            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 1f));
+            //        table.setBorderTop(new DottedBorder(Color.MAGENTA, 3f));
+            //        table.setBorderRight(new DottedBorder(Color.RED, 3f));
+            //        table.setBorderBottom(new DottedBorder(Color.BLUE, 3f));
+            //        table.setBorderLeft(new DottedBorder(Color.GRAY, 3f));
             Cell cell;
+            //        cell = new Cell().add("Some text");
+            //        cell.setBorderRight(new SolidBorder(Color.RED, 2f));
+            //        table.addCell(cell);
+            //        cell = new Cell().add("Some text");
+            //        cell.setBorderLeft(new SolidBorder(Color.GREEN, 4f));
+            //        table.addCell(cell);
             cell = new Cell().Add(longText);
             cell.SetBorderBottom(new SolidBorder(Color.RED, 5f));
             table.AddCell(cell);
-            table.AddCell(new Cell().Add("Hello").SetBorderBottom(new SolidBorder(Color.BLUE, 5f)));
-            cell = new Cell().Add("Some text.");
-            //cell.setBorderTop(new SolidBorder(Color.GREEN, 6f));
+            cell = new Cell().Add("Hello");
+            cell.SetBorderBottom(new SolidBorder(Color.BLUE, 5f));
             table.AddCell(cell);
-            table.AddCell(new Cell().Add("World"));
-            //.setBorderTop(new SolidBorder(Color.YELLOW, 6f)));
-            table.AddCell(new Cell().Add(longText));
-            table.AddCell(new Cell().Add(longText));
+            cell = new Cell().Add("Some text.");
+            cell.SetBorderTop(new SolidBorder(Color.GREEN, 6f));
+            table.AddCell(cell);
+            cell = new Cell().Add("World");
+            cell.SetBorderTop(new SolidBorder(Color.YELLOW, 6f));
+            table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
