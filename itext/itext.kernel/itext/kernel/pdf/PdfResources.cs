@@ -125,7 +125,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds font to resources and register PdfFont in the document for further flushing.</summary>
         /// <returns>added font resource name.</returns>
         public virtual PdfName AddFont(PdfDocument pdfDocument, PdfFont font) {
-            pdfDocument.GetDocumentFonts().Add(font);
+            font.MakeIndirect(pdfDocument);
+            pdfDocument.AddFont(font);
             return AddResource(font, fontNamesGen);
         }
 

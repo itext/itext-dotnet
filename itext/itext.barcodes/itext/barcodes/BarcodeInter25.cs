@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -79,20 +77,15 @@ namespace iText.Barcodes {
         /// <summary>Creates new BarcodeInter25</summary>
         public BarcodeInter25(PdfDocument document)
             : base(document) {
-            try {
-                x = 0.8f;
-                n = 2;
-                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-                size = 8;
-                baseline = size;
-                barHeight = size * 3;
-                textAlignment = ALIGN_CENTER;
-                generateChecksum = false;
-                checksumText = false;
-            }
-            catch (Exception e) {
-                throw new PdfException(e);
-            }
+            x = 0.8f;
+            n = 2;
+            font = document.GetDefaultFont();
+            size = 8;
+            baseline = size;
+            barHeight = size * 3;
+            textAlignment = ALIGN_CENTER;
+            generateChecksum = false;
+            checksumText = false;
         }
 
         /// <summary>Deletes all the non numeric characters from <CODE>text</CODE>.</summary>

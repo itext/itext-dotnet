@@ -79,7 +79,6 @@ namespace iText.Kernel.Font {
         internal PdfTrueTypeFont(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            CheckFontDictionary(fontDictionary, PdfName.TrueType);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, false);
             fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);

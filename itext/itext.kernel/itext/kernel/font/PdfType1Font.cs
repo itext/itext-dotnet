@@ -72,7 +72,6 @@ namespace iText.Kernel.Font {
         internal PdfType1Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            CheckFontDictionary(fontDictionary, PdfName.Type1);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             //if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
             bool fillStandardEncoding = !fontDictionary.ContainsKey(PdfName.FontDescriptor);

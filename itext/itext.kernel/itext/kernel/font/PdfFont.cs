@@ -451,10 +451,12 @@ namespace iText.Kernel.Font {
             return PdfFontFactory.CheckFontDictionary(fontDic, fontType, true);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1")]
         protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic) {
             return CheckTrueTypeFontDictionary(fontDic, true);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1")]
         protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
                 .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1))) {

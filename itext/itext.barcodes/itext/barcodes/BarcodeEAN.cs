@@ -42,10 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -194,19 +192,14 @@ namespace iText.Barcodes {
             // 7
             // 8
             // 9
-            try {
-                x = 0.8f;
-                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-                size = 8;
-                baseline = size;
-                barHeight = size * 3;
-                guardBars = true;
-                codeType = EAN13;
-                code = "";
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(e);
-            }
+            x = 0.8f;
+            font = document.GetDefaultFont();
+            size = 8;
+            baseline = size;
+            barHeight = size * 3;
+            guardBars = true;
+            codeType = EAN13;
+            code = "";
         }
 
         /// <summary>Calculates the EAN parity character.</summary>

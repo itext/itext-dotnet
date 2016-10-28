@@ -120,7 +120,6 @@ namespace iText.Kernel.Font {
 
         internal PdfType0Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
-            CheckFontDictionary(fontDictionary, PdfName.Type0);
             newFont = false;
             PdfDictionary cidFont = fontDictionary.GetAsArray(PdfName.DescendantFonts).GetAsDictionary(0);
             String cmap = fontDictionary.GetAsName(PdfName.Encoding).GetValue();

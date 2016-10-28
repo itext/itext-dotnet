@@ -51,6 +51,10 @@ namespace iText.Kernel.Font {
     /// <summary>
     /// This class provides helpful methods for creating fonts ready to be used in a
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+    /// Note, just created
+    /// <see cref="PdfFont"/>
+    /// is almost empty until it will be flushed,
+    /// because it is impossible to fulfill font data until flush.
     /// </summary>
     public sealed class PdfFontFactory {
         /// <summary>This is the default encoding to use.</summary>
@@ -73,13 +77,25 @@ namespace iText.Kernel.Font {
         /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
         ///     </exception>
         public static PdfFont CreateFont() {
-            return CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
+            return CreateFont(FontConstants.HELVETICA, DEFAULT_ENCODING);
         }
 
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>
-        /// by existing font dictionary.
+        /// by already existing font dictionary.
+        /// Note, the font won't be added to any document,
+        /// until you add it to
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// .
+        /// While adding to
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// , or to
+        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
+        /// the font will be made indirect implicitly.
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetFont(iText.Kernel.Pdf.PdfDictionary)"/>
+        /// method is strongly recommended if you want to get PdfFont by both
+        /// existing font dictionary, or just created and hasn't flushed yet.
         /// </summary>
         /// <param name="fontDictionary">the font dictionary to create the font from</param>
         /// <returns>

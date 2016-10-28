@@ -62,6 +62,8 @@ namespace iText.IO {
 
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
+        public const String EXCEPTION_WHILE_CREATING_DEFAULT_FONT = "Exception while creating default font (Helvetica, WinAnsi)";
+
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 
         public const String FORBID_RELEASE_IS_SET = "ForbidRelease flag is set and release is called. Releasing will not be performed.";

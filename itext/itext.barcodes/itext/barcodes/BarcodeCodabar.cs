@@ -42,10 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -90,21 +88,16 @@ namespace iText.Barcodes {
             // b
             // c
             // d
-            try {
-                x = 0.8f;
-                n = 2;
-                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-                size = 8;
-                baseline = size;
-                barHeight = size * 3;
-                textAlignment = ALIGN_CENTER;
-                generateChecksum = false;
-                checksumText = false;
-                startStopText = false;
-            }
-            catch (Exception e) {
-                throw new PdfException(e.Message, e.InnerException);
-            }
+            x = 0.8f;
+            n = 2;
+            font = document.GetDefaultFont();
+            size = 8;
+            baseline = size;
+            barHeight = size * 3;
+            textAlignment = ALIGN_CENTER;
+            generateChecksum = false;
+            checksumText = false;
+            startStopText = false;
         }
 
         /// <summary>Creates the bars.</summary>

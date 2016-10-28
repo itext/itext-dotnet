@@ -82,7 +82,6 @@ namespace iText.Kernel.Font {
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             EnsureObjectIsAddedToDocument(fontDictionary);
-            CheckFontDictionary(fontDictionary, PdfName.Type3);
             subset = true;
             embedded = true;
             fontProgram = new Type3FontProgram(false);

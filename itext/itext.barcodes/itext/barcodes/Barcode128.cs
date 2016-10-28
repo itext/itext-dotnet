@@ -44,10 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -151,18 +149,13 @@ namespace iText.Barcodes {
         /// <summary>Creates new Barcode128</summary>
         public Barcode128(PdfDocument document)
             : base(document) {
-            try {
-                x = 0.8f;
-                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-                size = 8;
-                baseline = size;
-                barHeight = size * 3;
-                textAlignment = ALIGN_CENTER;
-                codeType = CODE128;
-            }
-            catch (System.IO.IOException e) {
-                throw new Exception("Cannot create font", e);
-            }
+            x = 0.8f;
+            font = document.GetDefaultFont();
+            size = 8;
+            baseline = size;
+            barHeight = size * 3;
+            textAlignment = ALIGN_CENTER;
+            codeType = CODE128;
         }
 
         public enum Barcode128CodeSet {

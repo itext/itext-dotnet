@@ -441,7 +441,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(PdfException.FontSizeIsTooSmall, size);
             }
             currentGs.SetFontSize(size);
-            font.MakeIndirect(document);
             PdfName fontName = resources.AddFont(document, font);
             currentGs.SetFont(font);
             contentStream.GetOutputStream().Write(fontName).WriteSpace().WriteFloat(size).WriteSpace().WriteBytes(Tf);

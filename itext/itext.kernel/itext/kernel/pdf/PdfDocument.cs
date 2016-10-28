@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO;
+using iText.IO.Font;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -130,7 +131,10 @@ namespace iText.Kernel.Pdf {
         /// <summary>flag determines whether to write unused objects to result document</summary>
         protected internal bool flushUnusedObjects = false;
 
-        protected internal ICollection<PdfFont> documentFonts = new HashSet<PdfFont>();
+        private IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference, PdfFont
+            >();
+
+        private PdfFont defaultFont = null;
 
         [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
@@ -1419,10 +1423,68 @@ namespace iText.Kernel.Pdf {
             this.userProperties = userProperties;
         }
 
+        /// <summary>
+        /// Create a new instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// or load already created one.
+        /// Note, PdfFont which created with
+        /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
+        /// won't be cached
+        /// until it will be added to
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// or
+        /// <see cref="PdfResources"/>
+        /// .
+        /// </summary>
+        public virtual PdfFont GetFont(PdfDictionary dictionary) {
+            System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
+            if (documentFonts.ContainsKey(dictionary.GetIndirectReference())) {
+                return documentFonts.Get(dictionary.GetIndirectReference());
+            }
+            else {
+                return AddFont(PdfFontFactory.CreateFont(dictionary));
+            }
+        }
+
+        /// <summary>Gets default font for the document: Helvetica, WinAnsi.</summary>
+        /// <remarks>
+        /// Gets default font for the document: Helvetica, WinAnsi.
+        /// One instance per document.
+        /// </remarks>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// or
+        /// <see langword="null"/>
+        /// on error.
+        /// </returns>
+        public virtual PdfFont GetDefaultFont() {
+            if (defaultFont == null) {
+                try {
+                    defaultFont = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
+                    defaultFont.MakeIndirect(this);
+                    AddFont(defaultFont);
+                }
+                catch (System.IO.IOException e) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                    logger.Error(LogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT, e);
+                    defaultFont = null;
+                }
+            }
+            return defaultFont;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
+        }
+
+        /// <summary>Adds PdfFont without an checks</summary>
+        /// <returns>the same PdfFont instance.</returns>
+        internal virtual PdfFont AddFont(PdfFont font) {
+            documentFonts[font.GetPdfObject().GetIndirectReference()] = font;
+            return font;
         }
 
         /// <summary>
@@ -1733,7 +1795,7 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </returns>
         protected internal virtual ICollection<PdfFont> GetDocumentFonts() {
-            return documentFonts;
+            return documentFonts.Values;
         }
 
         protected internal virtual void FlushFonts() {

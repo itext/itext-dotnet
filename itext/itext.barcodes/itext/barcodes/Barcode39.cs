@@ -43,10 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Text;
-using iText.IO.Font;
-using iText.Kernel;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -88,21 +85,16 @@ namespace iText.Barcodes {
         /// <summary>Creates a new Barcode39.</summary>
         public Barcode39(PdfDocument document)
             : base(document) {
-            try {
-                x = 0.8f;
-                n = 2;
-                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-                size = 8;
-                baseline = size;
-                barHeight = size * 3;
-                generateChecksum = false;
-                checksumText = false;
-                startStopText = true;
-                extended = false;
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(e);
-            }
+            x = 0.8f;
+            n = 2;
+            font = document.GetDefaultFont();
+            size = 8;
+            baseline = size;
+            barHeight = size * 3;
+            generateChecksum = false;
+            checksumText = false;
+            startStopText = true;
+            extended = false;
         }
 
         /// <summary>Creates the bars.</summary>
