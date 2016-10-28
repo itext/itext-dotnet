@@ -371,7 +371,7 @@ namespace iText.Layout.Renderer {
                         cell.SetProperty(Property.BORDER_BOTTOM, collapsedBottomBorder);
                     }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
-                    if (collapsedBottomBorder != null) {
+                    if (collapsedBottomBorder != null && null != cellResult.GetOccupiedArea()) {
                         // apply the difference between collapsed table border and own cell border
                         cellResult.GetOccupiedArea().GetBBox().ApplyMargins(0, 0, (collapsedBottomBorder.GetWidth() - (oldBottomBorder
                              == null ? 0 : oldBottomBorder.GetWidth())) / 2, 0, false);
