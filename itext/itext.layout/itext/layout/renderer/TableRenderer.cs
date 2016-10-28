@@ -161,7 +161,7 @@ namespace iText.Layout.Renderer {
             // Notice that we consider only the first row's left and right border widths,
             // i.e. the borders still can be drawn outside the layout area.
             int row = 0;
-            while (row < rows.Count || -1 == leftBorderWidth || -1 == rightBorderWidth) {
+            while (row < rows.Count && (-1 == leftBorderWidth || -1 == rightBorderWidth)) {
                 CellRenderer[] currentRow = rows[row];
                 if (0 == row) {
                     for (int i = 0; i < currentRow.Length; i++) {
@@ -185,9 +185,9 @@ namespace iText.Layout.Renderer {
             leftBorderWidth = Math.Max(null == borders[3] ? 0 : borders[3].GetWidth(), leftBorderWidth);
             rightBorderWidth = Math.Max(null == borders[1] ? 0 : borders[1].GetWidth(), rightBorderWidth);
             topBorderWidth = Math.Max(null == borders[0] ? 0 : borders[0].GetWidth(), topBorderWidth);
+            bottomBorderWidth = null == borders[2] ? 0 : borders[2].GetWidth();
             // Apply top border
             layoutBox.ApplyMargins(topBorderWidth / 2, 0, 0, 0, false);
-            layoutBox.MoveRight(leftBorderWidth / 2);
             if (IsPositioned()) {
                 float x = (float)this.GetPropertyAsFloat(Property.X);
                 float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
@@ -232,6 +232,7 @@ namespace iText.Layout.Renderer {
                 footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
             }
+            layoutBox.ApplyMargins(0, rightBorderWidth / 2, 0, leftBorderWidth / 2, false);
             columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftBorderWidth, rightBorderWidth
                 );
             LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
@@ -263,22 +264,35 @@ namespace iText.Layout.Renderer {
                         cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
                     }
                 }
-                float currentRowBottomWidth = 0;
-                // Notice that some cells can have rowspan different from one and these cell's are not considered here.
-                foreach (TableRenderer.CellRendererInfo currentCellInfo in cellProcessingQueue) {
-                    Border currentCellBottomBorder = currentCellInfo.cellRenderer.GetBorders()[2];
-                    currentRowBottomWidth = Math.Max(null == currentCellBottomBorder ? 0 : currentCellBottomBorder.GetWidth(), 
-                        currentRowBottomWidth);
-                }
-                currentRowBottomWidth = Math.Max(currentRowBottomWidth, bottomBorderWidth);
-                // Apply bottom border on the row
-                layoutBox.ApplyMargins(0, 0, currentRowBottomWidth / 2, 0, false);
+                //            float currentRowBottomBorderWidth = 0;
+                //            // Notice that some cells can have rowspan different from one and these cell's are not considered here.
+                //            for (CellRendererInfo currentCellInfo : cellProcessingQueue) {
+                //                Border currentCellBottomBorder =  currentCellInfo.cellRenderer.getBorders()[2];
+                //                currentRowBottomBorderWidth = Math.max(null == currentCellBottomBorder ? 0 : currentCellBottomBorder.getWidth(), currentRowBottomBorderWidth);
+                //            }
+                //            currentRowBottomBorderWidth = Math.max(currentRowBottomBorderWidth, bottomBorderWidth);
+                //            // Apply bottom border on the row
+                //            layoutBox.applyMargins(0, 0, currentRowBottomBorderWidth / 2, 0, false);
                 // the element which was the first to cause Layout.Nothing
                 IRenderer firstCauseOfNothing = null;
                 while (cellProcessingQueue.Count > 0) {
-                    TableRenderer.CellRendererInfo currentCellInfo_1 = cellProcessingQueue.JRemoveFirst();
-                    int col_1 = currentCellInfo_1.column;
-                    CellRenderer cell = currentCellInfo_1.cellRenderer;
+                    TableRenderer.CellRendererInfo currentCellInfo = cellProcessingQueue.JRemoveFirst();
+                    int col_1 = currentCellInfo.column;
+                    CellRenderer cell = currentCellInfo.cellRenderer;
+                    int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+                    int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+                    // collapse borders if necessary
+                    // notice that bottom border collapse is handled lately
+                    Border[] cellBorders = cell.GetBorders();
+                    if (0 == row - rowspan + 1) {
+                        cell.SetProperty(Property.BORDER_TOP, GetCollapsedBorder(cellBorders[0], borders[0]));
+                    }
+                    if (0 == col_1) {
+                        cell.SetProperty(Property.BORDER_LEFT, GetCollapsedBorder(cellBorders[1], borders[1]));
+                    }
+                    if (tableModel.GetNumberOfColumns() == col_1 + colspan) {
+                        cell.SetProperty(Property.BORDER_RIGHT, GetCollapsedBorder(cellBorders[3], borders[3]));
+                    }
                     if (cell != null) {
                         BuildBordersArrays(cell, row, true);
                     }
@@ -296,11 +310,9 @@ namespace iText.Layout.Renderer {
                             BuildBordersArrays(nextCell, row, true);
                         }
                     }
-                    targetOverflowRowIndex[col_1] = currentCellInfo_1.finishRowInd;
+                    targetOverflowRowIndex[col_1] = currentCellInfo.finishRowInd;
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
-                    bool currentCellHasBigRowspan = (row != currentCellInfo_1.finishRowInd);
-                    int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
-                    int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+                    bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
                     float cellWidth = 0;
                     float colOffset = 0;
                     for (int i = col_1; i < col_1 + colspan; i++) {
@@ -310,7 +322,7 @@ namespace iText.Layout.Renderer {
                         colOffset += columnWidths[i_1];
                     }
                     float rowspanOffset = 0;
-                    for (int i_2 = row - 1; i_2 > currentCellInfo_1.finishRowInd - rowspan && i_2 >= 0; i_2--) {
+                    for (int i_2 = row - 1; i_2 > currentCellInfo.finishRowInd - rowspan && i_2 >= 0; i_2--) {
                         rowspanOffset += (float)heights[i_2];
                     }
                     float cellLayoutBoxHeight = rowspanOffset + (!currentCellHasBigRowspan || hasContent ? layoutBox.GetHeight
@@ -329,7 +341,13 @@ namespace iText.Layout.Renderer {
                     //                    cellBottomWidth = bottomBorder.getWidth();
                     //                    bottomBorder.setWidth(currentRowBottomWidth);
                     //                }
+                    cellArea.GetBBox().ApplyMargins(0, 0, borders[2] == null ? bottomBorderWidth : Math.Max(borders[2].GetWidth
+                        (), bottomBorderWidth), 0, false);
+                    cell.SetProperty(Property.BORDER_BOTTOM, GetCollapsedBorder(cellBorders[2], borders[2]));
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
+                    cell.SetProperty(Property.BORDER_BOTTOM, cellBorders[2]);
+                    cellArea.GetBBox().ApplyMargins(0, 0, borders[2] == null ? bottomBorderWidth : Math.Max(borders[2].GetWidth
+                        (), bottomBorderWidth), 0, true);
                     //                if (bottomBorder != null) {
                     //                    bottomBorder.setWidth(cellBottomWidth);
                     //                }
@@ -351,9 +369,9 @@ namespace iText.Layout.Renderer {
                             currentRow[col_1] = (CellRenderer)cellResult.GetSplitRenderer();
                         }
                         else {
-                            rows[currentCellInfo_1.finishRowInd][col_1] = null;
+                            rows[currentCellInfo.finishRowInd][col_1] = null;
                             currentRow[col_1] = cell;
-                            rowMoves[col_1] = currentCellInfo_1.finishRowInd;
+                            rowMoves[col_1] = currentCellInfo.finishRowInd;
                         }
                     }
                     else {
@@ -573,10 +591,6 @@ namespace iText.Layout.Renderer {
                     else {
                         AdjustFooterAndFixOccupiedArea(layoutBox);
                     }
-                    // apply top and bottom borders
-                    ApplyMargins(occupiedArea.GetBBox(), new float[] { topBorderWidth / 2, 0, currentRowBottomWidth / 2, 0 }, 
-                        true);
-                    ApplyMargins(occupiedArea.GetBBox(), true);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
                     foreach (KeyValuePair<int, int?> entry in rowMoves) {
                         // Move the cell back to its row if there was no actual split
@@ -605,10 +619,10 @@ namespace iText.Layout.Renderer {
                     childRenderers.AddAll(currChildRenderers);
                     currChildRenderers.Clear();
                 }
-                // Apply bottom border on the row
-                ApplyMargins(occupiedArea.GetBBox(), new float[] { 0, 0, currentRowBottomWidth / 2, 0 }, true);
-                ApplyMargins(layoutBox, new float[] { 0, 0, currentRowBottomWidth / 2, 0 }, true);
             }
+            //            // Apply bottom border on the row
+            //            // applyMargins(occupiedArea.getBBox(), new float[] {0, 0, currentRowBottomBorderWidth / 2, 0}, true);
+            //            applyMargins(layoutBox, new float[] {0, 0, currentRowBottomBorderWidth / 2, 0}, true);
             if (IsPositioned()) {
                 float y = (float)this.GetPropertyAsFloat(Property.Y);
                 float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
@@ -617,7 +631,7 @@ namespace iText.Layout.Renderer {
             // TODO TODO TODO
             // Apply top border
             ApplyMargins(occupiedArea.GetBBox(), new float[] { topBorderWidth / 2, 0, 0, 0 }, true);
-            occupiedArea.GetBBox().MoveLeft(leftBorderWidth / 2);
+            // layoutBox.applyMargins(0, 0, 0, leftBorderWidth / 2, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) {
                 footerRenderer = null;
@@ -922,7 +936,7 @@ namespace iText.Layout.Renderer {
 
         // Do nothing here. Itext7 handle cell and table borders collapse and draw result borders on #drawBorders() method
         protected internal virtual void DrawBorders(DrawContext drawContext) {
-            if (occupiedArea.GetBBox().GetHeight() < EPS) {
+            if (occupiedArea.GetBBox().GetHeight() < EPS || childRenderers.Count == 0) {
                 return;
             }
             float startX = GetOccupiedArea().GetBBox().GetX();
@@ -1221,6 +1235,15 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+        }
+
+        private Border GetCollapsedBorder(Border cellBorder, Border tableBorder) {
+            if (null != tableBorder) {
+                if (null == cellBorder || (null != tableBorder && cellBorder.GetWidth() < tableBorder.GetWidth())) {
+                    return tableBorder;
+                }
+            }
+            return cellBorder;
         }
 
         private bool CheckAndReplaceBorderInArray(List<List<Border>> borderArray, int i, int j, Border borderToAdd
