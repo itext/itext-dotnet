@@ -248,18 +248,21 @@ namespace iText.Layout.Renderer {
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
             int[] targetOverflowRowIndex = new int[tableModel.GetNumberOfColumns()];
             // complete table with empty cells
-            CellRenderer[] lastAddedRow = rows[rows.Count - 1];
-            int colIndex = 0;
-            while (colIndex < lastAddedRow.Length && null != lastAddedRow[colIndex]) {
-                colIndex++;
-            }
-            if (0 != colIndex && lastAddedRow.Length != colIndex) {
-                while (colIndex < lastAddedRow.Length) {
-                    Cell emptyCell = new Cell();
-                    emptyCell.SetBorder(Border.NO_BORDER);
-                    ((Table)this.GetModelElement()).AddCell(emptyCell);
-                    this.AddChild(emptyCell.GetRenderer());
-                    colIndex++;
+            CellRenderer[] lastAddedRow;
+            if (0 != rows.Count) {
+                lastAddedRow = rows[rows.Count - 1];
+                int colIndex = 0;
+                while (colIndex < lastAddedRow.Length && null != lastAddedRow[colIndex]) {
+                    colIndex += (int)lastAddedRow[colIndex].GetPropertyAsInteger(Property.COLSPAN);
+                }
+                if (0 != colIndex && lastAddedRow.Length != colIndex) {
+                    while (colIndex < lastAddedRow.Length) {
+                        Cell emptyCell = new Cell();
+                        emptyCell.SetBorder(Border.NO_BORDER);
+                        ((Table)this.GetModelElement()).AddCell(emptyCell);
+                        this.AddChild(emptyCell.GetRenderer());
+                        colIndex++;
+                    }
                 }
             }
             horizontalBorders.Add(tableModel.GetLastRowBottomBorder());
@@ -513,9 +516,9 @@ namespace iText.Layout.Renderer {
                     heights[heights.Count - 1] = heights[heights.Count - 1] + diff;
                 }
                 if (split || row == rows.Count - 1) {
-                    for (int ii = 0; ii < row; ii++) {
-                        currentRow = rows[ii];
-                        if (ii < row - 1 || (ii == row - 1 && (hasContent || cellWithBigRowspanAdded))) {
+                    for (int k = 0; k <= row; k++) {
+                        currentRow = rows[k];
+                        if (k < row || (k == row && (hasContent || cellWithBigRowspanAdded))) {
                             for (int col_1 = 0; col_1 < currentRow.Length; col_1++) {
                                 CellRenderer cell = currentRow[col_1];
                                 if (cell == null) {
@@ -523,10 +526,13 @@ namespace iText.Layout.Renderer {
                                 }
                                 float height = 0;
                                 int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
-                                for (int i = ii; i > ii - rowspan && i >= 0; i--) {
+                                for (int i = k; i > ((k == row + 1) ? targetOverflowRowIndex[col_1] : k) - rowspan && i >= 0; i--) {
                                     height += (float)heights[i];
                                 }
-                                int rowN = ii + 1;
+                                int rowN = k + 1;
+                                if (k == row && !hasContent) {
+                                    rowN--;
+                                }
                                 if (horizontalBorders[rowN][col_1] == null) {
                                     horizontalBorders[rowN][col_1] = cell.GetBorders()[2];
                                 }
