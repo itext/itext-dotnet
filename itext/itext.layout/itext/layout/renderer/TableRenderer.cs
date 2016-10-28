@@ -610,7 +610,7 @@ namespace iText.Layout.Renderer {
                                 horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? ((Cell)currentRow[col_1].GetModelElement()).
                                     HasProperty(Property.BORDER_BOTTOM) && null == ((Cell)currentRow[col_1].GetModelElement()).GetProperty
                                     <Border>(Property.BORDER_BOTTOM) ? null : (Border)((Cell)currentRow[col_1].GetModelElement()).GetDefaultProperty
-                                    (Property.BORDER) : GetBorders()[2];
+                                    <Border>(Property.BORDER) : GetBorders()[2];
                                 // for the future
                                 ((Cell)currentRow[col_1].GetModelElement()).SetBorderTop(GetBorders()[0] == null ? ((Cell)currentRow[col_1
                                     ].GetModelElement()).HasProperty(Property.BORDER_BOTTOM) && null == ((Cell)currentRow[col_1].GetModelElement
