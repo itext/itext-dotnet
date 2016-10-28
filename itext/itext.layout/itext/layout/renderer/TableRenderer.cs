@@ -312,7 +312,7 @@ namespace iText.Layout.Renderer {
                     // collapse boundary borders if necessary
                     // notice that bottom border collapse is handled afterwards
                     Border[] cellBorders = cell.GetBorders();
-                    if (0 >= row - rowspan + 1) {
+                    if (0 == row - rowspan + 1) {
                         cell.SetProperty(Property.BORDER_TOP, GetCollapsedBorder(cellBorders[0], borders[0]));
                     }
                     if (0 == col_1) {
