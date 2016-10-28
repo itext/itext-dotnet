@@ -171,14 +171,17 @@ namespace iText.Barcodes.Qrcode {
             return characterCountBitsForVersions[offset];
         }
 
+        /// <returns>the bits of the mode</returns>
         public int GetBits() {
             return bits;
         }
 
+        /// <returns>the name of the mode.</returns>
         public String GetName() {
             return name;
         }
 
+        /// <returns>the name of the mode.</returns>
         public override String ToString() {
             return name;
         }

@@ -44,7 +44,7 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Barcodes.Qrcode {
-    /// <summary>See ISO 18004:2006 Annex D</summary>
+    /// <summary>See ISO 18004:2006 Annex D.</summary>
     /// <author>Sean Owen</author>
     internal sealed class Version {
         /// <summary>See ISO 18004:2006 Annex D.</summary>
@@ -70,7 +70,7 @@ namespace iText.Barcodes.Qrcode {
         private Version(int versionNumber, int[] alignmentPatternCenters, Version.ECBlocks ecBlocks1, Version.ECBlocks
              ecBlocks2, Version.ECBlocks ecBlocks3, Version.ECBlocks ecBlocks4) {
             this.versionNumber = versionNumber;
-            this.alignmentPatternCenters = alignmentPatternCenters;
+            this.alignmentPatternCenters = alignmentPatternCenters.Clone();
             this.ecBlocks = new Version.ECBlocks[] { ecBlocks1, ecBlocks2, ecBlocks3, ecBlocks4 };
             int total = 0;
             int ecCodewords = ecBlocks1.GetECCodewordsPerBlock();
@@ -136,6 +136,9 @@ namespace iText.Barcodes.Qrcode {
             return VERSIONS[versionNumber - 1];
         }
 
+        /// <summary>Decode the version information.</summary>
+        /// <param name="versionBits">bits stored as int containing</param>
+        /// <returns>Version decoded from the versionBits</returns>
         internal static iText.Barcodes.Qrcode.Version DecodeVersionInformation(int versionBits) {
             int bestDifference = int.MaxValue;
             int bestVersion = 0;
@@ -162,7 +165,8 @@ namespace iText.Barcodes.Qrcode {
             return null;
         }
 
-        /// <summary>See ISO 18004:2006 Annex E</summary>
+        /// <summary>Build the function pattern, See ISO 18004:2006 Annex E.</summary>
+        /// <returns>Bitmatrix containing the pattern</returns>
         internal BitMatrix BuildFunctionPattern() {
             int dimension = GetDimensionForVersion();
             BitMatrix bitMatrix = new BitMatrix(dimension);
@@ -219,6 +223,7 @@ namespace iText.Barcodes.Qrcode {
                 this.ecBlocks = new Version.ECB[] { ecBlocks1, ecBlocks2 };
             }
 
+            /// <returns>The number of error-correction words per block</returns>
             public int GetECCodewordsPerBlock() {
                 return ecCodewordsPerBlock;
             }
@@ -231,10 +236,12 @@ namespace iText.Barcodes.Qrcode {
                 return total;
             }
 
+            /// <returns>the total number of error-correction words</returns>
             public int GetTotalECCodewords() {
                 return ecCodewordsPerBlock * GetNumBlocks();
             }
 
+            /// <returns/>
             public Version.ECB[] GetECBlocks() {
                 return ecBlocks;
             }
@@ -265,11 +272,12 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
+        /// <returns>The version number as a string</returns>
         public override String ToString() {
             return iText.IO.Util.JavaUtil.IntegerToString(versionNumber);
         }
 
-        /// <summary>See ISO 18004:2006 6.5.1 Table 9</summary>
+        /// <summary>See ISO 18004:2006 6.5.1 Table 9.</summary>
         private static Version[] BuildVersions() {
             return new Version[] { new Version(1, new int[] {  }, new Version.ECBlocks(7, new Version.ECB(1, 19)), new 
                 Version.ECBlocks(10, new Version.ECB(1, 16)), new Version.ECBlocks(13, new Version.ECB(1, 13)), new Version.ECBlocks

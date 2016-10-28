@@ -87,10 +87,12 @@ namespace iText.Barcodes.Qrcode {
             this.value = value;
         }
 
+        /// <returns>name of the encoding.</returns>
         public String GetEncodingName() {
             return encodingName;
         }
 
+        /// <returns>the value of the encoding.</returns>
         public int GetValue() {
             return value;
         }

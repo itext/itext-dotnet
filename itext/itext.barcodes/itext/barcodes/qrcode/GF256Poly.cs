@@ -248,6 +248,7 @@ namespace iText.Barcodes.Qrcode {
             return new iText.Barcodes.Qrcode.GF256Poly[] { quotient, remainder };
         }
 
+        /// <returns>String representation of the Galois Field polynomial.</returns>
         public override String ToString() {
             StringBuilder result = new StringBuilder(8 * GetDegree());
             for (int degree = GetDegree(); degree >= 0; degree--) {

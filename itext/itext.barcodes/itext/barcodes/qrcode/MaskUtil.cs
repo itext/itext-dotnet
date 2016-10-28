@@ -50,14 +50,24 @@ namespace iText.Barcodes.Qrcode {
         private MaskUtil() {
         }
 
-        // Apply mask penalty rule 1 and return the penalty. Find repetitive cells with the same color and
-        // give penalty to them. Example: 00000 or 11111.
+        /// <summary>Apply mask penalty rule 1 and return the penalty.</summary>
+        /// <remarks>
+        /// Apply mask penalty rule 1 and return the penalty. Find repetitive cells with the same color and
+        /// give penalty to them. Example: 00000 or 11111.
+        /// </remarks>
+        /// <param name="matrix">ByteMatrix to apply the penalty rule to</param>
+        /// <returns>the rule 1 penalty</returns>
         public static int ApplyMaskPenaltyRule1(ByteMatrix matrix) {
             return ApplyMaskPenaltyRule1Internal(matrix, true) + ApplyMaskPenaltyRule1Internal(matrix, false);
         }
 
-        // Apply mask penalty rule 2 and return the penalty. Find 2x2 blocks with the same color and give
-        // penalty to them.
+        /// <summary>Apply mask penalty rule 2 and return the penalty.</summary>
+        /// <remarks>
+        /// Apply mask penalty rule 2 and return the penalty. Find 2x2 blocks with the same color and give
+        /// penalty to them.
+        /// </remarks>
+        /// <param name="matrix">ByteMatrix to apply the penalty rule to</param>
+        /// <returns>the rule 2 penalty</returns>
         public static int ApplyMaskPenaltyRule2(ByteMatrix matrix) {
             int penalty = 0;
             byte[][] array = matrix.GetArray();
@@ -74,9 +84,14 @@ namespace iText.Barcodes.Qrcode {
             return penalty;
         }
 
-        // Apply mask penalty rule 3 and return the penalty. Find consecutive cells of 00001011101 or
-        // 10111010000, and give penalty to them.  If we find patterns like 000010111010000, we give
-        // penalties twice (i.e. 40 * 2).
+        /// <summary>Apply mask penalty rule 3 and return the penalty.</summary>
+        /// <remarks>
+        /// Apply mask penalty rule 3 and return the penalty. Find consecutive cells of 00001011101 or
+        /// 10111010000, and give penalty to them.  If we find patterns like 000010111010000, we give
+        /// penalties twice (i.e. 40 * 2).
+        /// </remarks>
+        /// <param name="matrix">ByteMatrix to apply the penalty rule to</param>
+        /// <returns>the rule 3 penalty</returns>
         public static int ApplyMaskPenaltyRule3(ByteMatrix matrix) {
             int penalty = 0;
             byte[][] array = matrix.GetArray();
@@ -102,15 +117,20 @@ namespace iText.Barcodes.Qrcode {
             return penalty;
         }
 
-        // Apply mask penalty rule 4 and return the penalty. Calculate the ratio of dark cells and give
-        // penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance. Examples:
-        // -   0% => 100
-        // -  40% =>  20
-        // -  45% =>  10
-        // -  50% =>   0
-        // -  55% =>  10
-        // -  55% =>  20
-        // - 100% => 100
+        /// <summary>Apply mask penalty rule 4 and return the penalty.</summary>
+        /// <remarks>
+        /// Apply mask penalty rule 4 and return the penalty. Calculate the ratio of dark cells and give
+        /// penalty if the ratio is far from 50%. It gives 10 penalty for 5% distance. Examples:
+        /// -   0% =&gt; 100
+        /// -  40% =&gt;  20
+        /// -  45% =&gt;  10
+        /// -  50% =&gt;   0
+        /// -  55% =&gt;  10
+        /// -  55% =&gt;  20
+        /// - 100% =&gt; 100
+        /// </remarks>
+        /// <param name="matrix">Bytematrix to apply the rule to</param>
+        /// <returns>the rule 4 penalty</returns>
         public static int ApplyMaskPenaltyRule4(ByteMatrix matrix) {
             int numDarkCells = 0;
             byte[][] array = matrix.GetArray();
@@ -128,8 +148,15 @@ namespace iText.Barcodes.Qrcode {
             return Math.Abs((int)(darkRatio * 100 - 50)) / 5 * 10;
         }
 
-        // Return the mask bit for "getMaskPattern" at "x" and "y". See 8.8 of JISX0510:2004 for mask
-        // pattern conditions.
+        /// <summary>Return the mask bit for "getMaskPattern" at "x" and "y".</summary>
+        /// <remarks>
+        /// Return the mask bit for "getMaskPattern" at "x" and "y". See 8.8 of JISX0510:2004 for mask
+        /// pattern conditions.
+        /// </remarks>
+        /// <param name="maskPattern">masking pattern to use</param>
+        /// <param name="x">width coordiante</param>
+        /// <param name="y">height-coordinate</param>
+        /// <returns>the mask bit at that position</returns>
         public static bool GetDataMaskBit(int maskPattern, int x, int y) {
             if (!QRCode.IsValidMaskPattern(maskPattern)) {
                 throw new ArgumentException("Invalid mask pattern");

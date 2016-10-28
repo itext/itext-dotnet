@@ -151,14 +151,20 @@ namespace iText.Barcodes.Qrcode {
             return errorCorrectionLevel;
         }
 
+        /// <returns>The datamask in byte-format</returns>
         internal byte GetDataMask() {
             return dataMask;
         }
 
+        /// <returns>the hashcode of the QR-code format information</returns>
         public override int GetHashCode() {
             return (errorCorrectionLevel.Ordinal() << 3) | (int)dataMask;
         }
 
+        /// <summary>Compares the Format Information of this and o</summary>
+        /// <param name="o">object to compare to</param>
+        /// <returns>True if o is a FormatInformationObject and the error-correction level and the datamask are equal, false otherwise
+        ///     </returns>
         public override bool Equals(Object o) {
             if (!(o is iText.Barcodes.Qrcode.FormatInformation)) {
                 return false;

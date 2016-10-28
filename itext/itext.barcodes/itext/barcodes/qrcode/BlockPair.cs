@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 namespace iText.Barcodes.Qrcode {
+    /// <summary>Helper class that groups a block of databytes with its corresponding block of error correction block
+    ///     </summary>
     internal sealed class BlockPair {
         private readonly ByteArray dataBytes;
 
@@ -52,10 +54,12 @@ namespace iText.Barcodes.Qrcode {
             errorCorrectionBytes = errorCorrection;
         }
 
+        /// <returns>data block of the pair</returns>
         public ByteArray GetDataBytes() {
             return dataBytes;
         }
 
+        /// <returns>error correction block of the pair</returns>
         public ByteArray GetErrorCorrectionBytes() {
             return errorCorrectionBytes;
         }
