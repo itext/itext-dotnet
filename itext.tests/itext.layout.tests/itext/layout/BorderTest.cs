@@ -123,29 +123,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-796")]
-        [NUnit.Framework.Test]
-        public virtual void SimpleBorderTest04() {
-            fileName = "simpleBorderTest04.pdf";
-            Document doc = CreateDocument();
-            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
-                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
-                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
-                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
-            String textHelloWorld = "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n";
-            Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.RED, 2f));
-            table.AddCell(new Cell(2, 1).Add(new Paragraph(textHelloWorld)));
-            for (int i = 0; i < 2; i++) {
-                table.AddCell(new Cell().Add(new Paragraph(textByron)));
-            }
-            table.AddCell(new Cell(1, 2).Add(textByron));
-            doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void Borders3DTest() {
             fileName = "borders3DTest.pdf";
@@ -572,28 +549,6 @@ namespace iText.Layout {
             cell = new Cell().Add("World");
             cell.SetBorderTop(new SolidBorder(Color.YELLOW, 6f));
             table.AddCell(cell);
-            doc.Add(table);
-            CloseDocumentAndCompareOutputs(doc);
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void SplitCellsTest02() {
-            fileName = "splitCellsTest02.pdf";
-            Document doc = CreateDocument();
-            String text = "And it's Arsenal, \n" + "Arsenal FC, \n" + "We're by far the greatest team, \n" + "The world has ever seen.... \n";
-            Table table = new Table(2);
-            Cell cell;
-            for (int i = 0; i < 38; i++) {
-                cell = new Cell().Add(text);
-                cell.SetBorder(new SolidBorder(Color.RED, 2f));
-                cell.SetBorderBottom(Border.NO_BORDER);
-                table.AddCell(cell);
-            }
-            doc.Add(table);
-            doc.Add(new AreaBreak());
-            table.SetBorder(new SolidBorder(Color.YELLOW, 3));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

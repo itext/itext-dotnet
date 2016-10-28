@@ -247,8 +247,8 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
             }
             // Apply halves of the borders. The other halves are applied on a Cell level
-            layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, rightTableBorderWidth / 2, 0, leftTableBorderWidth
-                 / 2, false);
+            layoutBox.ApplyMargins(topTableBorderWidth / 2, rightTableBorderWidth / 2, 0, leftTableBorderWidth / 2, false
+                );
             columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftTableBorderWidth, rightTableBorderWidth
                 );
             LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
@@ -312,7 +312,7 @@ namespace iText.Layout.Renderer {
                     // collapse boundary borders if necessary
                     // notice that bottom border collapse is handled afterwards
                     Border[] cellBorders = cell.GetBorders();
-                    if (0 == row - rowspan + 1) {
+                    if (0 >= row - rowspan + 1) {
                         cell.SetProperty(Property.BORDER_TOP, GetCollapsedBorder(cellBorders[0], borders[0]));
                     }
                     if (0 == col_1) {
@@ -367,14 +367,14 @@ namespace iText.Layout.Renderer {
                     Border collapsedBottomBorder = GetCollapsedBorder(oldBottomBorder, borders[2]);
                     if (collapsedBottomBorder != null) {
                         bottomTableBorderWidth = Math.Max(bottomTableBorderWidth, collapsedBottomBorder.GetWidth());
-                        cellArea.GetBBox().ApplyMargins<Rectangle>(0, 0, collapsedBottomBorder.GetWidth() / 2, 0, false);
+                        cellArea.GetBBox().ApplyMargins(0, 0, collapsedBottomBorder.GetWidth() / 2, 0, false);
                         cell.SetProperty(Property.BORDER_BOTTOM, collapsedBottomBorder);
                     }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
-                    if (collapsedBottomBorder != null && null != cellResult.GetOccupiedArea()) {
+                    if (collapsedBottomBorder != null) {
                         // apply the difference between collapsed table border and own cell border
-                        cellResult.GetOccupiedArea().GetBBox().ApplyMargins<Rectangle>(0, 0, (collapsedBottomBorder.GetWidth() - (
-                            oldBottomBorder == null ? 0 : oldBottomBorder.GetWidth())) / 2, 0, false);
+                        cellResult.GetOccupiedArea().GetBBox().ApplyMargins(0, 0, (collapsedBottomBorder.GetWidth() - (oldBottomBorder
+                             == null ? 0 : oldBottomBorder.GetWidth())) / 2, 0, false);
                         cell.SetProperty(Property.BORDER_BOTTOM, oldBottomBorder);
                     }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
@@ -518,11 +518,12 @@ namespace iText.Layout.Renderer {
                                     horizontalBorders[hasContent || cellWithBigRowspanAdded ? row + 1 : row][col_1] = collapsedBorder;
                                 }
                                 // apply the difference between collapsed table border and own cell border
-                                lastAddedRow[col_1].occupiedArea.GetBBox().ApplyMargins<Rectangle>(0, 0, (collapsedBorderWidth - cellBottomBorderWidth
+                                lastAddedRow[col_1].occupiedArea.GetBBox().ApplyMargins(0, 0, (collapsedBorderWidth - cellBottomBorderWidth
                                     ) / 2, 0, true);
                                 int cellRowStartIndex = heights.Count - (int)lastAddedRow[col_1].GetPropertyAsInteger(Property.ROWSPAN);
-                                for (int i = cellRowStartIndex > 0 ? cellRowStartIndex : 0; i < heights.Count; i++) {
-                                    currentCellHeight += heights[i];
+                                ListIterator iterator = heights.ListIterator(cellRowStartIndex > 0 ? cellRowStartIndex : 0);
+                                while (iterator.HasNext()) {
+                                    currentCellHeight += (float)iterator.Next();
                                 }
                                 if (currentCellHeight < lastAddedRow[col_1].occupiedArea.GetBBox().GetHeight()) {
                                     bottomBorderWidthDifference = Math.Max(bottomBorderWidthDifference, (collapsedBorderWidth - cellBottomBorderWidth
@@ -568,8 +569,7 @@ namespace iText.Layout.Renderer {
                 if (split) {
                     iText.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent);
                     // Apply bottom border
-                    splitResult[0].GetOccupiedArea().GetBBox().ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, true
-                        );
+                    splitResult[0].GetOccupiedArea().GetBBox().ApplyMargins(0, 0, bottomTableBorderWidth / 2, 0, true);
                     int[] rowspans = new int[currentRow.Length];
                     bool[] columnsWithCellToBeEnlarged = new bool[currentRow.Length];
                     for (int col_1 = 0; col_1 < currentRow.Length; col_1++) {
@@ -585,17 +585,14 @@ namespace iText.Layout.Renderer {
                                 currentRow[col_1] = null;
                                 CellRenderer cellOverflow = (CellRenderer)splits[col_1].GetOverflowRenderer();
                                 if (splits[col_1].GetStatus() == LayoutResult.PARTIAL) {
-                                    cellOverflow.SetBorders(((Cell)cellOverflow.GetModelElement()).HasProperty(Property.BORDER_BOTTOM) && null
-                                         == ((Cell)cellOverflow.GetModelElement()).GetProperty<Border>(Property.BORDER_BOTTOM) ? null : (Border
-                                        )((Cell)cellOverflow.GetModelElement()).GetDefaultProperty<Border>(Property.BORDER), 0);
+                                    cellOverflow.SetBorders((Border)((Cell)cellOverflow.GetModelElement()).GetDefaultProperty(Property.BORDER)
+                                        , 0);
                                 }
                                 else {
                                     cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
                                 }
-                                horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? ((Cell)cellOverflow.GetModelElement()).HasProperty
-                                    (Property.BORDER_BOTTOM) && null == ((Cell)cellOverflow.GetModelElement()).GetProperty<Border>(Property
-                                    .BORDER_BOTTOM) ? null : (Border)((Cell)cellOverflow.GetModelElement()).GetDefaultProperty<Border>(Property
-                                    .BORDER) : GetBorders()[2];
+                                horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? (Border)((Cell)cellOverflow.GetModelElement(
+                                    )).GetDefaultProperty(Property.BORDER) : GetBorders()[2];
                                 cellOverflow.DeleteOwnProperty(Property.BORDER_BOTTOM);
                                 cellOverflow.SetBorders(cellOverflow.GetBorders()[2], 2);
                                 rows[targetOverflowRowIndex[col_1]][col_1] = (CellRenderer)cellOverflow.SetParent(splitResult[1]);
@@ -607,15 +604,11 @@ namespace iText.Layout.Renderer {
                         else {
                             if (hasContent && currentRow[col_1] != null) {
                                 columnsWithCellToBeEnlarged[col_1] = true;
-                                horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? ((Cell)currentRow[col_1].GetModelElement()).
-                                    HasProperty(Property.BORDER_BOTTOM) && null == ((Cell)currentRow[col_1].GetModelElement()).GetProperty
-                                    <Border>(Property.BORDER_BOTTOM) ? null : (Border)((Cell)currentRow[col_1].GetModelElement()).GetDefaultProperty
-                                    <Border>(Property.BORDER) : GetBorders()[2];
+                                horizontalBorders[row + 1][col_1] = GetBorders()[2] == null ? (Border)((Cell)currentRow[col_1].GetModelElement
+                                    ()).GetDefaultProperty(Property.BORDER) : GetBorders()[2];
                                 // for the future
-                                ((Cell)currentRow[col_1].GetModelElement()).SetBorderTop(GetBorders()[0] == null ? ((Cell)currentRow[col_1
-                                    ].GetModelElement()).HasProperty(Property.BORDER_BOTTOM) && null == ((Cell)currentRow[col_1].GetModelElement
-                                    ()).GetProperty<Border>(Property.BORDER_BOTTOM) ? null : (Border)((Cell)currentRow[col_1].GetModelElement
-                                    ()).GetDefaultProperty<Border>(Property.BORDER) : GetBorders()[0]);
+                                ((Cell)currentRow[col_1].GetModelElement()).SetBorderTop(GetBorders()[0] == null ? (Border)((Cell)currentRow
+                                    [col_1].GetModelElement()).GetDefaultProperty(Property.BORDER) : GetBorders()[0]);
                             }
                         }
                     }
@@ -917,7 +910,7 @@ namespace iText.Layout.Renderer {
             ) {
             iText.Layout.Renderer.TableRenderer overflowRenderer = (iText.Layout.Renderer.TableRenderer)GetNextRenderer
                 ();
-            overflowRenderer.SetRowRange(rowRange);
+            overflowRenderer.rowRange = rowRange;
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
