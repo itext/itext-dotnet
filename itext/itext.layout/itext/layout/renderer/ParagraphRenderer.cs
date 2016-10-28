@@ -86,15 +86,6 @@ namespace iText.Layout.Renderer {
             if (0 == childRenderers.Count) {
                 anythingPlaced = true;
                 currentRenderer = null;
-                SetProperty(Property.MARGIN_TOP, 0);
-                SetProperty(Property.MARGIN_RIGHT, 0);
-                SetProperty(Property.MARGIN_BOTTOM, 0);
-                SetProperty(Property.MARGIN_LEFT, 0);
-                SetProperty(Property.PADDING_TOP, 0);
-                SetProperty(Property.PADDING_RIGHT, 0);
-                SetProperty(Property.PADDING_BOTTOM, 0);
-                SetProperty(Property.PADDING_LEFT, 0);
-                SetProperty(Property.BORDER, Border.NO_BORDER);
             }
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
