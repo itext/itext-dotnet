@@ -556,6 +556,28 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SplitCellsTest02() {
+            fileName = "splitCellsTest02.pdf";
+            Document doc = CreateDocument();
+            String text = "And it's Arsenal, \n" + "Arsenal FC, \n" + "We're by far the greatest team, \n" + "The world has ever seen.... \n";
+            Table table = new Table(2);
+            Cell cell;
+            for (int i = 0; i < 38; i++) {
+                cell = new Cell().Add(text);
+                cell.SetBorder(new SolidBorder(Color.RED, 2f));
+                cell.SetBorderBottom(Border.NO_BORDER);
+                table.AddCell(cell);
+            }
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorder(new SolidBorder(Color.YELLOW, 3));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void TableWithHeaderTest01() {
             fileName = "tableWithHeaderTest01.pdf";
             Document doc = CreateDocument();
