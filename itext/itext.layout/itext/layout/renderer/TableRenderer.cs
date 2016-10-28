@@ -917,7 +917,7 @@ namespace iText.Layout.Renderer {
             ) {
             iText.Layout.Renderer.TableRenderer overflowRenderer = (iText.Layout.Renderer.TableRenderer)GetNextRenderer
                 ();
-            overflowRenderer.rowRange = rowRange;
+            overflowRenderer.SetRowRange(rowRange);
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
