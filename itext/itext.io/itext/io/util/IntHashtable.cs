@@ -62,11 +62,9 @@ namespace iText.IO.Util {
     /// <author>Paulo Soares (added extra methods)</author>
     public class IntHashtable : ICloneable {
         /// <summary>The hash table data.</summary>
-        [System.NonSerialized]
         private IntHashtable.Entry[] table;
 
         /// <summary>The total number of entries in the hash table.</summary>
-        [System.NonSerialized]
         private int count;
 
         /// <summary>The table is rehashed when its size exceeds this threshold.</summary>

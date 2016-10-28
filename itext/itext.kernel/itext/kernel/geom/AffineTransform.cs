@@ -146,7 +146,6 @@ namespace iText.Kernel.Geom {
         internal double m12;
 
         /// <summary>The transformation <code>type</code></summary>
-        [System.NonSerialized]
         internal int type;
 
         public AffineTransform() {
