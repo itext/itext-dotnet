@@ -225,7 +225,19 @@ namespace iText.IO.Font {
                             fontBuilt = new TrueTypeFont(fontProgram);
                         }
                         else {
-                            fontBuilt = new TrueTypeFont(name);
+                            if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0) {
+                                // splitting by "," would be easier but is more error-prone
+                                String[] parts = baseName.Split(".ttc,");
+                                try {
+                                    fontBuilt = new TrueTypeFont(parts[0] + ".ttc", System.Convert.ToInt32(parts[1]));
+                                }
+                                catch (FormatException nfe) {
+                                    throw new iText.IO.IOException(nfe.Message, nfe);
+                                }
+                            }
+                            else {
+                                fontBuilt = new TrueTypeFont(name);
+                            }
                         }
                     }
                     else {

@@ -903,6 +903,25 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
+        public virtual void TestPdfFontFactoryTtc() {
+            String filename = destinationFolder + "testPdfFontFactoryTtc.pdf";
+            String cmpFilename = sourceFolder + "cmp_testPdfFontFactoryTtc.pdf";
+            String txt = "The quick brown fox";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "uming.ttc,1");
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(txt).EndText().RestoreState
+                ();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
         public virtual void TestWriteTTC() {
             String filename = destinationFolder + "DocumentWithTTC.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
