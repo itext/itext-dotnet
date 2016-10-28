@@ -115,9 +115,8 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             Table table = new Table(2);
             table.AddCell(new Cell().Add("1"));
-            table.AddCell(new Cell().Add("2"));
+            table.AddCell(new Cell(2, 1).Add("2"));
             table.AddCell(new Cell().Add("3"));
-            table.AddCell(new Cell().Add("4"));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -449,7 +448,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDocument, new PageSize(842, 400));
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 91f));
+            table.SetBorder(new SolidBorder(Color.GREEN, 90f));
             Cell cell;
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.BLUE, 20f));
@@ -457,13 +456,12 @@ namespace iText.Layout {
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.RED, 120f));
             table.AddCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
