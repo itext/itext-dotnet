@@ -228,6 +228,11 @@ namespace iText.Kernel.Colors {
             return false;
         }
 
+        public static bool IsColorProperty(String value) {
+            return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || WebColors.NAMES.Contains
+                (value.ToLower(System.Globalization.CultureInfo.InvariantCulture));
+        }
+
         /// <summary>Gives you a BaseColor based on a name.</summary>
         /// <param name="name">
         /// a name such as black, violet, cornflowerblue or #RGB or
