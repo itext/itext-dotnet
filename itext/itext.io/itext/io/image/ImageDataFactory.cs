@@ -74,32 +74,62 @@ namespace iText.IO.Image {
         private ImageDataFactory() {
         }
 
+        /// <summary>Create an ImageData instance representing the image from the image bytes.</summary>
+        /// <param name="bytes">byte representation of the image.</param>
+        /// <param name="recoverImage">whether to recover from a image error (for TIFF-images)</param>
+        /// <returns>The created ImageData object.</returns>
         public static ImageData Create(byte[] bytes, bool recoverImage) {
             return CreateImageInstance(bytes, recoverImage);
         }
 
+        /// <summary>Create an ImageData instance representing the image from the image bytes.</summary>
+        /// <param name="bytes">byte representation of the image.</param>
+        /// <returns>The created ImageData object.</returns>
         public static ImageData Create(byte[] bytes) {
             return Create(bytes, false);
         }
 
+        /// <summary>Create an ImageData instance representing the image from the file located at the specified url.</summary>
+        /// <param name="url">location of the image</param>
+        /// <param name="recoverImage">whether to recover from a image error (for TIFF-images)</param>
+        /// <returns>The created ImageData object.</returns>
         public static ImageData Create(Uri url, bool recoverImage) {
             return CreateImageInstance(url, recoverImage);
         }
 
+        /// <summary>Create an ImageData instance representing the image from the file located at the specified url.</summary>
+        /// <param name="url">location of the image</param>
+        /// <returns>The created ImageData object.</returns>
         public static ImageData Create(Uri url) {
             return Create(url, false);
         }
 
+        /// <summary>Create an ImageData instance representing the image from the specified file.</summary>
+        /// <param name="filename">filename of the file containing the image</param>
+        /// <param name="recoverImage">whether to recover from a image error (for TIFF-images)</param>
+        /// <returns>The created ImageData object.</returns>
         /// <exception cref="Java.Net.MalformedURLException"/>
         public static ImageData Create(String filename, bool recoverImage) {
             return Create(UrlUtil.ToURL(filename), recoverImage);
         }
 
+        /// <summary>Create an ImageData instance representing the image from the specified file.</summary>
+        /// <param name="filename">filename of the file containing the image</param>
+        /// <returns>The created ImageData object.</returns>
         /// <exception cref="Java.Net.MalformedURLException"/>
         public static ImageData Create(String filename) {
             return Create(filename, false);
         }
 
+        /// <summary>Create an ImageData instance from the passed parameters.</summary>
+        /// <param name="width">width of the image in pixels</param>
+        /// <param name="height">height of the image in pixels</param>
+        /// <param name="reverseBits">whether to reverse the bits stored in data (TIFF images).</param>
+        /// <param name="typeCCITT">Type of CCITT encoding</param>
+        /// <param name="parameters">colour space parameters</param>
+        /// <param name="data">array containing raw image data</param>
+        /// <param name="transparency">array containing transparency information</param>
+        /// <returns>created ImageData object.</returns>
         public static ImageData Create(int width, int height, bool reverseBits, int typeCCITT, int parameters, byte
             [] data, int[] transparency) {
             if (transparency != null && transparency.Length != 2) {
@@ -122,6 +152,14 @@ namespace iText.IO.Image {
             return image;
         }
 
+        /// <summary>Create an ImageData instance from the passed parameters.</summary>
+        /// <param name="width">width of the image in pixels</param>
+        /// <param name="height">height of the image in pixels</param>
+        /// <param name="components">colour space components</param>
+        /// <param name="bpc">bits per colour.</param>
+        /// <param name="data">array containing raw image data</param>
+        /// <param name="transparency">array containing transparency information</param>
+        /// <returns>created ImageData object.</returns>
         public static ImageData Create(int width, int height, int components, int bpc, byte[] data, int[] transparency
             ) {
             if (transparency != null && transparency.Length != components * 2) {
@@ -169,6 +207,11 @@ namespace iText.IO.Image {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
 
+        /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
+        /// <param name="url">location of the image.</param>
+        /// <param name="noHeader">Whether the image contains a header.</param>
+        /// <param name="size">size of the image</param>
+        /// <returns>created ImageData.</returns>
         public static ImageData CreateBmp(Uri url, bool noHeader, int size) {
             byte[] imageType = ReadImageType(url);
             if (ImageTypeIs(imageType, bmp)) {
@@ -179,6 +222,11 @@ namespace iText.IO.Image {
             throw new ArgumentException("BMP image expected.");
         }
 
+        /// <summary>Get a bitmap ImageData instance from the provided bytes.</summary>
+        /// <param name="bytes">array containing the raw image data</param>
+        /// <param name="noHeader">Whether the image contains a header.</param>
+        /// <param name="size">size of the image</param>
+        /// <returns>created ImageData.</returns>
         public static ImageData CreateBmp(byte[] bytes, bool noHeader, int size) {
             byte[] imageType = ReadImageType(bytes);
             if (noHeader || ImageTypeIs(imageType, bmp)) {
@@ -191,8 +239,8 @@ namespace iText.IO.Image {
 
         /// <summary>Return a GifImage object.</summary>
         /// <remarks>Return a GifImage object. This object cannot be added to a document</remarks>
-        /// <param name="bytes"/>
-        /// <returns/>
+        /// <param name="bytes">array containing the raw image data</param>
+        /// <returns>GifImageData instance.</returns>
         public static GifImageData CreateGif(byte[] bytes) {
             byte[] imageType = ReadImageType(bytes);
             if (ImageTypeIs(imageType, gif)) {
@@ -206,7 +254,7 @@ namespace iText.IO.Image {
         /// <summary>Returns a specified frame of the gif image</summary>
         /// <param name="url">url of gif image</param>
         /// <param name="frame">number of frame to be returned</param>
-        /// <returns/>
+        /// <returns>GifImageData instance.</returns>
         public static ImageData CreateGifFrame(Uri url, int frame) {
             byte[] imageType = ReadImageType(url);
             if (ImageTypeIs(imageType, gif)) {
@@ -321,6 +369,9 @@ namespace iText.IO.Image {
             throw new ArgumentException("JBIG2 image expected.");
         }
 
+        /// <summary>Create a ImageData instance from a Jpeg image url</summary>
+        /// <param name="url"/>
+        /// <returns/>
         public static ImageData CreateJpeg(Uri url) {
             byte[] imageType = ReadImageType(url);
             if (ImageTypeIs(imageType, jpeg)) {

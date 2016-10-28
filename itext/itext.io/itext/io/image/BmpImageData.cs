@@ -61,10 +61,12 @@ namespace iText.IO.Image {
             this.size = size;
         }
 
+        /// <returns>size of the image</returns>
         public virtual int GetSize() {
             return size;
         }
 
+        /// <returns>True if the bitmap image does not contain a header</returns>
         public virtual bool IsNoHeader() {
             return noHeader;
         }

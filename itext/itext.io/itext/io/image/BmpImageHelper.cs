@@ -146,6 +146,12 @@ namespace iText.IO.Image {
         // BMP Image types
         // Color space types
         // Compression Types
+        /// <summary>Process the passed Image data as a BMP image.</summary>
+        /// <remarks>
+        /// Process the passed Image data as a BMP image.
+        /// Image is loaded and all image attributes are initialized and/or updated
+        /// </remarks>
+        /// <param name="image">the image to process as a BMP image</param>
         public static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.BMP) {
                 throw new ArgumentException("BMP image expected");
