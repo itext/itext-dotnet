@@ -69,18 +69,14 @@ namespace iText.Kernel.Crypto.Securityhandler {
         /// </summary>
         protected internal int nextObjectKeySize;
 
+        [System.NonSerialized]
         protected internal IDigest md5;
 
         /// <summary>Work area to prepare the object/generation bytes</summary>
         protected internal byte[] extra = new byte[5];
 
         protected internal SecurityHandler() {
-            try {
-                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
-            }
-            catch (Exception e) {
-                throw new PdfException(PdfException.PdfEncryption, e);
-            }
+            SafeInitMessageDigest();
         }
 
         /// <summary>
@@ -109,5 +105,14 @@ namespace iText.Kernel.Crypto.Securityhandler {
         public abstract OutputStreamEncryption GetEncryptionStream(Stream os);
 
         public abstract IDecryptor GetDecryptor();
+
+        private void SafeInitMessageDigest() {
+            try {
+                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+            }
+            catch (Exception e) {
+                throw new PdfException(PdfException.PdfEncryption, e);
+            }
+        }
     }
 }

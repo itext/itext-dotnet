@@ -131,6 +131,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal ICollection<PdfFont> documentFonts = new HashSet<PdfFont>();
 
+        [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
 
         private static long lastDocumentId = new long();
