@@ -110,6 +110,21 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SimpleBorderTest03() {
+            fileName = "simpleBorderTest03.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.AddCell(new Cell().Add("1"));
+            table.AddCell(new Cell().Add("2"));
+            table.AddCell(new Cell().Add("3"));
+            table.AddCell(new Cell().Add("4"));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void Borders3DTest() {
             fileName = "borders3DTest.pdf";
             Document doc = CreateDocument();
@@ -273,7 +288,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-798")]
         public virtual void WideBorderTest02() {
             fileName = "wideBorderTest02.pdf";
             outFileName = destinationFolder + fileName;
@@ -300,197 +314,183 @@ namespace iText.Layout {
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
             cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell(1, 2).add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //
-            //        cell = new Cell(2, 1).add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell(1, 2).add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 45f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 40f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 35f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.BLUE, 5f));
-            //        table.addCell(cell);
-            //
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Borders shouldn't be layouted outside the layout area.");
-            //        cell.setBorder(new SolidBorder(Color.RED, 50f));
-            //        table.addCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell(2, 1).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell(1, 2).Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 45f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 40f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 35f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.BLUE, 5f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -528,7 +528,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-818")]
         public virtual void SplitCellsTest01() {
             fileName = "splitCellsTest01.pdf";
             Document doc = CreateDocument();
@@ -565,17 +564,17 @@ namespace iText.Layout {
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.";
             Table table = new Table(2);
-            //        table.setBorderTop(new DottedBorder(Color.MAGENTA, 3f));
-            //        table.setBorderRight(new DottedBorder(Color.RED, 3f));
-            //        table.setBorderBottom(new DottedBorder(Color.BLUE, 3f));
-            //        table.setBorderLeft(new DottedBorder(Color.GRAY, 3f));
+            table.SetBorderTop(new DottedBorder(Color.MAGENTA, 3f));
+            table.SetBorderRight(new DottedBorder(Color.RED, 3f));
+            table.SetBorderBottom(new DottedBorder(Color.BLUE, 3f));
+            table.SetBorderLeft(new DottedBorder(Color.GRAY, 3f));
             Cell cell;
-            //        cell = new Cell().add("Some text");
-            //        cell.setBorderRight(new SolidBorder(Color.RED, 2f));
-            //        table.addCell(cell);
-            //        cell = new Cell().add("Some text");
-            //        cell.setBorderLeft(new SolidBorder(Color.GREEN, 4f));
-            //        table.addCell(cell);
+            cell = new Cell().Add("Some text");
+            cell.SetBorderRight(new SolidBorder(Color.RED, 2f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Some text");
+            cell.SetBorderLeft(new SolidBorder(Color.GREEN, 4f));
+            table.AddCell(cell);
             cell = new Cell().Add(longText);
             cell.SetBorderBottom(new SolidBorder(Color.RED, 5f));
             table.AddCell(cell);
@@ -595,7 +594,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
         public virtual void TableWithHeaderTest01() {
             fileName = "tableWithHeaderTest01.pdf";
             Document doc = CreateDocument();
@@ -612,7 +610,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
         public virtual void TableWithHeaderTest02() {
             fileName = "tableWithHeaderTest02.pdf";
             Document doc = CreateDocument();
