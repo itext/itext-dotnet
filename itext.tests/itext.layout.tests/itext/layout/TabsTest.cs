@@ -36,7 +36,7 @@ namespace iText.Layout {
              + "space anchor:\t2123123012 03\tslash anchor:\t202131224\\12\tdot anchor:\t202.32323232323232323223223223223232323232323232323232\n"
              + "space anchor:\t2012 0213133\tslash anchor:\t2024\\21312312\tdot anchor:\t131.292";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }

@@ -14,7 +14,7 @@ namespace iText.Kernel.Pdf {
              + "/test/itext/kernel/pdf/PdfOutlineTest/";
 
         /// <exception cref="System.IO.FileNotFoundException"/>
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "documentWithOutlines.pdf"));

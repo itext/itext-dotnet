@@ -13,7 +13,7 @@ namespace iText.Kernel.Utils {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/utils/PdfSplitterTest/";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

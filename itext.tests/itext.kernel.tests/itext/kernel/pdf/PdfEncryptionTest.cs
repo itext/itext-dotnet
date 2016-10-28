@@ -53,7 +53,7 @@ namespace iText.Kernel.Pdf {
 
         private ICipherParameters privateKey;
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

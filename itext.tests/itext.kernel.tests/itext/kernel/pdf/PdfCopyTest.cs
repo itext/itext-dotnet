@@ -12,7 +12,7 @@ namespace iText.Kernel.Pdf {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfCopyTest/";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

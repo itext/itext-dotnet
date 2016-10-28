@@ -29,7 +29,7 @@ namespace iText.Kernel.Pdf {
 
         internal const String pangramme = "Amazingly few discothegues provide jukeboxes" + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }

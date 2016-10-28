@@ -23,7 +23,7 @@ namespace iText.Layout {
 
         internal String cmpFileName;
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
@@ -229,11 +229,36 @@ namespace iText.Layout {
         public virtual void WideBorderTest02() {
             fileName = "wideBorderTest02.pdf";
             Document doc = CreateDocument();
-            Table table = new Table(1);
-            table.SetWidthPercent(50);
+            Table table = new Table(3);
+            table.SetBorder(new SolidBorder(Color.GREEN, 1));
+            //        table.setWidthPercent(50);
             Cell cell;
             cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
-            cell.SetBorder(new SolidBorder(Color.RED, 100f));
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
+            table.AddCell(cell);
+            cell = new Cell().Add("Borders shouldn't be layouted outside the layout area.");
+            cell.SetBorder(new SolidBorder(Color.RED, 50f));
             table.AddCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
@@ -241,8 +266,8 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [NUnit.Framework.Test]
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
@@ -272,6 +297,20 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CollapseBordersTest01() {
+            fileName = "collapseBordersTest01.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            table.SetBorder(new SolidBorder(Color.GREEN, 1));
+            Cell cell = new Cell().Add("Hello").SetBorder(new SolidBorder(Color.RED, 1));
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-818")]
         public virtual void SplitCellsTest01() {
             fileName = "splitCellsTest01.pdf";
@@ -290,40 +329,38 @@ namespace iText.Layout {
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
-                 + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text."
                  + "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.";
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
+            //                "Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text.Very very very very very very very very very very very very very very very very very very long text." +
             Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 1f));
             Cell cell;
-            cell = new Cell().Add("Some text");
-            cell.SetBorderRight(new SolidBorder(Color.RED, 2f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Some text");
-            cell.SetBorderLeft(new SolidBorder(Color.GREEN, 4f));
-            table.AddCell(cell);
             cell = new Cell().Add(longText);
             cell.SetBorderBottom(new SolidBorder(Color.RED, 5f));
             table.AddCell(cell);
             table.AddCell(new Cell().Add("Hello").SetBorderBottom(new SolidBorder(Color.BLUE, 5f)));
             cell = new Cell().Add("Some text.");
-            cell.SetBorderTop(new SolidBorder(Color.GREEN, 6f));
+            //cell.setBorderTop(new SolidBorder(Color.GREEN, 6f));
             table.AddCell(cell);
-            table.AddCell(new Cell().Add("World").SetBorderTop(new SolidBorder(Color.YELLOW, 6f)));
+            table.AddCell(new Cell().Add("World"));
+            //.setBorderTop(new SolidBorder(Color.YELLOW, 6f)));
+            table.AddCell(new Cell().Add(longText));
+            table.AddCell(new Cell().Add(longText));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

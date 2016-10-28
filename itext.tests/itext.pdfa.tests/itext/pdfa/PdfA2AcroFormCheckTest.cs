@@ -14,7 +14,7 @@ namespace iText.Pdfa {
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/pdfa/PdfA2AcroFormCheckTest/";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateOrClearDestinationFolder(destinationFolder);
         }

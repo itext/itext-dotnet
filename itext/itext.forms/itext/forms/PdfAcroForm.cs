@@ -898,7 +898,8 @@ namespace iText.Forms {
             return false;
         }
 
-        private IDictionary<String, PdfFormField> IterateFields(PdfArray array, IDictionary<String, PdfFormField> fields) {
+        private IDictionary<String, PdfFormField> IterateFields(PdfArray array, IDictionary<String, PdfFormField> 
+            fields) {
             int index = 1;
             foreach (PdfObject field in array) {
                 PdfFormField formField = PdfFormField.MakeFormField(field, document);
@@ -1035,8 +1036,8 @@ namespace iText.Forms {
             }
             PdfArray kids = field.GetAsArray(PdfName.Kids);
             if (kids != null) {
-                for (IEnumerator<PdfObject> iterator = kids.GetDirectEnumerator(); iterator.MoveNext();) {
-                    PdfObject kid = iterator.Current;
+                for (IEnumerator<PdfObject> iterator = kids.DirectIterator(); iterator.HasNext(); ) {
+                    PdfObject kid = iterator.Next();
                     resources.AddAll(GetResources((PdfDictionary)kid));
                 }
             }

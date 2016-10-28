@@ -1551,8 +1551,8 @@ namespace iText.Kernel.Utils {
                             if (compareResult != null && currentPath != null) {
                                 currentPath.PushOffsetToPath(i);
                                 compareResult.AddError(currentPath, String.Format("PdfString. Characters differ at position {0}. Expected: {1} ({2}). Found: {3} ({4})."
-                                    , i, char.ToString(cmpStr[i]), cmpStr.JSubstring(l, r).Replace("\n", "\\n"), char.ToString(outStr[i]), 
-                                    outStr.JSubstring(l, r).Replace("\n", "\\n")));
+                                    , i, char?.ToString(cmpStr[i]), cmpStr.JSubstring(l, r).Replace("\n", "\\n"), char?.ToString(outStr[i]
+                                    ), outStr.JSubstring(l, r).Replace("\n", "\\n")));
                                 currentPath.Pop();
                             }
                             break;

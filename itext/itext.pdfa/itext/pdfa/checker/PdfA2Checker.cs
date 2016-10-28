@@ -132,15 +132,15 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_150(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_154(extGStateDict);
                     CheckExtGState(gState);
                 }
             }
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
-        private sealed class _CanvasGraphicsState_150 : CanvasGraphicsState {
-            public _CanvasGraphicsState_150(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_154 : CanvasGraphicsState {
+            public _CanvasGraphicsState_154(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
@@ -297,14 +297,12 @@ namespace iText.Pdfa.Checker {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
             // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
             if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN)) {
-                throw new PdfAConformanceException(
-                    PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanEncodingOrWinAnsiEncoding,
-                    trueTypeFont);
+                throw new PdfAConformanceException(PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanEncodingOrWinAnsiEncoding
+                    , trueTypeFont);
             }
-
-            // if font has differences array, itext7 ensures that all names in it are listed in AdobeGlyphList
         }
 
+        // if font has differences array, itext7 ensures that all names in it are listed in AdobeGlyphList
         protected internal override double GetMaxRealValue() {
             return float.MaxValue;
         }
@@ -375,7 +373,6 @@ namespace iText.Pdfa.Checker {
                             );
                     }
                 }
-
                 CheckResourcesOfAppearanceStreams(ap);
             }
             else {
@@ -410,7 +407,6 @@ namespace iText.Pdfa.Checker {
                         );
                 }
                 CheckResources(form.GetAsDictionary(PdfName.DR));
-
                 PdfArray fields = form.GetAsArray(PdfName.Fields);
                 if (fields != null) {
                     fields = GetFormFields(fields);
@@ -476,16 +472,16 @@ namespace iText.Pdfa.Checker {
                 }
                 PdfArray configs = oCProperties.GetAsArray(PdfName.Configs);
                 if (configs != null) {
-                    for (IEnumerator<PdfObject> iterator = configs.GetDirectEnumerator(); iterator.MoveNext();) {
-                        PdfObject config = iterator.Current;
+                    for (IEnumerator<PdfObject> iterator = configs.DirectIterator(); iterator.HasNext(); ) {
+                        PdfObject config = iterator.Next();
                         configList.Add((PdfDictionary)config);
                     }
                 }
                 ICollection<PdfObject> ocgs = new HashSet<PdfObject>();
                 PdfArray ocgsArray = oCProperties.GetAsArray(PdfName.OCGs);
                 if (ocgsArray != null) {
-                    for (IEnumerator<PdfObject> iterator = ocgsArray.GetDirectEnumerator(); iterator.MoveNext();) {
-                        PdfObject ocg = iterator.Current;
+                    for (IEnumerator<PdfObject> iterator = ocgsArray.DirectIterator(); iterator.HasNext(); ) {
+                        PdfObject ocg = iterator.Next();
                         ocgs.Add(ocg);
                     }
                 }
@@ -513,7 +509,7 @@ namespace iText.Pdfa.Checker {
                 if (order.Count != ocgs.Count) {
                     throw new PdfAConformanceException(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs);
                 }
-                order.IntersectWith(ocgs);
+                order.RetainAll(ocgs);
                 if (order.Count != ocgs.Count) {
                     throw new PdfAConformanceException(PdfAConformanceException.OrderArrayShallContainReferencesToAllOcgs);
                 }
@@ -819,7 +815,6 @@ namespace iText.Pdfa.Checker {
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(cs), currentColorSpaces, true, null);
                 }
             }
-
             CheckResources(form.GetAsDictionary(PdfName.Resources));
         }
 
@@ -877,8 +872,8 @@ namespace iText.Pdfa.Checker {
         }
 
         private void FillOrderRecursively(PdfArray orderArray, ICollection<PdfObject> order) {
-            for (IEnumerator<PdfObject> iterator = orderArray.GetDirectEnumerator(); iterator.MoveNext(); ) {
-                PdfObject orderItem = iterator.Current;
+            for (IEnumerator<PdfObject> iterator = orderArray.DirectIterator(); iterator.HasNext(); ) {
+                PdfObject orderItem = iterator.Next();
                 if (!orderItem.IsArray()) {
                     order.Add(orderItem);
                 }

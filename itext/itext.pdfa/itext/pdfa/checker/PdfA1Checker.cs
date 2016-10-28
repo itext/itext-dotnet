@@ -225,16 +225,16 @@ namespace iText.Pdfa.Checker {
 
         public override void CheckFont(PdfFont pdfFont) {
             if (!pdfFont.IsEmbedded()) {
-                throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1)
-                    .SetMessageParams(pdfFont.GetFontProgram().GetFontNames().GetFontName());
+                throw new PdfAConformanceException(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1).SetMessageParams
+                    (pdfFont.GetFontProgram().GetFontNames().GetFontName());
             }
-
             if (pdfFont is PdfTrueTypeFont) {
-                PdfTrueTypeFont trueTypeFont = (PdfTrueTypeFont) pdfFont;
+                PdfTrueTypeFont trueTypeFont = (PdfTrueTypeFont)pdfFont;
                 bool symbolic = trueTypeFont.GetFontEncoding().IsFontSpecific();
                 if (symbolic) {
                     CheckSymbolicTrueTypeFont(trueTypeFont);
-                } else {
+                }
+                else {
                     CheckNonSymbolicTrueTypeFont(trueTypeFont);
                 }
             }
@@ -243,23 +243,21 @@ namespace iText.Pdfa.Checker {
         protected internal override void CheckNonSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             String encoding = trueTypeFont.GetFontEncoding().GetBaseEncoding();
             // non-symbolic true type font will always has an encoding entry in font dictionary in itext7
-            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN) ||
-                trueTypeFont.GetFontEncoding().HasDifferences()) {
-                throw new PdfAConformanceException(
-                    PdfAConformanceException
-                        .AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry, trueTypeFont);
+            if (!PdfEncodings.WINANSI.Equals(encoding) && !encoding.Equals(PdfEncodings.MACROMAN) || trueTypeFont.GetFontEncoding
+                ().HasDifferences()) {
+                throw new PdfAConformanceException(PdfAConformanceException.AllNonSymbolicTrueTypeFontShallSpecifyMacRomanOrWinAnsiEncodingAsTheEncodingEntry
+                    , trueTypeFont);
             }
         }
 
         protected internal override void CheckSymbolicTrueTypeFont(PdfTrueTypeFont trueTypeFont) {
             if (trueTypeFont.GetFontEncoding().HasDifferences()) {
-                throw new PdfAConformanceException(
-                    PdfAConformanceException.AllSymbolicTrueTypeFontsShallNotSpecifyEncoding);
+                throw new PdfAConformanceException(PdfAConformanceException.AllSymbolicTrueTypeFontsShallNotSpecifyEncoding
+                    );
             }
-
-            // if symbolic font encoding doesn't have differences, itext7 won't write encoding for such font
         }
 
+        // if symbolic font encoding doesn't have differences, itext7 won't write encoding for such font
         protected internal override void CheckImage(PdfStream image, PdfDictionary currentColorSpaces) {
             PdfColorSpace colorSpace = null;
             if (IsAlreadyChecked(image)) {
@@ -310,7 +308,6 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.AGroupObjectWithAnSKeyWithAValueOfTransparencyShallNotBeIncludedInAFormXobject
                     );
             }
-
             CheckResources(form.GetAsDictionary(PdfName.Resources));
         }
 
@@ -453,7 +450,6 @@ namespace iText.Pdfa.Checker {
                     throw new PdfAConformanceException(PdfAConformanceException.AppearanceDictionaryShallContainOnlyTheNKeyWithStreamValue
                         );
                 }
-
                 CheckResourcesOfAppearanceStreams(ap);
             }
             if (PdfName.Widget.Equals(subtype) && (annotDic.ContainsKey(PdfName.AA) || annotDic.ContainsKey(PdfName.A)
@@ -481,9 +477,7 @@ namespace iText.Pdfa.Checker {
                 throw new PdfAConformanceException(PdfAConformanceException.NeedAppearancesFlagOfTheInteractiveFormDictionaryShallEitherNotBePresentedOrShallBeFalse
                     );
             }
-
             CheckResources(form.GetAsDictionary(PdfName.DR));
-
             PdfArray fields = form.GetAsArray(PdfName.Fields);
             if (fields != null) {
                 fields = GetFormFields(fields);
@@ -556,10 +550,10 @@ namespace iText.Pdfa.Checker {
             }
         }
 
-        protected PdfArray GetFormFields(PdfArray array) {
+        protected internal virtual PdfArray GetFormFields(PdfArray array) {
             PdfArray fields = new PdfArray();
-            for (IEnumerator<PdfObject> iterator = array.GetDirectEnumerator(); iterator.MoveNext();) {
-                PdfDictionary field = (PdfDictionary)iterator.Current;
+            for (IEnumerator<PdfObject> iterator = array.DirectIterator(); iterator.HasNext(); ) {
+                PdfDictionary field = (PdfDictionary)iterator.Next();
                 PdfArray kids = field.GetAsArray(PdfName.Kids);
                 fields.Add(field);
                 if (kids != null) {

@@ -241,7 +241,7 @@ namespace iText.Kernel.Pdf {
                 AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion());
+                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, iText.Kernel.Version.GetInstance().GetVersion());
                     SetXmpMetadata(xmpMeta);
                 }
                 catch (XMPException) {
@@ -1295,7 +1295,7 @@ namespace iText.Kernel.Pdf {
                         catalog = new PdfCatalog(this);
                         info = new PdfDocumentInfo(this).AddCreationDate();
                         info.AddModDate();
-                        info.GetPdfObject().Put(PdfName.Producer, new PdfString(Version.GetInstance().GetVersion()));
+                        info.GetPdfObject().Put(PdfName.Producer, new PdfString(iText.Kernel.Version.GetInstance().GetVersion()));
                     }
                     else {
                         info.AddModDate();
@@ -1303,7 +1303,7 @@ namespace iText.Kernel.Pdf {
                         if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
                             producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
                         }
-                        Version version = Version.GetInstance();
+                        iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
                         if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
                             producer = version.GetVersion();
                         }
@@ -1718,6 +1718,10 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
+        }
+
+        private long IncrementDocumentId() {
+            return System.Threading.Interlocked.Increment(ref lastDocumentId);
         }
 
         void System.IDisposable.Dispose() {
