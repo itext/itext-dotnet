@@ -636,8 +636,8 @@ namespace iText.IO.Image {
                             }
                         }
                         Object[] indexed = new Object[4];
-                        indexed[0] = "Indexed";
-                        indexed[1] = "DeviceRGB";
+                        indexed[0] = "/Indexed";
+                        indexed[1] = "/DeviceRGB";
                         indexed[2] = gColor - 1;
                         indexed[3] = PdfEncodings.ConvertToString(palette, null);
                         tiff.additional = new Dictionary<String, Object>();
