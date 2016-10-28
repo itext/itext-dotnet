@@ -49,11 +49,11 @@ using iText.Kernel;
 namespace iText.Kernel.Colors {
     /// <summary>
     /// This class is a HashMap that contains the names of colors as a key and the
-    /// corresponding BaseColor as value.
+    /// corresponding RGB color as value.
     /// </summary>
     /// <remarks>
     /// This class is a HashMap that contains the names of colors as a key and the
-    /// corresponding BaseColor as value. (Source: Wikipedia
+    /// corresponding RGB color as value. (Source: Wikipedia
     /// http://en.wikipedia.org/wiki/Web_colors )
     /// </remarks>
     public class WebColors : Dictionary<String, int[]> {
@@ -204,41 +204,12 @@ namespace iText.Kernel.Colors {
             NAMES["yellowgreen"] = new int[] { 0x9a, 0xcd, 0x32, 0xff };
         }
 
-        /// <summary>
-        /// A web color string without the leading # will be 3 or 6 characters long
-        /// and all those characters will be hex digits.
-        /// </summary>
-        /// <remarks>
-        /// A web color string without the leading # will be 3 or 6 characters long
-        /// and all those characters will be hex digits. NOTE: colStr must be all
-        /// lower case or the current hex letter test will fail.
-        /// </remarks>
-        /// <param name="colStr">
-        /// A non-null, lower case string that might describe an RGB color
-        /// in hex.
-        /// </param>
-        /// <returns>Is this a web color hex string without the leading #?</returns>
-        private static bool MissingHashColorFormat(String colStr) {
-            int len = colStr.Length;
-            if (len == 3 || len == 6) {
-                // and it just contains hex chars 0-9, a-f, A-F
-                String match = "[0-9a-f]{" + len + "}";
-                return colStr.Matches(match);
-            }
-            return false;
-        }
-
-        public static bool IsColorProperty(String value) {
-            return value.Contains("rgb(") || value.Contains("rgba(") || value.Contains("#") || WebColors.NAMES.Contains
-                (value.ToLower(System.Globalization.CultureInfo.InvariantCulture));
-        }
-
-        /// <summary>Gives you a BaseColor based on a name.</summary>
+        /// <summary>Gives you a DeviceRgb based on a name.</summary>
         /// <param name="name">
         /// a name such as black, violet, cornflowerblue or #RGB or
         /// #RRGGBB or RGB or RRGGBB or rgb(R,G,B)
         /// </param>
-        /// <returns>the corresponding BaseColor object. Never returns null.</returns>
+        /// <returns>the corresponding DeviceRgb object. Never returns null.</returns>
         /// <exception cref="System.ArgumentException">if the String isn't a know representation of a color.</exception>
         public static DeviceRgb GetRGBColor(String name) {
             int[] color = new int[] { 0, 0, 0, 255 };
@@ -295,6 +266,30 @@ namespace iText.Kernel.Colors {
             }
             color = NAMES.Get(colorName);
             return new DeviceRgb(color[0], color[1], color[2]);
+        }
+
+        /// <summary>
+        /// A web color string without the leading # will be 3 or 6 characters long
+        /// and all those characters will be hex digits.
+        /// </summary>
+        /// <remarks>
+        /// A web color string without the leading # will be 3 or 6 characters long
+        /// and all those characters will be hex digits. NOTE: colStr must be all
+        /// lower case or the current hex letter test will fail.
+        /// </remarks>
+        /// <param name="colStr">
+        /// A non-null, lower case string that might describe an RGB color
+        /// in hex.
+        /// </param>
+        /// <returns>Is this a web color hex string without the leading #?</returns>
+        private static bool MissingHashColorFormat(String colStr) {
+            int len = colStr.Length;
+            if (len == 3 || len == 6) {
+                // and it just contains hex chars 0-9, a-f, A-F
+                String match = "[0-9a-f]{" + len + "}";
+                return colStr.Matches(match);
+            }
+            return false;
         }
 
         private static int GetRGBChannelValue(String rgbChannel) {
