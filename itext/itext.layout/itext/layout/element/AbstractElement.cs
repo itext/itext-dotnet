@@ -129,6 +129,12 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        /// <summary>Gets the child elements of this elements</summary>
+        /// <returns>a list of children</returns>
+        public virtual IList<IElement> GetChildren() {
+            return childElements;
+        }
+
         protected internal abstract IRenderer MakeNewRenderer();
 
         /// <summary>Marks all child elements as artifacts recursively.</summary>
