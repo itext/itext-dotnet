@@ -278,10 +278,10 @@ namespace iText.Layout.Renderer {
                         cell.SetProperty(Property.BORDER_TOP, GetCollapsedBorder(cellBorders[0], borders[0]));
                     }
                     if (0 == col_1) {
-                        cell.SetProperty(Property.BORDER_LEFT, GetCollapsedBorder(cellBorders[1], borders[1]));
+                        cell.SetProperty(Property.BORDER_LEFT, GetCollapsedBorder(cellBorders[3], borders[3]));
                     }
                     if (tableModel.GetNumberOfColumns() == col_1 + colspan) {
-                        cell.SetProperty(Property.BORDER_RIGHT, GetCollapsedBorder(cellBorders[3], borders[3]));
+                        cell.SetProperty(Property.BORDER_RIGHT, GetCollapsedBorder(cellBorders[1], borders[1]));
                     }
                     if (cell != null) {
                         BuildBordersArrays(cell, row, true);
@@ -325,15 +325,15 @@ namespace iText.Layout.Renderer {
                     VerticalAlignment? verticalAlignment = cell.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, null);
                     // Increase bottom border widths up to the table's if necessary to correct #layout()
-                    Border bottomBorder = GetCollapsedBorder(cellBorders[2], borders[2]);
+                    Border bottomBorder = GetCollapsedBorder(cell.GetBorders()[2], borders[2]);
                     if (bottomBorder != null) {
                         cellArea.GetBBox().ApplyMargins(0, 0, bottomBorder.GetWidth(), 0, false);
+                        cell.SetProperty(Property.BORDER_BOTTOM, bottomBorder);
                     }
-                    cell.SetProperty(Property.BORDER_BOTTOM, bottomBorder);
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
-                    cell.SetProperty(Property.BORDER_BOTTOM, cellBorders[2]);
                     if (bottomBorder != null) {
                         cellArea.GetBBox().ApplyMargins(0, 0, bottomBorder.GetWidth(), 0, true);
+                        cell.SetProperty(Property.BORDER_BOTTOM, cell.GetBorders()[2]);
                     }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.
