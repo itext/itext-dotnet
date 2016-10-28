@@ -76,6 +76,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal PageSize defaultPageSize = PageSize.Default;
 
+        [System.NonSerialized]
         protected internal EventDispatcher eventDispatcher = new EventDispatcher();
 
         /// <summary>PdfWriter associated with the document.</summary>
