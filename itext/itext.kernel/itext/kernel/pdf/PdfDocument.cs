@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO;
-using iText.IO.Font;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -1461,7 +1460,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfFont GetDefaultFont() {
             if (defaultFont == null) {
                 try {
-                    defaultFont = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
+                    defaultFont = PdfFontFactory.CreateFont();
                     defaultFont.MakeIndirect(this);
                     AddFont(defaultFont);
                 }

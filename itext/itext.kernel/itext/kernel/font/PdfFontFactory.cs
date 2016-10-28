@@ -67,11 +67,15 @@ namespace iText.Kernel.Font {
         private static bool DEFAULT_CACHED = true;
 
         /// <summary>
-        /// Creates a default font, namely
+        /// Creates a new instance of default font, namely
         /// <see cref="iText.IO.Font.FontConstants.HELVETICA"/>
-        /// standard font with
+        /// standard font
+        /// with
         /// <see cref="iText.IO.Font.PdfEncodings.WINANSI"/>
         /// encoding.
+        /// Note, if you want to reuse the same instance of default font, you may use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// .
         /// </summary>
         /// <returns>created font</returns>
         /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
