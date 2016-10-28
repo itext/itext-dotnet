@@ -65,8 +65,11 @@ namespace iText.IO.Font.Otf {
             if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                 int[] substSequence = substMap.Get(g.GetCode());
                 if (substSequence != null) {
-                    line.SubstituteOneToMany(openReader, substSequence);
-                    changed = true;
+                    // The use of multiple substitution for deletion of an input glyph is prohibited. GlyphCount should always be greater than 0.
+                    if (substSequence.Length > 0) {
+                        line.SubstituteOneToMany(openReader, substSequence);
+                        changed = true;
+                    }
                 }
             }
             line.idx++;
