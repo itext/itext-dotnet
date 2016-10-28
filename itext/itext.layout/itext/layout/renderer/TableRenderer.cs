@@ -521,9 +521,8 @@ namespace iText.Layout.Renderer {
                                 lastAddedRow[col_1].occupiedArea.GetBBox().ApplyMargins<Rectangle>(0, 0, (collapsedBorderWidth - cellBottomBorderWidth
                                     ) / 2, 0, true);
                                 int cellRowStartIndex = heights.Count - (int)lastAddedRow[col_1].GetPropertyAsInteger(Property.ROWSPAN);
-                                ListIterator iterator = heights.ListIterator(cellRowStartIndex > 0 ? cellRowStartIndex : 0);
-                                while (iterator.HasNext()) {
-                                    currentCellHeight += (float)iterator.Next();
+                                for (int i = cellRowStartIndex > 0 ? cellRowStartIndex : 0; i < heights.Count; i++) {
+                                    currentCellHeight += heights[i];
                                 }
                                 if (currentCellHeight < lastAddedRow[col_1].occupiedArea.GetBBox().GetHeight()) {
                                     bottomBorderWidthDifference = Math.Max(bottomBorderWidthDifference, (collapsedBorderWidth - cellBottomBorderWidth
