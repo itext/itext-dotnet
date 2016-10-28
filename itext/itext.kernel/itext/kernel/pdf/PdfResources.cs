@@ -181,6 +181,11 @@ namespace iText.Kernel.Pdf {
             return AddResource(image, imageNamesGen);
         }
 
+        public virtual PdfImageXObject GetImage(PdfName name) {
+            PdfStream image = GetResource(PdfName.Image).GetAsStream(name);
+            return image != null ? new PdfImageXObject(image) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Xobject.PdfFormXObject"/>
@@ -255,6 +260,11 @@ namespace iText.Kernel.Pdf {
             return name;
         }
 
+        public virtual PdfFormXObject GetForm(PdfName name) {
+            PdfStream form = GetResource(PdfName.Form).GetAsStream(name);
+            return form != null ? new PdfFormXObject(form) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState"/>
@@ -308,6 +318,11 @@ namespace iText.Kernel.Pdf {
             return AddResource(extGState, egsNamesGen);
         }
 
+        public virtual PdfExtGState GetPdfExtGState(PdfName name) {
+            PdfDictionary dic = GetResource(PdfName.ExtGState).GetAsDictionary(name);
+            return dic != null ? new PdfExtGState(dic) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="PdfDictionary"/>
@@ -346,6 +361,10 @@ namespace iText.Kernel.Pdf {
             return AddResource(properties, propNamesGen);
         }
 
+        public virtual PdfObject GetProperties(PdfName name) {
+            return GetResourceObject(PdfName.Properties, name);
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
@@ -374,6 +393,11 @@ namespace iText.Kernel.Pdf {
         /// <returns>added color space resources name.</returns>
         public virtual PdfName AddColorSpace(PdfObject colorSpace) {
             return AddResource(colorSpace, csNamesGen);
+        }
+
+        public virtual PdfColorSpace GetColorSpace(PdfName name) {
+            PdfObject colorSpace = GetResourceObject(PdfName.ColorSpace, name);
+            return colorSpace != null ? PdfColorSpace.MakeColorSpace(colorSpace) : null;
         }
 
         /// <summary>
@@ -431,6 +455,11 @@ namespace iText.Kernel.Pdf {
             return AddResource(pattern, patternNamesGen);
         }
 
+        public virtual PdfPattern GetPattern(PdfName name) {
+            PdfObject pattern = GetResourceObject(PdfName.Pattern, name);
+            return pattern is PdfDictionary ? PdfPattern.GetPatternInstance((PdfDictionary)pattern) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfShading"/>
@@ -484,6 +513,11 @@ namespace iText.Kernel.Pdf {
                     ().ToString());
             }
             return AddResource(shading, shadingNamesGen);
+        }
+
+        public virtual PdfShading GetShading(PdfName name) {
+            PdfObject shading = GetResourceObject(PdfName.Shading, name);
+            return shading is PdfDictionary ? PdfShading.MakeShading((PdfDictionary)shading) : null;
         }
 
         protected internal virtual bool IsReadOnly() {

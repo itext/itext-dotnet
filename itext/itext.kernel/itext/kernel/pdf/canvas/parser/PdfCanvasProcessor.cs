@@ -853,9 +853,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 else {
                     if (PdfName.Pattern.Equals(pdfObject)) {
                         if (operands[0] is PdfName) {
-                            PdfObject pattern = resources.GetResourceObject(PdfName.Pattern, (PdfName)operands[0]);
-                            if (pattern is PdfDictionary) {
-                                return new PatternColor(PdfPattern.GetPatternInstance((PdfDictionary)pattern));
+                            PdfPattern pattern = resources.GetPattern((PdfName)operands[0]);
+                            if (pattern != null) {
+                                return new PatternColor(pattern);
                             }
                         }
                     }
@@ -909,12 +909,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                                                     PdfColorSpace underlyingCs = ((PdfSpecialCs.UncoloredTilingPattern)pdfColorSpace).GetUnderlyingColorSpace(
                                                         );
                                                     if (patternName is PdfName) {
-                                                        PdfObject patternObject = resources.GetResourceObject(PdfName.Pattern, (PdfName)patternName);
-                                                        if (patternObject is PdfDictionary) {
-                                                            PdfPattern pattern = PdfPattern.GetPatternInstance((PdfDictionary)patternObject);
-                                                            if (pattern is PdfPattern.Tiling) {
-                                                                return new PatternColor((PdfPattern.Tiling)pattern, underlyingCs, GetColorants(underlyingOperands));
-                                                            }
+                                                        PdfPattern pattern = resources.GetPattern((PdfName)patternName);
+                                                        if (pattern is PdfPattern.Tiling) {
+                                                            return new PatternColor((PdfPattern.Tiling)pattern, underlyingCs, GetColorants(underlyingOperands));
                                                         }
                                                     }
                                                 }
