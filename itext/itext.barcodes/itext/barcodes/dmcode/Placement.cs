@@ -56,6 +56,10 @@ namespace iText.Barcodes.Dmcode {
         private Placement() {
         }
 
+        /// <summary>Execute the placement</summary>
+        /// <param name="nrow">number of rows</param>
+        /// <param name="ncol">number of columns</param>
+        /// <returns>array containing appropriate values for ECC200</returns>
         public static short[] DoPlacement(int nrow, int ncol) {
             int key = nrow * 1000 + ncol;
             short[] pc = cache.Get(key);

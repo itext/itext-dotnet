@@ -205,6 +205,11 @@ namespace iText.Barcodes.Dmcode {
             }
         }
 
+        /// <summary>Calculates the error correction code for the given parameters.</summary>
+        /// <param name="wd">bytearray containing the data</param>
+        /// <param name="nd">size of the data</param>
+        /// <param name="datablock">size of a datablock</param>
+        /// <param name="nc">size of a errorblock</param>
         public static void GenerateECC(byte[] wd, int nd, int datablock, int nc) {
             int blocks = (nd + 2) / datablock;
             int b;
