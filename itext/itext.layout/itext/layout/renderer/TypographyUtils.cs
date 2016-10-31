@@ -183,8 +183,7 @@ namespace iText.Layout.Renderer {
         internal static int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
             ) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
-                    );
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 if (levels == null) {
