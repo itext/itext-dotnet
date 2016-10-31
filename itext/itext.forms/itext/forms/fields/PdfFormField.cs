@@ -2824,12 +2824,9 @@ namespace iText.Forms.Fields {
                         fontAndSize[0] = font;
                     }
                     else {
-                        if (null != document.GetFont(requiredFontDictionary)) {
-                            fontAndSize[0] = document.GetFont(requiredFontDictionary);
-                        }
-                        else {
-                            fontAndSize[0] = PdfFontFactory.CreateFont(requiredFontDictionary);
-                        }
+                        PdfFont dicFont = document != null ? document.GetFont(requiredFontDictionary) : PdfFontFactory.CreateFont(
+                            requiredFontDictionary);
+                        fontAndSize[0] = dicFont;
                     }
                     if (fontSize != 0) {
                         fontAndSize[1] = fontSize;
