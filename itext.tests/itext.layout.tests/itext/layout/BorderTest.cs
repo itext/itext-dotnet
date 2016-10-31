@@ -582,15 +582,41 @@ namespace iText.Layout {
         public virtual void SplitCellsTest02() {
             fileName = "splitCellsTest02.pdf";
             Document doc = CreateDocument();
-            String text = "And it's Arsenal, \n" + "Arsenal FC, \n" + "We're by far the greatest team, \n" + "The world has ever seen.... \n";
+            String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n";
             Table table = new Table(2);
             Cell cell;
             for (int i = 0; i < 38; i++) {
                 cell = new Cell().Add(text);
                 cell.SetBorder(new SolidBorder(Color.RED, 2f));
-                cell.SetBorderBottom(Border.NO_BORDER);
                 table.AddCell(cell);
             }
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table.SetBorder(new SolidBorder(Color.YELLOW, 3));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest04() {
+            fileName = "splitCellsTest04.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 100 + 72));
+            String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "A\n" + "B\n" + "C\n" + "D";
+            Table table = new Table(1);
+            Cell cell;
+            cell = new Cell().Add(text);
+            cell.SetBorderBottom(new SolidBorder(Color.RED, 100));
+            cell.SetBorderTop(new SolidBorder(Color.RED, 100));
+            table.AddCell(cell);
+            table.AddFooterCell(new Cell().Add("Footer").SetBorderTop(new SolidBorder(Color.YELLOW, 30)));
+            table.AddHeaderCell(new Cell().Add("Header").SetBorderBottom(new SolidBorder(Color.GREEN, 100)));
             doc.Add(table);
             doc.Add(new AreaBreak());
             table.SetBorder(new SolidBorder(Color.YELLOW, 3));

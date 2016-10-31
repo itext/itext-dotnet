@@ -538,6 +538,7 @@ namespace iText.Layout.Renderer {
                             }
                         }
                         heights[heights.Count - 1] = heights[heights.Count - 1] + bottomBorderWidthDifference;
+                        occupiedArea.GetBBox().MoveDown(bottomBorderWidthDifference).IncreaseHeight(bottomBorderWidthDifference);
                     }
                     // Correct occupied areas of all added cells
                     for (int k = 0; k <= row; k++) {
@@ -574,9 +575,6 @@ namespace iText.Layout.Renderer {
                 }
                 if (split) {
                     iText.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent);
-                    // Apply bottom border
-                    splitResult[0].GetOccupiedArea().GetBBox().ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, true
-                        );
                     int[] rowspans = new int[currentRow.Length];
                     bool[] columnsWithCellToBeEnlarged = new bool[currentRow.Length];
                     for (int col_1 = 0; col_1 < currentRow.Length; col_1++) {
@@ -662,17 +660,15 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                    if (row == rowRange.GetFinishRow() && footerRenderer != null) {
-                        footerRenderer.GetOccupiedAreaBBox().SetY(splitResult[0].GetOccupiedAreaBBox().GetY() - footerRenderer.GetOccupiedAreaBBox
-                            ().GetHeight());
-                        foreach (IRenderer renderer in footerRenderer.GetChildRenderers()) {
-                            renderer.Move(0, splitResult[0].GetOccupiedAreaBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetY()
-                                 - renderer.GetOccupiedArea().GetBBox().GetHeight());
-                        }
+                    if (0 != this.childRenderers.Count) {
+                        occupiedArea.GetBBox().ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, true);
+                        layoutBox.ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, false);
                     }
                     else {
-                        AdjustFooterAndFixOccupiedArea(layoutBox);
+                        occupiedArea.GetBBox().ApplyMargins<Rectangle>(topTableBorderWidth / 2, 0, 0, 0, false);
+                        layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, 0, 0, 0, true);
                     }
+                    AdjustFooterAndFixOccupiedArea(layoutBox);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
                     foreach (KeyValuePair<int, int?> entry in rowMoves) {
                         // Move the cell back to its row if there was no actual split
@@ -710,6 +706,7 @@ namespace iText.Layout.Renderer {
             // Apply bottom and top border
             ApplyMargins(occupiedArea.GetBBox(), new float[] { topTableBorderWidth / 2, 0, bottomTableBorderWidth / 2, 
                 0 }, true);
+            layoutBox.ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, false);
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) {
                 footerRenderer = null;
