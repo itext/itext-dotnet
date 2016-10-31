@@ -70,7 +70,7 @@ namespace iText.Barcodes.Qrcode {
         private Version(int versionNumber, int[] alignmentPatternCenters, Version.ECBlocks ecBlocks1, Version.ECBlocks
              ecBlocks2, Version.ECBlocks ecBlocks3, Version.ECBlocks ecBlocks4) {
             this.versionNumber = versionNumber;
-            this.alignmentPatternCenters = alignmentPatternCenters.Clone();
+            this.alignmentPatternCenters = (int[])alignmentPatternCenters.Clone();
             this.ecBlocks = new Version.ECBlocks[] { ecBlocks1, ecBlocks2, ecBlocks3, ecBlocks4 };
             int total = 0;
             int ecCodewords = ecBlocks1.GetECCodewordsPerBlock();

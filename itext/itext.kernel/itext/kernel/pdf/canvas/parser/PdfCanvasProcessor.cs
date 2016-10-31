@@ -904,7 +904,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                                             }
                                             else {
                                                 if (PdfName.Pattern.Equals(csType)) {
-                                                    IList<PdfObject> underlyingOperands = new LinkedList<PdfObject>(operands);
+                                                    IList<PdfObject> underlyingOperands = new List<PdfObject>(operands);
                                                     PdfObject patternName = underlyingOperands.JRemoveAt(operands.Count - 2);
                                                     PdfColorSpace underlyingCs = ((PdfSpecialCs.UncoloredTilingPattern)pdfColorSpace).GetUnderlyingColorSpace(
                                                         );
