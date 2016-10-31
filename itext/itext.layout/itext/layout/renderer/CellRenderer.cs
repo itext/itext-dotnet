@@ -94,7 +94,7 @@ namespace iText.Layout.Renderer {
             Matrix ctm = canvas.GetGraphicsState().GetCtm();
             // Avoid rotation
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            bool avoidRotation = null != angle && null != this.GetProperty<Background>(Property.BACKGROUND);
+            bool avoidRotation = null != angle && HasProperty(Property.BACKGROUND);
             if (avoidRotation) {
                 AffineTransform transform = new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6)
                     , ctm.Get(7));
