@@ -218,31 +218,33 @@ namespace iText.IO.Font {
                     fontBuilt = new Type1Font(name, null, null, null);
                 }
                 else {
-                    if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || baseName.ToLower
-                        (System.Globalization.CultureInfo.InvariantCulture).EndsWith(".otf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                        ).IndexOf(".ttc,") > 0) {
-                        if (fontProgram != null) {
-                            fontBuilt = new TrueTypeFont(fontProgram);
-                        }
-                        else {
-                            if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0) {
-                                // splitting by "," would be easier but is more error-prone
-                                String[] parts = baseName.Split(".ttc,");
-                                try {
-                                    fontBuilt = new TrueTypeFont(parts[0] + ".ttc", System.Convert.ToInt32(parts[1]));
-                                }
-                                catch (FormatException nfe) {
-                                    throw new iText.IO.IOException(nfe.Message, nfe);
-                                }
+                    if (isCidFont) {
+                        fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
+                    }
+                    else {
+                        if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || baseName.ToLower
+                            (System.Globalization.CultureInfo.InvariantCulture).EndsWith(".otf")) {
+                            if (fontProgram != null) {
+                                fontBuilt = new TrueTypeFont(fontProgram);
                             }
                             else {
                                 fontBuilt = new TrueTypeFont(name);
                             }
                         }
-                    }
-                    else {
-                        if (isCidFont) {
-                            fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
+                        else {
+                            int ttcSplit = baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,");
+                            if (ttcSplit > 0) {
+                                try {
+                                    String ttcName = baseName.JSubstring(0, ttcSplit + 4);
+                                    //count(.ttc) = 4
+                                    int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                    //count(.ttc,) = 5)
+                                    fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                                }
+                                catch (FormatException nfe) {
+                                    throw new iText.IO.IOException(nfe.Message, nfe);
+                                }
+                            }
                         }
                     }
                 }
