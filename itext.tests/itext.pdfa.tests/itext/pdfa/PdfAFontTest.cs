@@ -56,7 +56,7 @@ namespace iText.Pdfa {
                     ("Hello World! Pdf/A-1B").EndText().RestoreState();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "FreeSans")));
 ;
         }
 
@@ -97,7 +97,7 @@ namespace iText.Pdfa {
                     ("Hello World! Pdf/A-1B").EndText().RestoreState();
                 doc.Close();
             }
-            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1));
+            , NUnit.Framework.Throws.TypeOf<PdfAConformanceException>().With.Message.EqualTo(String.Format(PdfAConformanceException.AllFontsMustBeEmbeddedThisOneIsnt1, "Helvetica")));
 ;
         }
 
