@@ -464,6 +464,98 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void BorderCollapseTest01() {
+            fileName = "borderCollapseTest01.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.RED, 5));
+            Cell cell;
+            table.AddCell(new Cell(1, 2).Add("first").SetBorder(Border.NO_BORDER));
+            cell = new Cell(1, 2).Add("second");
+            cell.SetBorder(Border.NO_BORDER);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderCollapseTest02() {
+            fileName = "borderCollapseTest02.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Cell cell;
+            Table table = new Table(2);
+            // first row
+            // column 1
+            cell = new Cell().Add("1");
+            cell.SetBorder(Border.NO_BORDER);
+            table.AddCell(cell);
+            // column 2
+            cell = new Cell().Add("2");
+            table.AddCell(cell);
+            // second row
+            // column 1
+            cell = new Cell().Add("3");
+            cell.SetBorder(Border.NO_BORDER);
+            table.AddCell(cell);
+            // column 2
+            cell = new Cell().Add("4");
+            table.AddCell(cell);
+            cell = new Cell(1, 2).Add("5");
+            cell.SetBorder(Border.NO_BORDER);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BorderCollapseTest03() {
+            fileName = "borderCollapseTest03.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Cell cell;
+            Table table = new Table(2);
+            // first row
+            // column 1
+            cell = new Cell().Add("1");
+            cell.SetBorderBottom(new SolidBorder(Color.RED, 4));
+            table.AddCell(cell);
+            // column 2
+            cell = new Cell().Add("2");
+            cell.SetBorderBottom(new SolidBorder(Color.YELLOW, 5));
+            table.AddCell(cell);
+            // second row
+            // column 1
+            cell = new Cell().Add("3");
+            cell.SetBorder(new SolidBorder(Color.GREEN, 3));
+            table.AddCell(cell);
+            // column 2
+            cell = new Cell().Add("4");
+            cell.SetBorderBottom(new SolidBorder(Color.MAGENTA, 2));
+            table.AddCell(cell);
+            cell = new Cell(1, 2).Add("5");
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void WideBorderTest03() {
             fileName = "wideBorderTest03.pdf";
             outFileName = destinationFolder + fileName;

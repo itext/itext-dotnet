@@ -257,8 +257,8 @@ namespace iText.Layout {
                 tabStops.Add(tabStop);
             }
             p.AddTabStops(tabStops);
-            foreach (String line in text.Split("\n")) {
-                foreach (String chunk in line.Split("\t")) {
+            foreach (String line in iText.IO.Util.StringUtil.Split(text, "\n")) {
+                foreach (String chunk in iText.IO.Util.StringUtil.Split(line, "\t")) {
                     p.Add(chunk).Add(new Tab());
                 }
                 p.Add("\n");
