@@ -82,5 +82,13 @@ namespace iText.IO.Util {
         public static String Normalize(String s, NormalizationForm form) {
             return s.Normalize(form);
         }
+
+        public static String[] Split(String srcStr, String splitSequence) {
+            if (splitSequence.Length == 1) {
+                return srcStr.Split(splitSequence.ToCharArray());
+            } else {
+                return Regex.Split(srcStr, splitSequence);
+            }
+        }
     }
 }
