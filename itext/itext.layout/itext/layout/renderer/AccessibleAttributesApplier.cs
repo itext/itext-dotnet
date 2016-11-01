@@ -489,7 +489,8 @@ namespace iText.Layout.Renderer {
 
         private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType) {
             switch (numberingType) {
-                case ListNumberingType.DECIMAL: {
+                case ListNumberingType.DECIMAL:
+                case ListNumberingType.DECIMAL_LEADING_ZERO: {
                     return PdfName.Decimal;
                 }
 

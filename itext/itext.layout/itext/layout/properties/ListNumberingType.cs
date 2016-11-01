@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 namespace iText.Layout.Properties {
     public enum ListNumberingType {
         DECIMAL,
+        DECIMAL_LEADING_ZERO,
         ROMAN_LOWER,
         ROMAN_UPPER,
         ENGLISH_LOWER,
