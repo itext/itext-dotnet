@@ -64,6 +64,8 @@ namespace iText.IO.Image {
             //ByteArrayOutputStream stream;
         }
 
+        /// <summary>Processes the ImageData as a TIFF image.</summary>
+        /// <param name="image">image to process.</param>
         public static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.TIFF) {
                 throw new ArgumentException("TIFF image expected");
