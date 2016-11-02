@@ -87,7 +87,7 @@ namespace iText.Layout.Renderer {
                 foreach (IRenderer symbolRenderer in symbolRenderers) {
                     maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
                 }
-                float? symbolIndent = GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                 listItemNum = 0;
                 foreach (IRenderer childRenderer in childRenderers) {
                     childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
