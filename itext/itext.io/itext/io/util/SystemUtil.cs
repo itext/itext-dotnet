@@ -53,7 +53,7 @@ namespace iText.IO.Util {
     /// </summary>
     public class SystemUtil {
         public static long GetSystemTimeTicks() {
-            return DateTime.Now.Ticks + Environment.TickCount;
+            return DateTime.Now.Ticks / 10000 + Environment.TickCount;
         }
 
         public static long GetFreeMemory() {
