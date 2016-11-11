@@ -72,7 +72,7 @@ namespace iText.IO.Util {
         }
 
         public static String Group(Match match, int index) {
-            return match.Groups[index].Value;
+            return match.Groups[index].Success ? match.Groups[index].Value : null;
         }
 
         public static String Group(Match match) {
