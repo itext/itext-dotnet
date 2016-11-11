@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace iText.IO.Util {
@@ -108,6 +109,44 @@ namespace iText.IO.Util {
 
         public static String IntegerToOctalString(int i) {
             return Convert.ToString(i, 8);
+        }
+
+        public static bool DictionariesEquals<TKey, TValue>(IDictionary<TKey, TValue> that, IDictionary<TKey, TValue> other) {
+            if (other == that)
+                return true;
+            if (that == null || other == null)
+                return false;
+
+            return !that.Except(other).Any();
+        }
+
+        public static int DictionaryHashCode<TKey, TValue>(IDictionary<TKey, TValue> dict) {
+            int result = 0;
+            if (dict != null) {
+                foreach (KeyValuePair<TKey, TValue> entry in dict) {
+                    result += entry.GetHashCode();
+                }
+            }
+            return result;
+        }
+
+        public static bool SetEquals<T>(ISet<T> that, ISet<T> other) {
+            if (other == that)
+                return true;
+            if (that == null || other == null)
+                return false;
+
+            return that.SetEquals(other);
+        }
+
+        public static int SetHashCode<T>(ISet<T> set) {
+            int result = 0;
+            if (set != null) {
+                foreach (T value in set) {
+                    result += value.GetHashCode();
+                }
+            }
+            return result;
         }
 
         public static bool ArraysEquals<T>(T[] a, T[] a2) {
