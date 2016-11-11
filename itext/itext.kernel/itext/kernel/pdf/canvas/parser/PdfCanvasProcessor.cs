@@ -356,10 +356,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             if (supportedEvents == null || supportedEvents.Contains(EventType.CLIP_PATH_CHANGED) || supportedEvents.Contains
                 (EventType.RENDER_PATH)) {
                 RegisterContentOperator("w", new PdfCanvasProcessor.SetLineWidthOperator());
-                RegisterContentOperator("J", new PdfCanvasProcessor.SetLineCapOperator(this));
-                RegisterContentOperator("j", new PdfCanvasProcessor.SetLineJoinOperator(this));
-                RegisterContentOperator("M", new PdfCanvasProcessor.SetMiterLimitOperator(this));
-                RegisterContentOperator("d", new PdfCanvasProcessor.SetLineDashPatternOperator(this));
+                RegisterContentOperator("J", new PdfCanvasProcessor.SetLineCapOperator());
+                RegisterContentOperator("j", new PdfCanvasProcessor.SetLineJoinOperator());
+                RegisterContentOperator("M", new PdfCanvasProcessor.SetMiterLimitOperator());
+                RegisterContentOperator("d", new PdfCanvasProcessor.SetLineDashPatternOperator());
                 int fillStroke = PathRenderInfo.FILL | PathRenderInfo.STROKE;
                 RegisterContentOperator("m", new PdfCanvasProcessor.MoveToOperator());
                 RegisterContentOperator("l", new PdfCanvasProcessor.LineToOperator());
@@ -1179,12 +1179,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 int lineCap = ((PdfNumber)operands[0]).IntValue();
                 processor.GetGraphicsState().SetLineCapStyle(lineCap);
             }
-
-            internal SetLineCapOperator(PdfCanvasProcessor _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfCanvasProcessor _enclosing;
         }
 
         /// <summary>A handler that implements operator (j).</summary>
@@ -1195,12 +1189,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 int lineJoin = ((PdfNumber)operands[0]).IntValue();
                 processor.GetGraphicsState().SetLineJoinStyle(lineJoin);
             }
-
-            internal SetLineJoinOperator(PdfCanvasProcessor _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfCanvasProcessor _enclosing;
         }
 
         /// <summary>A handler that implements operator (M).</summary>
@@ -1211,12 +1199,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 float miterLimit = ((PdfNumber)operands[0]).FloatValue();
                 processor.GetGraphicsState().SetMiterLimit(miterLimit);
             }
-
-            internal SetMiterLimitOperator(PdfCanvasProcessor _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfCanvasProcessor _enclosing;
         }
 
         /// <summary>A handler that implements operator (d).</summary>
@@ -1227,12 +1209,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                 processor.GetGraphicsState().SetDashPattern(new PdfArray(iText.IO.Util.JavaUtil.ArraysAsList(operands[0], 
                     operands[1])));
             }
-
-            internal SetLineDashPatternOperator(PdfCanvasProcessor _enclosing) {
-                this._enclosing = _enclosing;
-            }
-
-            private readonly PdfCanvasProcessor _enclosing;
         }
 
         /// <summary>An XObject subtype handler for FORM</summary>
