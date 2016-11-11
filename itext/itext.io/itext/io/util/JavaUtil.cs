@@ -54,6 +54,14 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public static class JavaUtil {
+        public static String GetStringForChars(char[] chars) {
+            return new String(chars);
+        }
+
+        public static String GetStringForChars(char[] chars, int offset, int length) {
+            return new String(chars, offset, length);
+        }
+
         public static String GetStringForBytes(byte[] bytes, int offset, int length) {
             return Encoding.UTF8.GetString(bytes, offset, length);
         }
