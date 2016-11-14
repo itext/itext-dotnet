@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Layout.Properties;
 
 namespace iText.Layout.Layout {
     /// <summary>
@@ -58,15 +57,8 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal LayoutArea area;
 
-        protected internal HeightProperty heightProperty;
-
         public LayoutContext(LayoutArea area) {
             this.area = area;
-        }
-
-        public LayoutContext(LayoutArea area, HeightProperty heightProperty) {
-            this.area = area;
-            this.heightProperty = heightProperty;
         }
 
         /// <summary>
@@ -77,10 +69,6 @@ namespace iText.Layout.Layout {
         /// <returns>the area for content layouting.</returns>
         public virtual LayoutArea GetArea() {
             return area;
-        }
-
-        public virtual HeightProperty GetHeightProperty() {
-            return heightProperty;
         }
 
         /// <summary><inheritDoc/></summary>

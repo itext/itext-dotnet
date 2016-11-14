@@ -1,9 +1,10 @@
 using System;
 using iText.IO;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Canvas.Draw;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -99,10 +100,11 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "heightTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_heightTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
-            String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
                  + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
                  + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
                  + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            String textHelloWorld = "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n" + "Hello World\n";
             Document doc = new Document(pdfDocument);
             List list = new List(ListNumberingType.DECIMAL);
             for (int i = 0; i < 10; i++) {
@@ -113,12 +115,12 @@ namespace iText.Layout {
             //list.setPaddingTop(100); // TODO
             doc.Add(list);
             doc.Add(new AreaBreak());
-            Paragraph p = new Paragraph(text);
+            Paragraph p = new Paragraph(textByron);
             for (int i_1 = 0; i_1 < 15; i_1++) {
-                p.Add(text);
+                p.Add(textByron);
             }
             p.SetBorder(new SolidBorder(0.5f));
-            p.SetHeight(1000);
+            p.SetHeight(500);
             doc.Add(p);
             doc.Add(new AreaBreak());
             p.SetBorder(Border.NO_BORDER);
@@ -130,22 +132,21 @@ namespace iText.Layout {
             div.SetHeight(1000);
             doc.Add(div);
             doc.Add(new AreaBreak());
-            LineSeparator lineSeparator = new LineSeparator(new SolidLine(100));
-            doc.Add(lineSeparator.SetMinHeight(300));
-            Table table = new Table(1);
-            Cell cell = new Cell().Add(new Paragraph("Hello World\nHello World\nHello World\nHello World\nHello World\n"
-                ));
-            table.AddCell("fixed height (more than sufficient)");
-            cell.SetHeight(72f);
-            table.AddCell(cell.Clone(true));
-            table.AddCell("fixed height (not sufficient)");
-            cell.SetHeight(36f);
-            table.AddCell(cell.Clone(true));
-            table.AddCell("minimum height");
-            cell = new Cell().Add("Dr. iText");
-            cell.SetMinHeight(36f);
-            table.AddCell(cell);
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.RED, 2f));
+            table.AddCell(new Cell(2, 1).Add(new Paragraph(textHelloWorld)));
+            for (int i_3 = 0; i_3 < 2; i_3++) {
+                table.AddCell(new Cell().Add(new Paragraph(textByron)));
+            }
+            table.AddCell(new Cell(1, 2).Add(textByron));
+            //table.setHeight(2000);
             doc.Add(table);
+            doc.Add(new Paragraph("Hello"));
+            doc.Add(new AreaBreak());
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
+            image.SetMaxHeight(100);
+            doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

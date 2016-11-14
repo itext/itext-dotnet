@@ -95,7 +95,7 @@ namespace iText.Layout.Renderer {
                 SetProperty(Property.PADDING_BOTTOM, 0);
                 SetProperty(Property.PADDING_LEFT, 0);
                 // if paragraph has been deliberatly created empty.
-                if (!HasProperty(Property.HEIGHT) && RetrieveHeightPropertyType() != HeightPropertyType.MAX_HEIGHT) {
+                if (!HasProperty(Property.HEIGHT) && RetrieveHeightPropertyType() != HeightType.MAX_HEIGHT) {
                     SetProperty(Property.BORDER, Border.NO_BORDER);
                 }
             }
@@ -119,8 +119,8 @@ namespace iText.Layout.Renderer {
             float[] paddings = GetPaddings();
             ApplyPaddings(parentBBox, paddings, false);
             float? blockHeight = RetrieveHeight();
-            if (null != blockHeight && RetrieveHeightPropertyType() != HeightPropertyType.MIN_HEIGHT && parentBBox.GetHeight
-                () > blockHeight) {
+            if (null != blockHeight && RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT && parentBBox.GetHeight()
+                 > blockHeight) {
                 parentBBox.MoveUp(parentBBox.GetHeight() - blockHeight).SetHeight(blockHeight);
             }
             IList<Rectangle> areas;
@@ -229,8 +229,7 @@ namespace iText.Layout.Renderer {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
                             if (HasProperty(Property.HEIGHT)) {
-                                if (RetrieveHeightPropertyType() != HeightPropertyType.MIN_HEIGHT && parentBBox.GetHeight() == blockHeight
-                                    ) {
+                                if (RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT && parentBBox.GetHeight() == blockHeight) {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
                                 split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
@@ -287,8 +286,8 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer = null;
-            if (blockHeight != null && RetrieveHeightPropertyType() != HeightPropertyType.MAX_HEIGHT && blockHeight > 
-                occupiedArea.GetBBox().GetHeight()) {
+            if (blockHeight != null && RetrieveHeightPropertyType() != HeightType.MAX_HEIGHT && blockHeight > occupiedArea
+                .GetBBox().GetHeight()) {
                 float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockHeight - occupiedArea.GetBBox().GetHeight
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {

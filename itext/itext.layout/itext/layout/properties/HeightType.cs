@@ -1,5 +1,5 @@
 namespace iText.Layout.Properties {
-    public enum HeightPropertyType {
+    public enum HeightType {
         MIN_HEIGHT,
         HEIGHT,
         MAX_HEIGHT

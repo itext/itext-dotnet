@@ -73,7 +73,7 @@ namespace iText.Layout.Renderer {
             if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null) {
                 // TODO this is actually MinHeight.
                 SetProperty(Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
-                SetProperty(Property.HEIGHT_TYPE, HeightPropertyType.MIN_HEIGHT);
+                SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
             }
             return base.Layout(layoutContext);
         }

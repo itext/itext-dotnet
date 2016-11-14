@@ -543,7 +543,7 @@ namespace iText.Layout.Renderer {
             childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.GetTabPosition() - curWidth
                 ));
             childRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
-            childRenderer.SetProperty(Property.HEIGHT_TYPE, HeightPropertyType.MIN_HEIGHT);
+            childRenderer.SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
             if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT) {
                 return null;
             }
@@ -594,7 +594,7 @@ namespace iText.Layout.Renderer {
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
             tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
-            tabRenderer.SetProperty(Property.HEIGHT_TYPE, HeightPropertyType.MIN_HEIGHT);
+            tabRenderer.SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
             return tabWidth;
         }
 
@@ -606,7 +606,7 @@ namespace iText.Layout.Renderer {
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue((float)tabWidth));
             tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
-            tabRenderer.SetProperty(Property.HEIGHT_TYPE, HeightPropertyType.MIN_HEIGHT);
+            tabRenderer.SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
         }
 
         internal class RendererGlyph {

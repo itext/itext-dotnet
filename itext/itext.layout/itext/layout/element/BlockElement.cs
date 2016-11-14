@@ -326,13 +326,13 @@ namespace iText.Layout.Element {
 
         public virtual T SetMaxHeight(float maxHeight) {
             SetProperty(Property.HEIGHT, maxHeight);
-            SetProperty(Property.HEIGHT_TYPE, HeightPropertyType.MAX_HEIGHT);
+            SetProperty(Property.HEIGHT_TYPE, HeightType.MAX_HEIGHT);
             return (T)(Object)this;
         }
 
         public virtual T SetMinHeight(float minHeight) {
             SetProperty(Property.HEIGHT, minHeight);
-            SetProperty(Property.HEIGHT_TYPE, HeightPropertyType.MIN_HEIGHT);
+            SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
             return (T)(Object)this;
         }
 

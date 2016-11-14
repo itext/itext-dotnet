@@ -85,7 +85,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(parentBBox, paddings, false);
             float? blockHeight = RetrieveHeight();
             if (!IsFixedLayout() && blockHeight != null && blockHeight < parentBBox.GetHeight() && RetrieveHeightPropertyType
-                () != HeightPropertyType.MIN_HEIGHT && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
+                () != HeightType.MIN_HEIGHT && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                 parentBBox.MoveUp(parentBBox.GetHeight() - blockHeight).SetHeight(blockHeight);
             }
             IList<Rectangle> areas;
@@ -153,8 +153,7 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
                                 if (HasProperty(Property.HEIGHT)) {
-                                    if (RetrieveHeightPropertyType() != HeightPropertyType.MIN_HEIGHT && parentBBox.GetHeight() == blockHeight
-                                        ) {
+                                    if (RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT && parentBBox.GetHeight() == blockHeight) {
                                         return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
                                     }
                                     overflowRenderer.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
@@ -192,7 +191,7 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
                                 if (HasProperty(Property.HEIGHT)) {
-                                    if (RetrieveHeightPropertyType() != HeightPropertyType.MIN_HEIGHT) {
+                                    if (RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT) {
                                         return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
                                     }
                                 }
@@ -223,8 +222,8 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer_1 = null;
-            if (blockHeight != null && RetrieveHeightPropertyType() != HeightPropertyType.MAX_HEIGHT && blockHeight > 
-                occupiedArea.GetBBox().GetHeight()) {
+            if (blockHeight != null && RetrieveHeightPropertyType() != HeightType.MAX_HEIGHT && blockHeight > occupiedArea
+                .GetBBox().GetHeight()) {
                 float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockHeight - occupiedArea.GetBBox().GetHeight
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {
@@ -255,10 +254,10 @@ namespace iText.Layout.Renderer {
             }
             ApplyVerticalAlignment();
             if (null == overflowRenderer_1) {
-                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, causeOfNothing);
             }
             else {
-                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, overflowRenderer_1);
+                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, overflowRenderer_1, causeOfNothing);
             }
         }
 
