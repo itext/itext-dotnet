@@ -128,6 +128,22 @@ namespace iText.Layout.Renderer {
                 }
                 height *= (float)verticalScaling;
             }
+            if (null != RetrieveMinHeight() && height < RetrieveMinHeight()) {
+                width *= RetrieveMinHeight() / height;
+                height = RetrieveMinHeight();
+            }
+            else {
+                if (null != RetrieveMaxHeight() && height > RetrieveMaxHeight()) {
+                    width *= RetrieveMaxHeight() / height;
+                    height = RetrieveMaxHeight();
+                }
+                else {
+                    if (null != RetrieveHeight() && height != RetrieveHeight()) {
+                        width *= RetrieveHeight() / height;
+                        height = RetrieveHeight();
+                    }
+                }
+            }
             float imageItselfScaledWidth = (float)width;
             float imageItselfScaledHeight = (float)height;
             // See in adjustPositionAfterRotation why angle = 0 is necessary

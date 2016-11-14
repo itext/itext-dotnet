@@ -518,6 +518,14 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<float?>(Property.HEIGHT);
         }
 
+        protected internal virtual float? RetrieveMaxHeight() {
+            return this.GetProperty<float?>(Property.MAX_HEIGHT);
+        }
+
+        protected internal virtual float? RetrieveMinHeight() {
+            return this.GetProperty<float?>(Property.MIN_HEIGHT);
+        }
+
         protected internal virtual float? RetrieveUnitValue(float basePercentValue, int property) {
             UnitValue value = this.GetProperty<UnitValue>(property);
             if (value != null) {

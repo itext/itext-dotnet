@@ -443,6 +443,16 @@ namespace iText.Layout.Element {
             return xObject.GetHeight();
         }
 
+        public virtual iText.Layout.Element.Image SetMaxHeight(float maxHeight) {
+            SetProperty(Property.HEIGHT, maxHeight);
+            return (iText.Layout.Element.Image)(Object)this;
+        }
+
+        public virtual iText.Layout.Element.Image SetMinHeight(float minHeight) {
+            SetProperty(Property.HEIGHT, minHeight);
+            return (iText.Layout.Element.Image)(Object)this;
+        }
+
         /// <summary>Gets scaled width of the image.</summary>
         /// <returns>the current scaled width</returns>
         public virtual float GetImageScaledWidth() {

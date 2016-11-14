@@ -224,7 +224,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (result == null) {
-                if (anythingPlaced) {
+                if (anythingPlaced || 0 == childRenderers.Count) {
                     result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                 }
                 else {
@@ -542,7 +542,7 @@ namespace iText.Layout.Renderer {
             childRenderer.SetProperty(Property.TAB_LEADER, nextTabStop.GetTabLeader());
             childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(nextTabStop.GetTabPosition() - curWidth
                 ));
-            childRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
+            childRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
             if (nextTabStop.GetTabAlignment() == TabAlignment.LEFT) {
                 return null;
             }
@@ -592,7 +592,7 @@ namespace iText.Layout.Renderer {
                 tabWidth -= (curWidth + childWidth + tabWidth) - layoutBox.GetWidth();
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(tabWidth));
-            tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
+            tabRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
             return tabWidth;
         }
 
@@ -603,7 +603,7 @@ namespace iText.Layout.Renderer {
                 tabWidth = lineWidth - curWidth;
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue((float)tabWidth));
-            tabRenderer.SetProperty(Property.HEIGHT, maxAscent - maxDescent);
+            tabRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
         }
 
         internal class RendererGlyph {

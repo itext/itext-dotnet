@@ -7,6 +7,7 @@ using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -277,6 +278,84 @@ namespace iText.Layout {
                 ));
             document.Add(list);
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ListWithSetHeightProperties01() {
+            String outFileName = destinationFolder + "listWithSetHeightProperties01.pdf";
+            String cmpFileName = sourceFolder + "cmp_listWithSetHeightProperties01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("Default layout:"));
+            ListItem item = new ListItem();
+            ListItem nestedItem = new ListItem();
+            List list = new List(ListNumberingType.DECIMAL);
+            List nestedList = new List(ListNumberingType.ENGLISH_UPPER);
+            List nestedNestedList = new List(ListNumberingType.GREEK_LOWER);
+            nestedNestedList.Add("Hello");
+            nestedNestedList.Add("World");
+            nestedItem.Add(nestedNestedList);
+            nestedList.Add(nestedItem);
+            nestedList.Add(nestedItem);
+            item.Add(nestedList);
+            list.Add(item);
+            list.Add(item);
+            list.SetBorder(new SolidBorder(Color.RED, 3));
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("List's height is set shorter than needed:"));
+            list.SetHeight(50);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            list.DeleteOwnProperty(Property.HEIGHT);
+            list.DeleteOwnProperty(Property.MIN_HEIGHT);
+            list.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(new Paragraph("List's min height is set shorter than needed:"));
+            list.SetMinHeight(50);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            list.DeleteOwnProperty(Property.HEIGHT);
+            list.DeleteOwnProperty(Property.MIN_HEIGHT);
+            list.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(new Paragraph("List's max height is set shorter than needed:"));
+            list.SetMaxHeight(50);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            list.DeleteOwnProperty(Property.HEIGHT);
+            list.DeleteOwnProperty(Property.MIN_HEIGHT);
+            list.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(new Paragraph("List's height is set bigger than needed:"));
+            list.SetHeight(1300);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            list.DeleteOwnProperty(Property.HEIGHT);
+            list.DeleteOwnProperty(Property.MIN_HEIGHT);
+            list.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(new Paragraph("List's min height is set bigger than needed:"));
+            list.SetMinHeight(1300);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            list.DeleteOwnProperty(Property.HEIGHT);
+            list.DeleteOwnProperty(Property.MIN_HEIGHT);
+            list.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(new Paragraph("List's max height is set bigger than needed:"));
+            list.SetMaxHeight(1300);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            list.DeleteOwnProperty(Property.HEIGHT);
+            list.DeleteOwnProperty(Property.MIN_HEIGHT);
+            list.DeleteOwnProperty(Property.MAX_HEIGHT);
+            doc.Add(new Paragraph("Some list items' and nested lists' heights are set bigger or shorter than needed:")
+                );
+            nestedList.SetHeight(400);
+            nestedItem.SetHeight(300);
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

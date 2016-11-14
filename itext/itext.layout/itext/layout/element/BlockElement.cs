@@ -324,6 +324,32 @@ namespace iText.Layout.Element {
             return (T)(Object)this;
         }
 
+        public override T SetHeight(float height) {
+            base.SetHeight(height);
+            OverrideHeightProperties(height);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMaxHeight(float maxHeight) {
+            SetProperty(Property.MAX_HEIGHT, maxHeight);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMinHeight(float minHeight) {
+            SetProperty(Property.MIN_HEIGHT, minHeight);
+            return (T)(Object)this;
+        }
+
+        // call only after setting Height property value
+        private void OverrideHeightProperties(float height) {
+            if (!HasProperty(Property.MAX_HEIGHT) || height < (float)GetProperty(Property.MAX_HEIGHT)) {
+                SetMaxHeight(height);
+            }
+            if (!HasProperty(Property.MIN_HEIGHT) || height > (float)GetProperty(Property.MIN_HEIGHT)) {
+                SetMinHeight(height);
+            }
+        }
+
         public abstract AccessibilityProperties GetAccessibilityProperties();
 
         public abstract PdfName GetRole();

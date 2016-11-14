@@ -74,14 +74,15 @@ namespace iText.Layout {
             cell = new Cell().Add("One");
             table.AddCell(cell);
             // row 1 and 2, cell 2
-            cell = new Cell(2, 1).Add("Two");
-            table.AddCell(cell);
-            // row 2, cell 1
-            cell = new Cell().Add("Three");
-            table.AddCell(cell);
-            // row 3, cell 1
-            cell = new Cell().Add("Four");
-            table.AddCell(cell);
+            //        cell = new Cell(2, 1).add("Two");
+            //        table.addCell(cell);
+            //        // row 2, cell 1
+            //        cell = new Cell().add("Three");
+            //        table.addCell(cell);
+            //
+            //        // row 3, cell 1
+            //        cell = new Cell().add("Four");
+            //        table.addCell(cell);
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

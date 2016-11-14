@@ -74,7 +74,7 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null) {
                 // TODO this is actually MinHeight.
-                SetProperty(Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
+                SetProperty(Property.MIN_HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
             }
             ListSymbolPosition symbolPosition = GetProperty(Property.LIST_SYMBOL_POSITION);
             if (symbolPosition == ListSymbolPosition.INSIDE) {
@@ -111,7 +111,11 @@ namespace iText.Layout.Renderer {
                     symbolAddedInside = true;
                 }
             }
-            return base.Layout(layoutContext);
+            LayoutResult result = base.Layout(layoutContext);
+            if (LayoutResult.PARTIAL == result.GetStatus()) {
+                result.GetOverflowRenderer().DeleteOwnProperty(Property.MIN_HEIGHT);
+            }
+            return result;
         }
 
         public override void Draw(DrawContext drawContext) {

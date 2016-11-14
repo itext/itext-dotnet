@@ -65,9 +65,10 @@ namespace iText.Layout {
             document.Add(new Paragraph());
             document.Add(new Paragraph().SetBackgroundColor(Color.GREEN));
             document.Add(new Paragraph().SetBorder(new SolidBorder(Color.BLUE, 3)));
-            document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right? Or not?"));
-            document.Add(new Paragraph().SetHeight(50).SetBorder(new SolidBorder(1)));
-            document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right? Or not?"));
+            document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right?").SetBackgroundColor
+                (Color.RED).SetBorder(new SolidBorder(1)));
+            document.Add(new Paragraph().SetHeight(50));
+            document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right?"));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
