@@ -76,41 +76,7 @@ namespace iText.Layout.Renderer {
                 // TODO this is actually MinHeight.
                 SetProperty(Property.MIN_HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
             }
-            ListSymbolPosition symbolPosition = GetProperty(Property.LIST_SYMBOL_POSITION);
-            if (symbolPosition == ListSymbolPosition.INSIDE) {
-                if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
-                    ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
-                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
-                    if (symbolIndent != null) {
-                        symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
-                    }
-                    paragraphRenderer.childRenderers.Add(0, symbolRenderer);
-                    symbolAddedInside = true;
-                }
-                else {
-                    if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
-                        IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
-                        float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
-                        if (symbolIndent != null) {
-                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
-                        }
-                        paragraphRenderer.AddChild(symbolRenderer);
-                        paragraphRenderer.AddChild(childRenderers[0]);
-                        childRenderers[0] = paragraphRenderer;
-                        symbolAddedInside = true;
-                    }
-                }
-                if (!symbolAddedInside) {
-                    IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
-                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
-                    if (symbolIndent != null) {
-                        symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
-                    }
-                    paragraphRenderer.AddChild(symbolRenderer);
-                    childRenderers.Add(0, paragraphRenderer);
-                    symbolAddedInside = true;
-                }
-            }
+            ApplyListSymbolPosition();
             LayoutResult result = base.Layout(layoutContext);
             if (LayoutResult.PARTIAL == result.GetStatus()) {
                 result.GetOverflowRenderer().DeleteOwnProperty(Property.MIN_HEIGHT);
@@ -223,6 +189,44 @@ namespace iText.Layout.Renderer {
             // TODO retain all the properties ?
             overflowRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
             return overflowRenderer;
+        }
+
+        private void ApplyListSymbolPosition() {
+            ListSymbolPosition symbolPosition = GetProperty(Property.LIST_SYMBOL_POSITION);
+            if (symbolPosition == ListSymbolPosition.INSIDE) {
+                if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
+                    ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
+                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                    if (symbolIndent != null) {
+                        symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                    }
+                    paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                    symbolAddedInside = true;
+                }
+                else {
+                    if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
+                        IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                        float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                        if (symbolIndent != null) {
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                        }
+                        paragraphRenderer.AddChild(symbolRenderer);
+                        paragraphRenderer.AddChild(childRenderers[0]);
+                        childRenderers[0] = paragraphRenderer;
+                        symbolAddedInside = true;
+                    }
+                }
+                if (!symbolAddedInside) {
+                    IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                    if (symbolIndent != null) {
+                        symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                    }
+                    paragraphRenderer.AddChild(symbolRenderer);
+                    childRenderers.Add(0, paragraphRenderer);
+                    symbolAddedInside = true;
+                }
+            }
         }
     }
 }
