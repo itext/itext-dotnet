@@ -2,10 +2,12 @@ using System;
 using iText.IO;
 using iText.IO.Image;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -297,6 +299,45 @@ namespace iText.Layout {
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"
                 ));
             image.SetHorizontalAlignment(HorizontalAlignment.LEFT);
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest15() {
+            String outFileName = destinationFolder + "imageTest15.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest15.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-928")]
+        public virtual void ImageTest16() {
+            String outFileName = destinationFolder + "imageTest16.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest16.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            image.SetAutoScale(true);
+            image.SetRotationAngle(Math.PI / 2);
             doc.Add(image);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

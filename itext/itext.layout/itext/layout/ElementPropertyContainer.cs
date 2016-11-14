@@ -638,8 +638,10 @@ namespace iText.Layout {
             }
             else {
                 if (currentProperty is Underline) {
-                    SetProperty(Property.UNDERLINE, iText.IO.Util.JavaUtil.ArraysAsList((Underline)currentProperty, newUnderline
-                        ));
+                    IList<Underline> mergedUnderlines = new List<Underline>();
+                    mergedUnderlines.Add((Underline)currentProperty);
+                    mergedUnderlines.Add(newUnderline);
+                    SetProperty(Property.UNDERLINE, mergedUnderlines);
                 }
                 else {
                     SetProperty(Property.UNDERLINE, newUnderline);

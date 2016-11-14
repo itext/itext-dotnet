@@ -190,5 +190,23 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void UnderlineTest() {
+            String outFileName = destinationFolder + "underline.pdf";
+            String cmpFileName = sourceFolder + "cmp_underline.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Paragraph p = new Paragraph("Text");
+            p.SetUnderline(1, 0);
+            p.SetUnderline(1, 5);
+            p.SetUnderline(1, 10);
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
