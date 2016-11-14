@@ -174,5 +174,47 @@ namespace iText.Forms {
             form.AddField(root);
             NUnit.Framework.Assert.AreEqual(3, form.GetFormFields().Count);
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFormWithDefaultResources() {
+            String outPdf = destinationFolder + "fillFormWithDefaultResources.pdf";
+            String cmpPdf = sourceFolder + "cmp_fillFormWithDefaultResources.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(sourceFolder + "formWithDefaultResources.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            PdfFormField field = fields.Get("Text1");
+            field.SetValue("New value size must be 8");
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FillFormTwiceWithoutResources() {
+            String outPdf = destinationFolder + "fillFormWithoutResources.pdf";
+            String cmpPdf = sourceFolder + "cmp_fillFormWithoutResources.pdf";
+            PdfWriter writer = new PdfWriter(outPdf);
+            PdfReader reader = new PdfReader(sourceFolder + "formWithoutResources.pdf");
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            IDictionary<String, PdfFormField> fields = form.GetFormFields();
+            PdfFormField field = fields.Get("Text1");
+            field.SetValue("New value size must be 8").SetFontSize(8);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(outPdf, cmpPdf, destinationFolder, "diff_");
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
     }
 }
