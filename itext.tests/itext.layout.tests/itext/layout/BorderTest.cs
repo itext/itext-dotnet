@@ -737,7 +737,6 @@ namespace iText.Layout {
             fileName = "splitCellsTest05.pdf";
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
-            // 150
             String textAlphabet = "Cell";
             Table table = new Table(3);
             table.AddCell(new Cell().Add(textAlphabet));
@@ -745,6 +744,72 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(textAlphabet));
             table.AddCell(new Cell().Add(textAlphabet));
             table.AddCell(new Cell().Add(textAlphabet));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest06() {
+            fileName = "splitCellsTest06.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(300, 150));
+            doc.Add(new Paragraph("No more"));
+            doc.Add(new Paragraph("place"));
+            doc.Add(new Paragraph("here"));
+            Table table = new Table(3);
+            Cell cell = new Cell(3, 1);
+            cell.Add("G");
+            cell.Add("R");
+            cell.Add("P");
+            table.AddCell(cell);
+            table.AddCell("middle row 1");
+            cell = new Cell(3, 1);
+            cell.Add("A");
+            cell.Add("B");
+            cell.Add("C");
+            table.AddCell(cell);
+            table.AddCell("middle row 2");
+            table.AddCell("middle row 3");
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest07() {
+            fileName = "splitCellsTest07.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
+            String textAlphabet = "Cell";
+            Table table = new Table(3);
+            table.AddCell(new Cell().Add(textAlphabet + "1"));
+            table.AddCell(new Cell(2, 1).Add(textAlphabet + "2"));
+            table.AddCell(new Cell().Add(textAlphabet + "3"));
+            table.AddCell(new Cell().Add(textAlphabet + "4"));
+            table.AddCell(new Cell().Add(textAlphabet + "5"));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest08() {
+            fileName = "splitCellsTest08.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 160));
+            String textAlphabet = "Cell";
+            Table table = new Table(3);
+            table.AddCell(new Cell().Add(textAlphabet + "1"));
+            table.AddCell(new Cell(2, 1).Add(textAlphabet + "2").SetBorder(new SolidBorder(Color.GREEN, 4)));
+            table.AddCell(new Cell().Add(textAlphabet + "3"));
+            table.AddCell(new Cell().Add(textAlphabet + "4"));
+            table.AddCell(new Cell().Add(textAlphabet + "5"));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

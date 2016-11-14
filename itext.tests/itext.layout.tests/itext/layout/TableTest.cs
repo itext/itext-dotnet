@@ -838,7 +838,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-929")]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 9)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {

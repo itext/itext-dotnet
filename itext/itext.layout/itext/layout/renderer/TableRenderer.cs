@@ -616,12 +616,12 @@ namespace iText.Layout.Renderer {
                             if (currentRow[col] != null) {
                                 if (hasContent) {
                                     columnsWithCellToBeEnlarged[col] = true;
+                                    // for the future
+                                    splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
                                 }
                                 for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
                                     horizontalBorders[row + 1][j] = GetBorders()[2];
                                 }
-                                // for the future
-                                ((Cell)currentRow[col].GetModelElement()).SetBorderTop(GetBorders()[0]);
                             }
                         }
                     }
@@ -639,8 +639,10 @@ namespace iText.Layout.Renderer {
                                 Cell overflowCell = ((Cell)currentRow[col].GetModelElement());
                                 currentRow[col].isLastRendererForModelElement = false;
                                 childRenderers.Add(currentRow[col]);
+                                Border topBorder = currentRow[col].GetProperty<Border>(Property.BORDER_TOP);
                                 currentRow[col] = null;
                                 rows[targetOverflowRowIndex[col]][col] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
+                                rows[targetOverflowRowIndex[col]][col].SetProperty(Property.BORDER_TOP, topBorder);
                             }
                             else {
                                 childRenderers.Add(currentRow[col]);
@@ -654,9 +656,11 @@ namespace iText.Layout.Renderer {
                                 // so we should process the last cell in the column as in the case 1 == minRowspan
                                 if (i != row + minRowspan - 1 && null != rows[i][col]) {
                                     Cell overflowCell = ((Cell)rows[i][col].GetModelElement());
+                                    Border topBorder = rows[i][col].GetProperty<Border>(Property.BORDER_TOP);
                                     rows[i][col].isLastRendererForModelElement = false;
                                     rows[i][col] = null;
                                     rows[targetOverflowRowIndex[col]][col] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
+                                    rows[targetOverflowRowIndex[col]][col].SetProperty(Property.BORDER_TOP, topBorder);
                                 }
                             }
                         }
