@@ -73,7 +73,7 @@ namespace iText.Kernel.Utils {
             pageRange = iText.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
             Regex sequencePattern = iText.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)");
             Regex singlePagePattern = iText.IO.Util.StringUtil.RegexCompile("(\\d+)");
-            foreach (String pageRangePart in pageRange.Split(",")) {
+            foreach (String pageRangePart in iText.IO.Util.StringUtil.Split(pageRange, ",")) {
                 Match matcher;
                 if ((matcher = iText.IO.Util.StringUtil.Match(sequencePattern, pageRangePart)).Success) {
                     sequenceStarts.Add(System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1)));

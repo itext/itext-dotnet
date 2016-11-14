@@ -116,6 +116,8 @@ namespace iText.Layout.Properties {
 
         public const int HEIGHT = 27;
 
+        public const int HEIGHT_TYPE = 83;
+
         public const int HORIZONTAL_ALIGNMENT = 28;
 
         /// <summary>Value of 1 is equivalent to no scaling</summary>

@@ -1684,7 +1684,7 @@ namespace iText.Kernel.Pdf {
                             }
                             else {
                                 if (PdfName.Keywords.Equals(key)) {
-                                    foreach (String v in value.Split(",|;")) {
+                                    foreach (String v in iText.IO.Util.StringUtil.Split(value, ",|;")) {
                                         if (v.Trim().Length > 0) {
                                             xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions.ARRAY), v.Trim
                                                 (), null);

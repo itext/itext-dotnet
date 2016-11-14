@@ -123,7 +123,7 @@ namespace iText.IO.Font {
             resource.Close();
             foreach (Object key in p.Keys) {
                 String value = p.GetProperty((String)key);
-                String[] sp = value.Split(" ");
+                String[] sp = iText.IO.Util.StringUtil.Split(value, " ");
                 ICollection<String> hs = new HashSet<String>();
                 foreach (String s in sp) {
                     if (s.Length > 0) {

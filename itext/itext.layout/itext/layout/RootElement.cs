@@ -220,12 +220,12 @@ namespace iText.Layout {
         /// <param name="y">the point about which the text will be aligned and rotated</param>
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <param name="vertAlign">vertical alignment about the specified point</param>
-        /// <param name="angle">the angle of rotation applied to the text, in radians</param>
+        /// <param name="radAngle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
         public virtual T ShowTextAlignedKerned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
-             vertAlign, float angle) {
+             vertAlign, float radAngle) {
             Paragraph p = new Paragraph(text).SetFontKerning(FontKerning.YES);
-            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, angle);
+            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, radAngle);
         }
 
         /// <summary>Convenience method to write a text aligned about the specified point</summary>
@@ -266,14 +266,14 @@ namespace iText.Layout {
         /// <param name="pageNumber">the page number to write the text</param>
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <param name="vertAlign">vertical alignment about the specified point</param>
-        /// <param name="angle">the angle of rotation applied to the text, in radians</param>
+        /// <param name="radAngle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
         public virtual T ShowTextAligned(Paragraph p, float x, float y, int pageNumber, TextAlignment? textAlign, 
-            VerticalAlignment? vertAlign, float angle) {
+            VerticalAlignment? vertAlign, float radAngle) {
             Div div = new Div();
             div.SetTextAlignment(textAlign).SetVerticalAlignment(vertAlign);
-            if (angle != 0) {
-                div.SetRotationAngle(angle);
+            if (radAngle != 0) {
+                div.SetRotationAngle(radAngle);
             }
             div.SetProperty(Property.ROTATION_POINT_X, x);
             div.SetProperty(Property.ROTATION_POINT_Y, y);

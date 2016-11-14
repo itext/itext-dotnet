@@ -227,7 +227,7 @@ namespace iText.IO.Font {
                         else {
                             if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,") > 0) {
                                 // splitting by "," would be easier but is more error-prone
-                                String[] parts = baseName.Split(".ttc,");
+                                String[] parts = iText.IO.Util.StringUtil.Split(baseName, ".ttc,");
                                 try {
                                     fontBuilt = new TrueTypeFont(parts[0] + ".ttc", System.Convert.ToInt32(parts[1]));
                                 }

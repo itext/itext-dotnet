@@ -3,9 +3,11 @@ using iText.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -86,6 +88,65 @@ namespace iText.Layout {
             document.Add(new Paragraph("\n\n\nLook, i'm the the text of the second paragraph. But before me and the first one there are three empty lines!"
                 ));
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HeightTest01() {
+            String outFileName = destinationFolder + "heightTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_heightTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            String text = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            Document doc = new Document(pdfDocument);
+            List list = new List(ListNumberingType.DECIMAL);
+            for (int i = 0; i < 10; i++) {
+                list.Add(new ListItem("" + i));
+            }
+            list.SetHeight(30);
+            list.SetBorder(new SolidBorder(0.5f));
+            //list.setPaddingTop(100); // TODO
+            doc.Add(list);
+            doc.Add(new AreaBreak());
+            Paragraph p = new Paragraph(text);
+            for (int i_1 = 0; i_1 < 15; i_1++) {
+                p.Add(text);
+            }
+            p.SetBorder(new SolidBorder(0.5f));
+            p.SetHeight(1000);
+            doc.Add(p);
+            doc.Add(new AreaBreak());
+            p.SetBorder(Border.NO_BORDER);
+            Div div = new Div();
+            div.SetBorder(new SolidBorder(0.5f));
+            for (int i_2 = 0; i_2 < 5; i_2++) {
+                div.Add(p);
+            }
+            div.SetHeight(1000);
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            LineSeparator lineSeparator = new LineSeparator(new SolidLine(100));
+            doc.Add(lineSeparator.SetMinHeight(300));
+            Table table = new Table(1);
+            Cell cell = new Cell().Add(new Paragraph("Hello World\nHello World\nHello World\nHello World\nHello World\n"
+                ));
+            table.AddCell("fixed height (more than sufficient)");
+            cell.SetHeight(72f);
+            table.AddCell(cell.Clone(true));
+            table.AddCell("fixed height (not sufficient)");
+            cell.SetHeight(36f);
+            table.AddCell(cell.Clone(true));
+            table.AddCell("minimum height");
+            cell = new Cell().Add("Dr. iText");
+            cell.SetMinHeight(36f);
+            table.AddCell(cell);
+            doc.Add(table);
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

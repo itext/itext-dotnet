@@ -197,7 +197,7 @@ namespace iText.Kernel.Font {
             int d1Pos = str.IndexOf(D_1_STR);
             if (d0Pos != -1) {
                 isColor = true;
-                String[] bbArray = str.JSubstring(0, d0Pos - 1).Split(" ");
+                String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d0Pos - 1), " ");
                 if (bbArray.Length == 2) {
                     this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                 }
@@ -205,7 +205,7 @@ namespace iText.Kernel.Font {
             else {
                 if (d1Pos != -1) {
                     isColor = false;
-                    String[] bbArray = str.JSubstring(0, d1Pos - 1).Split(" ");
+                    String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d1Pos - 1), " ");
                     if (bbArray.Length == 6) {
                         this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                         this.llx = float.Parse(bbArray[2], System.Globalization.CultureInfo.InvariantCulture);

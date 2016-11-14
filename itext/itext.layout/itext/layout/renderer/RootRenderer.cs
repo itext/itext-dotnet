@@ -154,6 +154,9 @@ namespace iText.Layout.Renderer {
                     }
                     renderer = result.GetOverflowRenderer();
                 }
+                if (null != result && null != result.GetSplitRenderer()) {
+                    renderer = result.GetSplitRenderer();
+                }
                 // Keep renderer until next element is added for future keep with next adjustments
                 if (renderer != null && true.Equals(renderer.GetProperty<bool?>(Property.KEEP_WITH_NEXT))) {
                     if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {

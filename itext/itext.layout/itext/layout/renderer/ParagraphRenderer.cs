@@ -94,7 +94,10 @@ namespace iText.Layout.Renderer {
                 SetProperty(Property.PADDING_RIGHT, 0);
                 SetProperty(Property.PADDING_BOTTOM, 0);
                 SetProperty(Property.PADDING_LEFT, 0);
-                SetProperty(Property.BORDER, Border.NO_BORDER);
+                // if paragraph has been deliberatly created empty.
+                if (!HasProperty(Property.HEIGHT) && RetrieveHeightPropertyType() != HeightPropertyType.MAX_HEIGHT) {
+                    SetProperty(Property.BORDER, Border.NO_BORDER);
+                }
             }
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
@@ -115,6 +118,11 @@ namespace iText.Layout.Renderer {
             }
             float[] paddings = GetPaddings();
             ApplyPaddings(parentBBox, paddings, false);
+            float? blockHeight = RetrieveHeight();
+            if (null != blockHeight && RetrieveHeightPropertyType() != HeightPropertyType.MIN_HEIGHT && parentBBox.GetHeight
+                () > blockHeight) {
+                parentBBox.MoveUp(parentBBox.GetHeight() - blockHeight).SetHeight(blockHeight);
+            }
             IList<Rectangle> areas;
             if (isPositioned) {
                 areas = JavaCollectionsUtil.SingletonList(parentBBox);
@@ -220,6 +228,13 @@ namespace iText.Layout.Renderer {
                             if (result.GetOverflowRenderer() != null) {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
+                            if (HasProperty(Property.HEIGHT)) {
+                                if (RetrieveHeightPropertyType() != HeightPropertyType.MIN_HEIGHT && parentBBox.GetHeight() == blockHeight
+                                    ) {
+                                    return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
+                                }
+                                split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
                             if (anythingPlaced) {
                                 return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1]);
                             }
@@ -270,11 +285,21 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveDown(moveDown);
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
-            float? blockHeight = this.GetPropertyAsFloat(Property.HEIGHT);
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
-            if (blockHeight != null && blockHeight > occupiedArea.GetBBox().GetHeight()) {
-                occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float)
-                    blockHeight);
+            IRenderer overflowRenderer = null;
+            if (blockHeight != null && RetrieveHeightPropertyType() != HeightPropertyType.MAX_HEIGHT && blockHeight > 
+                occupiedArea.GetBBox().GetHeight()) {
+                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockHeight - occupiedArea.GetBBox().GetHeight
+                    ());
+                if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {
+                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockHeight);
+                }
+                else {
+                    occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
+                        ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
+                    overflowRenderer = CreateOverflowRenderer(parent);
+                    modelElement.SetProperty(Property.HEIGHT, (float)blockHeight - occupiedArea.GetBBox().GetHeight());
+                }
                 ApplyVerticalAlignment();
             }
             if (isPositioned) {
@@ -292,7 +317,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+            if (null == overflowRenderer) {
+                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+            }
+            else {
+                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, overflowRenderer);
+            }
         }
 
         /// <summary><inheritDoc/></summary>
