@@ -101,6 +101,8 @@ namespace iText.Layout.Renderer {
                                 }
                                 ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                                 result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
+                                ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                                logger.Warn(String.Format(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                             }
                             else {
                                 if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer)) {

@@ -200,6 +200,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest09() {
             String outFileName = destinationFolder + "imageTest09.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest09.pdf";
@@ -308,6 +309,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest15() {
             String outFileName = destinationFolder + "imageTest15.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest15.pdf";
@@ -326,7 +328,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-928")]
         public virtual void ImageTest16() {
             String outFileName = destinationFolder + "imageTest16.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest16.pdf";
@@ -339,6 +340,33 @@ namespace iText.Layout {
             image.SetAutoScale(true);
             image.SetRotationAngle(Math.PI / 2);
             doc.Add(image);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 50)]
+        public virtual void ImageTest17() {
+            String outFileName = destinationFolder + "imageTest17.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageTest17.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
+                "Desert.jpg"));
+            image1.SetBorder(new SolidBorder(Color.BLUE, 5));
+            iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
+                "scarf.jpg"));
+            image2.SetBorder(new SolidBorder(Color.BLUE, 5));
+            for (int i = 0; i <= 24; i++) {
+                image1.SetRotationAngle(i * Math.PI / 12);
+                image2.SetRotationAngle(i * Math.PI / 12);
+                doc.Add(image1);
+                doc.Add(image2);
+            }
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

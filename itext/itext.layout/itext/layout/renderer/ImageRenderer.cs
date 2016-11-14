@@ -249,16 +249,15 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea area) {
-            if (width > area.GetBBox().GetWidth()) {
-                SetProperty(Property.HEIGHT, area.GetBBox().GetWidth() / width * imageHeight);
-                SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetWidth()));
-                // if still image is not scaled properly
-                if (this.GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight()) {
-                    SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetHeight() / (float)this.GetPropertyAsFloat
-                        (Property.HEIGHT) * (this.GetProperty<UnitValue>(Property.WIDTH)).GetValue()));
-                    SetProperty(Property.HEIGHT, area.GetBBox().GetHeight());
-                }
+        protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
+            Rectangle area = layoutArea.GetBBox().Clone();
+            ApplyMargins(area, false);
+            ApplyBorderBox(area, false);
+            // if rotation was applied, width would be equal to the width of rectangle bounding the rotated image
+            float angleScaleCoef = imageWidth / (float)width;
+            if (width > angleScaleCoef * area.GetWidth()) {
+                SetProperty(Property.HEIGHT, area.GetWidth() / width * imageHeight);
+                SetProperty(Property.WIDTH, UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;
         }
@@ -302,9 +301,7 @@ namespace iText.Layout.Renderer {
             }
             // Rotating image can cause fitting into area problems.
             // So let's find scaling coefficient
-            // TODO
             float scaleCoeff = 1;
-            // hasProperty(Property) checks only properties field, cannot use it
             if (true.Equals(GetPropertyAsBoolean(Property.AUTO_SCALE))) {
                 scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / (float)height);
                 height *= scaleCoeff;
@@ -327,6 +324,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             pivotY *= scaleCoeff;
+            deltaX *= scaleCoeff;
             return scaleCoeff;
         }
 
