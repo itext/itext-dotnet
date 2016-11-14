@@ -204,10 +204,11 @@ namespace iText.Layout.Renderer {
             if (tableWidth == null || tableWidth == 0) {
                 tableWidth = layoutBox.GetWidth();
             }
-            float? blockHeight = RetrieveHeight();
-            if (blockHeight != null && blockHeight < layoutBox.GetHeight() && RetrieveHeightPropertyType() != HeightType
-                .MIN_HEIGHT && !true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                layoutBox.MoveUp(layoutBox.GetHeight() - blockHeight).SetHeight(blockHeight);
+            // Float blockHeight = retrieveHeight();
+            float? blockMaxHeight = RetrieveMaxHeight();
+            if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
+                Property.FORCED_PLACEMENT))) {
+                layoutBox.MoveUp(layoutBox.GetHeight() - blockMaxHeight).SetHeight(blockMaxHeight);
             }
             float layoutBoxHeight = layoutBox.GetHeight();
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
@@ -687,9 +688,8 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         int status = (childRenderers.IsEmpty() && footerRenderer == null) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
-                        if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || (HasProperty
-                            (Property.HEIGHT) && RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT && layoutBoxHeight == blockHeight
-                            )) {
+                        if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || (null
+                             != blockMaxHeight && layoutBoxHeight == blockMaxHeight)) {
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
                         }
                         else {
@@ -706,28 +706,92 @@ namespace iText.Layout.Renderer {
                     currChildRenderers.Clear();
                 }
             }
+            // if table is empty we still need to process  table borders
+            if (0 == childRenderers.Count) {
+            }
+            //            ArrayList<Border> topHorizontalBorders = new ArrayList<Border>();
+            //            ArrayList<Border> bottomHorizontalBorders = new ArrayList<Border>();
+            //            ArrayList<Border> leftVerticalBorders = new ArrayList<Border>();
+            //            ArrayList<Border> rightVerticalBorders = new ArrayList<Border>();
+            //
+            //            for (int i = 0; i < ((Table)modelElement).getNumberOfColumns(); i++) {
+            //                bottomHorizontalBorders.add(borders[2]);
+            //                topHorizontalBorders.add(borders[0]);
+            //            }
+            //            horizontalBorders.set(0, topHorizontalBorders);
+            //            horizontalBorders.add(bottomHorizontalBorders);
+            //            leftVerticalBorders.add(borders[0]);
+            //            rightVerticalBorders.add(borders[3]);
+            //            verticalBorders = new ArrayList<>();
+            //            verticalBorders.add(leftVerticalBorders);
+            //            for (int i = 1; i < ((Table)modelElement).getNumberOfColumns()-1; i++) {
+            //                verticalBorders.add(new ArrayList<Border>());
+            //            }
+            //            verticalBorders.add(rightVerticalBorders);
             IRenderer overflowRenderer = null;
-            if (blockHeight != null && RetrieveHeightPropertyType() != HeightType.MAX_HEIGHT && blockHeight > occupiedArea
-                .GetBBox().GetHeight()) {
-                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockHeight - occupiedArea.GetBBox().GetHeight
+            float? blockMinHeight = RetrieveMinHeight();
+            if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
+                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {
-                    heights[heights.Count - 1] = heights[heights.Count - 1] + blockHeight - occupiedArea.GetBBox().GetHeight();
-                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockHeight);
+                    if (0 != childRenderers.Count) {
+                        heights.Add(blockMinHeight - occupiedArea.GetBBox().GetHeight());
+                    }
+                    else {
+                        heights[heights.Count - 1] = blockMinHeight - occupiedArea.GetBBox().GetHeight();
+                    }
+                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                 }
                 else {
-                    heights[heights.Count - 1] = heights[heights.Count - 1] + occupiedArea.GetBBox().GetBottom() - layoutContext
-                        .GetArea().GetBBox().GetBottom();
+                    if (0 != childRenderers.Count) {
+                        heights.Add(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox().GetBottom());
+                    }
+                    else {
+                        heights[heights.Count - 1] = occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox().GetBottom
+                            ();
+                    }
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
                         ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
-                    // Add empty cell in order to continue table on the next area
-                    Cell emptyCell = new Cell(1, ((Table)modelElement).GetNumberOfColumns());
-                    emptyCell.SetBorder(Border.NO_BORDER);
                     overflowRenderer = CreateOverflowRenderer(new Table.RowRange(((Table)modelElement).GetNumberOfRows(), ((Table
                         )modelElement).GetNumberOfRows()));
-                    ((Table)modelElement).AddCell(emptyCell);
-                    overflowRenderer.AddChild(emptyCell.GetRenderer());
-                    modelElement.SetProperty(Property.HEIGHT, (float)blockHeight - occupiedArea.GetBBox().GetHeight());
+                    overflowRenderer.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight
+                        ());
+                    overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
+                    overflowRenderer.DeleteOwnProperty(Property.MAX_HEIGHT);
+                }
+                if (0 != childRenderers.Count) {
+                    CellRenderer[] currentRow = rows[row - 1];
+                    verticalBorders[0].Add(row - 1, borders[3]);
+                    verticalBorders[currentRow.Length].Add(row - 1, borders[3]);
+                    List<Border> lastRowHorizontalBorders = new List<Border>();
+                    for (int i = 0; i < currentRow.Length; i++) {
+                        if (null != currentRow[i]) {
+                            currentRow[i].DeleteOwnProperty(Property.BORDER_BOTTOM);
+                            borders = currentRow[i].GetBorders();
+                            lastRowHorizontalBorders.Add(borders[2]);
+                        }
+                    }
+                    horizontalBorders.Add(horizontalBorders.Count - 1, lastRowHorizontalBorders);
+                }
+                else {
+                    List<Border> topHorizontalBorders = new List<Border>();
+                    List<Border> bottomHorizontalBorders = new List<Border>();
+                    List<Border> leftVerticalBorders = new List<Border>();
+                    List<Border> rightVerticalBorders = new List<Border>();
+                    for (int i = 0; i < ((Table)modelElement).GetNumberOfColumns(); i++) {
+                        bottomHorizontalBorders.Add(borders[2]);
+                        topHorizontalBorders.Add(borders[0]);
+                    }
+                    horizontalBorders[0] = topHorizontalBorders;
+                    horizontalBorders.Add(bottomHorizontalBorders);
+                    leftVerticalBorders.Add(borders[0]);
+                    rightVerticalBorders.Add(borders[3]);
+                    verticalBorders = new List<List<Border>>();
+                    verticalBorders.Add(leftVerticalBorders);
+                    for (int i_1 = 0; i_1 < ((Table)modelElement).GetNumberOfColumns() - 1; i_1++) {
+                        verticalBorders.Add(new List<Border>());
+                    }
+                    verticalBorders.Add(rightVerticalBorders);
                 }
             }
             if (IsPositioned()) {
@@ -970,7 +1034,8 @@ namespace iText.Layout.Renderer {
 
         // Do nothing here. Itext7 handles cell and table borders collapse and draws result borders during #drawBorders()
         protected internal virtual void DrawBorders(DrawContext drawContext) {
-            if (occupiedArea.GetBBox().GetHeight() < EPS || childRenderers.Count == 0) {
+            if (occupiedArea.GetBBox().GetHeight() < EPS) {
+                // || childRenderers.size() == 0) {
                 return;
             }
             float startX = GetOccupiedArea().GetBBox().GetX();

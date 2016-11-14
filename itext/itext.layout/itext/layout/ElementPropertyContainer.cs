@@ -104,10 +104,6 @@ namespace iText.Layout {
                     return (T1)(Object)0f;
                 }
 
-                case Property.HEIGHT_TYPE: {
-                    return (T1)(Object)HeightType.HEIGHT;
-                }
-
                 default: {
                     return (T1)(Object)null;
                 }
@@ -164,7 +160,6 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetHeight(float height) {
             SetProperty(Property.HEIGHT, height);
-            SetProperty(Property.HEIGHT_TYPE, HeightType.HEIGHT);
             return (T)(Object)this;
         }
 

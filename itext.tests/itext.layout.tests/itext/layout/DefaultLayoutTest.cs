@@ -68,7 +68,8 @@ namespace iText.Layout {
             document.Add(new Paragraph());
             document.Add(new Paragraph().SetBackgroundColor(Color.GREEN));
             document.Add(new Paragraph().SetBorder(new SolidBorder(Color.BLUE, 3)));
-            document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right?"));
+            document.Add(new Paragraph("Hello! I'm the first paragraph added to the document. Am i right?").SetBackgroundColor
+                (Color.RED).SetBorder(new SolidBorder(1)));
             document.Add(new Paragraph().SetHeight(50));
             document.Add(new Paragraph("Hello! I'm the second paragraph added to the document. Am i right?"));
             document.Close();
@@ -110,36 +111,45 @@ namespace iText.Layout {
             for (int i = 0; i < 10; i++) {
                 list.Add(new ListItem("" + i));
             }
-            list.SetHeight(30);
+            list.SetHeight(60);
             list.SetBorder(new SolidBorder(0.5f));
             //list.setPaddingTop(100); // TODO
             doc.Add(list);
             doc.Add(new AreaBreak());
+            doc.Add(list);
+            doc.Add(new AreaBreak());
             Paragraph p = new Paragraph(textByron);
-            for (int i_1 = 0; i_1 < 15; i_1++) {
-                p.Add(textByron);
-            }
+            //for (int i = 0; i < 15; i++) {
+            p.Add(textByron);
+            //}
             p.SetBorder(new SolidBorder(0.5f));
-            p.SetHeight(500);
+            p.SetHeight(1000);
+            doc.Add(p);
+            doc.Add(new AreaBreak());
             doc.Add(p);
             doc.Add(new AreaBreak());
             p.SetBorder(Border.NO_BORDER);
             Div div = new Div();
             div.SetBorder(new SolidBorder(0.5f));
-            for (int i_2 = 0; i_2 < 5; i_2++) {
+            for (int i_1 = 0; i_1 < 5; i_1++) {
                 div.Add(p);
             }
             div.SetHeight(1000);
             doc.Add(div);
             doc.Add(new AreaBreak());
+            doc.Add(div);
+            doc.Add(new AreaBreak());
             Table table = new Table(2);
             table.SetBorder(new SolidBorder(Color.RED, 2f));
-            table.AddCell(new Cell(2, 1).Add(new Paragraph(textHelloWorld)));
-            for (int i_3 = 0; i_3 < 2; i_3++) {
-                table.AddCell(new Cell().Add(new Paragraph(textByron)));
+            //        table.addCell(new Cell(2, 1).add(new Paragraph(textHelloWorld)));
+            for (int i_2 = 0; i_2 < 4; i_2++) {
+                table.AddCell(new Cell().Add(new Paragraph(textByron)).SetBorder(new SolidBorder(Color.YELLOW, 1)));
             }
-            table.AddCell(new Cell(1, 2).Add(textByron));
-            //table.setHeight(2000);
+            //        table.addCell(new Cell(1, 2).add(textByron));
+            table.SetHeight(1700);
+            doc.Add(table);
+            doc.Add(new Paragraph("Hello"));
+            doc.Add(new AreaBreak());
             doc.Add(table);
             doc.Add(new Paragraph("Hello"));
             doc.Add(new AreaBreak());
@@ -147,6 +157,9 @@ namespace iText.Layout {
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
             image.SetMaxHeight(100);
             doc.Add(image);
+            doc.Add(new AreaBreak());
+            doc.Add(image);
+            doc.Add(new AreaBreak());
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

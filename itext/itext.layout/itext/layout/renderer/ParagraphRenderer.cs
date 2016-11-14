@@ -86,18 +86,6 @@ namespace iText.Layout.Renderer {
             if (0 == childRenderers.Count) {
                 anythingPlaced = true;
                 currentRenderer = null;
-                SetProperty(Property.MARGIN_TOP, 0);
-                SetProperty(Property.MARGIN_RIGHT, 0);
-                SetProperty(Property.MARGIN_BOTTOM, 0);
-                SetProperty(Property.MARGIN_LEFT, 0);
-                SetProperty(Property.PADDING_TOP, 0);
-                SetProperty(Property.PADDING_RIGHT, 0);
-                SetProperty(Property.PADDING_BOTTOM, 0);
-                SetProperty(Property.PADDING_LEFT, 0);
-                // if paragraph has been deliberatly created empty.
-                if (!HasProperty(Property.HEIGHT) && RetrieveHeightPropertyType() != HeightType.MAX_HEIGHT) {
-                    SetProperty(Property.BORDER, Border.NO_BORDER);
-                }
             }
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
@@ -118,10 +106,10 @@ namespace iText.Layout.Renderer {
             }
             float[] paddings = GetPaddings();
             ApplyPaddings(parentBBox, paddings, false);
-            float? blockHeight = RetrieveHeight();
-            if (null != blockHeight && RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT && parentBBox.GetHeight()
-                 > blockHeight) {
-                parentBBox.MoveUp(parentBBox.GetHeight() - blockHeight).SetHeight(blockHeight);
+            //        Float blockHeight = retrieveHeight();
+            float? blockMaxHeight = RetrieveMaxHeight();
+            if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
+                parentBBox.MoveUp(parentBBox.GetHeight() - blockMaxHeight).SetHeight(blockMaxHeight);
             }
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -229,7 +217,7 @@ namespace iText.Layout.Renderer {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
                             if (HasProperty(Property.HEIGHT)) {
-                                if (RetrieveHeightPropertyType() != HeightType.MIN_HEIGHT && parentBBox.GetHeight() == blockHeight) {
+                                if (null != blockMaxHeight && parentBBox.GetHeight() == blockMaxHeight) {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
                                 split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
@@ -286,18 +274,21 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer = null;
-            if (blockHeight != null && RetrieveHeightPropertyType() != HeightType.MAX_HEIGHT && blockHeight > occupiedArea
-                .GetBBox().GetHeight()) {
-                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockHeight - occupiedArea.GetBBox().GetHeight
+            float? blockMinHeight = RetrieveMinHeight();
+            if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
+                float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {
-                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockHeight);
+                    occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                 }
                 else {
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
                         ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
                     overflowRenderer = CreateOverflowRenderer(parent);
-                    modelElement.SetProperty(Property.HEIGHT, (float)blockHeight - occupiedArea.GetBBox().GetHeight());
+                    overflowRenderer.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight
+                        ());
+                    overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
+                    overflowRenderer.DeleteOwnProperty(Property.MAX_HEIGHT);
                 }
                 ApplyVerticalAlignment();
             }

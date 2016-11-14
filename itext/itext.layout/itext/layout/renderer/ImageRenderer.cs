@@ -115,22 +115,19 @@ namespace iText.Layout.Renderer {
                 }
                 height *= (float)verticalScaling;
             }
-            float? heightPropertyValue = RetrieveHeight();
-            if (null != heightPropertyValue) {
-                if (HeightType.MIN_HEIGHT == RetrieveHeightPropertyType() && height < heightPropertyValue) {
-                    width *= heightPropertyValue / height;
-                    height = heightPropertyValue;
+            if (null != RetrieveMinHeight() && height < RetrieveMinHeight()) {
+                width *= RetrieveMinHeight() / height;
+                height = RetrieveMinHeight();
+            }
+            else {
+                if (null != RetrieveMaxHeight() && height > RetrieveMaxHeight()) {
+                    width *= RetrieveMaxHeight() / height;
+                    height = RetrieveMaxHeight();
                 }
                 else {
-                    if (HeightType.HEIGHT == RetrieveHeightPropertyType() && height != heightPropertyValue) {
-                        width *= heightPropertyValue / height;
-                        height = heightPropertyValue;
-                    }
-                    else {
-                        if (HeightType.MAX_HEIGHT == RetrieveHeightPropertyType() && height > heightPropertyValue) {
-                            width *= heightPropertyValue / height;
-                            height = heightPropertyValue;
-                        }
+                    if (null != RetrieveHeight() && height != RetrieveHeight()) {
+                        width *= RetrieveHeight() / height;
+                        height = RetrieveHeight();
                     }
                 }
             }
@@ -237,7 +234,6 @@ namespace iText.Layout.Renderer {
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea area) {
             if (width > area.GetBBox().GetWidth()) {
                 SetProperty(Property.HEIGHT, area.GetBBox().GetWidth() / width * imageHeight);
-                SetProperty(Property.HEIGHT_TYPE, HeightType.HEIGHT);
                 SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetWidth()));
                 // if still image is not scaled properly
                 if (this.GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight()) {

@@ -445,13 +445,11 @@ namespace iText.Layout.Element {
 
         public virtual iText.Layout.Element.Image SetMaxHeight(float maxHeight) {
             SetProperty(Property.HEIGHT, maxHeight);
-            SetProperty(Property.HEIGHT_TYPE, HeightType.MAX_HEIGHT);
             return (iText.Layout.Element.Image)(Object)this;
         }
 
         public virtual iText.Layout.Element.Image SetMinHeight(float minHeight) {
             SetProperty(Property.HEIGHT, minHeight);
-            SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
             return (iText.Layout.Element.Image)(Object)this;
         }
 
