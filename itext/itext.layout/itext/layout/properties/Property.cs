@@ -96,6 +96,10 @@ namespace iText.Layout.Properties {
 
         public const int DESTINATION = 17;
 
+        public const int EXTEND_FINAL_ROW = 86;
+
+        public const int EXTEND_LAST_ROW = 87;
+
         public const int FIRST_LINE_INDENT = 18;
 
         public const int FLUSH_ON_DRAW = 19;

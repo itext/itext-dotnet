@@ -324,27 +324,7 @@ namespace iText.Layout.Renderer {
                     if (tableModel.GetNumberOfColumns() == col + colspan) {
                         cell.SetProperty(Property.BORDER_RIGHT, GetCollapsedBorder(cellBorders[1], borders[1]));
                     }
-                    if (cell != null) {
-                        BuildBordersArrays(cell, row, true, false);
-                    }
-                    int currCellRowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
-                    int currCellColspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
-                    if (row + currCellRowspan < rows.Count) {
-                        for (int j = 0; j < currCellColspan; j++) {
-                            CellRenderer nextCell = rows[row + currCellRowspan][col + j];
-                            if (nextCell != null) {
-                                BuildBordersArrays(nextCell, row + currCellRowspan, true, true);
-                            }
-                        }
-                    }
-                    if (col + currCellColspan < rows[row].Length) {
-                        for (int j = 0; j < currCellRowspan && row + 1 + j - currCellRowspan >= 0; j++) {
-                            CellRenderer nextCell = rows[row + 1 + j - currCellRowspan][col + currCellColspan];
-                            if (nextCell != null) {
-                                BuildBordersArrays(nextCell, row + 1 + j - currCellRowspan, true, false);
-                            }
-                        }
-                    }
+                    BuildBordersArrays(cell, row, col);
                     targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
                     bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
@@ -590,6 +570,7 @@ namespace iText.Layout.Renderer {
                             if (splits[col].GetStatus() != LayoutResult.NOTHING && (hasContent || cellWithBigRowspanAdded)) {
                                 childRenderers.Add(cellSplit);
                             }
+                            LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
                             if (hasContent || cellWithBigRowspanAdded || splits[col].GetStatus() == LayoutResult.NOTHING) {
                                 currentRow[col] = null;
                                 CellRenderer cellOverflow = (CellRenderer)splits[col].GetOverflowRenderer();
@@ -611,6 +592,7 @@ namespace iText.Layout.Renderer {
                             else {
                                 rows[targetOverflowRowIndex[col]][col] = (CellRenderer)currentRow[col].SetParent(splitResult[1]);
                             }
+                            rows[targetOverflowRowIndex[col]][col].occupiedArea = cellOccupiedArea;
                         }
                         else {
                             if (currentRow[col] != null) {
@@ -633,6 +615,7 @@ namespace iText.Layout.Renderer {
                     }
                     for (col = 0; col < numberOfColumns; col++) {
                         if (columnsWithCellToBeEnlarged[col]) {
+                            LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
                             if (1 == minRowspan) {
                                 // Here we use the same cell, but create a new renderer which doesn't have any children,
                                 // therefore it won't have any content.
@@ -663,6 +646,7 @@ namespace iText.Layout.Renderer {
                                     rows[targetOverflowRowIndex[col]][col].SetProperty(Property.BORDER_TOP, topBorder);
                                 }
                             }
+                            rows[targetOverflowRowIndex[col]][col].occupiedArea = cellOccupiedArea;
                         }
                     }
                     if (hasContent || cellWithBigRowspanAdded) {
@@ -675,6 +659,9 @@ namespace iText.Layout.Renderer {
                     else {
                         occupiedArea.GetBBox().ApplyMargins<Rectangle>(topTableBorderWidth / 2, 0, 0, 0, false);
                         layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, 0, 0, 0, true);
+                    }
+                    if (true.Equals(GetPropertyAsBoolean(Property.EXTEND_LAST_ROW))) {
+                        ExtendLastRow(currentRow, layoutBox);
                     }
                     AdjustFooterAndFixOccupiedArea(layoutBox);
                     // On the next page we need to process rows without any changes except moves connected to actual cell splitting
@@ -789,6 +776,10 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), new float[] { topTableBorderWidth / 2, 0, bottomTableBorderWidth / 2, 
                 0 }, true);
             layoutBox.ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, false);
+            if ((true.Equals(GetPropertyAsBoolean(Property.EXTEND_FINAL_ROW)) || (true.Equals(GetPropertyAsBoolean(Property
+                .EXTEND_LAST_ROW)) && false.Equals(HasProperty(Property.EXTEND_FINAL_ROW)))) && 0 != rows.Count) {
+                ExtendLastRow(rows[rows.Count - 1], layoutBox);
+            }
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) {
                 footerRenderer = null;
@@ -1270,6 +1261,30 @@ namespace iText.Layout.Renderer {
             return true;
         }
 
+        private void BuildBordersArrays(CellRenderer cell, int row, int col) {
+            if (cell != null) {
+                BuildBordersArrays(cell, row, true, false);
+            }
+            int currCellRowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+            int currCellColspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+            if (row + currCellRowspan < rows.Count) {
+                for (int j = 0; j < currCellColspan; j++) {
+                    CellRenderer nextCell = rows[row + currCellRowspan][col + j];
+                    if (nextCell != null) {
+                        BuildBordersArrays(nextCell, row + currCellRowspan, true, true);
+                    }
+                }
+            }
+            if (col + currCellColspan < rows[row].Length) {
+                for (int j = 0; j < currCellRowspan && row + 1 + j - currCellRowspan >= 0; j++) {
+                    CellRenderer nextCell = rows[row + 1 + j - currCellRowspan][col + currCellColspan];
+                    if (nextCell != null) {
+                        BuildBordersArrays(nextCell, row + 1 + j - currCellRowspan, true, false);
+                    }
+                }
+            }
+        }
+
         private void BuildBordersArrays(CellRenderer cell, int row, bool hasContent, bool isCellFromFutureRow) {
             int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
             int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
@@ -1443,6 +1458,19 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        protected internal virtual void ExtendLastRow(CellRenderer[] lastRow, Rectangle freeBox) {
+            if (null != lastRow && 0 != heights.Count) {
+                heights[heights.Count - 1] = heights[heights.Count - 1] + freeBox.GetHeight();
+                occupiedArea.GetBBox().MoveDown(freeBox.GetHeight()).IncreaseHeight(freeBox.GetHeight());
+                foreach (CellRenderer cell in lastRow) {
+                    if (null != cell) {
+                        cell.occupiedArea.GetBBox().MoveDown(freeBox.GetHeight()).IncreaseHeight(freeBox.GetHeight());
+                    }
+                }
+                freeBox.MoveUp(freeBox.GetHeight()).SetHeight(0);
+            }
         }
 
         /// <summary>This method is used to set row range for table renderer during creating a new renderer.</summary>

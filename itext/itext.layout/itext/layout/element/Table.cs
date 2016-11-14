@@ -699,6 +699,16 @@ namespace iText.Layout.Element {
             }
         }
 
+        public virtual iText.Layout.Element.Table SetExtendLastRow(bool isExtended) {
+            SetProperty(Property.EXTEND_LAST_ROW, isExtended);
+            return this;
+        }
+
+        public virtual iText.Layout.Element.Table SetExtendFinalRow(bool isExtended) {
+            SetProperty(Property.EXTEND_FINAL_ROW, isExtended);
+            return this;
+        }
+
         public override AccessibilityProperties GetAccessibilityProperties() {
             if (tagProperties == null) {
                 tagProperties = new AccessibilityProperties();

@@ -74,6 +74,18 @@ namespace iText.Layout.Element {
             Add(image);
         }
 
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case Property.LIST_SYMBOL_POSITION: {
+                    return (T1)(Object)ListSymbolPosition.DEFAULT;
+                }
+
+                default: {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
+        }
+
         /// <summary>Sets the list item symbol to be used.</summary>
         /// <param name="symbol">the textual symbol to be used for the item.</param>
         /// <returns>this list item.</returns>

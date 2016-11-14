@@ -765,6 +765,33 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ExtendLastRowTest01() {
+            String testName = "extendLastRowTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+                )));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
+            Table table = new Table(2);
+            for (int i = 0; i < 20; i++) {
+                table.AddCell(image);
+            }
+            doc.Add(new Paragraph("Extend the last row on each page"));
+            table.SetExtendLastRow(true);
+            doc.Add(table);
+            doc.Add(new Paragraph("Extend all last rows on each page except final one"));
+            table.SetExtendFinalRow(false);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void ToLargeElementWithKeepTogetherPropertyInTableTest01() {
