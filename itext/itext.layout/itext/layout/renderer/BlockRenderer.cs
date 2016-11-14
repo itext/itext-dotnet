@@ -86,7 +86,7 @@ namespace iText.Layout.Renderer {
             float? blockMaxHeight = RetrieveMaxHeight();
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
                 GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                parentBBox.MoveUp(parentBBox.GetHeight() - blockMaxHeight).SetHeight(blockMaxHeight);
+                parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
             }
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -200,8 +200,8 @@ namespace iText.Layout.Renderer {
                                         CorrectPositionedLayout(layoutBox);
                                     }
                                     if (parentBBox.GetHeight() == blockMaxHeight) {
-                                        occupiedArea.GetBBox().MoveDown(blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight(blockMaxHeight
-                                            );
+                                        occupiedArea.GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
+                                            )blockMaxHeight);
                                         return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
                                     }
                                     overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
@@ -239,8 +239,8 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer_1 = null;
             float? blockMinHeight = RetrieveMinHeight();
-            if (!true.Equals(GetProperty(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight > occupiedArea
-                .GetBBox().GetHeight()) {
+            if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight
+                 > occupiedArea.GetBBox().GetHeight()) {
                 float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {

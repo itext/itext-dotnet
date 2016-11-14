@@ -83,7 +83,8 @@ namespace iText.Layout.Renderer {
                 for (int i_1 = 0; i_1 < childRenderers.Count; i_1++) {
                     IRenderer symbolRenderer = symbolRenderers[i_1];
                     IRenderer listItemRenderer = childRenderers[i_1];
-                    if (listItemRenderer.GetProperty(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition.INSIDE) {
+                    if ((ListSymbolPosition)listItemRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
+                        .INSIDE) {
                         maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
                     }
                 }
@@ -92,9 +93,10 @@ namespace iText.Layout.Renderer {
                 foreach (IRenderer childRenderer in childRenderers) {
                     childRenderer.SetParent(this);
                     childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-                    float calculatedMargin = childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
-                    if (childRenderer.GetProperty(Property.LIST_SYMBOL_POSITION) == ListSymbolPosition.DEFAULT) {
-                        calculatedMargin += maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f);
+                    float calculatedMargin = (float)childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
+                    if ((ListSymbolPosition)childRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
+                        .DEFAULT) {
+                        calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
                     }
                     childRenderer.SetProperty(Property.MARGIN_LEFT, calculatedMargin);
                     IRenderer symbolRenderer = symbolRenderers[listItemNum++];

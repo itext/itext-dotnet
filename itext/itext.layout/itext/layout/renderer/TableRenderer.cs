@@ -221,7 +221,7 @@ namespace iText.Layout.Renderer {
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
                 Property.FORCED_PLACEMENT))) {
-                layoutBox.MoveUp(layoutBox.GetHeight() - blockMaxHeight).SetHeight(blockMaxHeight);
+                layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
             }
             float layoutBoxHeight = layoutBox.GetHeight();
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
@@ -327,21 +327,21 @@ namespace iText.Layout.Renderer {
                     if (cell != null) {
                         BuildBordersArrays(cell, row, true, false);
                     }
-                    if (row + cell.GetPropertyAsInteger(Property.ROWSPAN) < rows.Count) {
-                        for (int j = 0; j < cell.GetPropertyAsInteger(Property.COLSPAN); j++) {
-                            CellRenderer nextCell = rows[row + cell.GetPropertyAsInteger(Property.ROWSPAN)][col + j];
+                    int currCellRowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+                    int currCellColspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+                    if (row + currCellRowspan < rows.Count) {
+                        for (int j = 0; j < currCellColspan; j++) {
+                            CellRenderer nextCell = rows[row + currCellRowspan][col + j];
                             if (nextCell != null) {
-                                BuildBordersArrays(nextCell, row + cell.GetPropertyAsInteger(Property.ROWSPAN), true, true);
+                                BuildBordersArrays(nextCell, row + currCellRowspan, true, true);
                             }
                         }
                     }
-                    if (col + cell.GetPropertyAsInteger(Property.COLSPAN) < rows[row].Length) {
-                        for (int j = 0; j < cell.GetPropertyAsInteger(Property.ROWSPAN) && row + 1 + j - cell.GetPropertyAsInteger
-                            (Property.ROWSPAN) >= 0; j++) {
-                            CellRenderer nextCell = rows[row + 1 + j - cell.GetPropertyAsInteger(Property.ROWSPAN)][col + cell.GetPropertyAsInteger
-                                (Property.COLSPAN)];
+                    if (col + currCellColspan < rows[row].Length) {
+                        for (int j = 0; j < currCellRowspan && row + 1 + j - currCellRowspan >= 0; j++) {
+                            CellRenderer nextCell = rows[row + 1 + j - currCellRowspan][col + currCellColspan];
                             if (nextCell != null) {
-                                BuildBordersArrays(nextCell, row + 1 + j - cell.GetPropertyAsInteger(Property.ROWSPAN), true, false);
+                                BuildBordersArrays(nextCell, row + 1 + j - currCellRowspan, true, false);
                             }
                         }
                     }
@@ -739,10 +739,10 @@ namespace iText.Layout.Renderer {
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {
                     if (0 != childRenderers.Count) {
-                        heights.Add(blockMinHeight - occupiedArea.GetBBox().GetHeight());
+                        heights.Add((float)blockMinHeight - occupiedArea.GetBBox().GetHeight());
                     }
                     else {
-                        heights[heights.Count - 1] = blockMinHeight - occupiedArea.GetBBox().GetHeight();
+                        heights[heights.Count - 1] = (float)blockMinHeight - occupiedArea.GetBBox().GetHeight();
                     }
                     occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockMinHeight);
                 }

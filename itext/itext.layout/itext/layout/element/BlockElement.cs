@@ -342,10 +342,10 @@ namespace iText.Layout.Element {
 
         // call only after setting Height property value
         private void OverrideHeightProperties(float height) {
-            if (!HasProperty(Property.MAX_HEIGHT) || height < (float)GetProperty(Property.MAX_HEIGHT)) {
+            if (!HasProperty(Property.MAX_HEIGHT) || height < this.GetProperty<float?>(Property.MAX_HEIGHT)) {
                 SetMaxHeight(height);
             }
-            if (!HasProperty(Property.MIN_HEIGHT) || height > (float)GetProperty(Property.MIN_HEIGHT)) {
+            if (!HasProperty(Property.MIN_HEIGHT) || height > this.GetProperty<float?>(Property.MIN_HEIGHT)) {
                 SetMinHeight(height);
             }
         }

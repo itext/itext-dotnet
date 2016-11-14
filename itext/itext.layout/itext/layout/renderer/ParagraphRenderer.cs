@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(parentBBox, paddings, false);
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
-                parentBBox.MoveUp(parentBBox.GetHeight() - blockMaxHeight).SetHeight(blockMaxHeight);
+                parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
             }
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -220,8 +220,8 @@ namespace iText.Layout.Renderer {
                                     CorrectPositionedLayout(layoutBox);
                                 }
                                 if (parentBBox.GetHeight() == blockMaxHeight) {
-                                    occupiedArea.GetBBox().MoveDown(blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight(blockMaxHeight
-                                        );
+                                    occupiedArea.GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
+                                        )blockMaxHeight);
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
                                 split[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
