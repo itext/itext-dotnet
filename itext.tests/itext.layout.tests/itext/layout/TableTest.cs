@@ -700,7 +700,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-869")]
         public virtual void BigRowspanTest05() {
             String testName = "bigRowspanTest05.pdf";
             String outFileName = destinationFolder + testName;
@@ -838,7 +838,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-929")]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 9)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {

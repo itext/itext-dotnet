@@ -710,8 +710,8 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-907")]
         [NUnit.Framework.Test]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitCellsTest04() {
             fileName = "splitCellsTest04.pdf";
             Document doc = CreateDocument();

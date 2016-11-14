@@ -211,7 +211,7 @@ namespace iText.Layout.Renderer {
                     }
                     result = new LineLayoutResult(anythingPlaced ? LayoutResult.PARTIAL : LayoutResult.NOTHING, occupiedArea, 
                         split[0], split[1], childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing() : 
-                        this);
+                        childRenderer);
                     if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult && ((TextLayoutResult
                         )childResult).IsSplitForcedByNewline()) {
                         result.SetSplitForcedByNewline(true);
