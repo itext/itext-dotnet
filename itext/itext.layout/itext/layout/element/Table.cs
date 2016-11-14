@@ -139,11 +139,20 @@ namespace iText.Layout.Element {
             }
             this.columnWidths = new UnitValue[columnWidths.Length];
             float totalWidth = 0;
+            bool percentValuesPresentedInTableColumns = false;
             for (int i = 0; i < columnWidths.Length; i++) {
                 this.columnWidths[i] = columnWidths[i];
                 if (columnWidths[i].IsPointValue()) {
                     totalWidth += columnWidths[i].GetValue();
                 }
+                else {
+                    if (columnWidths[i].IsPercentValue()) {
+                        percentValuesPresentedInTableColumns = true;
+                    }
+                }
+            }
+            if (percentValuesPresentedInTableColumns) {
+                totalWidth = 0;
             }
             base.SetWidth(totalWidth);
             InitializeRows();

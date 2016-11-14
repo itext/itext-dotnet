@@ -204,15 +204,20 @@ namespace iText.Layout.Renderer {
             Table tableModel = (Table)GetModelElement();
             float? tableWidth = RetrieveWidth(layoutBox.GetWidth());
             if (tableWidth == null || tableWidth == 0) {
+                float totalColumnWidthInPercent = 0;
+                for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
+                    UnitValue columnWidth = tableModel.GetColumnWidth(col);
+                    if (columnWidth.IsPercentValue()) {
+                        totalColumnWidthInPercent += columnWidth.GetValue();
+                    }
+                }
                 tableWidth = layoutBox.GetWidth();
-            }
-            float freeAreaWidth = layoutBox.GetWidth() - (float)tableWidth;
-            for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
-                UnitValue columnWidth = tableModel.GetColumnWidth(col);
-                if (columnWidth.IsPercentValue()) {
-                    tableWidth += (freeAreaWidth) * columnWidth.GetValue() / 100;
+                if (totalColumnWidthInPercent > 0) {
+                    tableWidth = layoutBox.GetWidth() * totalColumnWidthInPercent / 100;
                 }
             }
+            columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftTableBorderWidth, rightTableBorderWidth
+                );
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight() - topTableBorderWidth / 2, (float)tableWidth, 0));
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
@@ -258,8 +263,6 @@ namespace iText.Layout.Renderer {
             // Apply halves of the borders. The other halves are applied on a Cell level
             layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, rightTableBorderWidth / 2, 0, leftTableBorderWidth
                  / 2, false);
-            columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftTableBorderWidth, rightTableBorderWidth
-                , layoutBox.GetWidth());
             LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
@@ -857,22 +860,46 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth, float leftBorderWidth
-            , float rightBorderWidth, float layoutBoxWidth) {
+            , float rightBorderWidth) {
             float[] scaledWidths = new float[tableModel.GetNumberOfColumns()];
             float widthSum = 0;
+            float totalPointWidth = 0;
             int col;
             for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
                 UnitValue columnUnitWidth = tableModel.GetColumnWidth(col);
                 float columnWidth;
-                if (columnUnitWidth.IsPointValue()) {
-                    columnWidth = columnUnitWidth.GetValue();
+                if (columnUnitWidth.IsPercentValue()) {
+                    columnWidth = tableWidth * columnUnitWidth.GetValue() / 100;
+                    scaledWidths[col] = columnWidth;
+                    widthSum += columnWidth;
                 }
                 else {
-                    columnWidth = (layoutBoxWidth - tableWidth) * columnUnitWidth.GetValue() / 100;
+                    totalPointWidth += columnUnitWidth.GetValue();
                 }
-                scaledWidths[col] = columnWidth;
-                widthSum += scaledWidths[col];
             }
+            float freeTableSpaceWidth = tableWidth - widthSum;
+            if (totalPointWidth > 0) {
+                for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
+                    float columnWidth;
+                    UnitValue columnUnitWidth = tableModel.GetColumnWidth(col);
+                    if (columnUnitWidth.IsPointValue()) {
+                        columnWidth = (freeTableSpaceWidth / totalPointWidth) * columnUnitWidth.GetValue();
+                        scaledWidths[col] = columnWidth;
+                        widthSum += columnWidth;
+                    }
+                }
+            }
+            //        for (col = 0; col < tableModel.getNumberOfColumns(); col++) {
+            //            UnitValue columnUnitWidth = tableModel.getColumnWidth(col);
+            //            float columnWidth;
+            //            if (columnUnitWidth.isPointValue()) {
+            //                columnWidth = columnUnitWidth.getValue();
+            //            } else {
+            //                columnWidth = tableWidth * columnUnitWidth.getValue() / 100;
+            //            }
+            //            scaledWidths[col] = columnWidth;
+            //            widthSum += scaledWidths[col];
+            //        }
             for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
                 scaledWidths[col] *= (tableWidth - leftBorderWidth / 2 - rightBorderWidth / 2) / widthSum;
             }
