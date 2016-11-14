@@ -47,6 +47,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -85,6 +86,8 @@ namespace iText.Layout.Renderer {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox();
             ApplyMargins(layoutBox, false);
+            Border[] borders = GetBorders();
+            ApplyBorderBox(layoutBox, borders, false);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             width = RetrieveWidth(layoutBox.GetWidth());
@@ -162,6 +165,7 @@ namespace iText.Layout.Renderer {
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
             ApplyMargins(occupiedArea.GetBBox(), true);
+            ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
         }
 
@@ -187,6 +191,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             ApplyMargins(occupiedArea.GetBBox(), false);
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
                 ApplyAbsolutePositioningTranslation(false);
