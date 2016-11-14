@@ -2284,21 +2284,21 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private void ApplyRotation(PdfPage page) {
-            iText.Kernel.Geom.Rectangle rectagle = page.GetPageSizeWithRotation();
+            iText.Kernel.Geom.Rectangle rectangle = page.GetPageSizeWithRotation();
             int rotation = page.GetRotation();
             switch (rotation) {
                 case 90: {
-                    ConcatMatrix(0, 1, -1, 0, rectagle.GetTop(), 0);
+                    ConcatMatrix(0, 1, -1, 0, rectangle.GetTop(), 0);
                     break;
                 }
 
                 case 180: {
-                    ConcatMatrix(-1, 0, 0, -1, rectagle.GetRight(), rectagle.GetTop());
+                    ConcatMatrix(-1, 0, 0, -1, rectangle.GetRight(), rectangle.GetTop());
                     break;
                 }
 
                 case 270: {
-                    ConcatMatrix(0, -1, 1, 0, 0, rectagle.GetRight());
+                    ConcatMatrix(0, -1, 1, 0, 0, rectangle.GetRight());
                     break;
                 }
             }
