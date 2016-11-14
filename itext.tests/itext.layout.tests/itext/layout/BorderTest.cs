@@ -62,6 +62,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-924")]
         [NUnit.Framework.Test]
         public virtual void IncompleteTableTest01() {
             fileName = "incompleteTableTest01.pdf";
@@ -583,6 +584,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("")]
         [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
@@ -692,7 +694,22 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest03() {
+            fileName = "splitCellsTest03.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(100, 150));
+            String textAlphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
+            Table table = new Table(1);
+            table.AddCell(new Cell().Add(textAlphabet).SetBorder(new SolidBorder(4)));
+            table.AddFooterCell(new Cell().Add("Footer"));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-907")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest04() {
             fileName = "splitCellsTest04.pdf";
@@ -704,14 +721,10 @@ namespace iText.Layout {
             Table table = new Table(1);
             Cell cell;
             cell = new Cell().Add(text);
-            cell.SetBorderBottom(new SolidBorder(Color.RED, 100));
-            cell.SetBorderTop(new SolidBorder(Color.RED, 100));
+            cell.SetBorderBottom(new SolidBorder(Color.RED, 20));
+            cell.SetBorderTop(new SolidBorder(Color.GREEN, 20));
             table.AddCell(cell);
-            table.AddFooterCell(new Cell().Add("Footer").SetBorderTop(new SolidBorder(Color.YELLOW, 30)));
-            table.AddHeaderCell(new Cell().Add("Header").SetBorderBottom(new SolidBorder(Color.GREEN, 100)));
-            doc.Add(table);
-            doc.Add(new AreaBreak());
-            table.SetBorder(new SolidBorder(Color.YELLOW, 3));
+            table.AddFooterCell(new Cell().Add("Footer").SetBorderTop(new SolidBorder(Color.YELLOW, 20)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
@@ -719,20 +732,18 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TableWithHeaderTest01() {
-            fileName = "tableWithHeaderTest01.pdf";
+        public virtual void SplitCellsTest05() {
+            fileName = "splitCellsTest05.pdf";
             Document doc = CreateDocument();
-            Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.YELLOW, 30));
-            Cell cell;
-            cell = new Cell().Add("Header with narrow border").SetBorder(new SolidBorder(Color.GREEN, 0.5f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Header with wide border").SetBorder(new SolidBorder(Color.GREEN, 65f));
-            table.AddCell(cell);
-            cell = new Cell().Add("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5f));
-            table.AddCell(cell);
-            cell = new Cell().Add("World").SetBorder(new SolidBorder(Color.MAGENTA, 5f));
-            table.AddCell(cell);
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
+            // 150
+            String textAlphabet = "Cell";
+            Table table = new Table(3);
+            table.AddCell(new Cell().Add(textAlphabet));
+            table.AddCell(new Cell(2, 1).Add(textAlphabet));
+            table.AddCell(new Cell().Add(textAlphabet));
+            table.AddCell(new Cell().Add(textAlphabet));
+            table.AddCell(new Cell().Add(textAlphabet));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

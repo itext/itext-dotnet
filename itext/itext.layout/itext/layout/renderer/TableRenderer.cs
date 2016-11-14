@@ -267,25 +267,6 @@ namespace iText.Layout.Renderer {
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
             int[] targetOverflowRowIndex = new int[tableModel.GetNumberOfColumns()];
-            // complete table with empty cells
-            CellRenderer[] lastAddedRow;
-            if (0 != rows.Count && null != rows[rows.Count - 1]) {
-                lastAddedRow = rows[rows.Count - 1];
-                int colIndex = 0;
-                while (colIndex < lastAddedRow.Length && null != lastAddedRow[colIndex]) {
-                    colIndex += (int)lastAddedRow[colIndex].GetPropertyAsInteger(Property.COLSPAN);
-                }
-                // complete row if it's not already complete ot totally empty
-                if (0 != colIndex && lastAddedRow.Length != colIndex) {
-                    while (colIndex < lastAddedRow.Length) {
-                        Cell emptyCell = new Cell();
-                        emptyCell.SetBorder(Border.NO_BORDER);
-                        ((Table)this.GetModelElement()).AddCell(emptyCell);
-                        this.AddChild(emptyCell.GetRenderer());
-                        colIndex++;
-                    }
-                }
-            }
             horizontalBorders.Add(tableModel.GetLastRowBottomBorder());
             for (row = 0; row < rows.Count; row++) {
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
@@ -336,18 +317,22 @@ namespace iText.Layout.Renderer {
                     if (cell != null) {
                         BuildBordersArrays(cell, row, true, false);
                     }
-                    if (row + 1 < rows.Count) {
-                        for (int j = 0; j < ((Cell)cell.GetModelElement()).GetColspan(); j++) {
-                            CellRenderer nextCell = rows[row + 1][col + j];
+                    if (row + cell.GetPropertyAsInteger(Property.ROWSPAN) < rows.Count) {
+                        for (int j = 0; j < cell.GetPropertyAsInteger(Property.COLSPAN); j++) {
+                            CellRenderer nextCell = rows[row + cell.GetPropertyAsInteger(Property.ROWSPAN)][col + j];
                             if (nextCell != null) {
-                                BuildBordersArrays(nextCell, row + 1, true, true);
+                                BuildBordersArrays(nextCell, row + cell.GetPropertyAsInteger(Property.ROWSPAN), true, true);
                             }
                         }
                     }
-                    if (col + 1 < rows[row].Length) {
-                        CellRenderer nextCell = rows[row][col + 1];
-                        if (nextCell != null) {
-                            BuildBordersArrays(nextCell, row, true, false);
+                    if (col + cell.GetPropertyAsInteger(Property.COLSPAN) < rows[row].Length) {
+                        for (int j = 0; j < cell.GetPropertyAsInteger(Property.ROWSPAN) && row + 1 + j - cell.GetPropertyAsInteger
+                            (Property.ROWSPAN) >= 0; j++) {
+                            CellRenderer nextCell = rows[row + 1 + j - cell.GetPropertyAsInteger(Property.ROWSPAN)][col + cell.GetPropertyAsInteger
+                                (Property.COLSPAN)];
+                            if (nextCell != null) {
+                                BuildBordersArrays(nextCell, row, true, false);
+                            }
                         }
                     }
                     targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
@@ -508,6 +493,7 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().IncreaseHeight(rowHeight);
                     layoutBox.DecreaseHeight(rowHeight);
                 }
+                CellRenderer[] lastAddedRow;
                 if (split || row == rows.Count - 1) {
                     // Correct layout area of the last row rendered on the page
                     if (heights.Count != 0) {
@@ -598,17 +584,16 @@ namespace iText.Layout.Renderer {
                                 currentRow[col] = null;
                                 CellRenderer cellOverflow = (CellRenderer)splits[col].GetOverflowRenderer();
                                 if (splits[col].GetStatus() == LayoutResult.PARTIAL) {
-                                    cellOverflow.SetBorders(((Cell)cellOverflow.GetModelElement()).HasProperty(Property.BORDER_BOTTOM) && null
-                                         == ((Cell)cellOverflow.GetModelElement()).GetProperty<Border>(Property.BORDER_BOTTOM) ? null : (Border
-                                        )((Cell)cellOverflow.GetModelElement()).GetDefaultProperty<Border>(Property.BORDER), 0);
+                                    cellOverflow.SetBorders(Border.NO_BORDER, 0);
+                                    cellSplit.SetBorders(Border.NO_BORDER, 2);
                                 }
                                 else {
                                     cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
                                 }
-                                horizontalBorders[row + 1][col] = GetBorders()[2] == null ? ((Cell)cellOverflow.GetModelElement()).HasProperty
-                                    (Property.BORDER_BOTTOM) && null == ((Cell)cellOverflow.GetModelElement()).GetProperty<Border>(Property
-                                    .BORDER_BOTTOM) ? null : (Border)((Cell)cellOverflow.GetModelElement()).GetDefaultProperty<Border>(Property
-                                    .BORDER) : GetBorders()[2];
+                                for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                    horizontalBorders[!hasContent && splits[col].GetStatus() == LayoutResult.PARTIAL ? row : row + 1][j] = GetBorders
+                                        ()[2];
+                                }
                                 cellOverflow.DeleteOwnProperty(Property.BORDER_BOTTOM);
                                 cellOverflow.SetBorders(cellOverflow.GetBorders()[2], 2);
                                 rows[targetOverflowRowIndex[col]][col] = (CellRenderer)cellOverflow.SetParent(splitResult[1]);
@@ -618,17 +603,15 @@ namespace iText.Layout.Renderer {
                             }
                         }
                         else {
-                            if (hasContent && currentRow[col] != null) {
-                                columnsWithCellToBeEnlarged[col] = true;
-                                horizontalBorders[row + 1][col] = GetBorders()[2] == null ? ((Cell)currentRow[col].GetModelElement()).HasProperty
-                                    (Property.BORDER_BOTTOM) && null == ((Cell)currentRow[col].GetModelElement()).GetProperty<Border>(Property
-                                    .BORDER_BOTTOM) ? null : (Border)((Cell)currentRow[col].GetModelElement()).GetDefaultProperty<Border>(
-                                    Property.BORDER) : GetBorders()[2];
+                            if (currentRow[col] != null) {
+                                if (hasContent) {
+                                    columnsWithCellToBeEnlarged[col] = true;
+                                }
+                                for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                    horizontalBorders[row + 1][j] = GetBorders()[2];
+                                }
                                 // for the future
-                                ((Cell)currentRow[col].GetModelElement()).SetBorderTop(GetBorders()[0] == null ? ((Cell)currentRow[col].GetModelElement
-                                    ()).HasProperty(Property.BORDER_BOTTOM) && null == ((Cell)currentRow[col].GetModelElement()).GetProperty
-                                    <Border>(Property.BORDER_BOTTOM) ? null : (Border)((Cell)currentRow[col].GetModelElement()).GetDefaultProperty
-                                    <Border>(Property.BORDER) : GetBorders()[0]);
+                                ((Cell)currentRow[col].GetModelElement()).SetBorderTop(GetBorders()[0]);
                             }
                         }
                     }
@@ -668,6 +651,9 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
+                    if (hasContent || cellWithBigRowspanAdded) {
+                        bottomTableBorderWidth = null == GetBorders()[2] ? 0 : GetBorders()[2].GetWidth();
+                    }
                     if (0 != this.childRenderers.Count) {
                         occupiedArea.GetBBox().ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, true);
                         layoutBox.ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, false);
@@ -691,7 +677,8 @@ namespace iText.Layout.Renderer {
                              : firstCauseOfNothing);
                     }
                     else {
-                        int status = (childRenderers.IsEmpty() && footerRenderer == null) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
+                        int status = (childRenderers.IsEmpty() && (tableModel.IsComplete() || footerRenderer == null)) ? LayoutResult
+                            .NOTHING : LayoutResult.PARTIAL;
                         if (status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                         }
