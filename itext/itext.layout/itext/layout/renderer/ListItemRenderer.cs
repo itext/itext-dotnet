@@ -54,6 +54,8 @@ namespace iText.Layout.Renderer {
 
         protected internal float symbolAreaWidth;
 
+        private bool symbolAddedInside;
+
         /// <summary>Creates a ListItemRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -73,6 +75,41 @@ namespace iText.Layout.Renderer {
             if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null) {
                 // TODO this is actually MinHeight.
                 SetProperty(Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
+            }
+            ListSymbolPosition symbolPosition = GetProperty(Property.LIST_SYMBOL_POSITION);
+            if (symbolPosition == ListSymbolPosition.INSIDE) {
+                if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
+                    ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
+                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                    if (symbolIndent != null) {
+                        symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                    }
+                    paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                    symbolAddedInside = true;
+                }
+                else {
+                    if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
+                        IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                        float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                        if (symbolIndent != null) {
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                        }
+                        paragraphRenderer.AddChild(symbolRenderer);
+                        paragraphRenderer.AddChild(childRenderers[0]);
+                        childRenderers[0] = paragraphRenderer;
+                        symbolAddedInside = true;
+                    }
+                }
+                if (!symbolAddedInside) {
+                    IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                    if (symbolIndent != null) {
+                        symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                    }
+                    paragraphRenderer.AddChild(symbolRenderer);
+                    childRenderers.Add(0, paragraphRenderer);
+                    symbolAddedInside = true;
+                }
             }
             return base.Layout(layoutContext);
         }
@@ -99,9 +136,17 @@ namespace iText.Layout.Renderer {
             }
             base.Draw(drawContext);
             // It will be null in case of overflow (only the "split" part will contain symbol renderer.
-            if (symbolRenderer != null) {
+            if (symbolRenderer != null && !symbolAddedInside) {
                 symbolRenderer.SetParent(parent);
                 float x = occupiedArea.GetBBox().GetX();
+                ListSymbolPosition symbolPosition = GetProperty(Property.LIST_SYMBOL_POSITION);
+                if (symbolPosition != ListSymbolPosition.DEFAULT) {
+                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                    x -= symbolAreaWidth + (symbolIndent == null ? 0 : symbolIndent);
+                    if (symbolPosition == ListSymbolPosition.OUTSIDE) {
+                        x += GetPropertyAsFloat(Property.MARGIN_LEFT);
+                    }
+                }
                 if (childRenderers.Count > 0) {
                     float? yLine = ((AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
                     if (yLine != null) {
@@ -128,12 +173,14 @@ namespace iText.Layout.Renderer {
                     xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth();
                 }
                 symbolRenderer.Move(xPosition, 0);
-                if (isTagged) {
-                    tagPointer.AddTag(0, PdfName.Lbl);
-                }
-                symbolRenderer.Draw(drawContext);
-                if (isTagged) {
-                    tagPointer.MoveToParent();
+                if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
+                    if (isTagged) {
+                        tagPointer.AddTag(0, PdfName.Lbl);
+                    }
+                    symbolRenderer.Draw(drawContext);
+                    if (isTagged) {
+                        tagPointer.MoveToParent();
+                    }
                 }
             }
             if (isTagged) {

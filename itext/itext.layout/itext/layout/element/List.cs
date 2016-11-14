@@ -95,6 +95,10 @@ namespace iText.Layout.Element {
                     return (T1)(Object)". ";
                 }
 
+                case Property.LIST_SYMBOL_POSITION: {
+                    return (T1)(Object)ListSymbolPosition.DEFAULT;
+                }
+
                 default: {
                     return base.GetDefaultProperty<T1>(property);
                 }

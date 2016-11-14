@@ -84,18 +84,28 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 float maxSymbolWidth = 0;
-                foreach (IRenderer symbolRenderer in symbolRenderers) {
-                    maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
+                for (int i_1 = 0; i_1 < childRenderers.Count; i_1++) {
+                    if (childRenderers[i_1].GetModelElement() is ListItem) {
+                        IRenderer symbolRenderer = symbolRenderers[i_1];
+                        IRenderer listItemRenderer = childRenderers[i_1];
+                        if (listItemRenderer.GetProperty(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition.INSIDE) {
+                            maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
+                        }
+                    }
                 }
                 float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                 listItemNum = 0;
                 foreach (IRenderer childRenderer in childRenderers) {
+                    childRenderer.SetParent(this);
                     childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-                    childRenderer.SetProperty(Property.MARGIN_LEFT, childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f
-                        ) + maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f));
+                    float calculatedMargin = childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
+                    if (childRenderer.GetProperty(Property.LIST_SYMBOL_POSITION) == ListSymbolPosition.DEFAULT) {
+                        calculatedMargin += maxSymbolWidth + (symbolIndent != null ? symbolIndent : 0f);
+                    }
+                    childRenderer.SetProperty(Property.MARGIN_LEFT, calculatedMargin);
                     if (childRenderer.GetModelElement() is ListItem) {
-                        IRenderer symbolRenderer_1 = symbolRenderers[listItemNum++];
-                        ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer_1, maxSymbolWidth);
+                        IRenderer symbolRenderer = symbolRenderers[listItemNum++];
+                        ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
                     }
                 }
             }
@@ -220,7 +230,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_204(constantFont, textElement);
+                            textRenderer = new _TextRenderer_218(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -239,8 +249,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_204 : TextRenderer {
-            public _TextRenderer_204(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_218 : TextRenderer {
+            public _TextRenderer_218(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
