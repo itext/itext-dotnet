@@ -139,6 +139,8 @@ namespace iText.Layout.Properties {
 
         public const int LINE_DRAWER = 35;
 
+        public const int LINK_ANNOTATION = 88;
+
         public const int LIST_START = 36;
 
         public const int LIST_SYMBOL = 37;

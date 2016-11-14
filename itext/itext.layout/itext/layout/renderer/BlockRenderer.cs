@@ -300,9 +300,8 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            ApplyDestinationsAndAnnotation(drawContext);
             PdfDocument document = drawContext.GetDocument();
-            ApplyDestination(document);
-            ApplyAction(document);
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             TagTreePointer tagPointer = null;
             IAccessibleElement accessibleElement = null;

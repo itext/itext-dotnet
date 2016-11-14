@@ -42,9 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Annot;
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
@@ -81,14 +78,6 @@ namespace iText.Layout.Renderer {
             if (isRelativePosition) {
                 ApplyAbsolutePositioningTranslation(false);
             }
-            PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
-            Rectangle pdfBBox = CalculateAbsolutePdfBBox();
-            linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
-            if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
-            }
-            PdfPage page = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber());
-            page.AddAnnotation(linkAnnotation);
         }
 
         public override IRenderer GetNextRenderer() {

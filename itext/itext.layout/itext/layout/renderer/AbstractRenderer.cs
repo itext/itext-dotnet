@@ -307,8 +307,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public virtual void Draw(DrawContext drawContext) {
-            ApplyDestination(drawContext.GetDocument());
-            ApplyAction(drawContext.GetDocument());
+            ApplyDestinationsAndAnnotation(drawContext);
             bool relativePosition = IsRelativePosition();
             if (relativePosition) {
                 ApplyAbsolutePositioningTranslation(false);
@@ -508,6 +507,12 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(rect, false);
             ApplyPaddings(rect, false);
             return rect;
+        }
+
+        protected internal virtual void ApplyDestinationsAndAnnotation(DrawContext drawContext) {
+            ApplyDestination(drawContext.GetDocument());
+            ApplyAction(drawContext.GetDocument());
+            ApplyLinkAnnotation(drawContext.GetDocument());
         }
 
         protected internal virtual float? RetrieveWidth(float parentBoxWidth) {
@@ -725,7 +730,7 @@ namespace iText.Layout.Renderer {
                 array.Add(PdfName.XYZ);
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetX()));
                 array.Add(new PdfNumber(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight()));
-                array.Add(new PdfNumber(1));
+                array.Add(new PdfNumber(0));
                 document.AddNamedDestination(destination, ((PdfArray)array.MakeIndirect(document)));
                 DeleteProperty(Property.DESTINATION);
             }
@@ -743,7 +748,17 @@ namespace iText.Layout.Renderer {
                 else {
                     link.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
                 }
-                document.GetPage(GetOccupiedArea().GetPageNumber()).AddAnnotation(link);
+                SetProperty(Property.LINK_ANNOTATION, link);
+            }
+        }
+
+        protected internal virtual void ApplyLinkAnnotation(PdfDocument document) {
+            PdfLinkAnnotation linkAnnotation = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
+            if (linkAnnotation != null) {
+                Rectangle pdfBBox = CalculateAbsolutePdfBBox();
+                linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
+                PdfPage page = document.GetPage(occupiedArea.GetPageNumber());
+                page.AddAnnotation(linkAnnotation);
             }
         }
 

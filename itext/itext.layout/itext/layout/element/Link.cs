@@ -47,6 +47,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Navigation;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -59,6 +60,7 @@ namespace iText.Layout.Element {
     /// HTML anchor tag.
     /// </summary>
     public class Link : Text {
+        [Obsolete]
         protected internal PdfLinkAnnotation linkAnnotation;
 
         /// <summary>Creates a Link with a fully constructed link annotation dictionary.</summary>
@@ -69,7 +71,7 @@ namespace iText.Layout.Element {
         /// </param>
         public Link(String text, PdfLinkAnnotation linkAnnotation)
             : base(text) {
-            this.linkAnnotation = linkAnnotation;
+            SetProperty(Property.LINK_ANNOTATION, linkAnnotation);
             SetRole(PdfName.Link);
         }
 
@@ -99,7 +101,7 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Kernel.Pdf.Annot.PdfLinkAnnotation"/>
         /// </returns>
         public virtual PdfLinkAnnotation GetLinkAnnotation() {
-            return linkAnnotation;
+            return this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
         }
 
         protected internal override IRenderer MakeNewRenderer() {
