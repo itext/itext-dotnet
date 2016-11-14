@@ -75,7 +75,12 @@ namespace iText.Layout.Renderer {
                 SetProperty(Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
                 SetProperty(Property.HEIGHT_TYPE, HeightType.MIN_HEIGHT);
             }
-            return base.Layout(layoutContext);
+            LayoutResult result = base.Layout(layoutContext);
+            if (LayoutResult.PARTIAL == result.GetStatus()) {
+                result.GetOverflowRenderer().DeleteOwnProperty(Property.HEIGHT);
+                result.GetOverflowRenderer().DeleteOwnProperty(Property.HEIGHT_TYPE);
+            }
+            return result;
         }
 
         public override void Draw(DrawContext drawContext) {

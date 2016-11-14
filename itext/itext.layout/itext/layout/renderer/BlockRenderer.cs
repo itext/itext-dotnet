@@ -136,7 +136,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
-                            layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
+                            // layoutBox.setHeight(layoutBox.getHeight() - result.getOccupiedArea().getBBox().getHeight());
                             if (currentAreaPos + 1 == areas.Count) {
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
@@ -230,12 +230,17 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().SetY(blockBottom).SetHeight((float)blockHeight);
                 }
                 else {
-                    occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
-                        ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
-                    overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
-                    modelElement.SetProperty(Property.HEIGHT, (float)blockHeight - occupiedArea.GetBBox().GetHeight());
+                    if (!IsFixedLayout()) {
+                        occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
+                            ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
+                        overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
+                        modelElement.SetProperty(Property.HEIGHT, (float)blockHeight - occupiedArea.GetBBox().GetHeight());
+                    }
+                    else {
+                        occupiedArea.GetBBox().MoveDown((float)blockHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float)
+                            blockHeight);
+                    }
                 }
-                ApplyVerticalAlignment();
             }
             if (isPositioned) {
                 float y = (float)this.GetPropertyAsFloat(Property.Y);

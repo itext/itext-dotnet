@@ -459,7 +459,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc, new PageSize(6400, 6400));
             String longText = para1Text + para2Text + para3Text;
             String extremeLongText = longText + longText + longText;
-            doc.Add(new Div().SetBackgroundColor(Color.GREEN).SetHeight(300).SetWidth(300).Add(new Div().SetBackgroundColor
+            doc.Add(new Div().SetBackgroundColor(Color.GREEN).SetMinHeight(300).SetWidth(300).Add(new Div().SetBackgroundColor
                 (Color.RED).SetWidth(30).SetRotationAngle(5 * Math.PI / 16).Add(new Paragraph(extremeLongText))).Add(new 
                 Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk")).Add(new Paragraph("smaaaaaaaaaaaaaaaaaaaall taaaaaaaaaaaaaaaaaaalk"
                 )).SetRotationAngle(Math.PI / 8));

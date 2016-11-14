@@ -301,7 +301,7 @@ namespace iText.Layout {
             if (pageNumber == 0) {
                 pageNumber = 1;
             }
-            div.SetFixedPosition(pageNumber, divX, divY, divSize).SetHeight(divSize);
+            div.SetFixedPosition(pageNumber, divX, divY, divSize).SetMinHeight(divSize);
             if (p.GetProperty<Leading>(Property.LEADING) == null) {
                 p.SetMultipliedLeading(1);
             }
