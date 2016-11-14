@@ -154,13 +154,17 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
                                 if (HasProperty(Property.MAX_HEIGHT) || HasProperty(Property.MIN_HEIGHT)) {
-                                    if (HasProperty(Property.MAX_HEIGHT) && parentBBox.GetHeight() == blockMaxHeight) {
-                                        return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
+                                    if (HasProperty(Property.MAX_HEIGHT)) {
+                                        if (parentBBox.GetHeight() == blockMaxHeight) {
+                                            return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
+                                        }
+                                        overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
+                                            );
                                     }
-                                    overflowRenderer.SetProperty(Property.MIN_HEIGHT, RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight()
-                                        );
-                                    overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
-                                        );
+                                    if (HasProperty(Property.MIN_HEIGHT)) {
+                                        overflowRenderer.SetProperty(Property.MIN_HEIGHT, RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight()
+                                            );
+                                    }
                                 }
                                 return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, splitRenderer, overflowRenderer, causeOfNothing
                                     );
@@ -197,6 +201,8 @@ namespace iText.Layout.Renderer {
                                 if (HasProperty(Property.MAX_HEIGHT) || HasProperty(Property.MIN_HEIGHT)) {
                                     if (HasProperty(Property.MAX_HEIGHT)) {
                                         if (parentBBox.GetHeight() == blockMaxHeight) {
+                                            occupiedArea.GetBBox().MoveDown(blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight(blockMaxHeight
+                                                );
                                             return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
                                         }
                                         overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
@@ -235,7 +241,8 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer_1 = null;
             float? blockMinHeight = RetrieveMinHeight();
-            if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
+            if (!true.Equals(GetProperty(Property.FORCED_PLACEMENT)) && null != blockMinHeight && blockMinHeight > occupiedArea
+                .GetBBox().GetHeight()) {
                 float blockBottom = occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox().GetHeight
                     ());
                 if (blockBottom >= layoutContext.GetArea().GetBBox().GetBottom()) {
@@ -246,7 +253,8 @@ namespace iText.Layout.Renderer {
                         occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - layoutContext.GetArea().GetBBox
                             ().GetBottom()).SetY(layoutContext.GetArea().GetBBox().GetBottom());
                         overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
-                        modelElement.SetProperty(Property.HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight());
+                        overflowRenderer_1.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight
+                            ());
                     }
                     else {
                         occupiedArea.GetBBox().MoveDown((float)blockMinHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float

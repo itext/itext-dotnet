@@ -58,7 +58,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES)]
+        [LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 2)]
         public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
@@ -90,6 +90,23 @@ namespace iText.Layout {
             document.Add(new Paragraph("\n\n\nLook, i'm the the text of the second paragraph. But before me and the first one there are three empty lines!"
                 ));
             document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HeightsTest02() {
+            String outFileName = destinationFolder + "heightTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_heightTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(1);
+            table.AddCell(new Cell().Add("b").SetHeight(900));
+            table.SetBorder(new SolidBorder(Color.RED, 3));
+            doc.Add(table);
+            doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }

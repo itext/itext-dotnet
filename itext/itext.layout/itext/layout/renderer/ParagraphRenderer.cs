@@ -106,7 +106,6 @@ namespace iText.Layout.Renderer {
             }
             float[] paddings = GetPaddings();
             ApplyPaddings(parentBBox, paddings, false);
-            //        Float blockHeight = retrieveHeight();
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
                 parentBBox.MoveUp(parentBBox.GetHeight() - blockMaxHeight).SetHeight(blockMaxHeight);
@@ -217,6 +216,9 @@ namespace iText.Layout.Renderer {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
                             if (HasProperty(Property.HEIGHT)) {
+                                if (isPositioned) {
+                                    CorrectPositionedLayout(layoutBox);
+                                }
                                 if (null != blockMaxHeight && parentBBox.GetHeight() == blockMaxHeight) {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
@@ -293,9 +295,7 @@ namespace iText.Layout.Renderer {
                 ApplyVerticalAlignment();
             }
             if (isPositioned) {
-                float y = (float)this.GetPropertyAsFloat(Property.Y);
-                float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
-                Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
+                CorrectPositionedLayout(layoutBox);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
@@ -407,6 +407,12 @@ namespace iText.Layout.Renderer {
             if (firstLineIndent != 0) {
                 overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
             }
+        }
+
+        private void CorrectPositionedLayout(Rectangle layoutBox) {
+            float y = (float)this.GetPropertyAsFloat(Property.Y);
+            float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
+            Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
         }
     }
 }
