@@ -215,14 +215,19 @@ namespace iText.Layout.Renderer {
                             if (result.GetOverflowRenderer() != null) {
                                 split[1].childRenderers.AddAll(result.GetOverflowRenderer().GetChildRenderers());
                             }
-                            if (HasProperty(Property.HEIGHT)) {
+                            if (HasProperty(Property.MAX_HEIGHT)) {
                                 if (isPositioned) {
                                     CorrectPositionedLayout(layoutBox);
                                 }
-                                if (null != blockMaxHeight && parentBBox.GetHeight() == blockMaxHeight) {
+                                if (parentBBox.GetHeight() == blockMaxHeight) {
+                                    occupiedArea.GetBBox().MoveDown(blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight(blockMaxHeight
+                                        );
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
-                                split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                                split[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
+                            if (HasProperty(Property.MIN_HEIGHT)) {
+                                split[1].SetProperty(Property.MIN_HEIGHT, RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
                             }
                             if (anythingPlaced) {
                                 return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1]);
@@ -407,12 +412,6 @@ namespace iText.Layout.Renderer {
             if (firstLineIndent != 0) {
                 overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
             }
-        }
-
-        private void CorrectPositionedLayout(Rectangle layoutBox) {
-            float y = (float)this.GetPropertyAsFloat(Property.Y);
-            float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
-            Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
         }
     }
 }
