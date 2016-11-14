@@ -63,8 +63,6 @@ namespace iText.Layout.Renderer {
             : base(modelElement) {
         }
 
-        // TODO underlying should not be applied
-        // https://jira.itextsupport.com/browse/SUP-952
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
@@ -142,6 +140,15 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
+            IRenderer symbolRenderer = CreateListSymbolRenderer(index, renderer);
+            // underlying should not be applied
+            if (symbolRenderer != null) {
+                symbolRenderer.SetProperty(Property.UNDERLINE, false);
+            }
+            return symbolRenderer;
+        }
+
+        private IRenderer CreateListSymbolRenderer(int index, IRenderer renderer) {
             Object defaultListSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
             if (defaultListSymbol is Text) {
                 return new TextRenderer((Text)defaultListSymbol);
@@ -230,7 +237,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_218(constantFont, textElement);
+                            textRenderer = new _TextRenderer_224(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -249,8 +256,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_218 : TextRenderer {
-            public _TextRenderer_218(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_224 : TextRenderer {
+            public _TextRenderer_224(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
