@@ -700,7 +700,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-869")]
         public virtual void BigRowspanTest05() {
             String testName = "bigRowspanTest05.pdf";
             String outFileName = destinationFolder + testName;
@@ -711,10 +710,10 @@ namespace iText.Layout {
                  + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n";
             String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
                  + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
-            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent
-                ))).AddCell(new Cell(2, 1).Add(new Paragraph("cell 4, 2\n" + longTextContent))).AddCell(new Cell().Add
-                (new Paragraph("cell 5, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n" + textContent
-                ))).AddCell(new Cell().Add(new Paragraph("cell 9, 2\n" + textContent)));
+            Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
+                ))).AddCell(new Cell(2, 1).Add(new Paragraph("cell 1, 1 and 2\n" + longTextContent))).AddCell(new Cell
+                ().Add(new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
+                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n" + textContent)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

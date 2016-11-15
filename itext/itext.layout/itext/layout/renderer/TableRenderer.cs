@@ -596,6 +596,7 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             if (currentRow[col] != null) {
+                                rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
                                 if (hasContent) {
                                     columnsWithCellToBeEnlarged[col] = true;
                                     // for the future
