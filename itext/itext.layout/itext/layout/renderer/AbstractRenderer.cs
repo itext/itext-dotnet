@@ -387,9 +387,9 @@ namespace iText.Layout.Renderer {
                 float bottomWidth = borders[2] != null ? borders[2].GetWidth() : 0;
                 float leftWidth = borders[3] != null ? borders[3].GetWidth() : 0;
                 Rectangle bBox = GetBorderAreaBBox();
-                if (bBox.GetWidth() <= 0 || bBox.GetHeight() <= 0) {
+                if (bBox.GetWidth() < 0 || bBox.GetHeight() < 0) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "border"));
+                    logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"));
                     return;
                 }
                 float x1 = bBox.GetX();
@@ -403,22 +403,22 @@ namespace iText.Layout.Renderer {
                 }
                 if (borders[0] != null) {
                     canvas.SaveState();
-                    borders[0].Draw(canvas, x1, y2, x2, y2, leftWidth, rightWidth);
+                    borders[0].Draw(canvas, x1, y2, x2, y2, Border.Side.TOP, leftWidth, rightWidth);
                     canvas.RestoreState();
                 }
                 if (borders[1] != null) {
                     canvas.SaveState();
-                    borders[1].Draw(canvas, x2, y2, x2, y1, topWidth, bottomWidth);
+                    borders[1].Draw(canvas, x2, y2, x2, y1, Border.Side.RIGHT, topWidth, bottomWidth);
                     canvas.RestoreState();
                 }
                 if (borders[2] != null) {
                     canvas.SaveState();
-                    borders[2].Draw(canvas, x2, y1, x1, y1, rightWidth, leftWidth);
+                    borders[2].Draw(canvas, x2, y1, x1, y1, Border.Side.BOTTOM, rightWidth, leftWidth);
                     canvas.RestoreState();
                 }
                 if (borders[3] != null) {
                     canvas.SaveState();
-                    borders[3].Draw(canvas, x1, y1, x1, y2, bottomWidth, topWidth);
+                    borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
                     canvas.RestoreState();
                 }
                 if (isTagged) {
