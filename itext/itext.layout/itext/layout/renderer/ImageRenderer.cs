@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -69,6 +70,12 @@ namespace iText.Layout.Renderer {
         protected internal float imageWidth;
 
         protected internal float imageHeight;
+
+        private float imageItselfScaledWidth;
+
+        private float imageItselfScaledHeight;
+
+        private Rectangle initialOccupiedAreaBBox;
 
         internal float[] matrix = new float[6];
 
@@ -147,16 +154,20 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            float imageItselfScaledWidth = (float)width;
-            float imageItselfScaledHeight = (float)height;
+            imageItselfScaledWidth = (float)width;
+            imageItselfScaledHeight = (float)height;
             // See in adjustPositionAfterRotation why angle = 0 is necessary
             if (null == angle) {
                 angle = 0f;
             }
             t.Rotate((float)angle);
+            initialOccupiedAreaBBox = GetOccupiedAreaBBox().Clone();
             float scaleCoef = AdjustPositionAfterRotation((float)angle, layoutBox.GetWidth(), layoutBox.GetHeight());
             imageItselfScaledHeight *= scaleCoef;
             imageItselfScaledWidth *= scaleCoef;
+            initialOccupiedAreaBBox.MoveDown(imageItselfScaledHeight);
+            initialOccupiedAreaBBox.SetHeight(imageItselfScaledHeight);
+            initialOccupiedAreaBBox.SetWidth(imageItselfScaledWidth);
             if (xObject is PdfFormXObject) {
                 t.Scale(scaleCoef, scaleCoef);
             }
@@ -186,7 +197,26 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            ApplyMargins(occupiedArea.GetBBox(), false);
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
+            bool isRelativePosition = IsRelativePosition();
+            if (isRelativePosition) {
+                ApplyAbsolutePositioningTranslation(false);
+            }
+            if (fixedYPosition == null) {
+                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
+            }
+            if (fixedXPosition == null) {
+                fixedXPosition = occupiedArea.GetBBox().GetX();
+            }
+            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (angle != null) {
+                ApplyConcatMatrix(drawContext, angle);
+            }
             base.Draw(drawContext);
+            if (angle != null) {
+                drawContext.GetCanvas().RestoreState();
+            }
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             bool isArtifact = false;
@@ -205,18 +235,6 @@ namespace iText.Layout.Renderer {
                         isArtifact = true;
                     }
                 }
-            }
-            ApplyMargins(occupiedArea.GetBBox(), false);
-            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
-            bool isRelativePosition = IsRelativePosition();
-            if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
-            }
-            if (fixedYPosition == null) {
-                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
-            }
-            if (fixedXPosition == null) {
-                fixedXPosition = occupiedArea.GetBBox().GetX();
             }
             PdfCanvas canvas = drawContext.GetCanvas();
             if (isTagged) {
@@ -247,6 +265,18 @@ namespace iText.Layout.Renderer {
 
         public override IRenderer GetNextRenderer() {
             return null;
+        }
+
+        public override Rectangle GetBorderAreaBBox() {
+            ApplyMargins(initialOccupiedAreaBBox, false);
+            ApplyBorderBox(initialOccupiedAreaBBox, GetBorders(), false);
+            bool isRelativePosition = IsRelativePosition();
+            if (isRelativePosition) {
+                ApplyAbsolutePositioningTranslation(false);
+            }
+            ApplyMargins(initialOccupiedAreaBBox, true);
+            ApplyBorderBox(initialOccupiedAreaBBox, true);
+            return initialOccupiedAreaBBox;
         }
 
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
@@ -295,6 +325,10 @@ namespace iText.Layout.Renderer {
                     maxY = Math.Max(maxY, y);
                 }
                 height = (float)(maxY - minY);
+                Border[] borders = GetBorders();
+                if (borders[3] != null) {
+                    height += (float)Math.Sin(angle) * borders[3].GetWidth();
+                }
                 width = (float)(maxX - minX);
                 pivotY = (float)(p00.GetY() - minY);
                 deltaX = -(float)minX;
@@ -337,6 +371,18 @@ namespace iText.Layout.Renderer {
             if (fixedYPosition != null) {
                 fixedYPosition += (float)t.GetTranslateY();
             }
+        }
+
+        private void ApplyConcatMatrix(DrawContext drawContext, float? angle) {
+            drawContext.GetCanvas().SaveState();
+            AffineTransform rotationTransform = AffineTransform.GetRotateInstance((float)angle);
+            Rectangle rect = GetBorderAreaBBox();
+            IList<Point> rotatedPoints = TransformPoints(RectangleToPointsList(rect), rotationTransform);
+            float[] shift = CalculateShiftToPositionBBoxOfPointsAt(rect.GetX(), rect.GetY() + rect.GetHeight(), rotatedPoints
+                );
+            double[] matrix = new double[6];
+            rotationTransform.GetMatrix(matrix);
+            drawContext.GetCanvas().ConcatMatrix(matrix[0], matrix[1], matrix[2], matrix[3], shift[0], shift[1]);
         }
     }
 }
