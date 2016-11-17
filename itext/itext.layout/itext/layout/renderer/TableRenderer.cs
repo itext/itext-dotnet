@@ -178,13 +178,13 @@ namespace iText.Layout.Renderer {
                         borders = currentRow[0].GetBorders();
                         leftTableBorderWidth = Math.Max(null == borders[3] ? -1 : borders[3].GetWidth(), leftTableBorderWidth);
                     }
-                    // the last cell in a row can have big rowspan
+                    // the last cell in a row can have big colspan
                     int lastInRow = currentRow.Length - 1;
                     while (lastInRow >= 0 && null == currentRow[lastInRow]) {
                         lastInRow--;
                     }
                     if (lastInRow >= 0 && currentRow.Length == lastInRow + currentRow[lastInRow].GetPropertyAsInteger(Property
-                        .ROWSPAN)) {
+                        .COLSPAN)) {
                         borders = currentRow[lastInRow].GetBorders();
                         rightTableBorderWidth = Math.Max(null == borders[1] ? -1 : borders[1].GetWidth(), rightTableBorderWidth);
                     }
