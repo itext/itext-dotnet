@@ -312,10 +312,13 @@ namespace iText.Layout.Renderer {
                     CellRenderer cell = currentCellInfo.cellRenderer;
                     int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                     int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+                    targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
+                    // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
+                    bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
                     // collapse boundary borders if necessary
                     // notice that bottom border collapse is handled afterwards
                     Border[] cellBorders = cell.GetBorders();
-                    if (0 == row - rowspan + 1) {
+                    if (0 == row - rowspan + (currentCellHasBigRowspan ? 2 : 1)) {
                         cell.SetProperty(Property.BORDER_TOP, GetCollapsedBorder(cellBorders[0], borders[0]));
                     }
                     if (0 == col) {
@@ -324,10 +327,7 @@ namespace iText.Layout.Renderer {
                     if (tableModel.GetNumberOfColumns() == col + colspan) {
                         cell.SetProperty(Property.BORDER_RIGHT, GetCollapsedBorder(cellBorders[1], borders[1]));
                     }
-                    BuildBordersArrays(cell, row, col);
-                    targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
-                    // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
-                    bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
+                    BuildBordersArrays(cell, row + (currentCellHasBigRowspan ? 1 : 0), col);
                     float cellWidth = 0;
                     float colOffset = 0;
                     for (int k = col; k < col + colspan; k++) {
