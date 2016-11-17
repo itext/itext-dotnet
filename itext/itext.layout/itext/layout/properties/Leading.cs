@@ -102,8 +102,8 @@ namespace iText.Layout.Properties {
         }
 
         public override bool Equals(Object obj) {
-            return obj is iText.Layout.Properties.Leading && type == ((iText.Layout.Properties.Leading)obj).type && value
-                 == ((iText.Layout.Properties.Leading)obj).value;
+            return GetType() == obj.GetType() && type == ((iText.Layout.Properties.Leading)obj).type && value == ((iText.Layout.Properties.Leading
+                )obj).value;
         }
 
         public override int GetHashCode() {

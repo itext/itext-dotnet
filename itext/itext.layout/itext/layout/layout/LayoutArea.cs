@@ -119,7 +119,7 @@ namespace iText.Layout.Layout {
 
         /// <summary><inheritDoc/></summary>
         public override bool Equals(Object obj) {
-            if (!(obj is iText.Layout.Layout.LayoutArea)) {
+            if (GetType() != obj.GetType()) {
                 return false;
             }
             iText.Layout.Layout.LayoutArea that = (iText.Layout.Layout.LayoutArea)obj;

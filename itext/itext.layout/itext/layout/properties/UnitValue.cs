@@ -138,7 +138,7 @@ namespace iText.Layout.Properties {
         }
 
         public override bool Equals(Object obj) {
-            if (!(obj is iText.Layout.Properties.UnitValue)) {
+            if (GetType() != obj.GetType()) {
                 return false;
             }
             iText.Layout.Properties.UnitValue other = (iText.Layout.Properties.UnitValue)obj;
