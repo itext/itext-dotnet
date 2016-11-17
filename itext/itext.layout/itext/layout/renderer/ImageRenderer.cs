@@ -184,7 +184,7 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea.GetBBox().MoveDown((float)height);
             if (borders[3] != null) {
-                height += (float)Math.Sin(angle) * borders[3].GetWidth();
+                height += (float)Math.Sin((float)angle) * borders[3].GetWidth();
             }
             occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
@@ -214,6 +214,7 @@ namespace iText.Layout.Renderer {
             }
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
+                drawContext.GetCanvas().SaveState();
                 ApplyConcatMatrix(drawContext, angle);
             }
             base.Draw(drawContext);
@@ -374,7 +375,6 @@ namespace iText.Layout.Renderer {
         }
 
         private void ApplyConcatMatrix(DrawContext drawContext, float? angle) {
-            drawContext.GetCanvas().SaveState();
             AffineTransform rotationTransform = AffineTransform.GetRotateInstance((float)angle);
             Rectangle rect = GetBorderAreaBBox();
             IList<Point> rotatedPoints = TransformPoints(RectangleToPointsList(rect), rotationTransform);
