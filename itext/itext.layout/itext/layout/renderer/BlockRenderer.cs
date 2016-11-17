@@ -350,8 +350,7 @@ namespace iText.Layout.Renderer {
             Rectangle bBox = occupiedArea.GetBBox().Clone();
             float? rotationAngle = this.GetProperty<float?>(Property.ROTATION_ANGLE);
             if (rotationAngle != null) {
-                if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)
-                    ) {
+                if (!HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
                     logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
                         .Name));
