@@ -130,6 +130,10 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        public override bool Equals(Object obj) {
+            return GetType() == obj.GetType() && CompareTo((iText.Kernel.Pdf.PdfVersion)obj) == 0;
+        }
+
         private static iText.Kernel.Pdf.PdfVersion CreatePdfVersion(int major, int minor) {
             iText.Kernel.Pdf.PdfVersion pdfVersion = new iText.Kernel.Pdf.PdfVersion(major, minor);
             values.Add(pdfVersion);
