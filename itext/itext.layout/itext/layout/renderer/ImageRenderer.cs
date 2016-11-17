@@ -183,6 +183,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             occupiedArea.GetBBox().MoveDown((float)height);
+            if (borders[3] != null) {
+                height += (float)Math.Sin(angle) * borders[3].GetWidth();
+            }
             occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
             float leftMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
@@ -191,8 +194,8 @@ namespace iText.Layout.Renderer {
                 TranslateImage(leftMargin, topMargin, t);
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
-            ApplyMargins(occupiedArea.GetBBox(), true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+            ApplyMargins(occupiedArea.GetBBox(), true);
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
         }
 
@@ -257,6 +260,7 @@ namespace iText.Layout.Renderer {
             if (isRelativePosition) {
                 ApplyAbsolutePositioningTranslation(true);
             }
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (isTagged) {
                 tagPointer.MoveToParent();
@@ -325,10 +329,6 @@ namespace iText.Layout.Renderer {
                     maxY = Math.Max(maxY, y);
                 }
                 height = (float)(maxY - minY);
-                Border[] borders = GetBorders();
-                if (borders[3] != null) {
-                    height += (float)Math.Sin(angle) * borders[3].GetWidth();
-                }
                 width = (float)(maxX - minX);
                 pivotY = (float)(p00.GetY() - minY);
                 deltaX = -(float)minX;
