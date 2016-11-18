@@ -1298,7 +1298,7 @@ namespace iText.Kernel.Pdf {
                         if (line.StartsWith(endobj)) {
                             tokens.Seek(pos - 16);
                             String s = tokens.ReadString(16);
-                            int index = s.IndexOf(endstream1);
+                            int index = s.IndexOf(endstream1, StringComparison.Ordinal);
                             if (index >= 0) {
                                 pos = pos - 16 + index;
                             }

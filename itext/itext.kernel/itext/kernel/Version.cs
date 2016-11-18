@@ -163,7 +163,7 @@ namespace iText.Kernel {
         /// <summary>Checks if the AGPL version is used.</summary>
         /// <returns>returns true if the AGPL version is used.</returns>
         public static bool IsAGPLVersion() {
-            return GetInstance().GetVersion().IndexOf(AGPL) > 0;
+            return GetInstance().GetVersion().IndexOf(AGPL, StringComparison.Ordinal) > 0;
         }
 
         /// <summary>Is the license expired?</summary>

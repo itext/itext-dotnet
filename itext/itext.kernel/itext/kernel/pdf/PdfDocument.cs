@@ -1619,7 +1619,7 @@ namespace iText.Kernel.Pdf {
                             producer = version.GetVersion();
                         }
                         else {
-                            int idx = producer.IndexOf("; modified using");
+                            int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
                             StringBuilder buf;
                             if (idx == -1) {
                                 buf = new StringBuilder(producer);

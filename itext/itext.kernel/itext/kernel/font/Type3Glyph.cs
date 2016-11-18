@@ -193,8 +193,8 @@ namespace iText.Kernel.Font {
 
         private void FillBBFromBytes(byte[] bytes) {
             String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes);
-            int d0Pos = str.IndexOf(D_0_STR);
-            int d1Pos = str.IndexOf(D_1_STR);
+            int d0Pos = str.IndexOf(D_0_STR, StringComparison.Ordinal);
+            int d1Pos = str.IndexOf(D_1_STR, StringComparison.Ordinal);
             if (d0Pos != -1) {
                 isColor = true;
                 String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d0Pos - 1), " ");

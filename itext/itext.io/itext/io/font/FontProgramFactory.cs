@@ -232,7 +232,8 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,");
+                            int ttcSplit = baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,", StringComparison.Ordinal
+                                );
                             if (ttcSplit > 0) {
                                 try {
                                     String ttcName = baseName.JSubstring(0, ttcSplit + 4);

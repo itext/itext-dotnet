@@ -237,8 +237,8 @@ namespace iText.IO.Font {
         internal virtual void RegisterFont(String path, String alias) {
             try {
                 if (path.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || path.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                    ).EndsWith(".otf") || path.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,")
-                     > 0) {
+                    ).EndsWith(".otf") || path.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,", 
+                    StringComparison.Ordinal) > 0) {
                     FontProgram fontProgram = FontProgramFactory.CreateFont(path);
                     Object[] allNames = new Object[] { fontProgram.GetFontNames().GetFontName(), fontProgram.GetFontNames().GetFamilyName
                         (), fontProgram.GetFontNames().GetFullName() };

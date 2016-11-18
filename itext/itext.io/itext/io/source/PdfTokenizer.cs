@@ -226,9 +226,9 @@ namespace iText.IO.Source {
         /// <exception cref="System.IO.IOException"/>
         public virtual int GetHeaderOffset() {
             String str = ReadString(1024);
-            int idx = str.IndexOf("%PDF-");
+            int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
             if (idx < 0) {
-                idx = str.IndexOf("%FDF-");
+                idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
                 if (idx < 0) {
                     throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
                 }
@@ -240,7 +240,7 @@ namespace iText.IO.Source {
         public virtual String CheckPdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
-            int idx = str.IndexOf("%PDF-");
+            int idx = str.IndexOf("%PDF-", StringComparison.Ordinal);
             if (idx != 0) {
                 throw new iText.IO.IOException(iText.IO.IOException.PdfHeaderNotFound, this);
             }
@@ -251,7 +251,7 @@ namespace iText.IO.Source {
         public virtual void CheckFdfHeader() {
             file.Seek(0);
             String str = ReadString(1024);
-            int idx = str.IndexOf("%FDF-");
+            int idx = str.IndexOf("%FDF-", StringComparison.Ordinal);
             if (idx != 0) {
                 throw new iText.IO.IOException(iText.IO.IOException.FdfStartxrefNotFound, this);
             }
