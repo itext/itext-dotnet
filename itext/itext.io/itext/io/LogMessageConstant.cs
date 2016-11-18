@@ -80,7 +80,7 @@ namespace iText.IO {
 
         public const String INPUT_STREAM_CONTENT_IS_LOST_ON_PDFSTREAM_SERIALIZATION = "PdfStream contains not null input stream. It's content will be lost in serialized object.";
 
-        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference";
+        public const String INVALID_INDIRECT_REFERENCE = "Invalid indirect reference {0} {1} R";
 
         public const String INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE = "Invalid key value: key {0} has null value.";
 

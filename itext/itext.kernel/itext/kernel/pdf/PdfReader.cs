@@ -692,8 +692,8 @@ namespace iText.Kernel.Pdf {
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                                logger.Warn(String.Format(LogMessageConstant.INVALID_INDIRECT_REFERENCE + " {0} {1} R", tokens.GetObjNr(), 
-                                    tokens.GetGenNr()));
+                                logger.Warn(String.Format(LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr(), tokens.GetGenNr
+                                    ()));
                                 return new PdfNull();
                             }
                             else {
