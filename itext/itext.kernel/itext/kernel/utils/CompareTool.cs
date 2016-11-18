@@ -2095,8 +2095,8 @@ namespace iText.Kernel.Utils {
             }
 
             public override bool Equals(Object obj) {
-                return obj is CompareTool.ObjectPath && baseCmpObject.Equals(((CompareTool.ObjectPath)obj).baseCmpObject) 
-                    && baseOutObject.Equals(((CompareTool.ObjectPath)obj).baseOutObject) && System.Linq.Enumerable.SequenceEqual
+                return obj.GetType() == GetType() && baseCmpObject.Equals(((CompareTool.ObjectPath)obj).baseCmpObject) && 
+                    baseOutObject.Equals(((CompareTool.ObjectPath)obj).baseOutObject) && System.Linq.Enumerable.SequenceEqual
                     (path, ((CompareTool.ObjectPath)obj).path);
             }
 
@@ -2143,7 +2143,7 @@ namespace iText.Kernel.Utils {
                 }
 
                 public override bool Equals(Object obj) {
-                    return (obj is CompareTool.ObjectPath.IndirectPathItem && this.cmpObject.Equals(((CompareTool.ObjectPath.IndirectPathItem
+                    return (obj.GetType() == this.GetType() && this.cmpObject.Equals(((CompareTool.ObjectPath.IndirectPathItem
                         )obj).cmpObject) && this.outObject.Equals(((CompareTool.ObjectPath.IndirectPathItem)obj).outObject));
                 }
 
@@ -2195,8 +2195,7 @@ namespace iText.Kernel.Utils {
                 }
 
                 public override bool Equals(Object obj) {
-                    return obj is CompareTool.ObjectPath.DictPathItem && key.Equals(((CompareTool.ObjectPath.DictPathItem)obj)
-                        .key);
+                    return obj.GetType() == GetType() && key.Equals(((CompareTool.ObjectPath.DictPathItem)obj).key);
                 }
 
                 protected internal override XmlElement ToXmlNode(XmlDocument document) {
@@ -2258,8 +2257,7 @@ namespace iText.Kernel.Utils {
                 }
 
                 public override bool Equals(Object obj) {
-                    return obj is CompareTool.ObjectPath.ArrayPathItem && index == ((CompareTool.ObjectPath.ArrayPathItem)obj)
-                        .index;
+                    return obj.GetType() == GetType() && index == ((CompareTool.ObjectPath.ArrayPathItem)obj).index;
                 }
 
                 protected internal override XmlElement ToXmlNode(XmlDocument document) {
@@ -2327,8 +2325,7 @@ namespace iText.Kernel.Utils {
                 }
 
                 public override bool Equals(Object obj) {
-                    return obj is CompareTool.ObjectPath.OffsetPathItem && offset == ((CompareTool.ObjectPath.OffsetPathItem)obj
-                        ).offset;
+                    return obj.GetType() == GetType() && offset == ((CompareTool.ObjectPath.OffsetPathItem)obj).offset;
                 }
 
                 protected internal override XmlElement ToXmlNode(XmlDocument document) {
@@ -2388,9 +2385,9 @@ namespace iText.Kernel.Utils {
             }
 
             public override bool Equals(Object obj) {
-                return obj is CompareTool.TrailerPath && outDocument.Equals(((CompareTool.TrailerPath)obj).outDocument) &&
-                     cmpDocument.Equals(((CompareTool.TrailerPath)obj).cmpDocument) && System.Linq.Enumerable.SequenceEqual
-                    (path, ((CompareTool.ObjectPath)obj).path);
+                return obj.GetType() == GetType() && outDocument.Equals(((CompareTool.TrailerPath)obj).outDocument) && cmpDocument
+                    .Equals(((CompareTool.TrailerPath)obj).cmpDocument) && System.Linq.Enumerable.SequenceEqual(path, ((CompareTool.ObjectPath
+                    )obj).path);
             }
 
             protected internal override Object Clone() {
