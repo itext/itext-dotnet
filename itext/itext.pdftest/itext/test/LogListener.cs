@@ -56,8 +56,6 @@ namespace iText.Test
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute
     {
-        private static string LEFT_CURLY_BRACES = "{";
-        private static string RIGHT_CURLY_BRACES = "}";
         private MemoryAppender appender;
 
 		public override void BeforeTest(ITest testDetails)
@@ -110,26 +108,10 @@ namespace iText.Test
         * */
         private bool EqualsMessageByTemplate(string message, string template)
         {
-            if (template.IndexOf(RIGHT_CURLY_BRACES) > 0 && template.IndexOf(LEFT_CURLY_BRACES) > 0)
+            if (template.IndexOf("{") > 0 && template.IndexOf("}") > 0)
             {
-
-                Regex rgx = new Regex("\\{.*?\\} ?");
-                String templateWithoutParameters = rgx.Replace(template, "");
-                String[] splitTemplate = Regex.Split(templateWithoutParameters, "\\s+");
-                int prevPosition = 0;
-                for (int i = 0; i < splitTemplate.Length; i++)
-                {
-                    int foundedIndex = message.IndexOf(splitTemplate[i], prevPosition);
-                    if (foundedIndex < 0 && foundedIndex < prevPosition)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        prevPosition = foundedIndex;
-                    }
-                }
-                return true;
+                String templateWithoutParameters = Regex.Replace(template, "\\{.*?\\} ?", ".*?");
+                return Regex.IsMatch(message, templateWithoutParameters);
             }
             else
             {
