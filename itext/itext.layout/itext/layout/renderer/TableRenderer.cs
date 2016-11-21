@@ -267,8 +267,8 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
             }
             // Apply halves of the borders. The other halves are applied on a Cell level
-            layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, rightTableBorderWidth / 2, 0, leftTableBorderWidth
-                 / 2, false);
+            layoutBox.ApplyMargins<Rectangle>(0, rightTableBorderWidth / 2, 0, leftTableBorderWidth / 2, false);
+            layoutBox.DecreaseHeight(topTableBorderWidth / 2);
             columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftTableBorderWidth, rightTableBorderWidth
                 );
             LayoutResult[] splits = new LayoutResult[tableModel.GetNumberOfColumns()];
@@ -360,8 +360,9 @@ namespace iText.Layout.Renderer {
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
                     if (collapsedBottomBorder != null && null != cellResult.GetOccupiedArea()) {
                         // apply the difference between collapsed table border and own cell border
-                        cellResult.GetOccupiedArea().GetBBox().ApplyMargins<Rectangle>(0, 0, (collapsedBottomBorder.GetWidth() - (
-                            oldBottomBorder == null ? 0 : oldBottomBorder.GetWidth())) / 2, 0, false);
+                        cellResult.GetOccupiedArea().GetBBox().MoveUp((collapsedBottomBorder.GetWidth() - (oldBottomBorder == null
+                             ? 0 : oldBottomBorder.GetWidth())) / 2).DecreaseHeight((collapsedBottomBorder.GetWidth() - (oldBottomBorder
+                             == null ? 0 : oldBottomBorder.GetWidth())) / 2);
                         cell.SetProperty(Property.BORDER_BOTTOM, oldBottomBorder);
                     }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
@@ -523,6 +524,7 @@ namespace iText.Layout.Renderer {
                         }
                         heights[heights.Count - 1] = heights[heights.Count - 1] + bottomBorderWidthDifference;
                         occupiedArea.GetBBox().MoveDown(bottomBorderWidthDifference).IncreaseHeight(bottomBorderWidthDifference);
+                        layoutBox.DecreaseHeight(bottomBorderWidthDifference);
                     }
                     // Correct occupied areas of all added cells
                     for (int k = 0; k <= row; k++) {
@@ -603,7 +605,7 @@ namespace iText.Layout.Renderer {
                                     splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
                                 }
                                 for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                    horizontalBorders[row + 1][j] = GetBorders()[2];
+                                    horizontalBorders[row + (!hasContent && rowspans[col] > 1 ? 0 : 1)][j] = GetBorders()[2];
                                 }
                             }
                         }
@@ -774,9 +776,9 @@ namespace iText.Layout.Renderer {
                 Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
             }
             // Apply bottom and top border
-            ApplyMargins(occupiedArea.GetBBox(), new float[] { topTableBorderWidth / 2, 0, bottomTableBorderWidth / 2, 
-                0 }, true);
-            layoutBox.ApplyMargins<Rectangle>(0, 0, bottomTableBorderWidth / 2, 0, false);
+            occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth / 2).IncreaseHeight((topTableBorderWidth + bottomTableBorderWidth
+                ) / 2);
+            layoutBox.DecreaseHeight(bottomTableBorderWidth / 2);
             if ((true.Equals(GetPropertyAsBoolean(Property.EXTEND_FINAL_ROW)) || (true.Equals(GetPropertyAsBoolean(Property
                 .EXTEND_LAST_ROW)) && false.Equals(HasProperty(Property.EXTEND_FINAL_ROW)))) && 0 != rows.Count) {
                 ExtendLastRow(rows[rows.Count - 1], layoutBox);

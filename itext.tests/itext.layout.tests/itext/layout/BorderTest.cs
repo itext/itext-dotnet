@@ -817,6 +817,51 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SplitCellsTest09() {
+            fileName = "splitCellsTest09.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 160));
+            String textAlphabet = "Cell";
+            Table table = new Table(3);
+            table.AddCell(new Cell().Add("1gsdfgsdfgsdfjghdlsfhgkjdfshgkjdsfgdsf gdsfg dfs gdfs gsdf gdfsgffgfgfgfgfgfffgfgfgdhsfjgdsfjgdfsgfgfg fg fg fg f gfg fgggggggggggggggfg fgf fgsd"
+                ));
+            table.AddCell(new Cell(2, 1).Add(textAlphabet + "3"));
+            table.AddCell(new Cell().Add(textAlphabet + "4").SetBorder(new SolidBorder(Color.GREEN, 2)));
+            table.AddCell(new Cell().Add(textAlphabet + "5"));
+            table.AddCell(new Cell().Add(textAlphabet + "5"));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest01() {
+            fileName = "tableWithHeaderTest01.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1000));
+            String text = "Cell";
+            Table table = new Table(3);
+            for (int i = 0; i < 1; i++) {
+                table.AddCell(new Cell().Add(text + "1").SetHeight(40));
+                //            table.addCell(new Cell(2, 1).add(text + "2"));
+                //            table.addCell(new Cell().add(text + "3"));
+                table.AddCell(new Cell().Add(text + "4").SetHeight(40));
+                table.AddCell(new Cell().Add(text + "5").SetHeight(40));
+            }
+            for (int i_1 = 0; i_1 < 3; i_1++) {
+                table.AddHeaderCell(new Cell().Add("Header").SetHeight(40));
+                table.AddFooterCell(new Cell().Add("Header").SetHeight(40));
+            }
+            table.SetBorder(new SolidBorder(Color.GREEN, 100));
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell(new Cell().Add("Hello")).SetBorder(new SolidBorder(Color.BLACK, 10)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void ForcedPlacementTest01() {
             fileName = "forcedPlacementTest01.pdf";
