@@ -1,5 +1,6 @@
 using System;
 using iText.IO;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -891,6 +892,29 @@ namespace iText.Layout {
             cell.Add("TESCHTINK");
             mainTable.AddCell(cell);
             doc.Add(mainTable);
+            doc.Close();
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-944")]
+        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        public virtual void RotatedBordersTest() {
+            fileName = "rotatedBordersTest.pdf";
+            Document doc = CreateDocument();
+            doc.SetMargins(0, 0, 0, 0);
+            Paragraph p = new Paragraph("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.\n"
+                 + "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.\n" + "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.\n"
+                );
+            p.SetBorder(new SolidBorder(50));
+            p.SetRotationAngle(Math.PI / 6);
+            doc.Add(p);
+            iText.Layout.Element.Image img = new Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            img.SetBorder(new SolidBorder(50));
+            img.SetRotationAngle(Math.PI / 6);
+            doc.Add(img);
             doc.Close();
             CloseDocumentAndCompareOutputs(doc);
         }
