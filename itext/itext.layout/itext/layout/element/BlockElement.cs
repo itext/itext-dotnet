@@ -326,7 +326,6 @@ namespace iText.Layout.Element {
 
         public override T SetHeight(float height) {
             base.SetHeight(height);
-            OverrideHeightProperties(height);
             return (T)(Object)this;
         }
 
@@ -338,16 +337,6 @@ namespace iText.Layout.Element {
         public virtual T SetMinHeight(float minHeight) {
             SetProperty(Property.MIN_HEIGHT, minHeight);
             return (T)(Object)this;
-        }
-
-        // call only after setting Height property value
-        private void OverrideHeightProperties(float height) {
-            if (!HasProperty(Property.MAX_HEIGHT) || height < this.GetProperty<float?>(Property.MAX_HEIGHT)) {
-                SetMaxHeight(height);
-            }
-            if (!HasProperty(Property.MIN_HEIGHT) || height > this.GetProperty<float?>(Property.MIN_HEIGHT)) {
-                SetMinHeight(height);
-            }
         }
 
         public abstract AccessibilityProperties GetAccessibilityProperties();

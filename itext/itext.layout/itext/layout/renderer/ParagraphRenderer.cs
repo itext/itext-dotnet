@@ -78,6 +78,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            OverrideHeightProperties();
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool anythingPlaced = false;
             bool firstLineInBox = true;
@@ -229,6 +230,9 @@ namespace iText.Layout.Renderer {
                             if (HasProperty(Property.MIN_HEIGHT)) {
                                 split[1].SetProperty(Property.MIN_HEIGHT, RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight());
                             }
+                            if (HasProperty(Property.HEIGHT)) {
+                                split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                            }
                             if (anythingPlaced) {
                                 return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1]);
                             }
@@ -294,8 +298,9 @@ namespace iText.Layout.Renderer {
                     overflowRenderer = CreateOverflowRenderer(parent);
                     overflowRenderer.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight
                         ());
-                    overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
-                    overflowRenderer.DeleteOwnProperty(Property.MAX_HEIGHT);
+                    if (HasProperty(Property.HEIGHT)) {
+                        overflowRenderer.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                    }
                 }
                 ApplyVerticalAlignment();
             }

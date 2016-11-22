@@ -64,6 +64,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            OverrideHeightProperties();
             if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
@@ -233,7 +234,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_218(constantFont, textElement);
+                            textRenderer = new _TextRenderer_219(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -252,8 +253,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_218 : TextRenderer {
-            public _TextRenderer_218(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_219 : TextRenderer {
+            public _TextRenderer_219(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }

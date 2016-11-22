@@ -135,6 +135,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            OverrideHeightProperties();
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             if (!((Table)modelElement).IsComplete()) {
@@ -750,8 +751,9 @@ namespace iText.Layout.Renderer {
                         )modelElement).GetNumberOfRows()));
                     overflowRenderer.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight - occupiedArea.GetBBox().GetHeight
                         ());
-                    overflowRenderer.DeleteOwnProperty(Property.HEIGHT);
-                    overflowRenderer.DeleteOwnProperty(Property.MAX_HEIGHT);
+                    if (HasProperty(Property.HEIGHT)) {
+                        overflowRenderer.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                    }
                 }
                 if (0 != childRenderers.Count) {
                     CellRenderer[] currentRow = rows[row - 1];
