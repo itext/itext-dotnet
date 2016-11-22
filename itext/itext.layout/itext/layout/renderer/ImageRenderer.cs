@@ -77,6 +77,10 @@ namespace iText.Layout.Renderer {
 
         private Rectangle initialOccupiedAreaBBox;
 
+        private float rotatedDeltaX;
+
+        private float rotatedDeltaY;
+
         internal float[] matrix = new float[6];
 
         /// <summary>Creates an ImageRenderer from its corresponding layout object.</summary>
@@ -196,6 +200,9 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
+            if (angle != 0) {
+                ApplyRotationLayout((float)angle);
+            }
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
         }
 
@@ -214,6 +221,8 @@ namespace iText.Layout.Renderer {
             }
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (angle != null) {
+                fixedXPosition += rotatedDeltaX;
+                fixedYPosition -= rotatedDeltaY;
                 drawContext.GetCanvas().SaveState();
                 ApplyConcatMatrix(drawContext, angle);
             }
@@ -383,6 +392,43 @@ namespace iText.Layout.Renderer {
             double[] matrix = new double[6];
             rotationTransform.GetMatrix(matrix);
             drawContext.GetCanvas().ConcatMatrix(matrix[0], matrix[1], matrix[2], matrix[3], shift[0], shift[1]);
+        }
+
+        private void ApplyRotationLayout(float angle) {
+            Border[] borders = GetBorders();
+            Rectangle rect = GetBorderAreaBBox();
+            float leftBorderWidth = borders[3] == null ? 0 : borders[3].GetWidth();
+            float rightBorderWidth = borders[1] == null ? 0 : borders[1].GetWidth();
+            float topBorderWidth = borders[0] == null ? 0 : borders[0].GetWidth();
+            if (leftBorderWidth != 0) {
+                float gip = (float)Math.Sqrt(Math.Pow(topBorderWidth, 2) + Math.Pow(leftBorderWidth, 2));
+                double atan = Math.Atan(topBorderWidth / leftBorderWidth);
+                if (angle < 0) {
+                    atan = -atan;
+                }
+                rotatedDeltaX = Math.Abs((float)(gip * Math.Cos(angle - atan) - leftBorderWidth));
+            }
+            else {
+                rotatedDeltaX = 0;
+            }
+            rect.MoveRight(rotatedDeltaX);
+            occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() + rotatedDeltaX);
+            if (rightBorderWidth != 0) {
+                float gip = (float)Math.Sqrt(Math.Pow(topBorderWidth, 2) + Math.Pow(leftBorderWidth, 2));
+                double atan = Math.Atan(rightBorderWidth / topBorderWidth);
+                if (angle < 0) {
+                    atan = -atan;
+                }
+                rotatedDeltaY = Math.Abs((float)(gip * Math.Cos(angle - atan) - topBorderWidth));
+            }
+            else {
+                rotatedDeltaY = 0;
+            }
+            rect.MoveDown(rotatedDeltaY);
+            if (angle < 0) {
+                rotatedDeltaY += rightBorderWidth;
+            }
+            occupiedArea.GetBBox().IncreaseHeight(rotatedDeltaY);
         }
     }
 }
