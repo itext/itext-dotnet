@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using Java.IO;
 using iText.IO.Source;
 
 namespace iText.IO.Util {
@@ -327,10 +326,6 @@ namespace iText.IO.Util {
                 }
                 n += count;
             }
-        }
-
-        public static TextReader WrapInBufferedReader(TextReader inputStreamReader) {
-            return new BufferedReader(inputStreamReader);
         }
     }
 }

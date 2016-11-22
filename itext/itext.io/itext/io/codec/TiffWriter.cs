@@ -266,7 +266,7 @@ namespace iText.IO.Codec {
             }
             else {
                 int off = 0;
-                byte[] rowBuf = usePredictor ? new byte[stride] : null;
+                byte[] rowBuf = new byte[stride];
                 for (int i = 0; i < height; i++) {
                     System.Array.Copy(b, off, rowBuf, 0, stride);
                     for (int j = stride - 1; j >= samplesPerPixel; j--) {
