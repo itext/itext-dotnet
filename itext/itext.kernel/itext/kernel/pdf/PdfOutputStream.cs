@@ -72,11 +72,16 @@ namespace iText.Kernel.Pdf {
         /// <summary>Contains the business logic for cryptography.</summary>
         protected internal PdfEncryption crypto;
 
+        /// <summary>Create a pdfOutputSteam writing to the passed OutputStream.</summary>
+        /// <param name="outputStream">Outputstream to write to.</param>
         public PdfOutputStream(Stream outputStream)
             : base(outputStream) {
         }
 
         // For internal usage only
+        /// <summary>Write a PdfObject to the outputstream.</summary>
+        /// <param name="pdfObject">PdfObject to write</param>
+        /// <returns>this PdfOutPutStream</returns>
         public virtual iText.Kernel.Pdf.PdfOutputStream Write(PdfObject pdfObject) {
             if (pdfObject.CheckState(PdfObject.MUST_BE_INDIRECT) && document != null) {
                 pdfObject.MakeIndirect(document);

@@ -1683,6 +1683,8 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfName(name, true);
         }
 
+        /// <summary>Create a PdfName from the passed string</summary>
+        /// <param name="value"/>
         public PdfName(String value)
             : base() {
             System.Diagnostics.Debug.Assert(value != null);
@@ -1694,6 +1696,8 @@ namespace iText.Kernel.Pdf {
             this.value = value;
         }
 
+        /// <summary>Create a PdfName from the passed bytes</summary>
+        /// <param name="content"/>
         public PdfName(byte[] content)
             : base(content) {
         }
@@ -1713,6 +1717,10 @@ namespace iText.Kernel.Pdf {
             return value;
         }
 
+        /// <summary>Compare this PdfName to o.</summary>
+        /// <param name="o">PdfName to compare this object to/</param>
+        /// <returns>Comparison between both values or, if one of the values is null, Comparison between contents. If one of the values and one of the contents are equal to null, generate values and compare those.
+        ///     </returns>
         public virtual int CompareTo(iText.Kernel.Pdf.PdfName o) {
             if (value != null && o.value != null) {
                 return string.CompareOrdinal(value, o.value);

@@ -139,7 +139,7 @@ namespace iText.IO.Font.Otf {
         /// <summary>Copy a slice of this Glyphline.</summary>
         /// <param name="left">leftmost index of the slice</param>
         /// <param name="right">rightmost index of the slice</param>
-        /// <returns>new Glyphline containing the copied slice</returns>
+        /// <returns>new GlyphLine containing the copied slice</returns>
         public virtual iText.IO.Font.Otf.GlyphLine Copy(int left, int right) {
             iText.IO.Font.Otf.GlyphLine glyphLine = new iText.IO.Font.Otf.GlyphLine();
             glyphLine.start = 0;

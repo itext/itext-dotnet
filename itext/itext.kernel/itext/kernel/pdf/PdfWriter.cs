@@ -86,6 +86,8 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
+        /// <summary>Create a PdfWriter writing to the passed outputstream and with default writer properties.</summary>
+        /// <param name="os">Outputstream to write too.</param>
         public PdfWriter(Stream os)
             : this(os, new WriterProperties()) {
         }
@@ -111,11 +113,16 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Create a PdfWriter writing to the passed filename and with default writer properties.</summary>
+        /// <param name="filename">filename of the resulting pdf.</param>
         /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(String filename)
             : this(filename, new WriterProperties()) {
         }
 
+        /// <summary>Create a PdfWriter writing to the passed filename and using the passed writer properties.</summary>
+        /// <param name="filename">filename of the resulting pdf.</param>
+        /// <param name="properties">writerproperties to use.</param>
         /// <exception cref="System.IO.FileNotFoundException"/>
         public PdfWriter(String filename, WriterProperties properties)
             : this(FileUtil.GetBufferedOutputStream(filename), properties) {
@@ -162,11 +169,14 @@ namespace iText.Kernel.Pdf {
         /// This requires more memory, but reduces the file size
         /// of the resulting PDF document.
         /// </remarks>
+        /// <param name="smartMode">True for enabling smart mode.</param>
         public virtual iText.Kernel.Pdf.PdfWriter SetSmartMode(bool smartMode) {
             this.properties.smartMode = smartMode;
             return this;
         }
 
+        /// <summary>Write an integer to the underlying stream</summary>
+        /// <param name="b">integer to write</param>
         /// <exception cref="System.IO.IOException"/>
         public override void Write(int b) {
             base.Write(b);
@@ -175,6 +185,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Write a byte array to the underlying stream</summary>
+        /// <param name="b">byte array to write</param>
         /// <exception cref="System.IO.IOException"/>
         public override void Write(byte[] b) {
             base.Write(b);
@@ -183,6 +195,10 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Write a slice of the passed byte array to the underlying stream</summary>
+        /// <param name="b">byte array to slice and write.</param>
+        /// <param name="off">starting index of the slice.</param>
+        /// <param name="len">length of the slice.</param>
         /// <exception cref="System.IO.IOException"/>
         public override void Write(byte[] b, int off, int len) {
             base.Write(b, off, len);
@@ -191,6 +207,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <summary>Close the writer and underlying streams.</summary>
         /// <exception cref="System.IO.IOException"/>
         public override void Close() {
             try {
@@ -625,6 +642,13 @@ namespace iText.Kernel.Pdf {
                 return hash;
             }
 
+            /// <summary>Compares this PdfWriter to the obj.</summary>
+            /// <remarks>
+            /// Compares this PdfWriter to the obj.
+            /// Two PdfWriters are equal if their hashcodes are equal and their serialized content are equal.
+            /// </remarks>
+            /// <param name="obj">obj to compare</param>
+            /// <returns>True if this and obj are equal, false otherwise</returns>
             public override bool Equals(Object obj) {
                 return obj is PdfWriter.SerializedPdfObject && GetHashCode() == obj.GetHashCode() && iText.IO.Util.JavaUtil.ArraysEquals
                     (serializedContent, ((PdfWriter.SerializedPdfObject)obj).serializedContent);
