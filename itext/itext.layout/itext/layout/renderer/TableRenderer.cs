@@ -790,9 +790,8 @@ namespace iText.Layout.Renderer {
                 footerRenderer = null;
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
-            if (0 == childRenderers.Count && (null != headerRenderer || null != footerRenderer)) {
-                // TODO
-                occupiedArea.GetBBox().SetHeight(0);
+            if (0 == childRenderers.Count && heights.Count > 0 && 0 == heights[0]) {
+                heights.Clear();
             }
             if (null == overflowRenderer) {
                 return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
