@@ -74,14 +74,27 @@ namespace iText.IO.Font.Otf {
 
         internal short anchorDelta = 0;
 
+        /// <summary>Construct a non-mark Glyph, retrieving characters from unicode.</summary>
+        /// <param name="code">code representation of the glyph in the font file</param>
+        /// <param name="width">normalized width of the glyph</param>
+        /// <param name="unicode">utf-32 representation of glyph if appears. Correct value is &gt; -1</param>
         public Glyph(int code, int width, int unicode)
             : this(code, width, unicode, null, false) {
         }
 
+        /// <summary>Construct a non-mark Glyph, using the codepoint of the characters as unicode point.</summary>
+        /// <param name="code">code representation of the glyph in the font file</param>
+        /// <param name="width">normalized width of the glyph</param>
+        /// <param name="chars">The Unicode text represented by this Glyph.</param>
         public Glyph(int code, int width, char[] chars)
             : this(code, width, CodePoint(chars), chars, false) {
         }
 
+        /// <summary>Construct a non-mark Glyph, retrieving characters from unicode.</summary>
+        /// <param name="code">code representation of the glyph in the font file</param>
+        /// <param name="width">normalized width of the glyph</param>
+        /// <param name="unicode">utf-32 representation of glyph if appears. Correct value is &gt; -1</param>
+        /// <param name="bbox">The normalized bounding box of this Glyph.</param>
         public Glyph(int code, int width, int unicode, int[] bbox)
             : this(code, width, unicode, null, false) {
             // The <i>code</i> or <i>id</i> by which this is represented in the Font File.
@@ -89,17 +102,29 @@ namespace iText.IO.Font.Otf {
             // The normalized bbox of this Glyph.
             // utf-32 representation of glyph if appears. Correct value is > -1
             // The Unicode text represented by this Glyph
-            // ture, if this Glyph is Mark
+            // true, if this Glyph is Mark
             // placement offset
             // advance offset
             // Index delta to base glyph. If after a glyph there are several anchored glyphs we should know we to find base glyph.
             this.bbox = bbox;
         }
 
+        /// <summary>Construct a non-mark Glyph object with id -1 and characters retrieved from unicode.</summary>
+        /// <param name="width">normalized width of the glyph</param>
+        /// <param name="unicode">utf-32 representation of glyph if appears. Correct value is &gt; -1</param>
         public Glyph(int width, int unicode)
             : this(-1, width, unicode, GetChars(unicode), false) {
         }
 
+        /// <summary>Construct a glyph object form the passed arguments.</summary>
+        /// <param name="code">code representation of the glyph in the font file</param>
+        /// <param name="width">normalized width of the glyph</param>
+        /// <param name="unicode">utf-32 representation of glyph if appears. Correct value is &gt; -1</param>
+        /// <param name="chars">
+        /// The Unicode text represented by this Glyph.
+        /// if null is passed, the unicode value is used to retrieve the chars.
+        /// </param>
+        /// <param name="IsMark">True if the glyph is a Mark</param>
         public Glyph(int code, int width, int unicode, char[] chars, bool IsMark) {
             this.code = code;
             this.width = width;
@@ -108,6 +133,8 @@ namespace iText.IO.Font.Otf {
             this.chars = chars != null ? chars : GetChars(unicode);
         }
 
+        /// <summary>Copy a Glyph.</summary>
+        /// <param name="glyph">Glyph to copy</param>
         public Glyph(iText.IO.Font.Otf.Glyph glyph) {
             this.code = glyph.code;
             this.width = glyph.width;
@@ -122,6 +149,14 @@ namespace iText.IO.Font.Otf {
             this.anchorDelta = glyph.anchorDelta;
         }
 
+        /// <summary>Copy a Glyph and assign new placement and advance offsets and a new index delta to base glyph</summary>
+        /// <param name="glyph">Glyph to copy</param>
+        /// <param name="xPlacement">x - placement offset</param>
+        /// <param name="yPlacement">y - placement offset</param>
+        /// <param name="xAdvance">x - advance offset</param>
+        /// <param name="yAdvance">y - advance offset</param>
+        /// <param name="anchorDelta">Index delta to base glyph. If after a glyph there are several anchored glyphs we should know we to find base glyph.
+        ///     </param>
         public Glyph(iText.IO.Font.Otf.Glyph glyph, int xPlacement, int yPlacement, int xAdvance, int yAdvance, int
              anchorDelta)
             : this(glyph) {
@@ -132,6 +167,9 @@ namespace iText.IO.Font.Otf {
             this.anchorDelta = (short)anchorDelta;
         }
 
+        /// <summary>Copy a glyph and assign the copied glyph a new unicode point and characters</summary>
+        /// <param name="glyph">glyph to copy</param>
+        /// <param name="unicode">new unicode point</param>
         public Glyph(iText.IO.Font.Otf.Glyph glyph, int unicode)
             : this(glyph.code, glyph.width, unicode, GetChars(unicode), glyph.IsMark()) {
         }
@@ -234,6 +272,9 @@ namespace iText.IO.Font.Otf {
             return result;
         }
 
+        /// <summary>Two Glyphs are equal if their unicode characters, code and normalized width are equal.</summary>
+        /// <param name="obj"/>
+        /// <returns>True if this equals obj cast to Glyph, false otherwise.</returns>
         public override bool Equals(Object obj) {
             if (this == obj) {
                 return true;

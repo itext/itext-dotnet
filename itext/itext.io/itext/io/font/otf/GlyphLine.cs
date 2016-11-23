@@ -62,24 +62,37 @@ namespace iText.IO.Font.Otf {
             this.glyphs = new List<Glyph>();
         }
 
+        /// <summary>Create a new line of Glyphs.</summary>
+        /// <param name="glyphs">list containing the glyphs</param>
         public GlyphLine(IList<Glyph> glyphs) {
             this.glyphs = glyphs;
             this.start = 0;
             this.end = glyphs.Count;
         }
 
+        /// <summary>Create a new line of Glyphs from a slice of a List of Glyphs.</summary>
+        /// <param name="glyphs">list of Glyphs to slice</param>
+        /// <param name="start">starting index of the slice</param>
+        /// <param name="end">terminating index of the slice</param>
         public GlyphLine(IList<Glyph> glyphs, int start, int end) {
             this.glyphs = glyphs;
             this.start = start;
             this.end = end;
         }
 
+        /// <summary>Create a new line of Glyphs from a slice of a List of Glyphs, and add the actual text.</summary>
+        /// <param name="glyphs">list of Glyphs to slice</param>
+        /// <param name="actualText">corresponding list containing the actual text the glyphs represent</param>
+        /// <param name="start">starting index of the slice</param>
+        /// <param name="end">terminating index of the slice</param>
         protected internal GlyphLine(IList<Glyph> glyphs, IList<GlyphLine.ActualText> actualText, int start, int end
             )
             : this(glyphs, start, end) {
             this.actualText = actualText;
         }
 
+        /// <summary>Copy a line of Glyphs.</summary>
+        /// <param name="other">line of Glyphs to copy</param>
         public GlyphLine(iText.IO.Font.Otf.GlyphLine other) {
             this.glyphs = other.glyphs;
             this.actualText = other.actualText;
@@ -88,6 +101,10 @@ namespace iText.IO.Font.Otf {
             this.idx = other.idx;
         }
 
+        /// <summary>Copy a slice of a line of Glyphs</summary>
+        /// <param name="other">line of Glyphs to copy</param>
+        /// <param name="start">starting index of the slice</param>
+        /// <param name="end">terminating index of the slice</param>
         public GlyphLine(iText.IO.Font.Otf.GlyphLine other, int start, int end) {
             this.glyphs = other.glyphs.SubList(start, end);
             if (other.actualText != null) {
@@ -98,6 +115,10 @@ namespace iText.IO.Font.Otf {
             this.idx = other.idx - start;
         }
 
+        /// <summary>Get the unicode string representation of the GlyphLine slice.</summary>
+        /// <param name="start">starting index of the slice</param>
+        /// <param name="end">terminating index of the slice</param>
+        /// <returns>String containing the unicode representation of the slice.</returns>
         public virtual String ToUnicodeString(int start, int end) {
             ActualTextIterator iter = new ActualTextIterator(this, start, end);
             StringBuilder str = new StringBuilder();
@@ -115,6 +136,10 @@ namespace iText.IO.Font.Otf {
             return str.ToString();
         }
 
+        /// <summary>Copy a slice of this Glyphline.</summary>
+        /// <param name="left">leftmost index of the slice</param>
+        /// <param name="right">rightmost index of the slice</param>
+        /// <returns>new Glyphline containing the copied slice</returns>
         public virtual iText.IO.Font.Otf.GlyphLine Copy(int left, int right) {
             iText.IO.Font.Otf.GlyphLine glyphLine = new iText.IO.Font.Otf.GlyphLine();
             glyphLine.start = 0;
