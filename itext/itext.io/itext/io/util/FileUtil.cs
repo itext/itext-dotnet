@@ -177,5 +177,9 @@ namespace iText.IO.Util {
                 return Accept(pathname.Name);
             }
         }
+
+        public static String GetParentDirectory(String path) {
+            return Directory.GetParent(path).FullName;
+        }
     }
 }
