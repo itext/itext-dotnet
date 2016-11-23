@@ -66,6 +66,8 @@ namespace iText.Kernel.Pdf {
             items = GetNames();
         }
 
+        /// <summary>Retrieves the names stored in the name tree</summary>
+        /// <returns>Map containing the PdfObjects stored in the tree</returns>
         public virtual IDictionary<String, PdfObject> GetNames() {
             if (items.Count > 0) {
                 return items;
@@ -107,6 +109,9 @@ namespace iText.Kernel.Pdf {
             return items;
         }
 
+        /// <summary>Add an entry to the name tree</summary>
+        /// <param name="key">key of the entry</param>
+        /// <param name="value">object to add</param>
         public virtual void AddEntry(String key, PdfObject value) {
             if (items.Keys.Contains(key)) {
                 throw new PdfException(PdfException.NameAlreadyExistsInTheNameTree);
@@ -115,10 +120,13 @@ namespace iText.Kernel.Pdf {
             items[key] = value;
         }
 
+        /// <returns>True if the object has been modified, false otherwise.</returns>
         public virtual bool IsModified() {
             return modified;
         }
 
+        /// <summary>Build a PdfDictionary containing the name tree</summary>
+        /// <returns>PdfDictionary containing the name tree</returns>
         public virtual PdfDictionary BuildTree() {
             String[] names = new String[items.Count];
             names = items.Keys.ToArray(names);

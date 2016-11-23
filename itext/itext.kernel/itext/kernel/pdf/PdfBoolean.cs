@@ -56,6 +56,8 @@ namespace iText.Kernel.Pdf {
 
         private bool value;
 
+        /// <summary>Store a boolean value</summary>
+        /// <param name="value">value to store</param>
         public PdfBoolean(bool value)
             : this(value, false) {
         }
