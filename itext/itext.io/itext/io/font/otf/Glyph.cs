@@ -1,55 +1,56 @@
 /*
-
-This file is part of the iText (R) project.
+*
+* This file is part of the iText (R) project.
 Copyright (c) 1998-2016 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3
-as published by the Free Software Foundation with the addition of the
-following permission added to Section 15 as permitted in Section 7(a):
-FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
-ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
-OF THIRD PARTY RIGHTS
-
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU Affero General Public License for more details.
-You should have received a copy of the GNU Affero General Public License
-along with this program; if not, see http://www.gnu.org/licenses or write to
-the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-Boston, MA, 02110-1301 USA, or download the license from the following URL:
-http://itextpdf.com/terms-of-use/
-
-The interactive user interfaces in modified source and object code versions
-of this program must display Appropriate Legal Notices, as required under
-Section 5 of the GNU Affero General Public License.
-
-In accordance with Section 7(b) of the GNU Affero General Public License,
-a covered work must retain the producer line in every PDF that is created
-or manipulated using iText.
-
-You can be released from the requirements of the license by purchasing
-a commercial license. Buying such a license is mandatory as soon as you
-develop commercial activities involving the iText software without
-disclosing the source code of your own applications.
-These activities include: offering paid services to customers as an ASP,
-serving PDFs on the fly in a web application, shipping iText with a closed
-source product.
-
-For more information, please contact iText Software Corp. at this
-address: sales@itextpdf.com
+* Authors: Bruno Lowagie, Paulo Soares, et al.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License version 3
+* as published by the Free Software Foundation with the addition of the
+* following permission added to Section 15 as permitted in Section 7(a):
+* FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+* ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+* OF THIRD PARTY RIGHTS
+*
+* This program is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+* or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU Affero General Public License for more details.
+* You should have received a copy of the GNU Affero General Public License
+* along with this program; if not, see http://www.gnu.org/licenses or write to
+* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA, 02110-1301 USA, or download the license from the following URL:
+* http://itextpdf.com/terms-of-use/
+*
+* The interactive user interfaces in modified source and object code versions
+* of this program must display Appropriate Legal Notices, as required under
+* Section 5 of the GNU Affero General Public License.
+*
+* In accordance with Section 7(b) of the GNU Affero General Public License,
+* a covered work must retain the producer line in every PDF that is created
+* or manipulated using iText.
+*
+* You can be released from the requirements of the license by purchasing
+* a commercial license. Buying such a license is mandatory as soon as you
+* develop commercial activities involving the iText software without
+* disclosing the source code of your own applications.
+* These activities include: offering paid services to customers as an ASP,
+* serving PDFs on the fly in a web application, shipping iText with a closed
+* source product.
+*
+* For more information, please contact iText Software Corp. at this
+* address: sales@itextpdf.com
 */
-
 using System;
 using iText.IO.Util;
 
 namespace iText.IO.Font.Otf {
     public class Glyph {
-        private static char REPLACEMENT_CHARACTER = '\ufffd';
-        private static char[] REPLACEMENT_CHARACTERS = new char[] { REPLACEMENT_CHARACTER };
-        private static String REPLACEMENT_CHARACTER_STRING = REPLACEMENT_CHARACTER.ToString();
+        private const char REPLACEMENT_CHARACTER = '\ufffd';
+
+        private static readonly char[] REPLACEMENT_CHARACTERS = new char[] { REPLACEMENT_CHARACTER };
+
+        private static readonly String REPLACEMENT_CHARACTER_STRING = REPLACEMENT_CHARACTER.ToString();
 
         private readonly int code;
 
@@ -121,8 +122,8 @@ namespace iText.IO.Font.Otf {
             this.anchorDelta = glyph.anchorDelta;
         }
 
-        public Glyph(iText.IO.Font.Otf.Glyph glyph, int xPlacement, int yPlacement,
-            int xAdvance, int yAdvance, int anchorDelta)
+        public Glyph(iText.IO.Font.Otf.Glyph glyph, int xPlacement, int yPlacement, int xAdvance, int yAdvance, int
+             anchorDelta)
             : this(glyph) {
             this.xPlacement = (short)xPlacement;
             this.yPlacement = (short)yPlacement;
@@ -208,7 +209,7 @@ namespace iText.IO.Font.Otf {
             return anchorDelta;
         }
 
-        public void SetAnchorDelta(short anchorDelta) {
+        public virtual void SetAnchorDelta(short anchorDelta) {
             this.anchorDelta = anchorDelta;
         }
 
@@ -227,8 +228,7 @@ namespace iText.IO.Font.Otf {
         public override int GetHashCode() {
             int prime = 31;
             int result = 1;
-            result = prime * result + ((chars == null) ? 0 : iText.IO.Util.JavaUtil.ArraysHashCode
-                (chars));
+            result = prime * result + ((chars == null) ? 0 : iText.IO.Util.JavaUtil.ArraysHashCode(chars));
             result = prime * result + code;
             result = prime * result + width;
             return result;
@@ -242,40 +242,47 @@ namespace iText.IO.Font.Otf {
                 return false;
             }
             iText.IO.Font.Otf.Glyph other = (iText.IO.Font.Otf.Glyph)obj;
-            return iText.IO.Util.JavaUtil.ArraysEquals(chars, other.chars) && code == other
-                .code && width == other.width;
+            return iText.IO.Util.JavaUtil.ArraysEquals(chars, other.chars) && code == other.code && width == other.width;
         }
 
-        /// <summary>
+        /// <summary>Gets a Unicode string corresponding to this glyph.</summary>
+        /// <remarks>
         /// Gets a Unicode string corresponding to this glyph. In general case it might consist of many characters.
-        /// If this glyph does not have a valid unicode (<see cref="HasValidUnicode"/>, then a string consisting of a special  
+        /// If this glyph does not have a valid unicode (
+        /// <seealso>#hasValidUnicode()</seealso>
+        /// , then a string consisting of a special
         /// Unicode '\ufffd' character is returned.
-        /// </summary>
+        /// </remarks>
         /// <returns>the Unicode string that corresponds to this glyph</returns>
         public virtual String GetUnicodeString() {
             if (chars != null) {
-                return new String(chars);
-            } else {
+                return iText.IO.Util.JavaUtil.GetStringForChars(chars);
+            }
+            else {
                 return REPLACEMENT_CHARACTER_STRING;
             }
         }
 
-        /// <summary>
-        /// Gets Unicode char sequence corresponding to this glyph. In general case it might consist of many characters. 
-        /// If this glyph does not have a valid unicode (<see cref="HasValidUnicode"/>), then a special Unicode '\ufffd' character is returned.
-        /// </summary>
+        /// <summary>Gets Unicode char sequence corresponding to this glyph.</summary>
+        /// <remarks>
+        /// Gets Unicode char sequence corresponding to this glyph. In general case it might consist of many characters.
+        /// If this glyph does not have a valid unicode (
+        /// <seealso>#hasValidUnicode()</seealso>
+        /// , then a special Unicode '\ufffd' character is returned.
+        /// </remarks>
         /// <returns>the Unicode char sequence that corresponds to this glyph</returns>
-        public char[] GetUnicodeChars() {
+        public virtual char[] GetUnicodeChars() {
             if (chars != null) {
                 return chars;
-            } else {
+            }
+            else {
                 return REPLACEMENT_CHARACTERS;
             }
         }
 
         public override String ToString() {
-            return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null
-                 ? iText.IO.Util.JavaUtil.ArraysToString(chars) : "null", ToHex(unicode), width);
+            return String.Format("[id={0}, chars={1}, uni={2}, width={3}]", ToHex(code), chars != null ? iText.IO.Util.JavaUtil.ArraysToString
+                (chars) : "null", ToHex(unicode), width);
         }
 
         private static String ToHex(int ch) {
@@ -287,8 +294,9 @@ namespace iText.IO.Font.Otf {
             if (a != null) {
                 if (a.Length == 1 && iText.IO.Util.JavaUtil.IsValidCodePoint(a[0])) {
                     return a[0];
-                } else {
-                    if (a.Length == 2 && char.IsHighSurrogate(a[0]) && char.IsLowSurrogate(a[1])) {
+                }
+                else {
+                    if (a.Length == 2 && System.Char.IsHighSurrogate(a[0]) && System.Char.IsLowSurrogate(a[1])) {
                         return iText.IO.Util.JavaUtil.ToCodePoint(a[0], a[1]);
                     }
                 }
