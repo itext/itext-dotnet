@@ -101,7 +101,10 @@ namespace iText.IO.Image {
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_TILEWIDTH)) {
                     throw new iText.IO.IOException(iText.IO.IOException.TilesAreNotSupported);
                 }
-                int compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                int compression = TIFFConstants.COMPRESSION_NONE;
+                if (dir.IsTagPresent(TIFFConstants.TIFFTAG_COMPRESSION)) {
+                    compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                }
                 switch (compression) {
                     case TIFFConstants.COMPRESSION_CCITTRLEW:
                     case TIFFConstants.COMPRESSION_CCITTRLE:
@@ -319,7 +322,10 @@ namespace iText.IO.Image {
         private static void ProcessTiffImageColor(TIFFDirectory dir, RandomAccessFileOrArray s, TiffImageHelper.TiffParameters
              tiff) {
             try {
-                int compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                int compression = TIFFConstants.COMPRESSION_NONE;
+                if (dir.IsTagPresent(TIFFConstants.TIFFTAG_COMPRESSION)) {
+                    compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                }
                 int predictor = 1;
                 TIFFLZWDecoder lzwDecoder = null;
                 switch (compression) {
