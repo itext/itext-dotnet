@@ -18,7 +18,7 @@ namespace iText.Layout {
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
-            CreateDestinationFolder(destinationFolder);
+            CreateOrClearDestinationFolder(destinationFolder);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -129,6 +129,73 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BlockFillAvailableArea01() {
+            String outFileName = destinationFolder + "blockFillAvailableArea01.pdf";
+            String cmpFileName = sourceFolder + "cmp_blockFillAvailableArea01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n"
+                 + "\n" + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n"
+                 + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted."
+                 + "To do good to Mankind is the chivalrous plan,\n" + "    And is always as nobly requited;\n" + "Then battle for Freedom wherever you can,\n"
+                 + "    And, if not shot or hanged, you'll get knighted." + "To do good to Mankind is the chivalrous plan,\n"
+                 + "    And is always as nobly requited;\n" + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
+            textByron = textByron + textByron;
+            Document doc = new Document(pdfDocument);
+            DeviceRgb blue = new DeviceRgb(80, 114, 153);
+            Div text = new Div().Add(new Paragraph(textByron));
+            Div image = new Div().Add(new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                )).SetHeight(500).SetAutoScaleWidth(true));
+            doc.Add(new Div().Add(new Paragraph("Fill on split").SetFontSize(30).SetFontColor(blue).SetTextAlignment(TextAlignment
+                .CENTER)).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetFillAvailableArea(true)).Add(new AreaBreak
+                ());
+            doc.Add(new Paragraph("text").SetFontSize(18).SetFontColor(blue));
+            Div div = CreateDiv(text, textByron, blue, true, false, true);
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("image").SetFontSize(18).SetFontColor(blue));
+            div = CreateDiv(image, textByron, blue, false, false, true);
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            doc.Add(new Div().Add(new Paragraph("Fill always").SetFontSize(30).SetFontColor(blue).SetTextAlignment(TextAlignment
+                .CENTER)).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetFillAvailableArea(true)).Add(new AreaBreak
+                ());
+            doc.Add(new Paragraph("text").SetFontSize(18).SetFontColor(blue));
+            div = CreateDiv(text, textByron, blue, true, true, false);
+            doc.Add(div);
+            doc.Add(new Paragraph("image").SetFontSize(18).SetFontColor(blue));
+            div = CreateDiv(image, textByron, blue, false, true, false);
+            doc.Add(div);
+            doc.Add(new Div().Add(new Paragraph("No fill").SetFontSize(30).SetFontColor(blue).SetTextAlignment(TextAlignment
+                .CENTER)).SetVerticalAlignment(VerticalAlignment.MIDDLE).SetFillAvailableArea(true)).Add(new AreaBreak
+                ());
+            doc.Add(new Paragraph("text").SetFontSize(18).SetFontColor(blue));
+            div = CreateDiv(text, textByron, blue, true, false, false);
+            doc.Add(div);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("image").SetFontSize(18).SetFontColor(blue));
+            div = CreateDiv(image, textByron, blue, false, false, false);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private Div CreateDiv(Div innerOverflowDiv, String text, DeviceRgb backgroundColor, bool keepTogether, bool
+             fillAlways, bool fillOnSplit) {
+            Div div = new Div().SetBorder(new DoubleBorder(10)).SetBackgroundColor(new DeviceRgb(216, 243, 255)).SetFillAvailableAreaOnSplit
+                (fillOnSplit).SetFillAvailableArea(fillAlways);
+            div.Add(new Paragraph(text));
+            div.Add(innerOverflowDiv.SetKeepTogether(keepTogether));
+            if (backgroundColor != null) {
+                innerOverflowDiv.SetBackgroundColor(backgroundColor);
+            }
+            return div;
         }
     }
 }

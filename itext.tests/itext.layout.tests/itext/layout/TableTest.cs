@@ -778,10 +778,11 @@ namespace iText.Layout {
                 table.AddCell(image);
             }
             doc.Add(new Paragraph("Extend the last row on each page"));
-            table.SetExtendLastRow(true);
+            table.SetExtendBottomRow(true);
             doc.Add(table);
             doc.Add(new Paragraph("Extend all last rows on each page except final one"));
-            table.SetExtendFinalRow(false);
+            table.SetExtendBottomRow(false);
+            table.SetExtendBottomRowOnSplit(true);
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

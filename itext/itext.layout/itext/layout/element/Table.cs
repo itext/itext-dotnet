@@ -699,13 +699,13 @@ namespace iText.Layout.Element {
             }
         }
 
-        public virtual iText.Layout.Element.Table SetExtendLastRow(bool isExtended) {
-            SetProperty(Property.EXTEND_LAST_ROW, isExtended);
+        public virtual iText.Layout.Element.Table SetExtendBottomRow(bool isExtended) {
+            SetProperty(Property.FILL_AVAILABLE_AREA, isExtended);
             return this;
         }
 
-        public virtual iText.Layout.Element.Table SetExtendFinalRow(bool isExtended) {
-            SetProperty(Property.EXTEND_FINAL_ROW, isExtended);
+        public virtual iText.Layout.Element.Table SetExtendBottomRowOnSplit(bool isExtended) {
+            SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, isExtended);
             return this;
         }
 

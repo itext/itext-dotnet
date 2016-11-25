@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -98,6 +99,16 @@ namespace iText.Layout.Element {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;
+        }
+
+        public virtual Div SetFillAvailableArea(bool fillArea) {
+            SetProperty(Property.FILL_AVAILABLE_AREA, fillArea);
+            return this;
+        }
+
+        public virtual Div SetFillAvailableAreaOnSplit(bool fillAreaOnSplit) {
+            SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, fillAreaOnSplit);
+            return this;
         }
 
         protected internal override IRenderer MakeNewRenderer() {

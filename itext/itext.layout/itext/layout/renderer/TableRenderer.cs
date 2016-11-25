@@ -667,7 +667,8 @@ namespace iText.Layout.Renderer {
                         occupiedArea.GetBBox().ApplyMargins<Rectangle>(topTableBorderWidth / 2, 0, 0, 0, false);
                         layoutBox.ApplyMargins<Rectangle>(topTableBorderWidth / 2, 0, 0, 0, true);
                     }
-                    if (true.Equals(GetPropertyAsBoolean(Property.EXTEND_LAST_ROW))) {
+                    if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA)) || true.Equals(GetPropertyAsBoolean(Property
+                        .FILL_AVAILABLE_AREA_ON_SPLIT))) {
                         ExtendLastRow(currentRow, layoutBox);
                     }
                     AdjustFooterAndFixOccupiedArea(layoutBox);
@@ -788,8 +789,7 @@ namespace iText.Layout.Renderer {
             occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth / 2).IncreaseHeight((topTableBorderWidth + bottomTableBorderWidth
                 ) / 2);
             layoutBox.DecreaseHeight(bottomTableBorderWidth / 2);
-            if ((true.Equals(GetPropertyAsBoolean(Property.EXTEND_FINAL_ROW)) || (true.Equals(GetPropertyAsBoolean(Property
-                .EXTEND_LAST_ROW)) && false.Equals(HasProperty(Property.EXTEND_FINAL_ROW)))) && 0 != rows.Count) {
+            if ((true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) && 0 != rows.Count) {
                 ExtendLastRow(rows[rows.Count - 1], layoutBox);
             }
             ApplyMargins(occupiedArea.GetBBox(), true);

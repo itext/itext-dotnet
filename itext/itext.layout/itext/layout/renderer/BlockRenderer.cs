@@ -108,10 +108,15 @@ namespace iText.Layout.Renderer {
                 childRenderer.SetParent(this);
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
                     )))).GetStatus() != LayoutResult.FULL) {
-                    if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
-                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                            ()));
-                        layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
+                    if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
+                        (Property.FILL_AVAILABLE_AREA))) {
+                        occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
+                    }
+                    else {
+                        if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
+                            occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                                ()));
+                        }
                     }
                     if (childRenderer.GetOccupiedArea() != null) {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
@@ -136,7 +141,6 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
-                            // layoutBox.setHeight(layoutBox.getHeight() - result.getOccupiedArea().getBBox().getHeight());
                             if (currentAreaPos + 1 == areas.Count) {
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
@@ -245,6 +249,9 @@ namespace iText.Layout.Renderer {
                 if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
                     causeOfNothing = result.GetCauseOfNothing();
                 }
+            }
+            if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
+                occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer_1 = null;
