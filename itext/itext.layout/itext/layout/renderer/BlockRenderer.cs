@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
                 childRenderer.SetParent(this);
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
                     )))).GetStatus() != LayoutResult.FULL) {
-                    if (result.GetOccupiedArea() != null) {
+                    if (result.GetOccupiedArea() != null && result.GetStatus() != LayoutResult.NOTHING) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                             ()));
                         layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
@@ -221,8 +221,12 @@ namespace iText.Layout.Renderer {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
                                 }
                                 else {
-                                    return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, LayoutResult.NOTHING 
-                                        == layoutResult ? result.GetCauseOfNothing() : null);
+                                    if (layoutResult != LayoutResult.NOTHING) {
+                                        return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null);
+                                    }
+                                    else {
+                                        return new LayoutResult(layoutResult, null, splitRenderer, overflowRenderer, result.GetCauseOfNothing());
+                                    }
                                 }
                             }
                         }
@@ -278,7 +282,7 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
                     }
                 }
             }

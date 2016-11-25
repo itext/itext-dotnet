@@ -198,8 +198,8 @@ namespace iText.Layout.Renderer {
                     else {
                         bool keepTogether = IsKeepTogether();
                         if (keepTogether) {
-                            return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, null == result.GetCauseOfNothing()
-                                 ? this : result.GetCauseOfNothing());
+                            return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing() ? this : 
+                                result.GetCauseOfNothing());
                         }
                         else {
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
@@ -255,8 +255,8 @@ namespace iText.Layout.Renderer {
                                     }
                                 }
                                 else {
-                                    return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, null == result.GetCauseOfNothing()
-                                         ? this : result.GetCauseOfNothing());
+                                    return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing() ? this : 
+                                        result.GetCauseOfNothing());
                                 }
                             }
                         }
@@ -313,7 +313,7 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                        return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
                     }
                 }
             }

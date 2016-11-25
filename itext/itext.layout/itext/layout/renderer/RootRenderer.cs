@@ -159,19 +159,23 @@ namespace iText.Layout.Renderer {
                     renderer = result.GetSplitRenderer();
                 }
                 // Keep renderer until next element is added for future keep with next adjustments
-                if (renderer != null && true.Equals(renderer.GetProperty<bool?>(Property.KEEP_WITH_NEXT))) {
-                    if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
-                        UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                if (renderer != null && result != null) {
+                    if (true.Equals(renderer.GetProperty<bool?>(Property.KEEP_WITH_NEXT))) {
+                        if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                            ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                            logger.Warn(iText.IO.LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
+                            UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                        }
+                        else {
+                            keepWithNextHangingRenderer = renderer;
+                            keepWithNextHangingRendererLayoutResult = result;
+                        }
                     }
                     else {
-                        keepWithNextHangingRenderer = renderer;
-                        keepWithNextHangingRendererLayoutResult = result;
+                        if (result.GetStatus() != LayoutResult.NOTHING) {
+                            UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                        }
                     }
-                }
-                else {
-                    UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
                 }
             }
             else {
@@ -257,9 +261,7 @@ namespace iText.Layout.Renderer {
                 currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
                     ());
                 currentArea.SetEmptyArea(false);
-                if (renderer != null) {
-                    ProcessRenderer(renderer, resultRenderers);
-                }
+                ProcessRenderer(renderer, resultRenderers);
             }
             if (!immediateFlush) {
                 childRenderers.AddAll(resultRenderers);
