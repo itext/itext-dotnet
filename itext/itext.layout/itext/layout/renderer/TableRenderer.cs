@@ -605,6 +605,9 @@ namespace iText.Layout.Renderer {
                                     // for the future
                                     splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
                                 }
+                                else {
+                                    splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
+                                }
                                 for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
                                     horizontalBorders[row + (!hasContent && rowspans[col] > 1 ? 0 : 1)][j] = GetBorders()[2];
                                 }
