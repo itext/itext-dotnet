@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Font.Otf;
@@ -131,7 +130,7 @@ namespace iText.Kernel.Font {
                     if (toUnicodeCMap == null) {
                         toUnicodeCMap = FontUtil.GetToUnicodeFromUniMap(PdfEncodings.IDENTITY_H);
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
-                        logger.Error(String.Format(LogMessageConstant.UNKNOWN_CMAP, uniMap));
+                        logger.Error(String.Format(iText.IO.LogMessageConstant.UNKNOWN_CMAP, uniMap));
                     }
                 }
                 fontProgram = DocTrueTypeFont.CreateFontProgram(cidFont, toUnicodeCMap);

@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -143,7 +142,7 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfDictionary mcrPageObject = mcr.GetPageObject();
             if (mcrPageObject == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
-                logger.Error(LogMessageConstant.ENCOUNTERED_INVALID_MCR);
+                logger.Error(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR);
                 return;
             }
             SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(mcrPageObject.GetIndirectReference());

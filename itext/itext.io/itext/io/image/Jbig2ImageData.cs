@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Log;
 using iText.IO.Source;
@@ -93,7 +92,7 @@ namespace iText.IO.Image {
 
         public override bool CanImageBeInline() {
             ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
-            logger.Warn(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
+            logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER);
             return false;
         }
     }

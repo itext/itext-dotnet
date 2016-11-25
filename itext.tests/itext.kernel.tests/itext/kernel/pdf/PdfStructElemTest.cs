@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Font;
@@ -273,7 +272,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest01() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
             PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest01.pdf")
@@ -294,7 +293,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest02() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
             PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest02.pdf")
@@ -310,7 +309,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest03() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
             PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest03.pdf")
@@ -327,7 +326,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest04() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
             PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest04.pdf")
@@ -359,7 +358,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest06() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));
             PdfDocument destination = new PdfDocument(new PdfWriter(destinationFolder + "structTreeCopyingTest06.pdf")
@@ -449,7 +448,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ENCOUNTERED_INVALID_MCR, Count = 72)]
+        [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR, Count = 72)]
         public virtual void CorruptedTagStructureTest01() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "cocacola_corruptedTagStruct.pdf"));
             NUnit.Framework.Assert.IsTrue(document.IsTagged());
@@ -458,7 +457,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
+        [LogMessage(iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED)]
         public virtual void CorruptedTagStructureTest02() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "directStructElem01.pdf"));
             NUnit.Framework.Assert.IsFalse(document.IsTagged());

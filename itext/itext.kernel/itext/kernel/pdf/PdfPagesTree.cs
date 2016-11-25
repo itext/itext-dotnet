@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel;
 
@@ -256,7 +255,7 @@ namespace iText.Kernel.Pdf {
             PdfPage pdfPage = GetPage(pageNum);
             if (pdfPage.IsFlushed()) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfPage));
-                logger.Warn(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
+                logger.Warn(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED);
             }
             if (InternalRemovePage(--pageNum)) {
                 return pdfPage;

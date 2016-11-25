@@ -1,5 +1,4 @@
 using System;
-using iText.IO;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -44,7 +43,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherParagraphTest02() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherParagraphTest02.pdf";
             String outFile = destinationFolder + "keepTogetherParagraphTest02.pdf";
@@ -113,7 +112,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void KeepTogetherDivTest02() {
             String cmpFileName = sourceFolder + "cmp_keepTogetherDivTest02.pdf";
             String outFile = destinationFolder + "keepTogetherDivTest02.pdf";

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Test;
@@ -198,7 +197,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void CopyPagesWithOutlines() {
             PdfReader reader = new PdfReader(sourceFolder + "iphone_user_guide.pdf");
             PdfWriter writer = new PdfWriter(destinationFolder + "copyPagesWithOutlines01.pdf");

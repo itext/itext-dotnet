@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using iText.IO;
 using iText.IO.Image;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
@@ -64,7 +63,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void CreateDocumentFromImages2() {
             String destinationDocument = destinationFolder + "documentFromImages2.pdf";
             FileStream fos = new FileStream(destinationDocument, FileMode.Create);

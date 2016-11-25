@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 
@@ -186,7 +185,7 @@ namespace iText.Kernel.Pdf {
             if (changed) {
                 //if the instance was modified, hashCode also will be changed, it may cause inconsistency.
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
-                logger.Warn(LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER);
+                logger.Warn(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER);
                 changed = false;
             }
             long hash = iText.IO.Util.JavaUtil.DoubleToLongBits(value);

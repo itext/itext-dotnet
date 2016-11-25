@@ -1,5 +1,4 @@
 using System;
-using iText.IO;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -55,7 +54,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, Count = 1)]
         public virtual void EmptyParagraphsTest01() {
             String outFileName = destinationFolder + "emptyParagraphsTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_emptyParagraphsTest01.pdf";
@@ -94,7 +93,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void AddParagraphOnShortPage1() {
             String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage1.pdf";
@@ -115,7 +114,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void AddParagraphOnShortPage2() {
             String outFileName = destinationFolder + "addParagraphOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addParagraphOnShortPage2.pdf";

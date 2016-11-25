@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -21,7 +20,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest01() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
@@ -59,7 +58,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 3)]
         public virtual void SplitDocumentTest02() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
@@ -105,7 +104,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentTest03() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
@@ -145,7 +144,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentByOutlineTest() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));

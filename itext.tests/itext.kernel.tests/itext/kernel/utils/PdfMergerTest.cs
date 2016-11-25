@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.Kernel.Pdf;
 using iText.Test;
 using iText.Test.Attributes;
@@ -80,7 +79,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeDocumentTest03() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";
@@ -114,7 +113,7 @@ namespace iText.Kernel.Utils {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void MergeDocumentTest04() {
             String filename = sourceFolder + "pdf_open_parameters.pdf";
             String filename1 = sourceFolder + "iphone_user_guide.pdf";

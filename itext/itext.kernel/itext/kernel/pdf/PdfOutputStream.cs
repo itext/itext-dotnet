@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.Kernel;
@@ -166,7 +165,7 @@ namespace iText.Kernel.Pdf {
                 PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                    logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key));
+                    logger.Warn(String.Format(iText.IO.LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key));
                     value = PdfNull.PDF_NULL;
                 }
                 if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject.LITERAL || value.GetObjectType

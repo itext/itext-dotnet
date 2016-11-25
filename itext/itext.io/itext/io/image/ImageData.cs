@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Colors;
 using iText.IO.Log;
 using iText.IO.Source;
@@ -311,11 +310,11 @@ namespace iText.IO.Image {
         public virtual bool CanImageBeInline() {
             ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Image.ImageData));
             if (imageSize > 4096) {
-                logger.Warn(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
+                logger.Warn(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB);
                 return false;
             }
             if (imageMask != null) {
-                logger.Warn(LogMessageConstant.IMAGE_HAS_MASK);
+                logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_MASK);
                 return false;
             }
             return true;

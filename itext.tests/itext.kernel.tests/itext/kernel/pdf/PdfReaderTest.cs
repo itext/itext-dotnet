@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Source;
 using iText.Kernel;
 using iText.Test;
@@ -540,7 +539,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void CorrectSimpleDoc1() {
             String filename = sourceFolder + "correctSimpleDoc1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -569,7 +568,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void CorrectSimpleDoc3() {
             String filename = sourceFolder + "correctSimpleDoc3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -600,7 +599,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest01() {
             String filename = sourceFolder + "OnlyTrailer.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -670,7 +669,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest05() {
             String filename = sourceFolder + "CompressionWrongShift.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -720,7 +719,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest08() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -741,7 +740,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest09() {
             String filename = sourceFolder + "XRefSectionWithFreeReferences3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -783,7 +782,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest11() {
             String filename = sourceFolder + "XRefSectionWithoutSize.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -801,7 +800,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest12() {
             String filename = sourceFolder + "XRefWithBreaks.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -819,7 +818,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FixPdfTest13() {
             String filename = sourceFolder + "XRefWithInvalidGenerations1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -862,7 +861,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
+        [LogMessage(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE)]
         public virtual void FixPdfTest14() {
             String filename = sourceFolder + "XRefWithInvalidGenerations2.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -879,7 +878,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest15() {
             String filename = sourceFolder + "XRefWithInvalidGenerations3.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -915,7 +914,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void FixPdfTest17() {
             String filename = sourceFolder + "XrefWithNullOffsets.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1017,7 +1016,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void AppendModeWith10PagesFix1() {
             String filename = sourceFolder + "10PagesDocumentAppendedFix1.pdf";
             PdfReader reader = new PdfReader(filename);
@@ -1040,7 +1039,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void AppendModeWith10PagesFix2() {
             String filename = sourceFolder + "10PagesDocumentAppendedFix2.pdf";
             PdfReader reader = new PdfReader(filename);

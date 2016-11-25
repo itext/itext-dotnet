@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.Kernel;
@@ -548,7 +547,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (Exception ex) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                logger.Error(LogMessageConstant.XREF_ERROR, ex);
+                logger.Error(iText.IO.LogMessageConstant.XREF_ERROR, ex);
                 RebuildXref();
             }
             ReadDecryptObj();
@@ -692,8 +691,8 @@ namespace iText.Kernel.Pdf {
                         if (reference.GetGenNumber() != tokens.GetGenNr()) {
                             if (fixedXref) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfReader));
-                                logger.Warn(String.Format(LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr(), tokens.GetGenNr
-                                    ()));
+                                logger.Warn(String.Format(iText.IO.LogMessageConstant.INVALID_INDIRECT_REFERENCE, tokens.GetObjNr(), tokens
+                                    .GetGenNr()));
                                 return new PdfNull();
                             }
                             else {

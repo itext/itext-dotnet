@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
@@ -362,8 +361,8 @@ namespace iText.Layout.Renderer {
             if (rotationAngle != null) {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_WIDTH) || !HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
-                        .Name));
+                    logger.Error(String.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, 
+                        GetType().Name));
                 }
                 else {
                     bBox.SetWidth((float)this.GetPropertyAsFloat(Property.ROTATION_INITIAL_WIDTH));
@@ -485,8 +484,8 @@ namespace iText.Layout.Renderer {
             if (angle != null) {
                 if (!HasOwnProperty(Property.ROTATION_INITIAL_HEIGHT)) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.BlockRenderer));
-                    logger.Error(String.Format(LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, GetType()
-                        .Name));
+                    logger.Error(String.Format(iText.IO.LogMessageConstant.ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER, 
+                        GetType().Name));
                 }
                 else {
                     AffineTransform transform = CreateRotationTransformInsideOccupiedArea();

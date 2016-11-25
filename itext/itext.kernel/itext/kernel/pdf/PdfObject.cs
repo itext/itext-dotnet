@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Crypto;
@@ -298,7 +297,7 @@ namespace iText.Kernel.Pdf {
             // In case ForbidRelease flag is set, release will not be performed.
             if (CheckState(FORBID_RELEASE)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
-                logger.Warn(LogMessageConstant.FORBID_RELEASE_IS_SET);
+                logger.Warn(iText.IO.LogMessageConstant.FORBID_RELEASE_IS_SET);
             }
             else {
                 if (indirectReference != null && indirectReference.GetReader() != null && !indirectReference.CheckState(FLUSHED

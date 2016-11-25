@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.Kernel.Colors;
@@ -50,7 +49,7 @@ namespace iText.Layout {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest01.pdf"));
             pdfDocument.SetTagged();

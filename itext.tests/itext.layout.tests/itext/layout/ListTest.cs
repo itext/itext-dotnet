@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
@@ -78,7 +77,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 8)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 8)]
         public virtual void AddListOnShortPage1() {
             String outFileName = destinationFolder + "addListOnShortPage1.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage1.pdf";
@@ -106,7 +105,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 3)]
         public virtual void AddListOnShortPage2() {
             String outFileName = destinationFolder + "addListOnShortPage2.pdf";
             String cmpFileName = sourceFolder + "cmp_addListOnShortPage2.pdf";

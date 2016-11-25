@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using iText.IO;
 using iText.IO.Source;
 using iText.Test;
 using iText.Test.Attributes;
@@ -214,7 +213,7 @@ namespace iText.Kernel.Pdf {
         }
 
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER)]
+        [LogMessage(iText.IO.LogMessageConstant.CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER)]
         public virtual void EqualNumbers() {
             PdfNumber num1 = ((PdfNumber)new PdfNumber(1).MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
                 ()))));

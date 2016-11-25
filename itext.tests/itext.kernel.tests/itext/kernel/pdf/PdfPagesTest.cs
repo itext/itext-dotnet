@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.Kernel;
 using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Utils;
@@ -169,7 +168,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
+        [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
         public virtual void InsertFlushedPageTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -191,7 +190,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
+        [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED)]
         public virtual void AddFlushedPageTest() {
             PdfWriter writer = new PdfWriter(new MemoryStream());
             PdfDocument pdfDoc = new PdfDocument(writer);
@@ -213,7 +212,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
+        [LogMessage(iText.IO.LogMessageConstant.REMOVING_PAGE_HAS_ALREADY_BEEN_FLUSHED, Count = 2)]
         public virtual void RemoveFlushedPage() {
             String filename = "removeFlushedPage.pdf";
             int pageCount = 10;

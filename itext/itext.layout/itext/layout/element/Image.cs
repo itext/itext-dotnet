@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Image;
 using iText.IO.Log;
 using iText.Kernel;
@@ -347,7 +346,7 @@ namespace iText.Layout.Element {
                 )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
                 ))) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Image));
-                logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
+                logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
             SetProperty(Property.AUTO_SCALE, autoScale);
             return this;

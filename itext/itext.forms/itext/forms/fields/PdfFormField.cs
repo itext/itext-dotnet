@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Image;
@@ -2213,7 +2212,7 @@ namespace iText.Forms.Fields {
                     else {
                         //Avoid NPE when handling corrupt pdfs
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                        logger.Error(LogMessageConstant.INCORRECT_PAGEROTATION);
+                        logger.Error(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
                         matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
                     }
                     //Apply field rotation

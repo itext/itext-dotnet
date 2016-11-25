@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -340,7 +339,8 @@ namespace iText.Layout.Renderer {
                 Rectangle backgroundArea = ApplyMargins(bBox, false);
                 if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background"));
+                    logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
+                        );
                     return;
                 }
                 drawContext.GetCanvas().SaveState().SetFillColor(background.GetColor()).Rectangle(backgroundArea.GetX() - 
@@ -389,7 +389,7 @@ namespace iText.Layout.Renderer {
                 Rectangle bBox = GetBorderAreaBBox();
                 if (bBox.GetWidth() < 0 || bBox.GetHeight() < 0) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(String.Format(LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"));
+                    logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_SIZE, "border"));
                     return;
                 }
                 float x1 = bBox.GetX();

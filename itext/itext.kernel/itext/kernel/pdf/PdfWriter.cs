@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -305,7 +304,7 @@ namespace iText.Kernel.Pdf {
             }
             if (CheckTypeOfPdfDictionary(obj, PdfName.Catalog)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfReader));
-                logger.Warn(LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
+                logger.Warn(iText.IO.LogMessageConstant.MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN);
                 obj = PdfNull.PDF_NULL;
             }
             PdfIndirectReference indirectReference = obj.GetIndirectReference();

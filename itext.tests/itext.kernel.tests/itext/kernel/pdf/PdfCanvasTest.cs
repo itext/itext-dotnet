@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Source;
@@ -1265,10 +1264,10 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
-        [LogMessage(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
-        [LogMessage(LogMessageConstant.IMAGE_HAS_MASK)]
-        [LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_MASK)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void InlineImagesTest01() {
             String filename = "inlineImages01.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));
@@ -1289,10 +1288,10 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
-        [LogMessage(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
-        [LogMessage(LogMessageConstant.IMAGE_HAS_MASK)]
-        [LogMessage(LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JBIG2DECODE_FILTER)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_HAS_MASK)]
+        [LogMessage(iText.IO.LogMessageConstant.IMAGE_SIZE_CANNOT_BE_MORE_4KB)]
         public virtual void InlineImagesTest02() {
             String filename = "inlineImages02.pdf";
             PdfDocument document = new PdfDocument(new PdfWriter(destinationFolder + filename));

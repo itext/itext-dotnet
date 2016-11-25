@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -211,11 +210,11 @@ namespace iText.Kernel.Pdf {
                 ();
             if (properties.appendMode && writerHasEncryption) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
+                logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
             }
             if (properties.preserveEncryption && writerHasEncryption) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
+                logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
             }
             Open(writer.properties.pdfVersion);
         }
@@ -740,7 +739,7 @@ namespace iText.Kernel.Pdf {
                     }
                     catch (Exception e) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                        logger.Error(LogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
+                        logger.Error(iText.IO.LogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
                     }
                 }
                 if (reader != null && IsCloseReader()) {
@@ -749,7 +748,7 @@ namespace iText.Kernel.Pdf {
                     }
                     catch (Exception e) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                        logger.Error(LogMessageConstant.PDF_READER_CLOSING_FAILED, e);
+                        logger.Error(iText.IO.LogMessageConstant.PDF_READER_CLOSING_FAILED, e);
                     }
                 }
             }
@@ -996,7 +995,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Warn(LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
+                    logger.Warn(iText.IO.LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
                 }
             }
             if (catalog.IsOutlineMode()) {
@@ -1466,7 +1465,7 @@ namespace iText.Kernel.Pdf {
                 }
                 catch (System.IO.IOException e) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Error(LogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT, e);
+                    logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT, e);
                     defaultFont = null;
                 }
             }
@@ -1705,7 +1704,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (XMPException e) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+                logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
 
@@ -1878,7 +1877,7 @@ namespace iText.Kernel.Pdf {
                 structTreeRoot = null;
                 structParentIndex = -1;
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(LogMessageConstant.TAG_STRUCTURE_INIT_FAILED, ex);
+                logger.Error(iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED, ex);
             }
         }
 

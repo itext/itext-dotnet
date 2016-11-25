@@ -138,7 +138,8 @@ namespace iText.Kernel.Utils {
                 return false;
             }
             iText.Kernel.Utils.PageRange other = (iText.Kernel.Utils.PageRange)obj;
-            return sequenceStarts.Equals(other.sequenceStarts) && sequenceEnds.Equals(other.sequenceEnds);
+            return System.Linq.Enumerable.SequenceEqual(sequenceStarts, other.sequenceStarts) && System.Linq.Enumerable.SequenceEqual
+                (sequenceEnds, other.sequenceEnds);
         }
 
         /// <summary><inheritDoc/></summary>

@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
 using iText.IO.Source;
@@ -189,7 +188,7 @@ namespace iText.IO.Font {
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.Error(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
+                        logger.Error(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {

@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Log;
@@ -67,7 +66,7 @@ namespace iText.Kernel.Font {
                 }
                 catch (Exception) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
-                    logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                    logger.Error(iText.IO.LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
                     cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
                 }
             }

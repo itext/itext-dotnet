@@ -46,7 +46,6 @@ using System.IO;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Util;
 
@@ -123,10 +122,10 @@ namespace iText.Signatures {
                         }
                         else {
                             if (status is RevokedStatus) {
-                                throw new System.IO.IOException(LogMessageConstant.OCSP_STATUS_IS_REVOKED);
+                                throw new System.IO.IOException(iText.IO.LogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
                             else {
-                                throw new System.IO.IOException(LogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
+                                throw new System.IO.IOException(iText.IO.LogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                         }
                     }

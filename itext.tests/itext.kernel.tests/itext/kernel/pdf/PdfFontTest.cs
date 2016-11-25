@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -866,7 +865,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
+        [LogMessage(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
         public virtual void CreateWrongPfb() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
@@ -930,7 +929,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
         public virtual void TestPdfFontFactoryTtc() {
             String filename = destinationFolder + "testPdfFontFactoryTtc.pdf";
             String cmpFilename = sourceFolder + "cmp_testPdfFontFactoryTtc.pdf";
@@ -949,7 +948,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
+        [LogMessage(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
         public virtual void TestWriteTTC() {
             String filename = destinationFolder + "DocumentWithTTC.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";

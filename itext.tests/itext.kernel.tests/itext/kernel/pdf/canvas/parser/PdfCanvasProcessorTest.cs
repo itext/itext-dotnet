@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
@@ -14,7 +13,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.XREF_ERROR, Count = 1)]
+        [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void ContentStreamProcessorTest() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "yaxiststar.pdf"), new PdfWriter(new ByteArrayOutputStream
                 ()));

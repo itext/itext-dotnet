@@ -1,5 +1,4 @@
 using System;
-using iText.IO;
 using iText.IO.Source;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -21,7 +20,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest01() {
             String srcFilename1 = sourceFolder + "appearances1.pdf";
             String srcFilename2 = sourceFolder + "fieldsOn2-sPage.pdf";
@@ -95,7 +94,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD)]
         public virtual void CopyFieldsTest04() {
             String srcFilename = sourceFolder + "srcFile1.pdf";
             PdfDocument srcDoc = new PdfDocument(new PdfReader(srcFilename));
@@ -127,7 +126,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest06() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields06.pdf";
@@ -147,7 +146,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest07() {
             String srcFilename = sourceFolder + "datasheet.pdf";
             String destFilename = destinationFolder + "copyFields07.pdf";
@@ -167,7 +166,7 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
+        [LogMessage(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, Count = 13)]
         public virtual void CopyFieldsTest08() {
             String srcFilename1 = sourceFolder + "appearances1.pdf";
             String srcFilename2 = sourceFolder + "fieldsOn2-sPage.pdf";

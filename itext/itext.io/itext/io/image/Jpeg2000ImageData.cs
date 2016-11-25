@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Log;
 
 namespace iText.IO.Image {
@@ -100,7 +99,7 @@ namespace iText.IO.Image {
 
         public override bool CanImageBeInline() {
             ILogger logger = LoggerFactory.GetLogger(typeof(ImageData));
-            logger.Warn(LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
+            logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_JPXDECODE_FILTER);
             return false;
         }
 

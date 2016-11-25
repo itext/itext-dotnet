@@ -1,5 +1,4 @@
 using System;
-using iText.IO;
 using iText.IO.Image;
 using iText.IO.Util;
 using iText.Kernel.Colors;
@@ -159,7 +158,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest07() {
             String outFileName = destinationFolder + "imageTest07.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest07.pdf";
@@ -179,7 +178,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest08() {
             String outFileName = destinationFolder + "imageTest08.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest08.pdf";
@@ -200,7 +199,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest09() {
             String outFileName = destinationFolder + "imageTest09.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest09.pdf";
@@ -309,7 +308,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void ImageTest15() {
             String outFileName = destinationFolder + "imageTest15.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest15.pdf";
@@ -348,7 +347,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 50)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 50)]
         public virtual void ImageTest17() {
             String outFileName = destinationFolder + "imageTest17.pdf";
             String cmpFileName = sourceFolder + "cmp_imageTest17.pdf";
