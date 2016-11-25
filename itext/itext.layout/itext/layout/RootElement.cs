@@ -76,8 +76,7 @@ namespace iText.Layout {
         /// <param name="element">an element with spacial margins, tabbing, and alignment</param>
         /// <returns>this element</returns>
         /// <seealso cref="iText.Layout.Element.BlockElement{T}"/>
-        public virtual T Add<T2>(BlockElement<T2> element)
-            where T2 : IElement {
+        public virtual T Add(IBlockElement element) {
             childElements.Add(element);
             EnsureRootRendererNotNull().AddChild(element.CreateRendererSubTree());
             return (T)(Object)this;

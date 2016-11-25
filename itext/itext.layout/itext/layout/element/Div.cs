@@ -66,8 +66,7 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual Div Add<T>(BlockElement<T> element)
-            where T : IElement {
+        public virtual Div Add(IBlockElement element) {
             childElements.Add(element);
             return this;
         }

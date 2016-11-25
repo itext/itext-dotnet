@@ -148,7 +148,7 @@ namespace iText.Layout {
             return this;
         }
 
-        public override iText.Layout.Document Add<T>(BlockElement<T> element) {
+        public override iText.Layout.Document Add(IBlockElement element) {
             CheckClosingStatus();
             base.Add(element);
             if (element is ILargeElement) {

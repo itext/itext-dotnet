@@ -170,8 +170,7 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual iText.Layout.Element.Cell Add<T>(BlockElement<T> element)
-            where T : IElement {
+        public virtual iText.Layout.Element.Cell Add(IBlockElement element) {
             childElements.Add(element);
             return this;
         }

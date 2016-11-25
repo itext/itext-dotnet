@@ -56,7 +56,7 @@ namespace iText.Layout.Element {
     /// can be delimited by padding, a border, and/or a margin.
     /// </summary>
     /// 
-    public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement
+    public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement, IBlockElement
         where T : IElement {
         /// <summary>Creates a BlockElement.</summary>
         protected internal BlockElement() {
