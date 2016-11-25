@@ -240,6 +240,8 @@ namespace iText.Forms {
             if (field.GetKids() != null) {
                 IterateFields(field.GetKids(), fields);
             }
+            //There's an issue described in DEVSIX-573. When you create multiple fields with different fonts those font may
+            // have same names (F1, F2, etc). So only first of them will be save in default resources.
             if (field.GetFormType() != null && (field.GetFormType().Equals(PdfName.Tx) || field.GetFormType().Equals(PdfName
                 .Ch))) {
                 IList<PdfDictionary> resources = GetResources(field.GetPdfObject());
