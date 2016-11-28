@@ -319,7 +319,7 @@ namespace iText.Layout.Renderer {
                     // collapse boundary borders if necessary
                     // notice that bottom border collapse is handled afterwards
                     Border[] cellBorders = cell.GetBorders();
-                    if (0 == row - rowspan + (currentCellHasBigRowspan ? 2 : 1)) {
+                    if (0 == row - rowspan + 1) {
                         cell.SetProperty(Property.BORDER_TOP, GetCollapsedBorder(cellBorders[0], borders[0]));
                     }
                     if (0 == col) {
@@ -328,7 +328,7 @@ namespace iText.Layout.Renderer {
                     if (tableModel.GetNumberOfColumns() == col + colspan) {
                         cell.SetProperty(Property.BORDER_RIGHT, GetCollapsedBorder(cellBorders[1], borders[1]));
                     }
-                    BuildBordersArrays(cell, row + (currentCellHasBigRowspan ? 1 : 0), col);
+                    BuildBordersArrays(cell, currentCellInfo.finishRowInd, col);
                     float cellWidth = 0;
                     float colOffset = 0;
                     for (int k = col; k < col + colspan; k++) {
