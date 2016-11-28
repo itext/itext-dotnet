@@ -249,11 +249,19 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (children != null) {
+                    bool newLineFound = false;
                     IList<LineRenderer.RendererGlyph> lineGlyphs = new List<LineRenderer.RendererGlyph>();
                     foreach (IRenderer child in children) {
+                        if (newLineFound) {
+                            break;
+                        }
                         if (child is TextRenderer) {
                             GlyphLine childLine = ((TextRenderer)child).line;
                             for (int i = childLine.start; i < childLine.end; i++) {
+                                if (TextRenderer.IsNewLine(childLine, i)) {
+                                    newLineFound = true;
+                                    break;
+                                }
                                 lineGlyphs.Add(new LineRenderer.RendererGlyph(childLine.Get(i), (TextRenderer)child));
                             }
                         }
