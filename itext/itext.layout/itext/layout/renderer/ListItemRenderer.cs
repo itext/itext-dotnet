@@ -73,7 +73,6 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null) {
-                // TODO this is actually MinHeight.
                 SetProperty(Property.MIN_HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
             }
             ApplyListSymbolPosition();

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
@@ -79,6 +80,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
+            bool wasHeightClipped = false;
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool anythingPlaced = false;
             bool firstLineInBox = true;
@@ -110,6 +112,7 @@ namespace iText.Layout.Renderer {
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
                 parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
+                wasHeightClipped = true;
             }
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -220,9 +223,11 @@ namespace iText.Layout.Renderer {
                                 if (isPositioned) {
                                     CorrectPositionedLayout(layoutBox);
                                 }
-                                if (parentBBox.GetHeight() == blockMaxHeight) {
+                                if (wasHeightClipped) {
                                     occupiedArea.GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
                                         )blockMaxHeight);
+                                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
+                                    logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
                                 split[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());

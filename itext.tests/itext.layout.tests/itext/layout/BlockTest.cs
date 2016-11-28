@@ -8,6 +8,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class BlockTest : ExtendedITextTest {
@@ -23,6 +24,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties01() {
             String outFileName = destinationFolder + "blockWithSetHeightProperties01.pdf";
@@ -76,6 +78,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
         [NUnit.Framework.Test]
         public virtual void BlockWithSetHeightProperties02() {
             String outFileName = destinationFolder + "blockWithSetHeightProperties02.pdf";

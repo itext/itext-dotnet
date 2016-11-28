@@ -136,6 +136,7 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
+            bool wasHeightClipped = false;
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
             if (!((Table)modelElement).IsComplete()) {
@@ -223,6 +224,7 @@ namespace iText.Layout.Renderer {
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
                 Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
+                wasHeightClipped = true;
             }
             float layoutBoxHeight = layoutBox.GetHeight();
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
@@ -688,8 +690,12 @@ namespace iText.Layout.Renderer {
                     else {
                         int status = (childRenderers.IsEmpty() && (tableModel.IsComplete() || footerRenderer == null)) ? LayoutResult
                             .NOTHING : LayoutResult.PARTIAL;
-                        if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || (null
-                             != blockMaxHeight && layoutBoxHeight == blockMaxHeight)) {
+                        if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
+                            ) {
+                            if (wasHeightClipped) {
+                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
+                            }
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
                         }
                         else {

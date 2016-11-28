@@ -62,6 +62,7 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
+            bool wasHeightClipped = false;
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool isPositioned = IsPositioned();
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
@@ -87,6 +88,7 @@ namespace iText.Layout.Renderer {
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
                 GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                 parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
+                wasHeightClipped = true;
             }
             IList<Rectangle> areas;
             if (isPositioned) {
@@ -157,7 +159,9 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
                                 if (HasProperty(Property.MAX_HEIGHT)) {
-                                    if (parentBBox.GetHeight() == blockMaxHeight) {
+                                    if (wasHeightClipped) {
+                                        ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                                        logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                                         return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
                                     }
                                     overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
@@ -206,9 +210,11 @@ namespace iText.Layout.Renderer {
                                     if (isPositioned) {
                                         CorrectPositionedLayout(layoutBox);
                                     }
-                                    if (parentBBox.GetHeight() == blockMaxHeight) {
+                                    if (wasHeightClipped) {
                                         occupiedArea.GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float
                                             )blockMaxHeight);
+                                        ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
+                                        logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                                         return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
                                     }
                                     overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()

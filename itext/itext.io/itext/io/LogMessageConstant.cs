@@ -46,6 +46,8 @@ using System;
 namespace iText.IO {
     /// <summary>Class containing constants to be used in logging.</summary>
     public sealed class LogMessageConstant {
+        public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
+
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
         public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";

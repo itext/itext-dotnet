@@ -283,6 +283,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 4)]
         [NUnit.Framework.Test]
         public virtual void ListWithSetHeightProperties01() {
             String outFileName = destinationFolder + "listWithSetHeightProperties01.pdf";
