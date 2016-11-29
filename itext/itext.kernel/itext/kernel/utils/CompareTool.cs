@@ -1047,7 +1047,8 @@ namespace iText.Kernel.Utils {
             cmpPagesRef = new List<PdfIndirectReference>();
             LoadPagesFromReader(cmpDocument, cmpPages, cmpPagesRef);
             if (outPages.Count != cmpPages.Count) {
-                return CompareVisually(outPath, differenceImagePrefix, ignoredAreas);
+                return CompareVisuallyAndCombineReports("Documents have different numbers of pages.", outPath, differenceImagePrefix
+                    , ignoredAreas, null);
             }
             CompareTool.CompareResult compareResult = new CompareTool.CompareResult(this, compareByContentErrorsLimit);
             IList<int> equalPages = new List<int>(cmpPages.Count);
@@ -1088,17 +1089,25 @@ namespace iText.Kernel.Utils {
                 return null;
             }
             else {
-                System.Console.Out.WriteLine("Fail");
-                System.Console.Out.Flush();
-                String compareByContentReport = "Compare by content report:\n" + compareResult.GetReport();
-                System.Console.Out.WriteLine(compareByContentReport);
-                System.Console.Out.Flush();
-                String message = CompareVisually(outPath, differenceImagePrefix, ignoredAreas, equalPages);
-                if (message == null || message.Length == 0) {
-                    return "Compare by content fails. No visual differences";
-                }
-                return message;
+                return CompareVisuallyAndCombineReports(compareResult.GetReport(), outPath, differenceImagePrefix, ignoredAreas
+                    , equalPages);
             }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private String CompareVisuallyAndCombineReports(String compareByFailContentReason, String outPath, String 
+            differenceImagePrefix, IDictionary<int, IList<Rectangle>> ignoredAreas, IList<int> equalPages) {
+            System.Console.Out.WriteLine("Fail");
+            System.Console.Out.Flush();
+            String compareByContentReport = "Compare by content report:\n" + compareByFailContentReason;
+            System.Console.Out.WriteLine(compareByContentReport);
+            System.Console.Out.Flush();
+            String message = CompareVisually(outPath, differenceImagePrefix, ignoredAreas, equalPages);
+            if (message == null || message.Length == 0) {
+                return "Compare by content fails. No visual differences";
+            }
+            return message;
         }
 
         private void LoadPagesFromReader(PdfDocument doc, IList<PdfDictionary> pages, IList<PdfIndirectReference> 
