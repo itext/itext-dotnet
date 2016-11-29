@@ -345,6 +345,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.modelElement = modelElement;
             splitRenderer.occupiedArea = occupiedArea;
             splitRenderer.isLastRendererForModelElement = false;
+            splitRenderer.properties = new Dictionary<int, Object>(properties);
             return splitRenderer;
         }
 

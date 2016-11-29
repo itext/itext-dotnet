@@ -432,6 +432,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer CreateSplitRenderer(IRenderer parent) {
             iText.Layout.Renderer.ParagraphRenderer splitRenderer = CreateSplitRenderer();
             splitRenderer.parent = parent;
+            splitRenderer.properties = new Dictionary<int, Object>(properties);
             return splitRenderer;
         }
 
