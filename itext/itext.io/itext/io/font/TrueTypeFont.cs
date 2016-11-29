@@ -317,12 +317,13 @@ namespace iText.IO.Font {
             fontIdentification.SetPanose(os_2.panose);
             IDictionary<int, int[]> cmap = GetActiveCmap();
             int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();
+            int maxGlyphId = fontMetrics.GetMaxGlyphId();
             unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
-            codeToGlyph = new LinkedDictionary<int, Glyph>(glyphWidths.Length);
+            codeToGlyph = new LinkedDictionary<int, Glyph>(maxGlyphId);
             avgWidth = 0;
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
-                if (index >= glyphWidths.Length) {
+                if (index >= maxGlyphId) {
                     ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
                     LOGGER.Warn(String.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName()
                         , index));

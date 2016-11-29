@@ -929,7 +929,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
         public virtual void TestPdfFontFactoryTtc() {
             String filename = destinationFolder + "testPdfFontFactoryTtc.pdf";
             String cmpFilename = sourceFolder + "cmp_testPdfFontFactoryTtc.pdf";
@@ -948,7 +947,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
         public virtual void TestWriteTTC() {
             String filename = destinationFolder + "DocumentWithTTC.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";

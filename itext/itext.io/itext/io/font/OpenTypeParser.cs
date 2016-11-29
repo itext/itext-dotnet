@@ -525,11 +525,18 @@ namespace iText.IO.Font {
                     throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("hmtx");
                 }
             }
+            glyphWidthsByIndex = new int[Math.Max(ReadMaxGlyphId(), numberOfHMetrics)];
             raf.Seek(table_location[0]);
-            glyphWidthsByIndex = new int[numberOfHMetrics];
             for (int k = 0; k < numberOfHMetrics; ++k) {
                 glyphWidthsByIndex[k] = raf.ReadUnsignedShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
                 int leftSideBearing = raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
+            }
+            // If the font is monospaced, only one entry need be in the array, but that entry is required.
+            // The last entry applies to all subsequent glyphs.
+            if (numberOfHMetrics > 0) {
+                for (int k_1 = numberOfHMetrics; k_1 < glyphWidthsByIndex.Length; k_1++) {
+                    glyphWidthsByIndex[k_1] = glyphWidthsByIndex[numberOfHMetrics - 1];
+                }
             }
         }
 
