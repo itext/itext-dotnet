@@ -92,6 +92,8 @@ namespace iText.Layout.Properties {
 
         public const int CHARACTER_SPACING = 15;
 
+        public const int COLLAPSING_MARGINS = 89;
+
         public const int COLSPAN = 16;
 
         public const int DESTINATION = 17;
@@ -252,7 +254,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 83;
+        private const int MAX_INHERITED_PROPERTY_ID = 89;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -260,6 +262,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.COLLAPSING_MARGINS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FIRST_LINE_INDENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_COLOR] = true;

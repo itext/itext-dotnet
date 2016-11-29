@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -59,10 +60,16 @@ namespace iText.Layout.Renderer {
 
         private LayoutResult keepWithNextHangingRendererLayoutResult;
 
+        private MarginsCollapseHandler marginsCollapseHandler;
+
         public override void AddChild(IRenderer renderer) {
             base.AddChild(renderer);
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (currentArea == null) {
                 UpdateCurrentArea(null);
+                if (marginsCollapsingEnabled) {
+                    marginsCollapseHandler = new MarginsCollapseHandler(this, null);
+                }
             }
             // Static layout
             if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers.Count - 1] == renderer
@@ -73,8 +80,12 @@ namespace iText.Layout.Renderer {
                 LayoutResult result = null;
                 LayoutArea storedArea = null;
                 LayoutArea nextStoredArea = null;
+                MarginsCollapseInfo childMarginsInfo = null;
+                if (marginsCollapsingEnabled && currentArea != null && renderer != null) {
+                    childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
+                }
                 while (currentArea != null && renderer != null && (result = renderer.SetParent(this).Layout(new LayoutContext
-                    (currentArea.Clone()))).GetStatus() != LayoutResult.FULL) {
+                    (currentArea.Clone(), childMarginsInfo))).GetStatus() != LayoutResult.FULL) {
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         if (result.GetOverflowRenderer() is ImageRenderer) {
                             ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
@@ -138,22 +149,30 @@ namespace iText.Layout.Renderer {
                                             logger.Warn(String.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                                         }
                                     }
-                                    renderer = result.GetOverflowRenderer();
-                                    continue;
-                                }
-                                storedArea = currentArea;
-                                if (nextStoredArea != null) {
-                                    currentArea = nextStoredArea;
-                                    currentPageNumber = nextStoredArea.GetPageNumber();
-                                    nextStoredArea = null;
                                 }
                                 else {
-                                    UpdateCurrentArea(result);
+                                    storedArea = currentArea;
+                                    if (nextStoredArea != null) {
+                                        currentArea = nextStoredArea;
+                                        currentPageNumber = nextStoredArea.GetPageNumber();
+                                        nextStoredArea = null;
+                                    }
+                                    else {
+                                        UpdateCurrentArea(result);
+                                    }
                                 }
                             }
                         }
                     }
                     renderer = result.GetOverflowRenderer();
+                    if (marginsCollapsingEnabled) {
+                        marginsCollapseHandler.EndChildMarginsHandling();
+                        marginsCollapseHandler = new MarginsCollapseHandler(this, null);
+                        childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
+                    }
+                }
+                if (marginsCollapsingEnabled) {
+                    marginsCollapseHandler.EndChildMarginsHandling();
                 }
                 if (null != result && null != result.GetSplitRenderer()) {
                     renderer = result.GetSplitRenderer();
@@ -355,6 +374,10 @@ namespace iText.Layout.Renderer {
                 keepWithNextHangingRenderer = null;
                 keepWithNextHangingRendererLayoutResult = null;
             }
+        }
+
+        public RootRenderer() {
+            marginsCollapseHandler = new MarginsCollapseHandler(this, null);
         }
     }
 }

@@ -50,6 +50,7 @@ using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -93,6 +94,12 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
+            MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo
+                ());
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.StartMarginsCollapse(parentBBox);
+            }
             float[] margins = GetMargins();
             ApplyMargins(parentBBox, margins, false);
             Border[] borders = GetBorders();
@@ -133,6 +140,10 @@ namespace iText.Layout.Renderer {
             Leading leading = this.GetProperty<Leading>(Property.LEADING);
             float leadingValue = 0;
             float lastLineHeight = 0;
+            if (marginsCollapsingEnabled && childRenderers.Count > 0) {
+                // all Paragraph kids are inline elements, therefore we don't need to process them all; it would be sufficient to process only one kid
+                marginsCollapseHandler.StartChildMarginsHandling(0, layoutBox);
+            }
             while (currentRenderer != null) {
                 currentRenderer.SetProperty(Property.TAB_DEFAULT, this.GetPropertyAsFloat(Property.TAB_DEFAULT));
                 currentRenderer.SetProperty(Property.TAB_STOPS, this.GetProperty<Object>(Property.TAB_STOPS));
@@ -205,8 +216,16 @@ namespace iText.Layout.Renderer {
                                 result.GetCauseOfNothing());
                         }
                         else {
+                            if (marginsCollapsingEnabled) {
+                                if (anythingPlaced) {
+                                    // all Paragraph kids are inline elements, therefore we don't need to process them all; it would be sufficient to process only one kid
+                                    marginsCollapseHandler.EndChildMarginsHandling(0, layoutBox);
+                                }
+                                marginsCollapseHandler.EndMarginsCollapse();
+                            }
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+                            margins = GetMargins();
                             ApplyMargins(occupiedArea.GetBBox(), margins, true);
                             iText.Layout.Renderer.ParagraphRenderer[] split = Split();
                             split[0].lines = lines;
@@ -288,6 +307,10 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().MoveDown(moveDown);
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
+            if (marginsCollapsingEnabled && childRenderers.Count > 0) {
+                // all Paragraph kids are inline elements, therefore we don't need to process them all; it would be sufficient to process only one kid
+                marginsCollapseHandler.EndChildMarginsHandling(0, layoutBox);
+            }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             IRenderer overflowRenderer = null;
             float? blockMinHeight = RetrieveMinHeight();
@@ -312,7 +335,11 @@ namespace iText.Layout.Renderer {
             if (isPositioned) {
                 CorrectPositionedLayout(layoutBox);
             }
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.EndMarginsCollapse();
+            }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+            margins = GetMargins();
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());

@@ -52,6 +52,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -68,6 +69,12 @@ namespace iText.Layout.Renderer {
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || isPositioned) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
+            }
+            MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo
+                ());
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             float[] margins = GetMargins();
             ApplyMargins(parentBBox, margins, false);
@@ -87,7 +94,11 @@ namespace iText.Layout.Renderer {
             float? blockMaxHeight = RetrieveMaxHeight();
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
                 GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
+                float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;
+                if (marginsCollapsingEnabled) {
+                    marginsCollapseHandler.ProcessFixedHeightAdjustment(heightDelta);
+                }
+                parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
             IList<Rectangle> areas;
@@ -108,8 +119,12 @@ namespace iText.Layout.Renderer {
                 IRenderer childRenderer = childRenderers[childPos];
                 LayoutResult result;
                 childRenderer.SetParent(this);
+                MarginsCollapseInfo childMarginsInfo = null;
+                if (marginsCollapsingEnabled) {
+                    childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(childPos, layoutBox);
+                }
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
-                    )))).GetStatus() != LayoutResult.FULL) {
+                    ), childMarginsInfo))).GetStatus() != LayoutResult.FULL) {
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
                         (Property.FILL_AVAILABLE_AREA))) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
@@ -144,6 +159,10 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
+                                if (marginsCollapsingEnabled) {
+                                    marginsCollapseHandler.EndChildMarginsHandling(childPos, layoutBox);
+                                    marginsCollapseHandler.EndMarginsCollapse();
+                                }
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 splitRenderer.childRenderers.Add(result.GetSplitRenderer());
@@ -157,6 +176,7 @@ namespace iText.Layout.Renderer {
                                 overflowRenderer.childRenderers = overflowRendererChildren;
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+                                margins = GetMargins();
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
                                 if (HasProperty(Property.MAX_HEIGHT)) {
                                     if (wasHeightClipped) {
@@ -188,6 +208,9 @@ namespace iText.Layout.Renderer {
                             if (result.GetStatus() == LayoutResult.NOTHING) {
                                 bool keepTogether = IsKeepTogether();
                                 int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
+                                if (marginsCollapsingEnabled) {
+                                    marginsCollapseHandler.EndMarginsCollapse();
+                                }
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(layoutResult);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 foreach (IRenderer renderer in splitRenderer.childRenderers) {
@@ -205,6 +228,7 @@ namespace iText.Layout.Renderer {
                                 }
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+                                margins = GetMargins();
                                 ApplyMargins(occupiedArea.GetBBox(), margins, true);
                                 if (HasProperty(Property.MAX_HEIGHT)) {
                                     if (isPositioned) {
@@ -245,8 +269,11 @@ namespace iText.Layout.Renderer {
                 anythingPlaced = true;
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                     ()));
+                if (marginsCollapsingEnabled) {
+                    marginsCollapseHandler.EndChildMarginsHandling(childPos, layoutBox);
+                }
                 if (result.GetStatus() == LayoutResult.FULL) {
-                    layoutBox.SetHeight(layoutBox.GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight());
+                    layoutBox.SetHeight(result.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     if (childRenderer.GetOccupiedArea() != null) {
                         AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
                     }
@@ -290,6 +317,10 @@ namespace iText.Layout.Renderer {
                 CorrectPositionedLayout(layoutBox);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.EndMarginsCollapse();
+            }
+            margins = GetMargins();
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
