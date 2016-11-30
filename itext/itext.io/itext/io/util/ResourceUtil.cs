@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace iText.IO.Util {
@@ -53,7 +54,18 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public static class ResourceUtil {
+
         private static List<object> resourceSearch = new List<object>();
+        private static ISet<string> iTextResourceAssemblyNames;
+
+        static ResourceUtil() {
+            iTextResourceAssemblyNames = new HashSet<string>();
+            iTextResourceAssemblyNames.Add("itext.hyph");
+            iTextResourceAssemblyNames.Add("itext.font_asian");
+
+            LoadITextResourceAssemblies();
+        }
+        
 
         public static void AddToResourceSearch(object obj) {
             lock (resourceSearch) {
@@ -76,6 +88,11 @@ namespace iText.IO.Util {
         /// <see langword="null"/>
         /// if not found.
         /// </returns>
+        public static Stream GetResourceStream(string key)
+        {
+            return GetResourceStream(key, null);
+        }
+
         public static Stream GetResourceStream(string key, Type definedClassType) {
             Stream istr = null;
             // Try to use resource loader to load the properties file.
@@ -86,6 +103,7 @@ namespace iText.IO.Util {
             }
             if (istr != null)
                 return istr;
+
             int count;
             lock (resourceSearch) {
                 count = resourceSearch.Count;
@@ -95,41 +113,86 @@ namespace iText.IO.Util {
                 lock (resourceSearch) {
                     obj = resourceSearch[k];
                 }
-                try {
-                    if (obj is Assembly) {
-                        istr = ((Assembly) obj).GetManifestResourceStream(key);
-                        if (istr != null)
-                            return istr;
-                    } else if (obj is string) {
-                        string dir = (string) obj;
-                        try {
-                            istr = Assembly.LoadFrom(dir).GetManifestResourceStream(key);
-                        } catch {
-                        }
-                        if (istr != null)
-                            return istr;
-                        string modkey = key.Replace('.', '/');
-                        string fullPath = Path.Combine(dir, modkey);
-                        if (File.Exists(fullPath)) {
-                            return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        }
-                        int idx = modkey.LastIndexOf('/');
-                        if (idx >= 0) {
-                            modkey = modkey.Substring(0, idx) + "." + modkey.Substring(idx + 1);
-                            fullPath = Path.Combine(dir, modkey);
-                            if (File.Exists(fullPath))
-                                return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        }
+                istr = SearchResourceInAssembly(key, obj);
+                if (istr != null) {
+                    return istr;
+                }
+            }
+
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+                if (iTextResourceAssemblyNames.Contains(assembly.GetName().Name)) {
+                    istr = SearchResourceInAssembly(key, assembly);
+                    if (istr != null) {
+                        return istr;
                     }
-                } catch {
                 }
             }
 
             return istr;
         }
 
-        public static Stream GetResourceStream(string key) {
-            return GetResourceStream(key, null);
+        private static Stream SearchResourceInAssembly(string key, Object obj) {
+            Stream istr = null;
+            try
+            {
+                if (obj is Assembly)
+                {
+                    istr = ((Assembly)obj).GetManifestResourceStream(key);
+                    if (istr != null)
+                        return istr;
+                }
+                else if (obj is string)
+                {
+                    string dir = (string)obj;
+                    try
+                    {
+                        istr = Assembly.LoadFrom(dir).GetManifestResourceStream(key);
+                    }
+                    catch
+                    {
+                    }
+                    if (istr != null)
+                        return istr;
+                    string modkey = key.Replace('.', '/');
+                    string fullPath = Path.Combine(dir, modkey);
+                    if (File.Exists(fullPath))
+                    {
+                        return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    }
+                    int idx = modkey.LastIndexOf('/');
+                    if (idx >= 0)
+                    {
+                        modkey = modkey.Substring(0, idx) + "." + modkey.Substring(idx + 1);
+                        fullPath = Path.Combine(dir, modkey);
+                        if (File.Exists(fullPath))
+                            return new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return istr;
+        }
+
+        private static void LoadITextResourceAssemblies() {
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            var loadedPaths = loadedAssemblies.Select(a => a.Location).ToArray();
+            
+            var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            var toLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            foreach (String path in toLoad)
+            {
+                try {
+                    AssemblyName name = AssemblyName.GetAssemblyName(path);
+                    if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.GetName().Name.Equals(name.Name))) {
+                        loadedAssemblies.Add(AppDomain.CurrentDomain.Load(name));
+                    }
+                }
+                catch
+                {
+                }
+            }
         }
     }
 }

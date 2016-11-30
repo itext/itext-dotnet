@@ -58,8 +58,6 @@ namespace iText.Test {
 
         [OneTimeSetUp]
         public static void SetUpFixture() {
-            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itext.hyph.dll");
-            ResourceUtil.AddToResourceSearch(TestContext.CurrentContext.TestDirectory + "/itext.font_asian.dll");
         }
 
         /// <summary>
