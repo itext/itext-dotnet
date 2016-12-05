@@ -46,6 +46,7 @@ using System.Collections;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -438,6 +439,11 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
             base.Draw(drawContext);
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
@@ -539,7 +545,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_564();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_572();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -611,8 +617,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_564 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_564() {
+        private sealed class _IGlyphLineFilter_572 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_572() {
             }
 
             public bool Accept(Glyph glyph) {
