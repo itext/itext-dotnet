@@ -145,6 +145,47 @@ namespace iText.Kernel.Utils {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
+        public virtual void SplitDocumentTest04() {
+            String inputFileName = sourceFolder + "iphone_user_guide.pdf";
+            PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
+            PageRange pageRange1 = new PageRange("even & 80-").AddPageSequence(4, 15).AddSinglePage(18).AddPageSequence
+                (1, 2);
+            PageRange pageRange2 = new PageRange("99,98").AddPageSequence(70, 99);
+            IList<PdfDocument> splitDocuments = new _PdfSplitter_147(inputPdfDoc).ExtractPageRanges(iText.IO.Util.JavaUtil.ArraysAsList
+                (pageRange1, pageRange2));
+            foreach (PdfDocument pdfDocument in splitDocuments) {
+                pdfDocument.Close();
+            }
+            for (int i = 1; i <= 2; i++) {
+                NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument4_" + i
+                     + ".pdf", sourceFolder + "cmp/" + "splitDocument4_" + i.ToString() + ".pdf", destinationFolder, "diff_"
+                    ));
+            }
+        }
+
+        private sealed class _PdfSplitter_147 : PdfSplitter {
+            public _PdfSplitter_147(PdfDocument baseArg1)
+                : base(baseArg1) {
+                this.partNumber = 1;
+            }
+
+            internal int partNumber;
+
+            protected internal override PdfWriter GetNextPdfWriter(PageRange documentPageRange) {
+                try {
+                    return new PdfWriter(PdfSplitterTest.destinationFolder + "splitDocument4_" + (this.partNumber++).ToString(
+                        ) + ".pdf");
+                }
+                catch (FileNotFoundException) {
+                    throw new Exception();
+                }
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY, Count = 2)]
         public virtual void SplitDocumentByOutlineTest() {
             String inputFileName = sourceFolder + "iphone_user_guide.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
@@ -165,7 +206,7 @@ namespace iText.Kernel.Utils {
         public virtual void SplitDocumentBySize() {
             String inputFileName = sourceFolder + "splitBySize.pdf";
             PdfDocument inputPdfDoc = new PdfDocument(new PdfReader(inputFileName));
-            PdfSplitter splitter = new _PdfSplitter_159(inputPdfDoc);
+            PdfSplitter splitter = new _PdfSplitter_193(inputPdfDoc);
             IList<PdfDocument> documents = splitter.SplitBySize(100000);
             foreach (PdfDocument doc in documents) {
                 doc.Close();
@@ -176,8 +217,8 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        private sealed class _PdfSplitter_159 : PdfSplitter {
-            public _PdfSplitter_159(PdfDocument baseArg1)
+        private sealed class _PdfSplitter_193 : PdfSplitter {
+            public _PdfSplitter_193(PdfDocument baseArg1)
                 : base(baseArg1) {
                 this.partNumber = 1;
             }

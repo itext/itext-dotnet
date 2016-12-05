@@ -66,5 +66,58 @@ namespace iText.Kernel.Utils {
             NUnit.Framework.Assert.AreEqual(range.GetAllPages(15), iText.IO.Util.JavaUtil.ArraysAsList(3, 5, 7, 9, 11, 
                 13));
         }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSingleConstructor() {
+            PageRange range = new PageRange("5");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(), iText.IO.Util.JavaUtil.ArraysAsList(5));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSinglesConstructor() {
+            PageRange range = new PageRange("5, 1");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(), iText.IO.Util.JavaUtil.ArraysAsList(5, 1));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSequenceConstructor() {
+            PageRange range = new PageRange("11-19");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(), iText.IO.Util.JavaUtil.ArraysAsList(11, 12, 13, 14, 15
+                , 16, 17, 18, 19));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSequenceAndSingleConstructor() {
+            PageRange range = new PageRange("22-27,25");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(), iText.IO.Util.JavaUtil.ArraysAsList(22, 23, 24, 25, 26
+                , 27, 25));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddSingleAndSequenceConstructor() {
+            PageRange range = new PageRange("5, 3-8");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(), iText.IO.Util.JavaUtil.ArraysAsList(5, 3, 4, 5, 6, 7, 
+                8));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddCustomAfterConstructor() {
+            PageRange range = new PageRange("3-");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(), iText.IO.Util.JavaUtil.ArraysAsList(3));
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(5), iText.IO.Util.JavaUtil.ArraysAsList(3, 4, 5));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddCustomEvenConstructor() {
+            PageRange range = new PageRange("even");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(5), iText.IO.Util.JavaUtil.ArraysAsList(2, 4));
+        }
+
+        [NUnit.Framework.Test]
+        public virtual void AddCustomAndConstructor() {
+            PageRange range = new PageRange("odd & 2-14");
+            NUnit.Framework.Assert.AreEqual(range.GetAllPages(15), iText.IO.Util.JavaUtil.ArraysAsList(3, 5, 7, 9, 11, 
+                13));
+        }
     }
 }
