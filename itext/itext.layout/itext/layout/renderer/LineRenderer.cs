@@ -322,7 +322,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         LineRenderer overflow = (LineRenderer)result.GetOverflowRenderer();
-                        if (levels != null) {
+                        if (levels != null && overflow != null) {
                             overflow.levels = new byte[levels.Length - lineLevels.Length];
                             System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.Length);
                             if (overflow.levels.Length == 0) {
@@ -332,7 +332,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetStatus() == LayoutResult.NOTHING) {
-                            if (levels != null) {
+                            if (levels != null && result.GetOverflowRenderer() != null) {
                                 ((LineRenderer)result.GetOverflowRenderer()).levels = levels;
                             }
                         }
