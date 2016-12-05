@@ -7,6 +7,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser.Data;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class TextRenderInfoTest : ExtendedITextTest {
@@ -35,6 +36,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// </remarks>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE)]
         public virtual void TestUnicodeEmptyString() {
             StringBuilder sb = new StringBuilder();
             String inFile = "japanese_text.pdf";

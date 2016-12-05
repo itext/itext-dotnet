@@ -417,9 +417,11 @@ namespace iText.Kernel.Font {
                     code <<= 8;
                     code |= cids[i];
                 }
-                Glyph glyph = fontProgram.GetGlyphByCode(cmapEncoding.GetCidCode(code));
+                int glyphCode = cmapEncoding.GetCidCode(code);
+                Glyph glyph = fontProgram.GetGlyphByCode(glyphCode);
                 if (glyph == null) {
-                    System.Console.Error.WriteLine(code);
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Font.PdfType0Font));
+                    logger.Warn(String.Format(iText.IO.LogMessageConstant.COULD_NOT_FIND_GLYPH_WITH_CODE, glyphCode));
                 }
                 width += glyph != null ? glyph.GetWidth() : notdef.GetWidth();
             }
