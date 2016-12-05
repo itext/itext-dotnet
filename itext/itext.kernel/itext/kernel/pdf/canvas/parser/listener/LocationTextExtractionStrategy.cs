@@ -71,11 +71,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
 
         /// <summary>Creates a new text extraction renderer.</summary>
         public LocationTextExtractionStrategy()
-            : this(new _ITextChunkLocationStrategy_86()) {
+            : this(new _ITextChunkLocationStrategy_88()) {
         }
 
-        private sealed class _ITextChunkLocationStrategy_86 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
-            public _ITextChunkLocationStrategy_86() {
+        private sealed class _ITextChunkLocationStrategy_88 : LocationTextExtractionStrategy.ITextChunkLocationStrategy {
+            public _ITextChunkLocationStrategy_88() {
             }
 
             public LocationTextExtractionStrategy.ITextChunkLocation CreateLocation(TextRenderInfo renderInfo, LineSegment
@@ -183,14 +183,9 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
             if (DUMP_STATE) {
                 DumpState();
             }
-            IList<LocationTextExtractionStrategy.TextChunk> textChunks = locationalResult;
-            if (rightToLeftRunDirection) {
-                JavaCollectionsUtil.Sort(textChunks, new LocationTextExtractionStrategy.TextChunkComparator(new LocationTextExtractionStrategy.TextChunkLocationComparator
-                    (false)));
-            }
-            else {
-                JavaCollectionsUtil.Sort(textChunks);
-            }
+            IList<LocationTextExtractionStrategy.TextChunk> textChunks = new List<LocationTextExtractionStrategy.TextChunk
+                >(locationalResult);
+            SortWithMarks(textChunks);
             StringBuilder sb = new StringBuilder();
             LocationTextExtractionStrategy.TextChunk lastChunk = null;
             foreach (LocationTextExtractionStrategy.TextChunk chunk in textChunks) {
@@ -269,6 +264,90 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                 }
             }
             return lastActualText;
+        }
+
+        private void SortWithMarks(IList<LocationTextExtractionStrategy.TextChunk> textChunks) {
+            IDictionary<LocationTextExtractionStrategy.TextChunk, LocationTextExtractionStrategy.TextChunkMarks> marks
+                 = new Dictionary<LocationTextExtractionStrategy.TextChunk, LocationTextExtractionStrategy.TextChunkMarks
+                >();
+            IList<LocationTextExtractionStrategy.TextChunk> toSort = new List<LocationTextExtractionStrategy.TextChunk
+                >();
+            for (int markInd = 0; markInd < textChunks.Count; markInd++) {
+                LocationTextExtractionStrategy.ITextChunkLocation location = textChunks[markInd].GetLocation();
+                if (location.GetStartLocation().Equals(location.GetEndLocation())) {
+                    bool foundBaseToAttachTo = false;
+                    for (int baseInd = 0; baseInd < textChunks.Count; baseInd++) {
+                        if (markInd != baseInd) {
+                            LocationTextExtractionStrategy.ITextChunkLocation baseLocation = textChunks[baseInd].GetLocation();
+                            if (!baseLocation.GetStartLocation().Equals(baseLocation.GetEndLocation()) && ContainsMark(baseLocation, location
+                                )) {
+                                LocationTextExtractionStrategy.TextChunkMarks currentMarks = marks.Get(textChunks[baseInd]);
+                                if (currentMarks == null) {
+                                    currentMarks = new LocationTextExtractionStrategy.TextChunkMarks();
+                                    marks[textChunks[baseInd]] = currentMarks;
+                                }
+                                if (markInd < baseInd) {
+                                    currentMarks.preceding.Add(textChunks[markInd]);
+                                }
+                                else {
+                                    currentMarks.succeeding.Add(textChunks[markInd]);
+                                }
+                                foundBaseToAttachTo = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!foundBaseToAttachTo) {
+                        toSort.Add(textChunks[markInd]);
+                    }
+                }
+                else {
+                    toSort.Add(textChunks[markInd]);
+                }
+            }
+            if (rightToLeftRunDirection) {
+                JavaCollectionsUtil.Sort(toSort, new LocationTextExtractionStrategy.TextChunkComparator(new LocationTextExtractionStrategy.TextChunkLocationComparator
+                    (false)));
+            }
+            else {
+                JavaCollectionsUtil.Sort(toSort);
+            }
+            textChunks.Clear();
+            foreach (LocationTextExtractionStrategy.TextChunk current in toSort) {
+                LocationTextExtractionStrategy.TextChunkMarks currentMarks = marks.Get(current);
+                if (currentMarks != null) {
+                    if (!rightToLeftRunDirection) {
+                        for (int j = 0; j < currentMarks.preceding.Count; j++) {
+                            textChunks.Add(currentMarks.preceding[j]);
+                        }
+                    }
+                    else {
+                        for (int j = currentMarks.succeeding.Count - 1; j >= 0; j--) {
+                            textChunks.Add(currentMarks.succeeding[j]);
+                        }
+                    }
+                }
+                textChunks.Add(current);
+                if (currentMarks != null) {
+                    if (!rightToLeftRunDirection) {
+                        for (int j = 0; j < currentMarks.succeeding.Count; j++) {
+                            textChunks.Add(currentMarks.succeeding[j]);
+                        }
+                    }
+                    else {
+                        for (int j = currentMarks.preceding.Count - 1; j >= 0; j--) {
+                            textChunks.Add(currentMarks.preceding[j]);
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool ContainsMark(LocationTextExtractionStrategy.ITextChunkLocation baseLocation, LocationTextExtractionStrategy.ITextChunkLocation
+             markLocation) {
+            return baseLocation.GetStartLocation().Get(Vector.I1) <= markLocation.GetStartLocation().Get(Vector.I1) &&
+                 baseLocation.GetEndLocation().Get(Vector.I1) >= markLocation.GetEndLocation().Get(Vector.I1) && Math.
+                Abs(baseLocation.DistPerpendicular() - markLocation.DistPerpendicular()) <= DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION;
         }
 
         public interface ITextChunkLocationStrategy {
@@ -513,13 +592,6 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                     return 0;
                 }
                 // not really needed, but just in case
-                LineSegment mySegment = new LineSegment(first.GetStartLocation(), first.GetEndLocation());
-                LineSegment otherSegment = new LineSegment(second.GetStartLocation(), second.GetEndLocation());
-                if (second.GetStartLocation().Equals(second.GetEndLocation()) && mySegment.ContainsSegment(otherSegment) ||
-                     first.GetStartLocation().Equals(first.GetEndLocation()) && otherSegment.ContainsSegment(mySegment)) {
-                    // Return 0 to save order due to stable sort. This handles situation of mark glyphs that have zero width
-                    return 0;
-                }
                 int result;
                 result = iText.IO.Util.JavaUtil.IntegerCompare(first.OrientationMagnitude(), second.OrientationMagnitude()
                     );
@@ -527,13 +599,20 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
                     return result;
                 }
                 int distPerpendicularDiff = first.DistPerpendicular() - second.DistPerpendicular();
-                if (Math.Abs(distPerpendicularDiff) > DIACRITICAL_MARKS_ALLOWED_VERTICAL_DEVIATION || distPerpendicularDiff
-                     != 0 && (mySegment.GetLength() > 0 && otherSegment.GetLength() > 0)) {
+                if (distPerpendicularDiff != 0) {
                     return distPerpendicularDiff;
                 }
                 return leftToRight ? iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelStart(), second.DistParallelStart
                     ()) : -iText.IO.Util.JavaUtil.FloatCompare(first.DistParallelEnd(), second.DistParallelEnd());
             }
+        }
+
+        private class TextChunkMarks {
+            private IList<LocationTextExtractionStrategy.TextChunk> preceding = new List<LocationTextExtractionStrategy.TextChunk
+                >();
+
+            private IList<LocationTextExtractionStrategy.TextChunk> succeeding = new List<LocationTextExtractionStrategy.TextChunk
+                >();
         }
     }
 }
