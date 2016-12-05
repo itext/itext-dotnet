@@ -445,5 +445,49 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageWithBordersSurroundedByTextTest() {
+            String outFileName = destinationFolder + "imageBordersTextTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageBordersTextTest.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
+            Paragraph p = new Paragraph();
+            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.Add(new Text("before image"));
+            p.Add(image);
+            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            p.Add(new Text("after image"));
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageInParagraphBorderTest() {
+            String outFileName = destinationFolder + "imageParagraphBorderTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageParagraphBorderTest.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100);
+            Paragraph p = new Paragraph();
+            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.Add(image);
+            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

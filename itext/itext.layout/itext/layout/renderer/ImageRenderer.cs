@@ -299,6 +299,20 @@ namespace iText.Layout.Renderer {
             return initialOccupiedAreaBBox;
         }
 
+        public override void Move(float dxRight, float dyUp) {
+            base.Move(dxRight, dyUp);
+            if (initialOccupiedAreaBBox != null) {
+                initialOccupiedAreaBBox.MoveRight(dxRight);
+                initialOccupiedAreaBBox.MoveUp(dyUp);
+            }
+            if (fixedXPosition != null) {
+                fixedXPosition += dxRight;
+            }
+            if (fixedYPosition != null) {
+                fixedYPosition += dyUp;
+            }
+        }
+
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
             Rectangle area = layoutArea.GetBBox().Clone();
             ApplyMargins(area, false);

@@ -487,10 +487,10 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (renderer is ImageRenderer) {
-                        renderer.GetOccupiedArea().GetBBox().SetY(occupiedArea.GetBBox().GetY() - maxDescent);
+                        renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom());
                     }
                     else {
-                        renderer.GetOccupiedArea().GetBBox().SetY(occupiedArea.GetBBox().GetY());
+                        renderer.Move(0, occupiedArea.GetBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetBottom());
                     }
                 }
             }
