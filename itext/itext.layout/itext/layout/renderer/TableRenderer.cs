@@ -877,6 +877,20 @@ namespace iText.Layout.Renderer {
                     drawContext.SetTaggingEnabled(true);
                 }
             }
+            if (footerRenderer != null) {
+                bool lastFooter = isLastRendererForModelElement && modelElement.IsComplete() && !modelElement.IsSkipLastFooter
+                    ();
+                bool notToTagFooter = drawContext.IsTaggingEnabled() && !lastFooter;
+                if (notToTagFooter) {
+                    drawContext.SetTaggingEnabled(false);
+                    drawContext.GetCanvas().OpenTag(new CanvasArtifact());
+                }
+                footerRenderer.Draw(drawContext);
+                if (notToTagFooter) {
+                    drawContext.GetCanvas().CloseTag();
+                    drawContext.SetTaggingEnabled(true);
+                }
+            }
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement && !childRenderers
                 .IsEmpty();
             TagTreePointer tagPointer = null;
@@ -928,20 +942,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             DrawBorders(drawContext);
-            if (footerRenderer != null) {
-                bool lastFooter = isLastRendererForModelElement && modelElement.IsComplete() && !modelElement.IsSkipLastFooter
-                    ();
-                bool notToTagFooter = drawContext.IsTaggingEnabled() && !lastFooter;
-                if (notToTagFooter) {
-                    drawContext.SetTaggingEnabled(false);
-                    drawContext.GetCanvas().OpenTag(new CanvasArtifact());
-                }
-                footerRenderer.Draw(drawContext);
-                if (notToTagFooter) {
-                    drawContext.GetCanvas().CloseTag();
-                    drawContext.SetTaggingEnabled(true);
-                }
-            }
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1067,6 +1067,10 @@ namespace iText.Layout.Renderer {
 
         // Do nothing here. Itext7 handles cell and table borders collapse and draws result borders during #drawBorders()
         protected internal virtual void DrawBorders(DrawContext drawContext) {
+            DrawBorders(drawContext, true, true);
+        }
+
+        protected internal virtual void DrawBorders(DrawContext drawContext, bool drawTop, bool drawBottom) {
             if (occupiedArea.GetBBox().GetHeight() < EPS || heights.Count == 0) {
                 return;
             }
@@ -1090,7 +1094,9 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }
-            // Notice that we draw boundary borders after all the others are drawn
+            if (drawTop) {
+                DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas());
+            }
             float y1 = startY;
             if (heights.Count > 0) {
                 y1 -= (float)heights[0];
@@ -1101,24 +1107,16 @@ namespace iText.Layout.Renderer {
                     y1 -= (float)heights[i];
                 }
             }
-            float x1 = startX;
-            if (columnWidths.Length > 0) {
-                x1 += columnWidths[0];
+            if (drawBottom) {
+                DrawHorizontalBorder(horizontalBorders.Count - 1, startX, y1, drawContext.GetCanvas());
             }
-            for (int i_1 = 1; i_1 < verticalBorders.Count; i_1++) {
+            float x1 = startX;
+            for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++) {
                 DrawVerticalBorder(i_1, startY, x1, drawContext.GetCanvas());
                 if (i_1 < columnWidths.Length) {
                     x1 += columnWidths[i_1];
                 }
             }
-            // draw boundary borders
-            DrawVerticalBorder(0, startY, startX, drawContext.GetCanvas());
-            DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas());
-            y1 = startY;
-            for (int i_2 = 0; i_2 < heights.Count; i_2++) {
-                y1 -= heights[i_2];
-            }
-            DrawHorizontalBorder(horizontalBorders.Count - 1, startX, y1, drawContext.GetCanvas());
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
