@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Log;
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
@@ -73,6 +74,11 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.LinkRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
             base.Draw(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {

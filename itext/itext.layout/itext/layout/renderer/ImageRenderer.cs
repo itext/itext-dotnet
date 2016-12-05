@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -207,6 +208,11 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
             ApplyMargins(occupiedArea.GetBBox(), false);
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
