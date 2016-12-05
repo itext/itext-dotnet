@@ -283,6 +283,30 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-962")]
+        public virtual void ListItemTest02() {
+            String outFileName = destinationFolder + "listItemTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemTest02.pdf";
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdf);
+            document.SetFontColor(Color.WHITE);
+            List list = new List();
+            Style liStyle = new Style().SetMargins(20, 0, 20, 0).SetBackgroundColor(Color.BLACK);
+            list.Add((ListItem)new ListItem("").AddStyle(liStyle)).Add((ListItem)new ListItem("fox").AddStyle(liStyle)
+                ).Add((ListItem)new ListItem("").AddStyle(liStyle)).Add((ListItem)new ListItem("dog").AddStyle(liStyle
+                ));
+            document.Add(list.SetBackgroundColor(Color.BLUE));
+            document.Add(new Paragraph("separation between lists"));
+            liStyle.SetMargin(0);
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 4)]
         [NUnit.Framework.Test]
         public virtual void ListWithSetHeightProperties01() {
