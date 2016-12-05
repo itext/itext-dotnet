@@ -6,6 +6,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -699,7 +700,7 @@ namespace iText.Layout {
         public virtual void SplitCellsTest03() {
             fileName = "splitCellsTest03.pdf";
             Document doc = CreateDocument();
-            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(100, 150));
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(100, 160));
             String textAlphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
             Table table = new Table(1);
             table.AddCell(new Cell().Add(textAlphabet).SetBorder(new SolidBorder(4)));
@@ -710,8 +711,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void SplitCellsTest04() {
             fileName = "splitCellsTest04.pdf";
             Document doc = CreateDocument();
@@ -823,7 +822,7 @@ namespace iText.Layout {
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 160));
             String textAlphabet = "Cell";
             Table table = new Table(3);
-            table.AddCell(new Cell().Add("1gsdfgsdfgsdfjghdlsfhgkjdfshgkjdsfgdsf gdsfg dfs gdfs gsdf gdfsgffgfgfgfgfgfffgfgfgdhsfjgdsfjgdfsgfgfg fg fg fg f gfg fgggggggggggggggfg fgf fgsd"
+            table.AddCell(new Cell().Add("Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again! Make Gretzky great again!"
                 ));
             table.AddCell(new Cell(2, 1).Add(textAlphabet + "3"));
             table.AddCell(new Cell().Add(textAlphabet + "4").SetBorder(new SolidBorder(Color.GREEN, 2)));
@@ -837,17 +836,18 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TableWithHeaderFooterTest01() {
-            fileName = "tableWithHeaderTest01.pdf";
+            fileName = "tableWithHeaderFooterTest01.pdf";
             Document doc = CreateDocument();
-            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1000));
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(1000, 1000));
             String text = "Cell";
             Table table = new Table(3);
-            for (int i = 0; i < 1; i++) {
-                table.AddCell(new Cell().Add(text + "1").SetHeight(40));
-                //            table.addCell(new Cell(2, 1).add(text + "2"));
-                //            table.addCell(new Cell().add(text + "3"));
-                table.AddCell(new Cell().Add(text + "4").SetHeight(40));
-                table.AddCell(new Cell().Add(text + "5").SetHeight(40));
+            for (int i = 0; i < 2; i++) {
+                table.AddCell(new Cell().Add(text + "1").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
+                    ));
+                table.AddCell(new Cell().Add(text + "4").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
+                    ));
+                table.AddCell(new Cell().Add(text + "5").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
+                    ));
             }
             for (int i_1 = 0; i_1 < 3; i_1++) {
                 table.AddHeaderCell(new Cell().Add("Header").SetHeight(40));
@@ -856,6 +856,87 @@ namespace iText.Layout {
             table.SetBorder(new SolidBorder(Color.GREEN, 100));
             doc.Add(table);
             doc.Add(new Table(1).AddCell(new Cell().Add("Hello")).SetBorder(new SolidBorder(Color.BLACK, 10)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest02() {
+            fileName = "tableWithHeaderFooterTest02.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(595, 1500));
+            Table table = new Table(2);
+            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header1").SetBorderTop(new SolidBorder(Color.RED, 100)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header2").SetBorderTop(new SolidBorder(Color.RED, 200)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer1").SetBorderTop(new SolidBorder(Color.RED, 100)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer2").SetBorderTop(new SolidBorder(Color.RED, 200)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer3"));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer4"));
+            for (int i = 1; i < 43; i += 2) {
+                table.AddCell(new Cell().SetHeight(30).Add("Cell" + i).SetBorderBottom(new SolidBorder(Color.BLUE, 400)).SetBorderRight
+                    (new SolidBorder(20)));
+                table.AddCell(new Cell().SetHeight(30).Add("Cell" + (i + 1)).SetBorderBottom(new SolidBorder(Color.BLUE, 100
+                    )).SetBorderLeft(new SolidBorder(20)));
+            }
+            table.SetSkipLastFooter(true);
+            table.SetSkipFirstHeader(true);
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.ORANGE, 2)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooter03() {
+            fileName = "tableWithHeaderFooterTest03.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            table.AddHeaderCell(new Cell().Add("Header").SetHeight(400).SetBorder(new SolidBorder(Color.BLUE, 40)));
+            table.SetBorder(new SolidBorder(Color.GREEN, 100));
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5)));
+            doc.Add(new AreaBreak());
+            table = new Table(1);
+            table.AddFooterCell(new Cell().Add("Footer").SetHeight(400).SetBorder(new SolidBorder(Color.BLUE, 40)));
+            table.SetBorder(new SolidBorder(Color.GREEN, 100));
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooter04() {
+            fileName = "tableWithHeaderFooterTest04.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            table.AddHeaderCell(new Cell().Add("Header").SetBorder(new SolidBorder(Color.BLUE, 40)));
+            table.AddCell(new Cell().Add("Cell").SetBorder(new SolidBorder(Color.MAGENTA, 30)));
+            table.AddFooterCell(new Cell().Add("Footer").SetBorder(new SolidBorder(Color.BLUE, 20)));
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.MAGENTA, 5)));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooter05() {
+            fileName = "tableWithHeaderFooterTest05.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            table.AddCell(new Cell().Add("Cell").SetBorder(new SolidBorder(Color.MAGENTA, 30)).SetHeight(30));
+            table.AddFooterCell(new Cell().Add("Footer").SetBorder(new SolidBorder(Color.BLUE, 50)).SetHeight(30));
+            table.SetBorder(new SolidBorder(100));
+            table.SetSkipLastFooter(true);
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.ORANGE, 5)));
+            table.DeleteOwnProperty(Property.BORDER);
+            doc.Add(table);
+            doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.ORANGE, 5)));
             CloseDocumentAndCompareOutputs(doc);
         }
 
