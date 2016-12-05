@@ -48,8 +48,8 @@ using iText.IO.Util;
 
 namespace iText.Kernel.Utils {
     /// <summary>
-    /// Class representing a page range, for instance a page range can contain pages
-    /// 5, then pages 10 through 15, then page 18, then page 21 and so on.
+    /// Class representing a page range, for instance a page range can contain
+    /// pages 5, then pages 10 through 15, then page 18, then page 21 and so on.
     /// </summary>
     public class PageRange {
         private static readonly Regex SEQUENCE_PATTERN = iText.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)?");
@@ -69,17 +69,15 @@ namespace iText.Kernel.Utils {
         /// <summary>
         /// Constructs a
         /// <see cref="PageRange"/>
-        /// instance from a range in a string form,
-        /// for example: "1-12, 15, 45-66". More advanced forms are also available,
-        /// for example:
+        /// instance from a range in a string form, for example: "1-12, 15, 45-66".
+        /// More advanced forms are also available, for example:
         /// - "3-" to indicate from page 3 to the last page
         /// - "odd" for all odd pages
         /// - "even" for all even pages
         /// - "3- & odd" for all odd pages starting from page 3
-        /// A complete example for pages 1 to 5, page 8 then odd pages starting from
-        /// page 9: "1-5, 8, odd & 9-".
+        /// A complete example for pages 1 to 5, page 8 then odd pages starting to page 9: "1-5, 8, odd & 9-".
         /// </summary>
-        /// <param name="pageRange">a String of page ranges</param>
+        /// <param name="pageRange">the page range</param>
         public PageRange(String pageRange) {
             pageRange = iText.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
             foreach (String pageRangePart in iText.IO.Util.StringUtil.Split(pageRange, ",")) {
@@ -179,14 +177,9 @@ namespace iText.Kernel.Utils {
         }
 
         /// <summary>Gets the list if pages that have been added to the range so far.</summary>
-        /// <param name="nbPages">
-        /// number of pages of the document to get the pages, to list
-        /// only the pages eligible for this document.
-        /// </param>
-        /// <returns>
-        /// the list containing page numbers added to the range matching this
-        /// document
-        /// </returns>
+        /// <param name="nbPages">number of pages of the document to get the pages, to list only the pages eligible for this document.
+        ///     </param>
+        /// <returns>the list containing page numbers added to the range matching this document</returns>
         public virtual IList<int> GetAllPages(int nbPages) {
             IList<int> allPages = new List<int>();
             for (int ind = 0; ind < sequences.Count; ind++) {
@@ -197,10 +190,7 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Checks if a given page is present in the range built so far.</summary>
         /// <param name="pageNumber">the page number to check</param>
-        /// <returns>
-        /// <code>true</code> if the page is present in this range,
-        /// <code>false</code> otherwise
-        /// </returns>
+        /// <returns><code>true</code> if the page is present in this range, <code>false</code> otherwise</returns>
         public virtual bool IsPageInRange(int pageNumber) {
             for (int ind = 0; ind < sequences.Count; ind++) {
                 if (sequences[ind].IsPageInRange(pageNumber)) {
@@ -273,10 +263,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <summary>
-        /// Class for range part containing a range of pages represented by a start
-        /// and an end page
-        /// </summary>
+        /// <summary>Class for range part containing a range of pages represented by a start and an end page</summary>
         public class PageRangePartSequence : PageRange.IPageRangePart {
             private readonly int start;
 
@@ -322,10 +309,7 @@ namespace iText.Kernel.Utils {
             }
         }
 
-        /// <summary>
-        /// Class for range part containing a range of pages for all pages after a
-        /// given start page
-        /// </summary>
+        /// <summary>Class for range part containing a range of pages for all pages after a given start page</summary>
         public class PageRangePartAfter : PageRange.IPageRangePart {
             private readonly int start;
 
@@ -367,8 +351,8 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Class for range part for all even or odd pages.</summary>
         /// <remarks>
-        /// Class for range part for all even or odd pages. The class contains only 2
-        /// instances, one for odd pages and one for even pages.
+        /// Class for range part for all even or odd pages.
+        /// The class contains only 2 instances, one for odd pages and one for even pages.
         /// </remarks>
         public class PageRangePartOddEven : PageRange.IPageRangePart {
             private readonly bool isOdd;
@@ -431,9 +415,9 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Class for range part based on several range parts.</summary>
         /// <remarks>
-        /// Class for range part based on several range parts. A 'and' is performed
-        /// between all conditions. This allows for example to configure odd pages
-        /// between page 19 and 25.
+        /// Class for range part based on several range parts.
+        /// A 'and' is performed between all conditions.
+        /// This allows for example to configure odd pages between page 19 and 25.
         /// </remarks>
         public class PageRangePartAnd : PageRange.IPageRangePart {
             private readonly IList<PageRange.IPageRangePart> conditions = new List<PageRange.IPageRangePart>();
@@ -444,22 +428,16 @@ namespace iText.Kernel.Utils {
 
             public virtual IList<int> GetAllPages() {
                 IList<int> allPages = new List<int>();
-                if (!conditions.IsEmpty()) {
-                    allPages.AddAll(conditions[0].GetAllPages());
-                }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages.RetainAll(cond.GetAllPages());
+                    allPages.AddAll(cond.GetAllPages());
                 }
                 return allPages;
             }
 
             public virtual IList<int> GetAllPages(int nbPages) {
                 IList<int> allPages = new List<int>();
-                if (!conditions.IsEmpty()) {
-                    allPages.AddAll(conditions[0].GetAllPages(nbPages));
-                }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages.RetainAll(cond.GetAllPages(nbPages));
+                    allPages.AddAll(cond.GetAllPages(nbPages));
                 }
                 return allPages;
             }
