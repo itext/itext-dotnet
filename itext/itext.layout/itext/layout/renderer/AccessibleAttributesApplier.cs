@@ -316,13 +316,13 @@ namespace iText.Layout.Renderer {
                 for (int i = 1; i < borders.Length; i++) {
                     Border border = borders[i];
                     if (border != null) {
-                        if (!border.GetColor().Equals(borders[0].GetColor())) {
+                        if (null == borders[0] || !border.GetColor().Equals(borders[0].GetColor())) {
                             allColorsEqual = false;
                         }
-                        if (border.GetWidth() != borders[0].GetWidth()) {
+                        if (null == borders[0] || border.GetWidth() != borders[0].GetWidth()) {
                             allWidthsEqual = false;
                         }
-                        if (border.GetBorderType() != borders[0].GetBorderType()) {
+                        if (null == borders[0] || border.GetBorderType() != borders[0].GetBorderType()) {
                             allTypesEqual = false;
                         }
                     }
