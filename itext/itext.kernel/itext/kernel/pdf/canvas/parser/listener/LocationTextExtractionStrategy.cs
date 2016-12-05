@@ -608,10 +608,10 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Listener {
         }
 
         private class TextChunkMarks {
-            private IList<LocationTextExtractionStrategy.TextChunk> preceding = new List<LocationTextExtractionStrategy.TextChunk
+            internal IList<LocationTextExtractionStrategy.TextChunk> preceding = new List<LocationTextExtractionStrategy.TextChunk
                 >();
 
-            private IList<LocationTextExtractionStrategy.TextChunk> succeeding = new List<LocationTextExtractionStrategy.TextChunk
+            internal IList<LocationTextExtractionStrategy.TextChunk> succeeding = new List<LocationTextExtractionStrategy.TextChunk
                 >();
         }
     }

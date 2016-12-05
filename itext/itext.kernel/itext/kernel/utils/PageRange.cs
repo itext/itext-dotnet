@@ -448,7 +448,7 @@ namespace iText.Kernel.Utils {
                     allPages.AddAll(conditions[0].GetAllPages());
                 }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages = RetainAll(allPages, cond.GetAllPages());
+                    allPages.RetainAll(cond.GetAllPages());
                 }
                 return allPages;
             }
@@ -459,19 +459,9 @@ namespace iText.Kernel.Utils {
                     allPages.AddAll(conditions[0].GetAllPages(nbPages));
                 }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages = RetainAll(allPages, cond.GetAllPages(nbPages));
+                    allPages.RetainAll(cond.GetAllPages(nbPages));
                 }
                 return allPages;
-            }
-
-            private IList<int> RetainAll(IList<int> first, IList<int> second) {
-                IList<int> result = new List<int>();
-                foreach (int x in first) {
-                    if (second.Contains(x)) {
-                        result.Add(x);
-                    }
-                }
-                return result;
             }
 
             public virtual bool IsPageInRange(int pageNumber) {
