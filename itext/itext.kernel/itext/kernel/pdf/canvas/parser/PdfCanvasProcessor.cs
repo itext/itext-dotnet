@@ -456,7 +456,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         protected internal virtual PdfFont GetFont(PdfDictionary fontDict) {
             int n = fontDict.GetIndirectReference().GetObjNumber();
             WeakReference fontRef = cachedFonts.Get(n);
-            PdfFont font = (PdfFont) (fontRef == null ? null : fontRef.Target);
+            PdfFont font = (PdfFont)(fontRef == null ? null : fontRef.Target);
             if (font == null) {
                 font = PdfFontFactory.CreateFont(fontDict);
                 cachedFonts[n] = new WeakReference(font);
