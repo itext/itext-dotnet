@@ -107,7 +107,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private IDictionary<PdfName, IXObjectDoHandler> xobjectDoHandlers;
 
         /// <summary>The font cache</summary>
-        private IDictionary<int, PdfFont> cachedFonts = new Dictionary<int, PdfFont>();
+        private IDictionary<int, WeakReference> cachedFonts = new Dictionary<int, WeakReference>();
 
         /// <summary>A stack containing marked content info.</summary>
         private Stack<CanvasTag> markedContentStack = new Stack<CanvasTag>();
@@ -455,10 +455,11 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <returns>the font</returns>
         protected internal virtual PdfFont GetFont(PdfDictionary fontDict) {
             int n = fontDict.GetIndirectReference().GetObjNumber();
-            PdfFont font = cachedFonts.Get(n);
+            WeakReference fontRef = cachedFonts.Get(n);
+            PdfFont font = (PdfFont) (fontRef == null ? null : fontRef.Target);
             if (font == null) {
                 font = PdfFontFactory.CreateFont(fontDict);
-                cachedFonts[n] = font;
+                cachedFonts[n] = new WeakReference(font);
             }
             return font;
         }

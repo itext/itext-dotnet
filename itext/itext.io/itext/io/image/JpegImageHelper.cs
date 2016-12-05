@@ -91,6 +91,12 @@ namespace iText.IO.Image {
         /// <summary>sequence preceding Photoshop resolution data</summary>
         private static readonly byte[] PS_8BIM_RESO = new byte[] { 0x38, 0x42, 0x49, 0x4d, 0x03, (byte)0xed };
 
+        /// <summary>Process the passed Image data as a JPEG image.</summary>
+        /// <remarks>
+        /// Process the passed Image data as a JPEG image.
+        /// Image is loaded and all image attributes are initialized and/or updated.
+        /// </remarks>
+        /// <param name="image">the image to process as a JPEG image</param>
         public static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.JPEG) {
                 throw new ArgumentException("JPEG image expected");
