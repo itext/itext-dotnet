@@ -51,6 +51,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Margincollapse;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -124,7 +125,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                logger.Error("Only BlockRenderer with Cell layout element could be added");
+                logger.Error("Only CellRenderer could be added");
             }
         }
 
@@ -153,6 +154,12 @@ namespace iText.Layout.Renderer {
             // key is column number (there can be only one move during one split)
             // value is the previous row number of the cell
             IDictionary<int, int?> rowMoves = new Dictionary<int, int?>();
+            MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo
+                ());
+            bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.StartMarginsCollapse(layoutBox);
+            }
             ApplyMargins(layoutBox, false);
             Border[] borders;
             float leftTableBorderWidth = -1;
@@ -226,7 +233,6 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
-            float layoutBoxHeight = layoutBox.GetHeight();
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight() - topTableBorderWidth / 2, (float)tableWidth, 0));
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
@@ -563,6 +569,9 @@ namespace iText.Layout.Renderer {
                     currentRow = rows[row];
                 }
                 if (split) {
+                    if (marginsCollapsingEnabled) {
+                        marginsCollapseHandler.EndMarginsCollapse();
+                    }
                     iText.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent);
                     int[] rowspans = new int[currentRow.Length];
                     bool[] columnsWithCellToBeEnlarged = new bool[currentRow.Length];
@@ -797,6 +806,9 @@ namespace iText.Layout.Renderer {
             layoutBox.DecreaseHeight(bottomTableBorderWidth / 2);
             if ((true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) && 0 != rows.Count) {
                 ExtendLastRow(rows[rows.Count - 1], layoutBox);
+            }
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.EndMarginsCollapse();
             }
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) {

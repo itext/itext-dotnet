@@ -80,13 +80,9 @@ namespace iText.Layout.Margincollapse {
                 rendererChildren = new List<IRenderer>();
             }
             rendererChildren.Add(child);
-            return StartChildMarginsHandling(processedChildrenNum++, layoutBox);
-        }
-
-        public virtual MarginsCollapseInfo StartChildMarginsHandling(int childIndex, Rectangle layoutBox) {
+            int childIndex = processedChildrenNum++;
             prevChildMarginInfo = childMarginInfo;
             childMarginInfo = null;
-            IRenderer child = GetRendererChild(childIndex);
             bool childIsBlockElement = IsBlockElement(child);
             PrepareBoxForLayoutAttempt(layoutBox, childIndex, childIsBlockElement);
             if (childIsBlockElement) {
@@ -123,10 +119,7 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void EndChildMarginsHandling() {
-            EndChildMarginsHandling(processedChildrenNum - 1, null);
-        }
-
-        public virtual void EndChildMarginsHandling(int childIndex, Rectangle layoutBox) {
+            int childIndex = processedChildrenNum - 1;
             if (childMarginInfo != null) {
                 if (firstNotEmptyKidIndex == childIndex && childMarginInfo.IsSelfCollapsing()) {
                     firstNotEmptyKidIndex = childIndex + 1;
@@ -139,12 +132,6 @@ namespace iText.Layout.Margincollapse {
             if (firstNotEmptyKidIndex == childIndex && FirstChildMarginAdjoinedToParent(renderer)) {
                 if (!collapseInfo.IsSelfCollapsing()) {
                     GetRidOfCollapseArtifactsAtopOccupiedArea();
-                    if (childMarginInfo != null) {
-                        float buffSpaceDiff = collapseInfo.GetBufferSpace() - childMarginInfo.GetBufferSpace();
-                        if (buffSpaceDiff > 0) {
-                            layoutBox.MoveDown(buffSpaceDiff);
-                        }
-                    }
                 }
             }
             if (prevChildMarginInfo != null) {
@@ -320,17 +307,19 @@ namespace iText.Layout.Margincollapse {
         }
 
         private static bool MarginsCouldBeSelfCollapsing(IRenderer renderer) {
-            return !HasBottomBorders(renderer) && !HasTopBorders(renderer) && !HasBottomPadding(renderer) && !HasTopPadding
-                (renderer) && !HasPositiveHeight(renderer);
+            return !(renderer is TableRenderer) && !HasBottomBorders(renderer) && !HasTopBorders(renderer) && !HasBottomPadding
+                (renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer);
         }
 
+        // table is never self-collapsing for now
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !HasTopBorders(parent) && !HasTopPadding(parent);
+            return !(parent is RootRenderer) && !(parent is TableRenderer) && !HasTopBorders(parent) && !HasTopPadding
+                (parent);
         }
 
         private static bool LastChildMarginAdjoinedToParent(IRenderer parent) {
-            return !(parent is RootRenderer) && !HasBottomBorders(parent) && !HasBottomPadding(parent) && !HasHeightProp
-                (parent);
+            return !(parent is RootRenderer) && !(parent is TableRenderer) && !HasBottomBorders(parent) && !HasBottomPadding
+                (parent) && !HasHeightProp(parent);
         }
 
         private static bool IsBlockElement(IRenderer renderer) {
