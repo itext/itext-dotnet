@@ -539,6 +539,37 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
+        public virtual void PagesTest11() {
+            String filename = sourceFolder + "hello.pdf";
+            PdfReader reader = new PdfReader(filename);
+            PdfDocument document = new PdfDocument(reader);
+            try {
+                document.GetPage(-30);
+            }
+            catch (PdfException pdfException) {
+                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.CannotFindThePageNumber, -30), pdfException.Message
+                    );
+            }
+            try {
+                document.GetPage(0);
+            }
+            catch (PdfException pdfException) {
+                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.CannotFindThePageNumber, 0), pdfException.Message
+                    );
+            }
+            document.GetPage(1);
+            try {
+                document.GetPage(25);
+            }
+            catch (PdfException pdfException) {
+                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.CannotFindThePageNumber, 25), pdfException.Message
+                    );
+            }
+            document.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.XREF_ERROR, Count = 1)]
         public virtual void CorrectSimpleDoc1() {
             String filename = sourceFolder + "correctSimpleDoc1.pdf";

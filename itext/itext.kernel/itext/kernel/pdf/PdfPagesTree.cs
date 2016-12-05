@@ -109,6 +109,9 @@ namespace iText.Kernel.Pdf {
         /// at the specified position in this list
         /// </returns>
         public virtual PdfPage GetPage(int pageNum) {
+            if (pageNum < 1 || pageNum > GetNumberOfPages()) {
+                throw new PdfException(String.Format(PdfException.CannotFindThePageNumber, pageNum));
+            }
             --pageNum;
             PdfPage pdfPage = pages[pageNum];
             if (pdfPage == null) {

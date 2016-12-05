@@ -113,6 +113,8 @@ namespace iText.Kernel {
 
         public const String CannotFindImageDataOrEI = "Cannot find image data or EI.";
 
+        public const String CannotFindThePageNumber = "Cannot find the page number {0}.";
+
         public const String CannotFlushDocumentRootTagBeforeDocumentIsClosed = "Cannot flush document root tag before document is closed.";
 
         public const String CannotFlushObject = "Cannot flush object.";
