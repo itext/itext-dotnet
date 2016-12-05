@@ -428,16 +428,22 @@ namespace iText.Kernel.Utils {
 
             public virtual IList<int> GetAllPages() {
                 IList<int> allPages = new List<int>();
+                if (!conditions.IsEmpty()) {
+                    allPages.AddAll(conditions[0].GetAllPages());
+                }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages.AddAll(cond.GetAllPages());
+                    allPages.RetainAll(cond.GetAllPages());
                 }
                 return allPages;
             }
 
             public virtual IList<int> GetAllPages(int nbPages) {
                 IList<int> allPages = new List<int>();
+                if (!conditions.IsEmpty()) {
+                    allPages.AddAll(conditions[0].GetAllPages(nbPages));
+                }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages.AddAll(cond.GetAllPages(nbPages));
+                    allPages.RetainAll(cond.GetAllPages(nbPages));
                 }
                 return allPages;
             }
