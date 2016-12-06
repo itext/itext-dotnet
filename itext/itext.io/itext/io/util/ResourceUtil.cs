@@ -120,7 +120,7 @@ namespace iText.IO.Util {
             }
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-                if (iTextResourceAssemblyNames.Contains(assembly.GetName().Name)) {
+                if (assembly.GetName().Name.StartsWith("itext")) {
                     istr = SearchResourceInAssembly(key, assembly);
                     if (istr != null) {
                         return istr;
