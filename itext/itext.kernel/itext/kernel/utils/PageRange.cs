@@ -168,17 +168,21 @@ namespace iText.Kernel.Utils {
             return AddPageRangePart(new PageRange.PageRangePartSingle(pageNumber));
         }
 
-        /// <summary>Gets the list if pages that have been added to the range so far.</summary>
+        /// <summary>Gets the list of pages that have been added to the range so far.</summary>
+        /// <remarks>
+        /// Gets the list of pages that have been added to the range so far.
+        /// This method has been deprecated in favor of an alternative method that
+        /// requires the user to supply the total number of pages in the document.
+        /// This number is necessary in order to limit open-ended ranges like "4-".
+        /// </remarks>
         /// <returns>the list containing page numbers added to the range</returns>
+        [System.ObsoleteAttribute(@"Please use GetQualifyingPageNums(int)")]
         public virtual IList<int> GetAllPages() {
-            IList<int> allPages = new List<int>();
-            for (int ind = 0; ind < sequences.Count; ind++) {
-                allPages.AddAll(sequences[ind].GetAllPages());
-            }
-            return allPages;
+            // supply a reasonably high default for users who haven't switched
+            return GetQualifyingPageNums(10000);
         }
 
-        /// <summary>Gets the list if pages that have been added to the range so far.</summary>
+        /// <summary>Gets the list of pages that have been added to the range so far.</summary>
         /// <param name="nbPages">
         /// number of pages of the document to get the pages, to list
         /// only the pages eligible for this document.
@@ -187,10 +191,10 @@ namespace iText.Kernel.Utils {
         /// the list containing page numbers added to the range matching this
         /// document
         /// </returns>
-        public virtual IList<int> GetAllPages(int nbPages) {
+        public virtual IList<int> GetQualifyingPageNums(int nbPages) {
             IList<int> allPages = new List<int>();
-            for (int ind = 0; ind < sequences.Count; ind++) {
-                allPages.AddAll(sequences[ind].GetAllPages(nbPages));
+            foreach (PageRange.IPageRangePart sequence in sequences) {
+                allPages.AddAll(sequence.GetAllPagesInRange(nbPages));
             }
             return allPages;
         }
@@ -202,8 +206,8 @@ namespace iText.Kernel.Utils {
         /// <code>false</code> otherwise
         /// </returns>
         public virtual bool IsPageInRange(int pageNumber) {
-            for (int ind = 0; ind < sequences.Count; ind++) {
-                if (sequences[ind].IsPageInRange(pageNumber)) {
+            foreach (PageRange.IPageRangePart sequence in sequences) {
+                if (sequence.IsPageInRange(pageNumber)) {
                     return true;
                 }
             }
@@ -226,9 +230,8 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Inner interface for range parts definition</summary>
         public interface IPageRangePart {
-            IList<int> GetAllPages();
-
-            IList<int> GetAllPages(int nbPages);
+            //public List<Integer> getAllPages();
+            IList<int> GetAllPagesInRange(int nbPages);
 
             bool IsPageInRange(int pageNumber);
         }
@@ -241,11 +244,7 @@ namespace iText.Kernel.Utils {
                 this.page = page;
             }
 
-            public virtual IList<int> GetAllPages() {
-                return JavaCollectionsUtil.SingletonList(page);
-            }
-
-            public virtual IList<int> GetAllPages(int nbPages) {
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
                 if (page <= nbPages) {
                     return JavaCollectionsUtil.SingletonList(page);
                 }
@@ -287,15 +286,7 @@ namespace iText.Kernel.Utils {
                 this.end = end;
             }
 
-            public virtual IList<int> GetAllPages() {
-                IList<int> allPages = new List<int>();
-                for (int pageInRange = start; pageInRange <= end; pageInRange++) {
-                    allPages.Add(pageInRange);
-                }
-                return allPages;
-            }
-
-            public virtual IList<int> GetAllPages(int nbPages) {
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
                 IList<int> allPages = new List<int>();
                 for (int pageInRange = start; pageInRange <= end && pageInRange <= nbPages; pageInRange++) {
                     allPages.Add(pageInRange);
@@ -333,12 +324,7 @@ namespace iText.Kernel.Utils {
                 this.start = start;
             }
 
-            public virtual IList<int> GetAllPages() {
-                // Return only the first element, we do not know the last page...
-                return JavaCollectionsUtil.SingletonList(start);
-            }
-
-            public virtual IList<int> GetAllPages(int nbPages) {
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
                 IList<int> allPages = new List<int>();
                 for (int pageInRange = start; pageInRange <= nbPages; pageInRange++) {
                     allPages.Add(pageInRange);
@@ -389,17 +375,7 @@ namespace iText.Kernel.Utils {
                 }
             }
 
-            public virtual IList<int> GetAllPages() {
-                // Return only the first element, we do not know the last page...
-                if (isOdd) {
-                    return JavaCollectionsUtil.SingletonList(1);
-                }
-                else {
-                    return JavaCollectionsUtil.SingletonList(2);
-                }
-            }
-
-            public virtual IList<int> GetAllPages(int nbPages) {
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
                 IList<int> allPages = new List<int>();
                 for (int pageInRange = (mod == 0 ? 2 : mod); pageInRange <= nbPages; pageInRange += 2) {
                     allPages.Add(pageInRange);
@@ -442,24 +418,13 @@ namespace iText.Kernel.Utils {
                 this.conditions.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(conditions));
             }
 
-            public virtual IList<int> GetAllPages() {
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
                 IList<int> allPages = new List<int>();
                 if (!conditions.IsEmpty()) {
-                    allPages.AddAll(conditions[0].GetAllPages());
+                    allPages.AddAll(conditions[0].GetAllPagesInRange(nbPages));
                 }
                 foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages.RetainAll(cond.GetAllPages());
-                }
-                return allPages;
-            }
-
-            public virtual IList<int> GetAllPages(int nbPages) {
-                IList<int> allPages = new List<int>();
-                if (!conditions.IsEmpty()) {
-                    allPages.AddAll(conditions[0].GetAllPages(nbPages));
-                }
-                foreach (PageRange.IPageRangePart cond in conditions) {
-                    allPages.RetainAll(cond.GetAllPages(nbPages));
+                    allPages.RetainAll(cond.GetAllPagesInRange(nbPages));
                 }
                 return allPages;
             }

@@ -101,7 +101,7 @@ namespace iText.Kernel.Utils {
             while (currentPage <= numOfPages) {
                 PageRange nextRange = GetNextRange(currentPage, numOfPages, size);
                 splitRanges.Add(nextRange);
-                IList<int> allPages = nextRange.GetAllPages(numOfPages);
+                IList<int> allPages = nextRange.GetQualifyingPageNums(numOfPages);
                 currentPage = (int)allPages[allPages.Count - 1] + 1;
             }
             return ExtractPageRanges(splitRanges);
@@ -204,7 +204,8 @@ namespace iText.Kernel.Utils {
             foreach (PageRange currentPageRange in pageRanges) {
                 PdfDocument currentPdfDocument = CreatePdfDocument(currentPageRange);
                 splitDocuments.Add(currentPdfDocument);
-                pdfDocument.CopyPagesTo(currentPageRange.GetAllPages(pdfDocument.GetNumberOfPages()), currentPdfDocument);
+                pdfDocument.CopyPagesTo(currentPageRange.GetQualifyingPageNums(pdfDocument.GetNumberOfPages()), currentPdfDocument
+                    );
             }
             return splitDocuments;
         }
