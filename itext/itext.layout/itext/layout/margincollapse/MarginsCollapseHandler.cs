@@ -81,8 +81,6 @@ namespace iText.Layout.Margincollapse {
             }
             rendererChildren.Add(child);
             int childIndex = processedChildrenNum++;
-            prevChildMarginInfo = childMarginInfo;
-            childMarginInfo = null;
             bool childIsBlockElement = IsBlockElement(child);
             PrepareBoxForLayoutAttempt(layoutBox, childIndex, childIsBlockElement);
             if (childIsBlockElement) {
@@ -140,10 +138,10 @@ namespace iText.Layout.Margincollapse {
                     collapseInfo.GetCollapseBefore().JoinMargin(prevChildMarginInfo.GetOwnCollapseAfter());
                 }
             }
-            prevChildMarginInfo = null;
+            prevChildMarginInfo = childMarginInfo;
+            childMarginInfo = null;
         }
 
-        // a sign that last kid processing finished successfully
         public virtual void StartMarginsCollapse(Rectangle parentBBox) {
             collapseInfo.GetCollapseBefore().JoinMargin(GetModelTopMargin(renderer));
             collapseInfo.GetCollapseAfter().JoinMargin(GetModelBottomMargin(renderer));
@@ -161,13 +159,9 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void EndMarginsCollapse() {
-            if (prevChildMarginInfo != null) {
-                // last kid processing finished with NOTHING
-                childMarginInfo = prevChildMarginInfo;
-            }
-            if (childMarginInfo != null && childMarginInfo.IsSelfCollapsing() && childMarginInfo.IsIgnoreOwnMarginTop(
-                )) {
-                collapseInfo.GetCollapseBefore().JoinMargin(childMarginInfo.GetCollapseAfter());
+            if (prevChildMarginInfo != null && prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop
+                ()) {
+                collapseInfo.GetCollapseBefore().JoinMargin(prevChildMarginInfo.GetCollapseAfter());
             }
             bool couldBeSelfCollapsing = iText.Layout.Margincollapse.MarginsCollapseHandler.MarginsCouldBeSelfCollapsing
                 (renderer);
@@ -179,9 +173,10 @@ namespace iText.Layout.Margincollapse {
             }
             collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && couldBeSelfCollapsing);
             MarginsCollapse ownCollapseAfter;
-            bool lastChildMarginJoinedToParent = childMarginInfo != null && childMarginInfo.IsIgnoreOwnMarginBottom();
+            bool lastChildMarginJoinedToParent = prevChildMarginInfo != null && prevChildMarginInfo.IsIgnoreOwnMarginBottom
+                ();
             if (lastChildMarginJoinedToParent) {
-                ownCollapseAfter = childMarginInfo.GetOwnCollapseAfter();
+                ownCollapseAfter = prevChildMarginInfo.GetOwnCollapseAfter();
             }
             else {
                 ownCollapseAfter = new MarginsCollapse();
@@ -189,8 +184,8 @@ namespace iText.Layout.Margincollapse {
             ownCollapseAfter.JoinMargin(GetModelBottomMargin(renderer));
             collapseInfo.SetOwnCollapseAfter(ownCollapseAfter);
             if (collapseInfo.IsSelfCollapsing()) {
-                if (childMarginInfo != null) {
-                    collapseInfo.SetCollapseAfter(childMarginInfo.GetCollapseAfter());
+                if (prevChildMarginInfo != null) {
+                    collapseInfo.SetCollapseAfter(prevChildMarginInfo.GetCollapseAfter());
                 }
                 else {
                     collapseInfo.GetCollapseAfter().JoinMargin(collapseInfo.GetCollapseBefore());
@@ -208,7 +203,7 @@ namespace iText.Layout.Margincollapse {
                     OverrideModelTopMargin(renderer, collapsedMargins);
                 }
                 if (lastChildMarginJoinedToParent) {
-                    collapseInfo.SetCollapseAfter(childMarginInfo.GetCollapseAfter());
+                    collapseInfo.SetCollapseAfter(prevChildMarginInfo.GetCollapseAfter());
                 }
                 if (!collapseInfo.IsIgnoreOwnMarginBottom()) {
                     float collapsedMargins = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
