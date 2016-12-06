@@ -243,8 +243,6 @@ namespace iText.Layout.Renderer {
                     result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, this);
                 }
             }
-            // Consider for now that all the children have the same font, and that after reordering text pieces
-            // can be reordered, but cannot be split.
             if (baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {
                 IList<IRenderer> children = null;
                 if (result.GetStatus() == LayoutResult.PARTIAL) {
@@ -334,13 +332,6 @@ namespace iText.Layout.Renderer {
                             System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.Length);
                             if (overflow.levels.Length == 0) {
                                 overflow.levels = null;
-                            }
-                        }
-                    }
-                    else {
-                        if (result.GetStatus() == LayoutResult.NOTHING) {
-                            if (levels != null) {
-                                ((LineRenderer)result.GetOverflowRenderer()).levels = levels;
                             }
                         }
                     }
