@@ -359,7 +359,11 @@ namespace iText.Layout.Renderer {
                 );
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
-            if (result != null) {
+            if (result == null) {
+                result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
+                     : null);
+            }
+            else {
                 iText.Layout.Renderer.TextRenderer[] split;
                 if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol) {
                     // ignore '\n'
@@ -368,19 +372,17 @@ namespace iText.Layout.Renderer {
                 else {
                     split = Split(currentTextPos);
                 }
-                // if (split[1].length() > 0 && split[1].charAt(0) != null && split[1].charAt(0) == '\n') {
-                if (isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol) {
-                    result.SetSplitForcedByNewline(true);
-                }
+                result.SetSplitForcedByNewline(isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol || isSplitForcedByImmediateNewLine
+                    );
                 result.SetSplitRenderer(split[0]);
                 // no sense to process empty renderer
                 if (split[1].text.start != split[1].text.end) {
                     result.SetOverflowRenderer(split[1]);
                 }
-            }
-            else {
-                result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
-                     : null);
+                else {
+                    // LayoutResult with partial status should have non-null overflow renderer
+                    result.SetStatus(LayoutResult.FULL);
+                }
             }
             return result;
         }

@@ -177,6 +177,15 @@ namespace iText.Layout.Layout {
         }
 
         /// <summary>
+        /// Sets the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// .
+        /// </summary>
+        public virtual void SetStatus(int status) {
+            this.status = status;
+        }
+
+        /// <summary>
         /// Gets the
         /// <see cref="LayoutArea">layout area</see>
         /// occupied by the content during

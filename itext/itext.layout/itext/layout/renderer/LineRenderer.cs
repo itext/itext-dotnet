@@ -178,7 +178,10 @@ namespace iText.Layout.Renderer {
                 }
                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
                     curWidth, maxHeight));
-                if (childResult.GetStatus() != LayoutResult.FULL) {
+                bool newLineOccurred = (childResult is TextLayoutResult && ((TextLayoutResult)childResult).IsSplitForcedByNewline
+                    ());
+                bool shouldBreakLayouting = childResult.GetStatus() != LayoutResult.FULL || newLineOccurred;
+                if (shouldBreakLayouting) {
                     LineRenderer[] split = Split();
                     split[0].childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                     bool wordWasSplitAndItWillFitOntoNextLine = false;
@@ -193,7 +196,7 @@ namespace iText.Layout.Renderer {
                         split[1].childRenderers.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                     }
                     else {
-                        if (childResult.GetStatus() == LayoutResult.PARTIAL) {
+                        if (childResult.GetStatus() == LayoutResult.PARTIAL || childResult.GetStatus() == LayoutResult.FULL) {
                             split[0].AddChild(childResult.GetSplitRenderer());
                             anythingPlaced = true;
                         }
@@ -211,14 +214,18 @@ namespace iText.Layout.Renderer {
                     }
                     IRenderer causeOfNothing = childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing
                         () : childRenderer;
-                    if (anythingPlaced) {
-                        result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], causeOfNothing);
+                    if (split[1] == null) {
+                        result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, split[0], split[1], causeOfNothing);
                     }
                     else {
-                        result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], causeOfNothing);
+                        if (anythingPlaced) {
+                            result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], causeOfNothing);
+                        }
+                        else {
+                            result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], causeOfNothing);
+                        }
                     }
-                    if (childResult.GetStatus() == LayoutResult.PARTIAL && childResult is TextLayoutResult && ((TextLayoutResult
-                        )childResult).IsSplitForcedByNewline()) {
+                    if (newLineOccurred) {
                         result.SetSplitForcedByNewline(true);
                     }
                     break;
@@ -322,7 +329,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (result.GetStatus() == LayoutResult.PARTIAL) {
                         LineRenderer overflow = (LineRenderer)result.GetOverflowRenderer();
-                        if (levels != null && overflow != null) {
+                        if (levels != null) {
                             overflow.levels = new byte[levels.Length - lineLevels.Length];
                             System.Array.Copy(levels, lineLevels.Length, overflow.levels, 0, overflow.levels.Length);
                             if (overflow.levels.Length == 0) {
@@ -332,7 +339,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetStatus() == LayoutResult.NOTHING) {
-                            if (levels != null && result.GetOverflowRenderer() != null) {
+                            if (levels != null) {
                                 ((LineRenderer)result.GetOverflowRenderer()).levels = levels;
                             }
                         }
