@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
@@ -50,6 +51,7 @@ using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Layout.Properties;
+using Versions.Attributes;
 
 namespace iText.Layout.Renderer {
     internal class TypographyUtils {
@@ -99,7 +101,7 @@ namespace iText.Layout.Renderer {
         static TypographyUtils() {
             bool moduleFound = false;
             try {
-                Type type = System.Type.GetType(TYPOGRAPHY_PACKAGE + SHAPER);
+                Type type = GetTypographyClass(TYPOGRAPHY_PACKAGE + SHAPER);
                 if (type != null) {
                     moduleFound = true;
                 }
@@ -320,7 +322,7 @@ namespace iText.Layout.Renderer {
         private static Type FindClass(String className) {
             Type c = cachedClasses.Get(className);
             if (c == null) {
-                c = System.Type.GetType(className);
+                c = GetTypographyClass(className);
                 cachedClasses[className] = c;
             }
             return c;
@@ -366,6 +368,28 @@ namespace iText.Layout.Renderer {
                 result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
                 return result;
             }
+        }
+
+        private static Type GetTypographyClass(String partialName) {
+            String classFullName = null;
+
+            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TypographyVersionAttribute), false);
+            if (customAttributes.Length > 0) {
+                string typographyVersion = ((TypographyVersionAttribute)customAttributes[0]).TypographyVersion;
+                string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                classFullName = String.Format(format, partialName, typographyVersion);
+            }
+
+            Type type = null;
+            if (classFullName != null) {
+                try {
+                    type = System.Type.GetType(classFullName);
+                } catch (FileLoadException fileLoadException) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
+                    logger.Error(fileLoadException.Message);
+                }
+            }
+            return type;
         }
     }
 }

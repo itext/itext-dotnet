@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Versions.Attributes;
 
 [assembly: AssemblyTitle("iText.Kernel")]
 [assembly: AssemblyDescription ("")]
@@ -20,6 +21,8 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: Guid("be4c62cc-6495-47e1-ab00-05b1bfe331f6")]
+
+[assembly: KeyVersion("2.0.2.0")]
 
 [assembly: AssemblyVersion("7.0.1.1")]
 [assembly: AssemblyFileVersion("7.0.1.1")]

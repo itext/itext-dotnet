@@ -42,7 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using System.Reflection;
+using iText.IO.Log;
+using Versions.Attributes;
 
 namespace iText.Kernel {
     /// <summary>This class contains version information about iText.</summary>
@@ -99,9 +102,8 @@ namespace iText.Kernel {
                 version = new iText.Kernel.Version();
                 lock (version) {
                     try {
-                        String licenseKeyClassFullName = "iText.License.LicenseKey, itext.licensekey";
                         String licenseeInfoMethodName = "GetLicenseeInfo";
-                        Type klass = System.Type.GetType(licenseKeyClassFullName);
+                        Type klass = GetLicenseKeyClass();
                         if (klass != null) {
                             MethodInfo m = klass.GetMethod(licenseeInfoMethodName);
                             String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
@@ -227,6 +229,33 @@ namespace iText.Kernel {
             if (cause != null && cause.Message != null && cause.Message.Contains("expired")) {
                 expired = true;
             }
+        }
+
+        private static Type GetLicenseKeyClass() {
+            String licenseKeyClassPartialName = "iText.License.LicenseKey, itext.licensekey";
+            String licenseKeyClassFullName = null;
+
+            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(KeyVersionAttribute), false);
+            if (customAttributes.Length > 0) {
+                String keyVersion = ((KeyVersionAttribute) customAttributes[0]).KeyVersion;
+                String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                licenseKeyClassFullName = String.Format(format, licenseKeyClassPartialName, keyVersion);
+            }
+
+            Type type = null;
+            if (licenseKeyClassFullName != null) {
+                try {
+                    type = System.Type.GetType(licenseKeyClassFullName);
+                } catch (FileLoadException fileLoadException) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
+                    logger.Error(fileLoadException.Message);
+                }
+            }
+
+            if (type == null) {
+                type = System.Type.GetType(licenseKeyClassPartialName);
+            }
+            return type;
         }
     }
 }
