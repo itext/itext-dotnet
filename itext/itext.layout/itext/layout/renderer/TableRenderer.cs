@@ -401,6 +401,10 @@ namespace iText.Layout.Renderer {
                     LayoutArea cellArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), cellLayoutBox);
                     VerticalAlignment? verticalAlignment = cell.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, null);
+                    UnitValue cellWidthProperty = cell.GetProperty(Property.WIDTH);
+                    if (cellWidthProperty != null && cellWidthProperty.IsPercentValue()) {
+                        cell.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(cellWidth));
+                    }
                     // Increase bottom borders widths up to the table's (or footer's) if necessary to perform #layout() correctly
                     Border oldBottomBorder = cell.GetBorders()[2];
                     Border collapsedBottomBorder = GetCollapsedBorder(oldBottomBorder, footerRenderer != null ? footerRenderer
