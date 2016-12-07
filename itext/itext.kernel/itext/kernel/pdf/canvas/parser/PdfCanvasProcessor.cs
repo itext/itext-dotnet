@@ -911,7 +911,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
                                                         );
                                                     if (patternName is PdfName) {
                                                         PdfPattern pattern = resources.GetPattern((PdfName)patternName);
-                                                        if (pattern is PdfPattern.Tiling) {
+                                                        if (pattern is PdfPattern.Tiling && !((PdfPattern.Tiling)pattern).IsColored()) {
                                                             return new PatternColor((PdfPattern.Tiling)pattern, underlyingCs, GetColorants(underlyingOperands));
                                                         }
                                                     }

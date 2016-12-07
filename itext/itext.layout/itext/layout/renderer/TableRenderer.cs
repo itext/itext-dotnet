@@ -828,6 +828,19 @@ namespace iText.Layout.Renderer {
                     currChildRenderers.Clear();
                 }
             }
+            // check if the last row is incomplete
+            if (tableModel.IsComplete() && !tableModel.IsEmpty()) {
+                CellRenderer[] lastRow = rows[rows.Count - 1];
+                int lastInRow = lastRow.Length - 1;
+                while (lastInRow >= 0 && null == lastRow[lastInRow]) {
+                    lastInRow--;
+                }
+                if (lastInRow < 0 || lastRow.Length != lastInRow + lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
+                    )) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                    logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                }
+            }
             // if table is empty we still need to process  table borders
             if (0 == childRenderers.Count && null == headerRenderer && null == footerRenderer) {
                 List<Border> topHorizontalBorders = new List<Border>();
