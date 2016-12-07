@@ -46,9 +46,9 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
-    /// <summary>Draws a border with rounded dots aroudn the element it's been set to.</summary>
+    /// <summary>Draws a border with rounded dots around the element it's been set to.</summary>
     /// <remarks>
-    /// Draws a border with rounded dots aroudn the element it's been set to. For square dots see
+    /// Draws a border with rounded dots around the element it's been set to. For square dots see
     /// <see cref="DottedBorder"/>
     /// .
     /// </remarks>
@@ -145,6 +145,9 @@ namespace iText.Layout.Borders {
         /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
+            if (gapsNum == 0) {
+                return initialGap;
+            }
             return (float)(distance / gapsNum);
         }
     }
