@@ -63,8 +63,8 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        [NUnit.Framework.Test]
         public virtual void IncompleteTableTest01() {
             fileName = "incompleteTableTest01.pdf";
             Document doc = CreateDocument();
@@ -80,7 +80,6 @@ namespace iText.Layout {
             // row 2, cell 1
             cell = new Cell().Add("Three");
             table.AddCell(cell);
-
             // row 3, cell 1
             cell = new Cell().Add("Four");
             table.AddCell(cell);

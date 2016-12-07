@@ -7,6 +7,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
@@ -143,6 +144,25 @@ namespace iText.Layout {
             Paragraph p = new Paragraph(link).SetRotationAngle(Math.PI / 4).SetBackgroundColor(Color.RED);
             Div div = new Div().Add(p).SetRotationAngle(Math.PI / 3).SetBackgroundColor(Color.BLUE);
             doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleMarginsTest01() {
+            String outFileName = destinationFolder + "simpleMarginsTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_simpleMarginsTest01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            Link link = new Link("TestLink", action);
+            link.SetBorder(new SolidBorder(Color.BLUE, 20));
+            link.SetProperty(Property.MARGIN_LEFT, 50);
+            link.SetProperty(Property.MARGIN_RIGHT, 50);
+            doc.Add(new Paragraph(link).SetBorder(new SolidBorder(10)));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
