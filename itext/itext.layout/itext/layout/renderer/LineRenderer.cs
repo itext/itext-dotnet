@@ -103,7 +103,7 @@ namespace iText.Layout.Renderer {
                     (unicodeIdsReorderingList)) : null;
             }
             bool anythingPlaced = false;
-            TabStop nextTabStop = null;
+            TabStop hangingTabStop = null;
             LineLayoutResult result = null;
             while (childPos < childRenderers.Count) {
                 IRenderer childRenderer = childRenderers[childPos];
@@ -117,16 +117,16 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (childRenderer is TabRenderer) {
-                        if (nextTabStop != null) {
+                        if (hangingTabStop != null) {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
                             tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
                         }
-                        nextTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
+                        hangingTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
                         if (childPos == childRenderers.Count - 1) {
-                            nextTabStop = null;
+                            hangingTabStop = null;
                         }
-                        if (nextTabStop != null) {
+                        if (hangingTabStop != null) {
                             ++childPos;
                             continue;
                         }
@@ -135,9 +135,9 @@ namespace iText.Layout.Renderer {
                 if (!anythingPlaced && childRenderer is TextRenderer) {
                     ((TextRenderer)childRenderer).TrimFirst();
                 }
-                if (nextTabStop != null && nextTabStop.GetTabAlignment() == TabAlignment.ANCHOR && childRenderer is TextRenderer
-                    ) {
-                    childRenderer.SetProperty(Property.TAB_ANCHOR, nextTabStop.GetTabAnchor());
+                if (hangingTabStop != null && hangingTabStop.GetTabAlignment() == TabAlignment.ANCHOR && childRenderer is 
+                    TextRenderer) {
+                    childRenderer.SetProperty(Property.TAB_ANCHOR, hangingTabStop.GetTabAnchor());
                 }
                 childResult = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea(
                     ).GetPageNumber(), bbox)));
@@ -155,23 +155,24 @@ namespace iText.Layout.Renderer {
                 maxAscent = Math.Max(maxAscent, childAscent);
                 maxDescent = Math.Min(maxDescent, childDescent);
                 float maxHeight = maxAscent - maxDescent;
-                if (nextTabStop != null) {
+                if (hangingTabStop != null) {
                     IRenderer tabRenderer = childRenderers[childPos - 1];
-                    float tabWidth = CalculateTab(layoutBox, curWidth, nextTabStop, childRenderer, childResult, tabRenderer);
+                    float tabWidth = CalculateTab(layoutBox, curWidth, hangingTabStop, childRenderer, childResult, tabRenderer
+                        );
                     tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                     childResult.GetOccupiedArea().GetBBox().MoveRight(tabWidth);
                     if (childResult.GetSplitRenderer() != null) {
                         childResult.GetSplitRenderer().GetOccupiedArea().GetBBox().MoveRight(tabWidth);
                     }
                     float tabAndNextElemWidth = tabWidth + childResult.GetOccupiedArea().GetBBox().GetWidth();
-                    if (nextTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < nextTabStop.GetTabPosition
-                        ()) {
-                        curWidth = nextTabStop.GetTabPosition();
+                    if (hangingTabStop.GetTabAlignment() == TabAlignment.RIGHT && curWidth + tabAndNextElemWidth < hangingTabStop
+                        .GetTabPosition()) {
+                        curWidth = hangingTabStop.GetTabPosition();
                     }
                     else {
                         curWidth += tabAndNextElemWidth;
                     }
-                    nextTabStop = null;
+                    hangingTabStop = null;
                 }
                 else {
                     curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();

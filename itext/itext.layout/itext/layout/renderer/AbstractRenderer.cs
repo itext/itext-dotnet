@@ -578,7 +578,7 @@ namespace iText.Layout.Renderer {
         /// <param name="rect">a rectangle margins will be applied on.</param>
         /// <param name="reverse">
         /// indicates whether margins will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// inside (in case of false) or outside (in case of true) the rectangle.
         /// </param>
         /// <returns>
         /// a
@@ -595,7 +595,7 @@ namespace iText.Layout.Renderer {
         /// <param name="margins">the margins to be applied on the given rectangle</param>
         /// <param name="reverse">
         /// indicates whether margins will be applied
-        /// inside (in case of false) or outside (in case of false) the rectangle.
+        /// inside (in case of false) or outside (in case of true) the rectangle.
         /// </param>
         /// <returns>
         /// a
