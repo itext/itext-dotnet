@@ -45,13 +45,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Versions.Attributes;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Font;
 using iText.Layout.Properties;
-using Versions.Attributes;
 
 namespace iText.Layout.Renderer {
     internal class TypographyUtils {

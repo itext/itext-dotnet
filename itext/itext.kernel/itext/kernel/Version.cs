@@ -44,8 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Reflection;
-using iText.IO.Log;
 using Versions.Attributes;
+using iText.IO.Log;
 
 namespace iText.Kernel {
     /// <summary>This class contains version information about iText.</summary>
