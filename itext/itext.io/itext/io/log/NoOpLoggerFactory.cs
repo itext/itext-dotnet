@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.IO.Log
-{
-    public class NoOpLoggerFactory : ILoggerFactory
-    {
+namespace iText.IO.Log {
+    public class NoOpLoggerFactory : ILoggerFactory {
         private ILogger logger = new NoOpLogger();
 
         public ILogger GetLogger(Type klass) {
