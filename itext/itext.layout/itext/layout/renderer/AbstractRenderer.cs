@@ -739,16 +739,19 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyAction(PdfDocument document) {
             PdfAction action = this.GetProperty<PdfAction>(Property.ACTION);
             if (action != null) {
-                PdfLinkAnnotation link = new PdfLinkAnnotation(GetOccupiedArea().GetBBox());
+                PdfLinkAnnotation link = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
+                if (link == null) {
+                    link = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0));
+                    Border border = this.GetProperty<Border>(Property.BORDER);
+                    if (border != null) {
+                        link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
+                    }
+                    else {
+                        link.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
+                    }
+                    SetProperty(Property.LINK_ANNOTATION, link);
+                }
                 link.SetAction(action);
-                Border border = this.GetProperty<Border>(Property.BORDER);
-                if (border != null) {
-                    link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
-                }
-                else {
-                    link.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
-                }
-                SetProperty(Property.LINK_ANNOTATION, link);
             }
         }
 

@@ -13,6 +13,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfAnnotationTest : ExtendedITextTest {
@@ -116,6 +117,30 @@ namespace iText.Kernel.Pdf {
             PdfLinkAnnotation link = (PdfLinkAnnotation)annotations[0];
             NUnit.Framework.Assert.AreEqual(page, link.GetPage());
             document.Close();
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET)]
+        public virtual void LinkAnnotationActionDestinationTest() {
+            String fileName = "linkAnnotationActionDestinationTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(new FileStream(destinationFolder + fileName, FileMode.Create
+                )));
+            PdfArray array = new PdfArray();
+            array.Add(pdfDocument.AddNewPage().GetPdfObject());
+            array.Add(PdfName.XYZ);
+            array.Add(new PdfNumber(36));
+            array.Add(new PdfNumber(100));
+            array.Add(new PdfNumber(1));
+            PdfDestination dest = PdfDestination.MakeDestination(array);
+            PdfLinkAnnotation link = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0));
+            link.SetAction(PdfAction.CreateGoTo("abc"));
+            link.SetDestination(dest);
+            pdfDocument.GetPage(1).AddAnnotation(link);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + fileName, sourceFolder
+                 + "cmp_" + fileName, destinationFolder, "diff_"));
         }
 
         /// <exception cref="System.Exception"/>
