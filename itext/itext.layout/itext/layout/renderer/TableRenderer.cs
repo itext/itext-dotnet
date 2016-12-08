@@ -154,10 +154,10 @@ namespace iText.Layout.Renderer {
             // key is column number (there can be only one move during one split)
             // value is the previous row number of the cell
             IDictionary<int, int?> rowMoves = new Dictionary<int, int?>();
-            MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo
-                ());
+            MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
+                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 marginsCollapseHandler.StartMarginsCollapse(layoutBox);
             }
             ApplyMargins(layoutBox, false);

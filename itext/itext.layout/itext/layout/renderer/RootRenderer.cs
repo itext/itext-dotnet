@@ -375,9 +375,5 @@ namespace iText.Layout.Renderer {
                 keepWithNextHangingRendererLayoutResult = null;
             }
         }
-
-        public RootRenderer() {
-            marginsCollapseHandler = new MarginsCollapseHandler(this, null);
-        }
     }
 }

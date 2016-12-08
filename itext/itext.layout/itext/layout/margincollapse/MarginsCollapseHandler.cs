@@ -64,7 +64,7 @@ namespace iText.Layout.Margincollapse {
 
         private int processedChildrenNum = 0;
 
-        private IList<IRenderer> rendererChildren;
+        private IList<IRenderer> rendererChildren = new List<IRenderer>();
 
         public MarginsCollapseHandler(IRenderer renderer, MarginsCollapseInfo marginsCollapseInfo) {
             this.renderer = renderer;
@@ -76,9 +76,6 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer child, Rectangle layoutBox) {
-            if (rendererChildren == null) {
-                rendererChildren = new List<IRenderer>();
-            }
             rendererChildren.Add(child);
             int childIndex = processedChildrenNum++;
             bool childIsBlockElement = IsBlockElement(child);
@@ -134,9 +131,7 @@ namespace iText.Layout.Margincollapse {
             }
             if (prevChildMarginInfo != null) {
                 FixPrevChildOccupiedArea(childIndex);
-                if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop()) {
-                    collapseInfo.GetCollapseBefore().JoinMargin(prevChildMarginInfo.GetOwnCollapseAfter());
-                }
+                UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetOwnCollapseAfter());
             }
             prevChildMarginInfo = childMarginInfo;
             childMarginInfo = null;
@@ -159,16 +154,14 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void EndMarginsCollapse() {
-            if (prevChildMarginInfo != null && prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop
-                ()) {
-                collapseInfo.GetCollapseBefore().JoinMargin(prevChildMarginInfo.GetCollapseAfter());
+            if (prevChildMarginInfo != null) {
+                UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetCollapseAfter());
             }
             bool couldBeSelfCollapsing = iText.Layout.Margincollapse.MarginsCollapseHandler.MarginsCouldBeSelfCollapsing
                 (renderer);
             if (FirstChildMarginAdjoinedToParent(renderer)) {
                 if (collapseInfo.IsSelfCollapsing() && !couldBeSelfCollapsing) {
-                    float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
-                    renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
+                    AddMarginToSelfCollapsedKid();
                 }
             }
             collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && couldBeSelfCollapsing);
@@ -209,6 +202,12 @@ namespace iText.Layout.Margincollapse {
                     float collapsedMargins = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
                     OverrideModelBottomMargin(renderer, collapsedMargins);
                 }
+            }
+        }
+
+        private void UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(MarginsCollapse collapseAfter) {
+            if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop()) {
+                collapseInfo.GetCollapseBefore().JoinMargin(collapseAfter);
             }
         }
 
@@ -289,11 +288,13 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
+        private void AddMarginToSelfCollapsedKid() {
+            float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
+            renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
+        }
+
         private IRenderer GetRendererChild(int index) {
-            if (rendererChildren != null) {
-                return rendererChildren[index];
-            }
-            return this.renderer.GetChildRenderers()[index];
+            return rendererChildren[index];
         }
 
         private void GetRidOfCollapseArtifactsAtopOccupiedArea() {

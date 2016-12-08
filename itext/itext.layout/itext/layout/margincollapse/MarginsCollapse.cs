@@ -57,7 +57,7 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
-        public virtual void JoinMargin(MarginsCollapse marginsCollapse) {
+        internal virtual void JoinMargin(MarginsCollapse marginsCollapse) {
             JoinMargin(marginsCollapse.maxPositiveMargin);
             JoinMargin(marginsCollapse.minNegativeMargin);
         }

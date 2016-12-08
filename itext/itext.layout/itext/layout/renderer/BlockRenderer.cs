@@ -70,10 +70,10 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || isPositioned) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
-            MarginsCollapseHandler marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo
-                ());
+            MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
+                marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
             ApplyMargins(parentBBox, false);
