@@ -467,6 +467,102 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FixedWidthRotationTest01() {
+            //TODO: currently is incorrect. See DEVSIX-988
+            String outFileName = destinationFolder + "fixedWidthRotationTest01.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest01.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
+                );
+            Div d = new Div().SetWidth(300).SetBorder(new SolidBorder(Color.RED, 5)).SetPadding(5);
+            Paragraph p = new Paragraph(text).SetWidth(600).SetRotationAngle(Math.PI / 2).SetBorder(new SolidBorder(Color
+                .BLUE, 5));
+            doc.Add(d.Add(p));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FixedWidthRotationTest02() {
+            //TODO: currently is incorrect. See DEVSIX-988
+            String outFileName = destinationFolder + "fixedWidthRotationTest02.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest02.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
+                );
+            Div d = new Div().SetWidth(300).SetBorder(new SolidBorder(Color.RED, 5)).SetPadding(5);
+            Paragraph p = new Paragraph(text).SetWidth(500).SetRotationAngle(Math.PI * 3 / 8).SetBorder(new SolidBorder
+                (Color.BLUE, 5));
+            doc.Add(d.Add(p));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void FixedWidthRotationTest03() {
+            //TODO: currently is incorrect. See DEVSIX-988
+            String outFileName = destinationFolder + "fixedWidthRotationTest03.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "fixedWidthRotationTest03.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
+                );
+            Div d = new Div().SetWidth(300).SetBorder(new SolidBorder(Color.RED, 5)).SetPadding(5);
+            Div d1 = new Div().Add(new Paragraph(text)).SetWidth(500).SetRotationAngle(Math.PI * 5 / 8).SetBorder(new 
+                SolidBorder(Color.BLUE, 5));
+            doc.Add(d.Add(d1));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MarginsRotatedTest01() {
+            //TODO: currently is incorrect. See DEVSIX-989
+            String outFileName = destinationFolder + "marginsRotatedTest01.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "marginsRotatedTest01.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
+                );
+            Div d = new Div().SetWidth(400).SetBorder(new SolidBorder(Color.RED, 5));
+            Div d1 = new Div().Add(new Paragraph(text)).SetWidth(200).SetRotationAngle(Math.PI / 4).SetMargins(100, 10
+                , 100, 10).SetBorder(new SolidBorder(Color.BLUE, 5));
+            doc.Add(d.Add(d1));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void MarginsRotatedTest02() {
+            //TODO: currently is incorrect. See DEVSIX-989
+            String outFileName = destinationFolder + "marginsRotatedTest02.pdf";
+            String cmpFileName = sourceFolder + cmpPrefix + "marginsRotatedTest02.pdf";
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            doc.SetProperty(Property.COLLAPSING_MARGINS, true);
+            Text text = new Text("Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me."
+                );
+            Div d = new Div().SetWidth(400).SetBorder(new SolidBorder(Color.RED, 5));
+            Div d1 = new Div().Add(new Paragraph(text)).SetWidth(200).SetRotationAngle(Math.PI / 4).SetMargins(100, 10
+                , 100, 10).SetBorder(new SolidBorder(Color.BLUE, 5));
+            doc.Add(d.Add(d1).Add(new Paragraph("Hello").SetMargin(50).SetBorder(new SolidBorder(Color.GREEN, 5))));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private void DrawCross(PdfCanvas canvas, float x, float y) {
             DrawLine(canvas, x - 50, y, x + 50, y);
             DrawLine(canvas, x, y - 50, x, y + 50);
