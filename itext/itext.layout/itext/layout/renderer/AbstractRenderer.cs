@@ -771,10 +771,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual bool IsNotFittingLayoutArea(LayoutArea layoutArea) {
-            Rectangle area = ApplyMargins(layoutArea.GetBBox().Clone(), false);
-            area = ApplyPaddings(area, false);
-            return !IsPositioned() && (occupiedArea.GetBBox().GetHeight() > area.GetHeight() || occupiedArea.GetBBox()
-                .GetWidth() > area.GetWidth());
+            return !IsPositioned() && (occupiedArea.GetBBox().GetHeight() > layoutArea.GetBBox().GetHeight() || occupiedArea
+                .GetBBox().GetWidth() > layoutArea.GetBBox().GetWidth());
         }
 
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
