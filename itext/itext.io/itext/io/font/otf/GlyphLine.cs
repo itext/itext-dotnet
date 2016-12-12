@@ -136,6 +136,10 @@ namespace iText.IO.Font.Otf {
             return str.ToString();
         }
 
+        public override String ToString() {
+            return ToUnicodeString(start, end);
+        }
+
         /// <summary>Copy a slice of this Glyphline.</summary>
         /// <param name="left">leftmost index of the slice</param>
         /// <param name="right">rightmost index of the slice</param>

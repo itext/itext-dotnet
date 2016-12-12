@@ -783,7 +783,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override String ToString() {
-            return line != null ? line.ToUnicodeString(line.start, line.end) : strToBeConverted;
+            return line != null ? line.ToString() : null;
         }
 
         /// <summary>Gets char code at given position for the text belonging to this renderer.</summary>

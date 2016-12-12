@@ -67,14 +67,37 @@ namespace iText.Layout.Renderer {
             maxAscent = 0;
             maxDescent = 0;
             int childPos = 0;
-            BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
+            // Trim first
+            int totalNumberOfTrimmedGlyphs = 0;
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is TextRenderer) {
-                    renderer.SetParent(this);
-                    ((TextRenderer)renderer).ApplyOtf();
-                    renderer.SetParent(null);
+                    TextRenderer textRenderer = (TextRenderer)renderer.SetParent(this);
+                    GlyphLine currentText = textRenderer.GetText();
+                    if (currentText != null) {
+                        int prevTextStart = currentText.start;
+                        textRenderer.TrimFirst();
+                        int numOfTrimmedGlyphs = textRenderer.GetText().start - prevTextStart;
+                        totalNumberOfTrimmedGlyphs += numOfTrimmedGlyphs;
+                    }
+                    if (textRenderer.Length() > 0) {
+                        break;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+            if (totalNumberOfTrimmedGlyphs != 0 && levels != null) {
+                levels = iText.IO.Util.JavaUtil.ArraysCopyOfRange(levels, totalNumberOfTrimmedGlyphs, levels.Length);
+            }
+            BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
+            foreach (IRenderer renderer_1 in childRenderers) {
+                if (renderer_1 is TextRenderer) {
+                    renderer_1.SetParent(this);
+                    ((TextRenderer)renderer_1).ApplyOtf();
+                    renderer_1.SetParent(null);
                     if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI) {
-                        baseDirection = renderer.GetOwnProperty<BaseDirection?>(Property.BASE_DIRECTION);
+                        baseDirection = renderer_1.GetOwnProperty<BaseDirection?>(Property.BASE_DIRECTION);
                     }
                 }
             }
@@ -131,9 +154,6 @@ namespace iText.Layout.Renderer {
                             continue;
                         }
                     }
-                }
-                if (!anythingPlaced && childRenderer is TextRenderer) {
-                    ((TextRenderer)childRenderer).TrimFirst();
                 }
                 if (hangingTabStop != null && hangingTabStop.GetTabAlignment() == TabAlignment.ANCHOR && childRenderer is 
                     TextRenderer) {
@@ -284,15 +304,15 @@ namespace iText.Layout.Renderer {
                         bool reversed = false;
                         int offset = 0;
                         while (pos < lineGlyphs.Count) {
-                            IRenderer renderer_1 = lineGlyphs[pos].renderer;
-                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_1);
+                            IRenderer renderer_2 = lineGlyphs[pos].renderer;
+                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_2);
                             newRenderer.DeleteOwnProperty(Property.REVERSED);
                             children.Add(newRenderer);
                             ((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)children[children.Count -
                                  1]).line);
                             GlyphLine gl = ((TextRenderer)children[children.Count - 1]).line;
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
-                            while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_1) {
+                            while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_2) {
                                 if (pos + 1 < lineGlyphs.Count) {
                                     if (reorder[pos] == reorder[pos + 1] + 1 && !TextRenderer.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextRenderer
                                         .IsSpaceGlyph(lineGlyphs[pos].glyph)) {
