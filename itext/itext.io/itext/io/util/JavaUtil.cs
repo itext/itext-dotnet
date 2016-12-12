@@ -283,6 +283,15 @@ namespace iText.IO.Util {
             return copy;
         }
 
+        public static T[] ArraysCopyOfRange<T>(T[] original, int from, int to) {
+            int newLength = to - from;
+            if (newLength < 0)
+                throw new ArgumentException(from + " > " + to);
+            T[] copy = new T[newLength];
+            System.Array.Copy(original, from, copy, 0, Math.Min(original.Length - from, newLength));
+            return copy;
+        }
+
         public static Stream CorrectWavFile(Stream stream) {
             String header = "";
             for (int i = 0; i < 4; i++) {
