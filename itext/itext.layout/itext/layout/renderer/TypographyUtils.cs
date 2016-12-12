@@ -382,13 +382,38 @@ namespace iText.Layout.Renderer {
 
             Type type = null;
             if (classFullName != null) {
+                String fileLoadExceptionMessage = null;
                 try {
                     type = System.Type.GetType(classFullName);
                 } catch (FileLoadException fileLoadException) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
-                    logger.Error(fileLoadException.Message);
+                    fileLoadExceptionMessage = fileLoadException.Message;
+                }
+                if (fileLoadExceptionMessage != null) {
+                    // try to find typography assembly by it's partial name and check if it refers to current version of itext core
+                    try {
+                        type = System.Type.GetType(partialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type != null) {
+                        bool doesReferToCurrentVersionOfCore = false;
+                        foreach (AssemblyName assemblyName in type.Assembly.GetReferencedAssemblies()) {
+                            if ("itext.io".Equals(assemblyName.Name)) {
+                                doesReferToCurrentVersionOfCore = assemblyName.Version.Equals(Assembly.GetExecutingAssembly().GetName().Version);
+                                break;
+                            }
+                        }
+                        if (!doesReferToCurrentVersionOfCore) {
+                            type = null;
+                        }
+                    }
+                    if (type == null) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
+                        logger.Error(fileLoadExceptionMessage);
+                    }
                 }
             }
+
             return type;
         }
     }

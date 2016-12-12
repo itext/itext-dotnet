@@ -244,16 +244,26 @@ namespace iText.Kernel {
 
             Type type = null;
             if (licenseKeyClassFullName != null) {
+                String fileLoadExceptionMessage = null;
                 try {
                     type = System.Type.GetType(licenseKeyClassFullName);
                 } catch (FileLoadException fileLoadException) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
-                    logger.Error(fileLoadException.Message);
+                    fileLoadExceptionMessage = fileLoadException.Message;
                 }
-            }
 
-            if (type == null) {
-                type = System.Type.GetType(licenseKeyClassPartialName);
+                if (fileLoadExceptionMessage != null) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
+                    try {
+                        type = System.Type.GetType(licenseKeyClassPartialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type != null) {
+                        logger.Warn(fileLoadExceptionMessage);
+                    } else {
+                        logger.Error(fileLoadExceptionMessage);
+                    }
+                }
             }
             return type;
         }
