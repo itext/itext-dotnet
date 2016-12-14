@@ -365,7 +365,7 @@ namespace iText.Layout.Renderer {
                     // collapse boundary borders if necessary
                     // notice that bottom border collapse is handled afterwards
                     Border[] cellBorders = cell.GetBorders();
-                    if (0 == row - rowspan + 1) {
+                    if (0 >= row - rowspan + 1) {
                         Border collapsed = GetCollapsedBorder(cellBorders[0], null != headerRenderer ? headerRenderer.horizontalBorders
                             [headerRenderer.horizontalBorders.Count - 1][col] : borders[0]);
                         if (null != headerRenderer && collapsed == cellBorders[0]) {
@@ -434,8 +434,10 @@ namespace iText.Layout.Renderer {
                     }
                     if (currentCellHasBigRowspan) {
                         // cell from the future
-                        if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
+                        if (cellResult.GetStatus() != LayoutResult.FULL) {
                             splits[col] = cellResult;
+                        }
+                        if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
                             currentRow[col] = (CellRenderer)cellResult.GetSplitRenderer();
                         }
                         else {
@@ -697,7 +699,10 @@ namespace iText.Layout.Renderer {
                                     cellSplit.SetBorders(Border.NO_BORDER, 2);
                                 }
                                 else {
-                                    cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
+                                    if (!cellOverflow.HasProperty(Property.BORDER_TOP) || Border.NO_BORDER != cellOverflow.GetProperty(Property
+                                        .BORDER_TOP)) {
+                                        cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
+                                    }
                                 }
                                 for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
                                     horizontalBorders[!hasContent && splits[col].GetStatus() == LayoutResult.PARTIAL ? row : row + 1][j] = GetBorders
@@ -722,7 +727,9 @@ namespace iText.Layout.Renderer {
                                     splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
                                 }
                                 else {
-                                    splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
+                                    if (Border.NO_BORDER != currentRow[col].GetProperty(Property.BORDER_TOP)) {
+                                        splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
+                                    }
                                 }
                                 for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
                                     horizontalBorders[row + (!hasContent && rowspans[col] > 1 ? 0 : 1)][j] = GetBorders()[2];
