@@ -709,6 +709,7 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 rows[targetOverflowRowIndex[col]][col] = (CellRenderer)currentRow[col].SetParent(splitResult[1]);
+                                rows[targetOverflowRowIndex[col]][col].DeleteOwnProperty(Property.BORDER_TOP);
                             }
                             rows[targetOverflowRowIndex[col]][col].occupiedArea = cellOccupiedArea;
                         }

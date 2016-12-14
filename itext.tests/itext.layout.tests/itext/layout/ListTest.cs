@@ -378,7 +378,6 @@ namespace iText.Layout {
             nestedList.SetHeight(400);
             nestedItem.SetHeight(300);
             doc.Add(list);
-            doc.Add(new AreaBreak());
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
