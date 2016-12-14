@@ -547,23 +547,23 @@ namespace iText.Kernel.Pdf {
                 document.GetPage(-30);
             }
             catch (PdfException pdfException) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.CannotFindThePageNumber, -30), pdfException.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, -30), pdfException
+                    .Message);
             }
             try {
                 document.GetPage(0);
             }
             catch (PdfException pdfException) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.CannotFindThePageNumber, 0), pdfException.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, 0), pdfException
+                    .Message);
             }
             document.GetPage(1);
             try {
                 document.GetPage(25);
             }
             catch (PdfException pdfException) {
-                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.CannotFindThePageNumber, 25), pdfException.Message
-                    );
+                NUnit.Framework.Assert.AreEqual(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, 25), pdfException
+                    .Message);
             }
             document.Close();
         }

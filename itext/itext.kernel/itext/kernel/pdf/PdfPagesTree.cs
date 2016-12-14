@@ -110,7 +110,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfPage GetPage(int pageNum) {
             if (pageNum < 1 || pageNum > GetNumberOfPages()) {
-                throw new PdfException(String.Format(PdfException.CannotFindThePageNumber, pageNum));
+                throw new IndexOutOfRangeException(String.Format(PdfException.RequestedPageNumberIsOutOfBounds, pageNum));
             }
             --pageNum;
             PdfPage pdfPage = pages[pageNum];

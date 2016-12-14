@@ -113,8 +113,6 @@ namespace iText.Kernel {
 
         public const String CannotFindImageDataOrEI = "Cannot find image data or EI.";
 
-        public const String CannotFindThePageNumber = "Cannot find the page number {0}.";
-
         public const String CannotFlushDocumentRootTagBeforeDocumentIsClosed = "Cannot flush document root tag before document is closed.";
 
         public const String CannotFlushObject = "Cannot flush object.";
@@ -418,6 +416,8 @@ namespace iText.Kernel {
         public const String PdfIndirectObjectBelongsToOtherPdfDocument = "Pdf indirect object belongs to other PDF document. Copy object to current pdf document.";
 
         public const String PdfVersionNotValid = "PDF version is not valid.";
+
+        public const String RequestedPageNumberIsOutOfBounds = "Requested page number {0} is out of bounds.";
 
         public const String PngFilterUnknown = "PNG filter unknown.";
 
