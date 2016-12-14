@@ -159,10 +159,8 @@ namespace iText.Layout.Renderer {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
                                 if (marginsCollapsingEnabled) {
-                                    //if (anythingPlaced) {
                                     marginsCollapseHandler.EndChildMarginsHandling();
                                 }
-                                //}
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 splitRenderer.childRenderers.Add(result.GetSplitRenderer());
@@ -218,11 +216,6 @@ namespace iText.Layout.Renderer {
                             if (result.GetStatus() == LayoutResult.NOTHING) {
                                 bool keepTogether = IsKeepTogether();
                                 int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
-                                if (marginsCollapsingEnabled) {
-                                }
-                                //if (anythingPlaced) {
-                                //marginsCollapseHandler.endChildMarginsHandling();
-                                //}
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(layoutResult);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 foreach (IRenderer renderer in splitRenderer.childRenderers) {
