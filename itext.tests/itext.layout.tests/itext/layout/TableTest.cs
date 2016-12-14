@@ -864,15 +864,14 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVISX-929")]
-        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 9)]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
             String testName = "splitTableOnShortPage.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, new PageSize(300, 90));
+            Document doc = new Document(pdfDoc, new PageSize(300, 98));
             doc.Add(new Paragraph("Table with setKeepTogether(true):"));
             Table table = new Table(3);
             table.SetKeepTogether(true);

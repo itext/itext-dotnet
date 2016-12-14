@@ -585,7 +585,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
@@ -710,6 +709,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SplitCellsTest04() {
             fileName = "splitCellsTest04.pdf";
             Document doc = CreateDocument();

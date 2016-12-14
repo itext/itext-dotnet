@@ -699,8 +699,7 @@ namespace iText.Layout.Renderer {
                                     cellSplit.SetBorders(Border.NO_BORDER, 2);
                                 }
                                 else {
-                                    if (!cellOverflow.HasProperty(Property.BORDER_TOP) || Border.NO_BORDER != cellOverflow.GetProperty(Property
-                                        .BORDER_TOP)) {
+                                    if (Border.NO_BORDER != cellOverflow.GetProperty<Border>(Property.BORDER_TOP)) {
                                         cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
                                     }
                                 }
