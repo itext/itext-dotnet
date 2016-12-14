@@ -726,7 +726,7 @@ namespace iText.Layout.Renderer {
                                     splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
                                 }
                                 else {
-                                    if (Border.NO_BORDER != currentRow[col].GetProperty(Property.BORDER_TOP)) {
+                                    if (Border.NO_BORDER != currentRow[col].GetProperty<Border>(Property.BORDER_TOP)) {
                                         splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
                                     }
                                 }
