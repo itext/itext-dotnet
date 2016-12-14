@@ -134,7 +134,7 @@ namespace iText.Layout.Renderer {
                     float? yLine = null;
                     for (int i = 0; i < childRenderers.Count; i++) {
                         if (childRenderers[i].GetOccupiedArea().GetBBox().GetHeight() > 0) {
-                            yLine = ((AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
+                            yLine = ((AbstractRenderer)childRenderers[i]).GetFirstYLineRecursively();
                             if (yLine != null) {
                                 break;
                             }
