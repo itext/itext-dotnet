@@ -964,11 +964,13 @@ namespace iText.Layout.Renderer {
             , float? wordSpacing) {
             float width = 0;
             for (int i = glyphLine.start; i < glyphLine.end; i++) {
-                float charWidth = GetCharWidth(glyphLine.Get(i), fontSize, hScale, characterSpacing, wordSpacing);
-                width += charWidth;
-                float xAdvance = (i != glyphLine.start) ? ScaleXAdvance(glyphLine.Get(i - 1).GetXAdvance(), fontSize, hScale
-                    ) : 0;
-                width += xAdvance;
+                if (!NoPrint(glyphLine.Get(i))) {
+                    float charWidth = GetCharWidth(glyphLine.Get(i), fontSize, hScale, characterSpacing, wordSpacing);
+                    width += charWidth;
+                    float xAdvance = (i != glyphLine.start) ? ScaleXAdvance(glyphLine.Get(i - 1).GetXAdvance(), fontSize, hScale
+                        ) : 0;
+                    width += xAdvance;
+                }
             }
             return width / TEXT_SPACE_COEFF;
         }
