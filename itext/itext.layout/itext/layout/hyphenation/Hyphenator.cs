@@ -30,6 +30,8 @@ namespace iText.Layout.Hyphenation {
     public sealed class Hyphenator {
         private const String HYPHENATION_DEFAULT_RESOURCE = "iText.Hyph.";
 
+        private const char SOFT_HYPHEN = '\u00ad';
+
         /// <summary>Logging instance.</summary>
         private static ILogger log = LoggerFactory.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
 
@@ -252,39 +254,17 @@ namespace iText.Layout.Hyphenation {
         /// <returns>the hyphenation result</returns>
         public static iText.Layout.Hyphenation.Hyphenation Hyphenate(String lang, String country, IDictionary<String
             , String> hyphPathNames, String word, int leftMin, int rightMin) {
-            HyphenationTree hTree = GetHyphenationTree(lang, country, hyphPathNames);
-            if (hTree == null) {
-                log.Warn("Soft hyphen unicode symbols will be used as hints for hyphenation");
-                char softHyphen = '\u00ad';
-                IList<int> softHyphens = new List<int>();
-                int lastSoftHyphenIndex = -1;
-                int curSoftHyphenIndex;
-                while ((curSoftHyphenIndex = word.IndexOf(softHyphen, lastSoftHyphenIndex + 1)) > 0) {
-                    softHyphens.Add(curSoftHyphenIndex);
-                    lastSoftHyphenIndex = curSoftHyphenIndex;
-                }
-                int leftInd = 0;
-                int rightInd = softHyphens.Count - 1;
-                while (leftInd < softHyphens.Count && word.JSubstring(0, softHyphens[leftInd]).Replace(softHyphen.ToString
-                    (), "").Length < leftMin) {
-                    leftInd++;
-                }
-                while (rightInd >= 0 && word.Substring(softHyphens[rightInd] + 1).Replace(softHyphen.ToString(), "").Length
-                     < rightMin) {
-                    rightInd--;
-                }
-                if (leftInd <= rightInd) {
-                    int[] hyphenationPoints = new int[rightInd - leftInd + 1];
-                    for (int i = leftInd; i <= rightInd; i++) {
-                        hyphenationPoints[i - leftInd] = softHyphens[i];
-                    }
-                    return new iText.Layout.Hyphenation.Hyphenation(word, hyphenationPoints);
-                }
-                else {
-                    return null;
-                }
+            // If a word contains soft hyphens, then hyphenation based on soft hyphens has higher priority
+            if (WordContainsSoftHyphens(word)) {
+                return HyphenateBasedOnSoftHyphens(word, leftMin, rightMin);
             }
-            return hTree.Hyphenate(word, leftMin, rightMin);
+            else {
+                HyphenationTree hTree = null;
+                if (lang != null) {
+                    hTree = GetHyphenationTree(lang, country, hyphPathNames);
+                }
+                return hTree != null ? hTree.Hyphenate(word, leftMin, rightMin) : null;
+            }
         }
 
         /// <summary>Hyphenates a word.</summary>
@@ -304,6 +284,41 @@ namespace iText.Layout.Hyphenation {
         /// <returns>the hyphenation result</returns>
         public iText.Layout.Hyphenation.Hyphenation Hyphenate(String word) {
             return Hyphenate(lang, country, hyphPathNames, word, leftMin, rightMin);
+        }
+
+        private static bool WordContainsSoftHyphens(String word) {
+            return word.IndexOf(SOFT_HYPHEN) >= 0;
+        }
+
+        private static iText.Layout.Hyphenation.Hyphenation HyphenateBasedOnSoftHyphens(String word, int leftMin, 
+            int rightMin) {
+            IList<int> softHyphens = new List<int>();
+            int lastSoftHyphenIndex = -1;
+            int curSoftHyphenIndex;
+            while ((curSoftHyphenIndex = word.IndexOf(SOFT_HYPHEN, lastSoftHyphenIndex + 1)) > 0) {
+                softHyphens.Add(curSoftHyphenIndex);
+                lastSoftHyphenIndex = curSoftHyphenIndex;
+            }
+            int leftInd = 0;
+            int rightInd = softHyphens.Count - 1;
+            while (leftInd < softHyphens.Count && word.JSubstring(0, softHyphens[leftInd]).Replace(SOFT_HYPHEN.ToString
+                (), "").Length < leftMin) {
+                leftInd++;
+            }
+            while (rightInd >= 0 && word.Substring(softHyphens[rightInd] + 1).Replace(SOFT_HYPHEN.ToString(), "").Length
+                 < rightMin) {
+                rightInd--;
+            }
+            if (leftInd <= rightInd) {
+                int[] hyphenationPoints = new int[rightInd - leftInd + 1];
+                for (int i = leftInd; i <= rightInd; i++) {
+                    hyphenationPoints[i - leftInd] = softHyphens[i];
+                }
+                return new iText.Layout.Hyphenation.Hyphenation(word, hyphenationPoints);
+            }
+            else {
+                return null;
+            }
         }
     }
 }

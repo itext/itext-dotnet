@@ -266,11 +266,11 @@ namespace iText.Layout.Renderer {
 
         private float[] CalculateAscenderDescender() {
             PdfFont listItemFont = GetPropertyAsFont(Property.FONT);
-            float? fontSize = GetPropertyAsFloat(Property.FONT_SIZE);
+            float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
             if (listItemFont != null && fontSize != null) {
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
-                return new float[] { fontSize * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, fontSize * ascenderDescender
-                    [1] / TextRenderer.TEXT_SPACE_COEFF };
+                return new float[] { (float)fontSize * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, (float)fontSize
+                     * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
             }
             return new float[] { 0, 0 };
         }
