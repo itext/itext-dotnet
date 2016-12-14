@@ -284,7 +284,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-962")]
         public virtual void ListItemTest02() {
             String outFileName = destinationFolder + "listItemTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemTest02.pdf";

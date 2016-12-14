@@ -377,8 +377,11 @@ namespace iText.Layout.Renderer {
         public override String ToString() {
             StringBuilder sb = new StringBuilder();
             if (lines != null && lines.Count > 0) {
-                foreach (LineRenderer lineRenderer in lines) {
-                    sb.Append(lineRenderer.ToString()).Append("\n");
+                for (int i = 0; i < lines.Count; i++) {
+                    if (i > 0) {
+                        sb.Append("\n");
+                    }
+                    sb.Append(lines[i].ToString());
                 }
             }
             else {

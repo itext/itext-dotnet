@@ -153,18 +153,9 @@ namespace iText.Layout.Renderer {
                  * fontSize : 0;
             line = new GlyphLine(text);
             line.start = line.end = -1;
-            FontMetrics fontMetrics = font.GetFontProgram().GetFontMetrics();
-            float ascender;
-            float descender;
-            if (fontMetrics.GetWinAscender() == 0 || fontMetrics.GetWinDescender() == 0 || fontMetrics.GetTypoAscender
-                () == fontMetrics.GetWinAscender() && fontMetrics.GetTypoDescender() == fontMetrics.GetWinDescender()) {
-                ascender = fontMetrics.GetTypoAscender() * TYPO_ASCENDER_SCALE_COEFF;
-                descender = fontMetrics.GetTypoDescender() * TYPO_ASCENDER_SCALE_COEFF;
-            }
-            else {
-                ascender = fontMetrics.GetWinAscender();
-                descender = fontMetrics.GetWinDescender();
-            }
+            float[] ascenderDescender = CalculateAscenderDescender(font);
+            float ascender = ascenderDescender[0];
+            float descender = ascenderDescender[1];
             float currentLineAscender = 0;
             float currentLineDescender = 0;
             float currentLineHeight = 0;
@@ -549,7 +540,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_574();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_566();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -622,8 +613,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_574 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_574() {
+        private sealed class _IGlyphLineFilter_566 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_566() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -809,6 +800,22 @@ namespace iText.Layout.Renderer {
         internal static bool IsSpaceGlyph(Glyph glyph) {
             return iText.IO.Util.TextUtil.IsWhiteSpace((char)glyph.GetUnicode()) || char.IsSeparator((char)glyph.GetUnicode
                 ());
+        }
+
+        internal static float[] CalculateAscenderDescender(PdfFont font) {
+            FontMetrics fontMetrics = font.GetFontProgram().GetFontMetrics();
+            float ascender;
+            float descender;
+            if (fontMetrics.GetWinAscender() == 0 || fontMetrics.GetWinDescender() == 0 || fontMetrics.GetTypoAscender
+                () == fontMetrics.GetWinAscender() && fontMetrics.GetTypoDescender() == fontMetrics.GetWinDescender()) {
+                ascender = fontMetrics.GetTypoAscender() * TYPO_ASCENDER_SCALE_COEFF;
+                descender = fontMetrics.GetTypoDescender() * TYPO_ASCENDER_SCALE_COEFF;
+            }
+            else {
+                ascender = fontMetrics.GetWinAscender();
+                descender = fontMetrics.GetWinDescender();
+            }
+            return new float[] { ascender, descender };
         }
 
         private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
