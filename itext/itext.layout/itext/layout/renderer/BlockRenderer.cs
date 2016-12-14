@@ -219,9 +219,9 @@ namespace iText.Layout.Renderer {
                                 bool keepTogether = IsKeepTogether();
                                 int layoutResult = anythingPlaced && !keepTogether ? LayoutResult.PARTIAL : LayoutResult.NOTHING;
                                 if (marginsCollapsingEnabled) {
-                                    //if (anythingPlaced) {
-                                    marginsCollapseHandler.EndChildMarginsHandling();
                                 }
+                                //if (anythingPlaced) {
+                                //marginsCollapseHandler.endChildMarginsHandling();
                                 //}
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(layoutResult);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
@@ -262,6 +262,8 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 if (marginsCollapsingEnabled) {
                                     marginsCollapseHandler.EndMarginsCollapse();
+                                    splitRenderer.SetProperty(Property.MARGIN_TOP, GetProperty(Property.MARGIN_TOP));
+                                    splitRenderer.SetProperty(Property.MARGIN_BOTTOM, GetProperty(Property.MARGIN_BOTTOM));
                                 }
                                 ApplyMargins(occupiedArea.GetBBox(), true);
                                 //splitRenderer.occupiedArea = occupiedArea.clone();

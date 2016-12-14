@@ -68,7 +68,7 @@ namespace iText.Layout {
                  + "Then battle for Freedom wherever you can,\n" + "    And, if not shot or hanged, you'll get knighted.";
             Document doc = new Document(pdfDocument);
             doc.SetProperty(Property.COLLAPSING_MARGINS, true);
-            //  doc.add(new Paragraph("marker text").setMargin(0));
+            doc.Add(new Paragraph("marker text").SetMargin(0));
             Paragraph p = new Paragraph(textByron);
             for (int i = 0; i < 3; i++) {
                 p.Add(textByron);
