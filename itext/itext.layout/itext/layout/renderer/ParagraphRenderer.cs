@@ -253,8 +253,8 @@ namespace iText.Layout.Renderer {
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                             if (marginsCollapsingEnabled) {
                                 marginsCollapseHandler.EndMarginsCollapse();
-                                split[0].SetProperty(Property.MARGIN_TOP, this.GetProperty<float?>(Property.MARGIN_TOP));
-                                split[0].SetProperty(Property.MARGIN_BOTTOM, this.GetProperty<float?>(Property.MARGIN_BOTTOM));
+                                split[0].SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
+                                split[0].SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
                             }
                             ApplyMargins(occupiedArea.GetBBox(), true);
                             if (wasHeightClipped) {

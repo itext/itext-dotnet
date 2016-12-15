@@ -193,8 +193,8 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 if (marginsCollapsingEnabled) {
                                     marginsCollapseHandler.EndMarginsCollapse();
-                                    splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetProperty<float?>(Property.MARGIN_TOP));
-                                    splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetProperty<float?>(Property.MARGIN_BOTTOM));
+                                    splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
+                                    splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
                                 }
                                 ApplyMargins(occupiedArea.GetBBox(), true);
                                 if (wasHeightClipped) {
@@ -255,8 +255,8 @@ namespace iText.Layout.Renderer {
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 if (marginsCollapsingEnabled) {
                                     marginsCollapseHandler.EndMarginsCollapse();
-                                    splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetProperty<float?>(Property.MARGIN_TOP));
-                                    splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetProperty<float?>(Property.MARGIN_BOTTOM));
+                                    splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
+                                    splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
                                 }
                                 ApplyMargins(occupiedArea.GetBBox(), true);
                                 //splitRenderer.occupiedArea = occupiedArea.clone();
