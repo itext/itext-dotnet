@@ -43,8 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.IO.Util;
-using iText.Kernel;
 
 namespace iText.Kernel.Colors {
     /// <summary>
@@ -235,7 +235,9 @@ namespace iText.Kernel.Colors {
                     color[2] = System.Convert.ToInt32(colorName.Substring(4), 16);
                     return new DeviceRgb(color[0], color[1], color[2]);
                 }
-                throw new PdfException(PdfException.UnknownColorFormatMustBeRGBorRRGGBB);
+                ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                logger.Error(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
+                return new DeviceRgb(0, 0, 0);
             }
             if (colorName.StartsWith("rgb(")) {
                 String delim = "rgb(), \t\r\n\f";
@@ -262,7 +264,9 @@ namespace iText.Kernel.Colors {
                 return new DeviceRgb(color[0], color[1], color[2]);
             }
             if (!NAMES.Contains(colorName)) {
-                throw new PdfException(PdfException.ColorNotFound).SetMessageParams(colorName);
+                ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                logger.Error(String.Format(iText.IO.LogMessageConstant.COLOR_NOT_FOUND, colorName));
+                return new DeviceRgb(0, 0, 0);
             }
             color = NAMES.Get(colorName);
             return new DeviceRgb(color[0], color[1], color[2]);

@@ -178,6 +178,7 @@ namespace iText.Kernel {
         [Obsolete]
         public const String CodabarStartStopCharacterAreOnlyExtremes = "In codabar, start/stop characters are only allowed at the extremes.";
 
+        [Obsolete]
         public const String ColorNotFound = "Color not found.";
 
         public const String ColorSpaceNotFound = "ColorSpace not found.";
@@ -507,6 +508,7 @@ namespace iText.Kernel {
 
         public const String UnknownKeyAlgorithm1 = "Unknown key algorithm: {0}.";
 
+        [Obsolete]
         public const String UnknownColorFormatMustBeRGBorRRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
         public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";

@@ -50,6 +50,8 @@ namespace iText.IO {
 
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
+        public const String COLOR_NOT_FOUND = "Color ''{0}'' not found. Defaulting to black color.";
+
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
         public const String COULD_NOT_FIND_GLYPH_WITH_CODE = "Could not find glyph with the following code: {0}";
@@ -137,6 +139,8 @@ namespace iText.IO {
         public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
 
         public const String UNKNOWN_CMAP = "Unknown CMap {0}";
+
+        public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb. Defaulting to black color.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
 
