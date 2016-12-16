@@ -134,8 +134,8 @@ namespace iText.Layout.Renderer {
                                 ()));
                         }
                     }
-                    if (childRenderer.GetOccupiedArea() != null) {
-                        AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
+                    if (result.GetSplitRenderer() != null) {
+                        AlignChildHorizontally(result.GetSplitRenderer(), layoutBox.GetWidth());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
                     if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
