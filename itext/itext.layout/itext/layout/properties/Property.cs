@@ -273,6 +273,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LEADING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_PRE_TEXT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_POSITION] = true;
