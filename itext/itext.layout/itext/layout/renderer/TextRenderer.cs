@@ -625,8 +625,10 @@ namespace iText.Layout.Renderer {
         public override void DrawBackground(DrawContext drawContext) {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
             float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
-            float bottomBBoxY = occupiedArea.GetBBox().GetY();
-            float leftBBoxX = occupiedArea.GetBBox().GetX();
+            Rectangle bBox = GetOccupiedAreaBBox();
+            Rectangle backgroundArea = ApplyMargins(bBox, false);
+            float bottomBBoxY = backgroundArea.GetY();
+            float leftBBoxX = backgroundArea.GetX();
             if (background != null) {
                 bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
                 PdfCanvas canvas = drawContext.GetCanvas();
@@ -635,8 +637,8 @@ namespace iText.Layout.Renderer {
                 }
                 canvas.SaveState().SetFillColor(background.GetColor());
                 canvas.Rectangle(leftBBoxX - background.GetExtraLeft(), bottomBBoxY + (float)textRise - background.GetExtraBottom
-                    (), occupiedArea.GetBBox().GetWidth() + background.GetExtraLeft() + background.GetExtraRight(), occupiedArea
-                    .GetBBox().GetHeight() - (float)textRise + background.GetExtraTop() + background.GetExtraBottom());
+                    (), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea
+                    .GetHeight() - (float)textRise + background.GetExtraTop() + background.GetExtraBottom());
                 canvas.Fill().RestoreState();
                 if (isTagged) {
                     canvas.CloseTag();
