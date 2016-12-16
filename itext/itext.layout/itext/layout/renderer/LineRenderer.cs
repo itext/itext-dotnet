@@ -342,6 +342,8 @@ namespace iText.Layout.Renderer {
                         float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
                         foreach (IRenderer child_1 in children) {
                             float currentWidth = ((TextRenderer)child_1).CalculateLineWidth();
+                            float[] margins = ((TextRenderer)child_1).GetMargins();
+                            currentWidth += margins[1] + margins[3];
                             ((TextRenderer)child_1).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             currentXPos += currentWidth;
                         }
