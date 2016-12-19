@@ -620,6 +620,21 @@ namespace iText.Kernel.Pdf {
                         }
                         catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                     }
+                    String producer = null;
+                    if (reader == null) {
+                        if (!info.GetProducer().Equals(iText.Kernel.Version.GetInstance().GetVersion()) && iText.Kernel.Version.GetInstance
+                            ().GetVersion().Contains("licensed")) {
+                            LoggerFactory.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.CUSTOM_PRODUCER_LINE_WAS_OVERRIDDEN);
+                        }
+                        producer = iText.Kernel.Version.GetInstance().GetVersion();
+                    }
+                    else {
+                        if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
+                            producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
+                        }
+                        producer = AddModifiedPostfix(producer);
+                    }
+                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     CheckIsoConformance();
                     PdfObject crypto_1 = null;
                     if (properties.appendMode) {
@@ -1601,37 +1616,20 @@ namespace iText.Kernel.Pdf {
                         writer.crypto = reader.decrypt;
                     }
                     writer.document = this;
+                    String producer = null;
                     if (reader == null) {
                         catalog = new PdfCatalog(this);
                         info = new PdfDocumentInfo(this).AddCreationDate();
-                        info.AddModDate();
-                        info.GetPdfObject().Put(PdfName.Producer, new PdfString(iText.Kernel.Version.GetInstance().GetVersion()));
+                        producer = iText.Kernel.Version.GetInstance().GetVersion();
                     }
                     else {
-                        info.AddModDate();
-                        String producer = null;
                         if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
                             producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
                         }
-                        iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
-                        if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
-                            producer = version.GetVersion();
-                        }
-                        else {
-                            int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
-                            StringBuilder buf;
-                            if (idx == -1) {
-                                buf = new StringBuilder(producer);
-                            }
-                            else {
-                                buf = new StringBuilder(producer.JSubstring(0, idx));
-                            }
-                            buf.Append("; modified using ");
-                            buf.Append(version.GetVersion());
-                            producer = buf.ToString();
-                        }
-                        info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
+                        producer = AddModifiedPostfix(producer);
                     }
+                    info.AddModDate();
+                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
@@ -2110,6 +2108,26 @@ namespace iText.Kernel.Pdf {
                 }
                 PdfDocument.IndirectRefDescription that = (PdfDocument.IndirectRefDescription)o;
                 return docId == that.docId && objNr == that.objNr && genNr == that.genNr;
+            }
+        }
+
+        private String AddModifiedPostfix(String producer) {
+            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
+            if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
+                return version.GetVersion();
+            }
+            else {
+                int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
+                StringBuilder buf;
+                if (idx == -1) {
+                    buf = new StringBuilder(producer);
+                }
+                else {
+                    buf = new StringBuilder(producer.JSubstring(0, idx));
+                }
+                buf.Append("; modified using ");
+                buf.Append(version.GetVersion());
+                return buf.ToString();
             }
         }
 

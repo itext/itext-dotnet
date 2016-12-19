@@ -56,6 +56,8 @@ namespace iText.IO {
 
         public const String COULD_NOT_FIND_GLYPH_WITH_CODE = "Could not find glyph with the following code: {0}";
 
+        public const String CUSTOM_PRODUCER_LINE_WAS_OVERRIDDEN = "The custom producer line was overridden with default one. If you want to create documents with custom producer line please contact our support team at itextpdf.com.";
+
         public const String DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET = "Destinations are not permitted for link annotations that already have actions. The old action will be removed.";
 
         public const String DOCUMENT_ALREADY_HAS_FIELD = "The document already has field {0}. Annotations of the fields with this name will be added to the existing one as children. If you want to have separate fields, please, rename them manually before copying.";
