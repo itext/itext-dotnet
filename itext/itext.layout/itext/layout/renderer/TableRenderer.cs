@@ -933,8 +933,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), true);
             if ((tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) && null != footerRenderer) {
                 if (tableModel.GetLastRowBottomBorder().Count > 0) {
-                    IList<Border> lastBottomBorders = footerRenderer.horizontalBorders[footerRenderer.horizontalBorders.Count 
-                        - 1];
+                    IList<Border> lastBottomBorders = footerRenderer.horizontalBorders[0];
                     foreach (Border border in lastBottomBorders) {
                         if (null != border && bottomTableBorderWidth < border.GetWidth()) {
                             bottomTableBorderWidth = border.GetWidth();

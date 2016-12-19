@@ -125,7 +125,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-796")]
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest04() {
             fileName = "simpleBorderTest04.pdf";
@@ -776,7 +775,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-931")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest07() {
             fileName = "splitCellsTest07.pdf";
@@ -795,7 +794,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-930")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest08() {
             fileName = "splitCellsTest08.pdf";
