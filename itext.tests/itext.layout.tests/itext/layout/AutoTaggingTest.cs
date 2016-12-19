@@ -7,6 +7,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using iText.Test;
@@ -177,6 +178,7 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("tableTest04.pdf", "cmp_tableTest04.pdf");
         }
@@ -208,6 +210,7 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("tableTest05.pdf", "cmp_tableTest05.pdf");
         }
@@ -367,6 +370,7 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("flushingTest02.pdf", "cmp_flushingTest02.pdf");
         }
@@ -402,6 +406,7 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             CompareResult("flushingTest03.pdf", "cmp_tableTest04.pdf");
         }

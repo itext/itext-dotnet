@@ -1067,8 +1067,8 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            doc.Add(new Table(1).SetHeight(400).SetBorder(new SolidBorder(Color.ORANGE, 100)));
-            /*.addCell(new Cell().add("").setHeight(30))*/
+            doc.Add(new Table(1).SetBorderTop(new SolidBorder(Color.ORANGE, 100)).SetBorderBottom(new SolidBorder(Color
+                .MAGENTA, 100)));
             doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.GREEN, 2)));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

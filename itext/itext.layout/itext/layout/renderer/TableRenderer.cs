@@ -312,9 +312,15 @@ namespace iText.Layout.Renderer {
             bottomTableBorderWidth = null == borders[2] ? 0 : borders[2].GetWidth();
             // Apply halves of the borders. The other halves are applied on a Cell level
             layoutBox.ApplyMargins<Rectangle>(0, rightTableBorderWidth / 2, 0, leftTableBorderWidth / 2, false);
-            if (!tableModel.IsEmpty() || tableModel.IsComplete()) {
+            if (!tableModel.IsEmpty()) {
                 layoutBox.DecreaseHeight(topTableBorderWidth / 2);
                 occupiedArea.GetBBox().MoveDown(topTableBorderWidth / 2).IncreaseHeight(topTableBorderWidth / 2);
+            }
+            else {
+                if (tableModel.IsComplete() && 0 == tableModel.GetLastRowBottomBorder().Count) {
+                    layoutBox.DecreaseHeight(topTableBorderWidth);
+                    occupiedArea.GetBBox().MoveDown(topTableBorderWidth).IncreaseHeight(topTableBorderWidth);
+                }
             }
             columnWidths = CalculateScaledColumnWidths(tableModel, (float)tableWidth, leftTableBorderWidth, rightTableBorderWidth
                 );
@@ -874,9 +880,37 @@ namespace iText.Layout.Renderer {
                 verticalBorders.Add(rightVerticalBorders);
             }
             // Apply bottom and top border
-            if (null == footerRenderer && (!tableModel.IsEmpty() || tableModel.IsComplete())) {
-                occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth / 2).IncreaseHeight((bottomTableBorderWidth) / 2);
-                layoutBox.DecreaseHeight(bottomTableBorderWidth / 2);
+            if (tableModel.IsComplete()) {
+                if (null == footerRenderer) {
+                    if (childRenderers.Count != 0) {
+                        occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth / 2).IncreaseHeight((bottomTableBorderWidth) / 2);
+                        layoutBox.DecreaseHeight(bottomTableBorderWidth / 2);
+                    }
+                    else {
+                        IList<Border> borderList = tableModel.GetLastRowBottomBorder();
+                        if (borderList.Count > 0) {
+                            foreach (Border border in borderList) {
+                                if (null != border && border.GetWidth() > bottomTableBorderWidth) {
+                                    bottomTableBorderWidth = border.GetWidth();
+                                }
+                            }
+                        }
+                        occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth).IncreaseHeight((bottomTableBorderWidth));
+                        layoutBox.DecreaseHeight(bottomTableBorderWidth);
+                    }
+                }
+            }
+            else {
+                if (null == footerRenderer) {
+                    if (childRenderers.Count != 0) {
+                        occupiedArea.GetBBox().MoveUp(bottomTableBorderWidth / 2).DecreaseHeight((bottomTableBorderWidth / 2));
+                        layoutBox.IncreaseHeight(bottomTableBorderWidth / 2);
+                    }
+                }
+                else {
+                    occupiedArea.GetBBox().MoveUp(bottomTableBorderWidth).DecreaseHeight((bottomTableBorderWidth));
+                    layoutBox.IncreaseHeight(bottomTableBorderWidth);
+                }
             }
             if ((true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) && 0 != rows.Count) {
                 ExtendLastRow(rows[rows.Count - 1], layoutBox);
@@ -898,8 +932,19 @@ namespace iText.Layout.Renderer {
             }
             ApplyMargins(occupiedArea.GetBBox(), true);
             if ((tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) && null != footerRenderer) {
+                if (tableModel.GetLastRowBottomBorder().Count > 0) {
+                    IList<Border> lastBottomBorders = footerRenderer.horizontalBorders[footerRenderer.horizontalBorders.Count 
+                        - 1];
+                    foreach (Border border in lastBottomBorders) {
+                        if (null != border && bottomTableBorderWidth < border.GetWidth()) {
+                            bottomTableBorderWidth = border.GetWidth();
+                        }
+                    }
+                }
                 footerRenderer = null;
-                occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth).IncreaseHeight(bottomTableBorderWidth);
+                if (0 != rows.Count || tableModel.IsComplete()) {
+                    occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth).IncreaseHeight(bottomTableBorderWidth);
+                }
             }
             AdjustFooterAndFixOccupiedArea(layoutBox);
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
@@ -1177,6 +1222,12 @@ namespace iText.Layout.Renderer {
                 }
                 if (null != borders[0]) {
                     startY -= borders[0].GetWidth() / 2;
+                    heights[0] = borders[0].GetWidth();
+                }
+                else {
+                    if (null != borders[2]) {
+                        startY -= borders[2].GetWidth() / 2;
+                    }
                 }
             }
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;

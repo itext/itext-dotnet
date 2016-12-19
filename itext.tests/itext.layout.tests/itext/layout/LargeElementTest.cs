@@ -1,7 +1,9 @@
 using System;
+using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Test;
 
@@ -39,6 +41,7 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -62,6 +65,7 @@ namespace iText.Layout {
                 }
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -89,6 +93,7 @@ namespace iText.Layout {
                 table.Flush();
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -119,6 +124,7 @@ namespace iText.Layout {
             // Compare with #largeTableWithHeaderFooterTest01A. When we flush last row before calling complete(), we don't yet know
             // if there will be any more rows. Flushing last row implicitly by calling complete solves this problem.
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -148,6 +154,7 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("Test " + i_2)));
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -177,6 +184,7 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("Test " + i_2)));
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -203,6 +211,7 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(new Paragraph("Test " + i_1)));
             }
             table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
