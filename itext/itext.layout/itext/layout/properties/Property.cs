@@ -232,9 +232,9 @@ namespace iText.Layout.Properties {
 
         public const int UNDERLINE = 74;
 
-        /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_ALIGNMENT = 75;
 
+        /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;
 
         public const int WIDTH = 77;
