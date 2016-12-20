@@ -622,10 +622,6 @@ namespace iText.Kernel.Pdf {
                     }
                     String producer = null;
                     if (reader == null) {
-                        if (!info.GetProducer().Equals(iText.Kernel.Version.GetInstance().GetVersion()) && iText.Kernel.Version.GetInstance
-                            ().GetVersion().Contains("licensed")) {
-                            LoggerFactory.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.CUSTOM_PRODUCER_LINE_WAS_OVERRIDDEN);
-                        }
                         producer = iText.Kernel.Version.GetInstance().GetVersion();
                     }
                     else {
