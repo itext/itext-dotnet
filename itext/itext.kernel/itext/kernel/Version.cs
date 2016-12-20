@@ -258,9 +258,7 @@ namespace iText.Kernel {
                     } catch {
                         // ignore
                     }
-                    if (type != null) {
-                        logger.Warn(fileLoadExceptionMessage);
-                    } else {
+                    if (type == null) {
                         logger.Error(fileLoadExceptionMessage);
                     }
                 }

@@ -280,6 +280,10 @@ namespace iText.IO {
 
         public const String IccProfileContains0ComponentsWhileImageDataContains1Components = "ICC profile contains {0} components, while the image data contains {1} components.";
 
+        public const String NotAtTrueTypeFile = "{0} is not a true type file";
+
+        public const String TableDoesNotExistsIn = "Table {0} does not exist in {1}";
+
         /// <summary>Object for more details</summary>
         protected internal Object obj;
 
