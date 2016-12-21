@@ -168,8 +168,17 @@ namespace iText.Layout.Renderer {
             bool isSplitForcedByImmediateNewLine = false;
             // true in situations like "Hello\nWorld"
             bool isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol = false;
+            // For example, if a first character is a RTL mark (U+200F), and the second is a newline, we need to break anyway
+            int firstPrintPos = currentTextPos;
+            while (firstPrintPos < text.end && NoPrint(text.Get(firstPrintPos))) {
+                firstPrintPos++;
+            }
             while (currentTextPos < text.end) {
                 if (NoPrint(text.Get(currentTextPos))) {
+                    if (line.start == -1) {
+                        line.start = currentTextPos;
+                    }
+                    line.end = Math.Max(line.end, currentTextPos + 1);
                     currentTextPos++;
                     continue;
                 }
@@ -184,7 +193,7 @@ namespace iText.Layout.Renderer {
                     if (IsNewLine(text, ind)) {
                         isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol = true;
                         firstCharacterWhichExceedsAllowedWidth = ind + 1;
-                        if (text.start == currentTextPos) {
+                        if (currentTextPos == firstPrintPos) {
                             isSplitForcedByImmediateNewLine = true;
                             // Notice that in that case we do not need to ignore the new line symbol ('\n')
                             isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol = false;
@@ -540,7 +549,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_566();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_576();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -553,16 +562,7 @@ namespace iText.Layout.Renderer {
                     }
                     if (reversedRanges != null) {
                         foreach (int[] range in reversedRanges) {
-                            int shift = removedIds.BinarySearch(range[0]);
-                            if (shift < 0) {
-                                shift = -shift - 1;
-                            }
-                            range[0] -= shift;
-                            shift = removedIds.BinarySearch(range[1] - 1);
-                            if (shift < 0) {
-                                shift = -shift - 1;
-                            }
-                            range[1] -= shift;
+                            UpdateRangeBasedOnRemovedCharacters(removedIds, range);
                         }
                     }
                     line = line.Filter(filter);
@@ -613,8 +613,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_566 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_566() {
+        private sealed class _IGlyphLineFilter_576 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_576() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -933,6 +933,33 @@ namespace iText.Layout.Renderer {
             return GetGlyphLineWidth(line, (float)this.GetPropertyAsFloat(Property.FONT_SIZE), this.GetPropertyAsFloat
                 (Property.HORIZONTAL_SCALING, 1f), this.GetPropertyAsFloat(Property.CHARACTER_SPACING), this.GetPropertyAsFloat
                 (Property.WORD_SPACING));
+        }
+
+        internal static void UpdateRangeBasedOnRemovedCharacters(IList<int> removedIds, int[] range) {
+            int shift = NumberOfElementsLessThan(removedIds, range[0]);
+            range[0] -= shift;
+            shift = NumberOfElementsLessThanOrEquual(removedIds, range[1] - 1);
+            range[1] -= shift;
+        }
+
+        private static int NumberOfElementsLessThan(IList<int> numbers, int n) {
+            int x = numbers.BinarySearch(n);
+            if (x >= 0) {
+                return x;
+            }
+            else {
+                return -x - 1;
+            }
+        }
+
+        private static int NumberOfElementsLessThanOrEquual(IList<int> numbers, int n) {
+            int x = numbers.BinarySearch(n);
+            if (x >= 0) {
+                return x + 1;
+            }
+            else {
+                return -x - 1;
+            }
         }
 
         private static bool NoPrint(Glyph g) {
