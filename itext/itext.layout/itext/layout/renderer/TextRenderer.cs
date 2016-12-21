@@ -935,14 +935,14 @@ namespace iText.Layout.Renderer {
                 (Property.WORD_SPACING));
         }
 
-        internal static void UpdateRangeBasedOnRemovedCharacters(IList<int> removedIds, int[] range) {
+        internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
             int shift = NumberOfElementsLessThan(removedIds, range[0]);
             range[0] -= shift;
             shift = NumberOfElementsLessThanOrEquual(removedIds, range[1] - 1);
             range[1] -= shift;
         }
 
-        private static int NumberOfElementsLessThan(IList<int> numbers, int n) {
+        private static int NumberOfElementsLessThan(List<int> numbers, int n) {
             int x = numbers.BinarySearch(n);
             if (x >= 0) {
                 return x;
@@ -952,7 +952,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static int NumberOfElementsLessThanOrEquual(IList<int> numbers, int n) {
+        private static int NumberOfElementsLessThanOrEquual(List<int> numbers, int n) {
             int x = numbers.BinarySearch(n);
             if (x >= 0) {
                 return x + 1;
