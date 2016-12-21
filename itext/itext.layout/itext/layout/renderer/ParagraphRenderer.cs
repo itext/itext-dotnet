@@ -117,7 +117,11 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(parentBBox, paddings, false);
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
-                parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
+                float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;
+                if (marginsCollapsingEnabled) {
+                    marginsCollapseHandler.ProcessFixedHeightAdjustment(heightDelta);
+                }
+                parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
                 wasHeightClipped = true;
             }
             IList<Rectangle> areas;
