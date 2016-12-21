@@ -434,8 +434,13 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyVerticalAlignment() {
             VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
             if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers.Count > 0) {
-                float deltaY = childRenderers[childRenderers.Count - 1].GetOccupiedArea().GetBBox().GetY() - GetInnerAreaBBox
-                    ().GetY();
+                LayoutArea lastChildOccupiedArea = childRenderers[childRenderers.Count - 1].GetOccupiedArea();
+                if (lastChildOccupiedArea == null) {
+                    // TODO normally, vertical alignment applying shall not be called on the renderer which has not processed kids, or kids processed with NOTHING result,
+                    // however it seems that this is the case for the table cells in certain situations. 
+                    return;
+                }
+                float deltaY = lastChildOccupiedArea.GetBBox().GetY() - GetInnerAreaBBox().GetY();
                 switch (verticalAlignment) {
                     case VerticalAlignment.BOTTOM: {
                         foreach (IRenderer child in childRenderers) {
