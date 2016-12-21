@@ -205,16 +205,22 @@ namespace iText.Signatures {
         /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
         public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore) {
+            IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
                     try {
                         return SignUtils.IsSignatureValid(ocsp, certStoreX509);
                     }
-                    catch (Exception) {
+                    catch (Exception ex) {
+                        exceptionsThrown.Add(ex);
                     }
                 }
             }
-            catch (Exception) {
+            catch (Exception e) {
+                exceptionsThrown.Add(e);
+            }
+            foreach (Exception ex_1 in exceptionsThrown) {
+                LOGGER.Error(ex_1.Message, ex_1);
             }
             return false;
         }
@@ -225,6 +231,7 @@ namespace iText.Signatures {
         /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
         public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore) {
+            IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
                     try {
@@ -232,11 +239,15 @@ namespace iText.Signatures {
                         return true;
                     }
                     catch (Exception ex) {
-                        LOGGER.Error(ex.Message, ex);
+                        exceptionsThrown.Add(ex);
                     }
                 }
             }
-            catch (Exception) {
+            catch (Exception e) {
+                exceptionsThrown.Add(e);
+            }
+            foreach (Exception ex_1 in exceptionsThrown) {
+                LOGGER.Error(ex_1.Message, ex_1);
             }
             return false;
         }
