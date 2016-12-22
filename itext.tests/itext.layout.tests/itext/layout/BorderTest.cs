@@ -794,7 +794,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-930")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest08() {
             fileName = "splitCellsTest08.pdf";
