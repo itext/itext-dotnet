@@ -221,7 +221,7 @@ namespace iText.Layout.Renderer {
                         else {
                             if (marginsCollapsingEnabled) {
                                 if (anythingPlaced) {
-                                    marginsCollapseHandler.EndChildMarginsHandling();
+                                    marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                                 }
                             }
                             iText.Layout.Renderer.ParagraphRenderer[] split = Split();
@@ -317,7 +317,7 @@ namespace iText.Layout.Renderer {
                 occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             }
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
-                marginsCollapseHandler.EndChildMarginsHandling();
+                marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
             }
             IRenderer overflowRenderer = null;
             float? blockMinHeight = RetrieveMinHeight();

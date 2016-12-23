@@ -159,7 +159,7 @@ namespace iText.Layout.Renderer {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
                                 if (marginsCollapsingEnabled) {
-                                    marginsCollapseHandler.EndChildMarginsHandling();
+                                    marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                                 }
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
@@ -279,7 +279,7 @@ namespace iText.Layout.Renderer {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
                     ()));
                 if (marginsCollapsingEnabled) {
-                    marginsCollapseHandler.EndChildMarginsHandling();
+                    marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                 }
                 if (result.GetStatus() == LayoutResult.FULL) {
                     layoutBox.SetHeight(result.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());

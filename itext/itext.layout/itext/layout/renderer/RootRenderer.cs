@@ -166,13 +166,13 @@ namespace iText.Layout.Renderer {
                     }
                     renderer = result.GetOverflowRenderer();
                     if (marginsCollapsingEnabled) {
-                        marginsCollapseHandler.EndChildMarginsHandling();
+                        marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                         marginsCollapseHandler = new MarginsCollapseHandler(this, null);
                         childMarginsInfo = marginsCollapseHandler.StartChildMarginsHandling(renderer, currentArea.GetBBox());
                     }
                 }
                 if (marginsCollapsingEnabled) {
-                    marginsCollapseHandler.EndChildMarginsHandling();
+                    marginsCollapseHandler.EndChildMarginsHandling(currentArea.GetBBox());
                 }
                 if (null != result && null != result.GetSplitRenderer()) {
                     renderer = result.GetSplitRenderer();

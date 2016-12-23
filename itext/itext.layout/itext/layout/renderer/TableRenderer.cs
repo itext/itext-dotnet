@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -824,7 +823,7 @@ namespace iText.Layout.Renderer {
                             ) {
                             if (wasHeightClipped) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                                logger.Warn(LogMessageConstant.CLIP_ELEMENT);
+                                logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                             }
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
                         }
@@ -856,7 +855,7 @@ namespace iText.Layout.Renderer {
                 if (lastInRow < 0 || lastRow.Length != lastInRow + lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
-                    logger.Warn(LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                    logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
                 }
             }
             // if table is empty we still need to process  table borders

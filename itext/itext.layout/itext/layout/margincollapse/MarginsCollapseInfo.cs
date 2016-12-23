@@ -54,17 +54,20 @@ namespace iText.Layout.Margincollapse {
 
         private bool isSelfCollapsing;
 
-        private float bufferSpace;
+        private float bufferSpaceOnTop;
+
+        private float bufferSpaceOnBottom;
 
         internal MarginsCollapseInfo() {
             // MarginCollapse instance which contains margin-after of the element without next sibling or parent margins (only element's margin and element's kids)
-            // when a parent has a fixed height this field tells kid how much free space parent has for the margin collapsed with kid
+            // when a parent has a fixed height these fields tells kid how much free space parent has for the margin collapsed with kid
             this.ignoreOwnMarginTop = false;
             this.ignoreOwnMarginBottom = false;
             this.collapseBefore = new MarginsCollapse();
             this.collapseAfter = new MarginsCollapse();
             this.isSelfCollapsing = true;
-            this.bufferSpace = 0;
+            this.bufferSpaceOnTop = 0;
+            this.bufferSpaceOnBottom = 0;
         }
 
         internal MarginsCollapseInfo(bool ignoreOwnMarginTop, bool ignoreOwnMarginBottom, MarginsCollapse collapseBefore
@@ -74,7 +77,8 @@ namespace iText.Layout.Margincollapse {
             this.collapseBefore = collapseBefore;
             this.collapseAfter = collapseAfter;
             this.isSelfCollapsing = true;
-            this.bufferSpace = 0;
+            this.bufferSpaceOnTop = 0;
+            this.bufferSpaceOnBottom = 0;
         }
 
         internal virtual MarginsCollapse GetCollapseBefore() {
@@ -113,12 +117,20 @@ namespace iText.Layout.Margincollapse {
             return ignoreOwnMarginBottom;
         }
 
-        internal virtual float GetBufferSpace() {
-            return bufferSpace;
+        internal virtual float GetBufferSpaceOnTop() {
+            return bufferSpaceOnTop;
         }
 
-        internal virtual void SetBufferSpace(float bufferSpace) {
-            this.bufferSpace = bufferSpace;
+        internal virtual void SetBufferSpaceOnTop(float bufferSpaceOnTop) {
+            this.bufferSpaceOnTop = bufferSpaceOnTop;
+        }
+
+        internal virtual float GetBufferSpaceOnBottom() {
+            return bufferSpaceOnBottom;
+        }
+
+        internal virtual void SetBufferSpaceOnBottom(float bufferSpaceOnBottom) {
+            this.bufferSpaceOnBottom = bufferSpaceOnBottom;
         }
     }
 }

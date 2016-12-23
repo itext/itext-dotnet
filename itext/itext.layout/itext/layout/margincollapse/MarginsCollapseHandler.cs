@@ -72,7 +72,8 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void ProcessFixedHeightAdjustment(float heightDelta) {
-            collapseInfo.SetBufferSpace(collapseInfo.GetBufferSpace() + heightDelta);
+            collapseInfo.SetBufferSpaceOnTop(collapseInfo.GetBufferSpaceOnTop() + heightDelta);
+            collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() + heightDelta);
         }
 
         public virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer child, Rectangle layoutBox) {
@@ -108,12 +109,15 @@ namespace iText.Layout.Margincollapse {
             MarginsCollapseInfo childMarginsInfo = new MarginsCollapseInfo(ignoreChildTopMargin, ignoreChildBottomMargin
                 , childCollapseBefore, childCollapseAfter);
             if (ignoreChildTopMargin && childIndex == firstNotEmptyKidIndex) {
-                childMarginsInfo.SetBufferSpace(collapseInfo.GetBufferSpace());
+                childMarginsInfo.SetBufferSpaceOnTop(collapseInfo.GetBufferSpaceOnTop());
+            }
+            if (ignoreChildBottomMargin) {
+                childMarginsInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom());
             }
             return childMarginsInfo;
         }
 
-        public virtual void EndChildMarginsHandling() {
+        public virtual void EndChildMarginsHandling(Rectangle layoutBox) {
             int childIndex = processedChildrenNum - 1;
             if (childMarginInfo != null) {
                 if (firstNotEmptyKidIndex == childIndex && childMarginInfo.IsSelfCollapsing()) {
@@ -127,6 +131,9 @@ namespace iText.Layout.Margincollapse {
             if (firstNotEmptyKidIndex == childIndex && FirstChildMarginAdjoinedToParent(renderer)) {
                 if (!collapseInfo.IsSelfCollapsing()) {
                     GetRidOfCollapseArtifactsAtopOccupiedArea();
+                    if (childMarginInfo != null) {
+                        ProcessUsedChildBufferSpaceOnTop(layoutBox);
+                    }
                 }
             }
             if (prevChildMarginInfo != null) {
@@ -142,7 +149,7 @@ namespace iText.Layout.Margincollapse {
             collapseInfo.GetCollapseAfter().JoinMargin(GetModelBottomMargin(renderer));
             if (!FirstChildMarginAdjoinedToParent(renderer)) {
                 float topIndent = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
-                AdjustBoxPosAndHeight(parentBBox, topIndent);
+                ApplyTopMargin(parentBBox, topIndent);
             }
             if (!LastChildMarginAdjoinedToParent(renderer)) {
                 float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
@@ -239,7 +246,7 @@ namespace iText.Layout.Margincollapse {
             if (!childIsBlockElement) {
                 if (childIndex == firstNotEmptyKidIndex && FirstChildMarginAdjoinedToParent(renderer)) {
                     float topIndent = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
-                    AdjustBoxPosAndHeight(layoutBox, topIndent);
+                    ApplyTopMargin(layoutBox, topIndent);
                 }
                 if (LastChildMarginAdjoinedToParent(renderer)) {
                     float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
@@ -248,22 +255,58 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
-        private void AdjustBoxPosAndHeight(Rectangle box, float topIndent) {
-            float bufferLeftovers = collapseInfo.GetBufferSpace() - topIndent;
-            if (bufferLeftovers >= 0) {
-                collapseInfo.SetBufferSpace(bufferLeftovers);
+        private void ApplyTopMargin(Rectangle box, float topIndent) {
+            float bufferLeftoversOnTop = collapseInfo.GetBufferSpaceOnTop() - topIndent;
+            SubtractUsedTopBufferFromBottomBuffer(bufferLeftoversOnTop > 0 ? topIndent : collapseInfo.GetBufferSpaceOnTop
+                ());
+            if (bufferLeftoversOnTop >= 0) {
+                collapseInfo.SetBufferSpaceOnTop(bufferLeftoversOnTop);
                 box.MoveDown(topIndent);
             }
             else {
-                box.MoveDown(collapseInfo.GetBufferSpace());
-                collapseInfo.SetBufferSpace(0);
-                box.SetHeight(box.GetHeight() + bufferLeftovers);
+                box.MoveDown(collapseInfo.GetBufferSpaceOnTop());
+                collapseInfo.SetBufferSpaceOnTop(0);
+                box.SetHeight(box.GetHeight() + bufferLeftoversOnTop);
             }
         }
 
         private void ApplyBottomMargin(Rectangle box, float bottomIndent) {
-            box.SetY(box.GetY() + bottomIndent);
-            box.SetHeight(box.GetHeight() - bottomIndent);
+            // Here we don't subtract used buffer space from topBuffer, because every kid is assumed to be 
+            // the last one on the page, and so every kid always has parent's bottom buffer, however only the true last kid
+            // uses it for real. Also, bottom margin are always applied after top margins, so it doesn't matter anyway.
+            float bottomIndentLeftovers = bottomIndent - collapseInfo.GetBufferSpaceOnBottom();
+            if (bottomIndentLeftovers < 0) {
+                collapseInfo.SetBufferSpaceOnBottom(-bottomIndentLeftovers);
+            }
+            else {
+                collapseInfo.SetBufferSpaceOnBottom(0);
+                box.SetY(box.GetY() + bottomIndentLeftovers);
+                box.SetHeight(box.GetHeight() - bottomIndentLeftovers);
+            }
+        }
+
+        private void ProcessUsedChildBufferSpaceOnTop(Rectangle layoutBox) {
+            float childUsedBufferSpaceOnTop = collapseInfo.GetBufferSpaceOnTop() - childMarginInfo.GetBufferSpaceOnTop
+                ();
+            if (childUsedBufferSpaceOnTop > 0) {
+                collapseInfo.SetBufferSpaceOnTop(childMarginInfo.GetBufferSpaceOnTop());
+                // usage of top buffer space on child is expressed by moving layout box down instead of making it smaller,
+                // so in order to process next kids correctly, we need to move parent layout box also
+                layoutBox.MoveDown(childUsedBufferSpaceOnTop);
+                SubtractUsedTopBufferFromBottomBuffer(childUsedBufferSpaceOnTop);
+            }
+        }
+
+        private void SubtractUsedTopBufferFromBottomBuffer(float usedTopBuffer) {
+            if (collapseInfo.GetBufferSpaceOnTop() > collapseInfo.GetBufferSpaceOnBottom()) {
+                float bufferLeftoversOnTop = collapseInfo.GetBufferSpaceOnTop() - usedTopBuffer;
+                if (bufferLeftoversOnTop < collapseInfo.GetBufferSpaceOnBottom()) {
+                    collapseInfo.SetBufferSpaceOnBottom(bufferLeftoversOnTop);
+                }
+            }
+            else {
+                collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() - usedTopBuffer);
+            }
         }
 
         private void FixPrevChildOccupiedArea(int childIndex) {
