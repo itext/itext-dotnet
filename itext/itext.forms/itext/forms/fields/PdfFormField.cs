@@ -49,6 +49,7 @@ using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Log;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -2625,7 +2626,7 @@ namespace iText.Forms.Fields {
         /// <summary>Gets the appearance state names.</summary>
         /// <returns>an array of Strings containing the names of the appearance states</returns>
         public virtual String[] GetAppearanceStates() {
-            ICollection<String> names = new HashSet<String>();
+            ICollection<String> names = new LinkedHashSet<String>();
             PdfString stringOpt = GetPdfObject().GetAsString(PdfName.Opt);
             if (stringOpt != null) {
                 names.Add(stringOpt.ToUnicodeString());
