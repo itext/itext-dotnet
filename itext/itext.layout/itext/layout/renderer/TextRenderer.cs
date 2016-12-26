@@ -88,6 +88,8 @@ namespace iText.Layout.Renderer {
 
         protected internal String strToBeConverted;
 
+        private PdfFont font;
+
         protected internal bool otfFeaturesApplied = false;
 
         protected internal float tabAnchorCharacterPosition = -1;
@@ -147,7 +149,6 @@ namespace iText.Layout.Renderer {
             float textRise = (float)this.GetPropertyAsFloat(Property.TEXT_RISE);
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
-            PdfFont font = this.GetPropertyAsFont(Property.FONT);
             float hScale = (float)this.GetProperty(Property.HORIZONTAL_SCALING, (float?)1f);
             ISplitCharacters splitCharacters = this.GetProperty<ISplitCharacters>(Property.SPLIT_CHARACTERS);
             float italicSkewAddition = true.Equals(GetPropertyAsBoolean(Property.ITALIC_SIMULATION)) ? ITALIC_ANGLE * 
@@ -156,7 +157,7 @@ namespace iText.Layout.Renderer {
                  * fontSize : 0;
             line = new GlyphLine(text);
             line.start = line.end = -1;
-            float[] ascenderDescender = CalculateAscenderDescender(font);
+            float[] ascenderDescender = CalculateAscenderDescender(GetFont());
             float ascender = ascenderDescender[0];
             float descender = ascenderDescender[1];
             float currentLineAscender = 0;
@@ -292,7 +293,7 @@ namespace iText.Layout.Renderer {
                                             }
                                             line.end = Math.Max(line.end, currentTextPos + pre.Length);
                                             GlyphLine lineCopy = line.Copy(line.start, line.end);
-                                            lineCopy.Add(font.GetGlyph(hyphenationConfig.GetHyphenSymbol()));
+                                            lineCopy.Add(GetFont().GetGlyph(hyphenationConfig.GetHyphenSymbol()));
                                             lineCopy.end++;
                                             line = lineCopy;
                                             // TODO these values are based on whole word. recalculate properly based on hyphenated part
@@ -431,14 +432,13 @@ namespace iText.Layout.Renderer {
                         }
                     }
                 }
-                PdfFont font = GetPropertyAsFont(Property.FONT);
-                if (IsOtfFont(font) && script != null) {
-                    TypographyUtils.ApplyOtfScript(font.GetFontProgram(), text, script);
+                if (HasOtfFont() && script != null) {
+                    TypographyUtils.ApplyOtfScript(GetFont().GetFontProgram(), text, script);
                 }
                 FontKerning fontKerning = (FontKerning)this.GetProperty<FontKerning?>(Property.FONT_KERNING, FontKerning.NO
                     );
                 if (fontKerning == FontKerning.YES) {
-                    TypographyUtils.ApplyKerning(font.GetFontProgram(), text);
+                    TypographyUtils.ApplyKerning(GetFont().GetFontProgram(), text);
                 }
                 otfFeaturesApplied = true;
             }
@@ -481,7 +481,6 @@ namespace iText.Layout.Renderer {
             }
             float leftBBoxX = occupiedArea.GetBBox().GetX();
             if (line.end > line.start) {
-                PdfFont font = GetPropertyAsFont(Property.FONT);
                 float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE);
                 Color fontColor = GetPropertyAsColor(Property.FONT_COLOR);
                 int? textRenderingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
@@ -506,7 +505,7 @@ namespace iText.Layout.Renderer {
                         canvas.OpenTag(new CanvasArtifact());
                     }
                 }
-                canvas.SaveState().BeginText().SetFontAndSize(font, fontSize);
+                canvas.SaveState().BeginText().SetFontAndSize(GetFont(), fontSize);
                 if (skew != null && skew.Length == 2) {
                     canvas.SetTextMatrix(1, skew[0], skew[1], 1, leftBBoxX, GetYLine());
                 }
@@ -552,7 +551,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_580();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_578();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -612,8 +611,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_580 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_580() {
+        private sealed class _IGlyphLineFilter_578 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_578() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -741,8 +740,9 @@ namespace iText.Layout.Renderer {
         /// </summary>
         /// <param name="text">the replacement text</param>
         public virtual void SetText(String text) {
-            GlyphLine glyphLine = ConvertToGlyphLine(text);
-            SetText(glyphLine, glyphLine.start, glyphLine.end);
+            strToBeConverted = text;
+            //strToBeConverted will be null after next method.
+            ConvertWaitingStringToGlyphLine();
         }
 
         /// <summary>
@@ -845,12 +845,11 @@ namespace iText.Layout.Renderer {
         }
 
         private GlyphLine ConvertToGlyphLine(String text) {
-            PdfFont font = GetPropertyAsFont(Property.FONT);
-            return font.CreateGlyphLine(text);
+            return GetFont().CreateGlyphLine(text);
         }
 
-        private bool IsOtfFont(PdfFont font) {
-            return font is PdfType0Font && font.GetFontProgram() is TrueTypeFont;
+        private bool HasOtfFont() {
+            return GetFont() is PdfType0Font && GetFont().GetFontProgram() is TrueTypeFont;
         }
 
         protected internal override float? GetFirstYLineRecursively() {
@@ -1046,10 +1045,19 @@ namespace iText.Layout.Renderer {
 
         private void ConvertWaitingStringToGlyphLine() {
             if (strToBeConverted != null) {
-                GlyphLine glyphLine = ConvertToGlyphLine(strToBeConverted);
-                SetText(glyphLine, glyphLine.start, glyphLine.end);
+                //yes we save font only while converting original string to synchronize glyphline and font.
+                font = GetPropertyAsFont(Property.FONT);
+                text = ConvertToGlyphLine(strToBeConverted);
+                otfFeaturesApplied = false;
                 strToBeConverted = null;
             }
+        }
+
+        private PdfFont GetFont() {
+            if (font == null) {
+                return GetPropertyAsFont(Property.FONT);
+            }
+            return font;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
