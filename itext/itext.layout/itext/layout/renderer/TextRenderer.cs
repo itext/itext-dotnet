@@ -947,7 +947,7 @@ namespace iText.Layout.Renderer {
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
             int shift = NumberOfElementsLessThan(removedIds, range[0]);
             range[0] -= shift;
-            shift = NumberOfElementsLessThanOrEquual(removedIds, range[1] - 1);
+            shift = NumberOfElementsLessThanOrEqual(removedIds, range[1] - 1);
             range[1] -= shift;
         }
 
@@ -961,7 +961,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static int NumberOfElementsLessThanOrEquual(List<int> numbers, int n) {
+        private static int NumberOfElementsLessThanOrEqual(List<int> numbers, int n) {
             int x = numbers.BinarySearch(n);
             if (x >= 0) {
                 return x + 1;
