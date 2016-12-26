@@ -145,7 +145,7 @@ namespace iText.Layout.Renderer {
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
             PdfFont font = this.GetPropertyAsFont(Property.FONT);
-            float? hScale = this.GetProperty(Property.HORIZONTAL_SCALING, (float?)1f);
+            float hScale = (float)this.GetProperty(Property.HORIZONTAL_SCALING, (float?)1f);
             ISplitCharacters splitCharacters = this.GetProperty<ISplitCharacters>(Property.SPLIT_CHARACTERS);
             float italicSkewAddition = true.Equals(GetPropertyAsBoolean(Property.ITALIC_SIMULATION)) ? ITALIC_ANGLE * 
                 fontSize : 0;
@@ -190,7 +190,7 @@ namespace iText.Layout.Renderer {
                 float nonBreakablePartMaxHeight = 0;
                 int firstCharacterWhichExceedsAllowedWidth = -1;
                 for (int ind = currentTextPos; ind < text.end; ind++) {
-                    if (IsNewLine(text, ind)) {
+                    if (TextUtil.IsNewLine(text.Get(ind))) {
                         isSplitForcedByNewLineAndWeNeedToIgnoreNewLineSymbol = true;
                         firstCharacterWhichExceedsAllowedWidth = ind + 1;
                         if (currentTextPos == firstPrintPos) {
@@ -232,7 +232,7 @@ namespace iText.Layout.Renderer {
                         break;
                     }
                     if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters.IsSplitCharacter
-                        (text, ind + 1) && IsSpaceGlyph(text.Get(ind + 1))) {
+                        (text, ind + 1) && TextUtil.IsSpaceGlyph(text.Get(ind + 1))) {
                         nonBreakablePartEnd = ind;
                         break;
                     }
@@ -549,7 +549,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_576();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_577();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -613,8 +613,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_576 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_576() {
+        private sealed class _IGlyphLineFilter_577 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_577() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -654,21 +654,20 @@ namespace iText.Layout.Renderer {
         public virtual void TrimFirst() {
             ConvertWaitingStringToGlyphLine();
             if (text != null) {
-                Glyph glyph;
-                while (text.start < text.end && (glyph = text.Get(text.start)).HasValidUnicode() && IsSpaceGlyph(glyph) &&
-                     !IsNewLine(text, text.start)) {
+                //isSpaceChar exclude newline symbols
+                while (text.start < text.end && char.IsSeparator(text.Get(text.start).GetUnicode())) {
                     text.start++;
                 }
             }
         }
 
         /// <summary>
-        /// Trims any whitespace characters from the end of the
+        /// Trims any whitespace characters from the end of the rendered
         /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
-        /// to
-        /// be rendered.
+        /// .
         /// </summary>
         /// <returns>the amount of space in points which the text was trimmed by</returns>
+        [System.ObsoleteAttribute(@"visibility will be changed to package.")]
         public virtual float TrimLast() {
             float trimmedSpace = 0;
             if (line.end <= 0) {
@@ -677,11 +676,11 @@ namespace iText.Layout.Renderer {
             float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE);
             float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
             float? wordSpacing = this.GetPropertyAsFloat(Property.WORD_SPACING);
-            float? hScale = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
+            float hScale = (float)this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!currentGlyph.HasValidUnicode() || !IsSpaceGlyph(currentGlyph)) {
+                if (!TextUtil.IsSpaceGlyph(currentGlyph)) {
                     break;
                 }
                 float currentCharWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, wordSpacing) / TEXT_SPACE_COEFF;
@@ -794,14 +793,9 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.TextRenderer((Text)modelElement, null);
         }
 
+        [System.ObsoleteAttribute(@"Use iText.IO.Util.TextUtil.IsNewLine(iText.IO.Font.Otf.Glyph) instead.")]
         protected internal static bool IsNewLine(GlyphLine text, int ind) {
-            int unicode = text.Get(ind).GetUnicode();
-            return unicode == '\n' || unicode == '\r';
-        }
-
-        internal static bool IsSpaceGlyph(Glyph glyph) {
-            return iText.IO.Util.TextUtil.IsWhiteSpace((char)glyph.GetUnicode()) || char.IsSeparator((char)glyph.GetUnicode
-                ());
+            return TextUtil.IsNewLine(text.Get(ind));
         }
 
         internal static float[] CalculateAscenderDescender(PdfFont font) {
@@ -821,7 +815,7 @@ namespace iText.Layout.Renderer {
         }
 
         private iText.Layout.Renderer.TextRenderer[] SplitIgnoreFirstNewLine(int currentTextPos) {
-            if (text.Get(currentTextPos).HasValidUnicode() && text.Get(currentTextPos).GetUnicode() == '\r') {
+            if (text.Get(currentTextPos).GetUnicode() == '\r') {
                 int next = currentTextPos + 1 < text.end ? text.Get(currentTextPos + 1).GetUnicode() : -1;
                 if (next == '\n') {
                     return Split(currentTextPos + 2);
@@ -876,7 +870,7 @@ namespace iText.Layout.Renderer {
             int spaces = 0;
             for (int i = line.start; i < line.end; i++) {
                 Glyph currentGlyph = line.Get(i);
-                if (currentGlyph.HasValidUnicode() && currentGlyph.GetUnicode() == ' ') {
+                if (currentGlyph.GetUnicode() == ' ') {
                     spaces++;
                 }
             }
@@ -930,7 +924,7 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual float CalculateLineWidth() {
-            return GetGlyphLineWidth(line, (float)this.GetPropertyAsFloat(Property.FONT_SIZE), this.GetPropertyAsFloat
+            return GetGlyphLineWidth(line, (float)this.GetPropertyAsFloat(Property.FONT_SIZE), (float)this.GetPropertyAsFloat
                 (Property.HORIZONTAL_SCALING, 1f), this.GetPropertyAsFloat(Property.CHARACTER_SPACING), this.GetPropertyAsFloat
                 (Property.WORD_SPACING));
         }
@@ -979,7 +973,7 @@ namespace iText.Layout.Renderer {
             if (characterSpacing != null) {
                 resultWidth += (float)characterSpacing * (float)hScale * TEXT_SPACE_COEFF;
             }
-            if (wordSpacing != null && g.HasValidUnicode() && g.GetUnicode() == ' ') {
+            if (wordSpacing != null && g.GetUnicode() == ' ') {
                 resultWidth += (float)wordSpacing * (float)hScale * TEXT_SPACE_COEFF;
             }
             return resultWidth;
@@ -989,7 +983,7 @@ namespace iText.Layout.Renderer {
             return xAdvance * fontSize * (float)hScale;
         }
 
-        private float GetGlyphLineWidth(GlyphLine glyphLine, float fontSize, float? hScale, float? characterSpacing
+        private float GetGlyphLineWidth(GlyphLine glyphLine, float fontSize, float hScale, float? characterSpacing
             , float? wordSpacing) {
             float width = 0;
             for (int i = glyphLine.start; i < glyphLine.end; i++) {
@@ -1007,7 +1001,7 @@ namespace iText.Layout.Renderer {
         private int[] GetWordBoundsForHyphenation(GlyphLine text, int leftTextPos, int rightTextPos, int wordMiddleCharPos
             ) {
             while (wordMiddleCharPos >= leftTextPos && !IsGlyphPartOfWordForHyphenation(text.Get(wordMiddleCharPos)) &&
-                 !IsWhitespaceGlyph(text.Get(wordMiddleCharPos))) {
+                 !IsSpaceGlyph(text.Get(wordMiddleCharPos))) {
                 wordMiddleCharPos--;
             }
             if (wordMiddleCharPos >= leftTextPos) {
@@ -1027,12 +1021,12 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
-            return g.HasValidUnicode() && (char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) ||
-                 '\u00ad' == g.GetUnicode());
+            return char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode
+                ();
         }
 
-        private bool IsWhitespaceGlyph(Glyph g) {
-            return g.HasValidUnicode() && g.GetUnicode() == ' ';
+        private bool IsSpaceGlyph(Glyph g) {
+            return g.GetUnicode() == ' ';
         }
 
         private void ConvertWaitingStringToGlyphLine() {

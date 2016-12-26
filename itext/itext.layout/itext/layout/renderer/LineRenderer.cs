@@ -308,13 +308,11 @@ namespace iText.Layout.Renderer {
                             TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_2);
                             newRenderer.DeleteOwnProperty(Property.REVERSED);
                             children.Add(newRenderer);
-                            ((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)children[children.Count -
-                                 1]).line);
-                            GlyphLine gl = ((TextRenderer)children[children.Count - 1]).line;
+                            newRenderer.line = new GlyphLine(newRenderer.line);
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
                             while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_2) {
                                 if (pos + 1 < lineGlyphs.Count) {
-                                    if (reorder[pos] == reorder[pos + 1] + 1 && !TextRenderer.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextRenderer
+                                    if (reorder[pos] == reorder[pos + 1] + 1 && !TextUtil.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextUtil
                                         .IsSpaceGlyph(lineGlyphs[pos].glyph)) {
                                         reversed = true;
                                     }
@@ -337,7 +335,7 @@ namespace iText.Layout.Renderer {
                                 initialPos = pos;
                             }
                             offset = initialPos;
-                            gl.SetGlyphs(replacementGlyphs);
+                            newRenderer.line.SetGlyphs(replacementGlyphs);
                         }
                         float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
                         foreach (IRenderer child_1 in children) {
