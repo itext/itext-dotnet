@@ -311,8 +311,8 @@ namespace iText.Layout.Renderer {
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
                             while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_2) {
                                 if (pos + 1 < lineGlyphs.Count) {
-                                    if (reorder[pos] == reorder[pos + 1] + 1 && !TextUtil.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextUtil
-                                        .IsSpaceGlyph(lineGlyphs[pos].glyph)) {
+                                    if (reorder[pos] == reorder[pos + 1] + 1 && !TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos + 1].glyph) && !TextUtil
+                                        .IsSpaceOrWhitespace(lineGlyphs[pos].glyph)) {
                                         reversed = true;
                                     }
                                     else {

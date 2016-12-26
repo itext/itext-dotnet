@@ -236,7 +236,7 @@ namespace iText.Layout.Renderer {
                         break;
                     }
                     if (splitCharacters.IsSplitCharacter(text, ind) || ind + 1 == text.end || splitCharacters.IsSplitCharacter
-                        (text, ind + 1) && TextUtil.IsSpaceGlyph(text.Get(ind + 1))) {
+                        (text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
                         nonBreakablePartEnd = ind;
                         break;
                     }
@@ -652,8 +652,9 @@ namespace iText.Layout.Renderer {
         public virtual void TrimFirst() {
             ConvertWaitingStringToGlyphLine();
             if (text != null) {
-                //isSpaceChar exclude newline symbols
-                while (text.start < text.end && char.IsSeparator(text.Get(text.start).GetUnicode())) {
+                Glyph glyph;
+                while (text.start < text.end && TextUtil.IsSpaceOrWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
+                    (glyph)) {
                     text.start++;
                 }
             }
@@ -678,7 +679,7 @@ namespace iText.Layout.Renderer {
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!TextUtil.IsSpaceGlyph(currentGlyph)) {
+                if (!TextUtil.IsSpaceOrWhitespace(currentGlyph)) {
                     break;
                 }
                 float currentCharWidth = GetCharWidth(currentGlyph, fontSize, hScale, characterSpacing, wordSpacing) / TEXT_SPACE_COEFF;
@@ -1015,7 +1016,7 @@ namespace iText.Layout.Renderer {
         private int[] GetWordBoundsForHyphenation(GlyphLine text, int leftTextPos, int rightTextPos, int wordMiddleCharPos
             ) {
             while (wordMiddleCharPos >= leftTextPos && !IsGlyphPartOfWordForHyphenation(text.Get(wordMiddleCharPos)) &&
-                 !IsSpaceGlyph(text.Get(wordMiddleCharPos))) {
+                 !TextUtil.IsUni0020(text.Get(wordMiddleCharPos))) {
                 wordMiddleCharPos--;
             }
             if (wordMiddleCharPos >= leftTextPos) {
@@ -1037,10 +1038,6 @@ namespace iText.Layout.Renderer {
         private bool IsGlyphPartOfWordForHyphenation(Glyph g) {
             return char.IsLetter((char)g.GetUnicode()) || char.IsDigit((char)g.GetUnicode()) || '\u00ad' == g.GetUnicode
                 ();
-        }
-
-        private bool IsSpaceGlyph(Glyph g) {
-            return g.GetUnicode() == ' ';
         }
 
         private void ConvertWaitingStringToGlyphLine() {
