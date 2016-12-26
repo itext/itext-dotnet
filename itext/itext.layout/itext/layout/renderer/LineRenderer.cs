@@ -112,7 +112,7 @@ namespace iText.Layout.Renderer {
                     if (child is TextRenderer) {
                         GlyphLine text = ((TextRenderer)child).GetText();
                         for (int i = text.start; i < text.end; i++) {
-                            if (TextRenderer.IsNewLine(text, i)) {
+                            if (TextUtil.IsNewLine(text.Get(i))) {
                                 newLineFound = true;
                                 break;
                             }
@@ -284,7 +284,7 @@ namespace iText.Layout.Renderer {
                         if (child is TextRenderer) {
                             GlyphLine childLine = ((TextRenderer)child).line;
                             for (int i = childLine.start; i < childLine.end; i++) {
-                                if (TextRenderer.IsNewLine(childLine, i)) {
+                                if (TextUtil.IsNewLine(childLine.Get(i))) {
                                     newLineFound = true;
                                     break;
                                 }
