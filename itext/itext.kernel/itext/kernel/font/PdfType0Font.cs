@@ -364,6 +364,96 @@ namespace iText.Kernel.Font {
             return new GlyphLine(glyphs);
         }
 
+        public override int AppendGlyphs(String content, int from, IList<Glyph> to) {
+            int process = 0;
+            int len = content.Length - from;
+            if (cidFontType == CID_FONT_TYPE_0) {
+                if (cmapEncoding.IsDirect()) {
+                    for (int k = 0; k < len; k++) {
+                        Glyph glyph = fontProgram.GetGlyphByCode((int)content[k]);
+                        if (IsAppendableGlyph(glyph)) {
+                            to.Add(glyph);
+                            process = k;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+                else {
+                    for (int k = 0; k < len; ++k) {
+                        int ch;
+                        if (TextUtil.IsSurrogatePair(content, k)) {
+                            ch = TextUtil.ConvertToUtf32(content, k);
+                            k++;
+                        }
+                        else {
+                            ch = content[k];
+                        }
+                        Glyph glyph = GetGlyph(ch);
+                        if (IsAppendableGlyph(glyph)) {
+                            to.Add(glyph);
+                            process = k;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if (cidFontType == CID_FONT_TYPE_2) {
+                    TrueTypeFont ttf = (TrueTypeFont)fontProgram;
+                    if (ttf.IsFontSpecific()) {
+                        byte[] b = PdfEncodings.ConvertToBytes(content, "symboltt");
+                        len = b.Length;
+                        for (int k = 0; k < len; ++k) {
+                            Glyph glyph = fontProgram.GetGlyph(b[k] & 0xff);
+                            if (IsAppendableGlyph(glyph)) {
+                                to.Add(glyph);
+                                process = k;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        for (int k = 0; k < len; ++k) {
+                            int val;
+                            if (TextUtil.IsSurrogatePair(content, k)) {
+                                val = TextUtil.ConvertToUtf32(content, k);
+                                k++;
+                            }
+                            else {
+                                val = content[k];
+                            }
+                            Glyph glyph = GetGlyph(val);
+                            if (IsAppendableGlyph(glyph)) {
+                                to.Add(glyph);
+                                process = k;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+                    throw new PdfException("font.has.no.suitable.cmap");
+                }
+            }
+            return process;
+        }
+
+        //TODO what if Glyphs contains only whitespaces and ignorable identifiers?
+        private bool IsAppendableGlyph(Glyph glyph) {
+            // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
+            // Character.isIdentifierIgnorable(0) gets true.
+            return glyph != null && (glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhiteSpace((char) glyph.GetUnicode()) ||
+                 iText.IO.Util.TextUtil.IsIdentifierIgnorable(glyph.GetUnicode()));
+        }
+
         public override String Decode(PdfString content) {
             // TODO refactor using decodeIntoGlyphLine?
             String cids = content.GetValue();

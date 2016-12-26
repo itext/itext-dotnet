@@ -86,6 +86,33 @@ namespace iText.Kernel.Font {
             return new GlyphLine(glyphs);
         }
 
+        public override int AppendGlyphs(String content, int from, IList<Glyph> to) {
+            int index;
+            for (index = from; index < content.Length; index++) {
+                Glyph glyph;
+                if (fontEncoding.IsFontSpecific()) {
+                    glyph = fontProgram.GetGlyphByCode(content[index]);
+                }
+                else {
+                    glyph = GetGlyph((int)content[index]);
+                }
+                if (IsAppendableGlyph(glyph)) {
+                    to.Add(glyph);
+                }
+                else {
+                    break;
+                }
+            }
+            return index - from;
+        }
+
+        private bool IsAppendableGlyph(Glyph glyph) {
+            // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
+            // Character.isIdentifierIgnorable(0) gets true.
+            return glyph != null && (glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhiteSpace((char) glyph.GetUnicode()) ||
+                 iText.IO.Util.TextUtil.IsIdentifierIgnorable(glyph.GetUnicode()));
+        }
+
         public override FontProgram GetFontProgram() {
             return (T)fontProgram;
         }

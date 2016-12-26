@@ -126,6 +126,8 @@ namespace iText.Kernel.Font {
 
         public abstract GlyphLine CreateGlyphLine(String content);
 
+        public abstract int AppendGlyphs(String content, int from, IList<Glyph> to);
+
         /// <summary>Converts the text into bytes to be placed in the document.</summary>
         /// <remarks>
         /// Converts the text into bytes to be placed in the document.
@@ -162,6 +164,7 @@ namespace iText.Kernel.Font {
 
         public abstract void WriteText(String text, PdfOutputStream stream);
 
+        [Obsolete]
         public virtual void WriteText(GlyphLine text, PdfOutputStream stream) {
             WriteText(text, 0, text.Size() - 1, stream);
         }
