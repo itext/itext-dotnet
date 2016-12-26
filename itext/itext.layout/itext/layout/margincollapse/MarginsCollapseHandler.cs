@@ -237,7 +237,12 @@ namespace iText.Layout.Margincollapse {
                 if (childIndex > firstNotEmptyKidIndex) {
                     if (LastChildMarginAdjoinedToParent(renderer)) {
                         // restore layout box after inline element
-                        float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
+                        float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize() - collapseInfo.GetUsedBufferSpaceOnBottom
+                            ();
+                        // used space shall be always less or equal to collapsedMarginAfter size
+                        collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() + collapseInfo.GetUsedBufferSpaceOnBottom
+                            ());
+                        collapseInfo.SetUsedBufferSpaceOnBottom(0);
                         layoutBox.SetY(layoutBox.GetY() - bottomIndent);
                         layoutBox.SetHeight(layoutBox.GetHeight() + bottomIndent);
                     }
@@ -257,8 +262,9 @@ namespace iText.Layout.Margincollapse {
 
         private void ApplyTopMargin(Rectangle box, float topIndent) {
             float bufferLeftoversOnTop = collapseInfo.GetBufferSpaceOnTop() - topIndent;
-            SubtractUsedTopBufferFromBottomBuffer(bufferLeftoversOnTop > 0 ? topIndent : collapseInfo.GetBufferSpaceOnTop
-                ());
+            float usedTopBuffer = bufferLeftoversOnTop > 0 ? topIndent : collapseInfo.GetBufferSpaceOnTop();
+            collapseInfo.SetUsedBufferSpaceOnTop(usedTopBuffer);
+            SubtractUsedTopBufferFromBottomBuffer(usedTopBuffer);
             if (bufferLeftoversOnTop >= 0) {
                 collapseInfo.SetBufferSpaceOnTop(bufferLeftoversOnTop);
                 box.MoveDown(topIndent);
@@ -276,9 +282,11 @@ namespace iText.Layout.Margincollapse {
             // uses it for real. Also, bottom margin are always applied after top margins, so it doesn't matter anyway.
             float bottomIndentLeftovers = bottomIndent - collapseInfo.GetBufferSpaceOnBottom();
             if (bottomIndentLeftovers < 0) {
+                collapseInfo.SetUsedBufferSpaceOnBottom(bottomIndent);
                 collapseInfo.SetBufferSpaceOnBottom(-bottomIndentLeftovers);
             }
             else {
+                collapseInfo.SetUsedBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom());
                 collapseInfo.SetBufferSpaceOnBottom(0);
                 box.SetY(box.GetY() + bottomIndentLeftovers);
                 box.SetHeight(box.GetHeight() - bottomIndentLeftovers);
@@ -286,10 +294,13 @@ namespace iText.Layout.Margincollapse {
         }
 
         private void ProcessUsedChildBufferSpaceOnTop(Rectangle layoutBox) {
-            float childUsedBufferSpaceOnTop = collapseInfo.GetBufferSpaceOnTop() - childMarginInfo.GetBufferSpaceOnTop
-                ();
+            float childUsedBufferSpaceOnTop = childMarginInfo.GetUsedBufferSpaceOnTop();
             if (childUsedBufferSpaceOnTop > 0) {
-                collapseInfo.SetBufferSpaceOnTop(childMarginInfo.GetBufferSpaceOnTop());
+                if (childUsedBufferSpaceOnTop > collapseInfo.GetBufferSpaceOnTop()) {
+                    childUsedBufferSpaceOnTop = collapseInfo.GetBufferSpaceOnTop();
+                }
+                collapseInfo.SetBufferSpaceOnTop(collapseInfo.GetBufferSpaceOnTop() - childUsedBufferSpaceOnTop);
+                collapseInfo.SetUsedBufferSpaceOnTop(childUsedBufferSpaceOnTop);
                 // usage of top buffer space on child is expressed by moving layout box down instead of making it smaller,
                 // so in order to process next kids correctly, we need to move parent layout box also
                 layoutBox.MoveDown(childUsedBufferSpaceOnTop);
@@ -332,6 +343,8 @@ namespace iText.Layout.Margincollapse {
         }
 
         private void AddMarginToSelfCollapsedKid() {
+            // normally, space for margins is added when content is met, however if all kids were self-collapsing (i.e. 
+            // had no content) we need to add it when no more adjoining margins will be met
             float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
             renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
         }
