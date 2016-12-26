@@ -92,6 +92,8 @@ namespace iText.Layout.Renderer {
 
         protected internal float tabAnchorCharacterPosition = -1;
 
+        protected internal IList<int[]> reversedRanges;
+
         /// <summary>Creates a TextRenderer from its corresponding layout object.</summary>
         /// <param name="textElement">
         /// the
@@ -127,6 +129,7 @@ namespace iText.Layout.Renderer {
             this.strToBeConverted = other.strToBeConverted;
             this.otfFeaturesApplied = other.otfFeaturesApplied;
             this.tabAnchorCharacterPosition = other.tabAnchorCharacterPosition;
+            this.reversedRanges = other.reversedRanges;
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
@@ -549,26 +552,22 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_577();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_580();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
-                if (HasOwnProperty(Property.REVERSED)) {
+                if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
-                    IList<int[]> reversedRanges = this.GetOwnProperty<IList<int[]>>(Property.REVERSED);
                     List<int> removedIds = new List<int>();
                     for (int i = line.start; i < line.end; i++) {
                         if (!filter.Accept(line.Get(i))) {
                             removedIds.Add(i);
                         }
                     }
-                    if (reversedRanges != null) {
-                        foreach (int[] range in reversedRanges) {
-                            UpdateRangeBasedOnRemovedCharacters(removedIds, range);
-                        }
+                    foreach (int[] range in GetReversedRanges()) {
+                        UpdateRangeBasedOnRemovedCharacters(removedIds, range);
                     }
                     line = line.Filter(filter);
                     if (writeReversedChars) {
-                        canvas.ShowText(line, new TextRenderer.ReversedCharsIterator(reversedRanges, line).SetUseReversed(writeReversedChars
-                            ));
+                        canvas.ShowText(line, new TextRenderer.ReversedCharsIterator(reversedRanges, line).SetUseReversed(true));
                     }
                     else {
                         canvas.ShowText(line);
@@ -613,8 +612,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_577 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_577() {
+        private sealed class _IGlyphLineFilter_580 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_580() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -791,6 +790,22 @@ namespace iText.Layout.Renderer {
 
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.TextRenderer((Text)modelElement, null);
+        }
+
+        internal virtual IList<int[]> GetReversedRanges() {
+            return reversedRanges;
+        }
+
+        internal virtual IList<int[]> InitReversedRanges() {
+            if (reversedRanges == null) {
+                reversedRanges = new List<int[]>();
+            }
+            return reversedRanges;
+        }
+
+        internal virtual iText.Layout.Renderer.TextRenderer RemoveReversedRanges() {
+            reversedRanges = null;
+            return this;
         }
 
         [System.ObsoleteAttribute(@"Use iText.IO.Util.TextUtil.IsNewLine(iText.IO.Font.Otf.Glyph) instead.")]

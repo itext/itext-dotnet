@@ -305,8 +305,7 @@ namespace iText.Layout.Renderer {
                         int offset = 0;
                         while (pos < lineGlyphs.Count) {
                             IRenderer renderer_2 = lineGlyphs[pos].renderer;
-                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_2);
-                            newRenderer.DeleteOwnProperty(Property.REVERSED);
+                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_2).RemoveReversedRanges();
                             children.Add(newRenderer);
                             newRenderer.line = new GlyphLine(newRenderer.line);
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
@@ -318,7 +317,7 @@ namespace iText.Layout.Renderer {
                                     }
                                     else {
                                         if (reversed) {
-                                            IList<int[]> reversedRange = CreateOrGetReversedProperty(newRenderer);
+                                            IList<int[]> reversedRange = newRenderer.InitReversedRanges();
                                             reversedRange.Add(new int[] { initialPos - offset, pos - offset });
                                             reversed = false;
                                         }
@@ -329,7 +328,7 @@ namespace iText.Layout.Renderer {
                                 pos++;
                             }
                             if (reversed) {
-                                IList<int[]> reversedRange = CreateOrGetReversedProperty(newRenderer);
+                                IList<int[]> reversedRange = newRenderer.InitReversedRanges();
                                 reversedRange.Add(new int[] { initialPos - offset, pos - 1 - offset });
                                 reversed = false;
                                 initialPos = pos;
@@ -532,13 +531,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
-        }
-
-        private IList<int[]> CreateOrGetReversedProperty(TextRenderer newRenderer) {
-            if (!newRenderer.HasOwnProperty(Property.REVERSED)) {
-                newRenderer.SetProperty(Property.REVERSED, new List<int[]>());
-            }
-            return newRenderer.GetOwnProperty<IList<int[]>>(Property.REVERSED);
         }
 
         private IRenderer GetLastChildRenderer() {
