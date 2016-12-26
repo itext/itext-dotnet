@@ -109,7 +109,7 @@ namespace iText.Kernel.Font {
         private bool IsAppendableGlyph(Glyph glyph) {
             // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
             // Character.isIdentifierIgnorable(0) gets true.
-            return glyph != null && (glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhiteSpace(glyph.GetUnicode()) ||
+            return glyph != null && (glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhiteSpace((char) glyph.GetUnicode()) ||
                  iText.IO.Util.TextUtil.IsIdentifierIgnorable(glyph.GetUnicode()));
         }
 

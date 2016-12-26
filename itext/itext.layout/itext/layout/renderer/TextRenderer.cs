@@ -82,13 +82,13 @@ namespace iText.Layout.Renderer {
 
         protected internal float yLineOffset;
 
+        private PdfFont font;
+
         protected internal GlyphLine text;
 
         protected internal GlyphLine line;
 
         protected internal String strToBeConverted;
-
-        private PdfFont font;
 
         protected internal bool otfFeaturesApplied = false;
 
@@ -120,6 +120,7 @@ namespace iText.Layout.Renderer {
         /// <param name="text">the replacement text</param>
         public TextRenderer(Text textElement, String text)
             : base(textElement) {
+            //font shall be stored only during converting original string to GlyphLine
             this.strToBeConverted = text;
         }
 
@@ -551,7 +552,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_578();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_579();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -611,8 +612,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_578 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_578() {
+        private sealed class _IGlyphLineFilter_579 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_579() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1042,6 +1043,7 @@ namespace iText.Layout.Renderer {
 
         private void ConvertWaitingStringToGlyphLine() {
             if (strToBeConverted != null) {
+                font = null;
                 //yes we save font only while converting original string to synchronize glyphline and font.
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
