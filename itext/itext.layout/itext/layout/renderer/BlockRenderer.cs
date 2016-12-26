@@ -566,11 +566,14 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void CorrectPositionedLayout(Rectangle layoutBox) {
-            float y = (float)this.GetPropertyAsFloat(Property.Y);
-            float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
-            Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
+            if (IsFixedLayout()) {
+                float y = (float)this.GetPropertyAsFloat(Property.Y);
+                float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
+                Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
+            }
         }
 
+        //TODO
         private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
             IList<Point> filteredPoints = new List<Point>();
             bool prevOnRightSide = false;

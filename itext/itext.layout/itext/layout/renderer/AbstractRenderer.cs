@@ -603,9 +603,6 @@ namespace iText.Layout.Renderer {
         /// of the renderer
         /// </returns>
         protected internal virtual Rectangle ApplyMargins(Rectangle rect, float[] margins, bool reverse) {
-            if (IsPositioned()) {
-                return rect;
-            }
             return rect.ApplyMargins<Rectangle>(margins[0], margins[1], margins[2], margins[3], reverse);
         }
 
@@ -781,7 +778,7 @@ namespace iText.Layout.Renderer {
         /// <see>boolean</see>
         /// </returns>
         protected internal virtual bool IsPositioned() {
-            return IsFixedLayout();
+            return !IsStaticLayout();
         }
 
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
@@ -792,6 +789,11 @@ namespace iText.Layout.Renderer {
         protected internal virtual bool IsFixedLayout() {
             Object positioning = this.GetProperty<Object>(Property.POSITION);
             return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
+        }
+
+        protected internal virtual bool IsStaticLayout() {
+            Object positioning = this.GetProperty<Object>(Property.POSITION);
+            return positioning == null || System.Convert.ToInt32(LayoutPosition.STATIC).Equals(positioning);
         }
 
         protected internal virtual bool IsRelativePosition() {

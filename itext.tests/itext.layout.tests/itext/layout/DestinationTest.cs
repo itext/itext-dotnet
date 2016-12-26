@@ -27,7 +27,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             Text text = new Text(String.Format("Page {0}", 10));
             text.SetProperty(Property.DESTINATION, "p10");
-            doc.Add(new Paragraph(text).SetFixedPosition(1, 549, 742, 40));
+            doc.Add(new Paragraph(text).SetFixedPosition(1, 549, 742, 40).SetMargin(0));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

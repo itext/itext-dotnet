@@ -149,7 +149,7 @@ namespace iText.Layout {
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
-            doc.Add(new Paragraph(link).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
+            doc.Add(new Paragraph(link).SetMargin(0).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

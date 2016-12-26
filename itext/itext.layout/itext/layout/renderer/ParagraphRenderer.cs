@@ -104,11 +104,14 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             ApplyBorderBox(parentBBox, borders, false);
             bool isPositioned = IsPositioned();
-            if (isPositioned) {
-                float x = (float)this.GetPropertyAsFloat(Property.X);
-                float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
-                parentBBox.SetX(relativeX + x);
+            if (IsPositioned()) {
+                if (IsFixedLayout()) {
+                    float x = (float)this.GetPropertyAsFloat(Property.X);
+                    float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
+                    parentBBox.SetX(relativeX + x);
+                }
             }
+            // TODO
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
                 parentBBox.SetWidth((float)blockWidth);
@@ -310,12 +313,10 @@ namespace iText.Layout.Renderer {
                     previousDescent = processedRenderer.GetMaxDescent();
                 }
             }
-            if (!isPositioned) {
-                float moveDown = Math.Min((leadingValue - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox.GetY
-                    ());
-                occupiedArea.GetBBox().MoveDown(moveDown);
-                occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
-            }
+            float moveDown = Math.Min((leadingValue - lastLineHeight) / 2, occupiedArea.GetBBox().GetY() - layoutBox.GetY
+                ());
+            occupiedArea.GetBBox().MoveDown(moveDown);
+            occupiedArea.GetBBox().SetHeight(occupiedArea.GetBBox().GetHeight() + moveDown);
             if (marginsCollapsingEnabled && childRenderers.Count > 0) {
                 marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
             }

@@ -50,16 +50,18 @@ namespace iText.Layout {
             int x1 = 350;
             int y1 = 600;
             int width1 = 100;
-            document.Add(new Paragraph("text to be rotatedg").SetRotationAngle((Math.PI / 6)).SetFixedPosition(x1, y1, 
-                width1).SetBorder(border));
-            document.Add(new Paragraph("text to be rotatedg").SetFixedPosition(x1, y1, width1).SetBorder(border));
+            document.Add(new Paragraph("text to be rotatedg").SetMargin(0).SetRotationAngle((Math.PI / 6)).SetFixedPosition
+                (x1, y1, width1).SetBorder(border));
+            document.Add(new Paragraph("text to be rotatedg").SetMargin(0).SetFixedPosition(x1, y1, width1).SetBorder(
+                border));
             String longText = "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
                  + "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooong text";
             int x2 = 50;
             int y2 = 300;
             int width2 = 450;
-            document.Add(new Paragraph(longText).SetRotationAngle((Math.PI / 6)).SetFixedPosition(x2, y2, width2));
-            document.Add(new Paragraph(longText).SetFixedPosition(x2, y2, width2));
+            document.Add(new Paragraph(longText).SetMargin(0).SetRotationAngle((Math.PI / 6)).SetFixedPosition(x2, y2, 
+                width2));
+            document.Add(new Paragraph(longText).SetMargin(0).SetFixedPosition(x2, y2, width2));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -75,8 +77,9 @@ namespace iText.Layout {
             Document document = new Document(pdfDocument);
             String longText = "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
                  + "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooong text";
-            document.Add(new Paragraph(longText).SetRotationAngle(-(Math.PI / 6)).SetFixedPosition(50, 50, 450));
-            document.Add(new Paragraph(longText).SetFixedPosition(50, 50, 450));
+            document.Add(new Paragraph(longText).SetMargin(0).SetRotationAngle(-(Math.PI / 6)).SetFixedPosition(50, 50
+                , 450));
+            document.Add(new Paragraph(longText).SetMargin(0).SetFixedPosition(50, 50, 450));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
@@ -94,8 +97,9 @@ namespace iText.Layout {
             float x = 50;
             float y = 380;
             float width = 200;
-            document.Add(new Paragraph(simpleText).SetRotationAngle((Math.PI / 2)).SetFixedPosition(x, y, width));
-            document.Add(new Paragraph(simpleText).SetFixedPosition(x, y, width));
+            document.Add(new Paragraph(simpleText).SetMargin(0).SetRotationAngle((Math.PI / 2)).SetFixedPosition(x, y, 
+                width));
+            document.Add(new Paragraph(simpleText).SetMargin(0).SetFixedPosition(x, y, width));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetFirstPage());
             DrawCross(canvas, x, y);
             document.Close();
@@ -115,8 +119,8 @@ namespace iText.Layout {
             float x = 50;
             float y = 380;
             float width = 100;
-            document.Add(new Paragraph(simpleText).SetRotationAngle(-(Math.PI / 4)).SetBackgroundColor(Color.RED).SetFixedPosition
-                (x, y, width));
+            document.Add(new Paragraph(simpleText).SetMargin(0).SetRotationAngle(-(Math.PI / 4)).SetBackgroundColor(Color
+                .RED).SetFixedPosition(x, y, width));
             PdfCanvas canvas = new PdfCanvas(pdfDocument.GetFirstPage());
             DrawCross(canvas, x, y);
             document.Close();
