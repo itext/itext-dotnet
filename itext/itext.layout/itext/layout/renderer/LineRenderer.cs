@@ -59,6 +59,7 @@ namespace iText.Layout.Renderer {
 
         protected internal byte[] levels;
 
+        // bidi levels
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveDown(-layoutBox
@@ -67,64 +68,10 @@ namespace iText.Layout.Renderer {
             maxAscent = 0;
             maxDescent = 0;
             int childPos = 0;
-            // Trim first
-            int totalNumberOfTrimmedGlyphs = 0;
-            foreach (IRenderer renderer in childRenderers) {
-                if (renderer is TextRenderer) {
-                    TextRenderer textRenderer = (TextRenderer)renderer.SetParent(this);
-                    GlyphLine currentText = textRenderer.GetText();
-                    if (currentText != null) {
-                        int prevTextStart = currentText.start;
-                        textRenderer.TrimFirst();
-                        int numOfTrimmedGlyphs = textRenderer.GetText().start - prevTextStart;
-                        totalNumberOfTrimmedGlyphs += numOfTrimmedGlyphs;
-                    }
-                    if (textRenderer.Length() > 0) {
-                        break;
-                    }
-                }
-                else {
-                    break;
-                }
-            }
-            if (totalNumberOfTrimmedGlyphs != 0 && levels != null) {
-                levels = iText.IO.Util.JavaUtil.ArraysCopyOfRange(levels, totalNumberOfTrimmedGlyphs, levels.Length);
-            }
-            BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
-            foreach (IRenderer renderer_1 in childRenderers) {
-                if (renderer_1 is TextRenderer) {
-                    renderer_1.SetParent(this);
-                    ((TextRenderer)renderer_1).ApplyOtf();
-                    renderer_1.SetParent(null);
-                    if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI) {
-                        baseDirection = renderer_1.GetOwnProperty<BaseDirection?>(Property.BASE_DIRECTION);
-                    }
-                }
-            }
-            IList<int> unicodeIdsReorderingList = null;
-            if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {
-                unicodeIdsReorderingList = new List<int>();
-                bool newLineFound = false;
-                foreach (IRenderer child in childRenderers) {
-                    if (newLineFound) {
-                        break;
-                    }
-                    if (child is TextRenderer) {
-                        GlyphLine text = ((TextRenderer)child).GetText();
-                        for (int i = text.start; i < text.end; i++) {
-                            if (TextUtil.IsNewLine(text.Get(i))) {
-                                newLineFound = true;
-                                break;
-                            }
-                            // we assume all the chars will have the same bidi group
-                            // we also assume pairing symbols won't get merged with other ones
-                            unicodeIdsReorderingList.Add(text.Get(i).GetUnicode());
-                        }
-                    }
-                }
-                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToArray
-                    (unicodeIdsReorderingList)) : null;
-            }
+            UpdateChildrenParent();
+            int totalNumberOfTrimmedGlyphs = TrimFirst();
+            BaseDirection? baseDirection = ApplyOtf();
+            UpdateBidiLevels(totalNumberOfTrimmedGlyphs, baseDirection);
             bool anythingPlaced = false;
             TabStop hangingTabStop = null;
             LineLayoutResult result = null;
@@ -159,8 +106,8 @@ namespace iText.Layout.Renderer {
                     TextRenderer) {
                     childRenderer.SetProperty(Property.TAB_ANCHOR, hangingTabStop.GetTabAnchor());
                 }
-                childResult = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea(
-                    ).GetPageNumber(), bbox)));
+                childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
+                    ), bbox)));
                 float childAscent = 0;
                 float childDescent = 0;
                 if (childRenderer is TextRenderer) {
@@ -304,12 +251,12 @@ namespace iText.Layout.Renderer {
                         bool reversed = false;
                         int offset = 0;
                         while (pos < lineGlyphs.Count) {
-                            IRenderer renderer_2 = lineGlyphs[pos].renderer;
-                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_2).RemoveReversedRanges();
+                            IRenderer renderer = lineGlyphs[pos].renderer;
+                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer).RemoveReversedRanges();
                             children.Add(newRenderer);
                             newRenderer.line = new GlyphLine(newRenderer.line);
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
-                            while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_2) {
+                            while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer) {
                                 if (pos + 1 < lineGlyphs.Count) {
                                     if (reorder[pos] == reorder[pos + 1] + 1 && !TextUtil.IsSpaceOrWhitespace(lineGlyphs[pos + 1].glyph) && !TextUtil
                                         .IsSpaceOrWhitespace(lineGlyphs[pos].glyph)) {
@@ -628,6 +575,82 @@ namespace iText.Layout.Renderer {
             }
             tabRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue((float)tabWidth));
             tabRenderer.SetProperty(Property.MIN_HEIGHT, maxAscent - maxDescent);
+        }
+
+        private void UpdateChildrenParent() {
+            foreach (IRenderer renderer in childRenderers) {
+                renderer.SetParent(this);
+            }
+        }
+
+        /// <summary>Trim first child text renderers.</summary>
+        /// <returns>total number of trimmed glyphs.</returns>
+        private int TrimFirst() {
+            int totalNumberOfTrimmedGlyphs = 0;
+            foreach (IRenderer renderer in childRenderers) {
+                if (renderer is TextRenderer) {
+                    TextRenderer textRenderer = (TextRenderer)renderer;
+                    GlyphLine currentText = textRenderer.GetText();
+                    if (currentText != null) {
+                        int prevTextStart = currentText.start;
+                        textRenderer.TrimFirst();
+                        int numOfTrimmedGlyphs = textRenderer.GetText().start - prevTextStart;
+                        totalNumberOfTrimmedGlyphs += numOfTrimmedGlyphs;
+                    }
+                    if (textRenderer.Length() > 0) {
+                        break;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+            return totalNumberOfTrimmedGlyphs;
+        }
+
+        /// <summary>Apply OTF features and return the last(!) base direction of child renderer</summary>
+        /// <returns>the last(!) base direction of child renderer.</returns>
+        private BaseDirection? ApplyOtf() {
+            BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
+            foreach (IRenderer renderer in childRenderers) {
+                if (renderer is TextRenderer) {
+                    ((TextRenderer)renderer).ApplyOtf();
+                    if (baseDirection == null || baseDirection == BaseDirection.NO_BIDI) {
+                        baseDirection = renderer.GetOwnProperty<BaseDirection?>(Property.BASE_DIRECTION);
+                    }
+                }
+            }
+            return baseDirection;
+        }
+
+        private void UpdateBidiLevels(int totalNumberOfTrimmedGlyphs, BaseDirection? baseDirection) {
+            if (totalNumberOfTrimmedGlyphs != 0 && levels != null) {
+                levels = iText.IO.Util.JavaUtil.ArraysCopyOfRange(levels, totalNumberOfTrimmedGlyphs, levels.Length);
+            }
+            IList<int> unicodeIdsReorderingList = null;
+            if (levels == null && baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {
+                unicodeIdsReorderingList = new List<int>();
+                bool newLineFound = false;
+                foreach (IRenderer child in childRenderers) {
+                    if (newLineFound) {
+                        break;
+                    }
+                    if (child is TextRenderer) {
+                        GlyphLine text = ((TextRenderer)child).GetText();
+                        for (int i = text.start; i < text.end; i++) {
+                            if (TextUtil.IsNewLine(text.Get(i))) {
+                                newLineFound = true;
+                                break;
+                            }
+                            // we assume all the chars will have the same bidi group
+                            // we also assume pairing symbols won't get merged with other ones
+                            unicodeIdsReorderingList.Add(text.Get(i).GetUnicode());
+                        }
+                    }
+                }
+                levels = unicodeIdsReorderingList.Count > 0 ? TypographyUtils.GetBidiLevels(baseDirection, ArrayUtil.ToArray
+                    (unicodeIdsReorderingList)) : null;
+            }
         }
 
         internal class RendererGlyph {

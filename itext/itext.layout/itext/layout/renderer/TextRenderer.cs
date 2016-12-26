@@ -1043,7 +1043,6 @@ namespace iText.Layout.Renderer {
         private void ConvertWaitingStringToGlyphLine() {
             if (strToBeConverted != null) {
                 //yes we save font only while converting original string to synchronize glyphline and font.
-                font = GetPropertyAsFont(Property.FONT);
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
                 strToBeConverted = null;
@@ -1052,7 +1051,7 @@ namespace iText.Layout.Renderer {
 
         private PdfFont GetFont() {
             if (font == null) {
-                return GetPropertyAsFont(Property.FONT);
+                font = GetPropertyAsFont(Property.FONT);
             }
             return font;
         }
