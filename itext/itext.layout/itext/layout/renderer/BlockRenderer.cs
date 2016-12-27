@@ -70,6 +70,7 @@ namespace iText.Layout.Renderer {
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || isPositioned) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
+            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (marginsCollapsingEnabled) {
@@ -84,12 +85,11 @@ namespace iText.Layout.Renderer {
                 float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
                 parentBBox.SetX(relativeX + x);
             }
-            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
+            float[] paddings = GetPaddings();
+            ApplyPaddings(parentBBox, paddings, false);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
                 parentBBox.SetWidth((float)blockWidth);
             }
-            float[] paddings = GetPaddings();
-            ApplyPaddings(parentBBox, paddings, false);
             float? blockMaxHeight = RetrieveMaxHeight();
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
                 GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {

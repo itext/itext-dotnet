@@ -31,7 +31,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(300).SetPaddings(20
+            Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(260).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
                 (0, -10, 0, 0).SetBackgroundColor(new DeviceGray(0.8f))).Add("but the rest of the line is in its original position."
                 );
@@ -49,7 +49,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_relativePositioningTest02.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(180).SetPaddings(20
+            Paragraph p = new Paragraph().SetBorder(new SolidBorder(new DeviceGray(0), 5)).SetWidth(140).SetPaddings(20
                 , 20, 20, 20).Add("Here is a line of text.").Add(new Text("This part is shifted\n up a bit,").SetRelativePosition
                 (0, -10, 0, 0).SetBackgroundColor(new DeviceGray(0.8f))).Add("but the rest of the line is in its original position."
                 ).SetRelativePosition(50, 0, 0, 0);

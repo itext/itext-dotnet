@@ -87,6 +87,7 @@ namespace iText.Layout.Renderer {
             bool firstLineInBox = true;
             LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
+            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             if (0 == childRenderers.Count) {
                 anythingPlaced = true;
                 currentRenderer = null;
@@ -112,12 +113,11 @@ namespace iText.Layout.Renderer {
                 }
             }
             // TODO
-            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
+            float[] paddings = GetPaddings();
+            ApplyPaddings(parentBBox, paddings, false);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
                 parentBBox.SetWidth((float)blockWidth);
             }
-            float[] paddings = GetPaddings();
-            ApplyPaddings(parentBBox, paddings, false);
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
                 float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;

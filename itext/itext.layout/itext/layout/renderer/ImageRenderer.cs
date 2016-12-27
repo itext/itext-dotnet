@@ -97,13 +97,13 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
             Rectangle layoutBox = area.GetBBox();
+            width = RetrieveWidth(layoutBox.GetWidth());
+            height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
-            width = RetrieveWidth(layoutBox.GetWidth());
-            height = RetrieveHeight();
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
             imageWidth = xObject.GetWidth();
