@@ -330,23 +330,51 @@ namespace iText.Layout.Renderer {
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawBackground(DrawContext drawContext) {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
-            if (background != null) {
+            BackgroundImage backgroundImage = this.GetProperty<BackgroundImage>(Property.BACKGROUND_IMAGE);
+            if (background != null || backgroundImage != null) {
                 Rectangle bBox = GetOccupiedAreaBBox();
                 bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
                 if (isTagged) {
                     drawContext.GetCanvas().OpenTag(new CanvasArtifact());
                 }
                 Rectangle backgroundArea = ApplyMargins(bBox, false);
-                if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                    logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
-                        );
-                    return;
+                if (background != null) {
+                    if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
+                            );
+                        return;
+                    }
+                    drawContext.GetCanvas().SaveState().SetFillColor(background.GetColor()).Rectangle(backgroundArea.GetX() - 
+                        background.GetExtraLeft(), backgroundArea.GetY() - background.GetExtraBottom(), backgroundArea.GetWidth
+                        () + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea.GetHeight() + background.GetExtraTop
+                        () + background.GetExtraBottom()).Fill().RestoreState();
                 }
-                drawContext.GetCanvas().SaveState().SetFillColor(background.GetColor()).Rectangle(backgroundArea.GetX() - 
-                    background.GetExtraLeft(), backgroundArea.GetY() - background.GetExtraBottom(), backgroundArea.GetWidth
-                    () + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea.GetHeight() + background.GetExtraTop
-                    () + background.GetExtraBottom()).Fill().RestoreState();
+                ApplyBorderBox(backgroundArea, false);
+                if (backgroundImage != null && backgroundImage.GetImage() != null) {
+                    if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
+                            );
+                        return;
+                    }
+                    Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetY() + backgroundArea.GetHeight
+                        () - backgroundImage.GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage
+                        ().GetHeight());
+                    drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
+                    float initialX = imageRectangle.GetX();
+                    do {
+                        imageRectangle.SetX(initialX);
+                        do {
+                            drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
+                            imageRectangle.MoveRight(backgroundImage.GetImage().GetWidth());
+                        }
+                        while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
+                        imageRectangle.MoveDown(backgroundImage.GetImage().GetHeight());
+                    }
+                    while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
+                    drawContext.GetCanvas().RestoreState();
+                }
                 if (isTagged) {
                     drawContext.GetCanvas().CloseTag();
                 }

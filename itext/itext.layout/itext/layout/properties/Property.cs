@@ -76,6 +76,8 @@ namespace iText.Layout.Properties {
 
         public const int BACKGROUND = 6;
 
+        public const int BACKGROUND_IMAGE = 90;
+
         public const int BASE_DIRECTION = 7;
 
         public const int BOLD_SIMULATION = 8;
@@ -257,7 +259,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 89;
+        private const int MAX_INHERITED_PROPERTY_ID = 90;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
