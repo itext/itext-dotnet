@@ -140,6 +140,11 @@ namespace iText.Kernel.Pdf {
             try {
                 PdfDocument document = GetIndirectReference().GetDocument();
                 if (document != null) {
+                    if (document.IsAppendMode() && !IsModified()) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+                        logger.Info(iText.IO.LogMessageConstant.PDF_OBJECT_FLUSHING_NOT_PERFORMED);
+                        return;
+                    }
                     document.CheckIsoConformance(this, IsoKey.PDF_OBJECT);
                     document.FlushObject(this, canBeInObjStm && GetObjectType() != STREAM && GetObjectType() != INDIRECT_REFERENCE
                          && GetIndirectReference().GetGenNumber() == 0);

@@ -132,6 +132,7 @@ namespace iText.Kernel.Pdf.Tagging {
             }
             pageToPageMcrs.JRemove(page.GetPdfObject().GetIndirectReference());
             UpdateStructParentTreeEntries(page.GetStructParentIndex(), mcrs);
+            structTreeRoot.SetModified();
         }
 
         public virtual PdfDictionary BuildParentTree() {
@@ -139,6 +140,10 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void RegisterMcr(PdfMcr mcr) {
+            RegisterMcr(mcr, false);
+        }
+
+        private void RegisterMcr(PdfMcr mcr, bool registeringOnInit) {
             PdfDictionary mcrPageObject = mcr.GetPageObject();
             if (mcrPageObject == null || (!(mcr is PdfObjRef) && mcr.GetMcid() < 0)) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.ParentTreeHandler));
@@ -167,6 +172,9 @@ namespace iText.Kernel.Pdf.Tagging {
             else {
                 pageMcrs[mcr.GetMcid()] = mcr;
             }
+            if (!registeringOnInit) {
+                structTreeRoot.SetModified();
+            }
         }
 
         public virtual void UnregisterMcr(PdfMcr mcrToUnregister) {
@@ -186,18 +194,21 @@ namespace iText.Kernel.Pdf.Tagging {
                         PdfNumber n = obj.GetAsNumber(PdfName.StructParent);
                         if (n != null) {
                             pageMcrs.JRemove(StructParentIndexIntoKey(n.IntValue()));
+                            structTreeRoot.SetModified();
                             return;
                         }
                     }
                     foreach (KeyValuePair<int, PdfMcr> entry in pageMcrs) {
                         if (entry.Value.GetPdfObject() == mcrToUnregister.GetPdfObject()) {
                             pageMcrs.JRemove(entry.Key);
+                            structTreeRoot.SetModified();
                             break;
                         }
                     }
                 }
                 else {
                     pageMcrs.JRemove(mcrToUnregister.GetMcid());
+                    structTreeRoot.SetModified();
                 }
             }
         }
@@ -241,7 +252,7 @@ namespace iText.Kernel.Pdf.Tagging {
             foreach (PdfStructElem mcrParent in mcrParents) {
                 foreach (IPdfStructElem kid in mcrParent.GetKids()) {
                     if (kid is PdfMcr) {
-                        RegisterMcr((PdfMcr)kid);
+                        RegisterMcr((PdfMcr)kid, true);
                     }
                 }
             }

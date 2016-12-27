@@ -56,6 +56,7 @@ namespace iText.Kernel.Pdf.Tagging {
             EnsureObjectIsAddedToDocument(parentObject);
             PdfDocument doc = parentObject.GetIndirectReference().GetDocument();
             annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber((int)doc.GetNextStructParentIndex()));
+            annot.SetModified();
             PdfDictionary dict = (PdfDictionary)GetPdfObject();
             dict.Put(PdfName.Type, PdfName.OBJR);
             dict.Put(PdfName.Obj, annot.GetPdfObject());

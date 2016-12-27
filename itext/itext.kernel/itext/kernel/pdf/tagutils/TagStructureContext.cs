@@ -231,6 +231,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
             annotDic.Remove(PdfName.StructParent);
+            annotDic.SetModified();
             if (structElem != null) {
                 return new TagTreePointer(document).SetCurrentStructElem(structElem);
             }
@@ -415,8 +416,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <summary>Method for internal usages.</summary>
         /// <remarks>
         /// Method for internal usages.
-        /// Essentially, all it does is just making sure that for connected tags properties are
-        /// up to date with connected accessible elements properties.
+        /// Essentially, all it does is just making sure that for connected tags the properties are
+        /// up to date with the connected accessible elements properties.
         /// </remarks>
         public virtual void ActualizeTagsProperties() {
             foreach (KeyValuePair<IAccessibleElement, PdfStructElem> structToModel in connectedModelToStruct) {

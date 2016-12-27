@@ -637,6 +637,11 @@ namespace iText.Kernel.Pdf {
                         if (structTreeRoot != null && structTreeRoot.GetPdfObject().IsModified()) {
                             TryFlushTagStructure();
                         }
+                        else {
+                            if (tagStructureContext != null) {
+                                tagStructureContext.RemoveAllConnectionsToTags();
+                            }
+                        }
                         if (catalog.IsOCPropertiesMayHaveChanged() && catalog.GetOCProperties(false).GetPdfObject().IsModified()) {
                             catalog.GetOCProperties(false).Flush();
                         }

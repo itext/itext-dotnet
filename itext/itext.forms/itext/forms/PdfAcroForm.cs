@@ -738,8 +738,7 @@ namespace iText.Forms {
                     if (xObject != null && xObject.GetPdfObject().Get(PdfName.Subtype) != null) {
                         Rectangle box = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
-                            throw new PdfException(PdfException.PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing
-                                );
+                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                         }
                         PdfCanvas canvas = new PdfCanvas(page);
                         // Here we avoid circular reference which might occur when page resources and the appearance xObject's
@@ -1000,8 +999,7 @@ namespace iText.Forms {
             PdfDictionary pageDic = annot.GetPageObject();
             if (pageDic != null) {
                 if (warnIfPageFlushed && pageDic.IsFlushed()) {
-                    throw new PdfException(PdfException.PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing
-                        );
+                    throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                 }
                 PdfDocument doc = pageDic.GetIndirectReference().GetDocument();
                 PdfPage widgetPage = doc.GetPage(pageDic);
