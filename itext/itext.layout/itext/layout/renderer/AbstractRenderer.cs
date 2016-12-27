@@ -969,20 +969,28 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void OverrideHeightProperties() {
-            if (HasProperty(Property.HEIGHT)) {
-                float? height = this.GetProperty<float?>(Property.HEIGHT);
-                if (!HasProperty(Property.MAX_HEIGHT) || height < this.GetProperty<float?>(Property.MAX_HEIGHT)) {
-                    SetProperty(Property.MAX_HEIGHT, height);
+            float? height = this.GetProperty<float?>(Property.HEIGHT);
+            float? maxHeight = this.GetProperty<float?>(Property.MAX_HEIGHT);
+            float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
+            if (null != height) {
+                if (null == maxHeight || height < maxHeight) {
+                    maxHeight = height;
                 }
-                if (!HasProperty(Property.MIN_HEIGHT) || height > this.GetProperty<float?>(Property.MIN_HEIGHT)) {
-                    SetProperty(Property.MIN_HEIGHT, height);
+                else {
+                    height = maxHeight;
+                }
+                if (null == minHeight || height > minHeight) {
+                    minHeight = height;
                 }
             }
-            if (HasProperty(Property.MIN_HEIGHT)) {
-                float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
-                if (HasProperty(Property.MAX_HEIGHT) && minHeight > this.GetProperty<float?>(Property.MAX_HEIGHT)) {
-                    SetProperty(Property.MAX_HEIGHT, minHeight);
-                }
+            if (null != maxHeight && null != minHeight && minHeight > maxHeight) {
+                maxHeight = minHeight;
+            }
+            if (null != maxHeight) {
+                SetProperty(Property.MAX_HEIGHT, maxHeight);
+            }
+            if (null != minHeight) {
+                SetProperty(Property.MIN_HEIGHT, minHeight);
             }
         }
 
