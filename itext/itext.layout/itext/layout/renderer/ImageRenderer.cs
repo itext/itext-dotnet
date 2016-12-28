@@ -56,10 +56,6 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer {
-        private float? height;
-
-        private float? width;
-
         protected internal float? fixedXPosition;
 
         protected internal float? fixedYPosition;
@@ -72,6 +68,12 @@ namespace iText.Layout.Renderer {
 
         protected internal float imageHeight;
 
+        internal float[] matrix = new float[6];
+
+        private float? height;
+
+        private float? width;
+
         private float imageItselfScaledWidth;
 
         private float imageItselfScaledHeight;
@@ -81,8 +83,6 @@ namespace iText.Layout.Renderer {
         private float rotatedDeltaX;
 
         private float rotatedDeltaY;
-
-        internal float[] matrix = new float[6];
 
         /// <summary>Creates an ImageRenderer from its corresponding layout object.</summary>
         /// <param name="image">
@@ -153,7 +153,7 @@ namespace iText.Layout.Renderer {
                     height = RetrieveMaxHeight();
                 }
                 else {
-                    if (null != RetrieveHeight() && height != RetrieveHeight()) {
+                    if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {
                         width *= RetrieveHeight() / height;
                         height = RetrieveHeight();
                     }
