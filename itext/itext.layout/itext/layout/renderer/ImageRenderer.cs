@@ -105,9 +105,10 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
-            imageWidth = xObject.GetWidth();
-            imageHeight = xObject.GetHeight();
+            Image modelElement = (Image)(GetModelElement());
+            PdfXObject xObject = modelElement.GetXObject();
+            imageWidth = modelElement.GetImageWidth();
+            imageHeight = modelElement.GetImageHeight();
             if (width == null && height == null) {
                 width = imageWidth;
                 height = (float)width / imageWidth * imageHeight;
