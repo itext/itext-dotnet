@@ -99,7 +99,7 @@ namespace iText.Test {
 
         private bool EqualsMessageByTemplate(string message, string template) {
             if (template.IndexOf("{") > 0 && template.IndexOf("}") > 0) {
-                String templateWithoutParameters = Regex.Replace(template, "\\{[0-9]+?\\}", "(.|\\\\s)*?");
+                String templateWithoutParameters = Regex.Replace(template.Replace("''", "'"), "\\{[0-9]+?\\}", "(.|\\\\s)*?");
                 return Regex.IsMatch(message, templateWithoutParameters);
             } else {
                 return message.Contains(template);
