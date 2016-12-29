@@ -582,6 +582,7 @@ namespace iText.Kernel.Pdf.Action {
             }
             dic.Put(key, action.GetPdfObject());
             wrapper.GetPdfObject().Put(PdfName.AA, dic);
+            wrapper.GetPdfObject().SetModified();
         }
 
         /// <summary>Adds a chained action.</summary>

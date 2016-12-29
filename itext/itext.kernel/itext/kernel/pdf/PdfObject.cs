@@ -95,7 +95,7 @@ namespace iText.Kernel.Pdf {
         // Indicates if the object has been flushed.
         // Indicates that the indirect reference of the object could be reused or have to be marked as free.
         // Indicates that definition of the indirect reference of the object still not found (e.g. keys in XRefStm).
-        // Indicates that object changed (using in stamp mode).
+        // Indicates that object changed (is used in append mode).
         // Indicates that the indirect reference of the object represents ObjectStream from original document.
         // When PdfReader read ObjectStream reference marked as OriginalObjectStream
         // to avoid further reusing.
@@ -218,7 +218,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Indicates is the object has been flushed or not.</summary>
-        /// <returns>true is object has been flushed, otherwise false.</returns>
+        /// <returns>true if object has been flushed, otherwise false.</returns>
         public virtual bool IsFlushed() {
             PdfIndirectReference indirectReference = GetIndirectReference();
             return (indirectReference != null && indirectReference.CheckState(FLUSHED));
@@ -289,7 +289,29 @@ namespace iText.Kernel.Pdf {
             return ProcessCopying(document, allowDuplicating);
         }
 
-        //TODO comment! Add note about flush, modified flag and xref.
+        /// <summary>Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since the document opening.
+        ///     </summary>
+        /// <remarks>
+        /// Sets the 'modified' flag to the indirect object, the flag denotes that the object was modified since the document opening.
+        /// <p>
+        /// This flag is meaningful only if the
+        /// <see cref="PdfDocument"/>
+        /// is opened in append mode
+        /// (see
+        /// <see cref="StampingProperties.UseAppendMode()"/>
+        /// ).
+        /// </p>
+        /// <p>
+        /// In append mode the whole document is preserved as is, and only changes to the document are
+        /// appended to the end of the document file. Because of this, only modified objects need to be flushed and are
+        /// allowed to be flushed (i.e. to be written).
+        /// </p>
+        /// </remarks>
+        /// <returns>
+        /// this
+        /// <see cref="PdfObject"/>
+        /// instance.
+        /// </returns>
         public virtual PdfObject SetModified() {
             if (indirectReference != null) {
                 indirectReference.SetState(MODIFIED);

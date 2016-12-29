@@ -182,8 +182,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetAttributes(PdfObject attributes) {
-            SetModified();
-            GetPdfObject().Put(PdfName.A, attributes);
+            Put(PdfName.A, attributes);
         }
 
         public virtual PdfString GetLang() {
@@ -191,8 +190,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetLang(PdfString lang) {
-            SetModified();
-            GetPdfObject().Put(PdfName.Lang, lang);
+            Put(PdfName.Lang, lang);
         }
 
         public virtual PdfString GetAlt() {
@@ -200,8 +198,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetAlt(PdfString alt) {
-            SetModified();
-            GetPdfObject().Put(PdfName.Alt, alt);
+            Put(PdfName.Alt, alt);
         }
 
         public virtual PdfString GetActualText() {
@@ -209,8 +206,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetActualText(PdfString actualText) {
-            SetModified();
-            GetPdfObject().Put(PdfName.ActualText, actualText);
+            Put(PdfName.ActualText, actualText);
         }
 
         public virtual PdfString GetE() {
@@ -218,8 +214,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetE(PdfString e) {
-            SetModified();
-            GetPdfObject().Put(PdfName.E, e);
+            Put(PdfName.E, e);
         }
 
         public virtual PdfName GetRole() {
@@ -227,8 +222,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetRole(PdfName role) {
-            SetModified();
-            GetPdfObject().Put(PdfName.S, role);
+            Put(PdfName.S, role);
         }
 
         public virtual iText.Kernel.Pdf.Tagging.PdfStructElem AddKid(iText.Kernel.Pdf.Tagging.PdfStructElem kid) {
