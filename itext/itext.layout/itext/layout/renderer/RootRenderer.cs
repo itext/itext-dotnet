@@ -62,6 +62,8 @@ namespace iText.Layout.Renderer {
 
         private MarginsCollapseHandler marginsCollapseHandler;
 
+        private LayoutArea initialCurrentArea;
+
         public override void AddChild(IRenderer renderer) {
             // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
             // so we use this generic mechanism of determining which renderers have been just added.
@@ -80,7 +82,7 @@ namespace iText.Layout.Renderer {
             }
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (currentArea == null) {
-                UpdateCurrentArea(null);
+                UpdateCurrentAndInitialArea(null);
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler = new MarginsCollapseHandler(this, null);
                 }
@@ -111,7 +113,7 @@ namespace iText.Layout.Renderer {
                                 nextStoredArea = null;
                             }
                             else {
-                                UpdateCurrentArea(result);
+                                UpdateCurrentAndInitialArea(result);
                             }
                         }
                     }
@@ -120,7 +122,7 @@ namespace iText.Layout.Renderer {
                             if (result.GetOverflowRenderer() is ImageRenderer) {
                                 if (currentArea.GetBBox().GetHeight() < ((ImageRenderer)result.GetOverflowRenderer()).imageHeight && !currentArea
                                     .IsEmptyArea()) {
-                                    UpdateCurrentArea(result);
+                                    UpdateCurrentAndInitialArea(result);
                                 }
                                 ((ImageRenderer)result.GetOverflowRenderer()).AutoScale(currentArea);
                                 result.GetOverflowRenderer().SetProperty(Property.FORCED_PLACEMENT, true);
@@ -171,7 +173,7 @@ namespace iText.Layout.Renderer {
                                         nextStoredArea = null;
                                     }
                                     else {
-                                        UpdateCurrentArea(result);
+                                        UpdateCurrentAndInitialArea(result);
                                     }
                                 }
                             }
@@ -217,8 +219,8 @@ namespace iText.Layout.Renderer {
                 if (positionedPageNumber == null) {
                     positionedPageNumber = currentPageNumber;
                 }
-                renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber, currentArea.GetBBox
-                    ().Clone())));
+                renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber, initialCurrentArea
+                    .GetBBox().Clone())));
                 if (immediateFlush) {
                     FlushSingleRenderer(renderer);
                     positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
@@ -268,7 +270,7 @@ namespace iText.Layout.Renderer {
 
         public virtual LayoutArea GetCurrentArea() {
             if (currentArea == null) {
-                UpdateCurrentArea(null);
+                UpdateCurrentAndInitialArea(null);
             }
             return currentArea;
         }
@@ -329,7 +331,7 @@ namespace iText.Layout.Renderer {
                             (firstElementSplitLayoutArea.Clone()));
                         if (firstElementSplitLayoutResult.GetStatus() == LayoutResult.PARTIAL) {
                             LayoutArea storedArea = currentArea;
-                            UpdateCurrentArea(firstElementSplitLayoutResult);
+                            UpdateCurrentAndInitialArea(firstElementSplitLayoutResult);
                             LayoutResult firstElementOverflowLayoutResult = firstElementSplitLayoutResult.GetOverflowRenderer().Layout
                                 (new LayoutContext(currentArea.Clone()));
                             if (firstElementOverflowLayoutResult.GetStatus() == LayoutResult.FULL) {
@@ -344,7 +346,7 @@ namespace iText.Layout.Renderer {
                                     currentPageNumber = firstElementSplitLayoutArea.GetPageNumber();
                                     UpdateCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetSplitRenderer(), new List<IRenderer>(
                                         ), firstElementSplitLayoutResult);
-                                    UpdateCurrentArea(firstElementSplitLayoutResult);
+                                    UpdateCurrentAndInitialArea(firstElementSplitLayoutResult);
                                     UpdateCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetOverflowRenderer(), new List<IRenderer
                                         >(), firstElementOverflowLayoutResult);
                                 }
@@ -358,7 +360,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (!ableToProcessKeepWithNext && !currentArea.IsEmptyArea()) {
                     LayoutArea storedArea = currentArea;
-                    UpdateCurrentArea(null);
+                    UpdateCurrentAndInitialArea(null);
                     LayoutResult firstElementLayoutResult = keepWithNextHangingRenderer.SetParent(this).Layout(new LayoutContext
                         (currentArea.Clone()));
                     if (firstElementLayoutResult.GetStatus() == LayoutResult.FULL) {
@@ -387,6 +389,11 @@ namespace iText.Layout.Renderer {
                 keepWithNextHangingRenderer = null;
                 keepWithNextHangingRendererLayoutResult = null;
             }
+        }
+
+        private void UpdateCurrentAndInitialArea(LayoutResult overflowResult) {
+            UpdateCurrentArea(overflowResult);
+            initialCurrentArea = new LayoutArea(currentArea.GetPageNumber(), currentArea.GetBBox().Clone());
         }
     }
 }
