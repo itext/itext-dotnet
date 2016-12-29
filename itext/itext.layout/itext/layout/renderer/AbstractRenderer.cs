@@ -137,6 +137,32 @@ namespace iText.Layout.Renderer {
                         root.AddChild(renderer);
                     }
                 }
+                else {
+                    if (positioning == LayoutPosition.ABSOLUTE) {
+                        iText.Layout.Renderer.AbstractRenderer positionedParent = this;
+                        while (!positionedParent.IsPositioned()) {
+                            IRenderer parent = positionedParent.parent;
+                            if (parent is iText.Layout.Renderer.AbstractRenderer) {
+                                positionedParent = (iText.Layout.Renderer.AbstractRenderer)parent;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        if (positionedParent == this) {
+                            positionedRenderers.Add(renderer);
+                        }
+                        else {
+                            positionedParent.AddChild(renderer);
+                        }
+                    }
+                }
+            }
+            // Fetch positioned renderers from non-positioned child because they might be stuck there because child's parent was null previously
+            if (renderer is iText.Layout.Renderer.AbstractRenderer && !((iText.Layout.Renderer.AbstractRenderer)renderer
+                ).IsPositioned() && ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers.Count > 0) {
+                positionedRenderers.AddAll(((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers);
+                ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers.Clear();
             }
         }
 
@@ -309,13 +335,14 @@ namespace iText.Layout.Renderer {
             ApplyDestinationsAndAnnotation(drawContext);
             bool relativePosition = IsRelativePosition();
             if (relativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             DrawChildren(drawContext);
+            DrawPositionedChildren(drawContext);
             if (relativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
+                ApplyRelativePositioningTranslation(true);
             }
             flushed = true;
         }
@@ -734,11 +761,60 @@ namespace iText.Layout.Renderer {
             return rect.ApplyMargins<Rectangle>(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
         }
 
-        protected internal virtual void ApplyAbsolutePositioningTranslation(bool reverse) {
-            float top = (float)this.GetPropertyAsFloat(Property.TOP);
-            float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM);
-            float left = (float)this.GetPropertyAsFloat(Property.LEFT);
-            float right = (float)this.GetPropertyAsFloat(Property.RIGHT);
+        protected internal virtual void ApplyAbsolutePosition(Rectangle rect) {
+            float? top = this.GetPropertyAsFloat(Property.TOP);
+            float? bottom = this.GetPropertyAsFloat(Property.BOTTOM);
+            float? left = this.GetPropertyAsFloat(Property.LEFT);
+            float? right = this.GetPropertyAsFloat(Property.RIGHT);
+            float initialHeight = rect.GetHeight();
+            float initialWidth = rect.GetWidth();
+            float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
+            if (minHeight != null && rect.GetHeight() < (float)minHeight) {
+                float difference = (float)minHeight - rect.GetHeight();
+                rect.MoveDown(difference).SetHeight(rect.GetHeight() + difference);
+            }
+            if (top != null) {
+                rect.SetHeight(rect.GetHeight() - top);
+            }
+            if (left != null) {
+                rect.SetX(rect.GetX() + (float)left).SetWidth(rect.GetWidth() - left);
+            }
+            if (right != null) {
+                UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
+                if (left == null && width != null) {
+                    float widthValue = width.IsPointValue() ? width.GetValue() : (width.GetValue() * initialWidth);
+                    float placeLeft = rect.GetWidth() - widthValue;
+                    if (placeLeft > 0) {
+                        float computedRight = Math.Min(placeLeft, (float)right);
+                        rect.SetX(rect.GetX() + rect.GetWidth() - computedRight - widthValue);
+                    }
+                }
+                else {
+                    if (width == null) {
+                        rect.SetWidth(rect.GetWidth() - (float)right);
+                    }
+                }
+            }
+            if (bottom != null) {
+                if (minHeight != null) {
+                    rect.SetHeight((float)minHeight + (float)bottom);
+                }
+                else {
+                    float minHeightValue = rect.GetHeight() - (float)bottom;
+                    float? currentMaxHeight = GetPropertyAsFloat(Property.MAX_HEIGHT);
+                    if (currentMaxHeight != null) {
+                        minHeightValue = Math.Min(minHeightValue, (float)currentMaxHeight);
+                    }
+                    SetProperty(Property.MIN_HEIGHT, minHeightValue);
+                }
+            }
+        }
+
+        protected internal virtual void ApplyRelativePositioningTranslation(bool reverse) {
+            float top = (float)this.GetPropertyAsFloat(Property.TOP, 0f);
+            float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM, 0f);
+            float left = (float)this.GetPropertyAsFloat(Property.LEFT, 0f);
+            float right = (float)this.GetPropertyAsFloat(Property.RIGHT, 0f);
             int reverseMultiplier = reverse ? -1 : 1;
             float dxRight = left != 0 ? left * reverseMultiplier : -right * reverseMultiplier;
             float dyUp = top != 0 ? -top * reverseMultiplier : bottom * reverseMultiplier;
@@ -827,6 +903,11 @@ namespace iText.Layout.Renderer {
         protected internal virtual bool IsRelativePosition() {
             int? positioning = this.GetPropertyAsInteger(Property.POSITION);
             return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
+        }
+
+        protected internal virtual bool IsAbsolutePosition() {
+            int? positioning = this.GetPropertyAsInteger(Property.POSITION);
+            return System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positioning);
         }
 
         protected internal virtual bool IsKeepTogether() {
@@ -1019,6 +1100,12 @@ namespace iText.Layout.Renderer {
             }
             if (null != minHeight) {
                 SetProperty(Property.MIN_HEIGHT, minHeight);
+            }
+        }
+
+        internal virtual void DrawPositionedChildren(DrawContext drawContext) {
+            foreach (IRenderer positionedChild in positionedRenderers) {
+                positionedChild.Draw(drawContext);
             }
         }
 

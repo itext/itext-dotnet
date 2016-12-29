@@ -218,7 +218,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             if (fixedYPosition == null) {
                 fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
@@ -275,7 +275,7 @@ namespace iText.Layout.Renderer {
                 canvas.CloseTag();
             }
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
+                ApplyRelativePositioningTranslation(true);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -293,7 +293,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(initialOccupiedAreaBBox, GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             ApplyMargins(initialOccupiedAreaBBox, true);
             ApplyBorderBox(initialOccupiedAreaBBox, true);

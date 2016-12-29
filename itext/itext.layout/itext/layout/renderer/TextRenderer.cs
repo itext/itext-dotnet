@@ -478,7 +478,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(occupiedArea.GetBBox(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             float leftBBoxX = occupiedArea.GetBBox().GetX();
             if (line.end > line.start) {
@@ -600,7 +600,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), true);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true);

@@ -67,7 +67,7 @@ namespace iText.Layout.Renderer {
             int pageNumber = layoutContext.GetArea().GetPageNumber();
             bool isPositioned = IsPositioned();
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || isPositioned) {
+            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null || IsFixedLayout()) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
@@ -81,9 +81,16 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             ApplyBorderBox(parentBBox, borders, false);
             if (isPositioned) {
-                float x = (float)this.GetPropertyAsFloat(Property.X);
-                float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
-                parentBBox.SetX(relativeX + x);
+                if (IsFixedLayout()) {
+                    float x = (float)this.GetPropertyAsFloat(Property.X);
+                    float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
+                    parentBBox.SetX(relativeX + x);
+                }
+                else {
+                    if (IsAbsolutePosition()) {
+                        ApplyAbsolutePosition(parentBBox);
+                    }
+                }
             }
             float[] paddings = GetPaddings();
             ApplyPaddings(parentBBox, paddings, false);
@@ -326,6 +333,14 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse();
             }
+            if (positionedRenderers.Count > 0) {
+                LayoutArea area = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());
+                ApplyBorderBox(area.GetBBox(), false);
+                foreach (IRenderer childPositionedRenderer in positionedRenderers) {
+                    childPositionedRenderer.Layout(new LayoutContext(area));
+                }
+                ApplyBorderBox(area.GetBBox(), true);
+            }
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
@@ -395,15 +410,16 @@ namespace iText.Layout.Renderer {
             }
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             BeginRotationIfApplied(drawContext.GetCanvas());
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             DrawChildren(drawContext);
+            DrawPositionedChildren(drawContext);
             EndRotationIfApplied(drawContext.GetCanvas());
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
+                ApplyRelativePositioningTranslation(true);
             }
             if (isTagged) {
                 tagPointer.MoveToParent();

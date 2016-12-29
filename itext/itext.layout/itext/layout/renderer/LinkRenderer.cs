@@ -82,7 +82,7 @@ namespace iText.Layout.Renderer {
             base.Draw(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
         }
 

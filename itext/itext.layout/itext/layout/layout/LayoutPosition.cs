@@ -62,6 +62,12 @@ namespace iText.Layout.Layout {
         /// </remarks>
         public const int RELATIVE = 2;
 
+        /// <summary>
+        /// Absolute positioned objects are positioned relative to the containing block, which is the nearest enclosing
+        /// ancestor block with a position other than 'static'.
+        /// </summary>
+        public const int ABSOLUTE = 3;
+
         /// <summary>Fixed positioned objects are positioned relative to the viewport, i.e., the page area of the current page.
         ///     </summary>
         public const int FIXED = 4;
