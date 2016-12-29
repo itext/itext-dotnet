@@ -328,14 +328,18 @@ namespace iText.Layout.Renderer {
             if (isPositioned) {
                 CorrectPositionedLayout(layoutBox);
             }
-            foreach (IRenderer childPositionedRenderer in positionedRenderers) {
-                childPositionedRenderer.Layout(new LayoutContext(new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea
-                    .GetBBox().Clone())));
-            }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse();
+            }
+            if (positionedRenderers.Count > 0) {
+                LayoutArea area = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());
+                ApplyBorderBox(area.GetBBox(), false);
+                foreach (IRenderer childPositionedRenderer in positionedRenderers) {
+                    childPositionedRenderer.Layout(new LayoutContext(area));
+                }
+                ApplyBorderBox(area.GetBBox(), true);
             }
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {

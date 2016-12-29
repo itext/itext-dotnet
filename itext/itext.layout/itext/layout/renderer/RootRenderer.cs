@@ -219,8 +219,19 @@ namespace iText.Layout.Renderer {
                 if (positionedPageNumber == null) {
                     positionedPageNumber = currentPageNumber;
                 }
-                renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber, initialCurrentArea
-                    .GetBBox().Clone())));
+                LayoutArea layoutArea;
+                // For position=absolute, if none of the top, bottom, left, right properties are provided,
+                // the content should be displayed in the flow of the current content, not overlapping it.
+                // The behavior is just if it would be statically positioned except it does not affect other elements
+                if (System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(renderer.GetProperty(Property.POSITION)) && !renderer
+                    .HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty(Property
+                    .LEFT) && !renderer.HasProperty(Property.RIGHT)) {
+                    layoutArea = new LayoutArea((int)positionedPageNumber, currentArea.GetBBox().Clone());
+                }
+                else {
+                    layoutArea = new LayoutArea((int)positionedPageNumber, initialCurrentArea.GetBBox().Clone());
+                }
+                renderer.SetParent(this).Layout(new LayoutContext(layoutArea));
                 if (immediateFlush) {
                     FlushSingleRenderer(renderer);
                     positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);

@@ -768,6 +768,11 @@ namespace iText.Layout.Renderer {
             float? right = this.GetPropertyAsFloat(Property.RIGHT);
             float initialHeight = rect.GetHeight();
             float initialWidth = rect.GetWidth();
+            float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
+            if (minHeight != null && rect.GetHeight() < (float)minHeight) {
+                float difference = (float)minHeight - rect.GetHeight();
+                rect.MoveDown(difference).SetHeight(rect.GetHeight() + difference);
+            }
             if (top != null) {
                 rect.SetHeight(rect.GetHeight() - top);
             }
@@ -791,12 +796,16 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (bottom != null) {
-                float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
                 if (minHeight != null) {
                     rect.SetHeight((float)minHeight + (float)bottom);
                 }
                 else {
-                    SetProperty(Property.MIN_HEIGHT, rect.GetHeight() - (float)bottom);
+                    float minHeightValue = rect.GetHeight() - (float)bottom;
+                    float? currentMaxHeight = GetPropertyAsFloat(Property.MAX_HEIGHT);
+                    if (currentMaxHeight != null) {
+                        minHeightValue = Math.Min(minHeightValue, (float)currentMaxHeight);
+                    }
+                    SetProperty(Property.MIN_HEIGHT, minHeightValue);
                 }
             }
         }
