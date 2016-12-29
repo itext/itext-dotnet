@@ -768,16 +768,16 @@ namespace iText.Layout.Renderer {
             float? right = this.GetPropertyAsFloat(Property.RIGHT);
             float initialHeight = rect.GetHeight();
             float initialWidth = rect.GetWidth();
-            float? minHeight = GetPropertyAsFloat(Property.MIN_HEIGHT);
+            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
             if (minHeight != null && rect.GetHeight() < (float)minHeight) {
                 float difference = (float)minHeight - rect.GetHeight();
                 rect.MoveDown(difference).SetHeight(rect.GetHeight() + difference);
             }
             if (top != null) {
-                rect.SetHeight(rect.GetHeight() - top);
+                rect.SetHeight(rect.GetHeight() - (float)top);
             }
             if (left != null) {
-                rect.SetX(rect.GetX() + (float)left).SetWidth(rect.GetWidth() - left);
+                rect.SetX(rect.GetX() + (float)left).SetWidth(rect.GetWidth() - (float)left);
             }
             if (right != null) {
                 UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
@@ -801,7 +801,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     float minHeightValue = rect.GetHeight() - (float)bottom;
-                    float? currentMaxHeight = GetPropertyAsFloat(Property.MAX_HEIGHT);
+                    float? currentMaxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
                     if (currentMaxHeight != null) {
                         minHeightValue = Math.Min(minHeightValue, (float)currentMaxHeight);
                     }
