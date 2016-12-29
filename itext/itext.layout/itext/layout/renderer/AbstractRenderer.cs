@@ -139,8 +139,12 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (positioning == LayoutPosition.ABSOLUTE) {
+                        // For position=absolute, if none of the top, bottom, left, right properties are provided,
+                        // the content should be displayed in the flow of the current content, not overlapping it.
+                        // The behavior is just if it would be statically positioned except it does not affect other elements
                         iText.Layout.Renderer.AbstractRenderer positionedParent = this;
-                        while (!positionedParent.IsPositioned()) {
+                        bool noPositionInfo = iText.Layout.Renderer.AbstractRenderer.NoAbsolutePositionInfo(renderer);
+                        while (!positionedParent.IsPositioned() && !noPositionInfo) {
                             IRenderer parent = positionedParent.parent;
                             if (parent is iText.Layout.Renderer.AbstractRenderer) {
                                 positionedParent = (iText.Layout.Renderer.AbstractRenderer)parent;
@@ -161,8 +165,20 @@ namespace iText.Layout.Renderer {
             // Fetch positioned renderers from non-positioned child because they might be stuck there because child's parent was null previously
             if (renderer is iText.Layout.Renderer.AbstractRenderer && !((iText.Layout.Renderer.AbstractRenderer)renderer
                 ).IsPositioned() && ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers.Count > 0) {
-                positionedRenderers.AddAll(((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers);
-                ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers.Clear();
+                // For position=absolute, if none of the top, bottom, left, right properties are provided,
+                // the content should be displayed in the flow of the current content, not overlapping it.
+                // The behavior is just if it would be statically positioned except it does not affect other elements
+                int pos = 0;
+                IList<IRenderer> childPositionedRenderers = ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers;
+                while (pos < childPositionedRenderers.Count) {
+                    if (iText.Layout.Renderer.AbstractRenderer.NoAbsolutePositionInfo(childPositionedRenderers[pos])) {
+                        pos++;
+                    }
+                    else {
+                        positionedRenderers.Add(childPositionedRenderers[pos]);
+                        childPositionedRenderers.JRemoveAt(pos);
+                    }
+                }
             }
         }
 
@@ -1101,6 +1117,11 @@ namespace iText.Layout.Renderer {
             if (null != minHeight) {
                 SetProperty(Property.MIN_HEIGHT, minHeight);
             }
+        }
+
+        internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
+            return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
+                (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
         }
 
         internal virtual void DrawPositionedChildren(DrawContext drawContext) {
