@@ -63,7 +63,21 @@ namespace iText.Layout.Renderer {
         private MarginsCollapseHandler marginsCollapseHandler;
 
         public override void AddChild(IRenderer renderer) {
+            // Some positioned renderers might have been fetched from non-positioned child and added to this renderer,
+            // so we use this generic mechanism of determining which renderers have been just added.
+            int numberOfChildRenderers = childRenderers.Count;
+            int numberOfPositionedChildRenderers = positionedRenderers.Count;
             base.AddChild(renderer);
+            IList<IRenderer> addedRenderers = new List<IRenderer>(1);
+            IList<IRenderer> addedPositionedRenderers = new List<IRenderer>(1);
+            while (childRenderers.Count > numberOfChildRenderers) {
+                addedRenderers.Add(childRenderers[numberOfChildRenderers]);
+                childRenderers.JRemoveAt(numberOfChildRenderers);
+            }
+            while (positionedRenderers.Count > numberOfPositionedChildRenderers) {
+                addedPositionedRenderers.Add(positionedRenderers[numberOfPositionedChildRenderers]);
+                positionedRenderers.JRemoveAt(numberOfPositionedChildRenderers);
+            }
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
             if (currentArea == null) {
                 UpdateCurrentArea(null);
@@ -72,9 +86,8 @@ namespace iText.Layout.Renderer {
                 }
             }
             // Static layout
-            if (currentArea != null && !childRenderers.IsEmpty() && childRenderers[childRenderers.Count - 1] == renderer
-                ) {
-                childRenderers.JRemoveAt(childRenderers.Count - 1);
+            for (int i = 0; currentArea != null && i < addedRenderers.Count; i++) {
+                renderer = addedRenderers[i];
                 ProcessWaitingKeepWithNextElement(renderer);
                 IList<IRenderer> resultRenderers = new List<IRenderer>();
                 LayoutResult result = null;
@@ -197,18 +210,18 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            else {
-                if (positionedRenderers.Count > 0 && positionedRenderers[positionedRenderers.Count - 1] == renderer) {
-                    int? positionedPageNumber = renderer.GetProperty<int?>(Property.PAGE_NUMBER);
-                    if (positionedPageNumber == null) {
-                        positionedPageNumber = currentPageNumber;
-                    }
-                    renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber, currentArea.GetBBox
-                        ().Clone())));
-                    if (immediateFlush) {
-                        FlushSingleRenderer(renderer);
-                        positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
-                    }
+            for (int i_1 = 0; i_1 < addedPositionedRenderers.Count; i_1++) {
+                positionedRenderers.Add(addedPositionedRenderers[i_1]);
+                renderer = positionedRenderers[positionedRenderers.Count - 1];
+                int? positionedPageNumber = renderer.GetProperty<int?>(Property.PAGE_NUMBER);
+                if (positionedPageNumber == null) {
+                    positionedPageNumber = currentPageNumber;
+                }
+                renderer.SetParent(this).Layout(new LayoutContext(new LayoutArea((int)positionedPageNumber, currentArea.GetBBox
+                    ().Clone())));
+                if (immediateFlush) {
+                    FlushSingleRenderer(renderer);
+                    positionedRenderers.JRemoveAt(positionedRenderers.Count - 1);
                 }
             }
         }
