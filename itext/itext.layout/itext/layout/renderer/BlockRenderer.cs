@@ -337,7 +337,7 @@ namespace iText.Layout.Renderer {
                 LayoutArea area = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());
                 ApplyBorderBox(area.GetBBox(), false);
                 foreach (IRenderer childPositionedRenderer in positionedRenderers) {
-                    childPositionedRenderer.Layout(new LayoutContext(area));
+                    childPositionedRenderer.SetParent(this).Layout(new LayoutContext(area));
                 }
                 ApplyBorderBox(area.GetBBox(), true);
             }
