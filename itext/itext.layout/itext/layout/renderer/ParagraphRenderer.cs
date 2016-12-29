@@ -111,8 +111,12 @@ namespace iText.Layout.Renderer {
                     float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
                     parentBBox.SetX(relativeX + x);
                 }
+                else {
+                    if (IsAbsolutePosition()) {
+                        ApplyAbsolutePosition(parentBBox);
+                    }
+                }
             }
-            // TODO
             float[] paddings = GetPaddings();
             ApplyPaddings(parentBBox, paddings, false);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
