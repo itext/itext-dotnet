@@ -518,10 +518,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("hmtx");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("hmtx", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("hmtx", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("hmtx");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("hmtx");
                 }
             }
             glyphWidthsByIndex = new int[Math.Max(ReadMaxGlyphId(), numberOfHMetrics)];
@@ -593,10 +594,11 @@ namespace iText.IO.Font {
             tableLocation = tables.Get("head");
             if (tableLocation == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("head", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("head");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("head");
                 }
             }
             raf.Seek(tableLocation[0] + FontConstants.HEAD_LOCA_FORMAT_OFFSET);
@@ -624,10 +626,11 @@ namespace iText.IO.Font {
             tableLocation = tables.Get("glyf");
             if (tableLocation == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("glyf");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("glyf");
                 }
             }
             int tableGlyphOffset = tableLocation[0];
@@ -664,10 +667,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("name");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("name", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("name", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("name");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("name");
                 }
             }
             allNameEntries = new LinkedDictionary<int, IList<String[]>>();
@@ -711,10 +715,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("hhea");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("hhea", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("hhea", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("hhea");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("hhea");
                 }
             }
             raf.Seek(table_location[0] + 4);
@@ -740,10 +745,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("head");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("head", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("head");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("head");
                 }
             }
             raf.Seek(table_location[0] + 16);
@@ -774,10 +780,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("OS/2");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("os/2", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("os/2", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("os/2");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("os/2");
                 }
             }
             os_2 = new OpenTypeParser.WindowsMetrics();
@@ -864,10 +871,11 @@ namespace iText.IO.Font {
             table_location = tables.Get("cmap");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("cmap", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("cmap", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("cmap");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("cmap");
                 }
             }
             raf.Seek(table_location[0]);

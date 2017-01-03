@@ -67,6 +67,16 @@ namespace iText.IO.Source {
         /// <summary>Whether there is a pushed back byte</summary>
         private bool isBack = false;
 
+        /// <summary>Creates a RandomAccessFileOrArray that wraps the specified byte source.</summary>
+        /// <remarks>
+        /// Creates a RandomAccessFileOrArray that wraps the specified byte source.  The byte source will be closed when
+        /// this RandomAccessFileOrArray is closed.
+        /// </remarks>
+        /// <param name="byteSource">the byte source to wrap</param>
+        public RandomAccessFileOrArray(IRandomAccessSource byteSource) {
+            this.byteSource = byteSource;
+        }
+
         /// <summary>Creates an independent view of this object (with it's own file pointer and push back queue).</summary>
         /// <remarks>
         /// Creates an independent view of this object (with it's own file pointer and push back queue).  Closing the new object will not close this object.
@@ -85,16 +95,6 @@ namespace iText.IO.Source {
         /// <returns>the byte source view.</returns>
         public virtual IRandomAccessSource CreateSourceView() {
             return new IndependentRandomAccessSource(byteSource);
-        }
-
-        /// <summary>Creates a RandomAccessFileOrArray that wraps the specified byte source.</summary>
-        /// <remarks>
-        /// Creates a RandomAccessFileOrArray that wraps the specified byte source.  The byte source will be closed when
-        /// this RandomAccessFileOrArray is closed.
-        /// </remarks>
-        /// <param name="byteSource">the byte source to wrap</param>
-        public RandomAccessFileOrArray(IRandomAccessSource byteSource) {
-            this.byteSource = byteSource;
         }
 
         /// <summary>Pushes a byte back.</summary>
@@ -319,16 +319,11 @@ namespace iText.IO.Source {
         /// the next two bytes of this stream, interpreted as a signed
         /// 16-bit number.
         /// </returns>
-        /// <exception>
-        /// EOFException
+        /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading
         /// two bytes.
         /// </exception>
-        /// <exception>
-        /// java.io.IOException
-        /// if an I/O error occurs.
-        /// </exception>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
         public short ReadShortLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
@@ -373,16 +368,11 @@ namespace iText.IO.Source {
         /// the next two bytes of this stream, interpreted as an
         /// unsigned 16-bit integer.
         /// </returns>
-        /// <exception>
-        /// EOFException
+        /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading
         /// two bytes.
         /// </exception>
-        /// <exception>
-        /// java.io.IOException
-        /// if an I/O error occurs.
-        /// </exception>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
         public int ReadUnsignedShortLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
@@ -424,16 +414,11 @@ namespace iText.IO.Source {
         /// stream is detected, or an exception is thrown.
         /// </remarks>
         /// <returns>the next two bytes of this stream as a Unicode character.</returns>
-        /// <exception>
-        /// EOFException
+        /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading
         /// two bytes.
         /// </exception>
-        /// <exception>
-        /// java.io.IOException
-        /// if an I/O error occurs.
-        /// </exception>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
         public char ReadCharLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
@@ -485,16 +470,11 @@ namespace iText.IO.Source {
         /// <c>int</c>
         /// .
         /// </returns>
-        /// <exception>
-        /// EOFException
+        /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading
         /// four bytes.
         /// </exception>
-        /// <exception>
-        /// java.io.IOException
-        /// if an I/O error occurs.
-        /// </exception>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
         public int ReadIntLE() {
             int ch1 = this.Read();
             int ch2 = this.Read();
@@ -534,16 +514,11 @@ namespace iText.IO.Source {
         /// <c>long</c>
         /// .
         /// </returns>
-        /// <exception>
-        /// EOFException
+        /// <exception cref="System.IO.EndOfStreamException">
         /// if this stream reaches the end before reading
         /// four bytes.
         /// </exception>
-        /// <exception>
-        /// java.io.IOException
-        /// if an I/O error occurs.
-        /// </exception>
-        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.IO.IOException">if an I/O error occurs.</exception>
         public long ReadUnsignedInt() {
             long ch1 = this.Read();
             long ch2 = this.Read();

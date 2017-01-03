@@ -146,9 +146,9 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Does the actual work of subsetting the font.</summary>
+        /// <returns>the subset font</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         /// <on>error</on>
-        /// <returns>the subset font</returns>
         internal virtual byte[] Process() {
             try {
                 CreateTableDirectory();
@@ -374,7 +374,8 @@ namespace iText.IO.Font {
         protected internal virtual void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
+                    );
             }
             int glyph0 = 0;
             if (!glyphsUsed.Contains(glyph0)) {
