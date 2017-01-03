@@ -350,7 +350,7 @@ namespace iText.IO.Font {
         /// <param name="enc">the encoding to be normalized</param>
         /// <returns>the normalized encoding</returns>
         protected internal static String NormalizeEncoding(String enc) {
-            String tmp = enc == null ? "" : enc.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            String tmp = enc == null ? "" : enc.ToLowerInvariant();
             switch (tmp) {
                 case "":
                 case "winansi":

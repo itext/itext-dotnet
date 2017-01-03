@@ -110,11 +110,11 @@ namespace iText.IO.Font {
             }
             else {
                 if (afmPath != null) {
-                    if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm")) {
+                    if (afmPath.ToLowerInvariant().EndsWith(".afm")) {
                         return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
                     }
                     else {
-                        if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm")) {
+                        if (afmPath.ToLowerInvariant().EndsWith(".pfm")) {
                             MemoryStream ba = new MemoryStream();
                             RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
                             Pfm2afm.Convert(rf, ba);
@@ -159,8 +159,7 @@ namespace iText.IO.Font {
                 return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
             }
             else {
-                if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfb")
-                    ) {
+                if (pfbPath != null && pfbPath.ToLowerInvariant().EndsWith(".pfb")) {
                     return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
                 }
                 else {

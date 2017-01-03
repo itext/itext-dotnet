@@ -67,7 +67,7 @@ namespace iText.Kernel.Numbering {
         /// <summary>Returns an upper case roman representation of an integer.</summary>
         /// <param name="number">a number to be converted to roman notation.</param>
         public static String ToRomanUpperCase(int number) {
-            return Convert(number).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            return Convert(number).ToUpperInvariant();
         }
 
         /// <summary>Returns a roman representation of an integer.</summary>

@@ -216,7 +216,7 @@ namespace iText.Kernel {
 
         private void AddLicensedPostfix(String ownerName) {
             iTextVersion += " (" + ownerName;
-            if (!key.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith("trial")) {
+            if (!key.ToLowerInvariant().StartsWith("trial")) {
                 iTextVersion += "; licensed version)";
             }
             else {

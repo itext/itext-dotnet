@@ -301,7 +301,7 @@ namespace iText.IO.Font {
         }
 
         protected internal static int ConvertFontWeight(String weight) {
-            String fontWeight = weight.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            String fontWeight = weight.ToLowerInvariant();
             switch (fontWeight) {
                 case "ultralight": {
                     return 100;

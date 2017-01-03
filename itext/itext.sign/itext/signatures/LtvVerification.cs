@@ -431,8 +431,7 @@ namespace iText.Signatures {
             foreach (byte b in bytes) {
                 buf.AppendHex(b);
             }
-            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpper(System.Globalization.CultureInfo.InvariantCulture
-                );
+            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpperInvariant();
         }
     }
 }

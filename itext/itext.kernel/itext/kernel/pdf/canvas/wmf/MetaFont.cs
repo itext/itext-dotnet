@@ -146,7 +146,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             catch (ArgumentException) {
                 faceName = iText.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
             }
-            faceName = faceName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            faceName = faceName.ToLowerInvariant();
         }
 
         /// <summary>Returns the Font.</summary>

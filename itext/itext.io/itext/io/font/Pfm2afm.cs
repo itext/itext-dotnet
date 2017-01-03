@@ -198,16 +198,15 @@ namespace iText.IO.Font {
                 output.Write("\nFamilyName " + ReadString());
             }
             output.Write("\nWeight ");
-            if (weight > 475 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("bold")) {
+            if (weight > 475 || fname.ToLowerInvariant().Contains("bold")) {
                 output.Write("Bold");
             }
             else {
-                if ((weight < 325 && weight != 0) || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains
-                    ("light")) {
+                if ((weight < 325 && weight != 0) || fname.ToLowerInvariant().Contains("light")) {
                     output.Write("Light");
                 }
                 else {
-                    if (fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("black")) {
+                    if (fname.ToLowerInvariant().Contains("black")) {
                         output.Write("Black");
                     }
                     else {
@@ -216,7 +215,7 @@ namespace iText.IO.Font {
                 }
             }
             output.Write("\nItalicAngle ");
-            if (italic != 0 || fname.ToLower(System.Globalization.CultureInfo.InvariantCulture).Contains("italic")) {
+            if (italic != 0 || fname.ToLowerInvariant().Contains("italic")) {
                 output.Write("-12.00");
             }
             else {

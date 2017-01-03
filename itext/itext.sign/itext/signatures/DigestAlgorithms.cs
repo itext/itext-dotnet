@@ -195,7 +195,7 @@ namespace iText.Signatures {
         /// <param name="name">The name of the digest algorithm.</param>
         /// <returns>An oid.</returns>
         public static String GetAllowedDigest(String name) {
-            return allowedDigests.Get(name.ToUpper(System.Globalization.CultureInfo.InvariantCulture));
+            return allowedDigests.Get(name.ToUpperInvariant());
         }
     }
 }

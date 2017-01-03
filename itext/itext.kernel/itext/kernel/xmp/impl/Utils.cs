@@ -406,8 +406,7 @@ namespace iText.Kernel.XMP.Impl {
                         // write control chars escaped,
                         // if there are others than tab, LF and CR the xml will become invalid.
                         buffer.Append("&#x");
-                        buffer.Append(iText.IO.Util.JavaUtil.IntegerToHexString(c).ToUpper(System.Globalization.CultureInfo.InvariantCulture
-                            ));
+                        buffer.Append(iText.IO.Util.JavaUtil.IntegerToHexString(c).ToUpperInvariant());
                         buffer.Append(';');
                     }
                 }

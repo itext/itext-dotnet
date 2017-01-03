@@ -56,8 +56,7 @@ namespace iText.Kernel.Font {
             if ((encoding == null || encoding.Length == 0) && type1Font.IsFontSpecific()) {
                 encoding = FontEncoding.FONT_SPECIFIC;
             }
-            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Equals(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
+            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLowerInvariant().Equals(encoding.ToLowerInvariant())) {
                 fontEncoding = FontEncoding.CreateFontSpecificEncoding();
             }
             else {

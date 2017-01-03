@@ -477,8 +477,7 @@ namespace iText.IO.Font {
             if (name == null) {
                 return null;
             }
-            int idx = name.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,", StringComparison.Ordinal
-                );
+            int idx = name.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
             if (idx < 0) {
                 return name;
             }

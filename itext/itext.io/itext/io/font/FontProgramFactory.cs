@@ -213,8 +213,8 @@ namespace iText.IO.Font {
                 }
             }
             else {
-                if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm") ||
-                     name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm")) {
+                if (isBuiltinFonts14 || name.ToLowerInvariant().EndsWith(".afm") || name.ToLowerInvariant().EndsWith(".pfm"
+                    )) {
                     fontBuilt = new Type1Font(name, null, null, null);
                 }
                 else {
@@ -222,8 +222,7 @@ namespace iText.IO.Font {
                         fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || baseName.ToLower
-                            (System.Globalization.CultureInfo.InvariantCulture).EndsWith(".otf")) {
+                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
                             if (fontProgram != null) {
                                 fontBuilt = new TrueTypeFont(fontProgram);
                             }
@@ -232,8 +231,7 @@ namespace iText.IO.Font {
                             }
                         }
                         else {
-                            int ttcSplit = baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,", StringComparison.Ordinal
-                                );
+                            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
                             if (ttcSplit > 0) {
                                 try {
                                     String ttcName = baseName.JSubstring(0, ttcSplit + 4);
