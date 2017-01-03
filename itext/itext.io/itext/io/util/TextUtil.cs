@@ -204,7 +204,7 @@ namespace iText.IO.Util {
                 return false;
             }
 
-            UnicodeCategory category = Char.GetUnicodeCategory(ch);
+            UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(ch);
             if (category == UnicodeCategory.SpaceSeparator || category == UnicodeCategory.LineSeparator ||
                 category == UnicodeCategory.ParagraphSeparator) {
 
