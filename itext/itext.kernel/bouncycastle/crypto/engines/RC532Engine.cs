@@ -13,7 +13,7 @@ namespace Org.BouncyCastle.Crypto.Engines
     * This implementation has a word size of 32 bits.</p>
     */
     public class RC532Engine
-		: IBlockCipher
+        : IBlockCipher
     {
         /*
         * the number of rounds to perform
@@ -55,16 +55,16 @@ namespace Org.BouncyCastle.Crypto.Engines
         }
 
         public virtual bool IsPartialBlockOkay
-		{
-			get { return false; }
-		}
+        {
+            get { return false; }
+        }
 
         public virtual int GetBlockSize()
         {
             return 2 * 4;
         }
 
-		/**
+        /**
         * initialise a RC5-32 cipher.
         *
         * @param forEncryption whether or not we are for encryption.
@@ -76,7 +76,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             bool				forEncryption,
             ICipherParameters	parameters)
         {
-            if (typeof(RC5Parameters).IsInstanceOfType(parameters))
+            if (parameters is RC5Parameters)
             {
                 RC5Parameters p = (RC5Parameters)parameters;
 
@@ -84,7 +84,7 @@ namespace Org.BouncyCastle.Crypto.Engines
 
                 SetKey(p.GetKey());
             }
-            else if (typeof(KeyParameter).IsInstanceOfType(parameters))
+            else if (parameters is KeyParameter)
             {
                 KeyParameter p = (KeyParameter)parameters;
 
@@ -105,8 +105,8 @@ namespace Org.BouncyCastle.Crypto.Engines
             int		outOff)
         {
             return (forEncryption)
-				?	EncryptBlock(input, inOff, output, outOff)
-				:	DecryptBlock(input, inOff, output, outOff);
+                ?	EncryptBlock(input, inOff, output, outOff)
+                :	DecryptBlock(input, inOff, output, outOff);
         }
 
         public virtual void Reset()
@@ -253,7 +253,7 @@ namespace Org.BouncyCastle.Crypto.Engines
         private int RotateLeft(int x, int y) {
             return ((int)  (  (uint) (x << (y & (32-1))) |
                               ((uint) x >> (32 - (y & (32-1)))) )
-                   );
+            );
         }
 
         /**
@@ -269,7 +269,7 @@ namespace Org.BouncyCastle.Crypto.Engines
         private int RotateRight(int x, int y) {
             return ((int) (     ((uint) x >> (y & (32-1))) |
                                 (uint) (x << (32 - (y & (32-1))))   )
-                   );
+            );
         }
 
         private int BytesToWord(
@@ -277,7 +277,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             int     srcOff)
         {
             return (src[srcOff] & 0xff) | ((src[srcOff + 1] & 0xff) << 8)
-                | ((src[srcOff + 2] & 0xff) << 16) | ((src[srcOff + 3] & 0xff) << 24);
+                   | ((src[srcOff + 2] & 0xff) << 16) | ((src[srcOff + 3] & 0xff) << 24);
         }
 
         private void WordToBytes(
