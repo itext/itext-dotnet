@@ -51,8 +51,10 @@ using System.Xml.Linq;
 namespace iText.Kernel.Utils {
     class XmlUtils {
         public static void WriteXmlDocToStream(XmlDocument xmlReport, Stream stream) {
-            XmlTextWriter writer = new XmlTextWriter(stream, Encoding.Default);
-            writer.Formatting = Formatting.Indented;
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = Encoding.UTF8;
+            settings.Indent = true;
+            XmlWriter writer = XmlWriter.Create(stream, settings);
             xmlReport.WriteTo(writer);
             writer.Flush();
         }
