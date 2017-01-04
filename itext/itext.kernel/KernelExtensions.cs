@@ -310,6 +310,7 @@ internal static class KernelExtensions {
         dgst.DoFinal(buff, offest);
     }
 
+#if !NETSTANDARD1_6
     public static Attribute GetCustomAttribute(this Assembly assembly, Type attributeType) {
         object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(attributeType, false);
         if (customAttributes.Length > 0 && customAttributes[0] is Attribute) {
@@ -318,8 +319,41 @@ internal static class KernelExtensions {
             return null;
         }
     }
+#endif
 
     public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
         return type.Assembly;
+#else
+        return type.GetTypeInfo().Assembly;
+#endif
     }
+
+#if NETSTANDARD1_6
+    public static MethodInfo GetMethod(this Type type, String methodName, Type[] parameterTypes) {
+        return type.GetTypeInfo().GetMethod(methodName, parameterTypes);
+    }
+
+    public static MethodInfo GetMethod(this Type type, String methodName) {
+        return type.GetTypeInfo().GetMethod(methodName);
+    }
+
+    public static ConstructorInfo GetConstructor(this Type type, Type[] parameterTypes) {
+        return type.GetTypeInfo().GetConstructor(parameterTypes);
+    }
+
+    public static bool IsInstanceOfType(this Type type, object objToCheck) {
+        return type.GetTypeInfo().IsInstanceOfType(objToCheck);
+    }
+
+    public static FieldInfo[] GetFields(this Type type, BindingFlags flags) {
+        return type.GetTypeInfo().GetFields(flags);
+    }
+
+    public static byte[] GetBuffer(this MemoryStream memoryStream) {
+        ArraySegment<byte> buf;
+        memoryStream.TryGetBuffer(out buf);
+        return buf.Array;
+    }
+#endif
 }

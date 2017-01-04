@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Reflection;
 using System.Text;
 
 namespace Org.BouncyCastle.Utilities.Collections

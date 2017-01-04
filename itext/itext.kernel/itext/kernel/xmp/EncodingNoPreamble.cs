@@ -82,25 +82,14 @@ namespace iText.Kernel.XMP {
         public override int GetMaxCharCount(int byteCount) {
             return encoding.GetMaxCharCount(byteCount);
         }
-    
+
+#if !NETSTANDARD1_6
         public override string BodyName {
             get {
                 return encoding.BodyName;
             }
         }
-    
-        public override int CodePage {
-            get {
-                return encoding.CodePage;
-            }
-        }
-    
-        public override string EncodingName {
-            get {
-                return encoding.EncodingName;
-            }
-        }
-    
+
         public override string HeaderName {
             get {
                 return encoding.HeaderName;
@@ -130,19 +119,35 @@ namespace iText.Kernel.XMP {
                 return encoding.IsMailNewsSave;
             }
         }
-    
-        public override string WebName {
-            get {
-                return encoding.WebName;
-            }
-        }
-    
+
         public override int WindowsCodePage {
             get {
                 return encoding.WindowsCodePage;
             }
         }
     
+#endif
+
+        public override int CodePage {
+            get {
+                return encoding.CodePage;
+            }
+        }
+    
+        public override string EncodingName {
+            get {
+                return encoding.EncodingName;
+            }
+        }
+    
+
+        public override string WebName {
+            get {
+                return encoding.WebName;
+            }
+        }
+    
+        
         public override Decoder GetDecoder() {
             return encoding.GetDecoder ();
         }

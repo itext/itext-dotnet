@@ -138,8 +138,12 @@ namespace iText.Kernel.XMP
 		public static XMPDateTime SetLocalTimeZone(XMPDateTime dateTime)
 		{
 			XMPCalendar cal = dateTime.GetCalendar();
-			cal.SetTimeZone(TimeZone.CurrentTimeZone);
-			return new XMPDateTimeImpl(cal);
+#if !NETSTANDARD1_6
+            cal.SetTimeZone(TimeZone.CurrentTimeZone);
+#else
+            cal.SetTimeZone(TimeZoneInfo.Local);
+#endif
+            return new XMPDateTimeImpl(cal);
 		}
 
 		/// <summary>Make sure a time is UTC.</summary>

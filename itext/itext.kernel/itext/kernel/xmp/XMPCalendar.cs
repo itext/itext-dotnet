@@ -47,8 +47,13 @@ namespace iText.Kernel.XMP {
 	
     public class XMPCalendar {
         private DateTime dateTime;
+#if !NETSTANDARD1_6
         private TimeZone timeZone;
+#else
+        private TimeZoneInfo timeZone;
+#endif
 
+#if !NETSTANDARD1_6
         public XMPCalendar(DateTime dateTime, TimeZone timeZone) {
 			this.dateTime = dateTime;
             this.timeZone = timeZone;
@@ -63,8 +68,24 @@ namespace iText.Kernel.XMP {
 
         public XMPCalendar() : this(DateTime.Now, TimeZone.CurrentTimeZone) {
         }
+#else
+        public XMPCalendar(DateTime dateTime, TimeZoneInfo timeZone) {
+            this.dateTime = dateTime;
+            this.timeZone = timeZone;
+        }
 
-		public virtual DateTime GetDateTime() {
+        public XMPCalendar(DateTime dateTime) : this(dateTime, TimeZoneInfo.Local) {
+        }
+
+        public XMPCalendar(TimeZoneInfo timeZone)
+            : this(DateTime.Now, timeZone) {
+        }
+
+        public XMPCalendar() : this(DateTime.Now, TimeZoneInfo.Local) {
+        }
+#endif
+
+        public virtual DateTime GetDateTime() {
             return dateTime;
         }
 
@@ -72,15 +93,26 @@ namespace iText.Kernel.XMP {
 			this.dateTime = dateTime;
 		}
 
-		public virtual void SetTimeZone(TimeZone timeZone) {
+
+#if !NETSTANDARD1_6
+        public virtual void SetTimeZone(TimeZone timeZone) {
 			this.timeZone = timeZone;
 		}
 
 		public virtual TimeZone GetTimeZone() {
             return timeZone;
         }
+#else
+        public virtual void SetTimeZone(TimeZoneInfo timeZone) {
+			this.timeZone = timeZone;
+		}
 
-		public virtual long GetTimeInMillis() {
+		public virtual TimeZoneInfo GetTimeZone() {
+            return timeZone;
+        }
+#endif
+
+        public virtual long GetTimeInMillis() {
             return dateTime.Ticks;
         }
 
