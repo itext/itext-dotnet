@@ -1340,7 +1340,9 @@ namespace iText.Kernel.Pdf {
 
         private void TryFlushPageTags() {
             try {
-                GetDocument().GetTagStructureContext().FlushPageTags(this);
+                if (!GetDocument().isClosing) {
+                    GetDocument().GetTagStructureContext().FlushPageTags(this);
+                }
                 GetDocument().GetStructTreeRoot().CreateParentTreeEntryForPage(this);
             }
             catch (Exception ex) {

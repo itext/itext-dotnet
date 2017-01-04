@@ -671,9 +671,6 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     else {
-                        if (structTreeRoot != null) {
-                            TryFlushTagStructure();
-                        }
                         if (catalog.IsOCPropertiesMayHaveChanged()) {
                             catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
                             catalog.GetOCProperties(false).Flush();
@@ -690,6 +687,9 @@ namespace iText.Kernel.Pdf {
                         }
                         for (int pageNum = 1; pageNum <= GetNumberOfPages(); pageNum++) {
                             GetPage(pageNum).Flush();
+                        }
+                        if (structTreeRoot != null) {
+                            TryFlushTagStructure();
                         }
                         catalog.GetPdfObject().Flush(false);
                         info.Flush();

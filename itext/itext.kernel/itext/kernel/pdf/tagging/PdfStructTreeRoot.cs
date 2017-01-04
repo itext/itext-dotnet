@@ -175,9 +175,6 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public override void Flush() {
-            for (int i = 0; i < GetDocument().GetNumberOfPages(); ++i) {
-                CreateParentTreeEntryForPage(GetDocument().GetPage(i + 1));
-            }
             GetPdfObject().Put(PdfName.ParentTree, GetParentTreeHandler().BuildParentTree());
             GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber((int)GetDocument().GetNextStructParentIndex())
                 );
