@@ -46,6 +46,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+#if NETSTANDARD1_6
+using System.Net.Http;
+#endif
 
 namespace iText.IO.Util {
     /// <summary>
@@ -70,10 +73,15 @@ namespace iText.IO.Util {
             if (url.IsFile) {
                 isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);
             } else {
+#if !NETSTANDARD1_6
                 WebRequest req = WebRequest.Create(url);
                 req.Credentials = CredentialCache.DefaultCredentials;
                 using (WebResponse res = req.GetResponse())
                 using (Stream rs = res.GetResponseStream()) {
+#else
+                HttpClient client = new HttpClient();
+                using (Stream rs = client.GetStreamAsync(url).Result) {
+#endif
                     isp = new MemoryStream();
                     byte[] buffer = new byte[4096];
                     int read;

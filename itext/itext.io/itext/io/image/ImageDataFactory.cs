@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+#if !NETSTANDARD1_6
 using System.Drawing;
+#endif
 using System.IO;
 using iText.IO.Codec;
 using iText.IO.Util;
@@ -186,6 +188,7 @@ namespace iText.IO.Image {
             return image;
         }
 
+#if !NETSTANDARD1_6
         /// <summary>Gets an instance of an Image from a java.awt.Image</summary>
         /// <param name="image">the java.awt.Image to convert</param>
         /// <param name="color">if different from <CODE>null</CODE> the transparency pixels are replaced by this color
@@ -206,6 +209,7 @@ namespace iText.IO.Image {
         public static ImageData Create(System.Drawing.Image image, Color? color, bool forceBW) {
             return DrawingImageFactory.GetImage(image, color, forceBW);
         }
+#endif
 
         /// <summary>Get a bitmap ImageData instance from the specified url.</summary>
         /// <param name="url">location of the image.</param>

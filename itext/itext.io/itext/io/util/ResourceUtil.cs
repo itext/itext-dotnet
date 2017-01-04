@@ -47,6 +47,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+#if NETSTANDARD1_6
+using System.Runtime.Loader;
+using Microsoft.DotNet.PlatformAbstractions;
+using Microsoft.Extensions.DependencyModel;
+#endif
 
 namespace iText.IO.Util {
     /// <summary>
@@ -119,6 +124,7 @@ namespace iText.IO.Util {
                 }
             }
 
+#if !NETSTANDARD1_6
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies()) {
                 if (assembly.GetName().Name.StartsWith("itext")) {
                     istr = SearchResourceInAssembly(key, assembly);
@@ -127,6 +133,21 @@ namespace iText.IO.Util {
                     }
                 }
             }
+#else
+            string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+            IEnumerable<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
+            foreach (AssemblyName assemblyName in loadedAssemblies) {
+                if (assemblyName.Name.StartsWith("itext")) {
+                    try {
+                        Assembly assembly = Assembly.Load(assemblyName);
+                        istr = SearchResourceInAssembly(key, assembly);
+                        if (istr != null) {
+                            return istr;
+                        }
+                    } catch { }
+                }
+            }
+#endif
 
             return istr;
         }
@@ -146,7 +167,11 @@ namespace iText.IO.Util {
                     string dir = (string)obj;
                     try
                     {
+#if !NETSTANDARD1_6
                         istr = Assembly.LoadFrom(dir).GetManifestResourceStream(key);
+#else
+                        istr = AssemblyLoadContext.Default.LoadFromAssemblyPath(key).GetManifestResourceStream(key);
+#endif
                     }
                     catch
                     {
@@ -176,6 +201,7 @@ namespace iText.IO.Util {
         }
 
         private static void LoadITextResourceAssemblies() {
+#if !NETSTANDARD1_6
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
             var loadedPaths = loadedAssemblies.Select(a => a.Location).ToArray();
             
@@ -193,6 +219,26 @@ namespace iText.IO.Util {
                 {
                 }
             }
+#else
+            string runtimeId = RuntimeEnvironment.GetRuntimeIdentifier();
+            List<AssemblyName> loadedAssemblies = DependencyContext.Default.GetRuntimeAssemblyNames(runtimeId).ToList();
+
+            var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
+            foreach (String path in referencedPaths)
+            {
+                try
+                {
+                    AssemblyName name = AssemblyLoadContext.GetAssemblyName(path);
+                    if (iTextResourceAssemblyNames.Contains(name.Name) && !loadedAssemblies.Any(assembly => assembly.Name.Equals(name.Name))) {
+                        Assembly newAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                        loadedAssemblies.Add(newAssembly.GetName());
+                    }
+                }
+                catch
+                {
+                }
+            }
+#endif
         }
     }
 }

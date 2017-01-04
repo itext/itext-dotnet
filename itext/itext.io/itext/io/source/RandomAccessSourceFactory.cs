@@ -44,6 +44,9 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using System.Net;
+#if NETSTANDARD1_6
+using System.Net.Http;
+#endif
 using iText.IO.Util;
 
 namespace iText.IO.Source
@@ -148,11 +151,20 @@ namespace iText.IO.Source
 		/// <see cref="RandomAccessSource"/>
 		/// </returns>
 		/// <exception cref="System.IO.IOException"/>
-        public IRandomAccessSource CreateSource(Uri url)
-		{
+        public IRandomAccessSource CreateSource(Uri url) {
+#if !NETSTANDARD1_6
             WebRequest wr = WebRequest.Create(url);
             wr.Credentials = CredentialCache.DefaultCredentials;
             Stream isp = wr.GetResponse().GetResponseStream();
+#else
+		    Stream isp;
+		    if (url.IsFile) {
+		        isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+		    } else {
+                HttpClient client = new HttpClient();
+                isp = client.GetStreamAsync(url).Result;
+            }
+#endif
             try
             {
                 return CreateSource(isp);

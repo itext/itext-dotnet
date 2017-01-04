@@ -157,7 +157,11 @@ namespace iText.IO {
         }
 
         public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
             return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
         }
     }
 }

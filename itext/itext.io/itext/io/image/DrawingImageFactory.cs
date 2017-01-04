@@ -1,3 +1,4 @@
+#if !NETSTANDARD1_6
 /*
 
 This file is part of the iText (R) project.
@@ -244,3 +245,4 @@ namespace iText.IO.Image {
         }
     }
 }
+#endif
