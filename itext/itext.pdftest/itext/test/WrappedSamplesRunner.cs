@@ -83,9 +83,9 @@ namespace iText.Test {
 
             sampleClass = sampleClassParams.sampleType;
             System.Console.Out.WriteLine("Starting test " + sampleClassParams);
-
-            string oldCurrentDir = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = NUnit.Framework.TestContext.CurrentContext.TestDirectory;
+            
+            string oldCurrentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory);
 
             RunMain();
 
@@ -99,7 +99,7 @@ namespace iText.Test {
             System.Console.Out.WriteLine("Test executed successfully, comparing results...");
             ComparePdf(outPath, dest, cmp);
 
-            Environment.CurrentDirectory = oldCurrentDir;
+            Directory.SetCurrentDirectory(oldCurrentDir);
 
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
