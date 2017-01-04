@@ -182,9 +182,14 @@ namespace iText.Layout {
         }
 
         public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
             return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
         }
 
+#if !NETSTANDARD1_6
         public static Attribute GetCustomAttribute(this Assembly assembly, Type attributeType) {
             object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(attributeType, false);
             if (customAttributes.Length > 0 && customAttributes[0] is Attribute) {
@@ -193,5 +198,16 @@ namespace iText.Layout {
                 return null;
             }
         }
+#endif
+
+#if NETSTANDARD1_6
+        public static MethodInfo GetMethod(this Type type, String methodName, Type[] parameterTypes) {
+            return type.GetTypeInfo().GetMethod(methodName, parameterTypes);
+        }
+
+        public static ConstructorInfo GetConstructor(this Type type, Type[] parameterTypes) {
+            return type.GetTypeInfo().GetConstructor(parameterTypes);
+        }
+#endif
     }
 }
