@@ -58,7 +58,7 @@ namespace iText.IO.Util {
         private static int tempFileCounter = 0;
 
         public static String GetFontsDir() {
-            return Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
+            return Path.Combine(Environment.GetEnvironmentVariable("windir"), "fonts");
         }
 
         public static bool FileExists(String path) {

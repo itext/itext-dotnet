@@ -306,7 +306,7 @@ namespace iText.IO.Util {
         }
 
         public static int CharacterDigit(char ch, int radix) {
-            return Convert.ToInt32(ch.ToString(CultureInfo.InvariantCulture), radix);
+            return Convert.ToInt32(new String(new[] {ch}), radix);
         }
 
         public static String CharToString(char ch) {
