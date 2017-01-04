@@ -56,7 +56,7 @@ namespace iText.IO.Source {
         public static bool plainRandomAccess = false;
 
         /// <summary>The source that backs this object</summary>
-        private readonly IRandomAccessSource byteSource;
+        private IRandomAccessSource byteSource;
 
         /// <summary>The physical location in the underlying byte source.</summary>
         private long byteSourcePosition;
@@ -84,6 +84,7 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <returns>the new view</returns>
         public virtual iText.IO.Source.RandomAccessFileOrArray CreateView() {
+            EnsureByteSourceIsThreadSafe();
             return new iText.IO.Source.RandomAccessFileOrArray(new IndependentRandomAccessSource(byteSource));
         }
 
@@ -94,6 +95,7 @@ namespace iText.IO.Source {
         /// </remarks>
         /// <returns>the byte source view.</returns>
         public virtual IRandomAccessSource CreateSourceView() {
+            EnsureByteSourceIsThreadSafe();
             return new IndependentRandomAccessSource(byteSource);
         }
 
@@ -629,6 +631,12 @@ namespace iText.IO.Source {
             byte[] buf = new byte[length];
             ReadFully(buf);
             return iText.IO.Util.JavaUtil.GetStringForBytes(buf, encoding);
+        }
+
+        private void EnsureByteSourceIsThreadSafe() {
+            if (!(byteSource is ThreadSafeRandomAccessSource)) {
+                byteSource = new ThreadSafeRandomAccessSource(byteSource);
+            }
         }
     }
 }
