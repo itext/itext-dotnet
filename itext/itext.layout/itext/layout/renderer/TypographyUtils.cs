@@ -373,11 +373,15 @@ namespace iText.Layout.Renderer {
         private static Type GetTypographyClass(String partialName) {
             String classFullName = null;
 
-            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TypographyVersionAttribute), false);
-            if (customAttributes.Length > 0) {
-                string typographyVersion = ((TypographyVersionAttribute)customAttributes[0]).TypographyVersion;
-                string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
-                classFullName = String.Format(format, partialName, typographyVersion);
+            Assembly layoutAssembly = typeof(TypographyUtils).GetAssembly();
+            try {
+                Attribute customAttribute = layoutAssembly.GetCustomAttribute(typeof(TypographyVersionAttribute));
+                if (customAttribute is TypographyVersionAttribute) {
+                    string typographyVersion = ((TypographyVersionAttribute) customAttribute).TypographyVersion;
+                    string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                    classFullName = String.Format(format, partialName, typographyVersion);
+                }
+            } catch (Exception ignored) {
             }
 
             Type type = null;
@@ -397,9 +401,9 @@ namespace iText.Layout.Renderer {
                     }
                     if (type != null) {
                         bool doesReferToCurrentVersionOfCore = false;
-                        foreach (AssemblyName assemblyName in type.Assembly.GetReferencedAssemblies()) {
+                        foreach (AssemblyName assemblyName in type.GetAssembly().GetReferencedAssemblies()) {
                             if ("itext.io".Equals(assemblyName.Name)) {
-                                doesReferToCurrentVersionOfCore = assemblyName.Version.Equals(Assembly.GetExecutingAssembly().GetName().Version);
+                                doesReferToCurrentVersionOfCore = assemblyName.Version.Equals(layoutAssembly.GetName().Version);
                                 break;
                             }
                         }

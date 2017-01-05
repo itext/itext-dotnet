@@ -32,6 +32,8 @@ namespace iText.Layout.Hyphenation {
 
         private const char SOFT_HYPHEN = '\u00ad';
 
+        private static readonly Object staticLock = new Object();
+
         /// <summary>Logging instance.</summary>
         private static ILogger log = LoggerFactory.GetLogger(typeof(iText.Layout.Hyphenation.Hyphenator));
 
@@ -75,22 +77,22 @@ namespace iText.Layout.Hyphenation {
 
         /// <summary>Registers additional file directories.</summary>
         /// <param name="directory">directory to register</param>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
-            )]
         public static void RegisterAdditionalHyphenationFileDirectory(String directory) {
-            if (additionalHyphenationFileDirectories == null) {
-                additionalHyphenationFileDirectories = new List<String>();
+            lock (staticLock) {
+                if (additionalHyphenationFileDirectories == null) {
+                    additionalHyphenationFileDirectories = new List<String>();
+                }
+                additionalHyphenationFileDirectories.Add(directory);
             }
-            additionalHyphenationFileDirectories.Add(directory);
         }
 
         /// <summary>Returns the default hyphenation tree cache.</summary>
         /// <returns>the default (static) hyphenation tree cache</returns>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
-            )]
         public static HyphenationTreeCache GetHyphenationTreeCache() {
-            if (hTreeCache == null) {
-                hTreeCache = new HyphenationTreeCache();
+            lock (staticLock) {
+                if (hTreeCache == null) {
+                    hTreeCache = new HyphenationTreeCache();
+                }
             }
             return hTreeCache;
         }
@@ -98,10 +100,10 @@ namespace iText.Layout.Hyphenation {
         /// <summary>Clears the default hyphenation tree cache.</summary>
         /// <remarks>Clears the default hyphenation tree cache. This method can be used if the underlying data files are changed at runtime.
         ///     </remarks>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
-            )]
         public static void ClearHyphenationTreeCache() {
-            hTreeCache = new HyphenationTreeCache();
+            lock (staticLock) {
+                hTreeCache = new HyphenationTreeCache();
+            }
         }
 
         /// <summary>

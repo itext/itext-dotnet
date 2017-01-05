@@ -50,6 +50,11 @@ using iText.IO.Util;
 
 namespace iText.IO.Image {
     public abstract class ImageData {
+        /// <summary>a static that is used for attributing a unique id to each image.</summary>
+        private static long serialId = 0;
+
+        private static readonly Object staticLock = new Object();
+
         protected internal Uri url;
 
         protected internal int[] transparency;
@@ -335,15 +340,12 @@ namespace iText.IO.Image {
             data = stream.ToArray();
         }
 
-        /// <summary>a static that is used for attributing a unique id to each image.</summary>
-        private static long serialId = 0;
-
         /// <summary>Creates a new serial id.</summary>
         /// <returns>the new serialId</returns>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
-            )]
         private static long? GetSerialId() {
-            return ++serialId;
+            lock (staticLock) {
+                return ++serialId;
+            }
         }
     }
 }
