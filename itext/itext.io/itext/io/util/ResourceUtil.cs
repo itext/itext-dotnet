@@ -97,7 +97,7 @@ namespace iText.IO.Util {
             Stream istr = null;
             // Try to use resource loader to load the properties file.
             try {
-                Assembly assm = definedClassType != null ? Assembly.GetAssembly(definedClassType) : Assembly.GetExecutingAssembly();
+                Assembly assm = definedClassType != null ? definedClassType.GetAssembly() : typeof(ResourceUtil).GetAssembly();
                 istr = assm.GetManifestResourceStream(key);
             } catch {
             }
@@ -179,8 +179,8 @@ namespace iText.IO.Util {
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
             var loadedPaths = loadedAssemblies.Select(a => a.Location).ToArray();
             
-            var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-            var toLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
+            var toLoad = referencedPaths.Where(referencePath => !loadedPaths.Any(loadedPath => loadedPath.Equals(referencePath, StringComparison.OrdinalIgnoreCase))).ToList();
             foreach (String path in toLoad)
             {
                 try {

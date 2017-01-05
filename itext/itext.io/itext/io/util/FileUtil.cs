@@ -181,5 +181,9 @@ namespace iText.IO.Util {
         public static String GetParentDirectory(String path) {
             return Directory.GetParent(path).FullName;
         }
+
+        public static String GetBaseDirectory() {
+            return AppDomain.CurrentDomain.BaseDirectory;
+        }
     }
 }

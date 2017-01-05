@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace iText.IO {
@@ -153,6 +154,10 @@ namespace iText.IO {
 
         public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             return dictionary.ContainsKey(key);
+        }
+
+        public static Assembly GetAssembly(this Type type) {
+            return type.Assembly;
         }
     }
 }

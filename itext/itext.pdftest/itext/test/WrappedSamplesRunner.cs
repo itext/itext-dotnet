@@ -201,7 +201,7 @@ namespace iText.Test {
 
             WrappedSamplesRunner.RunnerParams runnerParams = new WrappedSamplesRunner.RunnerParams();
             runnerParams.sampleType = classType;
-            Attribute attribute = Attribute.GetCustomAttribute(classType, typeof(WrapToTestAttribute));
+            Attribute attribute = classType.GetCustomAttribute(typeof(WrapToTestAttribute));
             if (attribute == null) {
                 if (searchConfig.IsToMarkTestsWithoutAnnotationAsIgnored() && IsLookLikeTest(classType)) {
                     runnerParams.ignoreMessage = String.Format("Class {0} seems to be a test but it doesn't have WrapToTest annotation."
