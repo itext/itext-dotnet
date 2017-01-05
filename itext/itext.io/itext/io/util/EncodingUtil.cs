@@ -70,7 +70,7 @@ namespace iText.IO.Util {
         }
 
         public static String ConvertToString(byte[] bytes, String encoding) {
-            String nameU = encoding.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            String nameU = encoding.ToUpperInvariant();
             Encoding enc = null;
             if (nameU.Equals("UNICODEBIGUNMARKED"))
                 enc = new UnicodeEncoding(true, false);

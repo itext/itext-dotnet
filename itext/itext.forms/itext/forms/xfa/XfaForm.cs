@@ -608,17 +608,17 @@ namespace iText.Forms.Xfa
 		/// <exception cref="System.IO.IOException">on error</exception>
 		private static byte[] SerializeDocument(XNode n)
 		{
-            MemoryStream fout = new MemoryStream();
+		    MemoryStream fout = new MemoryStream();
 		    if (n != null) {
 		        XmlWriterSettings settings = new XmlWriterSettings {
 		            Encoding = new UpperCaseUTF8Encoding(false),
-                    OmitXmlDeclaration = !(n is XDocument)
-                };
-		        XmlWriter writer = XmlTextWriter.Create(fout, settings);
-                n.WriteTo(writer);
-                writer.Close();
+		            OmitXmlDeclaration = !(n is XDocument)
+		        };
+		        XmlWriter writer = XmlWriter.Create(fout, settings);
+		        n.WriteTo(writer);
+		        writer.Close();
 		    }
-            fout.Close();
+		    fout.Dispose();
 		    return fout.ToArray();
 		}
 
@@ -649,7 +649,7 @@ namespace iText.Forms.Xfa
 					bout.Write(b);
 				}
 			}
-			bout.Close();
+			bout.Dispose();
 			InitXfaForm(new MemoryStream(bout.ToArray()));
 		}
 
