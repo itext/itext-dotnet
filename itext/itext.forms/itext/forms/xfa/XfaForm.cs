@@ -619,9 +619,13 @@ namespace iText.Forms.Xfa
 		        };
 		        XmlWriter writer = XmlWriter.Create(fout, settings);
 		        n.WriteTo(writer);
-		        writer.Close();
-		    }
-		    fout.Dispose();
+#if !NETSTANDARD1_6
+                writer.Close();
+#else
+                writer.Dispose();
+#endif
+            }
+            fout.Dispose();
 		    return fout.ToArray();
 		}
 
