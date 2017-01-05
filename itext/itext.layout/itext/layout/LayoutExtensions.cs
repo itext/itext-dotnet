@@ -176,5 +176,14 @@ namespace iText.Layout {
         public static Assembly GetAssembly(this Type type) {
             return type.Assembly;
         }
+
+        public static Attribute GetCustomAttribute(this Assembly assembly, Type attributeType) {
+            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(attributeType, false);
+            if (customAttributes.Length > 0 && customAttributes[0] is Attribute) {
+                return customAttributes[0] as Attribute;
+            } else {
+                return null;
+            }
+        }
     }
 }
