@@ -105,9 +105,11 @@ namespace iText.Signatures {
             : this((AsymmetricAlgorithm) algorithm, hashAlgorithm) {
         }
 
+#if !NETSTANDARD1_6
         public AsymmetricAlgorithmSignature(DSACryptoServiceProvider algorithm)
             : this((AsymmetricAlgorithm) algorithm, null) {
         }
+#endif
 
         private AsymmetricAlgorithmSignature(AsymmetricAlgorithm algorithm, String hashAlgorithm) {
             this.algorithm = algorithm;
@@ -115,8 +117,10 @@ namespace iText.Signatures {
 
             if (algorithm is RSACryptoServiceProvider)
                 encryptionAlgorithm = "RSA";
+#if !NETSTANDARD1_6
             else if (algorithm is DSACryptoServiceProvider)
                 encryptionAlgorithm = "DSA";
+#endif
             else
                 throw new ArgumentException("Not supported encryption algorithm " + algorithm);
         }
@@ -125,10 +129,18 @@ namespace iText.Signatures {
             if (algorithm is RSACryptoServiceProvider) {
                 RSACryptoServiceProvider rsa = (RSACryptoServiceProvider) algorithm;
                 return rsa.SignData(message, hashAlgorithm);
-            } else {
-                DSACryptoServiceProvider dsa = (DSACryptoServiceProvider) algorithm;
+            }
+#if !NETSTANDARD1_6
+            else
+            {
+            DSACryptoServiceProvider dsa = (DSACryptoServiceProvider) algorithm;
                 return dsa.SignData(message);
             }
+#else
+            else {
+                throw new ArgumentException("Not supported encryption algorithm " + algorithm);
+            }
+#endif
         }
 
         public string GetHashAlgorithm() {

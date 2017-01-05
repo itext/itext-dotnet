@@ -105,13 +105,15 @@ namespace iText.Signatures {
 
         internal static Stream GetHttpResponseForOcspRequest(byte[] request, Uri urlt) {
             HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
+#if !NETSTANDARD1_6
             con.ContentLength = request.Length;
+#endif
             con.ContentType = "application/ocsp-request";
             con.Accept = "application/ocsp-response";
             con.Method = "POST";
             Stream outp = con.GetRequestStream();
             outp.Write(request, 0, request.Length);
-            outp.Close();
+            outp.Dispose();
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(response.StatusCode);
@@ -186,7 +188,9 @@ namespace iText.Signatures {
             } catch (Exception e) {
                 throw new PdfException(PdfException.FailedToGetTsaResponseFrom1).SetMessageParams(tsaUrl);
             }
+#if !NETSTANDARD1_6
             con.ContentLength = requestBytes.Length;
+#endif
             con.ContentType = "application/timestamp-query";
             con.Method = "POST";
             if ((tsaUsername != null) && !tsaUsername.Equals("")) {

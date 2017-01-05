@@ -50,6 +50,7 @@ using iText.Kernel;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Utilities.Date;
+using System.Net;
 
 namespace iText.Signatures {
     internal static class SignExtensions {
@@ -191,5 +192,15 @@ namespace iText.Signatures {
             dgst.Update(input);
             return dgst.Digest();
         }
+
+#if NETSTANDARD1_6
+        public static WebResponse GetResponse(this WebRequest request) {
+            return request.GetResponseAsync().Result;
+        }
+
+        public static Stream GetRequestStream(this HttpWebRequest request) {
+            return request.GetRequestStreamAsync().Result;
+        }
+#endif
     }
 }
