@@ -682,7 +682,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (split) {
                     if (marginsCollapsingEnabled) {
-                        marginsCollapseHandler.EndMarginsCollapse();
+                        marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
                     iText.Layout.Renderer.TableRenderer[] splitResult = Split(row, hasContent);
                     int[] rowspans = new int[currentRow.Length];
@@ -928,7 +928,7 @@ namespace iText.Layout.Renderer {
                 Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
             }
             if (marginsCollapsingEnabled) {
-                marginsCollapseHandler.EndMarginsCollapse();
+                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             ApplyMargins(occupiedArea.GetBBox(), true);
             if ((tableModel.IsSkipLastFooter() || !tableModel.IsComplete()) && null != footerRenderer) {

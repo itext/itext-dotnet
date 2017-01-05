@@ -160,7 +160,7 @@ namespace iText.Layout.Margincollapse {
             IgnoreModelBottomMargin(renderer);
         }
 
-        public virtual void EndMarginsCollapse() {
+        public virtual void EndMarginsCollapse(Rectangle layoutBox) {
             if (prevChildMarginInfo != null) {
                 UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetCollapseAfter());
             }
@@ -168,7 +168,7 @@ namespace iText.Layout.Margincollapse {
                 (renderer);
             if (FirstChildMarginAdjoinedToParent(renderer)) {
                 if (collapseInfo.IsSelfCollapsing() && !couldBeSelfCollapsing) {
-                    AddMarginToSelfCollapsedKid();
+                    AddNotYetAppliedTopMargin(layoutBox);
                 }
             }
             collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && couldBeSelfCollapsing);
@@ -342,11 +342,13 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
-        private void AddMarginToSelfCollapsedKid() {
+        private void AddNotYetAppliedTopMargin(Rectangle layoutBox) {
             // normally, space for margins is added when content is met, however if all kids were self-collapsing (i.e. 
-            // had no content) we need to add it when no more adjoining margins will be met
+            // had no content) or if there were no kids, we need to add it when no more adjoining margins will be met
             float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
             renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
+            // even though all kids have been already drawn, we still need to adjust layout box in case we are in the block of fixed size  
+            ApplyTopMargin(layoutBox, indentTop);
         }
 
         private IRenderer GetRendererChild(int index) {

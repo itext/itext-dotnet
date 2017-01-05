@@ -199,7 +199,7 @@ namespace iText.Layout.Renderer {
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 if (marginsCollapsingEnabled) {
-                                    marginsCollapseHandler.EndMarginsCollapse();
+                                    marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                                     splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
                                     splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
                                 }
@@ -261,7 +261,7 @@ namespace iText.Layout.Renderer {
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                                 if (marginsCollapsingEnabled) {
-                                    marginsCollapseHandler.EndMarginsCollapse();
+                                    marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                                     splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
                                     splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
                                 }
@@ -331,7 +331,7 @@ namespace iText.Layout.Renderer {
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             if (marginsCollapsingEnabled) {
-                marginsCollapseHandler.EndMarginsCollapse();
+                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             if (positionedRenderers.Count > 0) {
                 LayoutArea area = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());

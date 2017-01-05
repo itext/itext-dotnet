@@ -263,7 +263,7 @@ namespace iText.Layout.Renderer {
                             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                             if (marginsCollapsingEnabled) {
-                                marginsCollapseHandler.EndMarginsCollapse();
+                                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                                 split[0].SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
                                 split[0].SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
                             }
@@ -348,7 +348,7 @@ namespace iText.Layout.Renderer {
                 CorrectPositionedLayout(layoutBox);
             }
             if (marginsCollapsingEnabled) {
-                marginsCollapseHandler.EndMarginsCollapse();
+                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
