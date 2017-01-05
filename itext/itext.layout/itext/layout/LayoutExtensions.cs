@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace iText.Layout {
@@ -170,6 +171,10 @@ namespace iText.Layout {
             list.RemoveFirst();
 
             return value;
+        }
+
+        public static Assembly GetAssembly(this Type type) {
+            return type.Assembly;
         }
     }
 }
