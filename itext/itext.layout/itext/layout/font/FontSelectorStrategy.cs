@@ -9,18 +9,20 @@ namespace iText.Layout.Font {
 
         protected internal int index;
 
-        protected internal FontSelectorStrategy(String text) {
+        protected internal FontProvider provider;
+
+        protected internal FontSelectorStrategy(String text, FontProvider provider) {
             this.text = text;
             this.index = 0;
+            this.provider = provider;
         }
 
         public virtual bool EndOfText() {
             return text == null || index >= text.Length;
         }
 
-        public abstract PdfFont GetFont();
+        public abstract PdfFont GetCurrentFont();
 
-        //TODO List or GlyphLine?
         public abstract IList<Glyph> NextGlyphs();
     }
 }

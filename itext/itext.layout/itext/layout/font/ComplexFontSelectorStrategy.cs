@@ -6,30 +6,32 @@ using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     public class ComplexFontSelectorStrategy : FontSelectorStrategy {
-        internal PdfFont font;
+        private PdfFont font;
 
-        internal FontSelector selector;
+        private FontSelector selector;
 
-        public ComplexFontSelectorStrategy(String text, FontSelector selector)
-            : base(text) {
+        public ComplexFontSelectorStrategy(String text, FontSelector selector, FontProvider provider)
+            : base(text, provider) {
             this.font = null;
             this.selector = selector;
         }
 
-        public override PdfFont GetFont() {
+        public override PdfFont GetCurrentFont() {
             return font;
         }
 
         public override IList<Glyph> NextGlyphs() {
-            IList<Glyph> glyphs = new List<Glyph>();
-            font = null;
-            int nextUnignorable = NextUnignorableIndex();
-            foreach (PdfFont f in selector.GetFonts()) {
-                if (f.ContainsGlyph(text, nextUnignorable)) {
-                    font = f;
+            int nextUnignorable = NextSignificantIndex();
+            foreach (FontProgramInfo f in selector.GetFonts()) {
+                font = f.GetPdfFont(provider);
+                if (font.ContainsGlyph(text, nextUnignorable)) {
                     break;
                 }
+                else {
+                    font = null;
+                }
             }
+            IList<Glyph> glyphs = new List<Glyph>();
             if (font != null) {
                 UnicodeScript? unicodeScript = NextSignificantUnicodeScript(nextUnignorable);
                 int to = nextUnignorable;
@@ -47,7 +49,7 @@ namespace iText.Layout.Font {
                 index += font.AppendGlyphs(text, index, to, glyphs);
             }
             else {
-                font = selector.BestMatch();
+                font = selector.BestMatch().GetPdfFont(provider);
                 if (index != nextUnignorable) {
                     index += font.AppendGlyphs(text, index, nextUnignorable - 1, glyphs);
                 }
@@ -56,7 +58,7 @@ namespace iText.Layout.Font {
             return glyphs;
         }
 
-        protected internal virtual int NextUnignorableIndex() {
+        private int NextSignificantIndex() {
             int nextValidChar = index;
             for (; nextValidChar < text.Length; nextValidChar++) {
                 if (!iText.IO.Util.TextUtil.IsIdentifierIgnorable(text[nextValidChar])) {
@@ -66,7 +68,7 @@ namespace iText.Layout.Font {
             return nextValidChar;
         }
 
-        protected internal virtual UnicodeScript? NextSignificantUnicodeScript(int from) {
+        private UnicodeScript? NextSignificantUnicodeScript(int from) {
             for (int i = from; i < text.Length; i++) {
                 int codePoint = text.CodePointAt(i);
                 UnicodeScript? unicodeScript = iText.IO.Util.UnicodeScriptUtil.Of(codePoint);

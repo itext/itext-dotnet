@@ -5,30 +5,63 @@ using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     public class FontProvider {
-        private IList<PdfFont> fonts = new List<PdfFont>();
+        private FontSet fontSet;
 
-        protected internal IDictionary<FontProvider.FontSelectorKey, FontSelector> fontSelectorCache;
+        private IDictionary<FontProgramInfo, PdfFont> pdfFonts = new Dictionary<FontProgramInfo, PdfFont>();
 
-        public FontProvider(IList<PdfFont> pdfFonts) {
+        public FontProvider(FontSet fontSet) {
             // initial big collection of fonts, entry point for all font selector logic.
             // FontProvider depends from PdfDocument, due to PdfFont.
-            this.fonts = pdfFonts;
-            this.fontSelectorCache = new Dictionary<FontProvider.FontSelectorKey, FontSelector>();
+            this.fontSet = fontSet;
         }
 
-        public FontProvider()
-            : this(new List<PdfFont>()) {
+        public FontProvider() {
+            this.fontSet = new FontSet();
         }
 
-        /// <summary>Note, this operation will reset internal FontSelector cache.</summary>
-        /// <param name="font"/>
-        public virtual void AddFont(PdfFont font) {
-            fonts.Add(font);
-            fontSelectorCache.Clear();
+        public virtual bool AddFont(FontProgram fontProgram, String encoding) {
+            return fontSet.AddFont(fontProgram, encoding);
+        }
+
+        public virtual bool AddFont(String fontProgram, String encoding) {
+            return fontSet.AddFont(fontProgram, encoding);
+        }
+
+        public virtual bool AddFont(byte[] fontProgram, String encoding) {
+            return fontSet.AddFont(fontProgram, encoding);
+        }
+
+        public virtual void AddFont(String fontProgram) {
+            AddFont(fontProgram, null);
+        }
+
+        public virtual void AddFont(FontProgram fontProgram) {
+            AddFont(fontProgram, GetDefaultEncoding(fontProgram));
+        }
+
+        public virtual void AddFont(byte[] fontProgram) {
+            AddFont(fontProgram, null);
+        }
+
+        public virtual String GetDefaultEncoding(FontProgram fontProgram) {
+            if (fontProgram is Type1Font) {
+                return PdfEncodings.WINANSI;
+            }
+            else {
+                return PdfEncodings.IDENTITY_H;
+            }
+        }
+
+        public virtual bool GetDefaultCacheFlag() {
+            return true;
+        }
+
+        public virtual bool GetDefaultEmbeddingFlag() {
+            return true;
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, String fontFamily, int style) {
-            return new ComplexFontSelectorStrategy(text, GetSelector(fontFamily, style));
+            return new ComplexFontSelectorStrategy(text, GetSelector(fontFamily, style), this);
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, String fontFamily) {
@@ -53,41 +86,48 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        protected internal virtual FontSelector GetSelector(String fontFamily, int style) {
-            FontProvider.FontSelectorKey key = new FontProvider.FontSelectorKey(fontFamily, style);
-            if (fontSelectorCache.ContainsKey(key)) {
-                return fontSelectorCache.Get(key);
+        public FontSelector GetSelector(String fontFamily, int style) {
+            FontSelectorKey key = new FontSelectorKey(fontFamily, style);
+            if (fontSet.GetFontSelectorCache().ContainsKey(key)) {
+                return fontSet.GetFontSelectorCache().Get(key);
             }
             else {
-                FontSelector fontSelector = new NamedFontSelector(fonts, fontFamily, style);
-                fontSelectorCache[key] = fontSelector;
+                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamily, style);
+                fontSet.GetFontSelectorCache()[key] = fontSelector;
                 return fontSelector;
             }
         }
 
-        private class FontSelectorKey {
-            internal String fontFamily;
+        protected internal virtual FontSelector CreateFontSelector(ICollection<FontProgramInfo> fonts, String fontFamily
+            , int style) {
+            return new NamedFontSelector(fonts, fontFamily, style);
+        }
 
-            internal int style;
-
-            public FontSelectorKey(String fontFamily, int style) {
-                this.fontFamily = fontFamily;
-                this.style = style;
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual PdfFont CreatePdfFont(FontProgramInfo fontInfo) {
+            if (pdfFonts.ContainsKey(fontInfo)) {
+                return pdfFonts.Get(fontInfo);
             }
-
-            public override bool Equals(Object o) {
-                if (this == o) {
-                    return true;
+            else {
+                FontProgram fontProgram;
+                if (fontSet.GetFontPrograms().ContainsKey(fontInfo)) {
+                    fontProgram = fontSet.GetFontPrograms().Get(fontInfo);
                 }
-                FontProvider.FontSelectorKey that = (FontProvider.FontSelectorKey)o;
-                return style == that.style && (fontFamily != null ? fontFamily.Equals(that.fontFamily) : that.fontFamily ==
-                     null);
-            }
-
-            public override int GetHashCode() {
-                int result = fontFamily != null ? fontFamily.GetHashCode() : 0;
-                result = 31 * result + style;
-                return result;
+                else {
+                    if (fontInfo.GetFontProgram() != null) {
+                        fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontProgram(), GetDefaultCacheFlag());
+                    }
+                    else {
+                        fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontName(), GetDefaultCacheFlag());
+                    }
+                }
+                String encoding = fontInfo.GetEncoding();
+                if (encoding == null || encoding.Length == 0) {
+                    encoding = GetDefaultEncoding(fontProgram);
+                }
+                PdfFont pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, GetDefaultEmbeddingFlag());
+                pdfFonts[fontInfo] = pdfFont;
+                return pdfFont;
             }
         }
     }

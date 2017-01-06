@@ -5,19 +5,19 @@ namespace iText.IO.Font {
     public sealed class FontNamesFactory {
         private static bool FETCH_CACHED_FIRST = true;
 
-        public static FontNames FetchFontNames(String name, byte[] fontProgram) {
-            String baseName = FontProgram.GetBaseName(name);
+        public static FontNames FetchFontNames(String fontName, byte[] fontProgram) {
+            String baseName = FontProgram.GetBaseName(fontName);
             //yes, we trying to find built-in standard font with original name, not baseName.
-            bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(name);
+            bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(fontName);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontNames fontNames = null;
             if (FETCH_CACHED_FIRST) {
-                fontNames = FetchCachedFontNames(name, fontProgram);
+                fontNames = FetchCachedFontNames(fontName, fontProgram);
                 if (fontNames != null) {
                     return fontNames;
                 }
             }
-            if (name == null) {
+            if (fontName == null) {
                 if (fontProgram != null) {
                     try {
                         fontNames = FetchTrueTypeNames(null, fontProgram);
@@ -35,17 +35,17 @@ namespace iText.IO.Font {
             }
             else {
                 try {
-                    if (isBuiltinFonts14 || name.ToLowerInvariant().EndsWith(".afm") || name.ToLowerInvariant().EndsWith(".pfm"
-                        )) {
-                        fontNames = FetchType1Names(name, null);
+                    if (isBuiltinFonts14 || fontName.ToLowerInvariant().EndsWith(".afm") || fontName.ToLowerInvariant().EndsWith
+                        (".pfm")) {
+                        fontNames = FetchType1Names(fontName, null);
                     }
                     else {
                         if (isCidFont) {
-                            fontNames = FetchCidFontNames(name);
+                            fontNames = FetchCidFontNames(fontName);
                         }
                         else {
                             if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
-                                fontNames = FetchTrueTypeNames(name, fontProgram);
+                                fontNames = FetchTrueTypeNames(fontName, fontProgram);
                             }
                             else {
                                 fontNames = FetchTTCNames(baseName);
@@ -60,10 +60,10 @@ namespace iText.IO.Font {
             return fontNames;
         }
 
-        private static FontNames FetchCachedFontNames(String name, byte[] fontProgram) {
+        private static FontNames FetchCachedFontNames(String fontName, byte[] fontProgram) {
             String fontKey;
-            if (name != null) {
-                fontKey = name;
+            if (fontName != null) {
+                fontKey = fontName;
             }
             else {
                 fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(fontProgram));
@@ -98,10 +98,10 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchTrueTypeNames(String name, byte[] fontProgram) {
+        private static FontNames FetchTrueTypeNames(String fontName, byte[] fontProgram) {
             OpenTypeParser parser;
-            if (name != null) {
-                parser = new OpenTypeParser(name);
+            if (fontName != null) {
+                parser = new OpenTypeParser(fontName);
             }
             else {
                 parser = new OpenTypeParser(fontProgram);
@@ -118,13 +118,13 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchType1Names(String name, byte[] afm) {
-            Type1Font fp = new Type1Font(name, null, afm, null);
+        private static FontNames FetchType1Names(String fontName, byte[] afm) {
+            Type1Font fp = new Type1Font(fontName, null, afm, null);
             return fp.GetFontNames();
         }
 
-        private static FontNames FetchCidFontNames(String name) {
-            CidFont font = new CidFont(name, null);
+        private static FontNames FetchCidFontNames(String fontName) {
+            CidFont font = new CidFont(fontName, null);
             return font.GetFontNames();
         }
     }

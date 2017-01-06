@@ -324,6 +324,8 @@ namespace iText.Kernel {
 
         public const String IoException = "I/O exception.";
 
+        public const String IoExceptionWhileCreatingFont = "I/O exception while creating Font";
+
         [Obsolete]
         public const String IsNotAnAcceptableValueForTheField = "{0} is not an acceptable value for the field {1}.";
 

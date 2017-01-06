@@ -962,7 +962,7 @@ namespace iText.Layout.Renderer {
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, (String)font);
                     while (!strategy.EndOfText()) {
                         iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
-                        textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetFont());
+                        textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetCurrentFont());
                         renderers.Add(textRenderer);
                     }
                     return renderers;
