@@ -9,7 +9,7 @@ namespace iText.Layout.Font {
         private IList<PdfFont> fonts;
 
         public NamedFontSelector(IList<PdfFont> allFonts, String fontFamily, int style) {
-            this.fonts = allFonts;
+            this.fonts = new List<PdfFont>(allFonts);
             JavaCollectionsUtil.Sort(allFonts, GetComparator(fontFamily != null ? fontFamily : "", style));
         }
 

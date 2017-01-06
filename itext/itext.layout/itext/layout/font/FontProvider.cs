@@ -20,10 +20,6 @@ namespace iText.Layout.Font {
             : this(new List<PdfFont>()) {
         }
 
-        public virtual IList<PdfFont> GetFonts() {
-            return fonts;
-        }
-
         /// <summary>Note, this operation will reset internal FontSelector cache.</summary>
         /// <param name="font"/>
         public virtual void AddFont(PdfFont font) {

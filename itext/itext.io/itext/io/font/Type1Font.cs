@@ -80,15 +80,21 @@ namespace iText.IO.Font {
             }
         }
 
+        protected internal Type1Font() {
+            fontNames = new FontNames();
+        }
+
         /// <exception cref="System.IO.IOException"/>
-        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb) {
+        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
+            : this() {
             CheckFilePath(metricsPath);
             CheckFilePath(binaryPath);
             fontParser = new Type1Parser(metricsPath, binaryPath, afm, pfb);
             Process();
         }
 
-        protected internal Type1Font(String baseFont) {
+        protected internal Type1Font(String baseFont)
+            : this() {
             GetFontNames().SetFontName(baseFont);
         }
 

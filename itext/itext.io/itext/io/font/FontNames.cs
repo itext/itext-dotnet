@@ -176,7 +176,7 @@ namespace iText.IO.Font {
 
         public virtual String GetFullNameLowerCase() {
             if (fullNameLowerCase == null) {
-                fullNameLowerCase = fullName[0][3];
+                fullNameLowerCase = fullName[0][3].ToLowerInvariant();
             }
             return fullNameLowerCase;
         }

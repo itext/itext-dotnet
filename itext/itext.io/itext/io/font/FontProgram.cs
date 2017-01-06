@@ -58,7 +58,7 @@ namespace iText.IO.Font {
 
         protected internal bool isFontSpecific;
 
-        protected internal FontNames fontNames = new FontNames();
+        protected internal FontNames fontNames;
 
         protected internal FontMetrics fontMetrics = new FontMetrics();
 
