@@ -814,7 +814,7 @@ namespace iText.Signatures {
                     os.WriteLong(range[k_1]).Write(' ');
                 }
                 os.Write(']');
-                System.Array.Copy(bos.ToArray(), 0, bout, (int)byteRangePosition, bos.Length);
+                System.Array.Copy(bos.ToArray(), 0, bout, (int)byteRangePosition, (int)bos.Length);
             }
             else {
                 try {
@@ -904,7 +904,7 @@ namespace iText.Signatures {
                         throw new ArgumentException("The key is too big");
                     }
                     if (tempFile == null) {
-                        System.Array.Copy(bous.ToArray(), 0, bout, (int)lit.GetPosition(), bous.Length);
+                        System.Array.Copy(bous.ToArray(), 0, bout, (int)lit.GetPosition(), (int)bous.Length);
                     }
                     else {
                         raf.Seek(lit.GetPosition());
