@@ -126,13 +126,27 @@ namespace iText.Kernel.Font {
 
         public abstract GlyphLine CreateGlyphLine(String content);
 
-        /// <param name="text"/>
-        /// <param name="from"/>
-        /// <param name="glyphs"/>
-        /// <param name="appendNotdefs"/>
-        /// <returns>number of processed chars from #text.</returns>
+        /// <summary>Append all supported glyphs and return number of processed chars.</summary>
+        /// <remarks>
+        /// Append all supported glyphs and return number of processed chars.
+        /// Composite font supports surrogate pairs.
+        /// </remarks>
+        /// <param name="text">String to convert to glyphs.</param>
+        /// <param name="from">from index of the text.</param>
+        /// <param name="to">to index of the text.</param>
+        /// <param name="glyphs">array for a new glyphs, shall not be null.</param>
+        /// <returns>number of processed chars from text.</returns>
         public abstract int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs);
 
+        /// <summary>Append any single glyph, even notdef.</summary>
+        /// <remarks>
+        /// Append any single glyph, even notdef.
+        /// Returns number of processed chars: 2 in case surrogate pair, otherwise 1.
+        /// </remarks>
+        /// <param name="text">String to convert to glyphs.</param>
+        /// <param name="from">from index of the text.</param>
+        /// <param name="glyphs">array for a new glyph, shall not be null.</param>
+        /// <returns>number of processed chars: 2 in case surrogate pair, otherwise 1</returns>
         public abstract int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs);
 
         public abstract bool ContainsGlyph(String text, int from);
