@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -190,7 +191,7 @@ namespace iText.Signatures {
             con.Method = "POST";
             if ((tsaUsername != null) && !tsaUsername.Equals("")) {
                 string authInfo = tsaUsername + ":" + tsaPassword;
-                authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo), Base64FormattingOptions.None);
+                authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
                 con.Headers["Authorization"] = "Basic " + authInfo;
             }
             Stream outp = con.GetRequestStream();
@@ -200,7 +201,7 @@ namespace iText.Signatures {
 
             TsaResponse response = new TsaResponse();
             response.tsaResponseStream = httpWebResponse.GetResponseStream();
-            response.encoding = httpWebResponse.ContentEncoding;
+            response.encoding = httpWebResponse.Headers[HttpResponseHeader.ContentEncoding];
             return response;
         }
 
