@@ -6,7 +6,7 @@ using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     public class NamedFontSelector : FontSelector {
-        internal IList<PdfFont> fonts;
+        private IList<PdfFont> fonts;
 
         public NamedFontSelector(IList<PdfFont> allFonts, String fontFamily, int style) {
             this.fonts = allFonts;
@@ -57,10 +57,8 @@ namespace iText.Layout.Font {
                 if (res != 0) {
                     return res;
                 }
-                //TODO lowercase full name to fontprogram
-                String fullFontName1 = fp1.GetFontNames().GetFullName()[0][3].ToLowerInvariant();
-                String fullFontName2 = fp2.GetFontNames().GetFullName()[0][3].ToLowerInvariant();
-                res = (fullFontName2.Contains(fontFamily) ? 1 : 0) - (fullFontName1.Contains(fontFamily) ? 1 : 0);
+                res = (fp2.GetFontNames().GetFullNameLowerCase().Contains(fontFamily) ? 1 : 0) - (fp1.GetFontNames().GetFullNameLowerCase
+                    ().Contains(fontFamily) ? 1 : 0);
                 return res;
             }
         }
