@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
@@ -17,8 +18,30 @@ namespace iText.Layout.Font {
             fonts.Add(font);
         }
 
-        public virtual FontSelector GetSelector(String fontFamily) {
-            return new NamedFontSelector(GetAllFonts(), fontFamily);
+        protected internal virtual FontSelector GetSelector(String fontFamily) {
+            return GetSelector(fontFamily, FontConstants.UNDEFINED);
+        }
+
+        /// <param name="fontFamily"/>
+        /// <param name="style">
+        /// Shall be
+        /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
+        /// ,
+        /// <see cref="iText.IO.Font.FontConstants.NORMAL"/>
+        /// ,
+        /// <see cref="iText.IO.Font.FontConstants.ITALIC"/>
+        /// ,
+        /// <see cref="iText.IO.Font.FontConstants.BOLD"/>
+        /// , or
+        /// <see cref="iText.IO.Font.FontConstants.BOLDITALIC"/>
+        /// </param>
+        /// <returns>
+        /// an instance of
+        /// <see cref="FontSelector"/>
+        /// .
+        /// </returns>
+        protected internal virtual FontSelector GetSelector(String fontFamily, int style) {
+            return new NamedFontSelector(GetAllFonts(), fontFamily, style);
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, String fontFamily) {

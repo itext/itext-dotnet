@@ -81,6 +81,7 @@ namespace iText.Layout.Font {
         }
 
         private static bool IsSignificantUnicodeScript(UnicodeScript? unicodeScript) {
+            // Character.UnicodeScript.UNKNOWN will be handled as significant unicode script
             return unicodeScript != UnicodeScript.COMMON && unicodeScript != UnicodeScript.INHERITED;
         }
 
