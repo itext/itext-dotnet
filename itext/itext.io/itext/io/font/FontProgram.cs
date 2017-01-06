@@ -300,5 +300,10 @@ namespace iText.IO.Font {
                 codeToGlyph[space.GetCode()] = space;
             }
         }
+
+        public override String ToString() {
+            String name = GetFontNames().GetFontName();
+            return name.Length > 0 ? name : base.ToString();
+        }
     }
 }

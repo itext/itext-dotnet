@@ -56,6 +56,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
@@ -552,7 +553,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_579();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_581();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -612,8 +613,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_579 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_579() {
+        private sealed class _IGlyphLineFilter_581 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_581() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -945,6 +946,33 @@ namespace iText.Layout.Renderer {
                 (Property.WORD_SPACING));
         }
 
+        protected internal virtual IList<iText.Layout.Renderer.TextRenderer> ResolveFonts() {
+            Object font = GetProperty(Property.FONT);
+            if (font is PdfFont) {
+                return JavaCollectionsUtil.SingletonList<iText.Layout.Renderer.TextRenderer>(this);
+            }
+            else {
+                if (font is String) {
+                    FontProvider provider = (FontProvider)GetProperty(Property.FONT_PROVIDER);
+                    if (provider == null) {
+                        throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
+                            );
+                    }
+                    IList<iText.Layout.Renderer.TextRenderer> renderers = new List<iText.Layout.Renderer.TextRenderer>();
+                    FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, (String)font);
+                    while (!strategy.EndOfText()) {
+                        iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
+                        textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetFont());
+                        renderers.Add(textRenderer);
+                    }
+                    return renderers;
+                }
+                else {
+                    throw new InvalidOperationException("Invalid font type.");
+                }
+            }
+        }
+
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
             int shift = NumberOfElementsLessThan(removedIds, range[0]);
             range[0] -= shift;
@@ -1049,6 +1077,14 @@ namespace iText.Layout.Renderer {
                 otfFeaturesApplied = false;
                 strToBeConverted = null;
             }
+        }
+
+        private void SetGlyphLineAndFont(IList<Glyph> glyphs, PdfFont font) {
+            this.text = new GlyphLine(glyphs);
+            this.font = font;
+            this.otfFeaturesApplied = false;
+            this.strToBeConverted = null;
+            SetProperty(Property.FONT, font);
         }
 
         private PdfFont GetFont() {

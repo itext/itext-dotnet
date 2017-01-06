@@ -69,6 +69,7 @@ namespace iText.Layout.Renderer {
             maxDescent = 0;
             int childPos = 0;
             UpdateChildrenParent();
+            ResolveChildrenFonts();
             int totalNumberOfTrimmedGlyphs = TrimFirst();
             BaseDirection? baseDirection = ApplyOtf();
             UpdateBidiLevels(totalNumberOfTrimmedGlyphs, baseDirection);
@@ -653,8 +654,26 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
+        private void ResolveChildrenFonts() {
+            IList<IRenderer> newChildRenderers = new List<IRenderer>(childRenderers.Count);
+            foreach (IRenderer child in childRenderers) {
+                if (child is TextRenderer) {
+                    newChildRenderers.AddAll(((TextRenderer)child).ResolveFonts());
+                }
+                else {
+                    newChildRenderers.Add(child);
+                }
+            }
+            //TODO It might be one textRenderer with resolved font.
+            // this mean, that some TextRenderer has been split into several with different fonts.
+            //if (newChildRenderers.size() > childRenderers.size()) {
+            childRenderers = newChildRenderers;
+        }
+
         internal class RendererGlyph {
             public RendererGlyph(Glyph glyph, TextRenderer textRenderer) {
+                //}
                 this.glyph = glyph;
                 this.renderer = textRenderer;
             }

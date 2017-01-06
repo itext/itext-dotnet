@@ -118,6 +118,21 @@ namespace iText.Kernel.Font {
             return null;
         }
 
+        public override bool ContainsGlyph(String text, int from) {
+            int ch = text[from];
+            if (fontEncoding.CanEncode(ch)) {
+                if (fontEncoding.IsFontSpecific()) {
+                    return ((Type1Font)GetFontProgram()).GetGlyphByCode(ch) != null;
+                }
+                else {
+                    return ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(ch)) != null;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
         protected internal override bool IsBuiltInFont() {
             return ((Type1Font)GetFontProgram()).IsBuiltInFont();
         }

@@ -126,7 +126,16 @@ namespace iText.Kernel.Font {
 
         public abstract GlyphLine CreateGlyphLine(String content);
 
-        public abstract int AppendGlyphs(String content, int from, IList<Glyph> to);
+        /// <param name="text"/>
+        /// <param name="from"/>
+        /// <param name="glyphs"/>
+        /// <param name="appendNotdefs"/>
+        /// <returns>number of processed chars from #text.</returns>
+        public abstract int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs);
+
+        public abstract int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs);
+
+        public abstract bool ContainsGlyph(String text, int from);
 
         /// <summary>Converts the text into bytes to be placed in the document.</summary>
         /// <remarks>
@@ -573,6 +582,10 @@ namespace iText.Kernel.Font {
                 MarkObjectAsIndirect(obj);
                 return false;
             }
+        }
+
+        public override String ToString() {
+            return "PdfFont{" + "fontProgram=" + fontProgram + '}';
         }
     }
 }

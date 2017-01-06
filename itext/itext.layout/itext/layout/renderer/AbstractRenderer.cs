@@ -110,7 +110,7 @@ namespace iText.Layout.Renderer {
             this.positionedRenderers = other.positionedRenderers;
             this.modelElement = other.modelElement;
             this.flushed = other.flushed;
-            this.occupiedArea = other.occupiedArea.Clone();
+            this.occupiedArea = other.occupiedArea != null ? other.occupiedArea.Clone() : null;
             this.parent = other.parent;
             this.properties.AddAll(other.properties);
             this.isLastRendererForModelElement = other.isLastRendererForModelElement;

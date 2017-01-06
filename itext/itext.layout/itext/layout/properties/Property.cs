@@ -116,7 +116,10 @@ namespace iText.Layout.Properties {
 
         public const int FONT_KERNING = 22;
 
+        [Obsolete]
         public const int FONT_SCRIPT = 23;
+
+        public const int FONT_PROVIDER = 91;
 
         public const int FONT_SIZE = 24;
 
@@ -259,7 +262,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 90;
+        private const int MAX_INHERITED_PROPERTY_ID = 91;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -273,6 +276,7 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_COLOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_KERNING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SCRIPT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_PROVIDER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SIZE] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FORCED_PLACEMENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
