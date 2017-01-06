@@ -950,13 +950,13 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual IList<iText.Layout.Renderer.TextRenderer> ResolveFonts() {
-            Object font = GetProperty(Property.FONT);
+            Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
                 return JavaCollectionsUtil.SingletonList<iText.Layout.Renderer.TextRenderer>(this);
             }
             else {
                 if (font is String) {
-                    FontProvider provider = (FontProvider)GetProperty(Property.FONT_PROVIDER);
+                    FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
                     if (provider == null) {
                         throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
                             );

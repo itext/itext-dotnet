@@ -87,12 +87,12 @@ namespace iText.Layout.Font {
                 UnicodeScript? unicodeScript = NextSignificantUnicodeScript(nextUnignorable);
                 int to = nextUnignorable;
                 for (int i = nextUnignorable; i < text.Length; i++) {
-                    int codePoint = text.CodePointAt(i);
+                    int codePoint = IsSurrogatePair(text, i) ? TextUtil.ConvertToUtf32(text, i) : (int)text[i];
                     UnicodeScript? currScript = iText.IO.Util.UnicodeScriptUtil.Of(codePoint);
                     if (IsSignificantUnicodeScript(currScript) && currScript != unicodeScript) {
                         break;
                     }
-                    if (IsSurrogatePair(codePoint)) {
+                    if (codePoint > 0xFFFF) {
                         i++;
                     }
                     to = i;
@@ -121,13 +121,17 @@ namespace iText.Layout.Font {
 
         private UnicodeScript? NextSignificantUnicodeScript(int from) {
             for (int i = from; i < text.Length; i++) {
-                int codePoint = text.CodePointAt(i);
+                int codePoint;
+                if (IsSurrogatePair(text, i)) {
+                    codePoint = TextUtil.ConvertToUtf32(text, i);
+                    i++;
+                }
+                else {
+                    codePoint = (int)text[i];
+                }
                 UnicodeScript? unicodeScript = iText.IO.Util.UnicodeScriptUtil.Of(codePoint);
                 if (IsSignificantUnicodeScript(unicodeScript)) {
                     return unicodeScript;
-                }
-                if (IsSurrogatePair(codePoint)) {
-                    i++;
                 }
             }
             return UnicodeScript.COMMON;
@@ -138,9 +142,10 @@ namespace iText.Layout.Font {
             return unicodeScript != UnicodeScript.COMMON && unicodeScript != UnicodeScript.INHERITED;
         }
 
-        private static bool IsSurrogatePair(int codePoint) {
-            //lazy surrogate pair check
-            return codePoint > 0xFFFF;
+        //This method doesn't perform additional checks if compare with TextUtil#isSurrogatePair()
+        private static bool IsSurrogatePair(String text, int idx) {
+            return TextUtil.IsSurrogateHigh(text[idx]) && idx < text.Length - 1 && TextUtil.IsSurrogateLow(text[idx + 
+                1]);
         }
     }
 }
