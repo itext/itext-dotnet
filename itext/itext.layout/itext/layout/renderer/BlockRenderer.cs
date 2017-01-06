@@ -312,8 +312,7 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     float blockBottom = Math.Max(occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox
-                        ().GetHeight()), layoutContext.GetArea().GetBBox().GetBottom());
-                    /*parentBBox.getBottom()*/
+                        ().GetHeight()), layoutBox.GetBottom());
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                     blockMinHeight -= occupiedArea.GetBBox().GetHeight();
                     if (!IsFixedLayout() && blockMinHeight > 0) {
