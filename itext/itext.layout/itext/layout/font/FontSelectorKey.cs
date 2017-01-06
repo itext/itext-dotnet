@@ -1,6 +1,12 @@
 using System;
 
 namespace iText.Layout.Font {
+    /// <summary>
+    /// Key for
+    /// <see cref="FontSelector"/>
+    /// caching.
+    /// </summary>
+    /// <seealso>FontSet#getFontSelectorCache().</seealso>
     internal sealed class FontSelectorKey {
         internal String fontFamily;
 

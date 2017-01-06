@@ -5,6 +5,17 @@ using iText.Kernel;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
+    /// <summary>
+    /// Contains all font related data to create
+    /// <see cref="iText.IO.Font.FontProgram"/>
+    /// and
+    /// <see cref="iText.Kernel.Font.PdfFont"/>
+    /// .
+    /// <see cref="iText.IO.Font.FontNames"/>
+    /// fetches with
+    /// <see cref="iText.IO.Font.FontNamesFactory"/>
+    /// .
+    /// </summary>
     public sealed class FontProgramInfo {
         private readonly String fontName;
 
@@ -40,7 +51,7 @@ namespace iText.Layout.Font {
 
         public PdfFont GetPdfFont(FontProvider fontProvider) {
             try {
-                return fontProvider.CreatePdfFont(this);
+                return fontProvider.GetPdfFont(this);
             }
             catch (System.IO.IOException e) {
                 throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);

@@ -5,6 +5,8 @@ using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
+    /// <summary>Reusable font set for FontProgram related data.</summary>
+    /// <seealso cref="FontProvider"/>
     public class FontSet {
         private static IDictionary<String, FontProgramInfo> fontInfoCache = new ConcurrentDictionary<String, FontProgramInfo
             >();
@@ -52,6 +54,14 @@ namespace iText.Layout.Font {
             return AddDirectory(dir, false);
         }
 
+        /// <summary>Add not supported for auto creating FontPrograms.</summary>
+        /// <param name="fontProgram"/>
+        /// <param name="encoding">
+        /// FontEncoding for creating
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// .
+        /// </param>
+        /// <returns>false, if fontProgram is null, otherwise true.</returns>
         public virtual bool AddFont(FontProgram fontProgram, String encoding) {
             if (fontProgram == null) {
                 return false;
@@ -86,10 +96,6 @@ namespace iText.Layout.Font {
             return fonts;
         }
 
-        public virtual IDictionary<FontProgramInfo, FontProgram> GetFontPrograms() {
-            return fontPrograms;
-        }
-
         protected internal virtual bool AddFont(String fontName, byte[] fontProgram, String encoding) {
             if (fontName == null && fontProgram == null) {
                 return false;
@@ -110,6 +116,10 @@ namespace iText.Layout.Font {
             }
             AddFontInfo(fontInfo);
             return true;
+        }
+
+        internal virtual IDictionary<FontProgramInfo, FontProgram> GetFontPrograms() {
+            return fontPrograms;
         }
 
         internal virtual IDictionary<FontSelectorKey, FontSelector> GetFontSelectorCache() {

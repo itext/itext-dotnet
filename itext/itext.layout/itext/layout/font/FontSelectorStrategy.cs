@@ -4,6 +4,12 @@ using iText.IO.Font.Otf;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
+    /// <summary>
+    /// <see cref="FontSelectorStrategy"/>
+    /// responsible for splitting text into sub texts with font.
+    /// <see cref="NextGlyphs()"/>
+    /// will create next sub text and set current font.
+    /// </summary>
     public abstract class FontSelectorStrategy {
         protected internal String text;
 
