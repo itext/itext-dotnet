@@ -138,7 +138,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            ConvertWaitingStringToGlyphLine();
+            UpdateFontAndText();
             LayoutArea area = layoutContext.GetArea();
             float[] margins = GetMargins();
             Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
@@ -395,7 +395,7 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual void ApplyOtf() {
-            ConvertWaitingStringToGlyphLine();
+            UpdateFontAndText();
             UnicodeScript? script = this.GetProperty<UnicodeScript?>(Property.FONT_SCRIPT);
             if (!otfFeaturesApplied) {
                 if (script == null && TypographyUtils.IsTypographyModuleInitialized()) {
@@ -653,7 +653,7 @@ namespace iText.Layout.Renderer {
         /// to be rendered.
         /// </summary>
         public virtual void TrimFirst() {
-            ConvertWaitingStringToGlyphLine();
+            UpdateFontAndText();
             if (text != null) {
                 Glyph glyph;
                 while (text.start < text.end && TextUtil.IsSpaceOrWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
@@ -746,7 +746,7 @@ namespace iText.Layout.Renderer {
         public virtual void SetText(String text) {
             strToBeConverted = text;
             //strToBeConverted will be null after next method.
-            ConvertWaitingStringToGlyphLine();
+            UpdateFontAndText();
         }
 
         /// <summary>
@@ -767,7 +767,7 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual GlyphLine GetText() {
-            ConvertWaitingStringToGlyphLine();
+            UpdateFontAndText();
             return text;
         }
 
@@ -849,7 +849,6 @@ namespace iText.Layout.Renderer {
         }
 
         private GlyphLine ConvertToGlyphLine(String text) {
-            font = GetPropertyAsFont(Property.FONT);
             return font.CreateGlyphLine(text);
         }
 
@@ -907,6 +906,7 @@ namespace iText.Layout.Renderer {
         protected internal virtual iText.Layout.Renderer.TextRenderer[] Split(int initialOverflowTextPos) {
             iText.Layout.Renderer.TextRenderer splitRenderer = CreateSplitRenderer();
             splitRenderer.SetText(text, text.start, initialOverflowTextPos);
+            splitRenderer.font = font;
             splitRenderer.line = line;
             splitRenderer.occupiedArea = occupiedArea.Clone();
             splitRenderer.parent = parent;
@@ -916,6 +916,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.AddAllProperties(GetOwnProperties());
             iText.Layout.Renderer.TextRenderer overflowRenderer = CreateOverflowRenderer();
             overflowRenderer.SetText(text, initialOverflowTextPos, text.end);
+            overflowRenderer.font = font;
             overflowRenderer.otfFeaturesApplied = otfFeaturesApplied;
             overflowRenderer.parent = parent;
             overflowRenderer.AddAllProperties(GetOwnProperties());
@@ -1071,9 +1072,9 @@ namespace iText.Layout.Renderer {
                 ();
         }
 
-        private void ConvertWaitingStringToGlyphLine() {
+        private void UpdateFontAndText() {
             if (strToBeConverted != null) {
-                //yes we save font only while converting original string to synchronize glyphline and font.
+                font = GetPropertyAsFont(Property.FONT);
                 text = ConvertToGlyphLine(strToBeConverted);
                 otfFeaturesApplied = false;
                 strToBeConverted = null;
