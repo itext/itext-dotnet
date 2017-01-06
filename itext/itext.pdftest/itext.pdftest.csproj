@@ -42,7 +42,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="log4net">
-      <HintPath>$(SolutionDir)\packages\log4net.2.0.5\lib\net40-full\log4net.dll</HintPath>
+      <HintPath>$(SolutionDir)\packages\log4net.2.0.7\lib\net40-full\log4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

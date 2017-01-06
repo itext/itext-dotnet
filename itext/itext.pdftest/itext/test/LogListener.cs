@@ -120,7 +120,8 @@ namespace iText.Test {
         private void Init() {
             ILoggerFactory iLog = new Log4NetLoggerFactory();
             LoggerFactory.BindFactory(iLog);
-            IAppender[] iAppenders = LogManager.GetRepository().GetAppenders();
+            //LogManager.GetRepository() calls Assembly.GetCallingAssembly() so it will always be current (this) assembly
+            IAppender[] iAppenders = LogManager.GetRepository(typeof(LogListener).GetAssembly()).GetAppenders();
             appender = iAppenders[0] as MemoryAppender;
             appender.Clear();
         }
