@@ -10,7 +10,7 @@ namespace iText.Layout.Font {
 
         public NamedFontSelector(IList<PdfFont> allFonts, String fontFamily, int style) {
             this.fonts = allFonts;
-            JavaCollectionsUtil.Sort(allFonts, GetComparator(fontFamily, style));
+            JavaCollectionsUtil.Sort(allFonts, GetComparator(fontFamily != null ? fontFamily : "", style));
         }
 
         public override PdfFont BestMatch() {
