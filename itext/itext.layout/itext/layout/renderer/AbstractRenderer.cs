@@ -387,7 +387,7 @@ namespace iText.Layout.Renderer {
             float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
             if (opacity != null && opacity < 1f) {
                 PdfExtGState extGState = new PdfExtGState();
-                extGState.SetStrokeOpacity(opacity).SetFillOpacity(opacity);
+                extGState.SetStrokeOpacity((float)opacity).SetFillOpacity((float)opacity);
                 drawContext.GetCanvas().SaveState().SetExtGState(extGState);
             }
         }
