@@ -489,5 +489,28 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1022")]
+        public virtual void ImageRelativePositionTest() {
+            String outFileName = destinationFolder + "imageRelativePositionTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageRelativePositionTest.pdf";
+            PdfWriter writer = new PdfWriter(outFileName);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document doc = new Document(pdfDoc);
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "Desert.jpg"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 100).SetRelativePosition(30, 30
+                , 0, 0);
+            Paragraph p = new Paragraph();
+            p.SetBorder(new SolidBorder(Color.GREEN, 5));
+            p.Add(image);
+            image.SetBorder(new SolidBorder(Color.BLUE, 5));
+            doc.Add(p);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
