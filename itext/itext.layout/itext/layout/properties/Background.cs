@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Colors;
 
 namespace iText.Layout.Properties {
@@ -56,7 +57,10 @@ namespace iText.Layout.Properties {
     /// location of the edges of the background coloring.
     /// </summary>
     public class Background {
+        [Obsolete]
         protected internal Color color;
+
+        protected internal TransparentColor transparentColor;
 
         protected internal float extraLeft;
 
@@ -69,7 +73,14 @@ namespace iText.Layout.Properties {
         /// <summary>Creates a background with a specified color.</summary>
         /// <param name="color">the background color</param>
         public Background(Color color)
-            : this(color, 0, 0, 0, 0) {
+            : this(color, 1f, 0, 0, 0, 0) {
+        }
+
+        /// <summary>Creates a background with a specified color and opacity.</summary>
+        /// <param name="color">the background color</param>
+        /// <param name="opacity">the opacity of the background color</param>
+        public Background(Color color, float opacity)
+            : this(color, opacity, 0, 0, 0, 0) {
         }
 
         /// <summary>
@@ -86,8 +97,29 @@ namespace iText.Layout.Properties {
         /// <param name="extraTop">extra coloring at the top</param>
         /// <param name="extraRight">extra coloring to the right side</param>
         /// <param name="extraBottom">extra coloring at the bottom</param>
-        public Background(Color color, float extraLeft, float extraTop, float extraRight, float extraBottom) {
+        public Background(Color color, float extraLeft, float extraTop, float extraRight, float extraBottom)
+            : this(color, 1f, extraLeft, extraTop, extraRight, extraBottom) {
+        }
+
+        /// <summary>
+        /// Creates a background with a specified color, and extra space that
+        /// must be counted as part of the background and therefore colored.
+        /// </summary>
+        /// <remarks>
+        /// Creates a background with a specified color, and extra space that
+        /// must be counted as part of the background and therefore colored.
+        /// These values are allowed to be negative.
+        /// </remarks>
+        /// <param name="color">the background color</param>
+        /// <param name="opacity">the opacity of the background color</param>
+        /// <param name="extraLeft">extra coloring to the left side</param>
+        /// <param name="extraTop">extra coloring at the top</param>
+        /// <param name="extraRight">extra coloring to the right side</param>
+        /// <param name="extraBottom">extra coloring at the bottom</param>
+        public Background(Color color, float opacity, float extraLeft, float extraTop, float extraRight, float extraBottom
+            ) {
             this.color = color;
+            this.transparentColor = new TransparentColor(color, opacity);
             this.extraLeft = extraLeft;
             this.extraRight = extraRight;
             this.extraTop = extraTop;
@@ -101,7 +133,13 @@ namespace iText.Layout.Properties {
         /// of any supported kind
         /// </returns>
         public virtual Color GetColor() {
-            return color;
+            return transparentColor.GetColor();
+        }
+
+        /// <summary>Gets the opacity of the background.</summary>
+        /// <returns>a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent</returns>
+        public virtual float GetOpacity() {
+            return transparentColor.GetOpacity();
         }
 
         /// <summary>Gets the extra space that must be filled to the left of the Element.</summary>

@@ -311,7 +311,19 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetFontColor(Color fontColor) {
-            SetProperty(Property.FONT_COLOR, fontColor);
+            return SetFontColor(fontColor, 1f);
+        }
+
+        /// <summary>Sets the font color of this Element and the opacity of the text.</summary>
+        /// <param name="fontColor">
+        /// a
+        /// <see cref="iText.Kernel.Colors.Color"/>
+        /// for the text in this Element.
+        /// </param>
+        /// <param name="opacity">an opacity for the text in this Element.</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetFontColor(Color fontColor, float opacity) {
+            SetProperty(Property.FONT_COLOR, fontColor != null ? new TransparentColor(fontColor, opacity) : null);
             return (T)(Object)this;
         }
 
@@ -375,7 +387,15 @@ namespace iText.Layout {
         /// <param name="backgroundColor">the background color</param>
         /// <returns>this Element.</returns>
         public virtual T SetBackgroundColor(Color backgroundColor) {
-            return SetBackgroundColor(backgroundColor, 0, 0, 0, 0);
+            return SetBackgroundColor(backgroundColor, 1f);
+        }
+
+        /// <summary>Specifies a background color for the Element.</summary>
+        /// <param name="backgroundColor">the background color</param>
+        /// <param name="opacity">the background color opacity</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBackgroundColor(Color backgroundColor, float opacity) {
+            return SetBackgroundColor(backgroundColor, opacity, 0, 0, 0, 0);
         }
 
         /// <summary>
@@ -390,8 +410,24 @@ namespace iText.Layout {
         /// <returns>this Element.</returns>
         public virtual T SetBackgroundColor(Color backgroundColor, float extraLeft, float extraTop, float extraRight
             , float extraBottom) {
-            SetProperty(Property.BACKGROUND, new Background(backgroundColor, extraLeft, extraTop, extraRight, extraBottom
-                ));
+            return SetBackgroundColor(backgroundColor, 1f, extraLeft, extraTop, extraRight, extraBottom);
+        }
+
+        /// <summary>
+        /// Specifies a background color for the Element, and extra space that
+        /// must be counted as part of the background and therefore colored.
+        /// </summary>
+        /// <param name="backgroundColor">the background color</param>
+        /// <param name="opacity">the background color opacity</param>
+        /// <param name="extraLeft">extra coloring to the left side</param>
+        /// <param name="extraTop">extra coloring at the top</param>
+        /// <param name="extraRight">extra coloring to the right side</param>
+        /// <param name="extraBottom">extra coloring at the bottom</param>
+        /// <returns>this Element.</returns>
+        public virtual T SetBackgroundColor(Color backgroundColor, float opacity, float extraLeft, float extraTop, 
+            float extraRight, float extraBottom) {
+            SetProperty(Property.BACKGROUND, backgroundColor != null ? new Background(backgroundColor, opacity, extraLeft
+                , extraTop, extraRight, extraBottom) : null);
             return (T)(Object)this;
         }
 
@@ -589,6 +625,18 @@ namespace iText.Layout {
             return SetUnderline(null, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT);
         }
 
+        /// <summary>
+        /// This attribute specifies the base direction of directionally neutral text
+        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
+        /// in an element's content and attribute values.
+        /// </summary>
+        /// <param name="baseDirection">base direction</param>
+        /// <returns>this element</returns>
+        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
+        public virtual T SetBaseDirection(BaseDirection baseDirection) {
+            return SetBaseDirection((BaseDirection?)baseDirection);
+        }
+
         /// <summary>Sets an horizontal line that can be an underline or a strikethrough.</summary>
         /// <remarks>
         /// Sets an horizontal line that can be an underline or a strikethrough.
@@ -630,7 +678,39 @@ namespace iText.Layout {
         /// <returns>this element</returns>
         public virtual T SetUnderline(Color color, float thickness, float thicknessMul, float yPosition, float yPositionMul
             , int lineCapStyle) {
-            Underline newUnderline = new Underline(color, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
+            return SetUnderline(color, 1f, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle);
+        }
+
+        /// <summary>Sets an horizontal line that can be an underline or a strikethrough.</summary>
+        /// <remarks>
+        /// Sets an horizontal line that can be an underline or a strikethrough.
+        /// Actually, the line can be anywhere vertically due to position parameter.
+        /// Multiple call to this method will produce multiple lines.
+        /// <p>
+        /// The thickness of the line will be
+        /// <c>thickness + thicknessMul * fontSize</c>
+        /// .
+        /// The position of the line will be
+        /// <c>baseLine + yPosition + yPositionMul * fontSize</c>
+        /// .
+        /// </remarks>
+        /// <param name="color">
+        /// the color of the line or <CODE>null</CODE> to follow the
+        /// text color
+        /// </param>
+        /// <param name="opacity">the opacity of the line</param>
+        /// <param name="thickness">the absolute thickness of the line</param>
+        /// <param name="thicknessMul">the thickness multiplication factor with the font size</param>
+        /// <param name="yPosition">the absolute y position relative to the baseline</param>
+        /// <param name="yPositionMul">the position multiplication factor with the font size</param>
+        /// <param name="lineCapStyle">
+        /// the end line cap style. Allowed values are enumerated in
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.LineCapStyle"/>
+        /// </param>
+        /// <returns>this element</returns>
+        public virtual T SetUnderline(Color color, float opacity, float thickness, float thicknessMul, float yPosition
+            , float yPositionMul, int lineCapStyle) {
+            Underline newUnderline = new Underline(color, opacity, thickness, thicknessMul, yPosition, yPositionMul, lineCapStyle
                 );
             Object currentProperty = this.GetProperty<Object>(Property.UNDERLINE);
             if (currentProperty is IList) {
@@ -660,18 +740,6 @@ namespace iText.Layout {
         public virtual T SetBaseDirection(BaseDirection? baseDirection) {
             SetProperty(Property.BASE_DIRECTION, baseDirection);
             return (T)(Object)this;
-        }
-
-        /// <summary>
-        /// This attribute specifies the base direction of directionally neutral text
-        /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
-        /// in an element's content and attribute values.
-        /// </summary>
-        /// <param name="baseDirection">base direction</param>
-        /// <returns>this element</returns>
-        [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
-        public virtual T SetBaseDirection(BaseDirection baseDirection) {
-            return SetBaseDirection((BaseDirection?)baseDirection);
         }
 
         /// <summary>

@@ -314,6 +314,23 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<Color>(property);
         }
 
+        /// <summary>
+        /// Returns a property with a certain key, as a
+        /// <see cref="iText.Layout.Properties.TransparentColor"/>
+        /// .
+        /// </summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Layout.Properties.TransparentColor"/>
+        /// </returns>
+        public virtual TransparentColor GetPropertyAsTransparentColor(int property) {
+            return this.GetProperty<TransparentColor>(property);
+        }
+
         /// <summary>Returns a property with a certain key, as a boolean value.</summary>
         /// <param name="property">
         /// an
@@ -388,10 +405,13 @@ namespace iText.Layout.Renderer {
                             );
                         return;
                     }
-                    drawContext.GetCanvas().SaveState().SetFillColor(background.GetColor()).Rectangle(backgroundArea.GetX() - 
-                        background.GetExtraLeft(), backgroundArea.GetY() - background.GetExtraBottom(), backgroundArea.GetWidth
-                        () + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea.GetHeight() + background.GetExtraTop
-                        () + background.GetExtraBottom()).Fill().RestoreState();
+                    TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
+                    drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
+                    backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
+                    drawContext.GetCanvas().Rectangle(backgroundArea.GetX() - background.GetExtraLeft(), backgroundArea.GetY()
+                         - background.GetExtraBottom(), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight
+                        (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
+                        ();
                 }
                 ApplyBorderBox(backgroundArea, false);
                 if (backgroundImage != null && backgroundImage.GetImage() != null) {
@@ -473,24 +493,16 @@ namespace iText.Layout.Renderer {
                     canvas.OpenTag(new CanvasArtifact());
                 }
                 if (borders[0] != null) {
-                    canvas.SaveState();
                     borders[0].Draw(canvas, x1, y2, x2, y2, Border.Side.TOP, leftWidth, rightWidth);
-                    canvas.RestoreState();
                 }
                 if (borders[1] != null) {
-                    canvas.SaveState();
                     borders[1].Draw(canvas, x2, y2, x2, y1, Border.Side.RIGHT, topWidth, bottomWidth);
-                    canvas.RestoreState();
                 }
                 if (borders[2] != null) {
-                    canvas.SaveState();
                     borders[2].Draw(canvas, x2, y1, x1, y1, Border.Side.BOTTOM, rightWidth, leftWidth);
-                    canvas.RestoreState();
                 }
                 if (borders[3] != null) {
-                    canvas.SaveState();
                     borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
-                    canvas.RestoreState();
                 }
                 if (isTagged) {
                     canvas.CloseTag();

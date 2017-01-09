@@ -485,7 +485,7 @@ namespace iText.Layout.Renderer {
             float leftBBoxX = occupiedArea.GetBBox().GetX();
             if (line.end > line.start) {
                 float fontSize = (float)this.GetPropertyAsFloat(Property.FONT_SIZE);
-                Color fontColor = GetPropertyAsColor(Property.FONT_COLOR);
+                TransparentColor fontColor = GetPropertyAsTransparentColor(Property.FONT_COLOR);
                 int? textRenderingMode = this.GetProperty<int?>(Property.TEXT_RENDERING_MODE);
                 float? textRise = this.GetPropertyAsFloat(Property.TEXT_RISE);
                 float? characterSpacing = this.GetPropertyAsFloat(Property.CHARACTER_SPACING);
@@ -532,15 +532,16 @@ namespace iText.Layout.Renderer {
                         canvas.SetLineWidth((float)strokeWidth);
                     }
                     Color strokeColor = GetPropertyAsColor(Property.STROKE_COLOR);
-                    if (strokeColor == null) {
-                        strokeColor = fontColor;
+                    if (strokeColor == null && fontColor != null) {
+                        strokeColor = fontColor.GetColor();
                     }
                     if (strokeColor != null) {
                         canvas.SetStrokeColor(strokeColor);
                     }
                 }
                 if (fontColor != null) {
-                    canvas.SetFillColor(fontColor);
+                    canvas.SetFillColor(fontColor.GetColor());
+                    fontColor.ApplyFillTransparency(canvas);
                 }
                 if (textRise != null && textRise != 0) {
                     canvas.SetTextRise((float)textRise);
@@ -554,7 +555,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_582();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_587();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -614,8 +615,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_582 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_582() {
+        private sealed class _IGlyphLineFilter_587 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_587() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -923,12 +924,20 @@ namespace iText.Layout.Renderer {
             return new iText.Layout.Renderer.TextRenderer[] { splitRenderer, overflowRenderer };
         }
 
+        [Obsolete]
         protected internal virtual void DrawSingleUnderline(Underline underline, Color fontStrokeColor, PdfCanvas 
             canvas, float fontSize, float italicAngleTan) {
-            Color underlineColor = underline.GetColor() != null ? underline.GetColor() : fontStrokeColor;
+            DrawSingleUnderline(underline, new TransparentColor(fontStrokeColor), canvas, fontSize, italicAngleTan);
+        }
+
+        protected internal virtual void DrawSingleUnderline(Underline underline, TransparentColor fontStrokeColor, 
+            PdfCanvas canvas, float fontSize, float italicAngleTan) {
+            TransparentColor underlineColor = underline.GetColor() != null ? new TransparentColor(underline.GetColor()
+                , underline.GetOpacity()) : fontStrokeColor;
             canvas.SaveState();
             if (underlineColor != null) {
-                canvas.SetStrokeColor(underlineColor);
+                canvas.SetStrokeColor(underlineColor.GetColor());
+                underlineColor.ApplyStrokeTransparency(canvas);
             }
             canvas.SetLineCapStyle(underline.GetLineCapStyle());
             float underlineThickness = underline.GetThickness(fontSize);

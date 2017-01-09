@@ -102,6 +102,30 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary>Creates a RidgeBorder instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        public RidgeBorder(DeviceRgb color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
+        /// <summary>Creates a RidgeBorder instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        public RidgeBorder(DeviceCmyk color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
+        /// <summary>Creates a RidgeBorder instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        public RidgeBorder(DeviceGray color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border._3D_RIDGE;

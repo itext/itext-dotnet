@@ -60,6 +60,14 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary>Creates a SolidBorder with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">width of the border</param>
+        public SolidBorder(Color color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border.SOLID;
@@ -106,14 +114,16 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SetFillColor(color);
-            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
+            canvas.SaveState().SetFillColor(transparentColor.GetColor());
+            transparentColor.ApplyFillTransparency(canvas);
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill().RestoreState();
         }
 
         /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
-            canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
-                ();
+            canvas.SaveState().SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
     }
 }

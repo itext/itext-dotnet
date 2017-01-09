@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Borders {
     /// <summary>Represents a border.</summary>
@@ -90,7 +91,12 @@ namespace iText.Layout.Borders {
 
         /// <summary>The color of the border.</summary>
         /// <seealso cref="iText.Kernel.Colors.Color"/>
+        [System.ObsoleteAttribute(@"use transparentColor instead")]
         protected internal Color color;
+
+        /// <summary>The color of the border.</summary>
+        /// <seealso cref="iText.Layout.Properties.TransparentColor"/>
+        protected internal TransparentColor transparentColor;
 
         /// <summary>The width of the border.</summary>
         protected internal float width;
@@ -127,6 +133,23 @@ namespace iText.Layout.Borders {
         /// <param name="width">the width which the border should have</param>
         protected internal Border(Color color, float width) {
             this.color = color;
+            this.transparentColor = new TransparentColor(color);
+            this.width = width;
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="Border">border</see>
+        /// with given width,
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// and opacity.
+        /// </summary>
+        /// <param name="color">the color which the border should have</param>
+        /// <param name="width">the width which the border should have</param>
+        /// <param name="opacity">the opacity which border should have</param>
+        protected internal Border(Color color, float width, float opacity) {
+            this.color = color;
+            this.transparentColor = new TransparentColor(color, opacity);
             this.width = width;
         }
 
@@ -230,7 +253,16 @@ namespace iText.Layout.Borders {
         /// <see cref="iText.Kernel.Colors.Color">color</see>
         /// </returns>
         public virtual Color GetColor() {
-            return color;
+            return transparentColor.GetColor();
+        }
+
+        /// <summary>
+        /// Gets the opacity of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        /// <returns>the border opacity</returns>
+        public virtual float GetOpacity() {
+            return transparentColor.GetOpacity();
         }
 
         /// <summary>
@@ -250,6 +282,7 @@ namespace iText.Layout.Borders {
         /// </summary>
         public virtual void SetColor(Color color) {
             this.color = color;
+            this.transparentColor = new TransparentColor(color, this.transparentColor.GetOpacity());
         }
 
         /// <summary>
@@ -271,8 +304,9 @@ namespace iText.Layout.Borders {
             }
             if (anObject is iText.Layout.Borders.Border) {
                 iText.Layout.Borders.Border anotherBorder = (iText.Layout.Borders.Border)anObject;
-                if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() != GetColor() || anotherBorder
-                    .GetWidth() != GetWidth()) {
+                if (anotherBorder.GetBorderType() != GetBorderType() || !anotherBorder.GetColor().Equals(GetColor()) || anotherBorder
+                    .GetWidth() != GetWidth() || anotherBorder.transparentColor.GetOpacity() != transparentColor.GetOpacity
+                    ()) {
                     return false;
                 }
             }
@@ -287,6 +321,7 @@ namespace iText.Layout.Borders {
             int h = hash;
             if (h == 0) {
                 h = (int)GetWidth() * 31 + GetColor().GetHashCode();
+                h = h * 31 + (int)transparentColor.GetOpacity();
                 hash = h;
             }
             return h;

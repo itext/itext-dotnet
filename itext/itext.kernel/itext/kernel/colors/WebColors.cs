@@ -60,6 +60,8 @@ namespace iText.Kernel.Colors {
         /// <summary>HashMap containing all the names and corresponding color values.</summary>
         public static readonly WebColors NAMES = new WebColors();
 
+        private const double RGB_MAX_VAL = 255.;
+
         static WebColors() {
             NAMES["aliceblue"] = new int[] { 0xf0, 0xf8, 0xff, 0xff };
             NAMES["antiquewhite"] = new int[] { 0xfa, 0xeb, 0xd7, 0xff };
@@ -210,9 +212,19 @@ namespace iText.Kernel.Colors {
         /// #RRGGBB or RGB or RRGGBB or rgb(R,G,B)
         /// </param>
         /// <returns>the corresponding DeviceRgb object. Never returns null.</returns>
-        /// <exception cref="System.ArgumentException">if the String isn't a know representation of a color.</exception>
         public static DeviceRgb GetRGBColor(String name) {
-            int[] color = new int[] { 0, 0, 0, 255 };
+            float[] rgbaColor = GetRGBAColor(name);
+            return new DeviceRgb(rgbaColor[0], rgbaColor[1], rgbaColor[2]);
+        }
+
+        /// <summary>Gives an array of four floats that contain RGBA values, each value is between 0 and 1.</summary>
+        /// <param name="name">
+        /// a name such as black, violet, cornflowerblue or #RGB or
+        /// #RRGGBB or RGB or RRGGBB or rgb(R,G,B) or rgb(R,G,B,A)
+        /// </param>
+        /// <returns>the corresponding array of four floats.</returns>
+        public static float[] GetRGBAColor(String name) {
+            float[] color = new float[] { 0, 0, 0, 1 };
             String colorName = name.ToLowerInvariant();
             bool colorStrWithoutHash = MissingHashColorFormat(colorName);
             if (colorName.StartsWith("#") || colorStrWithoutHash) {
@@ -222,54 +234,66 @@ namespace iText.Kernel.Colors {
                 }
                 if (colorName.Length == 3) {
                     String red = colorName.JSubstring(0, 1);
-                    color[0] = System.Convert.ToInt32(red + red, 16);
+                    color[0] = (float)(System.Convert.ToInt32(red + red, 16) / RGB_MAX_VAL);
                     String green = colorName.JSubstring(1, 2);
-                    color[1] = System.Convert.ToInt32(green + green, 16);
+                    color[1] = (float)(System.Convert.ToInt32(green + green, 16) / RGB_MAX_VAL);
                     String blue = colorName.Substring(2);
-                    color[2] = System.Convert.ToInt32(blue + blue, 16);
-                    return new DeviceRgb(color[0], color[1], color[2]);
+                    color[2] = (float)(System.Convert.ToInt32(blue + blue, 16) / RGB_MAX_VAL);
                 }
-                if (colorName.Length == 6) {
-                    color[0] = System.Convert.ToInt32(colorName.JSubstring(0, 2), 16);
-                    color[1] = System.Convert.ToInt32(colorName.JSubstring(2, 4), 16);
-                    color[2] = System.Convert.ToInt32(colorName.Substring(4), 16);
-                    return new DeviceRgb(color[0], color[1], color[2]);
-                }
-                ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
-                logger.Error(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
-                return new DeviceRgb(0, 0, 0);
-            }
-            if (colorName.StartsWith("rgb(")) {
-                String delim = "rgb(), \t\r\n\f";
-                StringTokenizer tok = new StringTokenizer(colorName, delim);
-                for (int k = 0; k < 3; ++k) {
-                    if (tok.HasMoreTokens()) {
-                        color[k] = GetRGBChannelValue(tok.NextToken());
-                        color[k] = Math.Max(0, color[k]);
-                        color[k] = Math.Min(255, color[k]);
+                else {
+                    if (colorName.Length == 6) {
+                        color[0] = (float)(System.Convert.ToInt32(colorName.JSubstring(0, 2), 16) / RGB_MAX_VAL);
+                        color[1] = (float)(System.Convert.ToInt32(colorName.JSubstring(2, 4), 16) / RGB_MAX_VAL);
+                        color[2] = (float)(System.Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
+                    }
+                    else {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                        logger.Error(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
                     }
                 }
-                return new DeviceRgb(color[0], color[1], color[2]);
             }
-            if (colorName.StartsWith("rgba(")) {
-                String delim = "rgba(), \t\r\n\f";
-                StringTokenizer tok = new StringTokenizer(colorName, delim);
-                for (int k = 0; k < 3; ++k) {
-                    if (tok.HasMoreTokens()) {
-                        color[k] = GetRGBChannelValue(tok.NextToken());
-                        color[k] = Math.Max(0, color[k]);
-                        color[k] = Math.Min(255, color[k]);
+            else {
+                if (colorName.StartsWith("rgb(")) {
+                    String delim = "rgb(), \t\r\n\f";
+                    StringTokenizer tok = new StringTokenizer(colorName, delim);
+                    ParseRGBColors(color, tok);
+                }
+                else {
+                    if (colorName.StartsWith("rgba(")) {
+                        String delim = "rgba(), \t\r\n\f";
+                        StringTokenizer tok = new StringTokenizer(colorName, delim);
+                        ParseRGBColors(color, tok);
+                        if (tok.MoveNext()) {
+                            color[3] = float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
+                            color[3] = Math.Max(0, color[3]);
+                            color[3] = Math.Min(1f, color[3]);
+                        }
+                    }
+                    else {
+                        if (!NAMES.Contains(colorName)) {
+                            ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                            logger.Error(String.Format(iText.IO.LogMessageConstant.COLOR_NOT_FOUND, colorName));
+                        }
+                        else {
+                            int[] intColor = NAMES.Get(colorName);
+                            color[0] = (float)(intColor[0] / RGB_MAX_VAL);
+                            color[1] = (float)(intColor[1] / RGB_MAX_VAL);
+                            color[2] = (float)(intColor[2] / RGB_MAX_VAL);
+                        }
                     }
                 }
-                return new DeviceRgb(color[0], color[1], color[2]);
             }
-            if (!NAMES.Contains(colorName)) {
-                ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
-                logger.Error(String.Format(iText.IO.LogMessageConstant.COLOR_NOT_FOUND, colorName));
-                return new DeviceRgb(0, 0, 0);
+            return color;
+        }
+
+        private static void ParseRGBColors(float[] color, StringTokenizer tok) {
+            for (int k = 0; k < 3; ++k) {
+                if (tok.HasMoreTokens()) {
+                    color[k] = GetRGBChannelValue(tok.NextToken());
+                    color[k] = Math.Max(0, color[k]);
+                    color[k] = Math.Min(1f, color[k]);
+                }
             }
-            color = NAMES.Get(colorName);
-            return new DeviceRgb(color[0], color[1], color[2]);
         }
 
         /// <summary>
@@ -296,12 +320,12 @@ namespace iText.Kernel.Colors {
             return false;
         }
 
-        private static int GetRGBChannelValue(String rgbChannel) {
+        private static float GetRGBChannelValue(String rgbChannel) {
             if (rgbChannel.EndsWith("%")) {
-                return System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) * 255 / 100;
+                return (float)(System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) / 100.);
             }
             else {
-                return System.Convert.ToInt32(rgbChannel);
+                return (float)(System.Convert.ToInt32(rgbChannel) / RGB_MAX_VAL);
             }
         }
     }
