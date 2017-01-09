@@ -235,9 +235,10 @@ namespace iText.Kernel {
             String licenseKeyClassPartialName = "iText.License.LicenseKey, itext.licensekey";
             String licenseKeyClassFullName = null;
 
-            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(KeyVersionAttribute), false);
-            if (customAttributes.Length > 0) {
-                String keyVersion = ((KeyVersionAttribute) customAttributes[0]).KeyVersion;
+            Assembly kernelAssembly = typeof(Version).GetAssembly();
+            Attribute keyVersionAttr = kernelAssembly.GetCustomAttribute(typeof(KeyVersionAttribute));
+            if (keyVersionAttr is KeyVersionAttribute) {
+                String keyVersion = ((KeyVersionAttribute)keyVersionAttr).KeyVersion;
                 String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
                 licenseKeyClassFullName = String.Format(format, licenseKeyClassPartialName, keyVersion);
             }
