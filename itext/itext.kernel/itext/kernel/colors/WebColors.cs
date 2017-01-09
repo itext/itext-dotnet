@@ -60,7 +60,7 @@ namespace iText.Kernel.Colors {
         /// <summary>HashMap containing all the names and corresponding color values.</summary>
         public static readonly WebColors NAMES = new WebColors();
 
-        private const double RGB_MAX_VAL = 255.;
+        private const double RGB_MAX_VAL = 255.0;
 
         static WebColors() {
             NAMES["aliceblue"] = new int[] { 0xf0, 0xf8, 0xff, 0xff };
@@ -263,7 +263,7 @@ namespace iText.Kernel.Colors {
                         String delim = "rgba(), \t\r\n\f";
                         StringTokenizer tok = new StringTokenizer(colorName, delim);
                         ParseRGBColors(color, tok);
-                        if (tok.MoveNext()) {
+                        if (tok.HasMoreTokens()) {
                             color[3] = float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
                             color[3] = Math.Max(0, color[3]);
                             color[3] = Math.Min(1f, color[3]);
@@ -322,7 +322,7 @@ namespace iText.Kernel.Colors {
 
         private static float GetRGBChannelValue(String rgbChannel) {
             if (rgbChannel.EndsWith("%")) {
-                return (float)(System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) / 100.);
+                return (float)(System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) / 100.0);
             }
             else {
                 return (float)(System.Convert.ToInt32(rgbChannel) / RGB_MAX_VAL);
