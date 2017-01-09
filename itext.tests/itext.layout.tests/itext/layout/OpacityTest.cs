@@ -1,4 +1,5 @@
 using System;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -123,6 +124,124 @@ namespace iText.Layout {
                 .RED, 1.0f, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
             div.Add(new Paragraph("Simple text inside of the div with underline.").SetUnderline(Color.RED, .75f, 0, 0, 
                 -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TextElementOpacity01() {
+            ElementOpacityTest("text");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DivElementOpacity01() {
+            ElementOpacityTest("div");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ParaElementOpacity01() {
+            ElementOpacityTest("para");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageElementOpacity01() {
+            ElementOpacityTest("image");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CellElementOpacity01() {
+            ElementOpacityTest("cell");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableElementOpacity01() {
+            ElementOpacityTest("table");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ListElementOpacity01() {
+            ElementOpacityTest("list");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ListItemElementOpacity01() {
+            ElementOpacityTest("listItem");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void ElementOpacityTest(String elem) {
+            String outFileName = destinationFolder + elem + "ElementOpacity01.pdf";
+            String cmpFileName = sourceFolder + "cmp_" + elem + "ElementOpacity01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            DeviceRgb divBackground = WebColors.GetRGBColor("#82abd6");
+            DeviceRgb paraBackground = WebColors.GetRGBColor("#994ec7");
+            DeviceRgb textBackground = WebColors.GetRGBColor("#009688");
+            DeviceRgb tableBackground = WebColors.GetRGBColor("#ffc107");
+            document.SetFontColor(Color.WHITE);
+            Div div = new Div().SetBackgroundColor(divBackground);
+            if ("div".Equals(elem)) {
+                div.SetOpacity(0.3f);
+            }
+            div.Add(new Paragraph("direct div content"));
+            Paragraph p = new Paragraph("direct paragraph content").SetBackgroundColor(paraBackground);
+            if ("para".Equals(elem)) {
+                p.SetOpacity(0.3f);
+            }
+            Text text = new Text("text content").SetBackgroundColor(textBackground);
+            p.Add(text);
+            if ("text".Equals(elem)) {
+                text.SetOpacity(0.3f);
+            }
+            div.Add(p);
+            iText.Layout.Element.Image image = new Image(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            div.Add(image);
+            if ("image".Equals(elem)) {
+                image.SetOpacity(0.3f);
+            }
+            Table table = new Table(2).SetBackgroundColor(tableBackground);
+            table.AddCell("Cell00");
+            table.AddCell("Cell01");
+            Cell cell10 = new Cell().Add("Cell10");
+            if ("cell".Equals(elem)) {
+                cell10.SetOpacity(0.3f);
+            }
+            table.AddCell(cell10);
+            table.AddCell(new Cell().Add("Cell11"));
+            if ("table".Equals(elem)) {
+                table.SetOpacity(0.3f);
+            }
+            div.Add(table);
+            List list = new List();
+            if ("list".Equals(elem)) {
+                list.SetOpacity(0.3f);
+            }
+            ListItem listItem = new ListItem("item 0");
+            list.Add(listItem);
+            if ("listItem".Equals(elem)) {
+                listItem.SetOpacity(0.3f);
+            }
+            list.Add("item 1");
+            div.Add(list);
             document.Add(div);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

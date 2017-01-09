@@ -411,12 +411,14 @@ namespace iText.Layout.Renderer {
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
+            BeginElementOpacityApplying(drawContext);
             BeginRotationIfApplied(drawContext.GetCanvas());
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             DrawChildren(drawContext);
             DrawPositionedChildren(drawContext);
             EndRotationIfApplied(drawContext.GetCanvas());
+            EndElementOpacityApplying(drawContext);
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(true);
             }

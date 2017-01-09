@@ -768,5 +768,10 @@ namespace iText.Layout {
             SetProperty(Property.DESTINATION, destination);
             return (T)(Object)this;
         }
+
+        public virtual T SetOpacity(float? opacity) {
+            SetProperty(Property.OPACITY, opacity);
+            return (T)(Object)this;
+        }
     }
 }

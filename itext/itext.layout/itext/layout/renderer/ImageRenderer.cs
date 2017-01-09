@@ -269,8 +269,10 @@ namespace iText.Layout.Renderer {
                 }
             }
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
+            BeginElementOpacityApplying(drawContext);
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
+            EndElementOpacityApplying(drawContext);
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }

@@ -176,7 +176,9 @@ namespace iText.Layout.Renderer {
                     if (isTagged) {
                         tagPointer.AddTag(0, PdfName.Lbl);
                     }
+                    BeginElementOpacityApplying(drawContext);
                     symbolRenderer.Draw(drawContext);
+                    EndElementOpacityApplying(drawContext);
                     if (isTagged) {
                         tagPointer.MoveToParent();
                     }

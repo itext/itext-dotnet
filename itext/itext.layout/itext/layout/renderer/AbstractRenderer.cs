@@ -53,6 +53,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -370,14 +371,32 @@ namespace iText.Layout.Renderer {
             if (relativePosition) {
                 ApplyRelativePositioningTranslation(false);
             }
+            BeginElementOpacityApplying(drawContext);
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             DrawChildren(drawContext);
             DrawPositionedChildren(drawContext);
+            EndElementOpacityApplying(drawContext);
             if (relativePosition) {
                 ApplyRelativePositioningTranslation(true);
             }
             flushed = true;
+        }
+
+        protected internal virtual void BeginElementOpacityApplying(DrawContext drawContext) {
+            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
+            if (opacity != null && opacity < 1f) {
+                PdfExtGState extGState = new PdfExtGState();
+                extGState.SetStrokeOpacity(opacity).SetFillOpacity(opacity);
+                drawContext.GetCanvas().SaveState().SetExtGState(extGState);
+            }
+        }
+
+        protected internal virtual void EndElementOpacityApplying(DrawContext drawContext) {
+            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
+            if (opacity != null && opacity < 1f) {
+                drawContext.GetCanvas().RestoreState();
+            }
         }
 
         /// <summary>
