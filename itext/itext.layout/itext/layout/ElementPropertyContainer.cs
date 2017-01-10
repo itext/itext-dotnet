@@ -320,7 +320,8 @@ namespace iText.Layout {
         /// <see cref="iText.Kernel.Colors.Color"/>
         /// for the text in this Element.
         /// </param>
-        /// <param name="opacity">an opacity for the text in this Element.</param>
+        /// <param name="opacity">an opacity for the text in this Element; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent.
+        ///     </param>
         /// <returns>this Element.</returns>
         public virtual T SetFontColor(Color fontColor, float opacity) {
             SetProperty(Property.FONT_COLOR, fontColor != null ? new TransparentColor(fontColor, opacity) : null);
@@ -392,7 +393,8 @@ namespace iText.Layout {
 
         /// <summary>Specifies a background color for the Element.</summary>
         /// <param name="backgroundColor">the background color</param>
-        /// <param name="opacity">the background color opacity</param>
+        /// <param name="opacity">the background color opacity; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent.
+        ///     </param>
         /// <returns>this Element.</returns>
         public virtual T SetBackgroundColor(Color backgroundColor, float opacity) {
             return SetBackgroundColor(backgroundColor, opacity, 0, 0, 0, 0);
@@ -418,7 +420,8 @@ namespace iText.Layout {
         /// must be counted as part of the background and therefore colored.
         /// </summary>
         /// <param name="backgroundColor">the background color</param>
-        /// <param name="opacity">the background color opacity</param>
+        /// <param name="opacity">the background color opacity; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
         /// <param name="extraLeft">extra coloring to the left side</param>
         /// <param name="extraTop">extra coloring at the top</param>
         /// <param name="extraRight">extra coloring to the right side</param>
@@ -698,7 +701,8 @@ namespace iText.Layout {
         /// the color of the line or <CODE>null</CODE> to follow the
         /// text color
         /// </param>
-        /// <param name="opacity">the opacity of the line</param>
+        /// <param name="opacity">the opacity of the line; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
         /// <param name="thickness">the absolute thickness of the line</param>
         /// <param name="thicknessMul">the thickness multiplication factor with the font size</param>
         /// <param name="yPosition">the absolute y position relative to the baseline</param>
@@ -769,6 +773,14 @@ namespace iText.Layout {
             return (T)(Object)this;
         }
 
+        /// <summary>Sets an opacity of the given element.</summary>
+        /// <remarks>
+        /// Sets an opacity of the given element. It will affect element content, borders and background. Note, that it will also
+        /// affect all element children, as they are the content of the given element.
+        /// </remarks>
+        /// <param name="opacity">a float between 0 and 1, where 1 stands for fully opaque element and 0 - for fully transparent
+        ///     </param>
+        /// <returns>this Element.</returns>
         public virtual T SetOpacity(float? opacity) {
             SetProperty(Property.OPACITY, opacity);
             return (T)(Object)this;

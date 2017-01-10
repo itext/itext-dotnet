@@ -146,7 +146,8 @@ namespace iText.Layout.Borders {
         /// </summary>
         /// <param name="color">the color which the border should have</param>
         /// <param name="width">the width which the border should have</param>
-        /// <param name="opacity">the opacity which border should have</param>
+        /// <param name="opacity">the opacity which border should have; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
         protected internal Border(Color color, float width, float opacity) {
             this.color = color;
             this.transparentColor = new TransparentColor(color, opacity);
@@ -260,7 +261,8 @@ namespace iText.Layout.Borders {
         /// Gets the opacity of the
         /// <see cref="Border">border</see>
         /// </summary>
-        /// <returns>the border opacity</returns>
+        /// <returns>the border opacity; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </returns>
         public virtual float GetOpacity() {
             return transparentColor.GetOpacity();
         }

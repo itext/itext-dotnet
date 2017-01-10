@@ -115,7 +115,8 @@ namespace iText.Layout.Properties {
         /// <see cref="iText.Kernel.Colors.Color"/>
         /// of the underline
         /// </param>
-        /// <param name="opacity">a float defining the opacity of the underline</param>
+        /// <param name="opacity">a float defining the opacity of the underline; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
         /// <param name="thickness">a float defining the minimum thickness in points of the underline</param>
         /// <param name="thicknessMul">a float defining the font size dependent component of the thickness of the underline
         ///     </param>
@@ -148,10 +149,7 @@ namespace iText.Layout.Properties {
         }
 
         /// <summary>Gets the opacity of the underline color.</summary>
-        /// <returns>
-        /// a
-        /// <see cref="iText.Kernel.Colors.Color"/>
-        /// </returns>
+        /// <returns>a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent</returns>
         public virtual float GetOpacity() {
             return transparentColor.GetOpacity();
         }

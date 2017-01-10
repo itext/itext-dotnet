@@ -78,7 +78,8 @@ namespace iText.Layout.Properties {
 
         /// <summary>Creates a background with a specified color and opacity.</summary>
         /// <param name="color">the background color</param>
-        /// <param name="opacity">the opacity of the background color</param>
+        /// <param name="opacity">the opacity of the background color; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
         public Background(Color color, float opacity)
             : this(color, opacity, 0, 0, 0, 0) {
         }
@@ -111,7 +112,8 @@ namespace iText.Layout.Properties {
         /// These values are allowed to be negative.
         /// </remarks>
         /// <param name="color">the background color</param>
-        /// <param name="opacity">the opacity of the background color</param>
+        /// <param name="opacity">the opacity of the background color; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
         /// <param name="extraLeft">extra coloring to the left side</param>
         /// <param name="extraTop">extra coloring at the top</param>
         /// <param name="extraRight">extra coloring to the right side</param>
