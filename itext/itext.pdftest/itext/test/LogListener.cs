@@ -71,6 +71,9 @@ namespace iText.Test {
         private void CheckLogMessages(ITest testDetails) {
             int checkedMessages = 0;
             LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
+            if (attributes.Length == 0) {
+                attributes = (LogMessageAttribute[]) testDetails.Fixture.GetType().GetCustomAttributes(typeof(LogMessageAttribute), true);
+            }
             if (attributes.Length > 0) {
                 for (int i = 0; i < attributes.Length; i++) {
                     LogMessageAttribute logMessage = attributes[i];

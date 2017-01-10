@@ -225,63 +225,68 @@ namespace iText.Kernel.Colors {
         /// <returns>the corresponding array of four floats.</returns>
         public static float[] GetRGBAColor(String name) {
             float[] color = new float[] { 0, 0, 0, 1 };
-            String colorName = name.ToLowerInvariant();
-            bool colorStrWithoutHash = MissingHashColorFormat(colorName);
-            if (colorName.StartsWith("#") || colorStrWithoutHash) {
-                if (!colorStrWithoutHash) {
-                    // lop off the # to unify hex parsing.
-                    colorName = colorName.Substring(1);
-                }
-                if (colorName.Length == 3) {
-                    String red = colorName.JSubstring(0, 1);
-                    color[0] = (float)(System.Convert.ToInt32(red + red, 16) / RGB_MAX_VAL);
-                    String green = colorName.JSubstring(1, 2);
-                    color[1] = (float)(System.Convert.ToInt32(green + green, 16) / RGB_MAX_VAL);
-                    String blue = colorName.Substring(2);
-                    color[2] = (float)(System.Convert.ToInt32(blue + blue, 16) / RGB_MAX_VAL);
-                }
-                else {
-                    if (colorName.Length == 6) {
-                        color[0] = (float)(System.Convert.ToInt32(colorName.JSubstring(0, 2), 16) / RGB_MAX_VAL);
-                        color[1] = (float)(System.Convert.ToInt32(colorName.JSubstring(2, 4), 16) / RGB_MAX_VAL);
-                        color[2] = (float)(System.Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
+            try {
+                String colorName = name.ToLowerInvariant();
+                bool colorStrWithoutHash = MissingHashColorFormat(colorName);
+                if (colorName.StartsWith("#") || colorStrWithoutHash) {
+                    if (!colorStrWithoutHash) {
+                        // lop off the # to unify hex parsing.
+                        colorName = colorName.Substring(1);
+                    }
+                    if (colorName.Length == 3) {
+                        String red = colorName.JSubstring(0, 1);
+                        color[0] = (float)(System.Convert.ToInt32(red + red, 16) / RGB_MAX_VAL);
+                        String green = colorName.JSubstring(1, 2);
+                        color[1] = (float)(System.Convert.ToInt32(green + green, 16) / RGB_MAX_VAL);
+                        String blue = colorName.Substring(2);
+                        color[2] = (float)(System.Convert.ToInt32(blue + blue, 16) / RGB_MAX_VAL);
                     }
                     else {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
-                        logger.Error(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
+                        if (colorName.Length == 6) {
+                            color[0] = (float)(System.Convert.ToInt32(colorName.JSubstring(0, 2), 16) / RGB_MAX_VAL);
+                            color[1] = (float)(System.Convert.ToInt32(colorName.JSubstring(2, 4), 16) / RGB_MAX_VAL);
+                            color[2] = (float)(System.Convert.ToInt32(colorName.Substring(4), 16) / RGB_MAX_VAL);
+                        }
+                        else {
+                            ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                            logger.Error(iText.IO.LogMessageConstant.UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB);
+                        }
+                    }
+                }
+                else {
+                    if (colorName.StartsWith("rgb(")) {
+                        String delim = "rgb(), \t\r\n\f";
+                        StringTokenizer tok = new StringTokenizer(colorName, delim);
+                        ParseRGBColors(color, tok);
+                    }
+                    else {
+                        if (colorName.StartsWith("rgba(")) {
+                            String delim = "rgba(), \t\r\n\f";
+                            StringTokenizer tok = new StringTokenizer(colorName, delim);
+                            ParseRGBColors(color, tok);
+                            if (tok.HasMoreTokens()) {
+                                color[3] = GetAlphaChannelValue(tok.NextToken());
+                            }
+                        }
+                        else {
+                            if (!NAMES.Contains(colorName)) {
+                                ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                                logger.Error(String.Format(iText.IO.LogMessageConstant.COLOR_NOT_FOUND, colorName));
+                            }
+                            else {
+                                int[] intColor = NAMES.Get(colorName);
+                                color[0] = (float)(intColor[0] / RGB_MAX_VAL);
+                                color[1] = (float)(intColor[1] / RGB_MAX_VAL);
+                                color[2] = (float)(intColor[2] / RGB_MAX_VAL);
+                            }
+                        }
                     }
                 }
             }
-            else {
-                if (colorName.StartsWith("rgb(")) {
-                    String delim = "rgb(), \t\r\n\f";
-                    StringTokenizer tok = new StringTokenizer(colorName, delim);
-                    ParseRGBColors(color, tok);
-                }
-                else {
-                    if (colorName.StartsWith("rgba(")) {
-                        String delim = "rgba(), \t\r\n\f";
-                        StringTokenizer tok = new StringTokenizer(colorName, delim);
-                        ParseRGBColors(color, tok);
-                        if (tok.HasMoreTokens()) {
-                            color[3] = float.Parse(tok.NextToken(), System.Globalization.CultureInfo.InvariantCulture);
-                            color[3] = Math.Max(0, color[3]);
-                            color[3] = Math.Min(1f, color[3]);
-                        }
-                    }
-                    else {
-                        if (!NAMES.Contains(colorName)) {
-                            ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
-                            logger.Error(String.Format(iText.IO.LogMessageConstant.COLOR_NOT_FOUND, colorName));
-                        }
-                        else {
-                            int[] intColor = NAMES.Get(colorName);
-                            color[0] = (float)(intColor[0] / RGB_MAX_VAL);
-                            color[1] = (float)(intColor[1] / RGB_MAX_VAL);
-                            color[2] = (float)(intColor[2] / RGB_MAX_VAL);
-                        }
-                    }
-                }
+            catch (Exception) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(WebColors));
+                logger.Error(String.Format(iText.IO.LogMessageConstant.COLOR_NOT_PARSED, name));
+                color = new float[] { 0, 0, 0, 1 };
             }
             return color;
         }
@@ -322,11 +327,29 @@ namespace iText.Kernel.Colors {
 
         private static float GetRGBChannelValue(String rgbChannel) {
             if (rgbChannel.EndsWith("%")) {
-                return (float)(System.Convert.ToInt32(rgbChannel.JSubstring(0, rgbChannel.Length - 1)) / 100.0);
+                return ParsePercentValue(rgbChannel);
             }
             else {
                 return (float)(System.Convert.ToInt32(rgbChannel) / RGB_MAX_VAL);
             }
+        }
+
+        private static float GetAlphaChannelValue(String rgbChannel) {
+            float alpha;
+            if (rgbChannel.EndsWith("%")) {
+                alpha = ParsePercentValue(rgbChannel);
+            }
+            else {
+                alpha = float.Parse(rgbChannel, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            alpha = Math.Max(0, alpha);
+            alpha = Math.Min(1f, alpha);
+            return alpha;
+        }
+
+        private static float ParsePercentValue(String rgbChannel) {
+            return (float)(float.Parse(rgbChannel.JSubstring(0, rgbChannel.Length - 1), System.Globalization.CultureInfo.InvariantCulture
+                ) / 100.0);
         }
     }
 }

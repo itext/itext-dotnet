@@ -45,7 +45,7 @@ using System;
 
 namespace iText.Test.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public class LogMessageAttribute : Attribute
     {
         private string messageTemplate;
