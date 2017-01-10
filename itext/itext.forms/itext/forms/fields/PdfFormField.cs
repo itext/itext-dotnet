@@ -124,6 +124,8 @@ namespace iText.Forms.Fields {
 
         public const int HIDDEN_BUT_PRINTABLE = 3;
 
+        public const int VISIBLE = 4;
+
         public static readonly int FF_READ_ONLY = MakeFieldFlag(1);
 
         public static readonly int FF_REQUIRED = MakeFieldFlag(2);
@@ -2111,8 +2113,12 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <param name="visibility"/>
-        /// <returns>the edited field</returns>
+        /// <summary>
+        /// Set the visibility flags of the form field annotation
+        /// Options are: HIDDEN, HIDDEN_BUT_PRINTABLE, VISIBLE, VISIBLE_BUT_DOES_NOT_PRINT
+        /// </summary>
+        /// <param name="visibility">visibility option</param>
+        /// <returns>the edited form field annotation</returns>
         public virtual iText.Forms.Fields.PdfFormField SetVisibility(int visibility) {
             switch (visibility) {
                 case HIDDEN: {
@@ -2129,6 +2135,7 @@ namespace iText.Forms.Fields {
                     break;
                 }
 
+                case VISIBLE:
                 default: {
                     GetPdfObject().Put(PdfName.F, new PdfNumber(PdfAnnotation.PRINT));
                     break;
