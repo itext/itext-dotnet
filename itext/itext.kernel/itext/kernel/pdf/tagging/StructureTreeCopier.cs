@@ -125,10 +125,10 @@ namespace iText.Kernel.Pdf.Tagging {
             // Now we "walk" through all the elems which belong to the first part, and look for the ones that contain both
             // kids from first and second part. We clone found elements and move kids from the second part to cloned elems.
             int lastTopBefore = 0;
-            for (int i_1 = 0; i_1 < tops.Size(); ++i_1) {
-                PdfDictionary top = tops.GetAsDictionary(i_1);
+            for (int i = 0; i < tops.Size(); ++i) {
+                PdfDictionary top = tops.GetAsDictionary(i);
                 if (firstPartElems.Contains(top)) {
-                    lastTopBefore = i_1;
+                    lastTopBefore = i;
                     StructureTreeCopier.LastClonedAncestor lastCloned = new StructureTreeCopier.LastClonedAncestor();
                     lastCloned.ancestor = top;
                     PdfDictionary topClone = top.Clone(ignoreKeysForClone);
@@ -141,8 +141,8 @@ namespace iText.Kernel.Pdf.Tagging {
                     }
                 }
             }
-            for (int i_2 = 0; i_2 < clonedTops.Count; ++i_2) {
-                destStructTreeRoot.AddKidObject(lastTopBefore + 1 + i_2, clonedTops[i_2]);
+            for (int i = 0; i < clonedTops.Count; ++i) {
+                destStructTreeRoot.AddKidObject(lastTopBefore + 1 + i, clonedTops[i]);
             }
             CopyTo(destDocument, page2page, callingDocument, false, lastTopBefore + 1);
         }
@@ -197,8 +197,8 @@ namespace iText.Kernel.Pdf.Tagging {
                     topsInOriginalOrder.Add(kidObject);
                 }
             }
-            foreach (PdfDictionary top_1 in topsInOriginalOrder) {
-                PdfDictionary copied = CopyObject(top_1, objectsToCopy, destDocument, page2pageDictionaries, copyFromDestDocument
+            foreach (PdfDictionary top in topsInOriginalOrder) {
+                PdfDictionary copied = CopyObject(top, objectsToCopy, destDocument, page2pageDictionaries, copyFromDestDocument
                     );
                 destDocument.GetStructTreeRoot().AddKidObject(insertIndex, copied);
                 if (insertIndex > -1) {

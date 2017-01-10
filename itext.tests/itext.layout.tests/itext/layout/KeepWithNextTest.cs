@@ -51,8 +51,8 @@ namespace iText.Layout {
             Paragraph title = new Paragraph("THIS IS THE TITLE OF A CHAPTER THAT FITS A PAGE");
             title.SetKeepWithNext(true);
             document.Add(title);
-            for (int i_1 = 0; i_1 < 20; i_1++) {
-                document.Add(new Paragraph("content of chapter " + i_1));
+            for (int i = 0; i < 20; i++) {
+                document.Add(new Paragraph("content of chapter " + i));
             }
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -186,7 +186,7 @@ namespace iText.Layout {
             document.Add(new Paragraph("Title").SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD)).SetKeepWithNext
                 (true));
             List list = new List(ListNumberingType.DECIMAL);
-            for (int i_1 = 0; i_1 < 10; i_1++) {
+            for (int i = 0; i < 10; i++) {
                 list.Add("item");
             }
             list.SetKeepTogether(true);
@@ -210,7 +210,7 @@ namespace iText.Layout {
             document.Add(new Paragraph("Title").SetFontSize(20).SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD
                 )).SetKeepWithNext(true));
             List list = new List(ListNumberingType.DECIMAL);
-            for (int i_1 = 0; i_1 < 10; i_1++) {
+            for (int i = 0; i < 10; i++) {
                 list.Add("item");
             }
             document.Add(list);
@@ -233,7 +233,7 @@ namespace iText.Layout {
             document.Add(new Paragraph("Title").SetFont(PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD)).SetKeepWithNext
                 (true));
             List list = new List(ListNumberingType.DECIMAL);
-            for (int i_1 = 0; i_1 < 10; i_1++) {
+            for (int i = 0; i < 10; i++) {
                 list.Add("item");
             }
             document.Add(list);

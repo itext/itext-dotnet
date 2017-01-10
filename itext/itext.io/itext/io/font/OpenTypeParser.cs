@@ -590,8 +590,8 @@ namespace iText.IO.Font {
             // If the font is monospaced, only one entry need be in the array, but that entry is required.
             // The last entry applies to all subsequent glyphs.
             if (numberOfHMetrics > 0) {
-                for (int k_1 = numberOfHMetrics; k_1 < glyphWidthsByIndex.Length; k_1++) {
-                    glyphWidthsByIndex[k_1] = glyphWidthsByIndex[numberOfHMetrics - 1];
+                for (int k = numberOfHMetrics; k < glyphWidthsByIndex.Length; k++) {
+                    glyphWidthsByIndex[k] = glyphWidthsByIndex[numberOfHMetrics - 1];
                 }
             }
         }
@@ -1100,33 +1100,33 @@ namespace iText.IO.Font {
             }
             raf.SkipBytes(2);
             int[] startCount = new int[segCount];
-            for (int k_1 = 0; k_1 < segCount; ++k_1) {
-                startCount[k_1] = raf.ReadUnsignedShort();
+            for (int k = 0; k < segCount; ++k) {
+                startCount[k] = raf.ReadUnsignedShort();
             }
             int[] idDelta = new int[segCount];
-            for (int k_2 = 0; k_2 < segCount; ++k_2) {
-                idDelta[k_2] = raf.ReadUnsignedShort();
+            for (int k = 0; k < segCount; ++k) {
+                idDelta[k] = raf.ReadUnsignedShort();
             }
             int[] idRO = new int[segCount];
-            for (int k_3 = 0; k_3 < segCount; ++k_3) {
-                idRO[k_3] = raf.ReadUnsignedShort();
+            for (int k = 0; k < segCount; ++k) {
+                idRO[k] = raf.ReadUnsignedShort();
             }
             int[] glyphId = new int[table_lenght / 2 - 8 - segCount * 4];
-            for (int k_4 = 0; k_4 < glyphId.Length; ++k_4) {
-                glyphId[k_4] = raf.ReadUnsignedShort();
+            for (int k = 0; k < glyphId.Length; ++k) {
+                glyphId[k] = raf.ReadUnsignedShort();
             }
-            for (int k_5 = 0; k_5 < segCount; ++k_5) {
+            for (int k = 0; k < segCount; ++k) {
                 int glyph;
-                for (int j = startCount[k_5]; j <= endCount[k_5] && j != 0xFFFF; ++j) {
-                    if (idRO[k_5] == 0) {
-                        glyph = j + idDelta[k_5] & 0xFFFF;
+                for (int j = startCount[k]; j <= endCount[k] && j != 0xFFFF; ++j) {
+                    if (idRO[k] == 0) {
+                        glyph = j + idDelta[k] & 0xFFFF;
                     }
                     else {
-                        int idx = k_5 + idRO[k_5] / 2 - segCount + j - startCount[k_5];
+                        int idx = k + idRO[k] / 2 - segCount + j - startCount[k];
                         if (idx >= glyphId.Length) {
                             continue;
                         }
-                        glyph = glyphId[idx] + idDelta[k_5] & 0xFFFF;
+                        glyph = glyphId[idx] + idDelta[k] & 0xFFFF;
                     }
                     int[] r = new int[2];
                     r[0] = glyph;

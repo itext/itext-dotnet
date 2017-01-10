@@ -208,14 +208,14 @@ namespace iText.Layout {
             for (int i = 0; i < 5; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header1 \n" + i)));
             }
-            for (int i_1 = 0; i_1 < 5; i_1++) {
-                table.AddHeaderCell(new Cell().Add(new Paragraph("Header2 \n" + i_1)));
+            for (int i = 0; i < 5; i++) {
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header2 \n" + i)));
             }
-            for (int i_2 = 0; i_2 < 500; i_2++) {
-                if (i_2 % 5 == 0) {
+            for (int i = 0; i < 500; i++) {
+                if (i % 5 == 0) {
                     table.Flush();
                 }
-                table.AddCell(new Cell().Add(new Paragraph("Test " + i_2)));
+                table.AddCell(new Cell().Add(new Paragraph("Test " + i)));
             }
             table.Complete();
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
@@ -238,14 +238,14 @@ namespace iText.Layout {
             for (int i = 0; i < 5; i++) {
                 table.AddHeaderCell(new Cell().Add(new Paragraph("Header \n" + i)));
             }
-            for (int i_1 = 0; i_1 < 5; i_1++) {
-                table.AddFooterCell(new Cell().Add(new Paragraph("Footer \n" + i_1)));
+            for (int i = 0; i < 5; i++) {
+                table.AddFooterCell(new Cell().Add(new Paragraph("Footer \n" + i)));
             }
-            for (int i_2 = 0; i_2 < 500; i_2++) {
-                if (i_2 % 5 == 0) {
+            for (int i = 0; i < 500; i++) {
+                if (i % 5 == 0) {
                     table.Flush();
                 }
-                table.AddCell(new Cell().Add(new Paragraph("Test " + i_2)));
+                table.AddCell(new Cell().Add(new Paragraph("Test " + i)));
             }
             table.Complete();
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
@@ -268,11 +268,11 @@ namespace iText.Layout {
             for (int i = 0; i < 5; i++) {
                 table.AddFooterCell(new Cell().Add(new Paragraph("Footer \n" + i)));
             }
-            for (int i_1 = 0; i_1 < 500; i_1++) {
-                if (i_1 % 5 == 0) {
+            for (int i = 0; i < 500; i++) {
+                if (i % 5 == 0) {
                     table.Flush();
                 }
-                table.AddCell(new Cell().Add(new Paragraph("Test " + i_1)));
+                table.AddCell(new Cell().Add(new Paragraph("Test " + i)));
             }
             table.Complete();
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));

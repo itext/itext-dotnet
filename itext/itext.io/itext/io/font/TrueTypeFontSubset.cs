@@ -206,14 +206,14 @@ namespace iText.IO.Font {
             WriteFontShort((1 << selector) * 16);
             WriteFontShort(selector);
             WriteFontShort((tablesUsed - (1 << selector)) * 16);
-            foreach (String name_1 in tableNames) {
+            foreach (String name in tableNames) {
                 int len;
-                tableLocation = tableDirectory.Get(name_1);
+                tableLocation = tableDirectory.Get(name);
                 if (tableLocation == null) {
                     continue;
                 }
-                WriteFontString(name_1);
-                switch (name_1) {
+                WriteFontString(name);
+                switch (name) {
                     case "glyf": {
                         WriteFontInt(CalculateChecksum(newGlyfTable));
                         len = glyfTableRealSize;
@@ -236,12 +236,12 @@ namespace iText.IO.Font {
                 WriteFontInt(len);
                 reference += len + 3 & ~3;
             }
-            foreach (String name_2 in tableNames) {
-                tableLocation = tableDirectory.Get(name_2);
+            foreach (String name in tableNames) {
+                tableLocation = tableDirectory.Get(name);
                 if (tableLocation == null) {
                     continue;
                 }
-                switch (name_2) {
+                switch (name) {
                     case "glyf": {
                         System.Array.Copy(newGlyfTable, 0, outFont, fontPtr, newGlyfTable.Length);
                         fontPtr += newGlyfTable.Length;
@@ -334,13 +334,13 @@ namespace iText.IO.Font {
             newGlyfTable = new byte[glyfSize];
             int glyfPtr = 0;
             int listGlyf = 0;
-            for (int k_1 = 0; k_1 < newLocaTable.Length; ++k_1) {
-                newLocaTable[k_1] = glyfPtr;
-                if (listGlyf < activeGlyphs.Length && activeGlyphs[listGlyf] == k_1) {
+            for (int k = 0; k < newLocaTable.Length; ++k) {
+                newLocaTable[k] = glyfPtr;
+                if (listGlyf < activeGlyphs.Length && activeGlyphs[listGlyf] == k) {
                     ++listGlyf;
-                    newLocaTable[k_1] = glyfPtr;
-                    int start = locaTable[k_1];
-                    int len = locaTable[k_1 + 1] - start;
+                    newLocaTable[k] = glyfPtr;
+                    int start = locaTable[k];
+                    int len = locaTable[k + 1] - start;
                     if (len > 0) {
                         rf.Seek(tableGlyphOffset + start);
                         rf.ReadFully(newGlyfTable, glyfPtr, len);

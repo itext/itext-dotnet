@@ -467,8 +467,8 @@ namespace iText.Layout.Renderer {
                     }
 
                     case VerticalAlignment.MIDDLE: {
-                        foreach (IRenderer child_1 in childRenderers) {
-                            child_1.Move(0, -deltaY / 2);
+                        foreach (IRenderer child in childRenderers) {
+                            child.Move(0, -deltaY / 2);
                         }
                         break;
                     }

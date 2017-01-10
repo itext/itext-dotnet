@@ -250,7 +250,7 @@ namespace iText.IO.Source {
                     if (fracLen > 0) {
                         buf.Prepend((byte)'.');
                     }
-                    for (int i_1 = 0; i_1 < intLen; i_1++) {
+                    for (int i = 0; i < intLen; i++) {
                         buf.Prepend(bytes[v % 10]);
                         v /= 10;
                     }

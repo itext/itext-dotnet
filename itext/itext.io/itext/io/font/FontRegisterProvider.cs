@@ -252,10 +252,10 @@ namespace iText.IO.Font {
                     names = (String[][])allNames[1];
                     //family name
                     for (int k = 0; k < TTFamilyOrder.Length; k += 3) {
-                        foreach (String[] name_1 in names) {
-                            if (TTFamilyOrder[k].Equals(name_1[0]) && TTFamilyOrder[k + 1].Equals(name_1[1]) && TTFamilyOrder[k + 2].Equals
-                                (name_1[2])) {
-                                familyName = name_1[3].ToLowerInvariant();
+                        foreach (String[] name in names) {
+                            if (TTFamilyOrder[k].Equals(name[0]) && TTFamilyOrder[k + 1].Equals(name[1]) && TTFamilyOrder[k + 2].Equals
+                                (name[2])) {
+                                familyName = name[3].ToLowerInvariant();
                                 k = TTFamilyOrder.Length;
                                 break;
                             }
@@ -265,11 +265,11 @@ namespace iText.IO.Font {
                         String lastName = "";
                         names = (String[][])allNames[2];
                         //full name
-                        foreach (String[] name_1 in names) {
-                            for (int k_1 = 0; k_1 < TTFamilyOrder.Length; k_1 += 3) {
-                                if (TTFamilyOrder[k_1].Equals(name_1[0]) && TTFamilyOrder[k_1 + 1].Equals(name_1[1]) && TTFamilyOrder[k_1 
-                                    + 2].Equals(name_1[2])) {
-                                    fullName = name_1[3];
+                        foreach (String[] name in names) {
+                            for (int k = 0; k < TTFamilyOrder.Length; k += 3) {
+                                if (TTFamilyOrder[k].Equals(name[0]) && TTFamilyOrder[k + 1].Equals(name[1]) && TTFamilyOrder[k + 2].Equals
+                                    (name[2])) {
+                                    fullName = name[3];
                                     if (fullName.Equals(lastName)) {
                                         continue;
                                     }
@@ -388,8 +388,8 @@ namespace iText.IO.Font {
                 count += RegisterFontDirectory(directory, true);
             }
             String[] withoutSubDirs = new String[] { "/Library/Fonts", "/System/Library/Fonts" };
-            foreach (String directory_1 in withoutSubDirs) {
-                count += RegisterFontDirectory(directory_1, false);
+            foreach (String directory in withoutSubDirs) {
+                count += RegisterFontDirectory(directory, false);
             }
             return count;
         }

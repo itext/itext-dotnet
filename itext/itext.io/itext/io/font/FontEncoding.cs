@@ -286,9 +286,9 @@ namespace iText.IO.Font {
                     k++;
                 }
             }
-            for (int k_1 = 0; k_1 < 256; k_1++) {
-                if (differences[k_1] == null) {
-                    differences[k_1] = FontConstants.notdef;
+            for (int k = 0; k < 256; k++) {
+                if (differences[k] == null) {
+                    differences[k] = FontConstants.notdef;
                 }
             }
         }

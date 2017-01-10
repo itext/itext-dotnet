@@ -180,10 +180,10 @@ namespace iText.IO.Font {
                     winansi.Put((int)c, k);
                 }
             }
-            for (int k_1 = 128; k_1 < 161; ++k_1) {
-                char c = pdfEncodingByteToChar[k_1];
+            for (int k = 128; k < 161; ++k) {
+                char c = pdfEncodingByteToChar[k];
                 if (c != 65533) {
-                    pdfEncoding.Put((int)c, k_1);
+                    pdfEncoding.Put((int)c, k);
                 }
             }
             AddExtraEncoding("Wingdings", new PdfEncodings.WingdingsConversion());
@@ -697,10 +697,10 @@ namespace iText.IO.Font {
                         t1.Put(v, k);
                     }
                 }
-                for (int k_1 = 0; k_1 < 256; ++k_1) {
-                    int v = table2[k_1];
+                for (int k = 0; k < 256; ++k) {
+                    int v = table2[k];
                     if (v != 0) {
-                        t2.Put(v, k_1);
+                        t2.Put(v, k);
                     }
                 }
             }

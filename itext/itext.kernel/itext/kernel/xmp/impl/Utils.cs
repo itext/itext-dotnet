@@ -370,8 +370,8 @@ namespace iText.Kernel.XMP.Impl {
             else {
                 // slow path with escaping
                 StringBuilder buffer = new StringBuilder(value.Length * 4 / 3);
-                for (int i_1 = 0; i_1 < value.Length; i_1++) {
-                    char c = value[i_1];
+                for (int i = 0; i < value.Length; i++) {
+                    char c = value[i];
                     if (!(escapeWhitespaces && (c == '\t' || c == '\n' || c == '\r'))) {
                         switch (c) {
                             case '<': {

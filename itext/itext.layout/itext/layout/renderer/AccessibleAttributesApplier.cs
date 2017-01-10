@@ -329,17 +329,17 @@ namespace iText.Layout.Renderer {
                 }
                 int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 //TODO set depending on writing direction
-                foreach (int i_1 in borderOrder) {
-                    if (borders[i_1] != null) {
-                        if (borders[i_1].GetColor() is DeviceRgb) {
-                            borderColors.Add(new PdfArray(borders[i_1].GetColor().GetColorValue()));
+                foreach (int i in borderOrder) {
+                    if (borders[i] != null) {
+                        if (borders[i].GetColor() is DeviceRgb) {
+                            borderColors.Add(new PdfArray(borders[i].GetColor().GetColorValue()));
                             atLeastOneRgb = true;
                         }
                         else {
                             borderColors.Add(PdfNull.PDF_NULL);
                         }
-                        borderTypes.Add(TransformBorderTypeToName(borders[i_1].GetBorderType()));
-                        borderWidths.Add(new PdfNumber(borders[i_1].GetWidth()));
+                        borderTypes.Add(TransformBorderTypeToName(borders[i].GetBorderType()));
+                        borderWidths.Add(new PdfNumber(borders[i].GetWidth()));
                     }
                     else {
                         borderColors.Add(PdfNull.PDF_NULL);

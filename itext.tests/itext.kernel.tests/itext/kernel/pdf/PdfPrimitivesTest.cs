@@ -27,11 +27,11 @@ namespace iText.Kernel.Pdf {
                 for (char ch = 'A'; ch <= 'Z'; ++ch) {
                     tmp.Append(ch);
                 }
-                for (char ch_1 = 'a'; ch_1 <= 'z'; ++ch_1) {
-                    tmp.Append(ch_1);
+                for (char ch = 'a'; ch <= 'z'; ++ch) {
+                    tmp.Append(ch);
                 }
-                for (char ch_2 = '0'; ch_2 <= '9'; ++ch_2) {
-                    tmp.Append(ch_2);
+                for (char ch = '0'; ch <= '9'; ++ch) {
+                    tmp.Append(ch);
                 }
                 symbols = tmp.ToString().ToCharArray();
             }

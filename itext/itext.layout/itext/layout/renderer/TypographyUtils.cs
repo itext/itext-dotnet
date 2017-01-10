@@ -215,12 +215,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 // fix anchorDelta
-                for (int i_1 = 0; i_1 < reorderedLine.Count; i_1++) {
-                    Glyph glyph = reorderedLine[i_1].glyph;
+                for (int i = 0; i < reorderedLine.Count; i++) {
+                    Glyph glyph = reorderedLine[i].glyph;
                     if (glyph.HasPlacement()) {
-                        int oldAnchor = reorder[i_1] + glyph.GetAnchorDelta();
+                        int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
                         int newPos = inverseReorder[oldAnchor];
-                        int newAnchorDelta = newPos - i_1;
+                        int newAnchorDelta = newPos - i;
                         glyph.SetAnchorDelta((short)newAnchorDelta);
                     }
                 }

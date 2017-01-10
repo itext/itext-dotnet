@@ -360,9 +360,9 @@ namespace iText.Kernel.Font {
                         break;
                     }
                 }
-                for (int k_1 = lastChar; k_1 >= firstChar; --k_1) {
-                    if (!FontConstants.notdef.Equals(fontEncoding.GetDifference(k_1))) {
-                        lastChar = k_1;
+                for (int k = lastChar; k >= firstChar; --k) {
+                    if (!FontConstants.notdef.Equals(fontEncoding.GetDifference(k))) {
+                        lastChar = k;
                         break;
                     }
                 }
@@ -370,13 +370,13 @@ namespace iText.Kernel.Font {
                 enc.Put(PdfName.Type, PdfName.Encoding);
                 PdfArray diff = new PdfArray();
                 bool gap = true;
-                for (int k_2 = firstChar; k_2 <= lastChar; ++k_2) {
-                    if (shortTag[k_2] != 0) {
+                for (int k = firstChar; k <= lastChar; ++k) {
+                    if (shortTag[k] != 0) {
                         if (gap) {
-                            diff.Add(new PdfNumber(k_2));
+                            diff.Add(new PdfNumber(k));
                             gap = false;
                         }
-                        diff.Add(new PdfName(fontEncoding.GetDifference(k_2)));
+                        diff.Add(new PdfName(fontEncoding.GetDifference(k)));
                     }
                     else {
                         gap = true;

@@ -982,13 +982,13 @@ namespace iText.Kernel.Utils {
                     file.Delete();
                 }
                 cmpImageFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.CmpPngFileFilter(this));
-                foreach (FileInfo file_1 in cmpImageFiles) {
-                    file_1.Delete();
+                foreach (FileInfo file in cmpImageFiles) {
+                    file.Delete();
                 }
                 diffFiles = FileUtil.ListFilesInDirectoryByFilter(outPath, new CompareTool.DiffPngFileFilter(this, differenceImagePrefix
                     ));
-                foreach (FileInfo file_2 in diffFiles) {
-                    file_2.Delete();
+                foreach (FileInfo file in diffFiles) {
+                    file.Delete();
                 }
             }
         }
@@ -2067,8 +2067,8 @@ namespace iText.Kernel.Utils {
                 for (int i = 0; i < path.Count; ++i) {
                     localPathItems.Add(pathClone.Pop());
                 }
-                for (int i_1 = localPathItems.Count - 1; i_1 >= 0; --i_1) {
-                    element.AppendChild(localPathItems[i_1].ToXmlNode(document));
+                for (int i = localPathItems.Count - 1; i >= 0; --i) {
+                    element.AppendChild(localPathItems[i].ToXmlNode(document));
                 }
                 return element;
             }
@@ -2085,9 +2085,9 @@ namespace iText.Kernel.Utils {
                 for (int i = 0; i < path.Count; ++i) {
                     localPathItems.Add(pathClone.Pop());
                 }
-                for (int i_1 = localPathItems.Count - 1; i_1 >= 0; --i_1) {
+                for (int i = localPathItems.Count - 1; i >= 0; --i) {
                     sb.Append("\n");
-                    sb.Append(localPathItems[i_1].ToString());
+                    sb.Append(localPathItems[i].ToString());
                 }
                 return sb.ToString();
             }

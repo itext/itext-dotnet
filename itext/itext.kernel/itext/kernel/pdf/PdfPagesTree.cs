@@ -369,19 +369,19 @@ namespace iText.Kernel.Pdf {
                 // handle count property!
                 IList<PdfPages> newParents = new List<PdfPages>(kids.Size());
                 PdfPages lastPdfPages = null;
-                for (int i_1 = 0; i_1 < kids.Size() && kidsCount > 0; i_1++) {
-                    PdfDictionary pdfPagesObject = kids.GetAsDictionary(i_1);
+                for (int i = 0; i < kids.Size() && kidsCount > 0; i++) {
+                    PdfDictionary pdfPagesObject = kids.GetAsDictionary(i);
                     if (pdfPagesObject.GetAsArray(PdfName.Kids) == null) {
                         // pdfPagesObject is PdfPage
                         if (lastPdfPages == null) {
                             // possible if only first kid is PdfPage
                             lastPdfPages = new PdfPages(parent.GetFrom(), document, parent);
-                            kids.Set(i_1, lastPdfPages.GetPdfObject());
+                            kids.Set(i, lastPdfPages.GetPdfObject());
                             newParents.Add(lastPdfPages);
                         }
                         lastPdfPages.AddPage(pdfPagesObject);
-                        kids.Remove(i_1);
-                        i_1--;
+                        kids.Remove(i);
+                        i--;
                         kidsCount--;
                     }
                     else {
@@ -393,8 +393,8 @@ namespace iText.Kernel.Pdf {
                     }
                 }
                 parents.JRemoveAt(parentIndex);
-                for (int i_2 = newParents.Count - 1; i_2 >= 0; i_2--) {
-                    parents.Add(parentIndex, newParents[i_2]);
+                for (int i = newParents.Count - 1; i >= 0; i--) {
+                    parents.Add(parentIndex, newParents[i]);
                 }
                 // recursive call, to load needed pageRef.
                 // NOTE optimization? add to loadPage startParentIndex.
@@ -405,8 +405,8 @@ namespace iText.Kernel.Pdf {
                 // Possible exception in case kids.getSize() < parent.getCount().
                 // In any case parent.getCount() has higher priority.
                 // NOTE optimization? when we already found needed index
-                for (int i_1 = 0; i_1 < parent.GetCount(); i_1++) {
-                    pageRefs[from + i_1] = kids.GetAsDictionary(i_1);
+                for (int i = 0; i < parent.GetCount(); i++) {
+                    pageRefs[from + i] = kids.GetAsDictionary(i);
                 }
             }
         }

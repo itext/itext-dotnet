@@ -66,8 +66,8 @@ namespace iText.Layout {
                     list.Add("Item #" + i);
                 }
             }
-            foreach (List list_1 in lists) {
-                document.Add(list_1).Add(new AreaBreak());
+            foreach (List list in lists) {
+                document.Add(list).Add(new AreaBreak());
             }
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

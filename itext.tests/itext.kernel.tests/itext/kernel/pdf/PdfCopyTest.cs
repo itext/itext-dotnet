@@ -73,9 +73,9 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
             pdfDoc1 = new PdfDocument(new PdfReader(destinationFolder + "copying2_1.pdf"));
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copying2_2.pdf"));
-            for (int i_1 = 0; i_1 < 10; i_1++) {
-                if (i_1 % 2 == 0) {
-                    pdfDoc2.AddPage(pdfDoc1.GetPage(i_1 + 1).CopyTo(pdfDoc2));
+            for (int i = 0; i < 10; i++) {
+                if (i % 2 == 0) {
+                    pdfDoc2.AddPage(pdfDoc1.GetPage(i + 1).CopyTo(pdfDoc2));
                 }
             }
             pdfDoc2.Close();
@@ -83,9 +83,9 @@ namespace iText.Kernel.Pdf {
             PdfReader reader = new PdfReader(destinationFolder + "copying2_2.pdf");
             PdfDocument pdfDocument = new PdfDocument(reader);
             NUnit.Framework.Assert.AreEqual(false, reader.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 0; i_2 < 5; i_2++) {
-                byte[] bytes = pdfDocument.GetPage(i_2 + 1).GetContentBytes();
-                NUnit.Framework.Assert.AreEqual("%page " + (i_2 * 2 + 1).ToString() + "\n", iText.IO.Util.JavaUtil.GetStringForBytes
+            for (int i = 0; i < 5; i++) {
+                byte[] bytes = pdfDocument.GetPage(i + 1).GetContentBytes();
+                NUnit.Framework.Assert.AreEqual("%page " + (i * 2 + 1).ToString() + "\n", iText.IO.Util.JavaUtil.GetStringForBytes
                     (bytes));
             }
             pdfDocument.Close();

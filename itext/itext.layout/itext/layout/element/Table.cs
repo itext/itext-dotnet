@@ -732,8 +732,8 @@ namespace iText.Layout.Element {
             for (int k = 0; k < numCols; ++k) {
                 total += columnWidths[k].GetValue();
             }
-            for (int k_1 = 0; k_1 < numCols; ++k_1) {
-                columnWidths[k_1] = UnitValue.CreatePointValue(width.GetValue() * columnWidths[k_1].GetValue() / total);
+            for (int k = 0; k < numCols; ++k) {
+                columnWidths[k] = UnitValue.CreatePointValue(width.GetValue() * columnWidths[k].GetValue() / total);
             }
         }
 
@@ -751,19 +751,17 @@ namespace iText.Layout.Element {
                 bool rowGroupComplete = true;
                 while (!converged) {
                     converged = true;
-                    for (int i_1 = 0; i_1 < columnWidths.Length; i_1++) {
-                        while (cellBottomRows[i_1] < lastRowWeCanFlush && cellBottomRows[i_1] + rows[cellBottomRows[i_1] - rowWindowStart
-                            ][i_1].GetRowspan() - 1 < maxRowGroupFinish) {
-                            cellBottomRows[i_1] += rows[cellBottomRows[i_1] - rowWindowStart][i_1].GetRowspan();
+                    for (int i = 0; i < columnWidths.Length; i++) {
+                        while (cellBottomRows[i] < lastRowWeCanFlush && cellBottomRows[i] + rows[cellBottomRows[i] - rowWindowStart
+                            ][i].GetRowspan() - 1 < maxRowGroupFinish) {
+                            cellBottomRows[i] += rows[cellBottomRows[i] - rowWindowStart][i].GetRowspan();
                         }
-                        if (cellBottomRows[i_1] + rows[cellBottomRows[i_1] - rowWindowStart][i_1].GetRowspan() - 1 > maxRowGroupFinish
-                            ) {
-                            maxRowGroupFinish = cellBottomRows[i_1] + rows[cellBottomRows[i_1] - rowWindowStart][i_1].GetRowspan() - 1;
+                        if (cellBottomRows[i] + rows[cellBottomRows[i] - rowWindowStart][i].GetRowspan() - 1 > maxRowGroupFinish) {
+                            maxRowGroupFinish = cellBottomRows[i] + rows[cellBottomRows[i] - rowWindowStart][i].GetRowspan() - 1;
                             converged = false;
                         }
                         else {
-                            if (cellBottomRows[i_1] + rows[cellBottomRows[i_1] - rowWindowStart][i_1].GetRowspan() - 1 < maxRowGroupFinish
-                                ) {
+                            if (cellBottomRows[i] + rows[cellBottomRows[i] - rowWindowStart][i].GetRowspan() - 1 < maxRowGroupFinish) {
                                 // don't have enough cells for a row group yet.
                                 rowGroupComplete = false;
                             }

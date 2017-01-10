@@ -708,9 +708,9 @@ namespace iText.Signatures {
                 // Get all the certificates
                 //
                 v = new Asn1EncodableVector();
-                foreach (Object element_1 in certs) {
-                    Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(((X509Certificate)element_1).GetEncoded(
-                        )));
+                foreach (Object element in certs) {
+                    Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(((X509Certificate)element).GetEncoded())
+                        );
                     v.Add(tempstream.ReadObject());
                 }
                 DerSet dercertificates = new DerSet(v);
@@ -1074,13 +1074,13 @@ namespace iText.Signatures {
             while (found) {
                 X509Certificate v = (X509Certificate)cc[cc.Count - 1];
                 found = false;
-                for (int k_1 = 0; k_1 < oc.Count; ++k_1) {
-                    X509Certificate issuer = (X509Certificate)oc[k_1];
+                for (int k = 0; k < oc.Count; ++k) {
+                    X509Certificate issuer = (X509Certificate)oc[k];
                     try {
                         v.Verify(issuer.GetPublicKey());
                         found = true;
-                        cc.Add(oc[k_1]);
-                        oc.JRemoveAt(k_1);
+                        cc.Add(oc[k]);
+                        oc.JRemoveAt(k);
                         break;
                     }
                     catch (Exception) {

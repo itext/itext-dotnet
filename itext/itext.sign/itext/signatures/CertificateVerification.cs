@@ -219,8 +219,8 @@ namespace iText.Signatures {
             catch (Exception e) {
                 exceptionsThrown.Add(e);
             }
-            foreach (Exception ex_1 in exceptionsThrown) {
-                LOGGER.Error(ex_1.Message, ex_1);
+            foreach (Exception ex in exceptionsThrown) {
+                LOGGER.Error(ex.Message, ex);
             }
             return false;
         }
@@ -246,8 +246,8 @@ namespace iText.Signatures {
             catch (Exception e) {
                 exceptionsThrown.Add(e);
             }
-            foreach (Exception ex_1 in exceptionsThrown) {
-                LOGGER.Error(ex_1.Message, ex_1);
+            foreach (Exception ex in exceptionsThrown) {
+                LOGGER.Error(ex.Message, ex);
             }
             return false;
         }

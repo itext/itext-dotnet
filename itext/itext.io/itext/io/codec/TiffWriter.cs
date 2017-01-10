@@ -78,8 +78,8 @@ namespace iText.IO.Codec {
                 field.WriteField(stream);
             }
             WriteLong(0, stream);
-            foreach (TiffWriter.FieldBase field_1 in ifd.Values) {
-                field_1.WriteValue(stream);
+            foreach (TiffWriter.FieldBase field in ifd.Values) {
+                field.WriteValue(stream);
             }
         }
 

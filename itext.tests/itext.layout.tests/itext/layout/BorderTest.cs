@@ -846,7 +846,7 @@ namespace iText.Layout {
                 table.AddCell(new Cell().Add(text + "5").SetHeight(40).SetBorderBottom(new SolidBorder(Color.MAGENTA, 100)
                     ));
             }
-            for (int i_1 = 0; i_1 < 3; i_1++) {
+            for (int i = 0; i < 3; i++) {
                 table.AddHeaderCell(new Cell().Add("Header").SetHeight(40));
                 table.AddFooterCell(new Cell().Add("Header").SetHeight(40));
             }

@@ -957,11 +957,11 @@ namespace iText.IO.Image {
                 priorRow = prev[i] & 0xff;
                 curr[i] = (byte)(raw + priorRow / 2);
             }
-            for (int i_1 = bpp; i_1 < count; i_1++) {
-                raw = curr[i_1] & 0xff;
-                priorPixel = curr[i_1 - bpp] & 0xff;
-                priorRow = prev[i_1] & 0xff;
-                curr[i_1] = (byte)(raw + (priorPixel + priorRow) / 2);
+            for (int i = bpp; i < count; i++) {
+                raw = curr[i] & 0xff;
+                priorPixel = curr[i - bpp] & 0xff;
+                priorRow = prev[i] & 0xff;
+                curr[i] = (byte)(raw + (priorPixel + priorRow) / 2);
             }
         }
 
@@ -993,12 +993,12 @@ namespace iText.IO.Image {
                 priorRow = prev[i] & 0xff;
                 curr[i] = (byte)(raw + priorRow);
             }
-            for (int i_1 = bpp; i_1 < count; i_1++) {
-                raw = curr[i_1] & 0xff;
-                priorPixel = curr[i_1 - bpp] & 0xff;
-                priorRow = prev[i_1] & 0xff;
-                priorRowPixel = prev[i_1 - bpp] & 0xff;
-                curr[i_1] = (byte)(raw + PaethPredictor(priorPixel, priorRow, priorRowPixel));
+            for (int i = bpp; i < count; i++) {
+                raw = curr[i] & 0xff;
+                priorPixel = curr[i - bpp] & 0xff;
+                priorRow = prev[i] & 0xff;
+                priorRowPixel = prev[i - bpp] & 0xff;
+                curr[i] = (byte)(raw + PaethPredictor(priorPixel, priorRow, priorRowPixel));
             }
         }
 

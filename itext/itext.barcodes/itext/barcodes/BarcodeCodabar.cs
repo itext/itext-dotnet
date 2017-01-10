@@ -283,8 +283,8 @@ namespace iText.Barcodes {
             if (barColor != null) {
                 canvas.SetFillColor(barColor);
             }
-            for (int k_1 = 0; k_1 < bars.Length; ++k_1) {
-                float w = (bars[k_1] == 0 ? x : x * n);
+            for (int k = 0; k < bars.Length; ++k) {
+                float w = (bars[k] == 0 ? x : x * n);
                 if (print) {
                     canvas.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
                 }

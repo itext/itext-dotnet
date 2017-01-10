@@ -28,14 +28,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             FilteredEventListener listener = new FilteredEventListener();
             LocationTextExtractionStrategy[] extractionStrategies = new LocationTextExtractionStrategy[regions.Length]
                 ;
-            for (int i_1 = 0; i_1 < regions.Length; i_1++) {
-                extractionStrategies[i_1] = listener.AttachEventListener(new LocationTextExtractionStrategy().SetUseActualText
-                    (true), regionFilters[i_1]);
+            for (int i = 0; i < regions.Length; i++) {
+                extractionStrategies[i] = listener.AttachEventListener(new LocationTextExtractionStrategy().SetUseActualText
+                    (true), regionFilters[i]);
             }
             new PdfCanvasProcessor(listener).ProcessPageContent(pdfDocument.GetPage(1));
-            for (int i_2 = 0; i_2 < regions.Length; i_2++) {
-                String actualText = extractionStrategies[i_2].GetResultantText();
-                NUnit.Framework.Assert.AreEqual(expectedText[i_2], actualText);
+            for (int i = 0; i < regions.Length; i++) {
+                String actualText = extractionStrategies[i].GetResultantText();
+                NUnit.Framework.Assert.AreEqual(expectedText[i], actualText);
             }
         }
 

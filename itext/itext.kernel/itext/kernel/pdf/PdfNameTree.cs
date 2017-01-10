@@ -173,20 +173,20 @@ namespace iText.Kernel.Pdf {
                 }
                 skip *= NODE_SIZE;
                 int tt = (names.Length + skip - 1) / skip;
-                for (int i_1 = 0; i_1 < tt; ++i_1) {
-                    int offset = i_1 * NODE_SIZE;
+                for (int i = 0; i < tt; ++i) {
+                    int offset = i * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
                     PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
                     PdfArray arr = new PdfArray();
-                    arr.Add(new PdfString(names[i_1 * skip], null));
-                    arr.Add(new PdfString(names[Math.Min((i_1 + 1) * skip, names.Length) - 1], null));
+                    arr.Add(new PdfString(names[i * skip], null));
+                    arr.Add(new PdfString(names[Math.Min((i + 1) * skip, names.Length) - 1], null));
                     dic.Put(PdfName.Limits, arr);
                     arr = new PdfArray();
                     for (; offset < end; ++offset) {
                         arr.Add(kids[offset]);
                     }
                     dic.Put(PdfName.Kids, arr);
-                    kids[i_1] = dic;
+                    kids[i] = dic;
                 }
                 top = tt;
             }

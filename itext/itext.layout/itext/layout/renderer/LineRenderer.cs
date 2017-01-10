@@ -285,11 +285,11 @@ namespace iText.Layout.Renderer {
                             newRenderer.line.SetGlyphs(replacementGlyphs);
                         }
                         float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
-                        foreach (IRenderer child_1 in children) {
-                            float currentWidth = ((TextRenderer)child_1).CalculateLineWidth();
-                            float[] margins = ((TextRenderer)child_1).GetMargins();
+                        foreach (IRenderer child in children) {
+                            float currentWidth = ((TextRenderer)child).CalculateLineWidth();
+                            float[] margins = ((TextRenderer)child).GetMargins();
                             currentWidth += margins[1] + margins[3];
-                            ((TextRenderer)child_1).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
+                            ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             currentXPos += currentWidth;
                         }
                     }

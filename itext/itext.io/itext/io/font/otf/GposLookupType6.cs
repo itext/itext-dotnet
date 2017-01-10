@@ -138,8 +138,8 @@ namespace iText.IO.Font.Otf {
                 markToBaseMark.marks[markCoverage[k]] = markRecords[k];
             }
             IList<GposAnchor[]> baseArray = OtfReadCommon.ReadBaseArray(openReader, classCount, baseArrayLocation);
-            for (int k_1 = 0; k_1 < baseCoverage.Count; ++k_1) {
-                markToBaseMark.baseMarks[baseCoverage[k_1]] = baseArray[k_1];
+            for (int k = 0; k < baseCoverage.Count; ++k) {
+                markToBaseMark.baseMarks[baseCoverage[k]] = baseArray[k];
             }
             marksbases.Add(markToBaseMark);
         }

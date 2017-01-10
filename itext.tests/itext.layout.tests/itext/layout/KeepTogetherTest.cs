@@ -54,7 +54,7 @@ namespace iText.Layout {
                 doc.Add(new Paragraph("String number" + i));
             }
             String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanasdadasdadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            for (int i_1 = 0; i_1 < 5; i_1++) {
+            for (int i = 0; i < 5; i++) {
                 str += str;
             }
             Paragraph p1 = new Paragraph(str);

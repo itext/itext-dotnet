@@ -171,32 +171,32 @@ namespace iText.Kernel.Pdf.Filters {
 
                     case 2: {
                         //PNG_FILTER_UP
-                        for (int i_1 = 0; i_1 < bytesPerRow; i_1++) {
-                            curr[i_1] += prior[i_1];
+                        for (int i = 0; i < bytesPerRow; i++) {
+                            curr[i] += prior[i];
                         }
                         break;
                     }
 
                     case 3: {
                         //PNG_FILTER_AVERAGE
-                        for (int i_2 = 0; i_2 < bytesPerPixel; i_2++) {
-                            curr[i_2] += (byte)(prior[i_2] / 2);
+                        for (int i = 0; i < bytesPerPixel; i++) {
+                            curr[i] += (byte)(prior[i] / 2);
                         }
-                        for (int i_3 = bytesPerPixel; i_3 < bytesPerRow; i_3++) {
-                            curr[i_3] += (byte)(((curr[i_3 - bytesPerPixel] & 0xff) + (prior[i_3] & 0xff)) / 2);
+                        for (int i = bytesPerPixel; i < bytesPerRow; i++) {
+                            curr[i] += (byte)(((curr[i - bytesPerPixel] & 0xff) + (prior[i] & 0xff)) / 2);
                         }
                         break;
                     }
 
                     case 4: {
                         //PNG_FILTER_PAETH
-                        for (int i_4 = 0; i_4 < bytesPerPixel; i_4++) {
-                            curr[i_4] += prior[i_4];
+                        for (int i = 0; i < bytesPerPixel; i++) {
+                            curr[i] += prior[i];
                         }
-                        for (int i_5 = bytesPerPixel; i_5 < bytesPerRow; i_5++) {
-                            int a = curr[i_5 - bytesPerPixel] & 0xff;
-                            int b = prior[i_5] & 0xff;
-                            int c = prior[i_5 - bytesPerPixel] & 0xff;
+                        for (int i = bytesPerPixel; i < bytesPerRow; i++) {
+                            int a = curr[i - bytesPerPixel] & 0xff;
+                            int b = prior[i] & 0xff;
+                            int c = prior[i - bytesPerPixel] & 0xff;
                             int p = a + b - c;
                             int pa = Math.Abs(p - a);
                             int pb = Math.Abs(p - b);
@@ -213,7 +213,7 @@ namespace iText.Kernel.Pdf.Filters {
                                     ret = c;
                                 }
                             }
-                            curr[i_5] += (byte)ret;
+                            curr[i] += (byte)ret;
                         }
                         break;
                     }

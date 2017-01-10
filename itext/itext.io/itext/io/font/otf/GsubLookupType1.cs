@@ -97,8 +97,8 @@ namespace iText.IO.Font.Otf {
                         substitute[k] = openReader.rf.ReadUnsignedShort();
                     }
                     IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
-                    for (int k_1 = 0; k_1 < glyphCount; ++k_1) {
-                        substMap.Put(coverageGlyphIds[k_1], substitute[k_1]);
+                    for (int k = 0; k < glyphCount; ++k) {
+                        substMap.Put(coverageGlyphIds[k], substitute[k]);
                     }
                 }
                 else {

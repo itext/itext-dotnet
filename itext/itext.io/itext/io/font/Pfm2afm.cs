@@ -310,9 +310,9 @@ namespace iText.IO.Font {
                     }
                 }
                 /* Put out all non-encoded chars */
-                for (int i_1 = firstchar; i_1 <= lastchar; i_1++) {
-                    if (ctabs[i_1 - firstchar] != 0) {
-                        Outchar(-1, ctabs[i_1 - firstchar], WinChars[i_1]);
+                for (int i = firstchar; i <= lastchar; i++) {
+                    if (ctabs[i - firstchar] != 0) {
+                        Outchar(-1, ctabs[i - firstchar], WinChars[i]);
                     }
                 }
             }
@@ -342,13 +342,13 @@ namespace iText.IO.Font {
             output.Write("StartKernData\nStartKernPairs");
             Outval(nzero);
             output.Write('\n');
-            for (int k_1 = 0; k_1 < kerns.Length; k_1 += 3) {
-                if (kerns[k_1 + 2] != 0) {
+            for (int k = 0; k < kerns.Length; k += 3) {
+                if (kerns[k + 2] != 0) {
                     output.Write("KPX ");
-                    output.Write(WinChars[kerns[k_1]]);
+                    output.Write(WinChars[kerns[k]]);
                     output.Write(' ');
-                    output.Write(WinChars[kerns[k_1 + 1]]);
-                    Outval(kerns[k_1 + 2]);
+                    output.Write(WinChars[kerns[k + 1]]);
+                    Outval(kerns[k + 2]);
                     output.Write('\n');
                 }
             }

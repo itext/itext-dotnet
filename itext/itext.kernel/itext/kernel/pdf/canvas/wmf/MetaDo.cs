@@ -388,7 +388,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                             int sx = @in.ReadShort();
                             int sy = @in.ReadShort();
                             cb.MoveTo(state.TransformX(sx), state.TransformY(sy));
-                            for (int k_1 = 1; k_1 < len; ++k_1) {
+                            for (int k = 1; k < len; ++k) {
                                 int x = @in.ReadShort();
                                 int y = @in.ReadShort();
                                 cb.LineTo(state.TransformX(x), state.TransformY(y));

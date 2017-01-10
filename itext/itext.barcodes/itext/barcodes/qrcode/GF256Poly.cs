@@ -133,8 +133,8 @@ namespace iText.Barcodes.Qrcode {
                 return result;
             }
             int result_1 = coefficients[0];
-            for (int i_1 = 1; i_1 < size; i_1++) {
-                result_1 = GF256.AddOrSubtract(field.Multiply(a, result_1), coefficients[i_1]);
+            for (int i = 1; i < size; i++) {
+                result_1 = GF256.AddOrSubtract(field.Multiply(a, result_1), coefficients[i]);
             }
             return result_1;
         }

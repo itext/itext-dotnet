@@ -244,8 +244,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -279,8 +279,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -314,8 +314,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -349,8 +349,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -385,8 +385,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -421,8 +421,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -457,8 +457,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -493,8 +493,8 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(creator, info.Get(PdfName.Creator).ToString(), "Creator");
             NUnit.Framework.Assert.AreEqual(title, info.Get(PdfName.Title).ToString(), "Title");
             NUnit.Framework.Assert.AreEqual(pageCount, pdfDocument.GetNumberOfPages(), "Page count");
-            for (int i_1 = 1; i_1 <= pageCount; i_1++) {
-                PdfDictionary page = pdfDocument.GetPage(i_1).GetPdfObject();
+            for (int i = 1; i <= pageCount; i++) {
+                PdfDictionary page = pdfDocument.GetPage(i).GetPdfObject();
                 NUnit.Framework.Assert.AreEqual(PdfName.Page, page.Get(PdfName.Type));
             }
             pdfDocument.Close();
@@ -564,8 +564,8 @@ namespace iText.Kernel.Pdf {
             pdfDoc1.Close();
             pdfDoc1 = new PdfDocument(new PdfReader(file1));
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(file2));
-            for (int i_1 = 9; i_1 >= 0; i_1--) {
-                PdfPage page2 = pdfDoc1.GetPage(i_1 + 1).CopyTo(pdfDoc2);
+            for (int i = 9; i >= 0; i--) {
+                PdfPage page2 = pdfDoc1.GetPage(i + 1).CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
             }
             pdfDoc1.Close();
@@ -579,9 +579,9 @@ namespace iText.Kernel.Pdf {
             CompareTool cmpTool = new CompareTool();
             PdfDocument doc1 = new PdfDocument(new PdfReader(file1));
             PdfDocument doc2 = new PdfDocument(new PdfReader(file2));
-            for (int i_2 = 0; i_2 < 10; i_2++) {
-                PdfDictionary page1 = doc1.GetPage(i_2 + 1).GetPdfObject();
-                PdfDictionary page2 = doc2.GetPage(10 - i_2).GetPdfObject();
+            for (int i = 0; i < 10; i++) {
+                PdfDictionary page1 = doc1.GetPage(i + 1).GetPdfObject();
+                PdfDictionary page2 = doc2.GetPage(10 - i).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page2));
             }
             doc1.Close();
@@ -627,8 +627,8 @@ namespace iText.Kernel.Pdf {
             PdfReader reader2 = new PdfReader(file2);
             PdfDocument doc2 = new PdfDocument(reader2);
             NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
-            for (int i_1 = 0; i_1 < 10; i_1++) {
-                PdfDictionary p2 = doc2.GetPage(i_1 + 1).GetPdfObject();
+            for (int i = 0; i < 10; i++) {
+                PdfDictionary p2 = doc2.GetPage(i + 1).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(p1, p2));
             }
             doc1.Close();
@@ -655,10 +655,10 @@ namespace iText.Kernel.Pdf {
             }
             pdfDoc1.Close();
             pdfDoc1 = new PdfDocument(new PdfReader(file1));
-            for (int i_1 = 0; i_1 < 5; i_1++) {
+            for (int i = 0; i < 5; i++) {
                 PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + String.Format("copyPages4_{0}.pdf"
-                    , i_1 + 2)));
-                PdfPage page2 = pdfDoc1.GetPage(i_1 + 1).CopyTo(pdfDoc2);
+                    , i + 2)));
+                PdfPage page2 = pdfDoc1.GetPage(i + 1).CopyTo(pdfDoc2);
                 pdfDoc2.AddPage(page2);
                 pdfDoc2.Close();
             }
@@ -667,9 +667,9 @@ namespace iText.Kernel.Pdf {
             PdfReader reader1 = new PdfReader(file1);
             PdfDocument doc1 = new PdfDocument(reader1);
             NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
-            for (int i_2 = 0; i_2 < 5; i_2++) {
-                PdfDictionary page1 = doc1.GetPage(i_2 + 1).GetPdfObject();
-                PdfDocument doc2 = new PdfDocument(new PdfReader(destinationFolder + String.Format("copyPages4_{0}.pdf", i_2
+            for (int i = 0; i < 5; i++) {
+                PdfDictionary page1 = doc1.GetPage(i + 1).GetPdfObject();
+                PdfDocument doc2 = new PdfDocument(new PdfReader(destinationFolder + String.Format("copyPages4_{0}.pdf", i
                      + 2)));
                 PdfDictionary page = doc2.GetPage(1).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page));
@@ -699,29 +699,29 @@ namespace iText.Kernel.Pdf {
                 pdfDoc1.Close();
             }
             IList<PdfDocument> docs = new List<PdfDocument>();
-            for (int i_1 = 0; i_1 < documentCount; i_1++) {
+            for (int i = 0; i < documentCount; i++) {
                 PdfDocument pdfDoc1 = new PdfDocument(new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf"
-                    , i_1 + 1)));
+                    , i + 1)));
                 docs.Add(pdfDoc1);
             }
             PdfDocument pdfDoc2 = new PdfDocument(new PdfWriter(destinationFolder + "copyPages5_4.pdf"));
-            for (int i_2 = 0; i_2 < 3; i_2++) {
-                pdfDoc2.AddPage(docs[i_2].GetPage(1).CopyTo(pdfDoc2));
+            for (int i = 0; i < 3; i++) {
+                pdfDoc2.AddPage(docs[i].GetPage(1).CopyTo(pdfDoc2));
             }
             pdfDoc2.Close();
             foreach (PdfDocument doc in docs) {
                 doc.Close();
             }
             CompareTool cmpTool = new CompareTool();
-            for (int i_3 = 0; i_3 < 3; i_3++) {
-                PdfReader reader1 = new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf", i_3 + 1));
+            for (int i = 0; i < 3; i++) {
+                PdfReader reader1 = new PdfReader(destinationFolder + String.Format("copyPages5_{0}.pdf", i + 1));
                 PdfDocument doc1 = new PdfDocument(reader1);
                 NUnit.Framework.Assert.AreEqual(false, reader1.HasRebuiltXref(), "Rebuilt");
                 PdfReader reader2 = new PdfReader(destinationFolder + "copyPages5_4.pdf");
                 PdfDocument doc2 = new PdfDocument(reader2);
                 NUnit.Framework.Assert.AreEqual(false, reader2.HasRebuiltXref(), "Rebuilt");
                 PdfDictionary page1 = doc1.GetPage(1).GetPdfObject();
-                PdfDictionary page2 = doc2.GetPage(i_3 + 1).GetPdfObject();
+                PdfDictionary page2 = doc2.GetPage(i + 1).GetPdfObject();
                 NUnit.Framework.Assert.IsTrue(cmpTool.CompareDictionaries(page1, page2));
                 doc1.Close();
                 doc2.Close();

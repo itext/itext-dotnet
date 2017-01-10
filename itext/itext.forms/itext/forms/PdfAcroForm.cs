@@ -694,8 +694,8 @@ namespace iText.Forms {
                 initialPageResourceClones[i] = resources == null ? null : resources.Clone();
             }
             PdfPage page;
-            foreach (PdfFormField field_1 in fields) {
-                PdfDictionary fieldObject = field_1.GetPdfObject();
+            foreach (PdfFormField field in fields) {
+                PdfDictionary fieldObject = field.GetPdfObject();
                 page = GetFieldPage(fieldObject);
                 if (page == null) {
                     continue;
@@ -715,7 +715,7 @@ namespace iText.Forms {
                 }
                 if (generateAppearance) {
                     if (appDic == null || asNormal == null) {
-                        field_1.RegenerateField();
+                        field.RegenerateField();
                         appDic = fieldObject.GetAsDictionary(PdfName.AP);
                     }
                 }

@@ -191,8 +191,8 @@ namespace iText.Layout {
             }
             x = xstart + 12;
             y = ystart;
-            foreach (String text_1 in text2) {
-                doc.ShowTextAligned(text_1, x, y, TextAlignment.LEFT);
+            foreach (String text in text2) {
+                doc.ShowTextAligned(text, x, y, TextAlignment.LEFT);
                 x += 70.0f;
             }
             doc.Close();
@@ -211,8 +211,8 @@ namespace iText.Layout {
                 y -= 25.0f;
             }
             y = ystart - 13;
-            foreach (String text_1 in text2) {
-                doc.ShowTextAligned(text_1, x, y, TextAlignment.LEFT);
+            foreach (String text in text2) {
+                doc.ShowTextAligned(text, x, y, TextAlignment.LEFT);
                 y -= 25.0f;
             }
             doc.Close();

@@ -841,8 +841,8 @@ namespace iText.Kernel.Font {
                     for (int i = 0; i < maxGlyphId / 8; i++) {
                         cidSetBytes[i] |= 0xff;
                     }
-                    for (int i_1 = 0; i_1 < maxGlyphId % 8; i_1++) {
-                        cidSetBytes[cidSetBytes.Length - 1] |= rotbits[i_1];
+                    for (int i = 0; i < maxGlyphId % 8; i++) {
+                        cidSetBytes[cidSetBytes.Length - 1] |= rotbits[i];
                     }
                     fontDescriptor.Put(PdfName.CIDSet, new PdfStream(cidSetBytes));
                     PdfDictionary cidFont = GetCidFontType2(ttf, fontDescriptor, fontName, metrics);

@@ -371,16 +371,16 @@ namespace iText.IO.Codec {
             s.countOfReferredToSegments = count_of_referred_to_segments;
             // 7.2.5
             referred_to_segment_numbers = new int[count_of_referred_to_segments + 1];
-            for (int i_1 = 1; i_1 <= count_of_referred_to_segments; i_1++) {
+            for (int i = 1; i <= count_of_referred_to_segments; i++) {
                 if (segment_number <= 256) {
-                    referred_to_segment_numbers[i_1] = ra.Read();
+                    referred_to_segment_numbers[i] = ra.Read();
                 }
                 else {
                     if (segment_number <= 65536) {
-                        referred_to_segment_numbers[i_1] = ra.ReadUnsignedShort();
+                        referred_to_segment_numbers[i] = ra.ReadUnsignedShort();
                     }
                     else {
-                        referred_to_segment_numbers[i_1] = (int)ra.ReadUnsignedInt();
+                        referred_to_segment_numbers[i] = (int)ra.ReadUnsignedInt();
                     }
                 }
             }
