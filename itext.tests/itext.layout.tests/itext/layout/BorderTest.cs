@@ -940,6 +940,72 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest06() {
+            fileName = "tableWithHeaderFooterTest06.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(PageSize.A6.Rotate());
+            Table table = new Table(5);
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
+                (Color.RED, 20));
+            table.AddHeaderCell(cell);
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page")).SetHeight(30).SetBorderTop(new SolidBorder
+                (Color.MAGENTA, 20));
+            table.AddFooterCell(cell);
+            for (int i = 0; i < 50; i++) {
+                table.AddCell(new Cell().SetBorderLeft(new SolidBorder(Color.BLUE, 0.5f)).SetBorderRight(new SolidBorder(Color
+                    .BLUE, 0.5f)).SetHeight(30).SetBorderBottom(new SolidBorder(Color.BLUE, 2 * i + 1 > 50 ? 50 : 2 * i + 
+                    1)).SetBorderTop(new SolidBorder(Color.GREEN, (50 - 2 * i + 1 >= 0) ? 50 - 2 * i + 1 : 0)).Add(new Paragraph
+                    ((i + 1).ToString())));
+            }
+            doc.Add(table);
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest07() {
+            String testName = "tableWithHeaderFooterTest07.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add("Footer"));
+            table.AddCell(new Cell().Add("0abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopq"));
+            table.AddCell(new Cell().Add("0bbbbbbbbbbbbbbbbbbbbbbbbbbbb").SetBorderBottom(new SolidBorder(50)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest08() {
+            String testName = "tableWithHeaderFooterTest08.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.AddFooterCell(new Cell(1, 2).SetHeight(50).Add("Footer"));
+            table.AddCell(new Cell().Add("Cell1").SetHeight(50));
+            table.AddCell(new Cell().Add("Cell2").SetHeight(50));
+            table.SetSkipLastFooter(true);
+            table.SetBorderBottom(new SolidBorder(Color.RED, 30));
+            doc.Add(table);
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Hello"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void ForcedPlacementTest01() {
             fileName = "forcedPlacementTest01.pdf";

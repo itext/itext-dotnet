@@ -627,11 +627,12 @@ namespace iText.Layout.Element {
         /// <summary>Writes the newly added content to the document.</summary>
         public virtual void Flush() {
             Cell[] row = null;
+            int rowNum = rows.Count;
             if (!rows.IsEmpty()) {
                 row = rows[rows.Count - 1];
             }
             document.Add(this);
-            if (row != null) {
+            if (row != null && rowNum != rows.Count) {
                 lastAddedRow = row;
             }
         }
@@ -676,13 +677,21 @@ namespace iText.Layout.Element {
             if (lastAddedRow != null) {
                 for (int i = 0; i < lastAddedRow.Length; i++) {
                     Cell cell = lastAddedRow[i];
+                    Border border = null;
                     if (cell != null) {
-                        Border border = cell.GetProperty<Border>(Property.BORDER);
-                        if (border == null) {
+                        if (cell.HasProperty(Property.BORDER_BOTTOM)) {
                             border = cell.GetProperty<Border>(Property.BORDER_BOTTOM);
                         }
-                        horizontalBorder.Add(border);
+                        else {
+                            if (cell.HasProperty(Property.BORDER)) {
+                                border = cell.GetProperty<Border>(Property.BORDER);
+                            }
+                            else {
+                                border = cell.GetDefaultProperty<Border>(Property.BORDER);
+                            }
+                        }
                     }
+                    horizontalBorder.Add(border);
                 }
             }
             return horizontalBorder;
