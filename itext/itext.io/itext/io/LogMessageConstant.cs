@@ -52,9 +52,9 @@ namespace iText.IO {
 
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
-        public const String COLOR_NOT_FOUND = "Color ''{0}'' not found. Defaulting to black color.";
+        public const String COLOR_NOT_FOUND = "Color \"{0}\" not found. Defaulting to black color.";
 
-        public const String COLOR_NOT_PARSED = "Color ''{0}'' wasn''t parsed. It has invalid value. Defaulting to black color.";
+        public const String COLOR_NOT_PARSED = "Color \"{0}\" was not parsed. It has invalid value. Defaulting to black color.";
 
         public const String COLORANT_INTENSITIES_INVALID = "Some of colorant intensities are invalid: they are bigger than 1 or less than 0. We will force them to become 1 or 0 respectively.";
 
