@@ -713,7 +713,7 @@ namespace iText.IO.Util {
             char ch = Convert.ToChar(codePoint);
             UnicodeCategory type = CharUnicodeInfo.GetUnicodeCategory(ch);
             // leave SURROGATE and PRIVATE_USE for table lookup
-            if (type == 0) {
+            if (type == UnicodeCategory.OtherNotAssigned) {
                 return UnicodeScript.UNKNOWN;
             }
             int index = Array.BinarySearch(ScriptStarts, codePoint);
