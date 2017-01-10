@@ -417,13 +417,13 @@ namespace iText.Layout.Renderer {
                     drawContext.GetCanvas().OpenTag(new CanvasArtifact());
                 }
                 Rectangle backgroundArea = ApplyMargins(bBox, false);
+                if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                    logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
+                        );
+                    return;
+                }
                 if (background != null) {
-                    if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
-                            );
-                        return;
-                    }
                     TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
                     drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
                     backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
@@ -436,6 +436,12 @@ namespace iText.Layout.Renderer {
                     ApplyBorderBox(backgroundArea, false);
                     Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
                         GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
+                    if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                            ));
+                        return;
+                    }
                     ApplyBorderBox(backgroundArea, true);
                     drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
                     float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
