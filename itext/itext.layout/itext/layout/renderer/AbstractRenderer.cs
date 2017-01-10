@@ -432,27 +432,24 @@ namespace iText.Layout.Renderer {
                         (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
                         ();
                 }
-                ApplyBorderBox(backgroundArea, false);
                 if (backgroundImage != null && backgroundImage.GetImage() != null) {
-                    if (backgroundArea.GetWidth() <= 0 || backgroundArea.GetHeight() <= 0) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
-                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background")
-                            );
-                        return;
-                    }
-                    Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetY() + backgroundArea.GetHeight
-                        () - backgroundImage.GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage
-                        ().GetHeight());
+                    ApplyBorderBox(backgroundArea, false);
+                    Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
+                        GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
+                    ApplyBorderBox(backgroundArea, true);
                     drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
-                    float initialX = imageRectangle.GetX();
+                    float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
+                        .GetX();
+                    float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
+                    imageRectangle.SetY(initialY);
                     do {
                         imageRectangle.SetX(initialX);
                         do {
                             drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
-                            imageRectangle.MoveRight(backgroundImage.GetImage().GetWidth());
+                            imageRectangle.MoveRight(imageRectangle.GetWidth());
                         }
                         while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
-                        imageRectangle.MoveDown(backgroundImage.GetImage().GetHeight());
+                        imageRectangle.MoveDown(imageRectangle.GetHeight());
                     }
                     while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
                     drawContext.GetCanvas().RestoreState();
