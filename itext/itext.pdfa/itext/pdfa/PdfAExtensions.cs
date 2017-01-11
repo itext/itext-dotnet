@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace iText.Pdfa {
@@ -77,6 +78,14 @@ namespace iText.Pdfa {
 
         public static void RetainAll<T>(this ISet<T> set, ICollection<T> c) {
             set.IntersectWith(c);
+        }
+
+        public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
+            return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
         }
     }
 }

@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using iText.IO.Util;
 
 namespace iText.Barcodes {
@@ -70,6 +71,14 @@ namespace iText.Barcodes {
             }
 
             return value;
+        }
+
+        public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
+            return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
         }
     }
 }
