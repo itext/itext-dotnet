@@ -42,12 +42,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using iText.IO.Log;
 using iText.Test.Attributes;
 using log4net;
 using log4net.Appender;
+using log4net.Config;
 using log4net.Core;
+using log4net.Layout;
+using log4net.Repository;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
@@ -55,6 +59,13 @@ namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
         private MemoryAppender appender;
+
+        static LogListener() {
+            ITextMemoryAppender memoryAppender = new ITextMemoryAppender();
+            memoryAppender.Layout = new PatternLayout("%message");
+            ILoggerRepository repo = LogManager.GetRepository(typeof(LogListener).GetAssembly());
+            BasicConfigurator.Configure(repo, memoryAppender);
+        }
 
         public override void BeforeTest(ITest testDetails) {
             Init();
@@ -72,7 +83,8 @@ namespace iText.Test {
             int checkedMessages = 0;
             LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
             if (attributes.Length == 0) {
-                attributes = (LogMessageAttribute[]) testDetails.Fixture.GetType().GetCustomAttributes(typeof(LogMessageAttribute), true);
+                attributes = testDetails.Fixture.GetType().GetCustomAttributes(typeof(LogMessageAttribute), true)
+                    .Select(attr => (LogMessageAttribute) attr).ToArray();
             }
             if (attributes.Length > 0) {
                 for (int i = 0; i < attributes.Length; i++) {

@@ -71,7 +71,6 @@
   </Target>
   -->
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>
