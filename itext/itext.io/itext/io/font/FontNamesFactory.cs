@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     public sealed class FontNamesFactory {
@@ -103,14 +102,15 @@ namespace iText.IO.Font {
         }
 
         private static FontNames FetchCachedFontNames(String fontName, byte[] fontProgram) {
-            String fontKey;
+            FontProgram fontFound;
+            FontCache.FontCacheKey cacheKey;
             if (fontName != null) {
-                fontKey = fontName;
+                cacheKey = FontCache.FontCacheKey.CreateFontCacheKey(fontName);
             }
             else {
-                fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(fontProgram));
+                cacheKey = FontCache.FontCacheKey.CreateFontCacheKey(fontProgram);
             }
-            FontProgram fontFound = FontCache.GetFont(fontKey);
+            fontFound = FontCache.GetFont(cacheKey);
             return fontFound != null ? fontFound.GetFontNames() : null;
         }
 
