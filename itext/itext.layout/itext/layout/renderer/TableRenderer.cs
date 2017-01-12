@@ -192,7 +192,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (layoutBox.GetWidth() > tableWidth) {
-                layoutBox.SetWidth(tableWidth);
+                layoutBox.SetWidth((float)tableWidth);
             }
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
                 Property.FORCED_PLACEMENT))) {
