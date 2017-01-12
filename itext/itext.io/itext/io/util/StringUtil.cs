@@ -57,11 +57,11 @@ namespace iText.IO.Util {
         }
 
         public static Regex RegexCompile(String s) {
-            return RegexCompile(s, RegexOptions.Compiled);
+            return RegexCompile(s, RegexOptions.None);
         }
 
         public static Regex RegexCompile(String s, RegexOptions options) {
-            Regex regex = new Regex(s, RegexOptions.Compiled | options);
+            Regex regex = new Regex(s, options);
             //This is needed so the method throw an exception in case of invalid regular expression.
             regex.IsMatch("");
             return regex;
