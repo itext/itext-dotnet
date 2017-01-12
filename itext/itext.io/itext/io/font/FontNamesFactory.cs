@@ -103,14 +103,14 @@ namespace iText.IO.Font {
 
         private static FontNames FetchCachedFontNames(String fontName, byte[] fontProgram) {
             FontProgram fontFound;
-            FontCache.FontCacheKey cacheKey;
+            FontCacheKey key;
             if (fontName != null) {
-                cacheKey = FontCache.FontCacheKey.CreateFontCacheKey(fontName);
+                key = FontCacheKey.Create(fontName);
             }
             else {
-                cacheKey = FontCache.FontCacheKey.CreateFontCacheKey(fontProgram);
+                key = FontCacheKey.Create(fontProgram);
             }
-            fontFound = FontCache.GetFont(cacheKey);
+            fontFound = FontCache.GetFont(key);
             return fontFound != null ? fontFound.GetFontNames() : null;
         }
 

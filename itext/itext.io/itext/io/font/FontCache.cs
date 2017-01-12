@@ -70,8 +70,8 @@ namespace iText.IO.Font {
 
         private const String W2_PROP = "W2";
 
-        private static IDictionary<FontCache.FontCacheKey, FontProgram> fontCache = new ConcurrentDictionary<FontCache.FontCacheKey
-            , FontProgram>();
+        private static IDictionary<FontCacheKey, FontProgram> fontCache = new ConcurrentDictionary<FontCacheKey, FontProgram
+            >();
 
         static FontCache() {
             try {
@@ -159,18 +159,18 @@ namespace iText.IO.Font {
         }
 
         public static FontProgram GetFont(String fontName) {
-            return fontCache.Get(new FontCache.FontCacheStringKey(fontName));
+            return fontCache.Get(FontCacheKey.Create(fontName));
         }
 
-        internal static FontProgram GetFont(FontCache.FontCacheKey key) {
+        internal static FontProgram GetFont(FontCacheKey key) {
             return fontCache.Get(key);
         }
 
         public static FontProgram SaveFont(FontProgram font, String fontName) {
-            return SaveFont(font, new FontCache.FontCacheStringKey(fontName));
+            return SaveFont(font, FontCacheKey.Create(fontName));
         }
 
-        internal static FontProgram SaveFont(FontProgram font, FontCache.FontCacheKey key) {
+        internal static FontProgram SaveFont(FontProgram font, FontCacheKey key) {
             FontProgram fontFound = fontCache.Get(key);
             if (fontFound != null) {
                 return fontFound;
@@ -244,125 +244,6 @@ namespace iText.IO.Font {
                 throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
             return cmap;
-        }
-
-        internal abstract class FontCacheKey {
-            internal static FontCache.FontCacheKey CreateFontCacheKey(String fontName) {
-                return new FontCache.FontCacheStringKey(fontName);
-            }
-
-            internal static FontCache.FontCacheKey CreateFontCacheKey(String fontName, int ttcIndex) {
-                return new FontCache.FontCacheTtcKey(fontName, ttcIndex);
-            }
-
-            internal static FontCache.FontCacheKey CreateFontCacheKey(byte[] fontProgram) {
-                return new FontCache.FontCacheBytesKey(fontProgram);
-            }
-
-            internal static FontCache.FontCacheKey CreateFontCacheKey(byte[] fontProgram, int ttcIndex) {
-                return new FontCache.FontCacheTtcKey(fontProgram, ttcIndex);
-            }
-        }
-
-        private class FontCacheStringKey : FontCache.FontCacheKey {
-            private String fontName;
-
-            internal FontCacheStringKey(String fontName) {
-                this.fontName = fontName;
-            }
-
-            public override bool Equals(Object o) {
-                if (this == o) {
-                    return true;
-                }
-                if (o == null || GetType() != o.GetType()) {
-                    return false;
-                }
-                FontCache.FontCacheStringKey that = (FontCache.FontCacheStringKey)o;
-                return fontName != null ? fontName.Equals(that.fontName) : that.fontName == null;
-            }
-
-            public override int GetHashCode() {
-                return fontName != null ? fontName.GetHashCode() : 0;
-            }
-        }
-
-        private class FontCacheBytesKey : FontCache.FontCacheKey {
-            private byte[] firstFontBytes;
-
-            private int fontLength;
-
-            private int hashcode;
-
-            internal FontCacheBytesKey(byte[] fontBytes) {
-                if (fontBytes != null) {
-                    int maxBytesNum = 10000;
-                    this.firstFontBytes = fontBytes.Length > maxBytesNum ? iText.IO.Util.JavaUtil.ArraysCopyOf(fontBytes, maxBytesNum
-                        ) : fontBytes;
-                    this.fontLength = fontBytes.Length;
-                }
-                this.hashcode = CalcHashCode();
-            }
-
-            public override bool Equals(Object o) {
-                if (this == o) {
-                    return true;
-                }
-                if (o == null || GetType() != o.GetType()) {
-                    return false;
-                }
-                FontCache.FontCacheBytesKey that = (FontCache.FontCacheBytesKey)o;
-                if (fontLength != that.fontLength) {
-                    return false;
-                }
-                return iText.IO.Util.JavaUtil.ArraysEquals(firstFontBytes, that.firstFontBytes);
-            }
-
-            public override int GetHashCode() {
-                return hashcode;
-            }
-
-            private int CalcHashCode() {
-                int result = iText.IO.Util.JavaUtil.ArraysHashCode(firstFontBytes);
-                result = 31 * result + fontLength;
-                return result;
-            }
-        }
-
-        private class FontCacheTtcKey : FontCache.FontCacheKey {
-            private FontCache.FontCacheKey ttcKey;
-
-            private int ttcIndex;
-
-            internal FontCacheTtcKey(String fontName, int ttcIndex) {
-                this.ttcKey = new FontCache.FontCacheStringKey(fontName);
-                this.ttcIndex = ttcIndex;
-            }
-
-            internal FontCacheTtcKey(byte[] fontBytes, int ttcIndex) {
-                this.ttcKey = new FontCache.FontCacheBytesKey(fontBytes);
-                this.ttcIndex = ttcIndex;
-            }
-
-            public override bool Equals(Object o) {
-                if (this == o) {
-                    return true;
-                }
-                if (o == null || GetType() != o.GetType()) {
-                    return false;
-                }
-                FontCache.FontCacheTtcKey that = (FontCache.FontCacheTtcKey)o;
-                if (ttcIndex != that.ttcIndex) {
-                    return false;
-                }
-                return ttcKey.Equals(that.ttcKey);
-            }
-
-            public override int GetHashCode() {
-                int result = ttcKey.GetHashCode();
-                result = 31 * result + ttcIndex;
-                return result;
-            }
         }
     }
 }

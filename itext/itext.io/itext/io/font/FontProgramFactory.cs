@@ -181,7 +181,7 @@ namespace iText.IO.Font {
             bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(name);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
-            FontCache.FontCacheKey fontKey = null;
+            FontCacheKey fontKey = null;
             if (cached) {
                 fontKey = CreateFontCacheKey(name, fontProgram);
                 fontFound = FontCache.GetFont(fontKey);
@@ -259,7 +259,7 @@ namespace iText.IO.Font {
             )]
         public static FontProgram CreateType1Font(String name, byte[] afm, byte[] pfb, bool cached) {
             FontProgram fontProgram;
-            FontCache.FontCacheKey fontKey = null;
+            FontCacheKey fontKey = null;
             if (cached) {
                 fontKey = CreateFontCacheKey(name, afm);
                 fontProgram = FontCache.GetFont(fontKey);
@@ -348,7 +348,7 @@ namespace iText.IO.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(String ttc, int ttcIndex, bool cached) {
-            FontCache.FontCacheKey fontCacheKey = FontCache.FontCacheKey.CreateFontCacheKey(ttc, ttcIndex);
+            FontCacheKey fontCacheKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
                 FontProgram fontFound = FontCache.GetFont(fontCacheKey);
                 if (fontFound != null) {
@@ -374,7 +374,7 @@ namespace iText.IO.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(byte[] ttc, int ttcIndex, bool cached) {
-            FontCache.FontCacheKey fontKey = FontCache.FontCacheKey.CreateFontCacheKey(ttc, ttcIndex);
+            FontCacheKey fontKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
                 FontProgram fontFound = FontCache.GetFont(fontKey);
                 if (fontFound != null) {
@@ -524,7 +524,7 @@ namespace iText.IO.Font {
         private static FontProgram CreateType1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb, 
             bool cached) {
             FontProgram fontProgram;
-            FontCache.FontCacheKey fontKey = null;
+            FontCacheKey fontKey = null;
             if (cached) {
                 fontKey = CreateFontCacheKey(metricsPath, afm);
                 fontProgram = FontCache.GetFont(fontKey);
@@ -536,15 +536,15 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
         }
 
-        private static FontCache.FontCacheKey CreateFontCacheKey(String name, byte[] fontProgram) {
-            FontCache.FontCacheKey cacheKey;
+        private static FontCacheKey CreateFontCacheKey(String name, byte[] fontProgram) {
+            FontCacheKey key;
             if (name != null) {
-                cacheKey = FontCache.FontCacheKey.CreateFontCacheKey(name);
+                key = FontCacheKey.Create(name);
             }
             else {
-                cacheKey = FontCache.FontCacheKey.CreateFontCacheKey(fontProgram);
+                key = FontCacheKey.Create(fontProgram);
             }
-            return cacheKey;
+            return key;
         }
     }
 }
