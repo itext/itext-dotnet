@@ -36,5 +36,26 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , diffPrefix));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ConsecutiveSpacesTest() {
+            String outFileName = destinationFolder + "consecutiveSpacesTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_consecutiveSpacesTest.pdf";
+            String diffPrefix = "diff_consecutiveSpacesTest_";
+            Document document = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            document.Add(new Paragraph("aaa\u00a0\u00a0\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(Color.RED, 
+                10)));
+            document.Add(new Paragraph("aaa\u00a0bbb").SetWidth(100).SetBorder(new SolidBorder(Color.GREEN, 10)));
+            document.Add(new Paragraph("aaa   bbb").SetWidth(100).SetBorder(new SolidBorder(Color.BLUE, 10)));
+            document.Add(new Paragraph("aaa bbb").SetWidth(100).SetBorder(new SolidBorder(Color.BLACK, 10)));
+            Paragraph p = new Paragraph();
+            p.Add("aaa\u00a0\u00a0\u00a0bbb").Add("ccc   ddd");
+            document.Add(p);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , diffPrefix));
+        }
     }
 }
