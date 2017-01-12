@@ -191,6 +191,9 @@ namespace iText.Layout.Renderer {
                     tableWidth = layoutBox.GetWidth() * totalColumnWidthInPercent / 100;
                 }
             }
+            if (layoutBox.GetWidth() > tableWidth) {
+                layoutBox.SetWidth(tableWidth);
+            }
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
                 Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
@@ -225,6 +228,9 @@ namespace iText.Layout.Renderer {
                 // apply the difference to set footer and table left/right margins identical
                 layoutBox.ApplyMargins<Rectangle>(0, Math.Max(0, rightTableBorderWidth - rightFooterBorderWidth) / 2, 0, Math
                     .Max(0, leftTableBorderWidth - leftFooterBorderWidth) / 2, false);
+                if (HasProperty(Property.WIDTH)) {
+                    footerRenderer.SetProperty(Property.WIDTH, new UnitValue(1, layoutBox.GetWidth()));
+                }
                 LayoutResult result = footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
@@ -278,6 +284,9 @@ namespace iText.Layout.Renderer {
                 // apply the difference to set header and table left/right margins identical
                 layoutBox.ApplyMargins<Rectangle>(0, Math.Max(0, rightTableBorderWidth - rightHeaderBorderWidth) / 2, 0, Math
                     .Max(0, leftTableBorderWidth - leftHeaderBorderWidth) / 2, false);
+                if (HasProperty(Property.WIDTH)) {
+                    headerRenderer.SetProperty(Property.WIDTH, new UnitValue(1, layoutBox.GetWidth()));
+                }
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
                     )));
                 if (result.GetStatus() != LayoutResult.FULL) {
@@ -385,7 +394,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 // such situation can occur if (the table is complete and empty) or (there was a row where each cell is rowspanned)
-                if (cellProcessingQueue.IsEmpty()) {
+                if (0 == cellProcessingQueue.Count) {
                     // we shouldn't consider this row in borders building
                     rows.Remove(currentRow);
                     row--;
@@ -716,6 +725,9 @@ namespace iText.Layout.Renderer {
                     // apply the difference to set footer and table left/right margins identical
                     layoutBox.ApplyMargins<Rectangle>(0, -collapsedTableBorderWidths[1] / 2, 0, -collapsedTableBorderWidths[3]
                          / 2, false);
+                    if (HasProperty(Property.WIDTH)) {
+                        footerRenderer.SetProperty(Property.WIDTH, new UnitValue(1, layoutBox.GetWidth()));
+                    }
                     footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox)));
                     layoutBox.ApplyMargins<Rectangle>(0, -collapsedTableBorderWidths[1] / 2, 0, -collapsedTableBorderWidths[3]
                          / 2, true);
@@ -910,11 +922,11 @@ namespace iText.Layout.Renderer {
                                     float blockBottom = Math.Max(occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox
                                         ().GetHeight()), layoutBox.GetBottom());
                                     if (0 == heights.Count) {
-                                        heights.Add(blockMinHeight - occupiedArea.GetBBox().GetHeight() / 2);
+                                        heights.Add(((float)blockMinHeight) - occupiedArea.GetBBox().GetHeight() / 2);
                                     }
                                     else {
-                                        heights[heights.Count - 1] = heights[heights.Count - 1] + blockMinHeight - occupiedArea.GetBBox().GetHeight
-                                            ();
+                                        heights[heights.Count - 1] = heights[heights.Count - 1] + ((float)blockMinHeight) - occupiedArea.GetBBox()
+                                            .GetHeight();
                                     }
                                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                                 }
