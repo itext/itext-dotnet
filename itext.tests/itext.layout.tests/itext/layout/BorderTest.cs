@@ -886,6 +886,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithHeaderFooter03() {
             fileName = "tableWithHeaderFooterTest03.pdf";
             Document doc = CreateDocument();
@@ -998,6 +999,41 @@ namespace iText.Layout {
             table.SetBorderBottom(new SolidBorder(Color.RED, 30));
             doc.Add(table);
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Hello"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-997")]
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest09() {
+            String testName = "tableWithHeaderFooterTest09.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)), PageSize.A4.Rotate());
+            Cell headerCell1 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 10)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell headerCell2 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 10)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell tableCell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom(
+                Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell tableCell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom(
+                Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            //        Cell tableCell3 = new Cell().add("I am table")
+            //                .setBorder(new SolidBorder(Color.YELLOW, 30))
+            //                .setBorderBottom(Border.NO_BORDER)
+            //                .setBorderTop(Border.NO_BORDER);
+            //        Cell tableCell4 = new Cell().add("I am table")
+            //                .setBorder(new SolidBorder(Color.YELLOW, 30))
+            //                .setBorderBottom(Border.NO_BORDER)
+            //                .setBorderTop(Border.NO_BORDER);
+            Table table = new Table(new float[] { 350, 350 }).SetBorder(new SolidBorder(Color.BLUE, 20)).AddHeaderCell
+                (headerCell1).AddHeaderCell(headerCell2).AddCell(tableCell1).AddCell(tableCell2);
+            //.addCell(tableCell3).addCell(tableCell4)
+            table.GetHeader().SetBorder(new SolidBorder(Color.BLACK, 50));
+            doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));

@@ -6,6 +6,7 @@ using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class LargeElementTest : ExtendedITextTest {
@@ -284,6 +285,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 1)]
         public virtual void LargeEmptyTableTest() {
             String testName = "largeEmptyTableTest.pdf";
             String outFileName = destinationFolder + testName;

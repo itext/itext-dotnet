@@ -512,5 +512,60 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        public virtual void ImageInTableTest01() {
+            String outFileName = destinationFolder + "imageInTableTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageInTableTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            Table table = new Table(1);
+            table.SetMaxHeight(300);
+            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            Cell c = new Cell().Add(img.SetHeight(500));
+            table.AddCell(c);
+            document.Add(table);
+            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new AreaBreak());
+            table.SetMinHeight(150);
+            document.Add(table);
+            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        public virtual void ImageInTableTest02() {
+            String outFileName = destinationFolder + "imageInTableTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageInTableTest02.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            Table table = new Table(1);
+            table.SetMaxHeight(300);
+            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            Cell c = new Cell().Add(img.SetHeight(500));
+            table.AddCell("First cell");
+            table.AddCell(c);
+            document.Add(table);
+            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Add(new AreaBreak());
+            table.SetMinHeight(150);
+            document.Add(table);
+            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
