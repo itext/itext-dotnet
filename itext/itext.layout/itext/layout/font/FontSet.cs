@@ -53,7 +53,7 @@ namespace iText.Layout.Font {
         private static IDictionary<String, FontProgramInfo> fontInfoCache = new ConcurrentDictionary<String, FontProgramInfo
             >();
 
-        private ICollection<FontProgramInfo> fonts = new HashSet<FontProgramInfo>();
+        private ICollection<FontProgramInfo> fonts = new LinkedHashSet<FontProgramInfo>();
 
         private IDictionary<FontProgramInfo, FontProgram> fontPrograms = new Dictionary<FontProgramInfo, FontProgram
             >();
