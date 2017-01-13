@@ -219,6 +219,8 @@ namespace iText.Layout.Properties {
 
         public const int SKEW = 65;
 
+        public const int TABLE_LAYOUT = 93;
+
         public const int TAB_ANCHOR = 66;
 
         public const int TAB_DEFAULT = 67;
