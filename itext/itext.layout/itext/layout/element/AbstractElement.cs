@@ -43,7 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
+using System.Linq;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Tagutils;
@@ -65,7 +65,7 @@ namespace iText.Layout.Element {
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
-        protected internal ICollection<Style> styles;
+        protected internal IList<Style> styles;
 
         public virtual IRenderer GetRenderer() {
             if (nextRenderer != null) {
@@ -104,7 +104,8 @@ namespace iText.Layout.Element {
         public override T1 GetProperty<T1>(int property) {
             Object result = base.GetProperty<T1>(property);
             if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property)) {
-                foreach (Style style in styles) {
+                IEnumerable<Style> listItReverse = styles.Reverse();
+                foreach (Style style in listItReverse) {
                     result = style.GetProperty<T1>(property);
                     if (result != null || base.HasProperty(property)) {
                         break;
@@ -123,7 +124,7 @@ namespace iText.Layout.Element {
         /// <returns>this element</returns>
         public virtual T AddStyle(Style style) {
             if (styles == null) {
-                styles = new LinkedHashSet<Style>();
+                styles = new List<Style>();
             }
             styles.Add(style);
             return (T)(Object)this;
