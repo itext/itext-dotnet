@@ -41,7 +41,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
@@ -50,9 +49,6 @@ namespace iText.Layout.Font {
     /// <summary>Reusable font set for FontProgram related data.</summary>
     /// <seealso cref="FontProvider"/>
     public class FontSet {
-        private static IDictionary<String, FontProgramInfo> fontInfoCache = new ConcurrentDictionary<String, FontProgramInfo
-            >();
-
         private ICollection<FontProgramInfo> fonts = new LinkedHashSet<FontProgramInfo>();
 
         private IDictionary<FontProgramInfo, FontProgram> fontPrograms = new Dictionary<FontProgramInfo, FontProgram
@@ -61,7 +57,6 @@ namespace iText.Layout.Font {
         private IDictionary<FontSelectorKey, FontSelector> fontSelectorCache = new Dictionary<FontSelectorKey, FontSelector
             >();
 
-        //"fontName+encoding" or "hash(fontProgram)+encoding" as key
         public virtual int AddDirectory(String dir, bool scanSubdirectories) {
             int count = 0;
             String[] files = FileUtil.ListFilesInDirectory(dir, scanSubdirectories);
@@ -122,16 +117,12 @@ namespace iText.Layout.Font {
             return AddFont(null, fontProgram, encoding);
         }
 
-        public virtual void AddFont(String fontProgram) {
-            AddFont(fontProgram, null);
+        public virtual bool AddFont(String fontProgram) {
+            return AddFont(fontProgram, null);
         }
 
-        public virtual void AddFont(FontProgram fontProgram) {
-            AddFont(fontProgram, null);
-        }
-
-        public virtual void AddFont(byte[] fontProgram) {
-            AddFont(fontProgram, null);
+        public virtual bool AddFont(byte[] fontProgram) {
+            return AddFont(fontProgram, null);
         }
 
         public virtual ICollection<FontProgramInfo> GetFonts() {
@@ -139,25 +130,17 @@ namespace iText.Layout.Font {
         }
 
         internal virtual bool AddFont(String fontName, byte[] fontProgram, String encoding) {
-            if (fontName == null && fontProgram == null) {
-                return false;
-            }
-            String fontInfoKey = CalculateFontProgramInfoKey(fontName, fontProgram, encoding);
-            FontProgramInfo fontInfo;
-            if (fontInfoCache.ContainsKey(fontInfoKey)) {
-                fontInfo = fontInfoCache.Get(fontInfoKey);
+            if (fontName != null) {
+                return AddFontInfo(FontProgramInfo.Create(fontName, encoding));
             }
             else {
-                fontInfo = FontProgramInfo.Create(fontName, fontProgram, encoding);
-                if (fontInfo != null) {
-                    fontInfoCache[fontInfoKey] = fontInfo;
+                if (fontProgram != null) {
+                    return AddFontInfo(FontProgramInfo.Create(fontProgram, encoding));
                 }
                 else {
                     return false;
                 }
             }
-            AddFontInfo(fontInfo);
-            return true;
         }
 
         internal virtual IDictionary<FontProgramInfo, FontProgram> GetFontPrograms() {
@@ -168,20 +151,15 @@ namespace iText.Layout.Font {
             return fontSelectorCache;
         }
 
-        private String CalculateFontProgramInfoKey(String fontName, byte[] fontProgram, String encoding) {
-            String key;
-            if (fontName != null) {
-                key = fontName;
+        private bool AddFontInfo(FontProgramInfo fontInfo) {
+            if (fontInfo != null) {
+                fonts.Add(fontInfo);
+                fontSelectorCache.Clear();
+                return true;
             }
             else {
-                key = iText.IO.Util.JavaUtil.IntegerToHexString(ArrayUtil.HashCode(fontProgram));
+                return false;
             }
-            return key + encoding;
-        }
-
-        private void AddFontInfo(FontProgramInfo fontInfo) {
-            fonts.Add(fontInfo);
-            fontSelectorCache.Clear();
         }
     }
 }

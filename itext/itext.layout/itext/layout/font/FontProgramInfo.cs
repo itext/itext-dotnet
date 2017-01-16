@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel;
@@ -59,6 +61,9 @@ namespace iText.Layout.Font {
     /// .
     /// </summary>
     public sealed class FontProgramInfo {
+        private static readonly IDictionary<FontCacheKey, FontNames> fontNamesCache = new ConcurrentDictionary<FontCacheKey
+            , FontNames>();
+
         private readonly String fontName;
 
         private readonly byte[] fontProgram;
@@ -82,19 +87,28 @@ namespace iText.Layout.Font {
                 .GetFontNames());
         }
 
-        internal static iText.Layout.Font.FontProgramInfo Create(String fontName, byte[] fontProgram, String encoding
-            ) {
+        internal static iText.Layout.Font.FontProgramInfo Create(String fontName, String encoding) {
+            FontCacheKey cacheKey = FontCacheKey.Create(fontName);
             FontNames names;
-            if (fontName != null) {
+            if (fontNamesCache.ContainsKey(cacheKey)) {
+                names = fontNamesCache.Get(cacheKey);
+            }
+            else {
                 names = FontNamesFactory.FetchFontNames(fontName);
+            }
+            return names != null ? new iText.Layout.Font.FontProgramInfo(fontName, null, encoding, names) : null;
+        }
+
+        internal static iText.Layout.Font.FontProgramInfo Create(byte[] fontProgram, String encoding) {
+            FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
+            FontNames names;
+            if (fontNamesCache.ContainsKey(cacheKey)) {
+                names = fontNamesCache.Get(cacheKey);
             }
             else {
                 names = FontNamesFactory.FetchFontNames(fontProgram);
             }
-            if (names == null) {
-                return null;
-            }
-            return new iText.Layout.Font.FontProgramInfo(fontName, fontProgram, encoding, names);
+            return names != null ? new iText.Layout.Font.FontProgramInfo(null, fontProgram, encoding, names) : null;
         }
 
         public PdfFont GetPdfFont(FontProvider fontProvider) {

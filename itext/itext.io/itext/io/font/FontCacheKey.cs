@@ -43,20 +43,20 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.IO.Font {
-    internal abstract class FontCacheKey {
-        internal static FontCacheKey Create(String fontName) {
+    public abstract class FontCacheKey {
+        public static FontCacheKey Create(String fontName) {
             return new FontCacheKey.FontCacheStringKey(fontName);
         }
 
-        internal static FontCacheKey Create(String fontName, int ttcIndex) {
+        public static FontCacheKey Create(String fontName, int ttcIndex) {
             return new FontCacheKey.FontCacheTtcKey(fontName, ttcIndex);
         }
 
-        internal static FontCacheKey Create(byte[] fontProgram) {
+        public static FontCacheKey Create(byte[] fontProgram) {
             return new FontCacheKey.FontCacheBytesKey(fontProgram);
         }
 
-        internal static FontCacheKey Create(byte[] fontProgram, int ttcIndex) {
+        public static FontCacheKey Create(byte[] fontProgram, int ttcIndex) {
             return new FontCacheKey.FontCacheTtcKey(fontProgram, ttcIndex);
         }
 
