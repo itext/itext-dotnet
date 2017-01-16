@@ -249,7 +249,7 @@ namespace iText.IO.Codec {
             * Scan full bytes for all 1's.
             */
             while (bits >= 8) {
-                if (bp[pos] != -1) {
+                if (bp[pos] != (byte)0xff) {
                     /* end of run */
                     return (span + oneruns[bp[pos] & 0xff]);
                 }
