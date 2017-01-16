@@ -28,11 +28,13 @@ namespace iText.Layout {
             Style myStyle = new Style();
             myStyle.SetFontColor(Color.RED);
             Paragraph p = new Paragraph("text").AddStyle(myStyle);
-            NUnit.Framework.Assert.AreEqual(Color.RED, p.GetRenderer().GetProperty<Color>(Property.FONT_COLOR));
+            NUnit.Framework.Assert.AreEqual(Color.RED, p.GetRenderer().GetProperty<TransparentColor>(Property.FONT_COLOR
+                ).GetColor());
             Style myStyle2 = new Style();
             myStyle2.SetFontColor(Color.GREEN);
             p.AddStyle(myStyle2);
-            NUnit.Framework.Assert.AreEqual(Color.GREEN, p.GetRenderer().GetProperty<Color>(Property.FONT_COLOR));
+            NUnit.Framework.Assert.AreEqual(Color.GREEN, p.GetRenderer().GetProperty<TransparentColor>(Property.FONT_COLOR
+                ).GetColor());
         }
     }
 }

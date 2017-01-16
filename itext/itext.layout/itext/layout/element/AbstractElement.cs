@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using iText.Kernel.Pdf;
@@ -65,7 +66,18 @@ namespace iText.Layout.Element {
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
-        protected internal IList<Style> styles;
+        /// <summary>
+        /// In iText 7.0.2, this attribute was changed from a
+        /// <see cref="Java.Util.Set{E}"/>
+        /// to a
+        /// <see cref="System.Collections.ICollection{E}"/>
+        /// . This is theoretically a backwards incompatible
+        /// change, but this can only break assignment logic in subclasses,
+        /// since no methods are added in
+        /// <see cref="Java.Util.Set{E}"/>
+        /// .
+        /// </summary>
+        protected internal ICollection<Style> styles;
 
         public virtual IRenderer GetRenderer() {
             if (nextRenderer != null) {
