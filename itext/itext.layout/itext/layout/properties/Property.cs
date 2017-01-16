@@ -116,7 +116,20 @@ namespace iText.Layout.Properties {
 
         public const int FONT_KERNING = 22;
 
-        [Obsolete]
+        /// <summary>
+        /// Note, this property will be applied only if
+        /// <see cref="FONT"/>
+        /// has String value.
+        /// </summary>
+        public const int FONT_STYLE = 94;
+
+        /// <summary>
+        /// Note, this property will be applied only if
+        /// <see cref="FONT"/>
+        /// has String value.
+        /// </summary>
+        public const int FONT_WEIGHT = 95;
+
         public const int FONT_SCRIPT = 23;
 
         public const int FONT_PROVIDER = 91;
@@ -266,7 +279,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 91;
+        private const int MAX_INHERITED_PROPERTY_ID = 95;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -279,9 +292,11 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_COLOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_KERNING] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SCRIPT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_PROVIDER] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SCRIPT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SIZE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_STYLE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_WEIGHT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FORCED_PLACEMENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
