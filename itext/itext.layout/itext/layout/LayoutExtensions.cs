@@ -54,6 +54,10 @@ namespace iText.Layout {
             return str.Substring(beginIndex, endIndex - beginIndex);
         }
 
+        public static String JSubstring(this StringBuilder sb, int beginIndex, int endIndex) {
+            return sb.ToString(beginIndex, endIndex - beginIndex);
+        }
+
         public static void JGetChars(this String str, int srcBegin, int srcEnd, char[] dst, int dstBegin) {
             str.CopyTo(srcBegin, dst, dstBegin, srcEnd - srcBegin);
         }

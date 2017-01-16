@@ -30,11 +30,35 @@ namespace iText.Layout {
             FontProvider sel = new FontProvider();
             sel.AddFont(fontsFolder + "Puritan2.otf");
             sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
+            sel.AddFont(fontsFolder + "FreeSans.ttf");
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             doc.SetProperty(Property.FONT, "Puritan");
+            Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
+            Paragraph paragraph = new Paragraph(text);
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1024")]
+        public virtual void CyrillicAndLatinGroup2() {
+            String outFileName = destinationFolder + "cyrillicAndLatinGroup2.pdf";
+            String cmpFileName = sourceFolder + "cmp_cyrillicAndLatinGroup2.pdf";
+            FontProvider sel = new FontProvider();
+            sel.AddFont(fontsFolder + "Puritan2.otf");
+            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
+            sel.AddFont(fontsFolder + "FreeSans.ttf");
+            String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            doc.SetProperty(Property.FONT, "'Puritan', \"FreeSans\"");
             Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
