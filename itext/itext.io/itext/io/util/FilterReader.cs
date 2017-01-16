@@ -77,8 +77,11 @@ namespace iText.IO.Util {
             return inp.Read(cbuf, off, len);
         }
 
-        public override void Close() {
-            inp.Close();
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                inp.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

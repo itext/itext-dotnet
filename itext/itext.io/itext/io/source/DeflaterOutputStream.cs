@@ -62,11 +62,11 @@ namespace iText.IO.Source {
 		{
 		}
 
-		/// <exception cref="System.IO.IOException"/>
-		public override void Close()
-		{
-			Finish();
-			base.Close();
-		}
+	    protected override void Dispose(bool disposing) {
+	        if (disposing) {
+	            Finish();
+	        }
+	        base.Dispose(disposing);
+	    }
 	}
 }

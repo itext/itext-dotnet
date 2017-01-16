@@ -159,7 +159,7 @@ namespace iText.IO.Source
             }
             finally
             {
-                try { isp.Close(); }
+                try { isp.Dispose(); }
                 catch { }
             }
 		}
@@ -288,7 +288,7 @@ namespace iText.IO.Source
 			{
 				try
 				{
-					stream.Close();
+					stream.Dispose();
 				}
 				catch (IOException)
 				{

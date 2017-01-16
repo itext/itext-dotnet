@@ -175,17 +175,21 @@ namespace System.util.zlib {
             z.free();
             z=null;
         }
-        
-        public override void Close() {
-            try{
-                try{Finish();}
-                catch (IOException) {}
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                try {
+                    try {
+                        Finish();
+                    } catch (IOException) {
+                    }
+                } finally {
+                    End();
+                    outp.Dispose();
+                    outp = null;
+                }
             }
-            finally{
-                End();
-                outp.Close();
-                outp=null;
-            }
+            base.Dispose(disposing);
         }
     }
 }

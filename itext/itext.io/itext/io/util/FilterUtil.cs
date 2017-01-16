@@ -69,8 +69,8 @@ namespace iText.IO.Util {
                 while ((n = zip.Read(b, 0, b.Length)) > 0) {
                     output.Write(b, 0, n);
                 }
-                zip.Close();
-                output.Close();
+                zip.Dispose();
+                output.Dispose();
                 return output.ToArray();
             } catch {
                 if (strict)
