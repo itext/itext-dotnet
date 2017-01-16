@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 
 namespace iText.Layout.Font {
     /// <summary>
@@ -50,12 +51,12 @@ namespace iText.Layout.Font {
     /// </summary>
     /// <seealso>FontSet#getFontSelectorCache().</seealso>
     internal sealed class FontSelectorKey {
-        internal String fontFamily;
+        internal IList<String> fontFamilies;
 
         internal int style;
 
-        public FontSelectorKey(String fontFamily, int style) {
-            this.fontFamily = fontFamily;
+        public FontSelectorKey(IList<String> fontFamilies, int style) {
+            this.fontFamilies = new List<String>(fontFamilies);
             this.style = style;
         }
 
@@ -64,12 +65,12 @@ namespace iText.Layout.Font {
                 return true;
             }
             iText.Layout.Font.FontSelectorKey that = (iText.Layout.Font.FontSelectorKey)o;
-            return style == that.style && (fontFamily != null ? fontFamily.Equals(that.fontFamily) : that.fontFamily ==
-                 null);
+            return style == that.style && (fontFamilies != null ? System.Linq.Enumerable.SequenceEqual(fontFamilies, that
+                .fontFamilies) : that.fontFamilies == null);
         }
 
         public override int GetHashCode() {
-            int result = fontFamily != null ? fontFamily.GetHashCode() : 0;
+            int result = fontFamilies != null ? fontFamilies.GetHashCode() : 0;
             result = 31 * result + style;
             return result;
         }

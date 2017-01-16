@@ -136,12 +136,12 @@ namespace iText.Layout.Font {
             return true;
         }
 
-        public virtual FontSelectorStrategy GetStrategy(String text, String fontFamily, int style) {
-            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamily, style), this);
+        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, int style) {
+            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, style), this);
         }
 
-        public virtual FontSelectorStrategy GetStrategy(String text, String fontFamily) {
-            return GetStrategy(text, fontFamily, FontConstants.UNDEFINED);
+        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies) {
+            return GetStrategy(text, fontFamilies, FontConstants.UNDEFINED);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelector"/>
         /// or get from cache.
         /// </summary>
-        /// <param name="fontFamily">target font family</param>
+        /// <param name="fontFamilies">target font families</param>
         /// <param name="style">
         /// Shall be
         /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
@@ -167,14 +167,15 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        /// <seealso>#createFontSelector(Set, String, int)}</seealso>
-        public FontSelector GetFontSelector(String fontFamily, int style) {
-            FontSelectorKey key = new FontSelectorKey(fontFamily, style);
+        /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, int)
+        ///     ">}</seealso>
+        public FontSelector GetFontSelector(IList<String> fontFamilies, int style) {
+            FontSelectorKey key = new FontSelectorKey(fontFamilies, style);
             if (fontSet.GetFontSelectorCache().ContainsKey(key)) {
                 return fontSet.GetFontSelectorCache().Get(key);
             }
             else {
-                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamily, style);
+                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, style);
                 fontSet.GetFontSelectorCache()[key] = fontSelector;
                 return fontSelector;
             }
@@ -184,14 +185,14 @@ namespace iText.Layout.Font {
         /// Create a new instance of
         /// <see cref="FontSelector"/>
         /// . While caching is main responsibility of
-        /// <see cref="GetFontSelector(System.String, int)"/>
+        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, int)"/>
         /// ,
         /// this method just create a new instance of
         /// <see cref="FontSelector"/>
         /// .
         /// </summary>
         /// <param name="fonts">Set of all available fonts in current context.</param>
-        /// <param name="fontFamily">target font family</param>
+        /// <param name="fontFamilies">target font families</param>
         /// <param name="style">
         /// Shall be
         /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
@@ -209,9 +210,9 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        protected internal virtual FontSelector CreateFontSelector(ICollection<FontProgramInfo> fonts, String fontFamily
-            , int style) {
-            return new FontSelector(fonts, fontFamily, style);
+        protected internal virtual FontSelector CreateFontSelector(ICollection<FontProgramInfo> fonts, IList<String
+            > fontFamilies, int style) {
+            return new FontSelector(fonts, fontFamilies, style);
         }
 
         /// <summary>

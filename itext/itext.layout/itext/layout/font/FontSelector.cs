@@ -46,14 +46,17 @@ using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
-    /// <summary>Sort given font set according to font name and font style.</summary>
+    /// <summary>Sort given set of fonts according to font name and style.</summary>
     public class FontSelector {
         protected internal IList<FontProgramInfo> fonts;
 
-        public FontSelector(ICollection<FontProgramInfo> allFonts, String fontFamily, int style) {
+        /// <summary>Create new FontSelector instance.</summary>
+        /// <param name="allFonts">Unsorted set of all available fonts.</param>
+        /// <param name="fontFamilies">sorted list of preferred font families.</param>
+        public FontSelector(ICollection<FontProgramInfo> allFonts, IList<String> fontFamilies, int style) {
             this.fonts = new List<FontProgramInfo>(allFonts);
             //Possible issue in .NET, virtual member in constructor.
-            JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamily != null ? fontFamily : "", style));
+            JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, style));
         }
 
         /// <summary>The best font match.</summary>
@@ -72,17 +75,57 @@ namespace iText.Layout.Font {
             return fonts;
         }
 
-        protected internal virtual IComparer<FontProgramInfo> GetComparator(String fontFamily, int style) {
-            return new FontSelector.PdfFontComparator(fontFamily, style);
+        protected internal virtual IComparer<FontProgramInfo> GetComparator(IList<String> fontFamilies, int style) {
+            return new FontSelector.PdfFontComparator(fontFamilies, style);
         }
 
         private class PdfFontComparator : IComparer<FontProgramInfo> {
-            internal String fontFamily;
+            internal IList<String> fontFamilies;
 
-            internal int style;
+            internal IList<int> fontStyles;
 
-            internal PdfFontComparator(String fontFamily, int style) {
-                this.fontFamily = fontFamily.ToLowerInvariant();
+            internal PdfFontComparator(IList<String> fontFamilies, int style) {
+                this.fontFamilies = new List<String>();
+                this.fontStyles = new List<int>();
+                if (fontFamilies != null && fontFamilies.Count > 0) {
+                    foreach (String fontFamily in fontFamilies) {
+                        String lowercaseFontFamily = fontFamily.ToLowerInvariant();
+                        this.fontFamilies.Add(lowercaseFontFamily);
+                        this.fontStyles.Add(ParseFontStyle(lowercaseFontFamily, style));
+                    }
+                }
+                else {
+                    this.fontFamilies.Add("");
+                    this.fontStyles.Add(style);
+                }
+            }
+
+            public virtual int Compare(FontProgramInfo o1, FontProgramInfo o2) {
+                int res = 0;
+                for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
+                    int style = fontStyles[i];
+                    if ((style & FontConstants.BOLD) == 0) {
+                        res = (o2.GetNames().IsBold() ? 1 : 0) - (o1.GetNames().IsBold() ? 1 : 0);
+                    }
+                    if ((style & FontConstants.ITALIC) == 0) {
+                        res += (o2.GetNames().IsItalic() ? 1 : 0) - (o1.GetNames().IsItalic() ? 1 : 0);
+                    }
+                    if (res == 0) {
+                        String fontName = fontFamilies[i];
+                        res = (o2.GetNames().GetFullNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetNames().GetFullNameLowerCase
+                            ().Contains(fontName) ? 1 : 0);
+                        // In most cases full font name will be enough.
+                        // It's trick for 'bad' fonts.
+                        if (res == 0) {
+                            res = (o2.GetNames().GetFontNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetNames().GetFontNameLowerCase
+                                ().Contains(fontName) ? 1 : 0);
+                        }
+                    }
+                }
+                return res;
+            }
+
+            private static int ParseFontStyle(String fontFamily, int style) {
                 if (style == FontConstants.UNDEFINED) {
                     style = FontConstants.NORMAL;
                     if (fontFamily.Contains("bold")) {
@@ -92,23 +135,7 @@ namespace iText.Layout.Font {
                         style |= FontConstants.ITALIC;
                     }
                 }
-                this.style = style;
-            }
-
-            public virtual int Compare(FontProgramInfo o1, FontProgramInfo o2) {
-                int res = 0;
-                if ((style & FontConstants.BOLD) == 0) {
-                    res = (o2.GetNames().IsBold() ? 1 : 0) - (o1.GetNames().IsBold() ? 1 : 0);
-                }
-                if ((style & FontConstants.ITALIC) == 0) {
-                    res += (o2.GetNames().IsItalic() ? 1 : 0) - (o1.GetNames().IsItalic() ? 1 : 0);
-                }
-                if (res != 0) {
-                    return res;
-                }
-                res = (o2.GetNames().GetFullNameLowerCase().Contains(fontFamily) ? 1 : 0) - (o1.GetNames().GetFullNameLowerCase
-                    ().Contains(fontFamily) ? 1 : 0);
-                return res;
+                return style;
             }
         }
     }

@@ -145,5 +145,18 @@ namespace iText.Layout.Font {
             result = 31 * result + (encoding != null ? encoding.GetHashCode() : 0);
             return result;
         }
+
+        public override String ToString() {
+            String name = names.GetFontName();
+            if (name.Length > 0) {
+                if (encoding != null) {
+                    return String.Format("%s+%s", name, encoding);
+                }
+                else {
+                    return name;
+                }
+            }
+            return base.ToString();
+        }
     }
 }

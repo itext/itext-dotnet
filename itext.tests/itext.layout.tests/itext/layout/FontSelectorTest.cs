@@ -46,7 +46,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1024")]
         public virtual void CyrillicAndLatinGroup2() {
             String outFileName = destinationFolder + "cyrillicAndLatinGroup2.pdf";
             String cmpFileName = sourceFolder + "cmp_cyrillicAndLatinGroup2.pdf";

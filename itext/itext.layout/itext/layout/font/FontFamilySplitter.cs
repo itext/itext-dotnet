@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace iText.Layout.Font {
+
+    /// <summary>
+    /// Split css font-family string into list of font-families or generic-families
+    /// </summary>
     internal sealed class FontFamilySplitter {
         private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *(\\w+) *$");
 
@@ -13,6 +17,9 @@ namespace iText.Layout.Font {
             );
 
         public static IList<String> SplitFontFamily(String fontFamily) {
+            if (fontFamily == null) {
+                return null;
+            }
             String[] names = iText.IO.Util.StringUtil.Split(fontFamily, ",");
             IList<String> result = new List<String>(names.Length);
             foreach (String name in names) {
