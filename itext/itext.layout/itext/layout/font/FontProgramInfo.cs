@@ -89,24 +89,20 @@ namespace iText.Layout.Font {
 
         internal static iText.Layout.Font.FontProgramInfo Create(String fontName, String encoding) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontName);
-            FontNames names;
-            if (fontNamesCache.ContainsKey(cacheKey)) {
-                names = fontNamesCache.Get(cacheKey);
-            }
-            else {
+            FontNames names = GetFontNamesFromCache(cacheKey);
+            if (names == null) {
                 names = FontNamesFactory.FetchFontNames(fontName);
+                PutFontNamesToCache(cacheKey, names);
             }
             return names != null ? new iText.Layout.Font.FontProgramInfo(fontName, null, encoding, names) : null;
         }
 
         internal static iText.Layout.Font.FontProgramInfo Create(byte[] fontProgram, String encoding) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
-            FontNames names;
-            if (fontNamesCache.ContainsKey(cacheKey)) {
-                names = fontNamesCache.Get(cacheKey);
-            }
-            else {
+            FontNames names = GetFontNamesFromCache(cacheKey);
+            if (names == null) {
                 names = FontNamesFactory.FetchFontNames(fontProgram);
+                PutFontNamesToCache(cacheKey, names);
             }
             return names != null ? new iText.Layout.Font.FontProgramInfo(null, fontProgram, encoding, names) : null;
         }
@@ -153,13 +149,6 @@ namespace iText.Layout.Font {
             return hash;
         }
 
-        private static int CalculateHashCode(String fontName, byte[] bytes, String encoding) {
-            int result = fontName != null ? fontName.GetHashCode() : 0;
-            result = 31 * result + ArrayUtil.HashCode(bytes);
-            result = 31 * result + (encoding != null ? encoding.GetHashCode() : 0);
-            return result;
-        }
-
         public override String ToString() {
             String name = names.GetFontName();
             if (name.Length > 0) {
@@ -171,6 +160,23 @@ namespace iText.Layout.Font {
                 }
             }
             return base.ToString();
+        }
+
+        private static int CalculateHashCode(String fontName, byte[] bytes, String encoding) {
+            int result = fontName != null ? fontName.GetHashCode() : 0;
+            result = 31 * result + ArrayUtil.HashCode(bytes);
+            result = 31 * result + (encoding != null ? encoding.GetHashCode() : 0);
+            return result;
+        }
+
+        private static FontNames GetFontNamesFromCache(FontCacheKey key) {
+            return fontNamesCache.Get(key);
+        }
+
+        private static void PutFontNamesToCache(FontCacheKey key, FontNames names) {
+            if (names != null) {
+                fontNamesCache[key] = names;
+            }
         }
     }
 }
