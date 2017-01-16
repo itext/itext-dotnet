@@ -42,9 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Tagutils;
@@ -66,17 +65,6 @@ namespace iText.Layout.Element {
 
         protected internal IList<IElement> childElements = new List<IElement>();
 
-        /// <summary>
-        /// In iText 7.0.2, this attribute was changed from a
-        /// <see cref="Java.Util.Set{E}"/>
-        /// to a
-        /// <see cref="System.Collections.ICollection{E}"/>
-        /// . This is theoretically a backwards incompatible
-        /// change, but this can only break assignment logic in subclasses,
-        /// since no methods are added in
-        /// <see cref="Java.Util.Set{E}"/>
-        /// .
-        /// </summary>
         protected internal ICollection<Style> styles;
 
         public virtual IRenderer GetRenderer() {
@@ -116,11 +104,10 @@ namespace iText.Layout.Element {
         public override T1 GetProperty<T1>(int property) {
             Object result = base.GetProperty<T1>(property);
             if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property)) {
-                IEnumerable<Style> listItReverse = styles.Reverse();
-                foreach (Style style in listItReverse) {
-                    result = style.GetProperty<T1>(property);
-                    if (result != null || base.HasProperty(property)) {
-                        break;
+                foreach (Style style in styles) {
+                    T1 foundInStyle = style.GetProperty<T1>(property);
+                    if (foundInStyle != null || style.HasProperty(property)) {
+                        result = foundInStyle;
                     }
                 }
             }
@@ -136,7 +123,7 @@ namespace iText.Layout.Element {
         /// <returns>this element</returns>
         public virtual T AddStyle(Style style) {
             if (styles == null) {
-                styles = new List<Style>();
+                styles = new LinkedHashSet<Style>();
             }
             styles.Add(style);
             return (T)(Object)this;
