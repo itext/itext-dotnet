@@ -583,7 +583,7 @@ namespace iText.IO.Image {
             finally {
                 if (stream != null) {
                     try {
-                        stream.Close();
+                        stream.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }

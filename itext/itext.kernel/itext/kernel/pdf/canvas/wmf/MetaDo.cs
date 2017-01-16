@@ -852,7 +852,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 while ((b = imgIn.Read()) != -1) {
                     @out.Write(b);
                 }
-                imgIn.Close();
+                imgIn.Dispose();
                 data = @out.ToArray();
             }
             else {

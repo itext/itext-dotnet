@@ -833,7 +833,7 @@ namespace iText.Signatures {
                 }
                 catch (System.IO.IOException e) {
                     try {
-                        raf.Close();
+                        raf.Dispose();
                     }
                     catch (Exception) {
                     }
@@ -935,14 +935,14 @@ namespace iText.Signatures {
             }
             finally {
                 if (tempFile != null) {
-                    raf.Close();
+                    raf.Dispose();
                     if (originalOS != null) {
                         tempFile.Delete();
                     }
                 }
                 if (originalOS != null) {
                     try {
-                        originalOS.Close();
+                        originalOS.Dispose();
                     }
                     catch (Exception) {
                     }

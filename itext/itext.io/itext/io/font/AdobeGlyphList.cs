@@ -69,7 +69,7 @@ namespace iText.IO.Font {
                     }
                     stream.Write(buf, 0, size);
                 }
-                resource.Close();
+                resource.Dispose();
                 resource = null;
                 String s = PdfEncodings.ConvertToString(stream.ToArray(), null);
                 StringTokenizer tk = new StringTokenizer(s, "\r\n");
@@ -105,7 +105,7 @@ namespace iText.IO.Font {
             finally {
                 if (resource != null) {
                     try {
-                        resource.Close();
+                        resource.Dispose();
                     }
                     catch (Exception) {
                     }

@@ -199,7 +199,7 @@ namespace iText.IO.Font {
             }
             finally {
                 if (resource != null) {
-                    resource.Close();
+                    resource.Dispose();
                 }
             }
         }
@@ -220,7 +220,7 @@ namespace iText.IO.Font {
             }
             finally {
                 if (resource != null) {
-                    resource.Close();
+                    resource.Dispose();
                 }
             }
         }

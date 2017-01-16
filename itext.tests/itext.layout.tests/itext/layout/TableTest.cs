@@ -1119,15 +1119,15 @@ namespace iText.Layout {
             for (int i = 0; i < 10; i++) {
                 table.AddCell(new Cell().Add("Cell No." + i));
             }
-            table.SetNextRenderer(new _T335811925(this, table, new Table.RowRange(0, 10)));
+            table.SetNextRenderer(new _T1797112519(this, table, new Table.RowRange(0, 10)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
 
-        internal class _T335811925 : TableRenderer {
-            public _T335811925(TableTest _enclosing, Table modelElement, Table.RowRange rowRange)
+        internal class _T1797112519 : TableRenderer {
+            public _T1797112519(TableTest _enclosing, Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
                 this._enclosing = _enclosing;
             }

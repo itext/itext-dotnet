@@ -238,7 +238,7 @@ namespace iText.Layout.Hyphenation {
             }
             finally {
                 try {
-                    @in.Close();
+                    @in.Dispose();
                 }
                 catch (Exception) {
                 }

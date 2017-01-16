@@ -115,7 +115,7 @@ namespace iText.IO.Image {
             }
             finally {
                 if (input != null) {
-                    input.Close();
+                    input.Dispose();
                 }
             }
         }

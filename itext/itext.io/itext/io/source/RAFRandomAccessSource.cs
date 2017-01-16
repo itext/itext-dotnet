@@ -110,7 +110,7 @@ namespace iText.IO.Source {
         /// <summary>Closes the underlying RandomAccessFile</summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
-            raf.Close();
+            raf.Dispose();
         }
     }
 }

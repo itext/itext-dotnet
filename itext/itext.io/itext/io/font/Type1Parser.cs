@@ -100,7 +100,7 @@ namespace iText.IO.Font {
                 finally {
                     if (resource != null) {
                         try {
-                            resource.Close();
+                            resource.Dispose();
                         }
                         catch (Exception) {
                         }

@@ -202,7 +202,7 @@ namespace iText.IO.Image {
             finally {
                 if (pngStream != null) {
                     try {
-                        pngStream.Close();
+                        pngStream.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }

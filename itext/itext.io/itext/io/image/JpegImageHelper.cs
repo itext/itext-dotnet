@@ -121,7 +121,7 @@ namespace iText.IO.Image {
             finally {
                 if (jpegStream != null) {
                     try {
-                        jpegStream.Close();
+                        jpegStream.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }
