@@ -10,8 +10,8 @@ using iText.Test;
 
 namespace iText.Pdfa {
     public class PdfAFontTest : ExtendedITextTest {
-        internal static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + 
-            "/../../resources/itext/pdfa/";
+        internal static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         internal static readonly String outputDir = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/pdfa/PdfAFontTest/";
 

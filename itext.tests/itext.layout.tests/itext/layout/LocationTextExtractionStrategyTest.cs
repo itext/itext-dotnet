@@ -14,7 +14,8 @@ using iText.Layout.Properties;
 
 namespace iText.Layout {
     public class LocationTextExtractionStrategyTest : SimpleTextExtractionStrategyTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/LocationTextExtractionStrategyTest/";
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/LocationTextExtractionStrategyTest/";
 
         public override ITextExtractionStrategy CreateRenderListenerForTest() {
             return new LocationTextExtractionStrategy();

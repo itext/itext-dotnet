@@ -6,7 +6,8 @@ using iText.Test;
 
 namespace iText.Pdfa {
     public class PdfA1EmbeddedFilesCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>

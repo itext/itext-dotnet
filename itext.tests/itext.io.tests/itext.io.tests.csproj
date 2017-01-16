@@ -47,6 +47,10 @@
       <Project>{CEE5E7E1-1BF0-4BE1-9941-903262CE2F83}</Project>
       <Name>itext.io</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\itext\itext.pdftest\itext.pdftest.csproj">
+      <Project>{F9880DC4-F015-4413-AF86-66D0E9512774}</Project>
+      <Name>itext.pdftest</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

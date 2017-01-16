@@ -7,7 +7,8 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Utils {
     public class PdfSplitterTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/utils/PdfSplitterTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/utils/PdfSplitterTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/utils/PdfSplitterTest/";

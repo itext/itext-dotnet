@@ -11,7 +11,8 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class TextRenderInfoTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/TextRenderInfoTest/";
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/TextRenderInfoTest/";
 
         public const int FIRST_PAGE = 1;
 

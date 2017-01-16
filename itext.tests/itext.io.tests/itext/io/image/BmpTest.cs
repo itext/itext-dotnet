@@ -2,7 +2,8 @@ using System;
 
 namespace iText.IO.Image {
     public class BmpTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/io/image/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/io/image/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

@@ -9,7 +9,8 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class PdfCanvasProcessorTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/PdfCanvasProcessorTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/PdfCanvasProcessorTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

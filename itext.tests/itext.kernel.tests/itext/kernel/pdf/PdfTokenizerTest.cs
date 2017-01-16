@@ -4,7 +4,8 @@ using iText.IO.Source;
 
 namespace iText.Kernel.Pdf {
     public class PdfTokenizerTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfTokeniserTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfTokeniserTest/";
 
         /// <exception cref="System.Exception"/>
         private void CheckTokenTypes(String data, params PdfTokenizer.TokenType[] expectedTypes) {
