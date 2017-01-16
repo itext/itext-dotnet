@@ -1076,7 +1076,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KozminNames() {
-            FontNames names = FontNamesFactory.FetchFontNames("KozMinPro-Regular", null);
+            FontNames names = FontNamesFactory.FetchFontNames("KozMinPro-Regular");
             NUnit.Framework.Assert.AreEqual(names.GetFontName(), "KozMinPro-Regular");
             NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "KozMinPro-Regular");
             NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "kozminpro-regular");
@@ -1088,7 +1088,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelveticaNames() {
-            FontNames names = FontNamesFactory.FetchFontNames("Helvetica", null);
+            FontNames names = FontNamesFactory.FetchFontNames("Helvetica");
             NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Helvetica");
             NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Helvetica");
             NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "helvetica");
@@ -1100,7 +1100,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OtfByStringNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "Puritan2.otf", null);
+            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "Puritan2.otf");
             NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Puritan2");
             NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Puritan 2.0 Regular");
             NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Puritan 2.0");
@@ -1114,7 +1114,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OtfByStreamNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(null, StreamUtil.InputStreamToArray(new FileStream(fontsFolder
+            FontNames names = FontNamesFactory.FetchFontNames(StreamUtil.InputStreamToArray(new FileStream(fontsFolder
                  + "Puritan2.otf", FileMode.Open, FileAccess.Read)));
             NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Puritan2");
             NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Puritan 2.0 Regular");
@@ -1129,7 +1129,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TtfByStringNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "abserif4_5.ttf", null);
+            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "abserif4_5.ttf");
             NUnit.Framework.Assert.AreEqual(names.GetFontName(), "AboriginalSerif");
             NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Aboriginal Serif");
             NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Aboriginal Serif");
@@ -1143,7 +1143,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TtfByStreamNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(null, StreamUtil.InputStreamToArray(new FileStream(fontsFolder
+            FontNames names = FontNamesFactory.FetchFontNames(StreamUtil.InputStreamToArray(new FileStream(fontsFolder
                  + "abserif4_5.ttf", FileMode.Open, FileAccess.Read)));
             NUnit.Framework.Assert.AreEqual(names.GetFontName(), "AboriginalSerif");
             NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Aboriginal Serif");

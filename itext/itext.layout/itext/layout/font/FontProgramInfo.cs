@@ -84,7 +84,13 @@ namespace iText.Layout.Font {
 
         internal static iText.Layout.Font.FontProgramInfo Create(String fontName, byte[] fontProgram, String encoding
             ) {
-            FontNames names = FontNamesFactory.FetchFontNames(fontName, fontProgram);
+            FontNames names;
+            if (fontName != null) {
+                names = FontNamesFactory.FetchFontNames(fontName);
+            }
+            else {
+                names = FontNamesFactory.FetchFontNames(fontProgram);
+            }
             if (names == null) {
                 return null;
             }

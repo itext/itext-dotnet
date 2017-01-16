@@ -138,7 +138,7 @@ namespace iText.Layout.Font {
             return fonts;
         }
 
-        protected internal virtual bool AddFont(String fontName, byte[] fontProgram, String encoding) {
+        internal virtual bool AddFont(String fontName, byte[] fontProgram, String encoding) {
             if (fontName == null && fontProgram == null) {
                 return false;
             }
