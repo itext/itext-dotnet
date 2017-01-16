@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font;
+using iText.IO.Util;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
@@ -99,20 +100,52 @@ namespace iText.Layout.Font {
             return fontSet.AddFont(fontProgram, encoding);
         }
 
-        public virtual void AddFont(String fontProgram) {
-            AddFont(fontProgram, null);
+        public virtual bool AddFont(String fontProgram) {
+            return AddFont(fontProgram, null);
         }
 
-        public virtual void AddFont(FontProgram fontProgram) {
-            AddFont(fontProgram, GetDefaultEncoding(fontProgram));
+        public virtual bool AddFont(FontProgram fontProgram) {
+            return AddFont(fontProgram, GetDefaultEncoding(fontProgram));
         }
 
-        public virtual void AddFont(byte[] fontProgram) {
-            AddFont(fontProgram, null);
+        public virtual bool AddFont(byte[] fontProgram) {
+            return AddFont(fontProgram, null);
         }
 
         public virtual int AddDirectory(String dir) {
             return fontSet.AddDirectory(dir);
+        }
+
+        public virtual int AddSystemFonts() {
+            int count = 0;
+            String[] withSubDirs = new String[] { FileUtil.GetFontsDir(), "/usr/share/X11/fonts", "/usr/X/lib/X11/fonts"
+                , "/usr/openwin/lib/X11/fonts", "/usr/share/fonts", "/usr/X11R6/lib/X11/fonts" };
+            foreach (String directory in withSubDirs) {
+                count += fontSet.AddDirectory(directory, true);
+            }
+            String[] withoutSubDirs = new String[] { "/Library/Fonts", "/System/Library/Fonts" };
+            foreach (String directory in withoutSubDirs) {
+                count += fontSet.AddDirectory(directory, false);
+            }
+            return count;
+        }
+
+        public virtual int AddStandardPdfFonts() {
+            AddFont(FontConstants.COURIER);
+            AddFont(FontConstants.COURIER_BOLD);
+            AddFont(FontConstants.COURIER_BOLDOBLIQUE);
+            AddFont(FontConstants.COURIER_OBLIQUE);
+            AddFont(FontConstants.HELVETICA);
+            AddFont(FontConstants.HELVETICA_BOLD);
+            AddFont(FontConstants.HELVETICA_BOLDOBLIQUE);
+            AddFont(FontConstants.HELVETICA_OBLIQUE);
+            AddFont(FontConstants.SYMBOL);
+            AddFont(FontConstants.TIMES_ROMAN);
+            AddFont(FontConstants.TIMES_BOLD);
+            AddFont(FontConstants.TIMES_BOLDITALIC);
+            AddFont(FontConstants.TIMES_ITALIC);
+            AddFont(FontConstants.ZAPFDINGBATS);
+            return 14;
         }
 
         public virtual FontSet GetFontSet() {
