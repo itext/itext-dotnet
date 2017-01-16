@@ -8,13 +8,11 @@ namespace iText.Layout.Font {
     /// Split css font-family string into list of font-families or generic-families
     /// </summary>
     internal sealed class FontFamilySplitter {
-        private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *(\\w+) *$");
+        private static readonly Regex FONT_FAMILY_PATTERN = iText.IO.Util.StringUtil.RegexCompile("^ *([\\w-]+) *$");
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w ]+')|(\"[\\w ]+\")) *$"
-            );
+        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED = iText.IO.Util.StringUtil.RegexCompile("^ *(('[\\w -]+')|(\"[\\w -]+\")) *$");
 
-        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.IO.Util.StringUtil.RegexCompile("\\w+( +\\w+)*"
-            );
+        private static readonly Regex FONT_FAMILY_PATTERN_QUOTED_SELECT = iText.IO.Util.StringUtil.RegexCompile("[\\w-]+( +[\\w-]+)*");
 
         public static IList<String> SplitFontFamily(String fontFamily) {
             if (fontFamily == null) {

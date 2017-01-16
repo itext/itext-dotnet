@@ -12,9 +12,11 @@ namespace iText.Layout {
                  + "FreeSans\n" + "FreeSans\n" + "'Puritan', FreeSans\n" + "Puritan; FreeSans\n" + "'Pur itan' , FreeSans\n"
                  + "Pur itan; FreeSans\n" + "   'Pur it an'  ,  FreeSans   \n" + "Pur it an; FreeSans\n" + "\"Puritan\", FreeSans\n"
                  + "Puritan; FreeSans\n" + "\"Pur itan\", FreeSans\n" + "Pur itan; FreeSans\n" + "\"Pur it an\", FreeSans\n"
-                 + "Pur it an; FreeSans\n" + "\"Puritan\"\n" + "Puritan\n" + "'Free Sans',\n" + "Free Sans\n" + "\"Puritan\", Free Sans\n"
-                 + "Puritan\n" + "'Puritan' FreeSans\n" + "-\n" + "Pur itan\n" + "-\n" + "Pur it an\"\n" + "-\n" + "\"Free Sans\n"
-                 + "-\n" + "Pur it an'\n" + "-\n" + "'Free Sans\n" + "-";
+                 + "Pur it an; FreeSans\n" + "\"Puritan\"\n" + "Puritan\n" + "'Free Sans',\n" + "Free Sans\n" + "'Free-Sans',\n"
+                 + "Free-Sans\n" + "  'Free-Sans' , Puritan\n" + "Free-Sans; Puritan\n" + "  \"Free-Sans\" , Puritan\n"
+                 + "Free-Sans; Puritan\n" + "  Free-Sans , Puritan\n" + "Free-Sans; Puritan\n" + "  Free-Sans\n" + "Free-Sans\n"
+                 + "\"Puritan\", Free Sans\n" + "Puritan\n" + "'Puritan' FreeSans\n" + "-\n" + "Pur itan\n" + "-\n" + 
+                "Pur it an\"\n" + "-\n" + "\"Free Sans\n" + "-\n" + "Pur it an'\n" + "-\n" + "'Free Sans\n" + "-";
             String[] splitFontFamilies = iText.IO.Util.StringUtil.Split(fontFamilies, "\n");
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < splitFontFamilies.Length; i += 2) {

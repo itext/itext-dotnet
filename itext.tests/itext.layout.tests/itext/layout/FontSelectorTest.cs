@@ -85,5 +85,27 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void StandardPdfFonts() {
+            String outFileName = destinationFolder + "standardPdfFonts.pdf";
+            String cmpFileName = sourceFolder + "cmp_standardPdfFonts.pdf";
+            FontProvider sel = new FontProvider();
+            sel.AddStandardPdfFonts();
+            String s = "Hello world!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
+            Document doc = new Document(pdfDoc);
+            doc.SetFontProvider(sel);
+            Paragraph paragraph = new Paragraph(s);
+            paragraph.SetProperty(Property.FONT, "Courier");
+            doc.Add(paragraph);
+            paragraph = new Paragraph(s);
+            paragraph.SetProperty(Property.FONT, "Times-Roman");
+            doc.Add(paragraph);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
