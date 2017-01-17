@@ -178,19 +178,6 @@ namespace iText.Layout.Renderer {
             }
             Table tableModel = (Table)GetModelElement();
             float? tableWidth = RetrieveWidth(layoutBox.GetWidth());
-            if (tableWidth == null || tableWidth == 0) {
-                float totalColumnWidthInPercent = 0;
-                for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
-                    UnitValue columnWidth = tableModel.GetColumnWidth(col);
-                    if (columnWidth.IsPercentValue()) {
-                        totalColumnWidthInPercent += columnWidth.GetValue();
-                    }
-                }
-                tableWidth = layoutBox.GetWidth();
-                if (totalColumnWidthInPercent > 0) {
-                    tableWidth = layoutBox.GetWidth() * totalColumnWidthInPercent / 100;
-                }
-            }
             if (layoutBox.GetWidth() > tableWidth) {
                 layoutBox.SetWidth((float)tableWidth);
             }
@@ -210,17 +197,7 @@ namespace iText.Layout.Renderer {
                  tableModel.IsSkipLastFooter());
             if (footerElement != null && footerShouldBeApplied) {
                 borders = GetBorders();
-                footerRenderer = (iText.Layout.Renderer.TableRenderer)footerElement.CreateRendererSubTree().SetParent(this
-                    );
-                Border[] footerBorders = footerRenderer.GetBorders();
-                if (tableModel.IsEmpty()) {
-                    footerRenderer.SetBorders(GetCollapsedBorder(footerBorders[0], borders[0]), 0);
-                    SetBorders(Border.NO_BORDER, 0);
-                }
-                footerRenderer.SetBorders(GetCollapsedBorder(footerBorders[1], borders[1]), 1);
-                footerRenderer.SetBorders(GetCollapsedBorder(footerBorders[2], borders[2]), 2);
-                footerRenderer.SetBorders(GetCollapsedBorder(footerBorders[3], borders[3]), 3);
-                SetBorders(Border.NO_BORDER, 2);
+                footerRenderer = InitFooterOrHeaderRenderer(true, borders);
                 bottomTableBorderWidth = 0;
                 collapsedTableBorderWidths = GetCollapsedBorderWidths(footerRenderer.rows, footerRenderer.GetBorders(), false
                     );
@@ -267,18 +244,10 @@ namespace iText.Layout.Renderer {
                 .IsSkipFirstHeader());
             if (headerElement != null && headerShouldBeApplied) {
                 borders = GetBorders();
-                headerRenderer = (iText.Layout.Renderer.TableRenderer)headerElement.CreateRendererSubTree().SetParent(this
-                    );
-                Border[] headerBorders = headerRenderer.GetBorders();
+                headerRenderer = InitFooterOrHeaderRenderer(false, borders);
                 if (tableModel.IsEmpty()) {
-                    headerRenderer.SetBorders(GetCollapsedBorder(headerBorders[2], borders[2]), 2);
-                    SetBorders(Border.NO_BORDER, 2);
                     bottomTableBorderWidth = 0;
                 }
-                headerRenderer.SetBorders(GetCollapsedBorder(headerBorders[0], borders[0]), 0);
-                headerRenderer.SetBorders(GetCollapsedBorder(headerBorders[1], borders[1]), 1);
-                headerRenderer.SetBorders(GetCollapsedBorder(headerBorders[3], borders[3]), 3);
-                SetBorders(Border.NO_BORDER, 0);
                 collapsedTableBorderWidths = GetCollapsedBorderWidths(headerRenderer.rows, headerRenderer.GetBorders(), false
                     );
                 float rightHeaderBorderWidth = collapsedTableBorderWidths[1];
@@ -1356,6 +1325,25 @@ namespace iText.Layout.Renderer {
             return overflowRenderer;
         }
 
+        protected internal override float? RetrieveWidth(float parentBoxWidth) {
+            float? tableWidth = base.RetrieveWidth(parentBoxWidth);
+            Table tableModel = (Table)GetModelElement();
+            if (tableWidth == null || tableWidth == 0) {
+                float totalColumnWidthInPercent = 0;
+                for (int col = 0; col < tableModel.GetNumberOfColumns(); col++) {
+                    UnitValue columnWidth = tableModel.GetColumnWidth(col);
+                    if (columnWidth.IsPercentValue()) {
+                        totalColumnWidthInPercent += columnWidth.GetValue();
+                    }
+                }
+                tableWidth = parentBoxWidth;
+                if (totalColumnWidthInPercent > 0) {
+                    tableWidth = parentBoxWidth * totalColumnWidthInPercent / 100;
+                }
+            }
+            return tableWidth;
+        }
+
         public override void DrawBorder(DrawContext drawContext) {
         }
 
@@ -1929,6 +1917,25 @@ namespace iText.Layout.Renderer {
             for (int row = rowRange.GetStartRow(); row <= rowRange.GetFinishRow(); row++) {
                 rows.Add(new CellRenderer[((Table)modelElement).GetNumberOfColumns()]);
             }
+        }
+
+        private iText.Layout.Renderer.TableRenderer InitFooterOrHeaderRenderer(bool footer, Border[] tableBorders) {
+            Table table = (Table)GetModelElement();
+            Table footerOrHeader = footer ? table.GetFooter() : table.GetHeader();
+            int innerBorder = footer ? 0 : 2;
+            int outerBorder = footer ? 2 : 0;
+            iText.Layout.Renderer.TableRenderer renderer = (iText.Layout.Renderer.TableRenderer)footerOrHeader.CreateRendererSubTree
+                ().SetParent(this);
+            Border[] borders = renderer.GetBorders();
+            if (table.IsEmpty()) {
+                renderer.SetBorders(GetCollapsedBorder(borders[innerBorder], tableBorders[innerBorder]), innerBorder);
+                SetBorders(Border.NO_BORDER, innerBorder);
+            }
+            renderer.SetBorders(GetCollapsedBorder(borders[1], tableBorders[1]), 1);
+            renderer.SetBorders(GetCollapsedBorder(borders[3], tableBorders[3]), 3);
+            renderer.SetBorders(GetCollapsedBorder(borders[outerBorder], tableBorders[outerBorder]), outerBorder);
+            SetBorders(Border.NO_BORDER, outerBorder);
+            return renderer;
         }
 
         /// <summary>This is a struct used for convenience in layout.</summary>

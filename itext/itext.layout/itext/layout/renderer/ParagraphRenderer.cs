@@ -101,24 +101,10 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
-            ApplyMargins(parentBBox, false);
             Border[] borders = GetBorders();
-            ApplyBorderBox(parentBBox, borders, false);
             bool isPositioned = IsPositioned();
-            if (IsPositioned()) {
-                if (IsFixedLayout()) {
-                    float x = (float)this.GetPropertyAsFloat(Property.X);
-                    float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
-                    parentBBox.SetX(relativeX + x);
-                }
-                else {
-                    if (IsAbsolutePosition()) {
-                        ApplyAbsolutePosition(parentBBox);
-                    }
-                }
-            }
             float[] paddings = GetPaddings();
-            ApplyPaddings(parentBBox, paddings, false);
+            ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
                 parentBBox.SetWidth((float)blockWidth);
             }

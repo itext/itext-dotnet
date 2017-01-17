@@ -77,23 +77,9 @@ namespace iText.Layout.Renderer {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
-            ApplyMargins(parentBBox, false);
             Border[] borders = GetBorders();
-            ApplyBorderBox(parentBBox, borders, false);
-            if (isPositioned) {
-                if (IsFixedLayout()) {
-                    float x = (float)this.GetPropertyAsFloat(Property.X);
-                    float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
-                    parentBBox.SetX(relativeX + x);
-                }
-                else {
-                    if (IsAbsolutePosition()) {
-                        ApplyAbsolutePosition(parentBBox);
-                    }
-                }
-            }
             float[] paddings = GetPaddings();
-            ApplyPaddings(parentBBox, paddings, false);
+            ApplyBordersPaddingsMargins(parentBBox, borders, paddings);
             if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
                 parentBBox.SetWidth((float)blockWidth);
             }
@@ -591,6 +577,27 @@ namespace iText.Layout.Renderer {
         }
 
         //TODO
+        protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, float
+            [] paddings) {
+            float parentWidth = parentBBox.GetWidth();
+            ApplyMargins(parentBBox, false);
+            ApplyBorderBox(parentBBox, borders, false);
+            if (IsPositioned()) {
+                if (IsFixedLayout()) {
+                    float x = (float)this.GetPropertyAsFloat(Property.X);
+                    float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
+                    parentBBox.SetX(relativeX + x);
+                }
+                else {
+                    if (IsAbsolutePosition()) {
+                        ApplyAbsolutePosition(parentBBox);
+                    }
+                }
+            }
+            ApplyPaddings(parentBBox, paddings, false);
+            return parentWidth - parentBBox.GetWidth();
+        }
+
         private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
             IList<Point> filteredPoints = new List<Point>();
             bool prevOnRightSide = false;
