@@ -12,14 +12,14 @@ using Org.BouncyCastle.Pkcs;
 
 namespace iText.Signatures {
     public class SigningTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itext/signatures/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
+                                                         .TestDirectory) + "/resources/itext/signatures/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/test/itext/signatures/";
+                                                              .TestDirectory + "/test/itext/signatures/";
 
-        public static readonly String keystorePath = NUnit.Framework.TestContext.CurrentContext
-            .TestDirectory + "/../../resources/itext/signatures/ks";
+        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
+                                                         .TestDirectory) + "/resources/itext/signatures/ks";
 
         public static readonly char[] password = "password".ToCharArray();
 

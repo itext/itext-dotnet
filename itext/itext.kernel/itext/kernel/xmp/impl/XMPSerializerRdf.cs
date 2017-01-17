@@ -130,7 +130,7 @@ namespace iText.Kernel.XMP.Impl
 				// writes the tail
 				Write(tailStr);
 				writer.Flush();
-				outputStream.Close();
+				outputStream.Dispose();
 			}
 			catch (System.IO.IOException)
 			{

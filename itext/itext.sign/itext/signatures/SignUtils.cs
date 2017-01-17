@@ -196,7 +196,7 @@ namespace iText.Signatures {
             }
             Stream outp = con.GetRequestStream();
             outp.Write(requestBytes, 0, requestBytes.Length);
-            outp.Close();
+            outp.Dispose();
             HttpWebResponse httpWebResponse = (HttpWebResponse) con.GetResponse();
 
             TsaResponse response = new TsaResponse();
