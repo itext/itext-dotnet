@@ -790,13 +790,13 @@ namespace iText.Kernel.Utils {
             FileStream xmlOut = new FileStream(outXmlPath, FileMode.Create);
             new TaggedPdfReaderTool(docOut).SetRootTag("root").ConvertToXml(xmlOut);
             docOut.Close();
-            xmlOut.Close();
+            xmlOut.Dispose();
             PdfReader readerCmp = new PdfReader(cmpPdf);
             PdfDocument docCmp = new PdfDocument(readerCmp);
             FileStream xmlCmp = new FileStream(cmpXmlPath, FileMode.Create);
             new TaggedPdfReaderTool(docCmp).SetRootTag("root").ConvertToXml(xmlCmp);
             docCmp.Close();
-            xmlCmp.Close();
+            xmlCmp.Dispose();
             if (!CompareXmls(outXmlPath, cmpXmlPath)) {
                 message = "The tag structures are different.";
             }
@@ -894,8 +894,8 @@ namespace iText.Kernel.Utils {
                 FileStream is1 = new FileStream(imageFiles[i].FullName, FileMode.Open, FileAccess.Read);
                 FileStream is2 = new FileStream(cmpImageFiles[i].FullName, FileMode.Open, FileAccess.Read);
                 bool cmpResult = CompareStreams(is1, is2);
-                is1.Close();
-                is2.Close();
+                is1.Dispose();
+                is2.Dispose();
                 if (!cmpResult) {
                     differentPagesFail = "Page is different!";
                     diffPages.Add(i + 1);
@@ -1080,7 +1080,7 @@ namespace iText.Kernel.Utils {
                     throw new Exception(e.Message, e);
                 }
                 finally {
-                    xml.Close();
+                    xml.Dispose();
                 }
             }
             if (equalPages.Count == cmpPages.Count && compareResult.IsOk()) {

@@ -1120,20 +1120,17 @@ namespace iText.Layout {
             for (int i = 0; i < 10; i++) {
                 table.AddCell(new Cell().Add("Cell No." + i));
             }
-            table.SetNextRenderer(new _T1181488058(this, table, new Table.RowRange(0, 10)));
+            table.SetNextRenderer(new TableTest.CustomRenderer(table, new Table.RowRange(0, 10)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
         }
 
-        internal class _T1181488058 : TableRenderer {
-            public _T1181488058(TableTest _enclosing, Table modelElement, Table.RowRange rowRange)
+        internal class CustomRenderer : TableRenderer {
+            public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
-                this._enclosing = _enclosing;
             }
-
-            private readonly TableTest _enclosing;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace iText.Kernel.Utils {
             TaggedPdfReaderTool tool = new TaggedPdfReaderTool(document);
             tool.SetRootTag("root");
             tool.ConvertToXml(outXml);
-            outXml.Close();
+            outXml.Dispose();
             document.Close();
             CompareTool compareTool = new CompareTool();
             if (!compareTool.CompareXmls(outXmlPath, cmpXmlPath)) {

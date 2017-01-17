@@ -41,7 +41,7 @@ namespace iText.Pdfa {
             MemoryStream txt = new MemoryStream();
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
-            @out.Close();
+            @out.Dispose();
             pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", PdfName.ApplicationXml, null, PdfName.
                 Source);
             pdfDocument.Close();
@@ -68,7 +68,7 @@ namespace iText.Pdfa {
             MemoryStream txt = new MemoryStream();
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
-            @out.Close();
+            @out.Dispose();
             pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, PdfName.Unspecified);
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
@@ -118,7 +118,7 @@ namespace iText.Pdfa {
             MemoryStream txt = new MemoryStream();
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
-            @out.Close();
+            @out.Dispose();
             pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, null);
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
