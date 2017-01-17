@@ -79,7 +79,7 @@ namespace iText.Kernel.Crypto
 	    protected override void Dispose(bool disposing) {
 	        if (disposing) {
 	            Finish();
-	            @out.Close();
+	            @out.Dispose();
 	        }
 	        base.Dispose(disposing);
 	    }

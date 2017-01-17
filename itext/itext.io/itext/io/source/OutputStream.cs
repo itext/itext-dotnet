@@ -159,7 +159,7 @@ namespace iText.IO.Source {
 	        if (disposing) {
 	            if (closeStream)
 	            {
-	                outputStream.Close();
+	                outputStream.Dispose();
 	            }
 	        }
 	        base.Dispose(disposing);
