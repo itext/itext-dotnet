@@ -356,7 +356,7 @@ namespace iText.Kernel.Pdf {
                     this.Write((PdfDictionary)pdfStream);
                     WriteBytes(iText.Kernel.Pdf.PdfOutputStream.stream);
                     byteArrayStream.WriteTo(this);
-                    byteArrayStream.Close();
+                    byteArrayStream.Dispose();
                     WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
                 }
             }

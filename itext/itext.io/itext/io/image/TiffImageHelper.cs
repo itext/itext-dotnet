@@ -593,7 +593,7 @@ namespace iText.IO.Image {
                                 .PHOTOMETRIC_MINISBLACK ? RawImageData.CCITT_BLACKIS1 : 0, g4.Close(), null);
                         }
                         else {
-                            zip.Close();
+                            zip.Dispose();
                             RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, samplePerPixel - extraSamples, bitsPerSample, stream
                                 .ToArray());
                             tiff.image.SetDeflated(true);
@@ -659,7 +659,7 @@ namespace iText.IO.Image {
                     tiff.image.SetRotation(rotation);
                 }
                 if (extraSamples > 0) {
-                    mzip.Close();
+                    mzip.Dispose();
                     RawImageData mimg = (RawImageData)ImageDataFactory.CreateRawImage(null);
                     RawImageHelper.UpdateRawImageParameters(mimg, w, h, 1, bitsPerSample, mstream.ToArray());
                     mimg.MakeMask();

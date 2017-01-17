@@ -80,8 +80,8 @@ namespace iText.Kernel.Pdf.Filters {
                 while ((n = zip.Read(b)) >= 0) {
                     @out.Write(b, 0, n);
                 }
-                zip.Close();
-                @out.Close();
+                zip.Dispose();
+                @out.Dispose();
                 return @out.ToArray();
             }
             catch (Exception) {

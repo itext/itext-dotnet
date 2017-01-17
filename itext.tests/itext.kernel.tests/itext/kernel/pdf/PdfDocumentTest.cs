@@ -209,8 +209,8 @@ namespace iText.Kernel.Pdf {
             DeflaterOutputStream zip2 = new DeflaterOutputStream(byteArrayStream2, -1);
             image.WriteTo(zip2);
             NUnit.Framework.Assert.IsTrue(byteArrayStream1.Length == byteArrayStream2.Length);
-            zip.Close();
-            zip2.Close();
+            zip.Dispose();
+            zip2.Dispose();
         }
 
         /// <exception cref="System.IO.IOException"/>

@@ -101,7 +101,7 @@ namespace iText.IO.Codec {
                 zip.Write(0);
                 zip.Write(data, k, remaining);
             }
-            zip.Close();
+            zip.Dispose();
             WriteChunk(IDAT, stream.ToArray());
         }
 
@@ -120,7 +120,7 @@ namespace iText.IO.Codec {
             stream.Write(0);
             DeflaterOutputStream zip = new DeflaterOutputStream(stream);
             zip.Write(data);
-            zip.Close();
+            zip.Dispose();
             WriteChunk(iCCP, stream.ToArray());
         }
 

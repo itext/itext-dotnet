@@ -112,7 +112,7 @@ namespace iText.Kernel.Utils {
                 @out.Write("</" + rootTag + ">");
             }
             @out.Flush();
-            @out.Close();
+            @out.Dispose();
         }
 
         /// <summary>Sets the name of the root tag of the resultant XML file</summary>

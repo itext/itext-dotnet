@@ -899,7 +899,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             }
             WriteDWord(os, 3);
             WriteWord(os, 0);
-            os.Close();
+            os.Dispose();
             return os.ToArray();
         }
 

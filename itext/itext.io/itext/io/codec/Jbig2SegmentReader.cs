@@ -239,7 +239,7 @@ namespace iText.IO.Codec {
                     }
                     os.Write(s.data);
                 }
-                os.Close();
+                os.Dispose();
                 return os.ToArray();
             }
 
@@ -477,7 +477,7 @@ namespace iText.IO.Codec {
                 if (os.Length > 0) {
                     streamBytes = os.ToArray();
                 }
-                os.Close();
+                os.Dispose();
             }
             catch (System.IO.IOException e) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(Jbig2SegmentReader));

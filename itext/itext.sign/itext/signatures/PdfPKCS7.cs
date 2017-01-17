@@ -632,7 +632,7 @@ namespace iText.Signatures {
                 MemoryStream bOut = new MemoryStream();
                 Asn1OutputStream dout = new Asn1OutputStream(bOut);
                 dout.WriteObject(new DerOctetString(digest));
-                dout.Close();
+                dout.Dispose();
                 return bOut.ToArray();
             }
             catch (Exception e) {
@@ -771,7 +771,7 @@ namespace iText.Signatures {
                 MemoryStream bOut = new MemoryStream();
                 Asn1OutputStream dout = new Asn1OutputStream(bOut);
                 dout.WriteObject(new DerSequence(whole));
-                dout.Close();
+                dout.Dispose();
                 return bOut.ToArray();
             }
             catch (Exception e) {
