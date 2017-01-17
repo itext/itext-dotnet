@@ -489,7 +489,7 @@ namespace iText.Layout.Renderer {
                             if (null != currentRow[tempCol]) {
                                 currentRow[tempCol].DeleteOwnProperty(Property.BORDER_BOTTOM);
                                 oldBottomBorder = currentRow[tempCol].GetBorders()[2];
-                                int tempColspan = currentRow[tempCol].GetPropertyAsInteger(Property.COLSPAN);
+                                int tempColspan = (int)currentRow[tempCol].GetPropertyAsInteger(Property.COLSPAN);
                                 for (int k = tempCol; k < tempCol + tempColspan; k++) {
                                     horizontalBorders[row + 1][k] = oldBottomBorder;
                                 }
