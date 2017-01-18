@@ -301,7 +301,7 @@ namespace iText.Layout.Renderer {
                         ().GetHeight()), layoutBox.GetBottom());
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                     blockMinHeight -= occupiedArea.GetBBox().GetHeight();
-                    if (!IsFixedLayout() && blockMinHeight > 0) {
+                    if (!IsFixedLayout() && blockMinHeight > AbstractRenderer.EPS) {
                         overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
                         overflowRenderer_1.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight);
                         if (HasProperty(Property.HEIGHT)) {
