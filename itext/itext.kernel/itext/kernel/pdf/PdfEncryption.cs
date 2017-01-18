@@ -293,7 +293,10 @@ namespace iText.Kernel.Pdf {
         /// <returns>PdfObject containing the two entries.</returns>
         public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId) {
             if (firstId.Length < 16) {
-                firstId = GenerateNewDocumentId();
+                firstId = PadByteArrayTo16(firstId);
+            }
+            if (secondId.Length < 16) {
+                secondId = PadByteArrayTo16(secondId);
             }
             ByteBuffer buf = new ByteBuffer(90);
             buf.Append('[').Append('<');
@@ -306,6 +309,12 @@ namespace iText.Kernel.Pdf {
             }
             buf.Append('>').Append(']');
             return new PdfLiteral(buf.ToByteArray());
+        }
+
+        private static byte[] PadByteArrayTo16(byte[] documentId) {
+            byte[] paddingBytes = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            System.Array.Copy(documentId, 0, paddingBytes, 0, documentId.Length);
+            return paddingBytes;
         }
 
         /// <summary>Gets the encryption permissions.</summary>
