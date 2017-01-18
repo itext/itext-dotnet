@@ -710,8 +710,8 @@ namespace iText.IO.Util {
         public static UnicodeScript Of(int codePoint) {
             if (!IsValidCodePoint(codePoint))
                 throw new Exception();
-            char ch = Convert.ToChar(codePoint);
-            UnicodeCategory type = CharUnicodeInfo.GetUnicodeCategory(ch);
+            string value = Char.ConvertFromUtf32(codePoint);
+            UnicodeCategory type = CharUnicodeInfo.GetUnicodeCategory(value, 0);
             // leave SURROGATE and PRIVATE_USE for table lookup
             if (type == UnicodeCategory.OtherNotAssigned) {
                 return UnicodeScript.UNKNOWN;
