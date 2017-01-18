@@ -107,6 +107,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
+        /// <summary>The ID entry that represents a change in a document.</summary>
+        protected internal PdfString modifiedDocumentId;
+
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
 
@@ -727,9 +730,21 @@ namespace iText.Kernel.Pdf {
                             originalFileID = PdfEncryption.GenerateNewDocumentId();
                         }
                     }
+                    byte[] secondId;
+                    if (modifiedDocumentId != null) {
+                        secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
+                    }
+                    else {
+                        if (isModified) {
+                            secondId = PdfEncryption.GenerateNewDocumentId();
+                        }
+                        else {
+                            secondId = originalFileID;
+                        }
+                    }
                     // if originalFIleID comes from crypto, it means that no need in checking modified state.
                     // For crypto purposes new documentId always generated.
-                    fileId = PdfEncryption.CreateInfoId(originalFileID, isModified);
+                    fileId = PdfEncryption.CreateInfoId(originalFileID, secondId);
                     // The following two operators prevents the possible inconsistency between root and info
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
@@ -1437,6 +1452,17 @@ namespace iText.Kernel.Pdf {
             this.userProperties = userProperties;
         }
 
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
+        /// The second one should be the same entry, unless the document has been modified. iText will by default generate
+        /// a modified id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="modifiedDocumentId">the new modified document id</param>
+        public virtual void SetModifiedDocumentId(PdfString modifiedDocumentId) {
+            this.modifiedDocumentId = modifiedDocumentId;
+        }
+
         /// <summary>
         /// Create a new instance of
         /// <see cref="iText.Kernel.Font.PdfFont"/>
@@ -1634,6 +1660,12 @@ namespace iText.Kernel.Pdf {
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
+                    if (reader != null) {
+                        // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
+                        if (reader.trailer.ContainsKey(PdfName.ID)) {
+                            trailer.Put(PdfName.ID, reader.trailer.GetAsArray(PdfName.ID));
+                        }
+                    }
                 }
                 if (properties.appendMode) {
                     // Due to constructor reader and writer not null.

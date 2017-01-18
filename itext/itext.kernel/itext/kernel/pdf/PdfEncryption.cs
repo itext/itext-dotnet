@@ -264,21 +264,45 @@ namespace iText.Kernel.Pdf {
             return md5.Digest(s.GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
         }
 
+        /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
+        /// <remarks>
+        /// Creates a PdfLiteral that contains an array of two id entries. These entries are both hexadecimal
+        /// strings containing 16 hex characters. The first entry is the original id, the second entry
+        /// should be different from the first one if the document has changed.
+        /// </remarks>
+        /// <param name="id">the first id</param>
+        /// <param name="modified">whether the document has been changed or not</param>
+        /// <returns>PdfObject containing the two entries.</returns>
         public static PdfObject CreateInfoId(byte[] id, bool modified) {
+            if (modified) {
+                return CreateInfoId(id, GenerateNewDocumentId());
+            }
+            else {
+                return CreateInfoId(id, id);
+            }
+        }
+
+        /// <summary>Creates a PdfLiteral that contains an array of two id entries.</summary>
+        /// <remarks>
+        /// Creates a PdfLiteral that contains an array of two id entries. These entries are both hexadecimal
+        /// strings containing 16 hex characters. The first entry is the original id, the second entry
+        /// should be different from the first one if the document has changed.
+        /// </remarks>
+        /// <param name="firstId">the first id</param>
+        /// <param name="secondId">the second id</param>
+        /// <returns>PdfObject containing the two entries.</returns>
+        public static PdfObject CreateInfoId(byte[] firstId, byte[] secondId) {
+            if (firstId.Length < 16) {
+                firstId = GenerateNewDocumentId();
+            }
             ByteBuffer buf = new ByteBuffer(90);
             buf.Append('[').Append('<');
-            if (id.Length != 16) {
-                id = GenerateNewDocumentId();
-            }
-            for (int k = 0; k < 16; ++k) {
-                buf.AppendHex(id[k]);
+            for (int k = 0; k < firstId.Length; ++k) {
+                buf.AppendHex(firstId[k]);
             }
             buf.Append('>').Append('<');
-            if (modified) {
-                id = GenerateNewDocumentId();
-            }
-            for (int k = 0; k < 16; ++k) {
-                buf.AppendHex(id[k]);
+            for (int k = 0; k < secondId.Length; ++k) {
+                buf.AppendHex(secondId[k]);
             }
             buf.Append('>').Append(']');
             return new PdfLiteral(buf.ToByteArray());
