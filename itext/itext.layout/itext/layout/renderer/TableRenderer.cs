@@ -716,6 +716,11 @@ namespace iText.Layout.Renderer {
                             layoutBox.DecreaseHeight(heightDiff);
                         }
                     }
+                    else {
+                        for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
+                            horizontalBorders[1][col] = borders[2];
+                        }
+                    }
                     // Correct occupied areas of all added cells
                     CorrectCellsOccupiedAreas(row, targetOverflowRowIndex);
                 }
@@ -802,9 +807,10 @@ namespace iText.Layout.Renderer {
                                             cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
                                         }
                                     }
-                                    for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                        horizontalBorders[!hasContent && splits[col].GetStatus() == LayoutResult.PARTIAL ? row : row + 1][j] = GetBorders
-                                            ()[2];
+                                    if (hasContent) {
+                                        for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                            horizontalBorders[row + 1][j] = GetBorders()[2];
+                                        }
                                     }
                                     cellOverflow.DeleteOwnProperty(Property.BORDER_BOTTOM);
                                     cellOverflow.SetBorders(cellOverflow.GetBorders()[2], 2);
@@ -823,14 +829,14 @@ namespace iText.Layout.Renderer {
                                         columnsWithCellToBeEnlarged[col] = true;
                                         // for the future
                                         splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
+                                        for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                            horizontalBorders[row + 1][j] = GetBorders()[2];
+                                        }
                                     }
                                     else {
                                         if (Border.NO_BORDER != currentRow[col].GetProperty<Border>(Property.BORDER_TOP)) {
                                             splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
                                         }
-                                    }
-                                    for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                        horizontalBorders[row + (!hasContent && rowspans[col] > 1 ? 0 : 1)][j] = GetBorders()[2];
                                     }
                                 }
                             }
