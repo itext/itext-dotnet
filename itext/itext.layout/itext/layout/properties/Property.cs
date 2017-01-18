@@ -136,9 +136,9 @@ namespace iText.Layout.Properties {
 
         public const int FONT_SIZE = 24;
 
-        public const int FULL = 25;
-
         public const int FORCED_PLACEMENT = 26;
+
+        public const int FULL = 25;
 
         public const int HEIGHT = 27;
 
@@ -148,6 +148,10 @@ namespace iText.Layout.Properties {
         public const int HORIZONTAL_SCALING = 29;
 
         public const int HYPHENATION = 30;
+
+        public const int IGNORE_FOOTER = 96;
+
+        public const int IGNORE_HEADER = 97;
 
         public const int ITALIC_SIMULATION = 31;
 

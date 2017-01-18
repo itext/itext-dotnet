@@ -1102,10 +1102,10 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(3);
-            table.SetBorder(new SolidBorder(100));
-            table.AddFooterCell(new Cell(1, 3).SetHeight(100).Add("Footer"));
+            table.SetBorder(new SolidBorder(90));
+            table.AddFooterCell(new Cell(1, 3).SetHeight(150).Add("Footer"));
             table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add("Header"));
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
                 table.AddCell(new Cell().Add(i + ": Bazz :").SetBorder(new SolidBorder(Color.BLACK, 10)));
                 table.AddCell(new Cell().Add("To infinity").SetBorder(new SolidBorder(Color.YELLOW, 30)));
                 table.AddCell(new Cell().Add(" and beyond!").SetBorder(new SolidBorder(Color.RED, 20)));
