@@ -110,6 +110,9 @@ namespace iText.Kernel.Pdf {
         /// <summary>The ID entry that represents a change in a document.</summary>
         protected internal PdfString modifiedDocumentId;
 
+        /// <summary>The original second id when the document is read initially.</summary>
+        private PdfString originalModifiedDocumentId;
+
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
 
@@ -735,11 +738,22 @@ namespace iText.Kernel.Pdf {
                         secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
                     }
                     else {
-                        if (isModified) {
-                            secondId = PdfEncryption.GenerateNewDocumentId();
+                        if (originalModifiedDocumentId != null) {
+                            PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
+                            if (!originalModifiedDocumentId.Equals(newModifiedId)) {
+                                secondId = ByteUtils.GetIsoBytes(newModifiedId.GetValue());
+                            }
+                            else {
+                                secondId = PdfEncryption.GenerateNewDocumentId();
+                            }
                         }
                         else {
-                            secondId = originalFileID;
+                            if (isModified) {
+                                secondId = PdfEncryption.GenerateNewDocumentId();
+                            }
+                            else {
+                                secondId = originalFileID;
+                            }
                         }
                     }
                     // if originalFIleID comes from crypto, it means that no need in checking modified state.
@@ -1602,6 +1616,10 @@ namespace iText.Kernel.Pdf {
                     }
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
+                    PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
+                    if (id != null) {
+                        originalModifiedDocumentId = id.GetAsString(1);
+                    }
                     catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
                     if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
                         // The version of the PDF specification to which the document conforms (for example, 1.4)
