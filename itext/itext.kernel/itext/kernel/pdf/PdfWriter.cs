@@ -108,7 +108,6 @@ namespace iText.Kernel.Pdf {
                 }
             }
             if (properties.debugMode) {
-                SetDebugMode();
             }
         }
 
@@ -172,57 +171,6 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfWriter SetSmartMode(bool smartMode) {
             this.properties.smartMode = smartMode;
             return this;
-        }
-
-        /// <summary>Write an integer to the underlying stream</summary>
-        /// <param name="b">integer to write</param>
-        /// <exception cref="System.IO.IOException"/>
-        public override void Write(int b) {
-            base.Write(b);
-            if (duplicateStream != null) {
-                duplicateStream.Write(b);
-            }
-        }
-
-        /// <summary>Write a byte array to the underlying stream</summary>
-        /// <param name="b">byte array to write</param>
-        /// <exception cref="System.IO.IOException"/>
-        public override void Write(byte[] b) {
-            base.Write(b);
-            if (duplicateStream != null) {
-                duplicateStream.Write(b);
-            }
-        }
-
-        /// <summary>Write a slice of the passed byte array to the underlying stream</summary>
-        /// <param name="b">byte array to slice and write.</param>
-        /// <param name="off">starting index of the slice.</param>
-        /// <param name="len">length of the slice.</param>
-        /// <exception cref="System.IO.IOException"/>
-        public override void Write(byte[] b, int off, int len) {
-            base.Write(b, off, len);
-            if (duplicateStream != null) {
-                duplicateStream.Write(b, off, len);
-            }
-        }
-
-        /// <summary>Close the writer and underlying streams.</summary>
-        /// <exception cref="System.IO.IOException"/>
-        public override void Close() {
-            try {
-                base.Close();
-            }
-            finally {
-                try {
-                    if (duplicateStream != null) {
-                        duplicateStream.Dispose();
-                    }
-                }
-                catch (Exception ex) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfWriter));
-                    logger.Error("Closing of the duplicatedStream failed.", ex);
-                }
-            }
         }
 
         /// <summary>Gets the current object stream.</summary>
@@ -487,22 +435,6 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                 }
-            }
-        }
-
-        private iText.Kernel.Pdf.PdfWriter SetDebugMode() {
-            duplicateStream = new PdfOutputStream(new ByteArrayOutputStream());
-            return this;
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        private byte[] GetDebugBytes() {
-            if (duplicateStream != null) {
-                duplicateStream.Flush();
-                return ((ByteArrayOutputStream)(duplicateStream.GetOutputStream())).ToArray();
-            }
-            else {
-                return null;
             }
         }
 
