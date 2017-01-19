@@ -215,7 +215,7 @@ namespace iText.Kernel.Pdf {
             finally {
                 try {
                     if (duplicateStream != null) {
-                        duplicateStream.Close();
+                        duplicateStream.Dispose();
                     }
                 }
                 catch (Exception ex) {

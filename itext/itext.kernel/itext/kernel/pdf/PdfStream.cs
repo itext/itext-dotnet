@@ -415,7 +415,7 @@ namespace iText.Kernel.Pdf {
             base.ReleaseContent();
             try {
                 if (outputStream != null) {
-                    outputStream.Close();
+                    outputStream.Dispose();
                     outputStream = null;
                 }
             }
