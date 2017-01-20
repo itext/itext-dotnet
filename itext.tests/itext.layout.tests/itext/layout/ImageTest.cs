@@ -14,11 +14,11 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class ImageTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/ImageTest/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/ImageTest/";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/ImageTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -569,5 +569,21 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1045")]
+        public virtual void FixedPositionImageTest01() {
+            String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_fixedPositionImageTest01.pdf";
+            String imgPath = sourceFolder + "Desert.jpg";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            document.Add(new iText.Layout.Element.Image(ImageDataFactory.Create(imgPath), 12, pdfDoc.GetDefaultPageSize
+                ().GetHeight() - 36, 24).SetBorder(new SolidBorder(Color.RED, 5)));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
