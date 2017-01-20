@@ -95,7 +95,7 @@ namespace iText.Kernel.Font {
             if (fontEncoding.IsFontSpecific()) {
                 for (int i = from; i <= to; i++) {
                     Glyph glyph = fontProgram.GetGlyphByCode(text[i] & 0xFF);
-                    if (glyph != null && (IsAppendableGlyph(glyph))) {
+                    if (glyph != null) {
                         glyphs.Add(glyph);
                         processed++;
                     }
@@ -107,7 +107,7 @@ namespace iText.Kernel.Font {
             else {
                 for (int i = from; i <= to; i++) {
                     Glyph glyph = GetGlyph((int)text[i]);
-                    if (glyph != null && (IsAppendableGlyph(glyph))) {
+                    if (glyph != null && (ContainsGlyph(text, i) || IsAppendableGlyph(glyph))) {
                         glyphs.Add(glyph);
                         processed++;
                     }
