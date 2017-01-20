@@ -72,8 +72,15 @@ namespace iText.Layout.Renderer {
                     childRenderers[i].SetParent(this);
                     IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers[i]);
                     childRenderers[i].SetParent(null);
+                    currentSymbolRenderer.SetParent(this);
+                    // Workaround for the case when font is specified as string
+                    if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty(Property.FONT) is String
+                        ) {
+                        PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
+                        currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
+                    }
                     symbolRenderers.Add(currentSymbolRenderer);
-                    LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout(layoutContext);
+                    LayoutResult listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
                     currentSymbolRenderer.SetParent(null);
                     if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
@@ -234,7 +241,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_219(constantFont, textElement);
+                            textRenderer = new _TextRenderer_227(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -253,8 +260,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_219 : TextRenderer {
-            public _TextRenderer_219(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_227 : TextRenderer {
+            public _TextRenderer_227(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }

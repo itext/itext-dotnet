@@ -269,7 +269,7 @@ namespace iText.Layout.Renderer {
         }
 
         private float[] CalculateAscenderDescender() {
-            PdfFont listItemFont = GetPropertyAsFont(Property.FONT);
+            PdfFont listItemFont = ResolveFirstPdfFont();
             float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
             if (listItemFont != null && fontSize != null) {
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);

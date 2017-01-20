@@ -973,13 +973,7 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     IList<iText.Layout.Renderer.TextRenderer> renderers = new List<iText.Layout.Renderer.TextRenderer>();
-                    FontCharacteristic fc = new FontCharacteristic();
-                    if (this.HasProperty(Property.FONT_WEIGHT)) {
-                        fc.SetFontWeight((String)this.GetProperty<Object>(Property.FONT_WEIGHT));
-                    }
-                    if (this.HasProperty(Property.FONT_STYLE)) {
-                        fc.SetFontStyle((String)this.GetProperty<Object>(Property.FONT_STYLE));
-                    }
+                    FontCharacteristic fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc);
                     while (!strategy.EndOfText()) {
