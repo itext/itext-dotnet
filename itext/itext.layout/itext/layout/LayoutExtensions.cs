@@ -58,6 +58,10 @@ namespace iText.Layout {
             return sb.ToString(beginIndex, endIndex - beginIndex);
         }
 
+        public static bool EqualsIgnoreCase(this String str, String anotherString) {
+            return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static void JGetChars(this String str, int srcBegin, int srcEnd, char[] dst, int dstBegin) {
             str.CopyTo(srcBegin, dst, dstBegin, srcEnd - srcBegin);
         }
