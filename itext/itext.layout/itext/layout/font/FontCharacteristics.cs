@@ -2,7 +2,7 @@ using System;
 using iText.IO.Font;
 
 namespace iText.Layout.Font {
-    public sealed class FontCharacteristic {
+    public sealed class FontCharacteristics {
         private bool isItalic = false;
 
         private bool isBold = false;
@@ -11,25 +11,25 @@ namespace iText.Layout.Font {
 
         private bool undefined = true;
 
-        public FontCharacteristic SetFontWeight(FontWeight fw) {
-            this.fontWeight = FontCharacteristicUtils.CalculateFontWeightNumber(fw);
+        public FontCharacteristics SetFontWeight(FontWeight fw) {
+            this.fontWeight = FontCharacteristicsUtils.CalculateFontWeightNumber(fw);
             Modified();
             return this;
         }
 
-        public FontCharacteristic SetFontWeight(short fw) {
+        public FontCharacteristics SetFontWeight(short fw) {
             if (fw > 0) {
-                this.fontWeight = FontCharacteristicUtils.NormalizeFontWeight(fw);
+                this.fontWeight = FontCharacteristicsUtils.NormalizeFontWeight(fw);
                 Modified();
             }
             return this;
         }
 
-        public FontCharacteristic SetFontWeight(String fw) {
-            return SetFontWeight(FontCharacteristicUtils.ParseFontWeight(fw));
+        public FontCharacteristics SetFontWeight(String fw) {
+            return SetFontWeight(FontCharacteristicsUtils.ParseFontWeight(fw));
         }
 
-        public FontCharacteristic SetBoldFlag(bool isBold) {
+        public FontCharacteristics SetBoldFlag(bool isBold) {
             this.isBold = isBold;
             if (this.isBold) {
                 Modified();
@@ -37,7 +37,7 @@ namespace iText.Layout.Font {
             return this;
         }
 
-        public FontCharacteristic SetItalicFlag(bool isItalic) {
+        public FontCharacteristics SetItalicFlag(bool isItalic) {
             this.isItalic = isItalic;
             if (this.isItalic) {
                 Modified();
@@ -47,7 +47,7 @@ namespace iText.Layout.Font {
 
         /// <summary>Set font style</summary>
         /// <param name="fs">shall be 'normal', 'italic' or 'oblique'.</param>
-        public FontCharacteristic SetFontStyle(String fs) {
+        public FontCharacteristics SetFontStyle(String fs) {
             if (fs != null && fs.Length > 0) {
                 fs = fs.Trim().ToLowerInvariant();
                 if (fs.Equals("normal")) {
@@ -78,7 +78,7 @@ namespace iText.Layout.Font {
         }
 
         public FontWeight GetFontWeight() {
-            return FontCharacteristicUtils.CalculateFontWeight(fontWeight);
+            return FontCharacteristicsUtils.CalculateFontWeight(fontWeight);
         }
 
         public bool IsUndefined() {
@@ -96,7 +96,7 @@ namespace iText.Layout.Font {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            FontCharacteristic that = (FontCharacteristic)o;
+            FontCharacteristics that = (FontCharacteristics)o;
             return isItalic == that.isItalic && isBold == that.isBold && fontWeight == that.fontWeight;
         }
 

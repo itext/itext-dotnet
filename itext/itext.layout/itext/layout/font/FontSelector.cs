@@ -52,7 +52,7 @@ namespace iText.Layout.Font {
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
         /// <param name="fontFamilies">sorted list of preferred font families.</param>
-        public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristic fc) {
+        public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual member in constructor.
             JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, fc));
@@ -74,7 +74,7 @@ namespace iText.Layout.Font {
             return fonts;
         }
 
-        protected internal virtual IComparer<FontInfo> GetComparator(IList<String> fontFamilies, FontCharacteristic
+        protected internal virtual IComparer<FontInfo> GetComparator(IList<String> fontFamilies, FontCharacteristics
              fc) {
             return new FontSelector.PdfFontComparator(fontFamilies, fc);
         }
@@ -82,11 +82,11 @@ namespace iText.Layout.Font {
         private class PdfFontComparator : IComparer<FontInfo> {
             internal IList<String> fontFamilies;
 
-            internal IList<FontCharacteristic> fontStyles;
+            internal IList<FontCharacteristics> fontStyles;
 
-            internal PdfFontComparator(IList<String> fontFamilies, FontCharacteristic fc) {
+            internal PdfFontComparator(IList<String> fontFamilies, FontCharacteristics fc) {
                 this.fontFamilies = new List<String>();
-                this.fontStyles = new List<FontCharacteristic>();
+                this.fontStyles = new List<FontCharacteristics>();
                 if (fontFamilies != null && fontFamilies.Count > 0) {
                     foreach (String fontFamily in fontFamilies) {
                         String lowercaseFontFamily = fontFamily.ToLowerInvariant();
@@ -103,7 +103,7 @@ namespace iText.Layout.Font {
             public virtual int Compare(FontInfo o1, FontInfo o2) {
                 int res = 0;
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
-                    FontCharacteristic fc = fontStyles[i];
+                    FontCharacteristics fc = fontStyles[i];
                     res = CharacteristicsSimilarity(fc, o2) - CharacteristicsSimilarity(fc, o1);
                     if (res == 0) {
                         String fontName = fontFamilies[i];
@@ -120,9 +120,9 @@ namespace iText.Layout.Font {
                 return res;
             }
 
-            private static FontCharacteristic ParseFontStyle(String fontFamily, FontCharacteristic fc) {
+            private static FontCharacteristics ParseFontStyle(String fontFamily, FontCharacteristics fc) {
                 if (fc == null) {
-                    fc = new FontCharacteristic();
+                    fc = new FontCharacteristics();
                 }
                 if (fc.IsUndefined()) {
                     if (fontFamily.Contains("bold")) {
@@ -135,7 +135,7 @@ namespace iText.Layout.Font {
                 return fc;
             }
 
-            private static int CharacteristicsSimilarity(FontCharacteristic fc, FontInfo fontInfo) {
+            private static int CharacteristicsSimilarity(FontCharacteristics fc, FontInfo fontInfo) {
                 bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
                 bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
                 int score = 0;

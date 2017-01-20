@@ -1165,8 +1165,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        internal virtual FontCharacteristic CreateFontCharacteristics() {
-            FontCharacteristic fc = new FontCharacteristic();
+        internal virtual FontCharacteristics CreateFontCharacteristics() {
+            FontCharacteristics fc = new FontCharacteristics();
             if (this.HasProperty(Property.FONT_WEIGHT)) {
                 fc.SetFontWeight((String)this.GetProperty<Object>(Property.FONT_WEIGHT));
             }
@@ -1189,7 +1189,7 @@ namespace iText.Layout.Renderer {
                         throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
                             );
                     }
-                    FontCharacteristic fc = CreateFontCharacteristics();
+                    FontCharacteristics fc = CreateFontCharacteristics();
                     return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily((String)font), fc).BestMatch().GetPdfFont
                         (provider);
                 }

@@ -53,9 +53,9 @@ namespace iText.Layout.Font {
     internal sealed class FontSelectorKey {
         private IList<String> fontFamilies;
 
-        private FontCharacteristic fc;
+        private FontCharacteristics fc;
 
-        public FontSelectorKey(IList<String> fontFamilies, FontCharacteristic fc) {
+        public FontSelectorKey(IList<String> fontFamilies, FontCharacteristics fc) {
             this.fontFamilies = new List<String>(fontFamilies);
             this.fc = fc;
         }

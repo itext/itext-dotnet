@@ -2,7 +2,7 @@ using System;
 using iText.IO.Font;
 
 namespace iText.Layout.Font {
-    internal sealed class FontCharacteristicUtils {
+    internal sealed class FontCharacteristicsUtils {
         internal static FontWeight CalculateFontWeight(short fw) {
             switch (fw) {
                 case 100: {

@@ -973,7 +973,7 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     IList<iText.Layout.Renderer.TextRenderer> renderers = new List<iText.Layout.Renderer.TextRenderer>();
-                    FontCharacteristic fc = CreateFontCharacteristics();
+                    FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc);
                     while (!strategy.EndOfText()) {
