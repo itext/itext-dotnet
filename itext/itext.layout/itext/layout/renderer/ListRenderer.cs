@@ -74,8 +74,8 @@ namespace iText.Layout.Renderer {
                     childRenderers[i].SetParent(null);
                     currentSymbolRenderer.SetParent(this);
                     // Workaround for the case when font is specified as string
-                    if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty(Property.FONT) is String
-                        ) {
+                    if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty<Object>(Property.FONT) 
+                        is String) {
                         PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
                         currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
                     }
