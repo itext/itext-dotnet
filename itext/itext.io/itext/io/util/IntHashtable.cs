@@ -60,7 +60,11 @@ namespace iText.IO.Util {
     /// <author>Stephen Colebourne</author>
     /// <author>Bruno Lowagie (change Objects as keys into int values)</author>
     /// <author>Paulo Soares (added extra methods)</author>
-    public class IntHashtable : ICloneable {
+    public class IntHashtable
+#if !NETSTANDARD1_6
+ : ICloneable
+#endif
+ {
         /// <summary>The hash table data.</summary>
         private IntHashtable.Entry[] table;
 
