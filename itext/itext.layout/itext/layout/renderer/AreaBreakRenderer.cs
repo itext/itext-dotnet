@@ -72,9 +72,6 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual LayoutResult Layout(LayoutContext layoutContext) {
-            LayoutArea occupiedArea = layoutContext.GetArea().Clone();
-            occupiedArea.GetBBox().SetHeight(0);
-            occupiedArea.GetBBox().SetWidth(0);
             return new LayoutResult(LayoutResult.NOTHING, null, null, null, this).SetAreaBreak(areaBreak);
         }
 

@@ -713,6 +713,42 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>
+        /// Sets the BleedBox object, that defines the region to which the contents of the page shall be clipped
+        /// when output in a production environment.
+        /// </summary>
+        /// <param name="rectangle">
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object to set, expressed in default user space units.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetBleedBox(Rectangle rectangle) {
+            Put(PdfName.BleedBox, new PdfArray(rectangle));
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's BleedBox, that define the region to which the
+        /// contents of the page shall be clipped when output in a production environment.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Geom.Rectangle"/>
+        /// object specified by page's BleedBox, expressed in default user space units.
+        /// CropBox by default.
+        /// </returns>
+        public virtual Rectangle GetBleedBox() {
+            Rectangle bleedBox = GetPdfObject().GetAsRectangle(PdfName.BleedBox);
+            return bleedBox == null ? GetCropBox() : bleedBox;
+        }
+
+        /// <summary>
         /// Sets the ArtBox object, that define the extent of the page’s meaningful content
         /// (including potential white space) as intended by the page’s creator.
         /// </summary>
@@ -1078,32 +1114,6 @@ namespace iText.Kernel.Pdf {
             return GetDocument().GetCatalog().GetPagesWithOutlines().Get(GetPdfObject());
         }
 
-        /// <returns>
-        /// true - if in case the page has a rotation, then new content will be automatically rotated in the
-        /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
-        /// </returns>
-        public virtual bool IsIgnorePageRotationForContent() {
-            return ignorePageRotationForContent;
-        }
-
-        /// <summary>
-        /// If true - defines that in case the page has a rotation, then new content will be automatically rotated in the
-        /// opposite direction.
-        /// </summary>
-        /// <remarks>
-        /// If true - defines that in case the page has a rotation, then new content will be automatically rotated in the
-        /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
-        /// Default value -
-        /// <see langword="false"/>
-        /// .
-        /// </remarks>
-        /// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
-        ///     </param>
-        public virtual iText.Kernel.Pdf.PdfPage SetIgnorePageRotationForContent(bool ignorePageRotationForContent) {
-            this.ignorePageRotationForContent = ignorePageRotationForContent;
-            return this;
-        }
-
         /// <summary>This method adds or replaces a page label.</summary>
         /// <param name="numberingStyle">
         /// The numbering style that shall be used for the numeric portion of each page label.
@@ -1138,6 +1148,32 @@ namespace iText.Kernel.Pdf {
         [Obsolete("Use SetPageLabel(PageLabelNumberingStyleConstants?, String, int) overload instead. Will be removed in 7.1.")]
         public virtual iText.Kernel.Pdf.PdfPage SetPageLabel(PageLabelNumberingStyleConstants numberingStyle, String labelPrefix, int firstPage) {
             return SetPageLabel((PageLabelNumberingStyleConstants?)numberingStyle, labelPrefix, firstPage);
+        }
+
+        /// <returns>
+        /// true - if in case the page has a rotation, then new content will be automatically rotated in the
+        /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
+        /// </returns>
+        public virtual bool IsIgnorePageRotationForContent() {
+            return ignorePageRotationForContent;
+        }
+
+        /// <summary>
+        /// If true - defines that in case the page has a rotation, then new content will be automatically rotated in the
+        /// opposite direction.
+        /// </summary>
+        /// <remarks>
+        /// If true - defines that in case the page has a rotation, then new content will be automatically rotated in the
+        /// opposite direction. On the rotated page this would look like if new content ignores page rotation.
+        /// Default value -
+        /// <see langword="false"/>
+        /// .
+        /// </remarks>
+        /// <param name="ignorePageRotationForContent">- true to ignore rotation of the new content on the rotated page.
+        ///     </param>
+        public virtual iText.Kernel.Pdf.PdfPage SetIgnorePageRotationForContent(bool ignorePageRotationForContent) {
+            this.ignorePageRotationForContent = ignorePageRotationForContent;
+            return this;
         }
 
         /// <summary>This method adds or replaces a page label.</summary>

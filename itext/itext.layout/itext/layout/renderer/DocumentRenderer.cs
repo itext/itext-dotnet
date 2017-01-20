@@ -90,7 +90,7 @@ namespace iText.Layout.Renderer {
             }
             PageSize lastPageSize = EnsureDocumentHasNPages(currentPageNumber, customPageSize);
             if (lastPageSize == null) {
-                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetPageSize());
+                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetTrimBox());
             }
             return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea(lastPageSize)));
         }
