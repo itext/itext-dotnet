@@ -72,15 +72,14 @@ namespace iText.Layout.Font {
         }
 
         public override IList<Glyph> NextGlyphs() {
+            font = null;
             int nextUnignorable = NextSignificantIndex();
             if (nextUnignorable < text.Length) {
                 foreach (FontInfo f in selector.GetFonts()) {
-                    font = f.GetPdfFont(provider);
-                    if (font.ContainsGlyph(text, nextUnignorable)) {
+                    PdfFont currentFont = f.GetPdfFont(provider);
+                    if (currentFont.ContainsGlyph(text, nextUnignorable)) {
+                        font = currentFont;
                         break;
-                    }
-                    else {
-                        font = null;
                     }
                 }
             }
@@ -88,6 +87,7 @@ namespace iText.Layout.Font {
                 nextUnignorable = 0;
             }
             IList<Glyph> glyphs = new List<Glyph>();
+            bool anyGlyphsAppended = false;
             if (font != null) {
                 UnicodeScript? unicodeScript = NextSignificantUnicodeScript(nextUnignorable);
                 int to = nextUnignorable;
@@ -102,9 +102,12 @@ namespace iText.Layout.Font {
                     }
                     to = i;
                 }
-                index += font.AppendGlyphs(text, index, to, glyphs);
+                int numOfAppendedGlyphs = font.AppendGlyphs(text, index, to, glyphs);
+                anyGlyphsAppended = numOfAppendedGlyphs > 0;
+                System.Diagnostics.Debug.Assert(anyGlyphsAppended);
+                index += numOfAppendedGlyphs;
             }
-            else {
+            if (!anyGlyphsAppended) {
                 font = selector.BestMatch().GetPdfFont(provider);
                 if (index != nextUnignorable) {
                     index += font.AppendGlyphs(text, index, nextUnignorable - 1, glyphs);
@@ -117,8 +120,7 @@ namespace iText.Layout.Font {
         private int NextSignificantIndex() {
             int nextValidChar = index;
             for (; nextValidChar < text.Length; nextValidChar++) {
-                if (!iText.IO.Util.TextUtil.IsIdentifierIgnorable(text[nextValidChar]) && !iText.IO.Util.TextUtil.IsWhiteSpace
-                    (text[nextValidChar])) {
+                if (!TextUtil.IsWhitespaceOrNonPrintable(text[nextValidChar])) {
                     break;
                 }
             }

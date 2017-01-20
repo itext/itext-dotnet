@@ -1021,7 +1021,7 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             int c = g.GetUnicode();
-            return c >= 0x200b && c <= 0x200f || c >= 0x202a && c <= 0x202e || c == '\u00AD';
+            return TextUtil.IsNonPrintable(c);
         }
 
         private float GetCharWidth(Glyph g, float fontSize, float? hScale, float? characterSpacing, float? wordSpacing

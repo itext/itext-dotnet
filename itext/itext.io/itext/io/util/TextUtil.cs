@@ -264,7 +264,13 @@ namespace iText.IO.Util {
             return g.GetUnicode() == ' ';
         }
 
+        public static bool IsNonPrintable(int c) {
+            return IsIdentifierIgnorable(c) || c == '\u00AD';
+        }
 
+        public static bool IsWhitespaceOrNonPrintable(int code) {
+            return IsWhiteSpace((char)code) || IsNonPrintable(code);
+        }
 
     }
 }
