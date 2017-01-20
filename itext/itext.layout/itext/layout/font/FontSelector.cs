@@ -104,17 +104,13 @@ namespace iText.Layout.Font {
                 int res = 0;
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristics fc = fontStyles[i];
-                    res = CharacteristicsSimilarity(fc, o2) - CharacteristicsSimilarity(fc, o1);
-                    if (res == 0) {
-                        String fontName = fontFamilies[i];
-                        res = (o2.GetDescriptor().GetFullNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetDescriptor().GetFullNameLowerCase
-                            ().Contains(fontName) ? 1 : 0);
-                        // In most cases full font name will be enough.
-                        // It's trick for 'bad' fonts.
-                        if (res == 0) {
-                            res = (o2.GetDescriptor().GetFontNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetDescriptor().GetFontNameLowerCase
-                                ().Contains(fontName) ? 1 : 0);
-                        }
+                    String fontName = fontFamilies[i];
+                    if (fontName.EqualsIgnoreCase("monospace")) {
+                        fc.SetMonospaceFlag(true);
+                    }
+                    res = CharacteristicsSimilarity(fontName, fc, o2) - CharacteristicsSimilarity(fontName, fc, o1);
+                    if (res != 0) {
+                        return res;
                     }
                 }
                 return res;
@@ -135,9 +131,10 @@ namespace iText.Layout.Font {
                 return fc;
             }
 
-            private static int CharacteristicsSimilarity(FontCharacteristics fc, FontInfo fontInfo) {
+            private static int CharacteristicsSimilarity(String fontName, FontCharacteristics fc, FontInfo fontInfo) {
                 bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
                 bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
+                bool isFontMonospace = fontInfo.GetDescriptor().IsMonospace();
                 int score = 0;
                 if (fc.IsBold()) {
                     if (isFontBold) {
@@ -163,6 +160,29 @@ namespace iText.Layout.Font {
                 else {
                     if (isFontItalic) {
                         score -= 3;
+                    }
+                }
+                if (fc.IsMonospace()) {
+                    if (isFontMonospace) {
+                        score += 5;
+                    }
+                    else {
+                        score -= 5;
+                    }
+                }
+                else {
+                    if (isFontMonospace) {
+                        score -= 1;
+                    }
+                }
+                if (fontInfo.GetDescriptor().GetFullNameLowerCase().Equals(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
+                    ().Equals(fontName)) {
+                    score += 10;
+                }
+                else {
+                    if (fontInfo.GetDescriptor().GetFullNameLowerCase().Contains(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
+                        ().Contains(fontName)) {
+                        score += 7;
                     }
                 }
                 return score;

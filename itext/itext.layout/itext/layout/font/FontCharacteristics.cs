@@ -11,13 +11,26 @@ namespace iText.Layout.Font {
 
         private bool undefined = true;
 
-        public FontCharacteristics SetFontWeight(FontWeight fw) {
+        private bool isMonospace = false;
+
+        public FontCharacteristics() {
+        }
+
+        public FontCharacteristics(iText.Layout.Font.FontCharacteristics other)
+            : this() {
+            this.isItalic = other.isItalic;
+            this.isBold = other.isBold;
+            this.fontWeight = other.fontWeight;
+            this.undefined = other.undefined;
+        }
+
+        public iText.Layout.Font.FontCharacteristics SetFontWeight(FontWeight fw) {
             this.fontWeight = FontCharacteristicsUtils.CalculateFontWeightNumber(fw);
             Modified();
             return this;
         }
 
-        public FontCharacteristics SetFontWeight(short fw) {
+        public iText.Layout.Font.FontCharacteristics SetFontWeight(short fw) {
             if (fw > 0) {
                 this.fontWeight = FontCharacteristicsUtils.NormalizeFontWeight(fw);
                 Modified();
@@ -25,11 +38,11 @@ namespace iText.Layout.Font {
             return this;
         }
 
-        public FontCharacteristics SetFontWeight(String fw) {
+        public iText.Layout.Font.FontCharacteristics SetFontWeight(String fw) {
             return SetFontWeight(FontCharacteristicsUtils.ParseFontWeight(fw));
         }
 
-        public FontCharacteristics SetBoldFlag(bool isBold) {
+        public iText.Layout.Font.FontCharacteristics SetBoldFlag(bool isBold) {
             this.isBold = isBold;
             if (this.isBold) {
                 Modified();
@@ -37,7 +50,7 @@ namespace iText.Layout.Font {
             return this;
         }
 
-        public FontCharacteristics SetItalicFlag(bool isItalic) {
+        public iText.Layout.Font.FontCharacteristics SetItalicFlag(bool isItalic) {
             this.isItalic = isItalic;
             if (this.isItalic) {
                 Modified();
@@ -45,9 +58,17 @@ namespace iText.Layout.Font {
             return this;
         }
 
+        public iText.Layout.Font.FontCharacteristics SetMonospaceFlag(bool isMonospace) {
+            this.isMonospace = isMonospace;
+            if (this.isMonospace) {
+                Modified();
+            }
+            return this;
+        }
+
         /// <summary>Set font style</summary>
         /// <param name="fs">shall be 'normal', 'italic' or 'oblique'.</param>
-        public FontCharacteristics SetFontStyle(String fs) {
+        public iText.Layout.Font.FontCharacteristics SetFontStyle(String fs) {
             if (fs != null && fs.Length > 0) {
                 fs = fs.Trim().ToLowerInvariant();
                 if (fs.Equals("normal")) {
@@ -73,6 +94,10 @@ namespace iText.Layout.Font {
             return isBold || fontWeight > 600;
         }
 
+        public bool IsMonospace() {
+            return isMonospace;
+        }
+
         public short GetFontWeightNumber() {
             return fontWeight;
         }
@@ -96,7 +121,7 @@ namespace iText.Layout.Font {
             if (o == null || GetType() != o.GetType()) {
                 return false;
             }
-            FontCharacteristics that = (FontCharacteristics)o;
+            iText.Layout.Font.FontCharacteristics that = (iText.Layout.Font.FontCharacteristics)o;
             return isItalic == that.isItalic && isBold == that.isBold && fontWeight == that.fontWeight;
         }
 
