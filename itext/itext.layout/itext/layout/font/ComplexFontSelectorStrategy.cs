@@ -83,9 +83,6 @@ namespace iText.Layout.Font {
                     }
                 }
             }
-            else {
-                nextUnignorable = 0;
-            }
             IList<Glyph> glyphs = new List<Glyph>();
             bool anyGlyphsAppended = false;
             if (font != null) {
@@ -112,7 +109,9 @@ namespace iText.Layout.Font {
                 if (index != nextUnignorable) {
                     index += font.AppendGlyphs(text, index, nextUnignorable - 1, glyphs);
                 }
-                index += font.AppendAnyGlyph(text, nextUnignorable, glyphs);
+                while (index <= nextUnignorable && index < text.Length) {
+                    index += font.AppendAnyGlyph(text, index, glyphs);
+                }
             }
             return glyphs;
         }
