@@ -116,18 +116,22 @@ namespace iText.Layout.Properties {
 
         public const int FONT_KERNING = 22;
 
-        /// <summary>
+        /// <summary>String value.</summary>
+        /// <remarks>
+        /// String value. 'normal'|'italic'|'oblique'
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
         /// has String value.
-        /// </summary>
+        /// </remarks>
         public const int FONT_STYLE = 94;
 
-        /// <summary>
+        /// <summary>String value.</summary>
+        /// <remarks>
+        /// String value. 'normal'|'bold'|number
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
         /// has String value.
-        /// </summary>
+        /// </remarks>
         public const int FONT_WEIGHT = 95;
 
         public const int FONT_SCRIPT = 23;

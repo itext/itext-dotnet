@@ -51,13 +51,13 @@ namespace iText.Layout.Font {
     /// </summary>
     /// <seealso>FontSet#getFontSelectorCache().</seealso>
     internal sealed class FontSelectorKey {
-        internal IList<String> fontFamilies;
+        private IList<String> fontFamilies;
 
-        internal int style;
+        private FontCharacteristic fc;
 
-        public FontSelectorKey(IList<String> fontFamilies, int style) {
+        public FontSelectorKey(IList<String> fontFamilies, FontCharacteristic fc) {
             this.fontFamilies = new List<String>(fontFamilies);
-            this.style = style;
+            this.fc = fc;
         }
 
         public override bool Equals(Object o) {
@@ -65,13 +65,16 @@ namespace iText.Layout.Font {
                 return true;
             }
             iText.Layout.Font.FontSelectorKey that = (iText.Layout.Font.FontSelectorKey)o;
-            return style == that.style && (fontFamilies != null ? System.Linq.Enumerable.SequenceEqual(fontFamilies, that
-                .fontFamilies) : that.fontFamilies == null);
+            if (fontFamilies != null ? !System.Linq.Enumerable.SequenceEqual(fontFamilies, that.fontFamilies) : that.fontFamilies
+                 != null) {
+                return false;
+            }
+            return fc != null ? fc.Equals(that.fc) : that.fc == null;
         }
 
         public override int GetHashCode() {
             int result = fontFamilies != null ? fontFamilies.GetHashCode() : 0;
-            result = 31 * result + style;
+            result = 31 * result + (fc != null ? fc.GetHashCode() : 0);
             return result;
         }
     }

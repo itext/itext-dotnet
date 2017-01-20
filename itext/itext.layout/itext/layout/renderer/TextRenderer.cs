@@ -556,7 +556,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_589();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_584();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -617,8 +617,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_589 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_589() {
+        private sealed class _IGlyphLineFilter_584 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_584() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -973,8 +973,15 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     IList<iText.Layout.Renderer.TextRenderer> renderers = new List<iText.Layout.Renderer.TextRenderer>();
+                    FontCharacteristic fc = new FontCharacteristic();
+                    if (this.HasProperty(Property.FONT_WEIGHT)) {
+                        fc.SetFontWeight((String)this.GetProperty<Object>(Property.FONT_WEIGHT));
+                    }
+                    if (this.HasProperty(Property.FONT_STYLE)) {
+                        fc.SetFontStyle((String)this.GetProperty<Object>(Property.FONT_STYLE));
+                    }
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font));
+                        (String)font), fc);
                     while (!strategy.EndOfText()) {
                         iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
                         textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetCurrentFont());

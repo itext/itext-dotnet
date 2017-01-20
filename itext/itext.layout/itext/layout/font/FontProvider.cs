@@ -169,12 +169,13 @@ namespace iText.Layout.Font {
             return true;
         }
 
-        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, int style) {
-            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, style), this);
+        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristic
+             fc) {
+            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc), this);
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies) {
-            return GetStrategy(text, fontFamilies, FontConstants.UNDEFINED);
+            return GetStrategy(text, fontFamilies, null);
         }
 
         /// <summary>
@@ -183,32 +184,25 @@ namespace iText.Layout.Font {
         /// or get from cache.
         /// </summary>
         /// <param name="fontFamilies">target font families</param>
-        /// <param name="style">
-        /// Shall be
-        /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.NORMAL"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.ITALIC"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.BOLD"/>
-        /// , or
-        /// <see cref="iText.IO.Font.FontConstants.BOLDITALIC"/>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristic"/>
+        /// .
         /// </param>
         /// <returns>
         /// an instance of
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, int)
+        /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristic)
         ///     ">}</seealso>
-        public FontSelector GetFontSelector(IList<String> fontFamilies, int style) {
-            FontSelectorKey key = new FontSelectorKey(fontFamilies, style);
+        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristic fc) {
+            FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
             if (fontSet.GetFontSelectorCache().ContainsKey(key)) {
                 return fontSet.GetFontSelectorCache().Get(key);
             }
             else {
-                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, style);
+                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, fc);
                 fontSet.GetFontSelectorCache()[key] = fontSelector;
                 return fontSelector;
             }
@@ -218,7 +212,7 @@ namespace iText.Layout.Font {
         /// Create a new instance of
         /// <see cref="FontSelector"/>
         /// . While caching is main responsibility of
-        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, int)"/>
+        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristic)"/>
         /// ,
         /// this method just create a new instance of
         /// <see cref="FontSelector"/>
@@ -226,17 +220,10 @@ namespace iText.Layout.Font {
         /// </summary>
         /// <param name="fonts">Set of all available fonts in current context.</param>
         /// <param name="fontFamilies">target font families</param>
-        /// <param name="style">
-        /// Shall be
-        /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.NORMAL"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.ITALIC"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.BOLD"/>
-        /// , or
-        /// <see cref="iText.IO.Font.FontConstants.BOLDITALIC"/>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristic"/>
+        /// .
         /// </param>
         /// <returns>
         /// an instance of
@@ -244,8 +231,8 @@ namespace iText.Layout.Font {
         /// .
         /// </returns>
         protected internal virtual FontSelector CreateFontSelector(ICollection<FontProgramInfo> fonts, IList<String
-            > fontFamilies, int style) {
-            return new FontSelector(fonts, fontFamilies, style);
+            > fontFamilies, FontCharacteristic fc) {
+            return new FontSelector(fonts, fontFamilies, fc);
         }
 
         /// <summary>
