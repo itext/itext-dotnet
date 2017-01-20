@@ -73,14 +73,19 @@ namespace iText.Layout.Font {
 
         public override IList<Glyph> NextGlyphs() {
             int nextUnignorable = NextSignificantIndex();
-            foreach (FontProgramInfo f in selector.GetFonts()) {
-                font = f.GetPdfFont(provider);
-                if (font.ContainsGlyph(text, nextUnignorable)) {
-                    break;
+            if (nextUnignorable < text.Length) {
+                foreach (FontInfo f in selector.GetFonts()) {
+                    font = f.GetPdfFont(provider);
+                    if (font.ContainsGlyph(text, nextUnignorable)) {
+                        break;
+                    }
+                    else {
+                        font = null;
+                    }
                 }
-                else {
-                    font = null;
-                }
+            }
+            else {
+                nextUnignorable = 0;
             }
             IList<Glyph> glyphs = new List<Glyph>();
             if (font != null) {
@@ -112,7 +117,8 @@ namespace iText.Layout.Font {
         private int NextSignificantIndex() {
             int nextValidChar = index;
             for (; nextValidChar < text.Length; nextValidChar++) {
-                if (!iText.IO.Util.TextUtil.IsIdentifierIgnorable(text[nextValidChar])) {
+                if (!iText.IO.Util.TextUtil.IsIdentifierIgnorable(text[nextValidChar]) && !iText.IO.Util.TextUtil.IsWhiteSpace
+                    (text[nextValidChar])) {
                     break;
                 }
             }

@@ -43,10 +43,10 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.IO.Font {
-    public sealed class FontNamesFactory {
+    public sealed class FontProgramDescriptorFactory {
         private static bool FETCH_CACHED_FIRST = true;
 
-        public static FontNames FetchFontNames(String fontName) {
+        public static FontProgramDescriptor FetchDescriptor(String fontName) {
             if (fontName == null || fontName.Length == 0) {
                 return null;
             }
@@ -54,65 +54,69 @@ namespace iText.IO.Font {
             //yes, we trying to find built-in standard font with original name, not baseName.
             bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(fontName);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
-            FontNames fontNames = null;
+            FontProgramDescriptor fontDescriptor = null;
             if (FETCH_CACHED_FIRST) {
-                fontNames = FetchCachedFontNames(fontName, null);
-                if (fontNames != null) {
-                    return fontNames;
+                fontDescriptor = FetchCachedDescriptor(fontName, null);
+                if (fontDescriptor != null) {
+                    return fontDescriptor;
                 }
             }
             try {
                 if (isBuiltinFonts14 || fontName.ToLowerInvariant().EndsWith(".afm") || fontName.ToLowerInvariant().EndsWith
                     (".pfm")) {
-                    fontNames = FetchType1Names(fontName, null);
+                    fontDescriptor = FetchType1FontDescriptor(fontName, null);
                 }
                 else {
                     if (isCidFont) {
-                        fontNames = FetchCidFontNames(fontName);
+                        fontDescriptor = FetchCidFontDescriptor(fontName);
                     }
                     else {
                         if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
-                            fontNames = FetchTrueTypeNames(fontName);
+                            fontDescriptor = FetchTrueTypeFontDescriptor(fontName);
                         }
                         else {
-                            fontNames = FetchTTCNames(baseName);
+                            fontDescriptor = FetchTTCDescriptor(baseName);
                         }
                     }
                 }
             }
             catch (Exception) {
-                fontNames = null;
+                fontDescriptor = null;
             }
-            return fontNames;
+            return fontDescriptor;
         }
 
-        public static FontNames FetchFontNames(byte[] fontProgram) {
+        public static FontProgramDescriptor FetchDescriptor(byte[] fontProgram) {
             if (fontProgram == null || fontProgram.Length == 0) {
                 return null;
             }
-            FontNames fontNames = null;
+            FontProgramDescriptor fontDescriptor = null;
             if (FETCH_CACHED_FIRST) {
-                fontNames = FetchCachedFontNames(null, fontProgram);
-                if (fontNames != null) {
-                    return fontNames;
+                fontDescriptor = FetchCachedDescriptor(null, fontProgram);
+                if (fontDescriptor != null) {
+                    return fontDescriptor;
                 }
             }
             try {
-                fontNames = FetchTrueTypeNames(fontProgram);
+                fontDescriptor = FetchTrueTypeFontDescriptor(fontProgram);
             }
             catch (Exception) {
             }
-            if (fontNames == null) {
+            if (fontDescriptor == null) {
                 try {
-                    fontNames = FetchType1Names(null, fontProgram);
+                    fontDescriptor = FetchType1FontDescriptor(null, fontProgram);
                 }
                 catch (Exception) {
                 }
             }
-            return fontNames;
+            return fontDescriptor;
         }
 
-        private static FontNames FetchCachedFontNames(String fontName, byte[] fontProgram) {
+        public static FontProgramDescriptor FetchDescriptor(FontProgram fontProgram) {
+            return FetchDescriptorFromFontProgram(fontProgram);
+        }
+
+        private static FontProgramDescriptor FetchCachedDescriptor(String fontName, byte[] fontProgram) {
             FontProgram fontFound;
             FontCacheKey key;
             if (fontName != null) {
@@ -122,11 +126,11 @@ namespace iText.IO.Font {
                 key = FontCacheKey.Create(fontProgram);
             }
             fontFound = FontCache.GetFont(key);
-            return fontFound != null ? fontFound.GetFontNames() : null;
+            return fontFound != null ? FetchDescriptorFromFontProgram(fontFound) : null;
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchTTCNames(String baseName) {
+        private static FontProgramDescriptor FetchTTCDescriptor(String baseName) {
             int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
             if (ttcSplit > 0) {
                 String ttcName;
@@ -141,9 +145,9 @@ namespace iText.IO.Font {
                     throw new iText.IO.IOException(nfe.Message, nfe);
                 }
                 OpenTypeParser parser = new OpenTypeParser(ttcName, ttcIndex);
-                FontNames names = FetchOpenTypeNames(parser);
+                FontProgramDescriptor descriptor = FetchOpenTypeFontDescriptor(parser);
                 parser.Close();
-                return names;
+                return descriptor;
             }
             else {
                 return null;
@@ -151,35 +155,40 @@ namespace iText.IO.Font {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchTrueTypeNames(String fontName) {
+        private static FontProgramDescriptor FetchTrueTypeFontDescriptor(String fontName) {
             using (OpenTypeParser parser = new OpenTypeParser(fontName)) {
-                return FetchOpenTypeNames(parser);
+                return FetchOpenTypeFontDescriptor(parser);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchTrueTypeNames(byte[] fontProgram) {
+        private static FontProgramDescriptor FetchTrueTypeFontDescriptor(byte[] fontProgram) {
             using (OpenTypeParser parser = new OpenTypeParser(fontProgram)) {
-                return FetchOpenTypeNames(parser);
+                return FetchOpenTypeFontDescriptor(parser);
             }
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchOpenTypeNames(OpenTypeParser fontParser) {
+        private static FontProgramDescriptor FetchOpenTypeFontDescriptor(OpenTypeParser fontParser) {
             fontParser.LoadTables(false);
-            return fontParser.GetFontNames();
+            return new FontProgramDescriptor(fontParser.GetFontNames(), fontParser.GetPostTable().italicAngle, fontParser
+                .GetPostTable().isFixedPitch);
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private static FontNames FetchType1Names(String fontName, byte[] afm) {
+        private static FontProgramDescriptor FetchType1FontDescriptor(String fontName, byte[] afm) {
             //TODO close original stream, may be separate static method should introduced
             Type1Font fp = new Type1Font(fontName, null, afm, null);
-            return fp.GetFontNames();
+            return new FontProgramDescriptor(fp.GetFontNames(), fp.GetFontMetrics());
         }
 
-        private static FontNames FetchCidFontNames(String fontName) {
+        private static FontProgramDescriptor FetchCidFontDescriptor(String fontName) {
             CidFont font = new CidFont(fontName, null);
-            return font.GetFontNames();
+            return new FontProgramDescriptor(font.GetFontNames(), font.GetFontMetrics());
+        }
+
+        private static FontProgramDescriptor FetchDescriptorFromFontProgram(FontProgram fontProgram) {
+            return new FontProgramDescriptor(fontProgram.GetFontNames(), fontProgram.GetFontMetrics());
         }
     }
 }

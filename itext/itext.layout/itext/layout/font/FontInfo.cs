@@ -55,56 +55,56 @@ namespace iText.Layout.Font {
     /// and
     /// <see cref="iText.Kernel.Font.PdfFont"/>
     /// .
-    /// <see cref="iText.IO.Font.FontNames"/>
+    /// <see cref="iText.IO.Font.FontProgramDescriptor"/>
     /// fetches with
-    /// <see cref="iText.IO.Font.FontNamesFactory"/>
+    /// <see cref="iText.IO.Font.FontProgramDescriptorFactory"/>
     /// .
     /// </summary>
-    public sealed class FontProgramInfo {
-        private static readonly IDictionary<FontCacheKey, FontNames> fontNamesCache = new ConcurrentDictionary<FontCacheKey
-            , FontNames>();
+    public sealed class FontInfo {
+        private static readonly IDictionary<FontCacheKey, FontProgramDescriptor> fontNamesCache = new ConcurrentDictionary
+            <FontCacheKey, FontProgramDescriptor>();
 
         private readonly String fontName;
 
         private readonly byte[] fontProgram;
 
-        private readonly String encoding;
-
-        private readonly FontNames names;
+        private readonly FontProgramDescriptor descriptor;
 
         private readonly int hash;
 
-        private FontProgramInfo(String fontName, byte[] fontProgram, String encoding, FontNames names) {
+        private readonly String encoding;
+
+        private FontInfo(String fontName, byte[] fontProgram, String encoding, FontProgramDescriptor descriptor) {
             this.fontName = fontName;
             this.fontProgram = fontProgram;
             this.encoding = encoding;
-            this.names = names;
+            this.descriptor = descriptor;
             this.hash = CalculateHashCode(fontName, fontProgram, encoding);
         }
 
-        internal static iText.Layout.Font.FontProgramInfo Create(FontProgram fontProgram, String encoding) {
-            return new iText.Layout.Font.FontProgramInfo(fontProgram.GetFontNames().GetFontName(), null, encoding, fontProgram
-                .GetFontNames());
+        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding) {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
+            return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor);
         }
 
-        internal static iText.Layout.Font.FontProgramInfo Create(String fontName, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontName);
-            FontNames names = GetFontNamesFromCache(cacheKey);
-            if (names == null) {
-                names = FontNamesFactory.FetchFontNames(fontName);
-                PutFontNamesToCache(cacheKey, names);
+            FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
+            if (descriptor == null) {
+                descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontName);
+                PutFontNamesToCache(cacheKey, descriptor);
             }
-            return names != null ? new iText.Layout.Font.FontProgramInfo(fontName, null, encoding, names) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor) : null;
         }
 
-        internal static iText.Layout.Font.FontProgramInfo Create(byte[] fontProgram, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
-            FontNames names = GetFontNamesFromCache(cacheKey);
-            if (names == null) {
-                names = FontNamesFactory.FetchFontNames(fontProgram);
-                PutFontNamesToCache(cacheKey, names);
+            FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
+            if (descriptor == null) {
+                descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
+                PutFontNamesToCache(cacheKey, descriptor);
             }
-            return names != null ? new iText.Layout.Font.FontProgramInfo(null, fontProgram, encoding, names) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor) : null;
         }
 
         public PdfFont GetPdfFont(FontProvider fontProvider) {
@@ -116,8 +116,8 @@ namespace iText.Layout.Font {
             }
         }
 
-        public FontNames GetNames() {
-            return names;
+        public FontProgramDescriptor GetDescriptor() {
+            return descriptor;
         }
 
         public String GetFontName() {
@@ -136,10 +136,10 @@ namespace iText.Layout.Font {
             if (this == o) {
                 return true;
             }
-            if (!(o is iText.Layout.Font.FontProgramInfo)) {
+            if (!(o is iText.Layout.Font.FontInfo)) {
                 return false;
             }
-            iText.Layout.Font.FontProgramInfo that = (iText.Layout.Font.FontProgramInfo)o;
+            iText.Layout.Font.FontInfo that = (iText.Layout.Font.FontInfo)o;
             return (fontName != null ? fontName.Equals(that.fontName) : that.fontName == null) && iText.IO.Util.JavaUtil.ArraysEquals
                 (fontProgram, that.fontProgram) && (encoding != null ? encoding.Equals(that.encoding) : that.encoding 
                 == null);
@@ -150,7 +150,7 @@ namespace iText.Layout.Font {
         }
 
         public override String ToString() {
-            String name = names.GetFontName();
+            String name = descriptor.GetFontName();
             if (name.Length > 0) {
                 if (encoding != null) {
                     return String.Format("%s+%s", name, encoding);
@@ -169,13 +169,13 @@ namespace iText.Layout.Font {
             return result;
         }
 
-        private static FontNames GetFontNamesFromCache(FontCacheKey key) {
+        private static FontProgramDescriptor GetFontNamesFromCache(FontCacheKey key) {
             return fontNamesCache.Get(key);
         }
 
-        private static void PutFontNamesToCache(FontCacheKey key, FontNames names) {
-            if (names != null) {
-                fontNamesCache[key] = names;
+        private static void PutFontNamesToCache(FontCacheKey key, FontProgramDescriptor descriptor) {
+            if (descriptor != null) {
+                fontNamesCache[key] = descriptor;
             }
         }
     }

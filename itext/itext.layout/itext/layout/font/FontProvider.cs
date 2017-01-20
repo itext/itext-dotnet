@@ -64,10 +64,10 @@ namespace iText.Layout.Font {
     /// <see cref="GetFontSet()"/>
     /// .
     /// FontProvider the only end point for creating PdfFont,
-    /// <see cref="GetPdfFont(FontProgramInfo)"/>
+    /// <see cref="GetPdfFont(FontInfo)"/>
     /// ,
-    /// <see cref="FontProgramInfo"/>
-    /// shal call this method.
+    /// <see cref="FontInfo"/>
+    /// shall call this method.
     /// <p>
     /// Note, FontProvider does not close created
     /// <see cref="iText.IO.Font.FontProgram"/>
@@ -78,7 +78,7 @@ namespace iText.Layout.Font {
     public class FontProvider {
         private FontSet fontSet;
 
-        private IDictionary<FontProgramInfo, PdfFont> pdfFonts = new Dictionary<FontProgramInfo, PdfFont>();
+        private IDictionary<FontInfo, PdfFont> pdfFonts = new Dictionary<FontInfo, PdfFont>();
 
         public FontProvider(FontSet fontSet) {
             this.fontSet = fontSet;
@@ -230,8 +230,8 @@ namespace iText.Layout.Font {
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        protected internal virtual FontSelector CreateFontSelector(ICollection<FontProgramInfo> fonts, IList<String
-            > fontFamilies, FontCharacteristic fc) {
+        protected internal virtual FontSelector CreateFontSelector(ICollection<FontInfo> fonts, IList<String> fontFamilies
+            , FontCharacteristic fc) {
             return new FontSelector(fonts, fontFamilies, fc);
         }
 
@@ -257,7 +257,7 @@ namespace iText.Layout.Font {
         /// <see cref="iText.IO.Font.FontProgramFactory"/>
         /// .
         /// </exception>
-        protected internal virtual PdfFont GetPdfFont(FontProgramInfo fontInfo) {
+        protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
             if (pdfFonts.ContainsKey(fontInfo)) {
                 return pdfFonts.Get(fontInfo);
             }

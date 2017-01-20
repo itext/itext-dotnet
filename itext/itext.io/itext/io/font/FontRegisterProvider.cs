@@ -297,7 +297,7 @@ namespace iText.IO.Font {
                     else {
                         if (path.ToLowerInvariant().EndsWith(".afm") || path.ToLowerInvariant().EndsWith(".pfm")) {
                             FontProgram fontProgram = FontProgramFactory.CreateFont(path);
-                            String fullName = fontProgram.GetFontNames().GetFullNameLowerCase();
+                            String fullName = fontProgram.GetFontNames().GetFullName()[0][3].ToLowerInvariant();
                             String familyName = fontProgram.GetFontNames().GetFamilyName()[0][3].ToLowerInvariant();
                             String psName = fontProgram.GetFontNames().GetFontName().ToLowerInvariant();
                             RegisterFontFamily(familyName, fullName, null);

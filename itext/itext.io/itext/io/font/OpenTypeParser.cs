@@ -505,10 +505,10 @@ namespace iText.IO.Font {
             ReadNameTable();
             ReadHeadTable();
             ReadOs_2Table();
+            ReadPostTable();
             if (all) {
                 CheckCff();
                 ReadHheaTable();
-                ReadPostTable();
                 ReadGlyphWidths();
                 ReadCmapTable();
             }

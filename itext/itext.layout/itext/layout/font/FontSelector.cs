@@ -47,14 +47,13 @@ using iText.IO.Util;
 namespace iText.Layout.Font {
     /// <summary>Sort given set of fonts according to font name and style.</summary>
     public class FontSelector {
-        protected internal IList<FontProgramInfo> fonts;
+        protected internal IList<FontInfo> fonts;
 
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
         /// <param name="fontFamilies">sorted list of preferred font families.</param>
-        public FontSelector(ICollection<FontProgramInfo> allFonts, IList<String> fontFamilies, FontCharacteristic 
-            fc) {
-            this.fonts = new List<FontProgramInfo>(allFonts);
+        public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristic fc) {
+            this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual member in constructor.
             JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, fc));
         }
@@ -66,21 +65,21 @@ namespace iText.Layout.Font {
         /// <see cref="GetFonts()"/>
         /// doesn't contain requested glyphs, this font will be used.
         /// </remarks>
-        public FontProgramInfo BestMatch() {
+        public FontInfo BestMatch() {
             return fonts[0];
         }
 
         /// <summary>Sorted set of fonts.</summary>
-        public IEnumerable<FontProgramInfo> GetFonts() {
+        public IEnumerable<FontInfo> GetFonts() {
             return fonts;
         }
 
-        protected internal virtual IComparer<FontProgramInfo> GetComparator(IList<String> fontFamilies, FontCharacteristic
+        protected internal virtual IComparer<FontInfo> GetComparator(IList<String> fontFamilies, FontCharacteristic
              fc) {
             return new FontSelector.PdfFontComparator(fontFamilies, fc);
         }
 
-        private class PdfFontComparator : IComparer<FontProgramInfo> {
+        private class PdfFontComparator : IComparer<FontInfo> {
             internal IList<String> fontFamilies;
 
             internal IList<FontCharacteristic> fontStyles;
@@ -101,24 +100,19 @@ namespace iText.Layout.Font {
                 }
             }
 
-            public virtual int Compare(FontProgramInfo o1, FontProgramInfo o2) {
+            public virtual int Compare(FontInfo o1, FontInfo o2) {
                 int res = 0;
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
                     FontCharacteristic fc = fontStyles[i];
-                    if (fc.IsBold()) {
-                        res = (o2.GetNames().IsBold() ? 1 : 0) - (o1.GetNames().IsBold() ? 1 : 0);
-                    }
-                    if (fc.IsItalic()) {
-                        res += (o2.GetNames().IsItalic() ? 1 : 0) - (o1.GetNames().IsItalic() ? 1 : 0);
-                    }
+                    res = CharacteristicsSimilarity(fc, o2) - CharacteristicsSimilarity(fc, o1);
                     if (res == 0) {
                         String fontName = fontFamilies[i];
-                        res = (o2.GetNames().GetFullNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetNames().GetFullNameLowerCase
+                        res = (o2.GetDescriptor().GetFullNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetDescriptor().GetFullNameLowerCase
                             ().Contains(fontName) ? 1 : 0);
                         // In most cases full font name will be enough.
                         // It's trick for 'bad' fonts.
                         if (res == 0) {
-                            res = (o2.GetNames().GetFontNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetNames().GetFontNameLowerCase
+                            res = (o2.GetDescriptor().GetFontNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetDescriptor().GetFontNameLowerCase
                                 ().Contains(fontName) ? 1 : 0);
                         }
                     }
@@ -139,6 +133,39 @@ namespace iText.Layout.Font {
                     }
                 }
                 return fc;
+            }
+
+            private static int CharacteristicsSimilarity(FontCharacteristic fc, FontInfo fontInfo) {
+                bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
+                bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
+                int score = 0;
+                if (fc.IsBold()) {
+                    if (isFontBold) {
+                        score += 5;
+                    }
+                    else {
+                        score -= 5;
+                    }
+                }
+                else {
+                    if (isFontBold) {
+                        score -= 3;
+                    }
+                }
+                if (fc.IsItalic()) {
+                    if (isFontItalic) {
+                        score += 5;
+                    }
+                    else {
+                        score -= 5;
+                    }
+                }
+                else {
+                    if (isFontItalic) {
+                        score -= 3;
+                    }
+                }
+                return score;
             }
         }
     }
