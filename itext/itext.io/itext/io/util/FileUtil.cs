@@ -80,6 +80,8 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    // Guarantee invariant order in all environments
+                    files = files.OrderBy(file => file.Name).ToArray();
                     String[] list = new String[files.Length];
                     for (int i = 0; i < files.Length; i++) {
                         list[i] = files[i].FullName;
@@ -99,6 +101,8 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    // Guarantee invariant order in all environments
+                    files = files.OrderBy(file => file.Name).ToArray();
                     List<FileInfo> list = new List<FileInfo>();
                     foreach (FileInfo f in files) {
                         if (filter.Accept(f)) {
@@ -117,6 +121,8 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    // Guarantee invariant order in all environments
+                    files = files.OrderBy(file => file.Name).ToArray();
                     var list = new LinkedList<String>();
                     for (int i = 0; i < files.Length; i++) {
                         if (filter.Accept(files[i].Name)) {
