@@ -142,12 +142,19 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
+            Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
+            cell.SetRole(PdfName.TH);
+            table.AddHeaderCell(cell);
             for (int i = 0; i < 3; ++i) {
-                table.AddHeaderCell("header " + i);
+                cell = new Cell().Add(new Paragraph("header " + i));
+                cell.SetRole(PdfName.TH);
+                table.AddHeaderCell(cell);
             }
             for (int i = 0; i < 3; ++i) {
                 table.AddFooterCell("footer " + i);
             }
+            cell = new Cell(1, 3).Add(new Paragraph("full-width paragraph"));
+            table.AddCell(cell);
             for (int i = 0; i < 5; ++i) {
                 table.AddCell(CreateParagraph2());
             }
@@ -256,7 +263,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            List list = new List();
+            List list = new List(ListNumberingType.DECIMAL);
             list.Add("item 1");
             list.Add("item 2");
             list.Add("item 3");
