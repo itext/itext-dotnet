@@ -97,7 +97,7 @@ namespace iText.Kernel.Utils {
         /// <param name="charset">the charset of the resultant XML file</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os, String charset) {
-            @out = new StreamWriter(os, System.Text.Encoding.GetEncoding(charset));
+            @out = new StreamWriter(os, iText.IO.Util.EncodingUtil.GetEncoding(charset));
             if (rootTag != null) {
                 @out.Write("<" + rootTag + ">" + Environment.NewLine);
             }

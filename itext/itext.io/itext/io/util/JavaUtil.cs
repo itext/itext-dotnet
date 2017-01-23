@@ -68,7 +68,7 @@ namespace iText.IO.Util {
         }
 
         public static String GetStringForBytes(byte[] bytes, int offset, int length, String encoding) {
-            return Encoding.GetEncoding(encoding).GetString(bytes, offset, length);
+            return EncodingUtil.GetEncoding(encoding).GetString(bytes, offset, length);
         }
 
         public static String GetStringForBytes(byte[] bytes, String encoding) {

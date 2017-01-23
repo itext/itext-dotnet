@@ -540,9 +540,9 @@ namespace iText.IO.Util {
                 return new UnicodeEncoding(false, true);
             Encoding enc;
             if (map.ContainsKey(nameU))
-                enc = Encoding.GetEncoding(map[nameU], new EncoderReplacementFallback(""), new DecoderReplacementFallback());
+                enc = EncodingUtil.GetEncoding(map[nameU], new EncoderReplacementFallback(""), new DecoderReplacementFallback());
             else 
-                enc = Encoding.GetEncoding(name, new EncoderReplacementFallback(""), new DecoderReplacementFallback());
+                enc = EncodingUtil.GetEncoding(name, new EncoderReplacementFallback(""), new DecoderReplacementFallback());
             return enc;
         }
     }

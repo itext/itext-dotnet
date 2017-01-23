@@ -110,7 +110,7 @@ namespace iText.IO.Util {
 
         public virtual void Load(Stream inStream) {
             if (inStream == null) return;
-            StreamReader inp = new StreamReader(inStream, Encoding.GetEncoding(1252));
+            StreamReader inp = new StreamReader(inStream, EncodingUtil.GetEncoding(1252));
             while (true) {
                 // Get next line
                 String line = inp.ReadLine();

@@ -50,6 +50,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
 using Org.BouncyCastle.Crypto;
 
 internal static class KernelExtensions {
@@ -96,7 +97,7 @@ internal static class KernelExtensions {
     }
 
     public static byte[] GetBytes(this String str, String encoding) {
-        return Encoding.GetEncoding(encoding).GetBytes(str);
+        return EncodingUtil.GetEncoding(encoding).GetBytes(str);
     }
 
     public static byte[] GetBytes(this String str, Encoding encoding) {

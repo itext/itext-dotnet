@@ -52,7 +52,7 @@ namespace iText.IO.Util {
     /// </summary>
     public static class EncodingUtil {
 
-        public static Encoding ISO_8859_1 = Encoding.GetEncoding("ISO-8859-1");
+        public static Encoding ISO_8859_1 = EncodingUtil.GetEncoding("ISO-8859-1");
 
         /// <exception cref="java.nio.charset.CharacterCodingException"/>
         public static byte[] ConvertToBytes(char[] chars, String encoding) {
@@ -98,6 +98,22 @@ namespace iText.IO.Util {
             if (enc != null)
                 return enc.GetString(bytes, offset, bytes.Length - offset);
             return IanaEncodings.GetEncodingEncoding(encoding).GetString(bytes);
+        }
+
+        public static Encoding GetEncoding(String encodingName) {
+            return Encoding.GetEncoding(encodingName);
+        }
+
+        public static Encoding GetEncoding(int encodingName) {
+            return Encoding.GetEncoding(encodingName);
+        }
+
+        public static Encoding GetEncoding(String encodingName, EncoderFallback encoderFallback, DecoderFallback decoderFallback) {
+            return Encoding.GetEncoding(encodingName, encoderFallback, decoderFallback);
+        }
+
+        public static Encoding GetEncoding(int encodingName, EncoderFallback encoderFallback, DecoderFallback decoderFallback) {
+            return Encoding.GetEncoding(encodingName, encoderFallback, decoderFallback);
         }
     }
 }

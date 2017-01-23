@@ -137,7 +137,7 @@ namespace iText.IO.Util {
 
         /// <exception cref="System.ArgumentException"/>
         public static StreamWriter CreatePrintWriter(Stream output, String encoding) {
-            return new StreamWriter(output, Encoding.GetEncoding(encoding));
+            return new StreamWriter(output, EncodingUtil.GetEncoding(encoding));
         }
 
         public static Stream GetBufferedOutputStream(String filename) {
