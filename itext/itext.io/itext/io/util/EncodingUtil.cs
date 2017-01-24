@@ -52,6 +52,12 @@ namespace iText.IO.Util {
     /// </summary>
     public static class EncodingUtil {
 
+        static EncodingUtil() {
+#if NETSTANDARD1_6
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
+        }
+
         public static Encoding ISO_8859_1 = EncodingUtil.GetEncoding("ISO-8859-1");
 
         /// <exception cref="java.nio.charset.CharacterCodingException"/>
