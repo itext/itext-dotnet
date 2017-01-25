@@ -380,10 +380,10 @@ namespace iText.Layout.Renderer {
                     tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
                     if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
                         AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, document);
-                        if (role.Equals(PdfName.TD)) {
+                        if (role.Equals(PdfName.TD) || role.Equals(PdfName.TH)) {
                             AccessibleAttributesApplier.ApplyTableAttributes(this);
                         }
-                        if (role.Equals(PdfName.List)) {
+                        if (role.Equals(PdfName.L)) {
                             AccessibleAttributesApplier.ApplyListAttributes(this);
                         }
                     }

@@ -355,10 +355,10 @@ namespace iText.Layout {
             PdfWriter writer = new PdfWriter(outFileName);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document doc = new Document(pdfDoc);
-            iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder +
+            iText.Layout.Element.Image image1 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
                 "Desert.jpg"));
             image1.SetBorder(new SolidBorder(Color.BLUE, 5));
-            iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder +
+            iText.Layout.Element.Image image2 = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + 
                 "scarf.jpg"));
             image2.SetBorder(new SolidBorder(Color.BLUE, 5));
             for (int i = 0; i <= 24; i++) {
