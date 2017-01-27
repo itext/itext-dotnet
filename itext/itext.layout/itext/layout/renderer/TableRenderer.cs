@@ -80,9 +80,9 @@ namespace iText.Layout.Renderer {
         ///     </remarks>
         protected internal bool isOriginalNonSplitRenderer = true;
 
-        private List<List<Border>> horizontalBorders;
+        private IList<IList<Border>> horizontalBorders;
 
-        private List<List<Border>> verticalBorders;
+        private IList<IList<Border>> verticalBorders;
 
         private float[] columnWidths = null;
 
@@ -189,8 +189,8 @@ namespace iText.Layout.Renderer {
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), (float)tableWidth, 0));
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
-            horizontalBorders = new List<List<Border>>();
-            verticalBorders = new List<List<Border>>();
+            horizontalBorders = new List<IList<Border>>();
+            verticalBorders = new List<IList<Border>>();
             Table footerElement = tableModel.GetFooter();
             // footer can be skipped, but after the table content will be layouted
             bool footerShouldBeApplied = !(tableModel.IsComplete() && 0 != tableModel.GetLastRowBottomBorder().Count &&
@@ -223,7 +223,7 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
                 if (!tableModel.IsEmpty()) {
                     float maxFooterTopBorderWidth = 0;
-                    List<Border> footerTopBorders = footerRenderer.horizontalBorders[0];
+                    IList<Border> footerTopBorders = footerRenderer.horizontalBorders[0];
                     foreach (Border border in footerTopBorders) {
                         if (null != border && border.GetWidth() > maxFooterTopBorderWidth) {
                             maxFooterTopBorderWidth = border.GetWidth();
@@ -271,7 +271,7 @@ namespace iText.Layout.Renderer {
                     .Max(0, leftTableBorderWidth - leftHeaderBorderWidth) / 2, true);
                 occupiedArea.GetBBox().MoveDown(headerHeight).IncreaseHeight(headerHeight);
                 float maxHeaderBottomBorderWidth = 0;
-                List<Border> rowBorders = headerRenderer.horizontalBorders[headerRenderer.horizontalBorders.Count - 1];
+                IList<Border> rowBorders = headerRenderer.horizontalBorders[headerRenderer.horizontalBorders.Count - 1];
                 foreach (Border border in rowBorders) {
                     if (null != border && maxHeaderBottomBorderWidth < border.GetWidth()) {
                         maxHeaderBottomBorderWidth = border.GetWidth();
@@ -296,7 +296,7 @@ namespace iText.Layout.Renderer {
                     occupiedArea.GetBBox().MoveUp(topTableBorderWidth).DecreaseHeight(topTableBorderWidth);
                 }
             }
-            List<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
+            IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
             Border widestLustFlushedBorder = null;
             foreach (Border border in lastFlushedRowBottomBorder) {
                 if (null != border && (null == widestLustFlushedBorder || widestLustFlushedBorder.GetWidth() < border.GetWidth
@@ -948,8 +948,8 @@ namespace iText.Layout.Renderer {
                                 logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
                                 // Process borders
                                 if (status == LayoutResult.NOTHING) {
-                                    List<Border> topBorders = new List<Border>();
-                                    List<Border> bottomBorders = new List<Border>();
+                                    IList<Border> topBorders = new List<Border>();
+                                    IList<Border> bottomBorders = new List<Border>();
                                     for (int i = 0; i < tableModel.GetNumberOfColumns(); i++) {
                                         topBorders.Add(borders[0]);
                                         bottomBorders.Add(borders[2]);
@@ -1027,13 +1027,13 @@ namespace iText.Layout.Renderer {
             }
             // if table is empty we still need to process table borders
             if (0 == childRenderers.Count && null == headerRenderer && null == footerRenderer) {
-                List<Border> topHorizontalBorders = new List<Border>();
-                List<Border> bottomHorizontalBorders = new List<Border>();
+                IList<Border> topHorizontalBorders = new List<Border>();
+                IList<Border> bottomHorizontalBorders = new List<Border>();
                 for (int i = 0; i < tableModel.GetNumberOfColumns(); i++) {
                     bottomHorizontalBorders.Add(Border.NO_BORDER);
                 }
-                List<Border> leftVerticalBorders = new List<Border>();
-                List<Border> rightVerticalBorders = new List<Border>();
+                IList<Border> leftVerticalBorders = new List<Border>();
+                IList<Border> rightVerticalBorders = new List<Border>();
                 // process bottom border of the last added row
                 if (tableModel.IsComplete() && 0 != lastFlushedRowBottomBorder.Count) {
                     bottomHorizontalBorders = lastFlushedRowBottomBorder;
@@ -1053,7 +1053,7 @@ namespace iText.Layout.Renderer {
                 horizontalBorders.Add(bottomHorizontalBorders);
                 leftVerticalBorders.Add(borders[3]);
                 rightVerticalBorders.Add(borders[1]);
-                verticalBorders = new List<List<Border>>();
+                verticalBorders = new List<IList<Border>>();
                 verticalBorders.Add(leftVerticalBorders);
                 for (int i = 0; i < tableModel.GetNumberOfColumns() - 1; i++) {
                     verticalBorders.Add(new List<Border>());
@@ -1320,12 +1320,12 @@ namespace iText.Layout.Renderer {
             if (hasContent || row == 0) {
                 rowN++;
             }
-            splitRenderer.horizontalBorders = new List<List<Border>>();
+            splitRenderer.horizontalBorders = new List<IList<Border>>();
             //splitRenderer.horizontalBorders.addAll(horizontalBorders);
             for (int i = 0; i <= rowN; i++) {
                 splitRenderer.horizontalBorders.Add(horizontalBorders[i]);
             }
-            splitRenderer.verticalBorders = new List<List<Border>>();
+            splitRenderer.verticalBorders = new List<IList<Border>>();
             //splitRenderer.verticalBorders.addAll(verticalBorders);
             for (int i = 0; i < verticalBorders.Count; i++) {
                 splitRenderer.verticalBorders.Add(new List<Border>());
@@ -1479,7 +1479,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas) {
-            List<Border> borders = horizontalBorders[i];
+            IList<Border> borders = horizontalBorders[i];
             float x1 = startX;
             float x2 = x1 + columnWidths[0];
             if (i == 0) {
@@ -1542,7 +1542,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas) {
-            List<Border> borders = verticalBorders[i];
+            IList<Border> borders = verticalBorders[i];
             float y1 = startY;
             float y2 = y1;
             if (!heights.IsEmpty()) {
@@ -1590,7 +1590,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private bool[] CollapseFooterBorders(List<Border> tableBottomBorders, int colNum, int rowNum) {
+        private bool[] CollapseFooterBorders(IList<Border> tableBottomBorders, int colNum, int rowNum) {
             bool[] useFooterBorders = new bool[colNum];
             int j = 0;
             int i = 0;
@@ -1623,7 +1623,7 @@ namespace iText.Layout.Renderer {
             return useFooterBorders;
         }
 
-        private void FixFooterBorders(List<Border> tableBottomBorders, int colNum, int rowNum, bool[] useFooterBorders
+        private void FixFooterBorders(IList<Border> tableBottomBorders, int colNum, int rowNum, bool[] useFooterBorders
             ) {
             int j = 0;
             int i = 0;
@@ -1779,7 +1779,7 @@ namespace iText.Layout.Renderer {
             if (rowspan > 1) {
                 int numOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
                 for (int k = row - rowspan + 1; k <= row; k++) {
-                    List<Border> borders = horizontalBorders[k];
+                    IList<Border> borders = horizontalBorders[k];
                     if (borders.Count < numOfColumns) {
                         for (int j = borders.Count; j < numOfColumns; j++) {
                             borders.Add(null);
@@ -1803,7 +1803,7 @@ namespace iText.Layout.Renderer {
             // process big colspan
             if (colspan > 1) {
                 for (int k = colN; k <= colspan + colN; k++) {
-                    List<Border> borders = verticalBorders[k];
+                    IList<Border> borders = verticalBorders[k];
                     if (borders.Count < row + rowspan) {
                         for (int l = borders.Count; l < row + rowspan; l++) {
                             borders.Add(null);
@@ -1897,14 +1897,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private bool CheckAndReplaceBorderInArray(List<List<Border>> borderArray, int i, int j, Border borderToAdd
+        private bool CheckAndReplaceBorderInArray(IList<IList<Border>> borderArray, int i, int j, Border borderToAdd
             , bool hasPriority) {
             if (borderArray.Count <= i) {
                 for (int count = borderArray.Count; count <= i; count++) {
                     borderArray.Add(new List<Border>());
                 }
             }
-            List<Border> borders = borderArray[i];
+            IList<Border> borders = borderArray[i];
             if (borders.IsEmpty()) {
                 for (int count = 0; count < j; count++) {
                     borders.Add(null);

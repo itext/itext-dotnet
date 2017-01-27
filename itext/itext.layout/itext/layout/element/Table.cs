@@ -672,8 +672,8 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Layout.Borders.Border"/>
         /// objects
         /// </returns>
-        public virtual List<Border> GetLastRowBottomBorder() {
-            List<Border> horizontalBorder = new List<Border>();
+        public virtual IList<Border> GetLastRowBottomBorder() {
+            IList<Border> horizontalBorder = new List<Border>();
             if (lastAddedRow != null) {
                 for (int i = 0; i < lastAddedRow.Length; i++) {
                     Cell cell = lastAddedRow[i];
