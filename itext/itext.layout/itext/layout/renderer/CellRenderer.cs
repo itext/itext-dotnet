@@ -95,6 +95,7 @@ namespace iText.Layout.Renderer {
             // Avoid rotation
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             bool avoidRotation = null != angle && HasProperty(Property.BACKGROUND);
+            bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
             if (avoidRotation) {
                 AffineTransform transform = new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6)
                     , ctm.Get(7));
@@ -106,12 +107,17 @@ namespace iText.Layout.Renderer {
                 }
                 transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);
-                DeleteProperty(Property.ROTATION_ANGLE);
+                SetProperty(Property.ROTATION_ANGLE, null);
             }
             base.DrawBackground(drawContext);
             // restore concat matrix and rotation angle
             if (avoidRotation) {
-                SetProperty(Property.ROTATION_ANGLE, angle);
+                if (restoreRotation) {
+                    SetProperty(Property.ROTATION_ANGLE, angle);
+                }
+                else {
+                    DeleteOwnProperty(Property.ROTATION_ANGLE);
+                }
                 canvas.ConcatMatrix(new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6), ctm.Get
                     (7)));
             }
