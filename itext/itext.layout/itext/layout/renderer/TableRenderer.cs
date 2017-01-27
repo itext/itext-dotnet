@@ -548,6 +548,11 @@ namespace iText.Layout.Renderer {
                                     if (HasProperty(Property.WIDTH)) {
                                         overflowRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(layoutBox.GetWidth()));
                                     }
+                                    // we have already applied margins on layoutBox
+                                    overflowRenderer.SetProperty(Property.MARGIN_TOP, 0);
+                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, 0);
+                                    overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, 0);
+                                    overflowRenderer.SetProperty(Property.MARGIN_LEFT, 0);
                                     if (LayoutResult.FULL == overflowRenderer.Layout(new LayoutContext(potentialArea)).GetStatus()) {
                                         footerRenderer = null;
                                         // fix layout area and table bottom border
