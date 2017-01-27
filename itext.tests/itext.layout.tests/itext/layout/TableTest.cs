@@ -1129,6 +1129,33 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SkipLastRowTest() {
+            // This test checks that the table occupies exactly one page and does not draw its footer.
+            // A naive algorithm would have this table on two pages with only one row with data on the second page
+            // However, as setSkipLastFooter is true, we can lay out that row with data on the first page and avoid unnecessary footer placement.
+            String testName = "skipLastRowTest.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(2);
+            table.AddHeaderCell("Header 1");
+            table.AddHeaderCell("Header 2");
+            table.AddFooterCell(new Cell(1, 2).Add("Footer"));
+            table.SetSkipLastFooter(true);
+            for (int i = 0; i < 33; i++) {
+                table.AddCell("text 1");
+                table.AddCell("text 2");
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
