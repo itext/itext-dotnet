@@ -49,6 +49,8 @@ namespace iText.Layout {
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
+            NUnit.Framework.Assert.AreEqual("Cell[row=0, col=0, rowspan=1, colspan=1]", table.GetCell(0, 0).ToString()
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
