@@ -639,13 +639,15 @@ namespace iText.Layout.Renderer {
                     if (child is TextRenderer) {
                         GlyphLine text = ((TextRenderer)child).GetText();
                         for (int i = text.start; i < text.end; i++) {
-                            if (TextUtil.IsNewLine(text.Get(i))) {
+                            Glyph glyph = text.Get(i);
+                            if (TextUtil.IsNewLine(glyph)) {
                                 newLineFound = true;
                                 break;
                             }
                             // we assume all the chars will have the same bidi group
                             // we also assume pairing symbols won't get merged with other ones
-                            unicodeIdsReorderingList.Add(text.Get(i).GetUnicode());
+                            int unicode = glyph.HasValidUnicode() ? glyph.GetUnicode() : glyph.GetUnicodeChars()[0];
+                            unicodeIdsReorderingList.Add(unicode);
                         }
                     }
                 }
