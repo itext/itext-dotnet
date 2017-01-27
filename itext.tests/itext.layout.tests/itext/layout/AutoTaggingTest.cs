@@ -48,6 +48,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -312,6 +313,24 @@ namespace iText.Layout {
             doc.Add(list);
             doc.Close();
             CompareResult("listTest01.pdf", "cmp_listTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void LinkTest01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "linkTest01.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            Link link = new Link("linked text", action);
+            link.SetUnderline();
+            link.GetLinkAnnotation().Put(PdfName.Border, new PdfArray(new int[] { 0, 0, 0 }));
+            doc.Add(new Paragraph("before ").Add(link).Add(" after"));
+            doc.Close();
+            CompareResult("linkTest01.pdf", "cmp_linkTest01.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
