@@ -657,23 +657,25 @@ namespace iText.Layout.Renderer {
         /// <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
         private void ResolveChildrenFonts() {
             IList<IRenderer> newChildRenderers = new List<IRenderer>(childRenderers.Count);
+            bool updateChildRendrers = false;
             foreach (IRenderer child in childRenderers) {
                 if (child is TextRenderer) {
-                    newChildRenderers.AddAll(((TextRenderer)child).ResolveFonts());
+                    if (((TextRenderer)child).ResolveFonts(newChildRenderers)) {
+                        updateChildRendrers = true;
+                    }
                 }
                 else {
                     newChildRenderers.Add(child);
                 }
             }
-            //TODO It might be one textRenderer with resolved font.
-            // this mean, that some TextRenderer has been split into several with different fonts.
-            //if (newChildRenderers.size() > childRenderers.size()) {
-            childRenderers = newChildRenderers;
+            // this mean, that some TextRenderer has been replaced.
+            if (updateChildRendrers) {
+                childRenderers = newChildRenderers;
+            }
         }
 
         internal class RendererGlyph {
             public RendererGlyph(Glyph glyph, TextRenderer textRenderer) {
-                //}
                 this.glyph = glyph;
                 this.renderer = textRenderer;
             }

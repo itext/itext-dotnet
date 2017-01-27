@@ -960,10 +960,22 @@ namespace iText.Layout.Renderer {
                 (Property.WORD_SPACING));
         }
 
-        protected internal virtual IList<iText.Layout.Renderer.TextRenderer> ResolveFonts() {
+        /// <summary>
+        /// Resolve
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// string value.
+        /// </summary>
+        /// <param name="addTo">add all processed renderers to.</param>
+        /// <returns>
+        /// true, if new
+        /// <see cref="TextRenderer"/>
+        /// has been created.
+        /// </returns>
+        protected internal virtual bool ResolveFonts(IList<IRenderer> addTo) {
             Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
-                return JavaCollectionsUtil.SingletonList<iText.Layout.Renderer.TextRenderer>(this);
+                addTo.Add(this);
+                return false;
             }
             else {
                 if (font is String) {
@@ -972,16 +984,15 @@ namespace iText.Layout.Renderer {
                         throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
                             );
                     }
-                    IList<iText.Layout.Renderer.TextRenderer> renderers = new List<iText.Layout.Renderer.TextRenderer>();
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc);
                     while (!strategy.EndOfText()) {
                         iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
                         textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetCurrentFont());
-                        renderers.Add(textRenderer);
+                        addTo.Add(textRenderer);
                     }
-                    return renderers;
+                    return true;
                 }
                 else {
                     throw new InvalidOperationException("Invalid font type.");
