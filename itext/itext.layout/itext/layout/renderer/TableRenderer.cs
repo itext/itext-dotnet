@@ -407,6 +407,9 @@ namespace iText.Layout.Renderer {
                     CellRenderer cell = currentCellInfo.cellRenderer;
                     int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                     int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+                    if (1 != rowspan) {
+                        cellWithBigRowspanAdded = true;
+                    }
                     targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
                     bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
@@ -589,7 +592,6 @@ namespace iText.Layout.Renderer {
                                                 if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM)) {
                                                     if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 < addRow) {
                                                         cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
-                                                        cellWithBigRowspanAdded = true;
                                                     }
                                                     else {
                                                         horizontalBorders[row + 1][addCol] = addRenderer.GetBorders()[2];
@@ -614,19 +616,10 @@ namespace iText.Layout.Renderer {
                                                 else {
                                                     if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
                                                         cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
-                                                        cellWithBigRowspanAdded = true;
                                                     }
                                                 }
                                                 break;
                                             }
-                                        }
-                                    }
-                                    else {
-                                        // if cell in current row has big rowspan
-                                        // we need to process it specially too,
-                                        // because some problems (for instance, borders related) can occur
-                                        if (((Cell)cell.GetModelElement()).GetRowspan() > 1) {
-                                            cellWithBigRowspanAdded = true;
                                         }
                                     }
                                 }
@@ -830,17 +823,23 @@ namespace iText.Layout.Renderer {
                             else {
                                 if (currentRow[col] != null) {
                                     rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
-                                    if (hasContent && split) {
+                                    bool isBigRowspannedCell = 1 != rowspans[col];
+                                    if (hasContent || isBigRowspannedCell) {
                                         columnsWithCellToBeEnlarged[col] = true;
+                                        if (isBigRowspannedCell && !processAsLast) {
+                                            childRenderers.Add(currentRow[col]);
+                                        }
                                         // for the future
                                         splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
-                                        for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                            horizontalBorders[row + 1][j] = GetBorders()[2];
-                                        }
                                     }
                                     else {
                                         if (Border.NO_BORDER != currentRow[col].GetProperty<Border>(Property.BORDER_TOP)) {
                                             splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
+                                        }
+                                    }
+                                    if (!processAsLast) {
+                                        for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                            horizontalBorders[row + (hasContent ? 1 : 0)][j] = GetBorders()[2];
                                         }
                                     }
                                 }

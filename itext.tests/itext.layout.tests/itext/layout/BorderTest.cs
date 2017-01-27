@@ -837,19 +837,19 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-931")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest07() {
             fileName = "splitCellsTest07.pdf";
             Document doc = CreateDocument();
-            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 180));
             String textAlphabet = "Cell";
             Table table = new Table(3);
             table.AddCell(new Cell().Add(textAlphabet + "1"));
-            table.AddCell(new Cell(2, 1).Add(textAlphabet + "2"));
+            table.AddCell(new Cell(2, 1).Add(textAlphabet + "222"));
             table.AddCell(new Cell().Add(textAlphabet + "3"));
-            table.AddCell(new Cell().Add(textAlphabet + "4"));
-            table.AddCell(new Cell().Add(textAlphabet + "5"));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "4")).SetKeepTogether(true));
+            table.AddCell(new Cell().Add(new Paragraph(textAlphabet + "5")).SetKeepTogether(true));
+            table.SetBorderBottom(new SolidBorder(Color.BLUE, 1));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }
