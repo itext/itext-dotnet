@@ -145,8 +145,12 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Document Add(AreaBreak areaBreak) {
+            CheckClosingStatus();
             childElements.Add(areaBreak);
             EnsureRootRendererNotNull().AddChild(areaBreak.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return this;
         }
 

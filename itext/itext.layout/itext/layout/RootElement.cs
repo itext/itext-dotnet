@@ -79,6 +79,9 @@ namespace iText.Layout {
         public virtual T Add(IBlockElement element) {
             childElements.Add(element);
             EnsureRootRendererNotNull().AddChild(element.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return (T)(Object)this;
         }
 
@@ -90,6 +93,9 @@ namespace iText.Layout {
         public virtual T Add(Image image) {
             childElements.Add(image);
             EnsureRootRendererNotNull().AddChild(image.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return (T)(Object)this;
         }
 
