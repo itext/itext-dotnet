@@ -382,5 +382,20 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ListSetSymbol() {
+            List list = new List();
+            //Assert.assertEquals("- ", ((Text) list.getProperty(Property.LIST_SYMBOL)).getText());
+            NUnit.Framework.Assert.AreEqual(null, list.GetProperty<Object>(Property.LIST_SYMBOL));
+            list.SetListSymbol("* ");
+            NUnit.Framework.Assert.AreEqual("* ", ((Text)list.GetProperty<Object>(Property.LIST_SYMBOL)).GetText());
+            list = new List();
+            Style style = new Style();
+            style.SetProperty(Property.LIST_SYMBOL, new Text("* "));
+            list.AddStyle(style);
+            NUnit.Framework.Assert.AreEqual("* ", ((Text)list.GetProperty<Object>(Property.LIST_SYMBOL)).GetText());
+        }
     }
 }

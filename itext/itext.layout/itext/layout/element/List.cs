@@ -75,7 +75,6 @@ namespace iText.Layout.Element {
         /// </summary>
         public List()
             : base() {
-            SetListSymbol(DEFAULT_LIST_SYMBOL);
         }
 
         /// <summary>Creates a List with a custom numbering type.</summary>
@@ -87,6 +86,10 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
+                case Property.LIST_SYMBOL: {
+                    return (T1)(Object)new Text(DEFAULT_LIST_SYMBOL);
+                }
+
                 case Property.LIST_SYMBOL_PRE_TEXT: {
                     return (T1)(Object)"";
                 }
