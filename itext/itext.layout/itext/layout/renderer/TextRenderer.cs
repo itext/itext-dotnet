@@ -453,7 +453,7 @@ namespace iText.Layout.Renderer {
                 logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
                 return;
             }
-            base.Draw(drawContext);
+            // Set up marked content before super.draw so that annotations are placed within marked content
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             bool isArtifact = false;
@@ -476,6 +476,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            base.Draw(drawContext);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), false);
             ApplyBorderBox(occupiedArea.GetBBox(), false);
             bool isRelativePosition = IsRelativePosition();
@@ -556,7 +557,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_584();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_586();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -585,9 +586,6 @@ namespace iText.Layout.Renderer {
                 }
                 canvas.EndText().RestoreState();
                 EndElementOpacityApplying(drawContext);
-                if (isTagged || isArtifact) {
-                    canvas.CloseTag();
-                }
                 Object underlines = this.GetProperty<Object>(Property.UNDERLINE);
                 if (underlines is IList) {
                     foreach (Object underline in (IList)underlines) {
@@ -603,6 +601,9 @@ namespace iText.Layout.Renderer {
                             0);
                     }
                 }
+                if (isTagged || isArtifact) {
+                    canvas.CloseTag();
+                }
             }
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
@@ -617,8 +618,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_584 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_584() {
+        private sealed class _IGlyphLineFilter_586 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_586() {
             }
 
             public bool Accept(Glyph glyph) {
