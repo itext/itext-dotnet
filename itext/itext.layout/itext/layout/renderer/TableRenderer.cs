@@ -1462,16 +1462,27 @@ namespace iText.Layout.Renderer {
                     y1 -= (float)heights[i];
                 }
             }
-            if (drawBottom) {
-                DrawHorizontalBorder(horizontalBorders.Count - 1, startX, y1, drawContext.GetCanvas());
-            }
             float x1 = startX;
-            for (int i = 0; i < verticalBorders.Count; i++) {
+            if (columnWidths.Length > 0) {
+                x1 += columnWidths[0];
+            }
+            for (int i = 1; i < verticalBorders.Count - 1; i++) {
                 DrawVerticalBorder(i, startY, x1, drawContext.GetCanvas());
                 if (i < columnWidths.Length) {
                     x1 += columnWidths[i];
                 }
             }
+            // Draw bounding borders. Vertical borders are the last to draw in order to collapse with header / footer
+            if (drawTop) {
+                DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas());
+            }
+            if (drawBottom) {
+                DrawHorizontalBorder(horizontalBorders.Count - 1, startX, y1, drawContext.GetCanvas());
+            }
+            // draw left
+            DrawVerticalBorder(0, startY, startX, drawContext.GetCanvas());
+            // draw right
+            DrawVerticalBorder(verticalBorders.Count - 1, startY, x1, drawContext.GetCanvas());
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
