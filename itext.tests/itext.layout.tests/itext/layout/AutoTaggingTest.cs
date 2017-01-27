@@ -481,10 +481,120 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WordBreaksLineEndingsTest01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest01.pdf"
+                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            String s = "Beaver was settled in 1856 by Mormon pioneers traveling this road.";
+            StringBuilder text = new StringBuilder();
+            for (int i = 0; i < 10; ++i) {
+                text.Append(s);
+                text.Append(" ");
+            }
+            Paragraph p = new Paragraph(text.ToString().Trim());
+            doc.Add(p);
+            doc.Close();
+            CompareResult("wordBreaksLineEndingsTest01.pdf", "cmp_wordBreaksLineEndingsTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WordBreaksLineEndingsTest02() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest02.pdf"
+                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            String s = "Beaver was settled in 1856 by Mormon pioneers traveling this road.";
+            Paragraph p = new Paragraph(s + " Beaver was settled in 1856 by").Add(" Mormon pioneers traveling this road."
+                );
+            doc.Add(p);
+            doc.Close();
+            CompareResult("wordBreaksLineEndingsTest02.pdf", "cmp_wordBreaksLineEndingsTest02.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WordBreaksLineEndingsTest03() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest03.pdf"
+                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            String s = "Beaver was settled in 1856 by\nMormon pioneers traveling this road.";
+            Paragraph p = new Paragraph(s);
+            doc.Add(p);
+            String s1 = "Beaver was settled in 1856 by \n Mormon pioneers traveling this road.";
+            Paragraph p1 = new Paragraph(s1);
+            doc.Add(p1);
+            String s2 = "\nBeaver was settled in 1856 by Mormon pioneers traveling this road.";
+            Paragraph p2 = new Paragraph(s2);
+            doc.Add(p2);
+            String s3_1 = "Beaver was settled in 1856 by";
+            String s3_2 = "\nMormon pioneers traveling this road.";
+            Paragraph p3 = new Paragraph(s3_1).Add(s3_2);
+            doc.Add(p3);
+            doc.Close();
+            CompareResult("wordBreaksLineEndingsTest03.pdf", "cmp_wordBreaksLineEndingsTest03.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WordBreaksLineEndingsTest04() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest04.pdf"
+                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            String s = "ShortWord Beaverwassettledin1856byMormonpioneerstravelingthisroadBeaverwassettledin1856byMormonpioneerstravelingthisroad.";
+            Paragraph p = new Paragraph(s);
+            doc.Add(p);
+            String s1 = "ShortWord " + "                                                                                          "
+                 + "                                                                                          " + "and another short word.";
+            Paragraph p1 = new Paragraph(s1);
+            doc.Add(p1);
+            doc.Close();
+            CompareResult("wordBreaksLineEndingsTest04.pdf", "cmp_wordBreaksLineEndingsTest04.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void WordBreaksLineEndingsTest05() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "wordBreaksLineEndingsTest05.pdf"
+                , new WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            String s = "t\n";
+            Paragraph p = new Paragraph(s).Add("\n").Add(s);
+            doc.Add(p);
+            Paragraph p1 = new Paragraph(s);
+            doc.Add(p1);
+            Paragraph p2 = new Paragraph(s).Add("another t");
+            doc.Add(p2);
+            doc.Close();
+            CompareResult("wordBreaksLineEndingsTest05.pdf", "cmp_wordBreaksLineEndingsTest05.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
-            Text id = new Text("text chunk with specific font").SetFont(font).SetFontSize(8).SetTextRise(6);
+            iText.Layout.Element.Text id = new iText.Layout.Element.Text("text chunk with specific font").SetFont(font
+                ).SetFontSize(8).SetTextRise(6);
             p.Add(id);
             return p;
         }

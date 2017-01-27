@@ -90,7 +90,7 @@ namespace iText.Layout {
             byte[] bytes = CreateSimplePdf(new Rectangle(792, 612), "A\nB\nC\nD");
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
-            NUnit.Framework.Assert.AreEqual("A\nB\nC\nD", text);
+            NUnit.Framework.Assert.AreEqual("A \nB \nC \nD", text);
         }
 
         /// <exception cref="System.Exception"/>
@@ -100,7 +100,7 @@ namespace iText.Layout {
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
-            NUnit.Framework.Assert.AreEqual("A\nB\nC\nD", text);
+            NUnit.Framework.Assert.AreEqual("A \nB \nC \nD", text);
         }
 
         /// <exception cref="System.Exception"/>
@@ -110,7 +110,7 @@ namespace iText.Layout {
             //TestResourceUtils.saveBytesToFile(bytes, new File("C:/temp/out.pdf"));
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(new MemoryStream(bytes)));
             String text = PdfTextExtractor.GetTextFromPage(pdfDocument.GetPage(1), CreateRenderListenerForTest());
-            NUnit.Framework.Assert.AreEqual("A\nB\nC\nD", text);
+            NUnit.Framework.Assert.AreEqual("A \nB \nC \nD", text);
         }
 
         /// <exception cref="System.Exception"/>
