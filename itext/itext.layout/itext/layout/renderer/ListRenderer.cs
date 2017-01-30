@@ -70,19 +70,23 @@ namespace iText.Layout.Renderer {
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
                 for (int i = 0; i < childRenderers.Count; i++) {
                     childRenderers[i].SetParent(this);
-                    IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers[i]);
+                    IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum, childRenderers[i]);
                     childRenderers[i].SetParent(null);
-                    currentSymbolRenderer.SetParent(this);
-                    // Workaround for the case when font is specified as string
-                    if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty<Object>(Property.FONT) 
-                        is String) {
-                        PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
-                        currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
+                    LayoutResult listSymbolLayoutResult = null;
+                    if (currentSymbolRenderer != null) {
+                        ++listItemNum;
+                        currentSymbolRenderer.SetParent(this);
+                        // Workaround for the case when font is specified as string
+                        if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty<Object>(Property.FONT) 
+                            is String) {
+                            PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
+                            currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
+                        }
+                        listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
+                        currentSymbolRenderer.SetParent(null);
                     }
                     symbolRenderers.Add(currentSymbolRenderer);
-                    LayoutResult listSymbolLayoutResult = currentSymbolRenderer.Layout(layoutContext);
-                    currentSymbolRenderer.SetParent(null);
-                    if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
+                    if (listSymbolLayoutResult != null && listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
                         return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
                             );
                     }
@@ -90,10 +94,12 @@ namespace iText.Layout.Renderer {
                 float maxSymbolWidth = 0;
                 for (int i = 0; i < childRenderers.Count; i++) {
                     IRenderer symbolRenderer = symbolRenderers[i];
-                    IRenderer listItemRenderer = childRenderers[i];
-                    if ((ListSymbolPosition)listItemRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
-                        .INSIDE) {
-                        maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
+                    if (symbolRenderer != null) {
+                        IRenderer listItemRenderer = childRenderers[i];
+                        if ((ListSymbolPosition)listItemRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
+                            .INSIDE) {
+                            maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
+                        }
                     }
                 }
                 float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
@@ -241,7 +247,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_227(constantFont, textElement);
+                            textRenderer = new _TextRenderer_232(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -254,14 +260,19 @@ namespace iText.Layout.Renderer {
                         return textRenderer;
                     }
                     else {
-                        throw new InvalidOperationException();
+                        if (defaultListSymbol == null) {
+                            return null;
+                        }
+                        else {
+                            throw new InvalidOperationException();
+                        }
                     }
                 }
             }
         }
 
-        private sealed class _TextRenderer_227 : TextRenderer {
-            public _TextRenderer_227(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_232 : TextRenderer {
+            public _TextRenderer_232(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
