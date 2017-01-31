@@ -96,8 +96,8 @@ namespace iText.Layout.Renderer {
                     IRenderer symbolRenderer = symbolRenderers[i];
                     if (symbolRenderer != null) {
                         IRenderer listItemRenderer = childRenderers[i];
-                        if ((ListSymbolPosition)GetListItemOrListProperty(listItemRenderer, Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
-                            .INSIDE) {
+                        if ((ListSymbolPosition)GetListItemOrListProperty(listItemRenderer, this, Property.LIST_SYMBOL_POSITION) !=
+                             ListSymbolPosition.INSIDE) {
                             maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
                         }
                     }
@@ -108,7 +108,7 @@ namespace iText.Layout.Renderer {
                     childRenderer.SetParent(this);
                     childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
                     float calculatedMargin = (float)childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
-                    if ((ListSymbolPosition)GetListItemOrListProperty(childRenderer, Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
+                    if ((ListSymbolPosition)GetListItemOrListProperty(childRenderer, this, Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
                         .DEFAULT) {
                         calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
                     }
@@ -158,14 +158,13 @@ namespace iText.Layout.Renderer {
             return symbolRenderer;
         }
 
-        internal static Object GetListItemOrListProperty(IRenderer listItem, int propertyId) {
-            return listItem.HasProperty(propertyId) ? listItem.GetProperty<Object>(propertyId) : (listItem is AbstractRenderer
-                 && ((AbstractRenderer)listItem).parent != null ? ((AbstractRenderer)listItem).parent.GetProperty<Object
-                >(propertyId) : null);
+        internal static Object GetListItemOrListProperty(IRenderer listItem, IRenderer list, int propertyId) {
+            return listItem.HasProperty(propertyId) ? listItem.GetProperty<Object>(propertyId) : list.GetProperty<Object
+                >(propertyId);
         }
 
         private IRenderer CreateListSymbolRenderer(int index, IRenderer renderer) {
-            Object defaultListSymbol = GetListItemOrListProperty(renderer, Property.LIST_SYMBOL);
+            Object defaultListSymbol = GetListItemOrListProperty(renderer, this, Property.LIST_SYMBOL);
             if (defaultListSymbol is Text) {
                 return new TextRenderer((Text)defaultListSymbol);
             }
@@ -242,8 +241,8 @@ namespace iText.Layout.Renderer {
                                 throw new InvalidOperationException();
                             }
                         }
-                        Text textElement = new Text(GetListItemOrListProperty(renderer, Property.LIST_SYMBOL_PRE_TEXT) + numberText
-                             + GetListItemOrListProperty(renderer, Property.LIST_SYMBOL_POST_TEXT));
+                        Text textElement = new Text(GetListItemOrListProperty(renderer, this, Property.LIST_SYMBOL_PRE_TEXT) + numberText
+                             + GetListItemOrListProperty(renderer, this, Property.LIST_SYMBOL_POST_TEXT));
                         IRenderer textRenderer;
                         // Be careful. There is a workaround here. For Greek symbols we first set a dummy font with document=null
                         // in order for the metrics to be taken into account correctly during layout.
@@ -253,7 +252,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_237(constantFont, textElement);
+                            textRenderer = new _TextRenderer_236(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -277,8 +276,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_237 : TextRenderer {
-            public _TextRenderer_237(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_236 : TextRenderer {
+            public _TextRenderer_236(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
