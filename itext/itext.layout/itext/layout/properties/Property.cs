@@ -310,10 +310,6 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LEADING] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_PRE_TEXT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_POSITION] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_POST_TEXT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;

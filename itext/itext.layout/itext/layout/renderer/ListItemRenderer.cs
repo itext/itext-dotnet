@@ -119,8 +119,8 @@ namespace iText.Layout.Renderer {
             if (symbolRenderer != null && !symbolAddedInside) {
                 symbolRenderer.SetParent(parent);
                 float x = occupiedArea.GetBBox().GetX();
-                ListSymbolPosition symbolPosition = (ListSymbolPosition)this.GetProperty<Object>(Property.LIST_SYMBOL_POSITION
-                    );
+                ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, Property
+                    .LIST_SYMBOL_POSITION);
                 if (symbolPosition != ListSymbolPosition.DEFAULT) {
                     float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
                     x -= symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent);
@@ -224,8 +224,8 @@ namespace iText.Layout.Renderer {
 
         private void ApplyListSymbolPosition() {
             if (symbolRenderer != null) {
-                ListSymbolPosition symbolPosition = (ListSymbolPosition)this.GetProperty<Object>(Property.LIST_SYMBOL_POSITION
-                    );
+                ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, Property
+                    .LIST_SYMBOL_POSITION);
                 if (symbolPosition == ListSymbolPosition.INSIDE) {
                     if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
                         ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];

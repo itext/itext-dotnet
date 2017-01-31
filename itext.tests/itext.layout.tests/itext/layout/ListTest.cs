@@ -92,6 +92,23 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void NestedListTest02() {
+            String outFileName = destinationFolder + "nestedListTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_nestedListTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            List nestedList = new List().SetSymbolIndent(20).SetMarginLeft(25).Add("One").Add("Two").Add("Three");
+            List list = new List(ListNumberingType.DECIMAL).SetSymbolIndent(20).Add("One").Add("Two").Add("Three").Add
+                ("Four").Add((ListItem)new ListItem().Add(nestedList));
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void ListNumberingTest01() {
             String outFileName = destinationFolder + "listNumberingTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_listNumberingTest01.pdf";
