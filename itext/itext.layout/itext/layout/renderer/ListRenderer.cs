@@ -160,8 +160,8 @@ namespace iText.Layout.Renderer {
 
         internal static Object GetListItemOrListProperty(IRenderer listItem, int propertyId) {
             return listItem.HasProperty(propertyId) ? listItem.GetProperty<Object>(propertyId) : (listItem is AbstractRenderer
-                 && ((AbstractRenderer)listItem).parent != null ? ((AbstractRenderer)listItem).parent.GetProperty<Object>(propertyId
-                ) : null);
+                 && ((AbstractRenderer)listItem).parent != null ? ((AbstractRenderer)listItem).parent.GetProperty<Object
+                >(propertyId) : null);
         }
 
         private IRenderer CreateListSymbolRenderer(int index, IRenderer renderer) {
