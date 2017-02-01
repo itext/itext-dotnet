@@ -92,6 +92,38 @@ namespace iText.Layout.Properties {
             return new iText.Layout.Properties.UnitValue(PERCENT, value);
         }
 
+        /// <summary>Creates an array of UnitValue PERCENT objects with specified values.</summary>
+        /// <param name="values">the values to be stored.</param>
+        /// <returns>
+        /// a new array of
+        /// <see cref="PERCENT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// </returns>
+        public static iText.Layout.Properties.UnitValue[] CreatePercentArray(float[] values) {
+            iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
+            for (int i = 0; i < values.Length; i++) {
+                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePercentValue(values[i]);
+            }
+            return resultArray;
+        }
+
+        /// <summary>Creates an array of UnitValue POINT objects with specified values.</summary>
+        /// <param name="values">the values to be stored.</param>
+        /// <returns>
+        /// a new array of
+        /// <see cref="POINT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// </returns>
+        public static iText.Layout.Properties.UnitValue[] CreatePointArray(float[] values) {
+            iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
+            for (int i = 0; i < values.Length; i++) {
+                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePointValue(values[i]);
+            }
+            return resultArray;
+        }
+
         /// <summary>Returns the unit this value is stored in, either points (pt) or percent(%)</summary>
         /// <returns>
         /// either 1 for
