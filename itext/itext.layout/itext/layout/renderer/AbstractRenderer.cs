@@ -560,6 +560,9 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer childRenderer in childRenderers) {
                 childRenderer.Move(dxRight, dyUp);
             }
+            foreach (IRenderer childRenderer in positionedRenderers) {
+                childRenderer.Move(dxRight, dyUp);
+            }
         }
 
         /// <summary>
