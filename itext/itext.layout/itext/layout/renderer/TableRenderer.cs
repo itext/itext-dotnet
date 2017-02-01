@@ -709,7 +709,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     // Correct occupied areas of all added cells
-                    CorrectCellsOccupiedAreas(row, targetOverflowRowIndex);
+                    CorrectCellsOccupiedAreas(splits, row, targetOverflowRowIndex);
                 }
                 // process footer with collapsed borders
                 if ((split || processAsLast || row == rows.Count - 1) && null != footerRenderer) {
@@ -1955,13 +1955,14 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void CorrectCellsOccupiedAreas(int row, int[] targetOverflowRowIndex) {
+        private void CorrectCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex) {
             // Correct occupied areas of all added cells
             for (int k = 0; k <= row; k++) {
                 CellRenderer[] currentRow = rows[k];
                 if (k < row || (row + 1 == heights.Count)) {
                     for (int col = 0; col < currentRow.Length; col++) {
-                        CellRenderer cell = currentRow[col];
+                        CellRenderer cell = (k < row || null == splits[col]) ? currentRow[col] : (CellRenderer)splits[col].GetSplitRenderer
+                            ();
                         if (cell == null) {
                             continue;
                         }
