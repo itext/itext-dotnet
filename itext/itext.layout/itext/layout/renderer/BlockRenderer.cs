@@ -625,30 +625,6 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal virtual float ApplyBordersPaddingsMargins(Rectangle parentBBox, Border[] borders, float
-            [] paddings, bool isPositioned) {
-            float borderMarginPaddingWidth = 0;
-            float marginBorderWidth = parentBBox.GetWidth();
-            ApplyMargins(parentBBox, false);
-            ApplyBorderBox(parentBBox, borders, false);
-            marginBorderWidth -= parentBBox.GetWidth();
-            borderMarginPaddingWidth += marginBorderWidth;
-            if (isPositioned) {
-                float x = (float)this.GetPropertyAsFloat(Property.X);
-                float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
-                parentBBox.SetX(relativeX + x);
-            }
-            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
-            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
-                parentBBox.SetWidth((float)blockWidth);
-            }
-            float paddingsWidth = parentBBox.GetWidth();
-            ApplyPaddings(parentBBox, paddings, false);
-            paddingsWidth -= parentBBox.GetWidth();
-            borderMarginPaddingWidth += paddingsWidth;
-            return borderMarginPaddingWidth;
-        }
-
         private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
             IList<Point> filteredPoints = new List<Point>();
             bool prevOnRightSide = false;

@@ -64,6 +64,7 @@ namespace iText.Layout.Properties {
         /// <param name="value">the value to be stored.</param>
         public UnitValue(int unitType, float value) {
             this.unitType = unitType;
+            System.Diagnostics.Debug.Assert(!float.IsNaN(value));
             this.value = value;
         }
 
@@ -122,6 +123,7 @@ namespace iText.Layout.Properties {
         /// <summary>Sets the measured value stored in this object</summary>
         /// <param name="value">a <code>float</code></param>
         public virtual void SetValue(float value) {
+            System.Diagnostics.Debug.Assert(!float.IsNaN(value));
             this.value = value;
         }
 

@@ -322,6 +322,24 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            Rectangle area = new Rectangle(availableWidth, AbstractRenderer.INF);
+            float additionalWidth = ApplyBordersPaddingsMargins(area, GetBorders(), GetPaddings(), IsPositioned());
+            float imageWidth = ((Image)modelElement).GetImageWidth();
+            UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
+            if (width == null || width.GetValue() < 0) {
+                return new MinMaxWidth(additionalWidth, availableWidth, imageWidth, imageWidth);
+            }
+            else {
+                if (width.IsPercentValue()) {
+                    return new MinMaxWidth(additionalWidth, availableWidth, 0, imageWidth);
+                }
+                else {
+                    return new MinMaxWidth(additionalWidth, availableWidth, width.GetValue(), width.GetValue());
+                }
+            }
+        }
+
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
             Rectangle area = layoutArea.GetBBox().Clone();
             ApplyMargins(area, false);
