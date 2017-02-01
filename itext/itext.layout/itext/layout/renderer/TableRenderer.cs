@@ -783,25 +783,15 @@ namespace iText.Layout.Renderer {
                                 }
                                 LayoutArea cellOccupiedArea = currentRow[col].GetOccupiedArea();
                                 if (hasContent || cellWithBigRowspanAdded || splits[col].GetStatus() == LayoutResult.NOTHING) {
-                                    currentRow[col] = null;
                                     CellRenderer cellOverflow = (CellRenderer)splits[col].GetOverflowRenderer();
-                                    if (splits[col].GetStatus() == LayoutResult.PARTIAL) {
-                                        cellOverflow.SetBorders(Border.NO_BORDER, 0);
-                                        cellSplit.SetBorders(Border.NO_BORDER, 2);
-                                    }
-                                    else {
-                                        if (Border.NO_BORDER != cellOverflow.GetProperty<Border>(Property.BORDER_TOP)) {
-                                            cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
-                                        }
-                                    }
-                                    if (hasContent) {
-                                        for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                            splitResult[0].horizontalBorders[row + 1][j] = GetBorders()[2];
-                                            splitResult[1].horizontalBorders[0][j] = GetBorders()[2];
-                                        }
-                                    }
                                     cellOverflow.DeleteOwnProperty(Property.BORDER_BOTTOM);
-                                    cellOverflow.SetBorders(cellOverflow.GetBorders()[2], 2);
+                                    cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
+                                    if (null != cellSplit) {
+                                        for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                            splitResult[0].horizontalBorders[row + (hasContent ? 1 : 0)][j] = currentRow[col].GetBorders()[2];
+                                        }
+                                    }
+                                    currentRow[col] = null;
                                     rows[targetOverflowRowIndex[col]][col] = (CellRenderer)cellOverflow.SetParent(splitResult[1]);
                                 }
                                 else {
@@ -819,18 +809,14 @@ namespace iText.Layout.Renderer {
                                         if (isBigRowspannedCell && !processAsLast) {
                                             childRenderers.Add(currentRow[col]);
                                         }
-                                        // for the future
-                                        splitResult[1].rows[0][col].SetBorders(GetBorders()[0], 0);
                                     }
                                     else {
                                         if (Border.NO_BORDER != currentRow[col].GetProperty<Border>(Property.BORDER_TOP)) {
                                             splitResult[1].rows[0][col].DeleteOwnProperty(Property.BORDER_TOP);
                                         }
                                     }
-                                    if (!processAsLast) {
-                                        for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                            horizontalBorders[row + (hasContent ? 1 : 0)][j] = GetBorders()[2];
-                                        }
+                                    for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
+                                        horizontalBorders[row + (hasContent ? 1 : 0)][j] = currentRow[col].GetBorders()[2];
                                     }
                                 }
                             }
@@ -851,13 +837,11 @@ namespace iText.Layout.Renderer {
                                     // we will change properties
                                     currentRow[col].isLastRendererForModelElement = false;
                                     childRenderers.Add(currentRow[col]);
-                                    Border topBorder = currentRow[col].GetProperty<Border>(Property.BORDER_TOP);
                                     currentRow[col] = null;
                                     rows[targetOverflowRowIndex[col]][col] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
                                     rows[targetOverflowRowIndex[col]][col].DeleteProperty(Property.HEIGHT);
                                     rows[targetOverflowRowIndex[col]][col].DeleteProperty(Property.MIN_HEIGHT);
                                     rows[targetOverflowRowIndex[col]][col].DeleteProperty(Property.MAX_HEIGHT);
-                                    rows[targetOverflowRowIndex[col]][col].SetProperty(Property.BORDER_TOP, topBorder);
                                 }
                                 else {
                                     childRenderers.Add(currentRow[col]);
@@ -871,11 +855,9 @@ namespace iText.Layout.Renderer {
                                     // so we should process the last cell in the column as in the case 1 == minRowspan
                                     if (i != row + minRowspan - 1 && null != rows[i][col]) {
                                         Cell overflowCell = ((Cell)rows[i][col].GetModelElement());
-                                        Border topBorder = rows[i][col].GetProperty<Border>(Property.BORDER_TOP);
                                         rows[i][col].isLastRendererForModelElement = false;
                                         rows[i][col] = null;
                                         rows[targetOverflowRowIndex[col]][col] = (CellRenderer)overflowCell.GetRenderer().SetParent(this);
-                                        rows[targetOverflowRowIndex[col]][col].SetProperty(Property.BORDER_TOP, topBorder);
                                     }
                                 }
                                 rows[targetOverflowRowIndex[col]][col].occupiedArea = cellOccupiedArea;

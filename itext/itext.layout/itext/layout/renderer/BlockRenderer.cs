@@ -263,7 +263,7 @@ namespace iText.Layout.Renderer {
                                         return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null);
                                     }
                                     else {
-                                        return new LayoutResult(layoutResult, null, splitRenderer, overflowRenderer, result.GetCauseOfNothing());
+                                        return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing());
                                     }
                                 }
                             }
