@@ -1,3 +1,4 @@
+using System;
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -36,12 +37,37 @@ namespace iText.Layout.Minmaxwidth {
             return result;
         }
 
+        //heuristic method
+        public static MinMaxWidth CountRotationMinMaxWidth(MinMaxWidth minMaxWidth, BlockRenderer renderer) {
+            float? rotation = renderer.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (rotation != null && renderer.GetModelElement() is BlockElement) {
+                float angle = rotation;
+                bool restoreRendererProperty = renderer.HasOwnProperty(Property.ROTATION_ANGLE);
+                renderer.SetProperty(Property.ROTATION_ANGLE, System.Convert.ToSingle(0));
+                float width = ToEffectiveWidth((BlockElement)renderer.GetModelElement(), minMaxWidth.GetAvailableWidth());
+                LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(width, AbstractRenderer
+                    .INF))));
+                if (restoreRendererProperty) {
+                    renderer.SetProperty(Property.ROTATION_ANGLE, rotation);
+                }
+                else {
+                    renderer.DeleteOwnProperty(Property.ROTATION_ANGLE);
+                }
+                if (result.GetOccupiedArea() != null) {
+                    double a = result.GetOccupiedArea().GetBBox().GetWidth();
+                    double b = result.GetOccupiedArea().GetBBox().GetHeight();
+                    return new MinMaxWidth(0, minMaxWidth.GetAvailableWidth(), (float)Math.Sqrt(2 * a * b), (float)Math.Sqrt(a
+                         * a + b * b));
+                }
+            }
+            return minMaxWidth;
+        }
+
         public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {
             LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer
                 .INF))));
             return result.GetStatus() == LayoutResult.NOTHING ? new MinMaxWidth(0, availableWidth) : new MinMaxWidth(0
-                , availableWidth, result.GetOccupiedArea().GetBBox().GetWidth(), result.GetOccupiedArea().GetBBox().GetWidth
-                ());
+                , availableWidth, 0, result.GetOccupiedArea().GetBBox().GetWidth());
         }
 
         private static float GetBorderWidth(IElement element) {

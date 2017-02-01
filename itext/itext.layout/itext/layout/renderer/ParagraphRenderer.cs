@@ -461,7 +461,7 @@ namespace iText.Layout.Renderer {
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
                 (availableWidth, AbstractRenderer.INF))));
-            return result.GetNotNullMinMaxWidth(availableWidth);
+            return MinMaxWidthUtils.CountRotationMinMaxWidth(result.GetNotNullMinMaxWidth(availableWidth), this);
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {

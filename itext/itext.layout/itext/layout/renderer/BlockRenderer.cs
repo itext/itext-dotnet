@@ -602,27 +602,22 @@ namespace iText.Layout.Renderer {
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             Rectangle area = new Rectangle(availableWidth, AbstractRenderer.INF);
-            if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
-                return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
-            }
-            else {
-                float additionalWidth = ApplyBordersPaddingsMargins(area, GetBorders(), GetPaddings(), IsPositioned());
-                MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, availableWidth);
-                AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
-                foreach (IRenderer childRenderer in childRenderers) {
-                    MinMaxWidth childMinMaxWidth;
-                    childRenderer.SetParent(this);
-                    if (childRenderer is AbstractRenderer) {
-                        childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(area.GetWidth());
-                    }
-                    else {
-                        childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, area.GetWidth());
-                    }
-                    handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
-                    handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
+            float additionalWidth = ApplyBordersPaddingsMargins(area, GetBorders(), GetPaddings(), IsPositioned());
+            MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, availableWidth);
+            AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
+            foreach (IRenderer childRenderer in childRenderers) {
+                MinMaxWidth childMinMaxWidth;
+                childRenderer.SetParent(this);
+                if (childRenderer is AbstractRenderer) {
+                    childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(area.GetWidth());
                 }
-                return minMaxWidth;
+                else {
+                    childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, area.GetWidth());
+                }
+                handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
+                handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
             }
+            return MinMaxWidthUtils.CountRotationMinMaxWidth(minMaxWidth, this);
         }
 
         private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {

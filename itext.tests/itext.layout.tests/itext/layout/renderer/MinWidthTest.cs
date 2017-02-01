@@ -8,6 +8,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
 using iText.Test;
+using iText.Test.Attributes;
 
 namespace iText.Layout.Renderer {
     public class MinWidthTest : ExtendedITextTest {
@@ -90,6 +91,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithBigRotatedParagraph() {
             String outFileName = destinationFolder + "divBigRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divBigRotatedParagraphTest01.pdf";

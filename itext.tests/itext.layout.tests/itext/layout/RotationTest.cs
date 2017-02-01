@@ -329,7 +329,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 50, 50 });
-            table.SetWidth(100).SetProperty(Property.TABLE_LAYOUT, "fixed");
+            table.SetWidth(100);
             table.AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle((Math.PI / 2)))).AddCell(new Cell
                 ().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph
                 ("cell 2, 1").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph("cell 2, 2").SetRotationAngle
@@ -350,7 +350,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 25, 50 });
-            table.SetWidth(75).SetProperty(Property.TABLE_LAYOUT, "fixed");
+            table.SetWidth(75);
             table.AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle((Math.PI / 2)))).AddCell(new Cell
                 ().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph
                 ("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph("cell 2, 2"))).AddCell(new Cell().Add(new Paragraph
@@ -371,7 +371,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             Table table = new Table(1);
-            table.SetWidth(50).SetProperty(Property.TABLE_LAYOUT, "fixed");
+            table.SetWidth(50);
             table.AddCell(new Cell().Add(new Paragraph("Hello")).SetRotationAngle(Math.PI * 70 / 180.0).SetBackgroundColor
                 (Color.GREEN));
             doc.Add(table);

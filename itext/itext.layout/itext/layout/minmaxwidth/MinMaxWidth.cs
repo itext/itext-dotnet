@@ -42,6 +42,10 @@ namespace iText.Layout.Minmaxwidth {
             return additionalWidth;
         }
 
+        public virtual float GetAvailableWidth() {
+            return availableWidth;
+        }
+
         public virtual void SetAdditionalWidth(float additionalWidth) {
             this.additionalWidth = additionalWidth;
         }
