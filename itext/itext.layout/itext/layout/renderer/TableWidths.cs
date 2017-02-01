@@ -247,6 +247,13 @@ namespace iText.Layout.Renderer {
                         toBalance = false;
                     }
                 }
+                if (sumOfPercents < 100 && totalNonPercent == 0) {
+                    // each column has percent value but sum < 100%
+                    // upscale percents
+                    for (int i = 0; i < widths.Length; i++) {
+                        widths[i].width = 100 * widths[i].width / sumOfPercents;
+                    }
+                }
                 if (!toBalance) {
                     for (int i = 0; i < numberOfColumns; i++) {
                         widths[i].finalWidth = widths[i].isPercent ? tableWidth * widths[i].width / 100 : widths[i].width;

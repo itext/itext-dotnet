@@ -136,6 +136,10 @@ namespace iText.Layout.Element {
             if (columnWidths.Length == 0) {
                 throw new ArgumentException("The widths array in table constructor can not have zero length.");
             }
+            //TODO remove in 7.1. It shall work as html tables.
+            if (HasOnlyPercents(columnWidths)) {
+                UseAllAvailableWidth();
+            }
             this.columnWidths = NormalizeColumnWidths(columnWidths);
             InitializeLargeTable(largeTable);
             InitializeRows();
@@ -184,6 +188,8 @@ namespace iText.Layout.Element {
             for (int k = 0; k < numColumns; ++k) {
                 this.columnWidths[k] = UnitValue.CreatePercentValue((float)100 / numColumns);
             }
+            //TODO remove in 7.1. It shall work as html tables.
+            UseAllAvailableWidth();
             this.columnWidths = NormalizeColumnWidths(numColumns, true);
             InitializeLargeTable(largeTable);
             InitializeRows();
@@ -805,6 +811,15 @@ namespace iText.Layout.Element {
                 SetWidth(UnitValue.CreatePercentValue(100));
                 SetFixedLayout();
             }
+        }
+
+        private static bool HasOnlyPercents(UnitValue[] columnWidths) {
+            foreach (UnitValue col in columnWidths) {
+                if (col == null || col.IsPointValue() || col.GetValue() < 0) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
