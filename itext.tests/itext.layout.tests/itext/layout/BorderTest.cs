@@ -651,8 +651,7 @@ namespace iText.Layout {
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
-            Table table = new Table(new UnitValue[] { UnitValue.CreatePercentValue(25), UnitValue.CreatePercentValue(75
-                ) });
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 3 }));
             table.SetWidthPercent(50).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1

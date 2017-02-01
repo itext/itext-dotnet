@@ -130,7 +130,6 @@ namespace iText.Layout.Element {
         /// <param name="columnWidths">the relative column widths</param>
         /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
         public Table(UnitValue[] columnWidths, bool largeTable) {
-            //this.isComplete = !largeTable;
             if (columnWidths == null) {
                 throw new ArgumentNullException("The widths array in table constructor can not be null.");
             }

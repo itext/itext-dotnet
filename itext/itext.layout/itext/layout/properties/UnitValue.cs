@@ -100,15 +100,20 @@ namespace iText.Layout.Properties {
         /// <summary>Creates an array of UnitValue PERCENT objects with specified values.</summary>
         /// <param name="values">the values to be stored.</param>
         /// <returns>
-        /// a new array of
+        /// a new normalized (Σ=100%) array of
         /// <see cref="PERCENT"/>
         /// 
         /// <see cref="UnitValue"/>
+        /// .
         /// </returns>
         public static iText.Layout.Properties.UnitValue[] CreatePercentArray(float[] values) {
             iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
+            float sum = 0;
+            foreach (float val in values) {
+                sum += val;
+            }
             for (int i = 0; i < values.Length; i++) {
-                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePercentValue(values[i]);
+                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePercentValue(100 * values[i] / sum);
             }
             return resultArray;
         }
