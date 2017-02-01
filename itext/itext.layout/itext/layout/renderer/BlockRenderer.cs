@@ -621,13 +621,13 @@ namespace iText.Layout.Renderer {
                 handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
                 handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
             }
-            return CountRotationMinMaxWidth(minMaxWidth);
+            return CountRotationMinMaxWidth(CorrectMinMaxWidth(minMaxWidth));
         }
 
         //Heuristic method.
         //We assume that the area of block stays the same when we try to layout it
         //with different available width (available width is between min-width and max-width).
-        protected internal virtual MinMaxWidth CountRotationMinMaxWidth(MinMaxWidth minMaxWidth) {
+        internal virtual MinMaxWidth CountRotationMinMaxWidth(MinMaxWidth minMaxWidth) {
             float? rotation = GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (rotation != null) {
                 bool restoreRendererRotation = HasOwnProperty(Property.ROTATION_ANGLE);
@@ -658,6 +658,15 @@ namespace iText.Layout.Renderer {
                     return new MinMaxWidth(0, minMaxWidth.GetAvailableWidth(), (float)resultMinWidth, (float)Math.Sqrt(a * a +
                          b * b));
                 }
+            }
+            return minMaxWidth;
+        }
+
+        internal virtual MinMaxWidth CorrectMinMaxWidth(MinMaxWidth minMaxWidth) {
+            float? width = RetrieveWidth(0);
+            if (width != null && width > 0 && width >= minMaxWidth.GetChildrenMinWidth()) {
+                minMaxWidth.SetChildrenMaxWidth((float)width);
+                minMaxWidth.SetChildrenMinWidth((float)width);
             }
             return minMaxWidth;
         }
