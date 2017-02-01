@@ -1439,7 +1439,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             //The DP is used to count each column width.
-            //In next arrays at the index i will be the corresponding sum width first i columns.
+            //In next two arrays at the index 'i' will be the sum of corresponding widths of first 'i' columns.
             float[] maxColumnsWidth = new float[ncol + 1];
             float[] minColumnsWidth = new float[ncol + 1];
             minColumnsWidth[0] = 0;
@@ -1449,9 +1449,9 @@ namespace iText.Layout.Renderer {
                 for (int row = 0; row < nrow; ++row) {
                     if (cellsMinMaxWidth[row][col] != null) {
                         curColspan = cellsColspan[row][col];
-                        maxColumnsWidth[col + 1] = Math.Max(maxColumnsWidth[col], cellsMinMaxWidth[row][col].GetMaxWidth() + maxColumnsWidth
+                        maxColumnsWidth[col + 1] = Math.Max(maxColumnsWidth[col + 1], cellsMinMaxWidth[row][col].GetMaxWidth() + maxColumnsWidth
                             [col - curColspan + 1]);
-                        minColumnsWidth[col + 1] = Math.Max(minColumnsWidth[col], cellsMinMaxWidth[row][col].GetMinWidth() + minColumnsWidth
+                        minColumnsWidth[col + 1] = Math.Max(minColumnsWidth[col + 1], cellsMinMaxWidth[row][col].GetMinWidth() + minColumnsWidth
                             [col - curColspan + 1]);
                     }
                 }
