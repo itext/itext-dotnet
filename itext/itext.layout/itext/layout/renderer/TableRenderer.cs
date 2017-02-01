@@ -1480,6 +1480,10 @@ namespace iText.Layout.Renderer {
                         minColumnsWidth[col + 1] = Math.Max(minColumnsWidth[col + 1], cellsMinMaxWidth[row][col].GetMinWidth() + minColumnsWidth
                             [col - curColspan + 1]);
                     }
+                    else {
+                        maxColumnsWidth[col + 1] = maxColumnsWidth[col];
+                        minColumnsWidth[col + 1] = minColumnsWidth[col];
+                    }
                 }
             }
             for (int col = 0; col < ncol; ++col) {
