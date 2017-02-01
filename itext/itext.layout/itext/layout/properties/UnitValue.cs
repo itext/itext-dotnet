@@ -68,6 +68,11 @@ namespace iText.Layout.Properties {
             this.value = value;
         }
 
+        /// <summary>Creates a copy of UnitValue object.</summary>
+        public UnitValue(iText.Layout.Properties.UnitValue unitValue)
+            : this(unitValue.unitType, unitValue.value) {
+        }
+
         /// <summary>Creates a UnitValue POINT object with a specified value.</summary>
         /// <param name="value">the value to be stored.</param>
         /// <returns>

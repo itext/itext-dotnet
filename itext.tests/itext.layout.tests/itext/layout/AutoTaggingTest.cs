@@ -137,7 +137,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest01.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Table table = new Table(3);
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100).SetAutoScale(true);
             table.AddCell(CreateParagraph1());
@@ -164,7 +164,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest02.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Table table = new Table(3);
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             for (int i = 0; i < 5; ++i) {
                 table.AddCell(CreateParagraph2());
             }
@@ -183,7 +183,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest03.pdf"));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            Table table = new Table(3);
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
             cell.SetRole(PdfName.TH);
             table.AddHeaderCell(cell);
