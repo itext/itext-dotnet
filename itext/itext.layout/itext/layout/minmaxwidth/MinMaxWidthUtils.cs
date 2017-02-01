@@ -14,7 +14,20 @@ namespace iText.Layout.Minmaxwidth {
         }
 
         public static float ToEffectiveWidth(BlockElement b, float fullWidth) {
-            return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) - GetPaddingWidth(b) + eps;
+            if (b is Table) {
+                return fullWidth + ((Table)b).GetNumberOfColumns() * eps;
+            }
+            else {
+                return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) - GetPaddingWidth(b) + eps;
+            }
+        }
+
+        public static float[] ToEffectiveTableColumnWidth(float[] tableColumnWidth) {
+            float[] result = tableColumnWidth.Clone();
+            for (int i = 0; i < result.Length; ++i) {
+                result[i] += eps;
+            }
+            return result;
         }
 
         public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {

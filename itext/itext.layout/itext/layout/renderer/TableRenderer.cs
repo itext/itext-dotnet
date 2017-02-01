@@ -1382,6 +1382,8 @@ namespace iText.Layout.Renderer {
                     );
                 leftTableBorderWidth = Math.Max(leftTableBorderWidth, collapsedTableBorderWidths[3]);
                 rightTableBorderWidth = Math.Max(rightTableBorderWidth, collapsedTableBorderWidths[1]);
+                footerRenderer.GetMinMaxWidth(availableWidth - (leftTableBorderWidth - collapsedTableBorderWidths[3]) / 2 
+                    - (rightTableBorderWidth - collapsedTableBorderWidths[1]) / 2);
             }
             bool isFirstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
             bool headerShouldBeApplied = !rows.IsEmpty() && (!isOriginalNonSplitRenderer || isFirstHeader && !tableModel
@@ -1391,10 +1393,10 @@ namespace iText.Layout.Renderer {
                 headerRenderer = InitFooterOrHeaderRenderer(false, borders);
                 collapsedTableBorderWidths = GetCollapsedBorderWidths(headerRenderer.rows, headerRenderer.GetBorders(), false
                     );
-                float rightHeaderBorderWidth = collapsedTableBorderWidths[1];
-                float leftHeaderBorderWidth = collapsedTableBorderWidths[3];
-                leftTableBorderWidth = Math.Max(leftTableBorderWidth, leftHeaderBorderWidth);
-                rightTableBorderWidth = Math.Max(rightTableBorderWidth, rightHeaderBorderWidth);
+                leftTableBorderWidth = Math.Max(leftTableBorderWidth, collapsedTableBorderWidths[3]);
+                rightTableBorderWidth = Math.Max(rightTableBorderWidth, collapsedTableBorderWidths[1]);
+                headerRenderer.GetMinMaxWidth(availableWidth - (leftTableBorderWidth - collapsedTableBorderWidths[3]) / 2 
+                    - (rightTableBorderWidth - collapsedTableBorderWidths[1]) / 2);
             }
             borders = GetBorders();
             // Apply halves of the borders. The other halves are applied on a Cell level
@@ -1458,15 +1460,32 @@ namespace iText.Layout.Renderer {
                 countedMinColumnWidth[col] = minColumnsWidth[col] - minColumnsWidth[col - 1];
                 countedMaxColumnWidth[col] = maxColumnsWidth[col] - maxColumnsWidth[col - 1];
             }
-            return new MinMaxWidth(additionalWidth, availableWidth, minColumnsWidth[ncol - 1], maxColumnsWidth[ncol - 
-                1]);
+            if (tableModel.GetFooter() != null) {
+                for (int i = 0; i < ncol; ++i) {
+                    countedMaxColumnWidth[i] = Math.Max(countedMaxColumnWidth[i], footerRenderer.GetMaxColumnWidth()[i]);
+                    countedMinColumnWidth[i] = Math.Max(countedMinColumnWidth[i], footerRenderer.GetMinColumnWidth()[i]);
+                }
+            }
+            if (tableModel.GetHeader() != null && headerShouldBeApplied) {
+                for (int i = 0; i < ncol; ++i) {
+                    countedMaxColumnWidth[i] = Math.Max(countedMaxColumnWidth[i], headerRenderer.GetMaxColumnWidth()[i]);
+                    countedMinColumnWidth[i] = Math.Max(countedMinColumnWidth[i], headerRenderer.GetMinColumnWidth()[i]);
+                }
+            }
+            float minColTotalWidth = 0;
+            float maxColTotalWidth = 0;
+            for (int i = 0; i < ncol; ++i) {
+                minColTotalWidth += countedMinColumnWidth[i];
+                maxColTotalWidth += countedMaxColumnWidth[i];
+            }
+            return new MinMaxWidth(additionalWidth, availableWidth, minColTotalWidth, maxColTotalWidth);
         }
 
         internal virtual float[] GetMinColumnWidth() {
             return countedMinColumnWidth;
         }
 
-        internal virtual float[] GetMaxColumWidth() {
+        internal virtual float[] GetMaxColumnWidth() {
             return countedMaxColumnWidth;
         }
 
