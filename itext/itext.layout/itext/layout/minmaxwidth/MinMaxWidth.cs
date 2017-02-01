@@ -53,5 +53,10 @@ namespace iText.Layout.Minmaxwidth {
         public virtual float GetMinWidth() {
             return Math.Min(childrenMinWidth + additionalWidth, GetMaxWidth());
         }
+
+        public override String ToString() {
+            return "min=" + (childrenMinWidth + additionalWidth) + ", max=" + (childrenMaxWidth + additionalWidth) + "; ("
+                 + availableWidth + ")";
+        }
     }
 }
