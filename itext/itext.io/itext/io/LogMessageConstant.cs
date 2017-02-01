@@ -146,6 +146,8 @@ namespace iText.IO {
 
         public const String TAG_STRUCTURE_INIT_FAILED = "Tag structure initialization failed, tag structure is ignored, it might be corrupted.";
 
+        public const String UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING = "Unexpected behaviour during table row collapsing. Calculated rowspan was less then 1.";
+
         public const String UNKNOWN_CMAP = "Unknown CMap {0}";
 
         public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb. Defaulting to black color.";

@@ -254,6 +254,40 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void ColspanRowspanTableTest() {
+            String outFileName = destinationFolder + "colspanRowspanTableTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_colspanRowspanTableTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Cell colspanCell = new Cell(1, 2).Add("I am veryveryvery big cell").SetBorder(new SolidBorder(Color.RED, 60
+                )).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell rowspanCell = new Cell(2, 1).Add("I am very very very long cell").SetBorder(new SolidBorder(Color.GREEN
+                , 60)).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell = new Cell().Add("I am cell").SetBorder(new SolidBorder(Color.BLUE, 10)).SetBorderBottom(Border.
+                NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Table table = new Table(3).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell
+                .Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
+            TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
+            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            Table minTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth
+                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder
+                (Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)
+                ).AddCell(colspanCell.Clone(true));
+            Table maxTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth
+                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder
+                (Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)
+                ).AddCell(colspanCell.Clone(true));
+            doc.Add(table);
+            doc.Add(minTable);
+            doc.Add(maxTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void HeaderFooterTableTest() {
             String outFileName = destinationFolder + "headerFooterTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_headerFooterTableTest.pdf";

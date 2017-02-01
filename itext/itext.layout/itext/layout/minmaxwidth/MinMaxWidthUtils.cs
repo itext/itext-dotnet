@@ -7,7 +7,7 @@ using iText.Layout.Renderer;
 
 namespace iText.Layout.Minmaxwidth {
     public class MinMaxWidthUtils {
-        private const float eps = 0.0001f;
+        private const float eps = 0.01f;
 
         public static float GetEps() {
             return eps;

@@ -206,7 +206,7 @@ namespace iText.Layout.Renderer {
             }
             // collapse all cell borders
             if (null != rows && isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
-                CollapseAllBorders(borders, 0, rows.Count - 1, tableModel.GetNumberOfColumns());
+                CollapseAllBordersAndEmptyRows(borders, 0, rows.Count - 1, tableModel.GetNumberOfColumns());
             }
             else {
                 UpdateFirstRowBorders(tableModel.GetNumberOfColumns());
@@ -1360,7 +1360,7 @@ namespace iText.Layout.Renderer {
             Table tableModel = (Table)GetModelElement();
             this.InitializeBorders(tableModel.GetLastRowBottomBorder(), true);
             if (null != rows) {
-                this.CollapseAllBorders(GetBorders(), 0, rows.Count - 1, tableModel.GetNumberOfColumns());
+                this.CollapseAllBordersAndEmptyRows(GetBorders(), 0, rows.Count - 1, tableModel.GetNumberOfColumns());
             }
             float rightTableBorderWidth = GetMaxRightWidth(GetBorders()[1]);
             float leftTableBorderWidth = GetMaxLeftWidth(GetBorders()[3]);
@@ -1753,8 +1753,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void CollapseAllBorders(Border[] tableBorders, int startRow, int finishRow, int colN) {
+        private void CollapseAllBordersAndEmptyRows(Border[] tableBorders, int startRow, int finishRow, int colN) {
             CellRenderer[] currentRow;
+            int[] rowsToDelete = new int[colN];
             for (int row = startRow; row <= finishRow; row++) {
                 currentRow = rows[row];
                 bool hasCells = false;
@@ -1764,6 +1765,18 @@ namespace iText.Layout.Renderer {
                         PrepareBuildingBordersArrays(currentRow[col], tableBorders, colN, row, col);
                         BuildBordersArrays(currentRow[col], row, col);
                         hasCells = true;
+                        if (rowsToDelete[col] > 0) {
+                            int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowsToDelete[col];
+                            if (rowspan < 1) {
+                                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
+                                logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
+                                rowspan = 1;
+                            }
+                            currentRow[col].SetProperty(Property.ROWSPAN, rowspan);
+                        }
+                        for (int i = 0; i < colspan; ++i) {
+                            rowsToDelete[col + i] = 0;
+                        }
                         col += colspan - 1;
                     }
                     else {
@@ -1776,6 +1789,9 @@ namespace iText.Layout.Renderer {
                     rows.Remove(currentRow);
                     row--;
                     finishRow--;
+                    for (int i = 0; i < colN; ++i) {
+                        ++rowsToDelete[i];
+                    }
                     if (row == finishRow) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                         logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
@@ -2245,7 +2261,8 @@ namespace iText.Layout.Renderer {
 
         private iText.Layout.Renderer.TableRenderer ProcessRendererBorders(int numberOfColumns) {
             InitializeBorders(new List<Border>(), true);
-            CollapseAllBorders(GetBorders(), rowRange.GetStartRow(), rowRange.GetFinishRow(), numberOfColumns);
+            CollapseAllBordersAndEmptyRows(GetBorders(), rowRange.GetStartRow(), rowRange.GetFinishRow(), numberOfColumns
+                );
             return this;
         }
 
