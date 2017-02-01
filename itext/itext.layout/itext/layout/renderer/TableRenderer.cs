@@ -1383,17 +1383,20 @@ namespace iText.Layout.Renderer {
         }
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            return CountTableMinMaxWidth(availableWidth, true).ToTableMinMaxWidth(availableWidth);
+            return CountTableMinMaxWidth(availableWidth, true, false).ToTableMinMaxWidth(availableWidth);
         }
 
         private TableRenderer.ColumnMinMaxWidth CountTableMinMaxWidth(float availableWidth, bool initializeBorders
-            ) {
+            , bool isTableBeingLayouted) {
             Rectangle layoutBox = new Rectangle(availableWidth, AbstractRenderer.INF);
             float? tableWidth = RetrieveWidth(layoutBox.GetWidth());
             ApplyMargins(layoutBox, false);
             if (initializeBorders) {
                 InitializeBorders(((Table)GetModelElement()).GetLastRowBottomBorder(), true);
                 InitializeHeaderAndFooter(true);
+                if (!isTableBeingLayouted) {
+                    SaveCellsProperties();
+                }
                 CollapseAllBorders();
             }
             TableRenderer.ColumnMinMaxWidth footerColWidth = null;
@@ -1420,6 +1423,9 @@ namespace iText.Layout.Renderer {
                 leftBorderMaxWidth = 0;
                 horizontalBorders = null;
                 verticalBorders = null;
+                if (!isTableBeingLayouted) {
+                    RestoreCellsProperties();
+                }
                 //TODO do we need it?
                 // delete set properties
                 DeleteOwnProperty(Property.BORDER_BOTTOM);
@@ -2252,7 +2258,7 @@ namespace iText.Layout.Renderer {
                     countedColumnWidth = tableWidths.FixedLayout();
                 }
                 else {
-                    TableRenderer.ColumnMinMaxWidth minMax = CountTableMinMaxWidth(availableWidth, false);
+                    TableRenderer.ColumnMinMaxWidth minMax = CountTableMinMaxWidth(availableWidth, false, true);
                     countedColumnWidth = tableWidths.AutoLayout(minMax.GetMinWidth(), minMax.GetMaxWidth());
                 }
             }
@@ -2264,6 +2270,34 @@ namespace iText.Layout.Renderer {
                 sum += column;
             }
             return sum + rightBorderMaxWidth / 2 + leftBorderMaxWidth / 2;
+        }
+
+        protected internal virtual iText.Layout.Renderer.TableRenderer SaveCellsProperties() {
+            CellRenderer[] currentRow;
+            int colN = ((Table)GetModelElement()).GetNumberOfColumns();
+            for (int row = 0; row < rows.Count; row++) {
+                currentRow = rows[row];
+                for (int col = 0; col < colN; col++) {
+                    if (null != currentRow[col]) {
+                        currentRow[col].SaveProperties();
+                    }
+                }
+            }
+            return this;
+        }
+
+        protected internal virtual iText.Layout.Renderer.TableRenderer RestoreCellsProperties() {
+            CellRenderer[] currentRow;
+            int colN = ((Table)GetModelElement()).GetNumberOfColumns();
+            for (int row = 0; row < rows.Count; row++) {
+                currentRow = rows[row];
+                for (int col = 0; col < colN; col++) {
+                    if (null != currentRow[col]) {
+                        currentRow[col].RestoreProperties();
+                    }
+                }
+            }
+            return this;
         }
 
         /// <summary>This are a structs used for convenience in layout.</summary>
