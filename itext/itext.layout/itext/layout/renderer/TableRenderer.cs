@@ -1481,8 +1481,8 @@ namespace iText.Layout.Renderer {
                             [col - curColspan + 1]);
                     }
                     else {
-                        maxColumnsWidth[col + 1] = maxColumnsWidth[col];
-                        minColumnsWidth[col + 1] = minColumnsWidth[col];
+                        maxColumnsWidth[col + 1] = Math.Max(maxColumnsWidth[col + 1], maxColumnsWidth[col]);
+                        minColumnsWidth[col + 1] = Math.Max(minColumnsWidth[col + 1], minColumnsWidth[col]);
                     }
                 }
             }
