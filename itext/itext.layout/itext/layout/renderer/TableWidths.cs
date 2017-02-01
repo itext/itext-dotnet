@@ -182,15 +182,21 @@ namespace iText.Layout.Renderer {
                 UnitValue colWidth = GetTable().GetColumnWidth(i);
                 if (colWidth.GetValue() >= 0) {
                     if (colWidth.IsPercentValue()) {
-                        widths[i].SetPercents(colWidth.GetValue());
+                        if (!widths[i].isPercent && widths[i].isFixed && widths[i].width > widths[i].min) {
+                            widths[i].max = widths[i].width;
+                            widths[i].SetFixed(false);
+                        }
+                        if (!widths[i].isPercent) {
+                            widths[i].SetPercents(colWidth.GetValue());
+                        }
                     }
                     else {
                         if (!widths[i].isPercent && colWidth.GetValue() >= widths[i].min) {
-                            if (!widths[i].isFixed) {
-                                widths[i].ResetPoints(colWidth.GetValue());
+                            if (widths[i].isFixed) {
+                                widths[i].SetPoints(colWidth.GetValue());
                             }
                             else {
-                                widths[i].SetPoints(colWidth.GetValue());
+                                widths[i].ResetPoints(colWidth.GetValue());
                             }
                         }
                     }
@@ -253,6 +259,7 @@ namespace iText.Layout.Renderer {
                     for (int i = 0; i < widths.Length; i++) {
                         widths[i].width = 100 * widths[i].width / sumOfPercents;
                     }
+                    sumOfPercents = 100;
                 }
                 if (!toBalance) {
                     for (int i = 0; i < numberOfColumns; i++) {
@@ -336,7 +343,7 @@ namespace iText.Layout.Renderer {
                         }
                         else {
                             float extraWidth = tableWidth - totalPercent - minTotalNonPercent;
-                            if (extraWidth < fixedAddition) {
+                            if (fixedAddition > 0 && (extraWidth < fixedAddition || flexibleAddition == 0)) {
                                 for (int i = 0; i < numberOfColumns; i++) {
                                     if (!widths[i].isPercent && widths[i].isFixed) {
                                         widths[i].finalWidth += (widths[i].width - widths[i].min) * extraWidth / fixedAddition;
@@ -539,7 +546,7 @@ namespace iText.Layout.Renderer {
         private class ColumnWidthData {
             internal readonly float min;
 
-            internal readonly float max;
+            internal float max;
 
             internal float width = 0;
 

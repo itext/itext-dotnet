@@ -68,6 +68,10 @@ namespace iText.Layout.Renderer {
             return (Cell)base.GetModelElement();
         }
 
+        protected internal override float? RetrieveWidth(float parentBoxWidth) {
+            return null;
+        }
+
         /// <summary><inheritDoc/></summary>
         protected internal override AbstractRenderer CreateSplitRenderer(int layoutResult) {
             iText.Layout.Renderer.CellRenderer splitRenderer = (iText.Layout.Renderer.CellRenderer)GetNextRenderer();
