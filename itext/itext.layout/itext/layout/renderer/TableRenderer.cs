@@ -1762,7 +1762,7 @@ namespace iText.Layout.Renderer {
             }
             col = 0;
             while (col < colN) {
-                if (null != rows[row][col]) {
+                if (null != rows[row][col] && row + 1 == (int)rows[row][col].GetPropertyAsInteger(Property.ROWSPAN)) {
                     Border oldTopBorder = rows[row][col].GetBorders()[0];
                     Border resultCellTopBorder = null;
                     Border collapsedBorder = null;

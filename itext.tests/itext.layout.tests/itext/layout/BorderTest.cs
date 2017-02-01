@@ -133,6 +133,29 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void IncompleteTableTest02() {
+            fileName = "incompleteTableTest02.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            Cell cell;
+            // row 1, cell 1
+            cell = new Cell().Add("One");
+            table.AddCell(cell);
+            table.StartNewRow();
+            // row 2, cell 1
+            cell = new Cell().Add("Two");
+            table.AddCell(cell);
+            // row 2, cell 2
+            cell = new Cell().Add("Three");
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SimpleBorderTest02() {
             fileName = "simpleBorderTest02.pdf";
             Document doc = CreateDocument();
