@@ -533,17 +533,15 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.rows = rows.SubList(row, rows.Count);
                                     overflowRenderer.SetProperty(Property.IGNORE_HEADER, true);
                                     overflowRenderer.SetProperty(Property.IGNORE_FOOTER, true);
-                                    overflowRenderer.SetBorders(Border.NO_BORDER, 0);
-                                    // apply the difference to set table and its continuation left/right margins identical
-                                    layoutBox.ApplyMargins<Rectangle>(0, -rightBorderMaxWidth, 0, -leftBorderMaxWidth / 2, false);
-                                    if (HasProperty(Property.WIDTH)) {
-                                        overflowRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(layoutBox.GetWidth()));
-                                    }
-                                    // we have already applied margins on layoutBox
                                     overflowRenderer.SetProperty(Property.MARGIN_TOP, 0);
-                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, 0);
                                     overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, 0);
                                     overflowRenderer.SetProperty(Property.MARGIN_LEFT, 0);
+                                    overflowRenderer.SetProperty(Property.MARGIN_RIGHT, 0);
+                                    // init borders
+                                    overflowRenderer.InitializeBorders(new List<Border>(), true);
+                                    overflowRenderer.CollapseAllBordersAndEmptyRows(overflowRenderer.GetBorders(), 0, rowRange.GetFinishRow() 
+                                        - rowRange.GetStartRow() - row, numberOfColumns);
+                                    PrepareFooterOrHeaderRendererForLayout(overflowRenderer, layoutBox.GetWidth());
                                     if (LayoutResult.FULL == overflowRenderer.Layout(new LayoutContext(potentialArea)).GetStatus()) {
                                         footerRenderer = null;
                                         // fix layout area and table bottom border
@@ -1737,7 +1735,7 @@ namespace iText.Layout.Renderer {
                     int colspan = (int)rows[row][col].GetPropertyAsInteger(Property.COLSPAN);
                     for (int i = col; i < col + colspan; i++) {
                         topBorders.Add(rows[row][col].GetBorders()[0]);
-                        collapsedBottomBorder = GetCollapsedBorder(collapsedBottomBorder, horizontalBorders[1][i]);
+                        collapsedBottomBorder = GetCollapsedBorder(collapsedBottomBorder, horizontalBorders[row + 1][i]);
                     }
                     rows[row][col].SetBorders(collapsedBottomBorder, 2);
                     col += colspan;
