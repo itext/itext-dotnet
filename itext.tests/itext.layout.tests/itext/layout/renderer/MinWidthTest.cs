@@ -1,7 +1,9 @@
 using System;
+using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -156,6 +158,60 @@ namespace iText.Layout.Renderer {
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
             d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DivWithPercentImage() {
+            String outFileName = destinationFolder + "divPercentImage.pdf";
+            String cmpFileName = sourceFolder + "cmp_divPercentImage.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject);
+            Div d = new Div().Add(img).SetBorder(new SolidBorder(Color.BLUE, 2f)).SetMarginBottom(10);
+            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50);
+            Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(Color.BLUE, 2f));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
+            MinMaxWidth resultPercent = ((AbstractRenderer)dPercent.CreateRendererSubTree().SetParent(doc.GetRenderer(
+                ))).GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            dPercent.SetWidth(ToEffectiveWidth(dPercent, resultPercent.GetMaxWidth()));
+            doc.Add(d);
+            doc.Add(dPercent);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void DivWithRotatedPercentImage() {
+            String outFileName = destinationFolder + "divRotatedPercentImage.pdf";
+            String cmpFileName = sourceFolder + "cmp_divRotatedPercentImage.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            PdfImageXObject imageXObject = new PdfImageXObject(ImageDataFactory.Create(sourceFolder + "itis.jpg"));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(imageXObject).SetRotationAngle(Math.PI * 3
+                 / 8);
+            Div d = new Div().Add(img).SetBorder(new SolidBorder(Color.BLUE, 2f)).SetMarginBottom(10);
+            iText.Layout.Element.Image imgPercent = new iText.Layout.Element.Image(imageXObject).SetWidthPercent(50).SetRotationAngle
+                (Math.PI * 3 / 8);
+            Div dPercent = new Div().Add(imgPercent).SetBorder(new SolidBorder(Color.BLUE, 2f));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
+            MinMaxWidth resultPercent = ((AbstractRenderer)dPercent.CreateRendererSubTree().SetParent(doc.GetRenderer(
+                ))).GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            dPercent.SetWidth(ToEffectiveWidth(dPercent, resultPercent.GetMaxWidth()));
+            doc.Add(d);
+            doc.Add(dPercent);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

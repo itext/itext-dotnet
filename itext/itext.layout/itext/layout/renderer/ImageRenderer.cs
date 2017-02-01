@@ -215,9 +215,16 @@ namespace iText.Layout.Renderer {
             if (angle != 0) {
                 ApplyRotationLayout((float)angle);
             }
+            float unscaledWidth = occupiedArea.GetBBox().GetWidth() / scaleCoef;
+            MinMaxWidth minMaxWidth = new MinMaxWidth(0, area.GetBBox().GetWidth(), unscaledWidth, unscaledWidth);
+            UnitValue rendererWidth = this.GetProperty<UnitValue>(Property.WIDTH);
+            if (rendererWidth != null && rendererWidth.IsPercentValue()) {
+                minMaxWidth.SetChildrenMinWidth(0);
+                float coeff = imageWidth / RetrieveWidth(area.GetBBox().GetWidth());
+                minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
+            }
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null
-                ).SetMinMaxWidth(new MinMaxWidth(0, area.GetBBox().GetWidth(), occupiedArea.GetBBox().GetWidth(), occupiedArea
-                .GetBBox().GetWidth()));
+                ).SetMinMaxWidth(minMaxWidth);
         }
 
         public override void Draw(DrawContext drawContext) {
@@ -329,21 +336,8 @@ namespace iText.Layout.Renderer {
         }
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            Rectangle area = new Rectangle(availableWidth, AbstractRenderer.INF);
-            float additionalWidth = ApplyBordersPaddingsMargins(area, GetBorders(), GetPaddings(), IsPositioned());
-            float imageWidth = ((Image)modelElement).GetImageWidth();
-            UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
-            if (width == null || width.GetValue() < 0) {
-                return new MinMaxWidth(additionalWidth, availableWidth, imageWidth, imageWidth);
-            }
-            else {
-                if (width.IsPercentValue()) {
-                    return new MinMaxWidth(additionalWidth, availableWidth, 0, imageWidth);
-                }
-                else {
-                    return new MinMaxWidth(additionalWidth, availableWidth, width.GetValue(), width.GetValue());
-                }
-            }
+            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, 
+                AbstractRenderer.INF))))).GetMinMaxWidth();
         }
 
         protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
