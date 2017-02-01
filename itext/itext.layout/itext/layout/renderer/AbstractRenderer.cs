@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -58,6 +58,7 @@ using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Layout;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -1190,6 +1191,40 @@ namespace iText.Layout.Renderer {
         internal virtual void DrawPositionedChildren(DrawContext drawContext) {
             foreach (IRenderer positionedChild in positionedRenderers) {
                 positionedChild.Draw(drawContext);
+            }
+        }
+
+        internal virtual FontCharacteristics CreateFontCharacteristics() {
+            FontCharacteristics fc = new FontCharacteristics();
+            if (this.HasProperty(Property.FONT_WEIGHT)) {
+                fc.SetFontWeight((String)this.GetProperty<Object>(Property.FONT_WEIGHT));
+            }
+            if (this.HasProperty(Property.FONT_STYLE)) {
+                fc.SetFontStyle((String)this.GetProperty<Object>(Property.FONT_STYLE));
+            }
+            return fc;
+        }
+
+        internal virtual PdfFont ResolveFirstPdfFont() {
+            // TODO this mechanism does not take text into account
+            Object font = this.GetProperty<Object>(Property.FONT);
+            if (font is PdfFont) {
+                return (PdfFont)font;
+            }
+            else {
+                if (font is String) {
+                    FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
+                    if (provider == null) {
+                        throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
+                            );
+                    }
+                    FontCharacteristics fc = CreateFontCharacteristics();
+                    return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily((String)font), fc).BestMatch().GetPdfFont
+                        (provider);
+                }
+                else {
+                    throw new InvalidOperationException("String or PdfFont expected as value of FONT property");
+                }
             }
         }
 

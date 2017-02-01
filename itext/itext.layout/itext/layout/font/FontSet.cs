@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,10 +49,9 @@ namespace iText.Layout.Font {
     /// <summary>Reusable font set for FontProgram related data.</summary>
     /// <seealso cref="FontProvider"/>
     public class FontSet {
-        private ICollection<FontProgramInfo> fonts = new LinkedHashSet<FontProgramInfo>();
+        private ICollection<FontInfo> fonts = new LinkedHashSet<FontInfo>();
 
-        private IDictionary<FontProgramInfo, FontProgram> fontPrograms = new Dictionary<FontProgramInfo, FontProgram
-            >();
+        private IDictionary<FontInfo, FontProgram> fontPrograms = new Dictionary<FontInfo, FontProgram>();
 
         private IDictionary<FontSelectorKey, FontSelector> fontSelectorCache = new Dictionary<FontSelectorKey, FontSelector
             >();
@@ -103,7 +102,7 @@ namespace iText.Layout.Font {
             if (fontProgram == null) {
                 return false;
             }
-            FontProgramInfo fontInfo = FontProgramInfo.Create(fontProgram, encoding);
+            FontInfo fontInfo = FontInfo.Create(fontProgram, encoding);
             AddFontInfo(fontInfo);
             fontPrograms[fontInfo] = fontProgram;
             return true;
@@ -125,17 +124,17 @@ namespace iText.Layout.Font {
             return AddFont(fontProgram, null);
         }
 
-        public virtual ICollection<FontProgramInfo> GetFonts() {
+        public virtual ICollection<FontInfo> GetFonts() {
             return fonts;
         }
 
         internal virtual bool AddFont(String fontName, byte[] fontProgram, String encoding) {
             if (fontName != null) {
-                return AddFontInfo(FontProgramInfo.Create(fontName, encoding));
+                return AddFontInfo(FontInfo.Create(fontName, encoding));
             }
             else {
                 if (fontProgram != null) {
-                    return AddFontInfo(FontProgramInfo.Create(fontProgram, encoding));
+                    return AddFontInfo(FontInfo.Create(fontProgram, encoding));
                 }
                 else {
                     return false;
@@ -143,7 +142,7 @@ namespace iText.Layout.Font {
             }
         }
 
-        internal virtual IDictionary<FontProgramInfo, FontProgram> GetFontPrograms() {
+        internal virtual IDictionary<FontInfo, FontProgram> GetFontPrograms() {
             return fontPrograms;
         }
 
@@ -151,7 +150,7 @@ namespace iText.Layout.Font {
             return fontSelectorCache;
         }
 
-        private bool AddFontInfo(FontProgramInfo fontInfo) {
+        private bool AddFontInfo(FontInfo fontInfo) {
             if (fontInfo != null) {
                 fonts.Add(fontInfo);
                 fontSelectorCache.Clear();

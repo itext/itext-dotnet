@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -84,6 +84,7 @@ namespace iText.IO.Util {
                     for (int i = 0; i < files.Length; i++) {
                         list[i] = files[i].FullName;
                     }
+                    JavaUtil.Sort(list);
                     return list;
                 }
             }
@@ -105,7 +106,9 @@ namespace iText.IO.Util {
                             list.Add(f);
                         }
                     }
-                    return list.ToArray();
+                    FileInfo[] result = list.ToArray();
+                    JavaUtil.Sort(result);
+                    return result;
                 }
             }
             return null;
@@ -123,7 +126,9 @@ namespace iText.IO.Util {
                             list.AddLast(files[i].FullName);
                         }
                     }
-                    return list.ToArray();
+                    String[] result = list.ToArray();
+                    JavaUtil.Sort(result);
+                    return result;
                 }
             }
             return null;

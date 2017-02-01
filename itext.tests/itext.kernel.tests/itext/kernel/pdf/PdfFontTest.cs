@@ -1,3 +1,45 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2017 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1078,83 +1120,72 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void KozminNames() {
-            FontNames names = FontNamesFactory.FetchFontNames("KozMinPro-Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "KozMinPro-Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "KozMinPro-Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "kozminpro-regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
-            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
-            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), false);
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "KozMinPro-Regular".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void HelveticaNames() {
-            FontNames names = FontNamesFactory.FetchFontNames("Helvetica");
-            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Helvetica");
-            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Helvetica");
-            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "helvetica");
-            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 500);
-            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
-            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), false);
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("Helvetica");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Helvetica");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Helvetica".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "helvetica");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 500);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OtfByStringNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "Puritan2.otf");
-            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Puritan2");
-            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Puritan 2.0 Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Puritan 2.0");
-            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "puritan 2.0 regular");
-            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Normal");
-            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
-            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
-            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan2.otf"
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Puritan 2.0 Regular".ToLowerInvariant(
+                ));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Puritan 2.0".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void OtfByStreamNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(StreamUtil.InputStreamToArray(new FileStream(fontsFolder
-                 + "Puritan2.otf", FileMode.Open, FileAccess.Read)));
-            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Puritan2");
-            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Puritan 2.0 Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Puritan 2.0");
-            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "puritan 2.0 regular");
-            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Normal");
-            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
-            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
-            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
+                (new FileStream(fontsFolder + "Puritan2.otf", FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Puritan 2.0 Regular".ToLowerInvariant(
+                ));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Puritan 2.0".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TtfByStringNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "abserif4_5.ttf");
-            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "AboriginalSerif");
-            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Aboriginal Serif");
-            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Aboriginal Serif");
-            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "aboriginal serif");
-            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
-            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
-            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "abserif4_5.ttf"
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Aboriginal Serif".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Aboriginal Serif".ToLowerInvariant()
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void TtfByStreamNames() {
-            FontNames names = FontNamesFactory.FetchFontNames(StreamUtil.InputStreamToArray(new FileStream(fontsFolder
-                 + "abserif4_5.ttf", FileMode.Open, FileAccess.Read)));
-            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "AboriginalSerif");
-            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Aboriginal Serif");
-            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Aboriginal Serif");
-            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "aboriginal serif");
-            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Regular");
-            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
-            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
-            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
+                (new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Aboriginal Serif".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Aboriginal Serif".ToLowerInvariant()
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
     }
 }

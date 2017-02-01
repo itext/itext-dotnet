@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -297,7 +297,7 @@ namespace iText.IO.Font {
                     else {
                         if (path.ToLowerInvariant().EndsWith(".afm") || path.ToLowerInvariant().EndsWith(".pfm")) {
                             FontProgram fontProgram = FontProgramFactory.CreateFont(path);
-                            String fullName = fontProgram.GetFontNames().GetFullNameLowerCase();
+                            String fullName = fontProgram.GetFontNames().GetFullName()[0][3].ToLowerInvariant();
                             String familyName = fontProgram.GetFontNames().GetFamilyName()[0][3].ToLowerInvariant();
                             String psName = fontProgram.GetFontNames().GetFontName().ToLowerInvariant();
                             RegisterFontFamily(familyName, fullName, null);

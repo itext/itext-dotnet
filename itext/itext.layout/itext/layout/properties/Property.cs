@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -116,18 +116,22 @@ namespace iText.Layout.Properties {
 
         public const int FONT_KERNING = 22;
 
-        /// <summary>
+        /// <summary>String value.</summary>
+        /// <remarks>
+        /// String value. 'normal'|'italic'|'oblique'
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
         /// has String value.
-        /// </summary>
+        /// </remarks>
         public const int FONT_STYLE = 94;
 
-        /// <summary>
+        /// <summary>String value.</summary>
+        /// <remarks>
+        /// String value. 'normal'|'bold'|number
         /// Note, this property will be applied only if
         /// <see cref="FONT"/>
         /// has String value.
-        /// </summary>
+        /// </remarks>
         public const int FONT_WEIGHT = 95;
 
         public const int FONT_SCRIPT = 23;
@@ -136,9 +140,9 @@ namespace iText.Layout.Properties {
 
         public const int FONT_SIZE = 24;
 
-        public const int FULL = 25;
-
         public const int FORCED_PLACEMENT = 26;
+
+        public const int FULL = 25;
 
         public const int HEIGHT = 27;
 
@@ -148,6 +152,10 @@ namespace iText.Layout.Properties {
         public const int HORIZONTAL_SCALING = 29;
 
         public const int HYPHENATION = 30;
+
+        public const int IGNORE_FOOTER = 96;
+
+        public const int IGNORE_HEADER = 97;
 
         public const int ITALIC_SIMULATION = 31;
 

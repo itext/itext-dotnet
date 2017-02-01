@@ -1,3 +1,45 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2017 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Text;
 using iText.IO.Font;
@@ -6,6 +48,7 @@ using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Action;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -141,12 +184,19 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
+            Cell cell = new Cell(1, 3).Add(new Paragraph("full-width header"));
+            cell.SetRole(PdfName.TH);
+            table.AddHeaderCell(cell);
             for (int i = 0; i < 3; ++i) {
-                table.AddHeaderCell("header " + i);
+                cell = new Cell().Add(new Paragraph("header " + i));
+                cell.SetRole(PdfName.TH);
+                table.AddHeaderCell(cell);
             }
             for (int i = 0; i < 3; ++i) {
                 table.AddFooterCell("footer " + i);
             }
+            cell = new Cell(1, 3).Add(new Paragraph("full-width paragraph"));
+            table.AddCell(cell);
             for (int i = 0; i < 5; ++i) {
                 table.AddCell(CreateParagraph2());
             }
@@ -255,13 +305,31 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
             pdfDocument.SetTagged();
             Document doc = new Document(pdfDocument);
-            List list = new List();
+            List list = new List(ListNumberingType.DECIMAL);
             list.Add("item 1");
             list.Add("item 2");
             list.Add("item 3");
             doc.Add(list);
             doc.Close();
             CompareResult("listTest01.pdf", "cmp_listTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void LinkTest01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "linkTest01.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
+            Link link = new Link("linked text", action);
+            link.SetUnderline();
+            link.GetLinkAnnotation().Put(PdfName.Border, new PdfArray(new int[] { 0, 0, 0 }));
+            doc.Add(new Paragraph("before ").Add(link).Add(" after"));
+            doc.Close();
+            CompareResult("linkTest01.pdf", "cmp_linkTest01.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>

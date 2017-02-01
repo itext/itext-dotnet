@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -269,7 +269,7 @@ namespace iText.Layout.Renderer {
         }
 
         private float[] CalculateAscenderDescender() {
-            PdfFont listItemFont = GetPropertyAsFont(Property.FONT);
+            PdfFont listItemFont = ResolveFirstPdfFont();
             float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
             if (listItemFont != null && fontSize != null) {
                 float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);

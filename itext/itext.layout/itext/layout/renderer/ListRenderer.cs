@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -210,7 +210,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_197(constantFont, textElement);
+                            textRenderer = new _TextRenderer_198(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -229,8 +229,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_197 : TextRenderer {
-            public _TextRenderer_197(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_198 : TextRenderer {
+            public _TextRenderer_198(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -342,6 +342,13 @@ namespace iText.Layout.Renderer {
                     childRenderers[i].SetParent(this);
                     IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers[i]);
                     childRenderers[i].SetParent(null);
+                    currentSymbolRenderer.SetParent(this);
+                    // Workaround for the case when font is specified as string
+                    if (currentSymbolRenderer is AbstractRenderer && currentSymbolRenderer.GetProperty<Object>(Property.FONT) 
+                        is String) {
+                        PdfFont actualPdfFont = ((AbstractRenderer)currentSymbolRenderer).ResolveFirstPdfFont();
+                        currentSymbolRenderer.SetProperty(Property.FONT, actualPdfFont);
+                    }
                     symbolRenderers.Add(currentSymbolRenderer);
                     LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout(layoutContext);
                     currentSymbolRenderer.SetParent(null);

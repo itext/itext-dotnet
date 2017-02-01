@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -145,8 +145,12 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Document Add(AreaBreak areaBreak) {
+            CheckClosingStatus();
             childElements.Add(areaBreak);
             EnsureRootRendererNotNull().AddChild(areaBreak.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return this;
         }
 

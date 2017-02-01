@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -64,10 +64,10 @@ namespace iText.Layout.Font {
     /// <see cref="GetFontSet()"/>
     /// .
     /// FontProvider the only end point for creating PdfFont,
-    /// <see cref="GetPdfFont(FontProgramInfo)"/>
+    /// <see cref="GetPdfFont(FontInfo)"/>
     /// ,
-    /// <see cref="FontProgramInfo"/>
-    /// shal call this method.
+    /// <see cref="FontInfo"/>
+    /// shall call this method.
     /// <p>
     /// Note, FontProvider does not close created
     /// <see cref="iText.IO.Font.FontProgram"/>
@@ -78,7 +78,7 @@ namespace iText.Layout.Font {
     public class FontProvider {
         private FontSet fontSet;
 
-        private IDictionary<FontProgramInfo, PdfFont> pdfFonts = new Dictionary<FontProgramInfo, PdfFont>();
+        private IDictionary<FontInfo, PdfFont> pdfFonts = new Dictionary<FontInfo, PdfFont>();
 
         public FontProvider(FontSet fontSet) {
             this.fontSet = fontSet;
@@ -169,12 +169,13 @@ namespace iText.Layout.Font {
             return true;
         }
 
-        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, int style) {
-            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, style), this);
+        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
+             fc) {
+            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc), this);
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies) {
-            return GetStrategy(text, fontFamilies, FontConstants.UNDEFINED);
+            return GetStrategy(text, fontFamilies, null);
         }
 
         /// <summary>
@@ -183,32 +184,25 @@ namespace iText.Layout.Font {
         /// or get from cache.
         /// </summary>
         /// <param name="fontFamilies">target font families</param>
-        /// <param name="style">
-        /// Shall be
-        /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.NORMAL"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.ITALIC"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.BOLD"/>
-        /// , or
-        /// <see cref="iText.IO.Font.FontConstants.BOLDITALIC"/>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristics"/>
+        /// .
         /// </param>
         /// <returns>
         /// an instance of
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, int)
+        /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
         ///     ">}</seealso>
-        public FontSelector GetFontSelector(IList<String> fontFamilies, int style) {
-            FontSelectorKey key = new FontSelectorKey(fontFamilies, style);
+        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc) {
+            FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
             if (fontSet.GetFontSelectorCache().ContainsKey(key)) {
                 return fontSet.GetFontSelectorCache().Get(key);
             }
             else {
-                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, style);
+                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, fc);
                 fontSet.GetFontSelectorCache()[key] = fontSelector;
                 return fontSelector;
             }
@@ -218,7 +212,7 @@ namespace iText.Layout.Font {
         /// Create a new instance of
         /// <see cref="FontSelector"/>
         /// . While caching is main responsibility of
-        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, int)"/>
+        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics)"/>
         /// ,
         /// this method just create a new instance of
         /// <see cref="FontSelector"/>
@@ -226,26 +220,19 @@ namespace iText.Layout.Font {
         /// </summary>
         /// <param name="fonts">Set of all available fonts in current context.</param>
         /// <param name="fontFamilies">target font families</param>
-        /// <param name="style">
-        /// Shall be
-        /// <see cref="iText.IO.Font.FontConstants.UNDEFINED"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.NORMAL"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.ITALIC"/>
-        /// ,
-        /// <see cref="iText.IO.Font.FontConstants.BOLD"/>
-        /// , or
-        /// <see cref="iText.IO.Font.FontConstants.BOLDITALIC"/>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristics"/>
+        /// .
         /// </param>
         /// <returns>
         /// an instance of
         /// <see cref="FontSelector"/>
         /// .
         /// </returns>
-        protected internal virtual FontSelector CreateFontSelector(ICollection<FontProgramInfo> fonts, IList<String
-            > fontFamilies, int style) {
-            return new FontSelector(fonts, fontFamilies, style);
+        protected internal virtual FontSelector CreateFontSelector(ICollection<FontInfo> fonts, IList<String> fontFamilies
+            , FontCharacteristics fc) {
+            return new FontSelector(fonts, fontFamilies, fc);
         }
 
         /// <summary>
@@ -270,7 +257,7 @@ namespace iText.Layout.Font {
         /// <see cref="iText.IO.Font.FontProgramFactory"/>
         /// .
         /// </exception>
-        protected internal virtual PdfFont GetPdfFont(FontProgramInfo fontInfo) {
+        protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
             if (pdfFonts.ContainsKey(fontInfo)) {
                 return pdfFonts.Get(fontInfo);
             }

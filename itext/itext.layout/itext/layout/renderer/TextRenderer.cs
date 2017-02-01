@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -465,7 +465,7 @@ namespace iText.Layout.Renderer {
                 logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
                 return;
             }
-            base.Draw(drawContext);
+            // Set up marked content before super.draw so that annotations are placed within marked content
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             bool isArtifact = false;
@@ -488,6 +488,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
+            base.Draw(drawContext);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), false);
             ApplyBorderBox(occupiedArea.GetBBox(), false);
             bool isRelativePosition = IsRelativePosition();
@@ -568,7 +569,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_599();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_596();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -597,9 +598,6 @@ namespace iText.Layout.Renderer {
                 }
                 canvas.EndText().RestoreState();
                 EndElementOpacityApplying(drawContext);
-                if (isTagged || isArtifact) {
-                    canvas.CloseTag();
-                }
                 Object underlines = this.GetProperty<Object>(Property.UNDERLINE);
                 if (underlines is IList) {
                     foreach (Object underline in (IList)underlines) {
@@ -615,6 +613,9 @@ namespace iText.Layout.Renderer {
                             0);
                     }
                 }
+                if (isTagged || isArtifact) {
+                    canvas.CloseTag();
+                }
             }
             if (isRelativePosition) {
                 ApplyRelativePositioningTranslation(false);
@@ -629,8 +630,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_599 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_599() {
+        private sealed class _IGlyphLineFilter_596 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_596() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -978,10 +979,22 @@ namespace iText.Layout.Renderer {
                 (Property.WORD_SPACING));
         }
 
-        protected internal virtual IList<iText.Layout.Renderer.TextRenderer> ResolveFonts() {
+        /// <summary>
+        /// Resolve
+        /// <see cref="iText.Layout.Properties.Property.FONT"/>
+        /// string value.
+        /// </summary>
+        /// <param name="addTo">add all processed renderers to.</param>
+        /// <returns>
+        /// true, if new
+        /// <see cref="TextRenderer"/>
+        /// has been created.
+        /// </returns>
+        protected internal virtual bool ResolveFonts(IList<IRenderer> addTo) {
             Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
-                return JavaCollectionsUtil.SingletonList<iText.Layout.Renderer.TextRenderer>(this);
+                addTo.Add(this);
+                return false;
             }
             else {
                 if (font is String) {
@@ -990,15 +1003,15 @@ namespace iText.Layout.Renderer {
                         throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
                             );
                     }
-                    IList<iText.Layout.Renderer.TextRenderer> renderers = new List<iText.Layout.Renderer.TextRenderer>();
+                    FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font));
+                        (String)font), fc);
                     while (!strategy.EndOfText()) {
                         iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
                         textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetCurrentFont());
-                        renderers.Add(textRenderer);
+                        addTo.Add(textRenderer);
                     }
-                    return renderers;
+                    return true;
                 }
                 else {
                     throw new InvalidOperationException("Invalid font type.");
@@ -1038,7 +1051,7 @@ namespace iText.Layout.Renderer {
                 return false;
             }
             int c = g.GetUnicode();
-            return c >= 0x200b && c <= 0x200f || c >= 0x202a && c <= 0x202e || c == '\u00AD';
+            return TextUtil.IsNonPrintable(c);
         }
 
         private float GetCharWidth(Glyph g, float fontSize, float? hScale, float? characterSpacing, float? wordSpacing

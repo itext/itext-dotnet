@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -303,7 +303,7 @@ namespace iText.Layout.Renderer {
                         ().GetHeight()), layoutBox.GetBottom());
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                     blockMinHeight -= occupiedArea.GetBBox().GetHeight();
-                    if (!IsFixedLayout() && blockMinHeight > 0) {
+                    if (!IsFixedLayout() && blockMinHeight > AbstractRenderer.EPS) {
                         overflowRenderer_1 = CreateOverflowRenderer(LayoutResult.PARTIAL);
                         overflowRenderer_1.SetProperty(Property.MIN_HEIGHT, (float)blockMinHeight);
                         if (HasProperty(Property.HEIGHT)) {
@@ -382,10 +382,10 @@ namespace iText.Layout.Renderer {
                     tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
                     if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
                         AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, document);
-                        if (role.Equals(PdfName.TD)) {
+                        if (role.Equals(PdfName.TD) || role.Equals(PdfName.TH)) {
                             AccessibleAttributesApplier.ApplyTableAttributes(this);
                         }
-                        if (role.Equals(PdfName.List)) {
+                        if (role.Equals(PdfName.L)) {
                             AccessibleAttributesApplier.ApplyListAttributes(this);
                         }
                     }

@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -72,17 +72,19 @@ namespace iText.Layout.Font {
         }
 
         public override IList<Glyph> NextGlyphs() {
+            font = null;
             int nextUnignorable = NextSignificantIndex();
-            foreach (FontProgramInfo f in selector.GetFonts()) {
-                font = f.GetPdfFont(provider);
-                if (font.ContainsGlyph(text, nextUnignorable)) {
-                    break;
-                }
-                else {
-                    font = null;
+            if (nextUnignorable < text.Length) {
+                foreach (FontInfo f in selector.GetFonts()) {
+                    PdfFont currentFont = f.GetPdfFont(provider);
+                    if (currentFont.ContainsGlyph(text, nextUnignorable)) {
+                        font = currentFont;
+                        break;
+                    }
                 }
             }
             IList<Glyph> glyphs = new List<Glyph>();
+            bool anyGlyphsAppended = false;
             if (font != null) {
                 UnicodeScript? unicodeScript = NextSignificantUnicodeScript(nextUnignorable);
                 int to = nextUnignorable;
@@ -97,14 +99,19 @@ namespace iText.Layout.Font {
                     }
                     to = i;
                 }
-                index += font.AppendGlyphs(text, index, to, glyphs);
+                int numOfAppendedGlyphs = font.AppendGlyphs(text, index, to, glyphs);
+                anyGlyphsAppended = numOfAppendedGlyphs > 0;
+                System.Diagnostics.Debug.Assert(anyGlyphsAppended);
+                index += numOfAppendedGlyphs;
             }
-            else {
+            if (!anyGlyphsAppended) {
                 font = selector.BestMatch().GetPdfFont(provider);
                 if (index != nextUnignorable) {
                     index += font.AppendGlyphs(text, index, nextUnignorable - 1, glyphs);
                 }
-                index += font.AppendAnyGlyph(text, nextUnignorable, glyphs);
+                while (index <= nextUnignorable && index < text.Length) {
+                    index += font.AppendAnyGlyph(text, index, glyphs);
+                }
             }
             return glyphs;
         }
@@ -112,7 +119,7 @@ namespace iText.Layout.Font {
         private int NextSignificantIndex() {
             int nextValidChar = index;
             for (; nextValidChar < text.Length; nextValidChar++) {
-                if (!iText.IO.Util.TextUtil.IsIdentifierIgnorable(text[nextValidChar])) {
+                if (!TextUtil.IsWhitespaceOrNonPrintable(text[nextValidChar])) {
                     break;
                 }
             }

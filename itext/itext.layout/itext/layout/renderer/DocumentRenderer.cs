@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -90,7 +90,7 @@ namespace iText.Layout.Renderer {
             }
             PageSize lastPageSize = EnsureDocumentHasNPages(currentPageNumber, customPageSize);
             if (lastPageSize == null) {
-                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetPageSize());
+                lastPageSize = new PageSize(document.GetPdfDocument().GetPage(currentPageNumber).GetTrimBox());
             }
             return (currentArea = new LayoutArea(currentPageNumber, document.GetPageEffectiveArea(lastPageSize)));
         }

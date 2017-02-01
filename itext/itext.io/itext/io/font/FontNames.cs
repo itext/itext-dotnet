@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -98,10 +98,6 @@ namespace iText.IO.Font {
 
         protected internal IDictionary<int, IList<String[]>> allNames;
 
-        private String fullNameLowerCase = null;
-
-        private String fontNameLowerCase = null;
-
         private String[][] fullName;
 
         private String[][] familyName;
@@ -174,20 +170,6 @@ namespace iText.IO.Font {
 
         public virtual String[][] GetFullName() {
             return fullName;
-        }
-
-        public virtual String GetFullNameLowerCase() {
-            if (fullNameLowerCase == null) {
-                fullNameLowerCase = fullName[0][3].ToLowerInvariant();
-            }
-            return fullNameLowerCase;
-        }
-
-        public virtual String GetFontNameLowerCase() {
-            if (fontNameLowerCase == null) {
-                fontNameLowerCase = fontName.ToLowerInvariant();
-            }
-            return fontNameLowerCase;
         }
 
         public virtual String GetFontName() {

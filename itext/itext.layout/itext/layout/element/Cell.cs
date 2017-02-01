@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -245,7 +245,7 @@ namespace iText.Layout.Element {
         }
 
         public override String ToString() {
-            return "Cell{" + "row=" + row + ", col=" + col + ", rowspan=" + rowspan + ", colspan=" + colspan + '}';
+            return String.Format("Cell[row={0}, col={1}, rowspan={2}, colspan={3}]", row, col, rowspan, colspan);
         }
 
         public override PdfName GetRole() {

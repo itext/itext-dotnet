@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -664,13 +664,15 @@ namespace iText.Layout.Renderer {
                     if (child is TextRenderer) {
                         GlyphLine text = ((TextRenderer)child).GetText();
                         for (int i = text.start; i < text.end; i++) {
-                            if (TextUtil.IsNewLine(text.Get(i))) {
+                            Glyph glyph = text.Get(i);
+                            if (TextUtil.IsNewLine(glyph)) {
                                 newLineFound = true;
                                 break;
                             }
                             // we assume all the chars will have the same bidi group
                             // we also assume pairing symbols won't get merged with other ones
-                            unicodeIdsReorderingList.Add(text.Get(i).GetUnicode());
+                            int unicode = glyph.HasValidUnicode() ? glyph.GetUnicode() : glyph.GetUnicodeChars()[0];
+                            unicodeIdsReorderingList.Add(unicode);
                         }
                     }
                 }
@@ -682,23 +684,25 @@ namespace iText.Layout.Renderer {
         /// <summary>While resolving TextRenderer may split into several ones with different fonts.</summary>
         private void ResolveChildrenFonts() {
             IList<IRenderer> newChildRenderers = new List<IRenderer>(childRenderers.Count);
+            bool updateChildRendrers = false;
             foreach (IRenderer child in childRenderers) {
                 if (child is TextRenderer) {
-                    newChildRenderers.AddAll(((TextRenderer)child).ResolveFonts());
+                    if (((TextRenderer)child).ResolveFonts(newChildRenderers)) {
+                        updateChildRendrers = true;
+                    }
                 }
                 else {
                     newChildRenderers.Add(child);
                 }
             }
-            //TODO It might be one textRenderer with resolved font.
-            // this mean, that some TextRenderer has been split into several with different fonts.
-            //if (newChildRenderers.size() > childRenderers.size()) {
-            childRenderers = newChildRenderers;
+            // this mean, that some TextRenderer has been replaced.
+            if (updateChildRendrers) {
+                childRenderers = newChildRenderers;
+            }
         }
 
         internal class RendererGlyph {
             public RendererGlyph(Glyph glyph, TextRenderer textRenderer) {
-                //}
                 this.glyph = glyph;
                 this.renderer = textRenderer;
             }

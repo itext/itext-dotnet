@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,21 +42,20 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
     /// <summary>Sort given set of fonts according to font name and style.</summary>
     public class FontSelector {
-        protected internal IList<FontProgramInfo> fonts;
+        protected internal IList<FontInfo> fonts;
 
         /// <summary>Create new FontSelector instance.</summary>
         /// <param name="allFonts">Unsorted set of all available fonts.</param>
         /// <param name="fontFamilies">sorted list of preferred font families.</param>
-        public FontSelector(ICollection<FontProgramInfo> allFonts, IList<String> fontFamilies, int style) {
-            this.fonts = new List<FontProgramInfo>(allFonts);
+        public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
+            this.fonts = new List<FontInfo>(allFonts);
             //Possible issue in .NET, virtual member in constructor.
-            JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, style));
+            JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, fc));
         }
 
         /// <summary>The best font match.</summary>
@@ -66,76 +65,127 @@ namespace iText.Layout.Font {
         /// <see cref="GetFonts()"/>
         /// doesn't contain requested glyphs, this font will be used.
         /// </remarks>
-        public FontProgramInfo BestMatch() {
+        public FontInfo BestMatch() {
             return fonts[0];
         }
 
         /// <summary>Sorted set of fonts.</summary>
-        public IEnumerable<FontProgramInfo> GetFonts() {
+        public IEnumerable<FontInfo> GetFonts() {
             return fonts;
         }
 
-        protected internal virtual IComparer<FontProgramInfo> GetComparator(IList<String> fontFamilies, int style) {
-            return new FontSelector.PdfFontComparator(fontFamilies, style);
+        protected internal virtual IComparer<FontInfo> GetComparator(IList<String> fontFamilies, FontCharacteristics
+             fc) {
+            return new FontSelector.PdfFontComparator(fontFamilies, fc);
         }
 
-        private class PdfFontComparator : IComparer<FontProgramInfo> {
+        private class PdfFontComparator : IComparer<FontInfo> {
             internal IList<String> fontFamilies;
 
-            internal IList<int> fontStyles;
+            internal IList<FontCharacteristics> fontStyles;
 
-            internal PdfFontComparator(IList<String> fontFamilies, int style) {
+            internal PdfFontComparator(IList<String> fontFamilies, FontCharacteristics fc) {
                 this.fontFamilies = new List<String>();
-                this.fontStyles = new List<int>();
+                this.fontStyles = new List<FontCharacteristics>();
                 if (fontFamilies != null && fontFamilies.Count > 0) {
                     foreach (String fontFamily in fontFamilies) {
                         String lowercaseFontFamily = fontFamily.ToLowerInvariant();
                         this.fontFamilies.Add(lowercaseFontFamily);
-                        this.fontStyles.Add(ParseFontStyle(lowercaseFontFamily, style));
+                        this.fontStyles.Add(ParseFontStyle(lowercaseFontFamily, fc));
                     }
                 }
                 else {
                     this.fontFamilies.Add("");
-                    this.fontStyles.Add(style);
+                    this.fontStyles.Add(fc);
                 }
             }
 
-            public virtual int Compare(FontProgramInfo o1, FontProgramInfo o2) {
+            public virtual int Compare(FontInfo o1, FontInfo o2) {
                 int res = 0;
                 for (int i = 0; i < fontFamilies.Count && res == 0; i++) {
-                    int style = fontStyles[i];
-                    if ((style & FontConstants.BOLD) == 0) {
-                        res = (o2.GetNames().IsBold() ? 1 : 0) - (o1.GetNames().IsBold() ? 1 : 0);
+                    FontCharacteristics fc = fontStyles[i];
+                    String fontName = fontFamilies[i];
+                    if (fontName.EqualsIgnoreCase("monospace")) {
+                        fc.SetMonospaceFlag(true);
                     }
-                    if ((style & FontConstants.ITALIC) == 0) {
-                        res += (o2.GetNames().IsItalic() ? 1 : 0) - (o1.GetNames().IsItalic() ? 1 : 0);
-                    }
-                    if (res == 0) {
-                        String fontName = fontFamilies[i];
-                        res = (o2.GetNames().GetFullNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetNames().GetFullNameLowerCase
-                            ().Contains(fontName) ? 1 : 0);
-                        // In most cases full font name will be enough.
-                        // It's trick for 'bad' fonts.
-                        if (res == 0) {
-                            res = (o2.GetNames().GetFontNameLowerCase().Contains(fontName) ? 1 : 0) - (o1.GetNames().GetFontNameLowerCase
-                                ().Contains(fontName) ? 1 : 0);
-                        }
+                    res = CharacteristicsSimilarity(fontName, fc, o2) - CharacteristicsSimilarity(fontName, fc, o1);
+                    if (res != 0) {
+                        return res;
                     }
                 }
                 return res;
             }
 
-            private static int ParseFontStyle(String fontFamily, int style) {
-                if (style == FontConstants.UNDEFINED) {
-                    style = FontConstants.NORMAL;
+            private static FontCharacteristics ParseFontStyle(String fontFamily, FontCharacteristics fc) {
+                if (fc == null) {
+                    fc = new FontCharacteristics();
+                }
+                if (fc.IsUndefined()) {
                     if (fontFamily.Contains("bold")) {
-                        style |= FontConstants.BOLD;
+                        fc.SetBoldFlag(true);
                     }
                     if (fontFamily.Contains("italic") || fontFamily.Contains("oblique")) {
-                        style |= FontConstants.ITALIC;
+                        fc.SetItalicFlag(true);
                     }
                 }
-                return style;
+                return fc;
+            }
+
+            private static int CharacteristicsSimilarity(String fontName, FontCharacteristics fc, FontInfo fontInfo) {
+                bool isFontBold = fontInfo.GetDescriptor().IsBold() || fontInfo.GetDescriptor().GetFontWeight() > 500;
+                bool isFontItalic = fontInfo.GetDescriptor().IsItalic() || fontInfo.GetDescriptor().GetItalicAngle() < 0;
+                bool isFontMonospace = fontInfo.GetDescriptor().IsMonospace();
+                int score = 0;
+                if (fc.IsBold()) {
+                    if (isFontBold) {
+                        score += 5;
+                    }
+                    else {
+                        score -= 5;
+                    }
+                }
+                else {
+                    if (isFontBold) {
+                        score -= 3;
+                    }
+                }
+                if (fc.IsItalic()) {
+                    if (isFontItalic) {
+                        score += 5;
+                    }
+                    else {
+                        score -= 5;
+                    }
+                }
+                else {
+                    if (isFontItalic) {
+                        score -= 3;
+                    }
+                }
+                if (fc.IsMonospace()) {
+                    if (isFontMonospace) {
+                        score += 5;
+                    }
+                    else {
+                        score -= 5;
+                    }
+                }
+                else {
+                    if (isFontMonospace) {
+                        score -= 1;
+                    }
+                }
+                if (fontInfo.GetDescriptor().GetFullNameLowerCase().Equals(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
+                    ().Equals(fontName)) {
+                    score += 10;
+                }
+                else {
+                    if (fontInfo.GetDescriptor().GetFullNameLowerCase().Contains(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
+                        ().Contains(fontName)) {
+                        score += 7;
+                    }
+                }
+                return score;
             }
         }
     }

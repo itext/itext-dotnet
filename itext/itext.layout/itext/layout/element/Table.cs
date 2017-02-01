@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -668,8 +668,8 @@ namespace iText.Layout.Element {
         /// <see cref="iText.Layout.Borders.Border"/>
         /// objects
         /// </returns>
-        public virtual List<Border> GetLastRowBottomBorder() {
-            List<Border> horizontalBorder = new List<Border>();
+        public virtual IList<Border> GetLastRowBottomBorder() {
+            IList<Border> horizontalBorder = new List<Border>();
             if (lastAddedRow != null) {
                 for (int i = 0; i < lastAddedRow.Length; i++) {
                     Cell cell = lastAddedRow[i];

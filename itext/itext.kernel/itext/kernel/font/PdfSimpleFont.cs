@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -95,7 +95,7 @@ namespace iText.Kernel.Font {
             if (fontEncoding.IsFontSpecific()) {
                 for (int i = from; i <= to; i++) {
                     Glyph glyph = fontProgram.GetGlyphByCode(text[i] & 0xFF);
-                    if (glyph != null && (IsAppendableGlyph(glyph))) {
+                    if (glyph != null) {
                         glyphs.Add(glyph);
                         processed++;
                     }
@@ -107,7 +107,7 @@ namespace iText.Kernel.Font {
             else {
                 for (int i = from; i <= to; i++) {
                     Glyph glyph = GetGlyph((int)text[i]);
-                    if (glyph != null && (IsAppendableGlyph(glyph))) {
+                    if (glyph != null && (ContainsGlyph(text, i) || IsAppendableGlyph(glyph))) {
                         glyphs.Add(glyph);
                         processed++;
                     }
@@ -142,8 +142,7 @@ namespace iText.Kernel.Font {
         private bool IsAppendableGlyph(Glyph glyph) {
             // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
             // Character.isIdentifierIgnorable(0) gets true.
-            return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhiteSpace((char)glyph.GetUnicode()) || iText.IO.Util.TextUtil.IsIdentifierIgnorable
-                (glyph.GetUnicode());
+            return glyph.GetCode() > 0 || TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
         public override FontProgram GetFontProgram() {
