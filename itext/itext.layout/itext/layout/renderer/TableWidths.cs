@@ -560,6 +560,8 @@ namespace iText.Layout.Renderer {
                 //endregion
                 //region Internal classes
                 //true means that this column has cell property based width.
+                System.Diagnostics.Debug.Assert(min >= 0);
+                System.Diagnostics.Debug.Assert(max >= 0);
                 this.min = min > 0 ? min + MinMaxWidthUtils.GetEps() : 0;
                 // All browsers implement a size limit on the cell's max width.
                 // This limit is based on KHTML's representation that used 16 bits widths.
