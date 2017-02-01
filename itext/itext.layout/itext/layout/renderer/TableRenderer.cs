@@ -368,8 +368,13 @@ namespace iText.Layout.Renderer {
             for (row = 0; row < rows.Count; row++) {
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
-                if (row == 1 && true.Equals(this.GetOwnProperty<bool?>(Property.FORCED_PLACEMENT))) {
-                    DeleteOwnProperty(Property.FORCED_PLACEMENT);
+                if (row == 1 && true.Equals(this.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                    if (true.Equals(this.GetOwnProperty<bool?>(Property.FORCED_PLACEMENT))) {
+                        DeleteOwnProperty(Property.FORCED_PLACEMENT);
+                    }
+                    else {
+                        SetProperty(Property.FORCED_PLACEMENT, false);
+                    }
                 }
                 CellRenderer[] currentRow = rows[row];
                 float rowHeight = 0;
