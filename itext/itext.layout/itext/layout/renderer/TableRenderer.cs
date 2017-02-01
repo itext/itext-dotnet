@@ -574,35 +574,30 @@ namespace iText.Layout.Renderer {
                                         for (int addRow = row + 1; addRow < rows.Count; addRow++) {
                                             if (rows[addRow][addCol] != null) {
                                                 CellRenderer addRenderer = rows[addRow][addCol];
+                                                // TODO DEVSIX-1060
                                                 verticalAlignment = addRenderer.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
-                                                if (verticalAlignment != null && verticalAlignment.Equals(VerticalAlignment.BOTTOM)) {
-                                                    if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 < addRow) {
-                                                        cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
-                                                    }
-                                                    else {
-                                                        horizontalBorders[row + 1][addCol] = addRenderer.GetBorders()[2];
-                                                        if (addCol == 0) {
-                                                            for (int i = row; i >= 0; i--) {
-                                                                if (!CheckAndReplaceBorderInArray(verticalBorders, addCol, i, addRenderer.GetBorders()[3], false)) {
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                        else {
-                                                            if (addCol == numberOfColumns - 1) {
-                                                                for (int i = row; i >= 0; i--) {
-                                                                    if (!CheckAndReplaceBorderInArray(verticalBorders, addCol + 1, i, addRenderer.GetBorders()[1], true)) {
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else {
-                                                    if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
-                                                        cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
-                                                    }
+                                                //                                            if (verticalAlignment != null && verticalAlignment.equals(VerticalAlignment.BOTTOM)) {
+                                                //                                                if (row + addRenderer.getPropertyAsInteger(Property.ROWSPAN) - 1 < addRow) {
+                                                //                                                    cellProcessingQueue.addLast(new CellRendererInfo(addRenderer, addCol, addRow));
+                                                //                                                } else {
+                                                //                                                    horizontalBorders.get(row + 1).set(addCol, addRenderer.getBorders()[2]);
+                                                //                                                    if (addCol == 0) {
+                                                //                                                        for (int i = row; i >= 0; i--) {
+                                                //                                                            if (!checkAndReplaceBorderInArray(verticalBorders, addCol, i, addRenderer.getBorders()[3], false)) {
+                                                //                                                                break;
+                                                //                                                            }
+                                                //                                                        }
+                                                //                                                    } else if (addCol == numberOfColumns - 1) {
+                                                //                                                        for (int i = row; i >= 0; i--) {
+                                                //                                                            if (!checkAndReplaceBorderInArray(verticalBorders, addCol + 1, i, addRenderer.getBorders()[1], true)) {
+                                                //                                                                break;
+                                                //                                                            }
+                                                //                                                        }
+                                                //                                                    }
+                                                //                                                }
+                                                //                                            } else
+                                                if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
+                                                    cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
                                                 }
                                                 break;
                                             }
@@ -1308,6 +1303,9 @@ namespace iText.Layout.Renderer {
             splitRenderer.totalWidthForColumns = totalWidthForColumns;
             iText.Layout.Renderer.TableRenderer overflowRenderer = CreateOverflowRenderer(new Table.RowRange(rowRange.
                 GetStartRow() + row, rowRange.GetFinishRow()));
+            if (0 == row && !hasContent) {
+                overflowRenderer.isOriginalNonSplitRenderer = true;
+            }
             overflowRenderer.rows = rows.SubList(row, rows.Count);
             splitRenderer.occupiedArea = occupiedArea;
             overflowRenderer.horizontalBorders = new List<IList<Border>>();
