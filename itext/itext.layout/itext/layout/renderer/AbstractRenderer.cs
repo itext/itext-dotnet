@@ -1164,6 +1164,19 @@ namespace iText.Layout.Renderer {
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
         }
 
+        internal virtual void ShrinkOccupiedAreaForAbsolutePosition() {
+            // In case of absolute positioning and not specified left, right, width values, the parent box is shrunk to fit
+            // the children. It does not occupy all the available width if it does not need to.
+            if (IsAbsolutePosition()) {
+                float? left = this.GetPropertyAsFloat(Property.LEFT);
+                float? right = this.GetPropertyAsFloat(Property.RIGHT);
+                UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
+                if (left == null && right == null && width == null) {
+                    occupiedArea.GetBBox().SetWidth(0);
+                }
+            }
+        }
+
         internal virtual void DrawPositionedChildren(DrawContext drawContext) {
             foreach (IRenderer positionedChild in positionedRenderers) {
                 positionedChild.Draw(drawContext);

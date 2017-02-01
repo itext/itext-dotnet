@@ -104,6 +104,7 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
                 GetHeight(), parentBBox.GetWidth(), 0));
+            ShrinkOccupiedAreaForAbsolutePosition();
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
@@ -130,7 +131,10 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (result.GetSplitRenderer() != null) {
-                        AlignChildHorizontally(result.GetSplitRenderer(), layoutBox.GetWidth());
+                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
+                        // in case when parent box should wrap around child boxes.
+                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        AlignChildHorizontally(result.GetSplitRenderer(), occupiedArea.GetBBox().GetWidth());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
                     if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
@@ -281,7 +285,10 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.FULL) {
                     layoutBox.SetHeight(result.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     if (childRenderer.GetOccupiedArea() != null) {
-                        AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
+                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
+                        // in case when parent box should wrap around child boxes.
+                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        AlignChildHorizontally(childRenderer, occupiedArea.GetBBox().GetWidth());
                     }
                 }
                 // Save the first renderer to produce LayoutResult.NOTHING
