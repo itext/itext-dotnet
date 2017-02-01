@@ -14,7 +14,8 @@ using iText.Test;
 
 namespace iText.Layout {
     public class PreLayoutTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/PreLayoutTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/PreLayoutTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/PreLayoutTest/";
@@ -47,11 +48,11 @@ namespace iText.Layout {
                     document.Add(pageNumberParagraph);
                 }
             }
-            foreach (IRenderer renderer_1 in pageNumberRenderers) {
-                String currentData = renderer_1.ToString().Replace("{pageNumber}", renderer_1.GetOccupiedArea().GetPageNumber
-                    ().ToString());
-                ((TextRenderer)renderer_1).SetText(currentData);
-                ((Text)renderer_1.GetModelElement()).SetNextRenderer(renderer_1);
+            foreach (IRenderer renderer in pageNumberRenderers) {
+                String currentData = renderer.ToString().Replace("{pageNumber}", renderer.GetOccupiedArea().GetPageNumber(
+                    ).ToString());
+                ((TextRenderer)renderer).SetText(currentData);
+                ((Text)renderer.GetModelElement()).SetNextRenderer(renderer);
             }
             document.Relayout();
             document.Close();
@@ -80,9 +81,9 @@ namespace iText.Layout {
             document.Add(new Paragraph("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
             int paragraphLastPageNumber = -1;
             IList<IRenderer> documentChildRenderers = document.GetRenderer().GetChildRenderers();
-            for (int i_1 = documentChildRenderers.Count - 1; i_1 >= 0; i_1--) {
-                if (documentChildRenderers[i_1].GetModelElement() == twoColumnParagraph) {
-                    paragraphLastPageNumber = documentChildRenderers[i_1].GetOccupiedArea().GetPageNumber();
+            for (int i = documentChildRenderers.Count - 1; i >= 0; i--) {
+                if (documentChildRenderers[i].GetModelElement() == twoColumnParagraph) {
+                    paragraphLastPageNumber = documentChildRenderers[i].GetOccupiedArea().GetPageNumber();
                     break;
                 }
             }

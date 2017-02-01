@@ -218,8 +218,7 @@ namespace iText.Signatures {
                 baos.Write(buffer, 0, bytesRead);
             }
             byte[] respBytes = baos.ToArray();
-            if (response.encoding != null && response.encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
+            if (response.encoding != null && response.encoding.ToLowerInvariant().Equals("base64".ToLowerInvariant())) {
                 respBytes = System.Convert.FromBase64String(iText.IO.Util.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"
                     ));
             }

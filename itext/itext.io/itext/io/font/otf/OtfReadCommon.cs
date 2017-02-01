@@ -170,10 +170,10 @@ namespace iText.IO.Font.Otf {
                 locations[k] = location + offset;
             }
             IList<OtfMarkRecord> marks = new List<OtfMarkRecord>();
-            for (int k_1 = 0; k_1 < markCount; ++k_1) {
+            for (int k = 0; k < markCount; ++k) {
                 OtfMarkRecord rec = new OtfMarkRecord();
-                rec.markClass = classes[k_1];
-                rec.anchor = ReadGposAnchor(tableReader, locations[k_1]);
+                rec.markClass = classes[k];
+                rec.anchor = ReadGposAnchor(tableReader, locations[k]);
                 marks.Add(rec);
             }
             return marks;

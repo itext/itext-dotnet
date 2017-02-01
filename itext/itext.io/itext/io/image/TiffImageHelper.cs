@@ -593,7 +593,7 @@ namespace iText.IO.Image {
                                 .PHOTOMETRIC_MINISBLACK ? RawImageData.CCITT_BLACKIS1 : 0, g4.Close(), null);
                         }
                         else {
-                            zip.Close();
+                            zip.Dispose();
                             RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, samplePerPixel - extraSamples, bitsPerSample, stream
                                 .ToArray());
                             tiff.image.SetDeflated(true);
@@ -630,17 +630,17 @@ namespace iText.IO.Image {
                         // as usually, some tiff producers just put values from 0 to 255.
                         // Let's check for these broken tiffs.
                         bool colormapBroken = true;
-                        for (int k_1 = 0; k_1 < palette.Length; ++k_1) {
-                            if (palette[k_1] != 0) {
+                        for (int k = 0; k < palette.Length; ++k) {
+                            if (palette[k] != 0) {
                                 colormapBroken = false;
                                 break;
                             }
                         }
                         if (colormapBroken) {
-                            for (int k_2 = 0; k_2 < gColor; ++k_2) {
-                                palette[k_2 * 3] = (byte)rgb[k_2];
-                                palette[k_2 * 3 + 1] = (byte)rgb[k_2 + gColor];
-                                palette[k_2 * 3 + 2] = (byte)rgb[k_2 + bColor];
+                            for (int k = 0; k < gColor; ++k) {
+                                palette[k * 3] = (byte)rgb[k];
+                                palette[k * 3 + 1] = (byte)rgb[k + gColor];
+                                palette[k * 3 + 2] = (byte)rgb[k + bColor];
                             }
                         }
                         Object[] indexed = new Object[4];
@@ -659,7 +659,7 @@ namespace iText.IO.Image {
                     tiff.image.SetRotation(rotation);
                 }
                 if (extraSamples > 0) {
-                    mzip.Close();
+                    mzip.Dispose();
                     RawImageData mimg = (RawImageData)ImageDataFactory.CreateRawImage(null);
                     RawImageHelper.UpdateRawImageParameters(mimg, w, h, 1, bitsPerSample, mstream.ToArray());
                     mimg.MakeMask();

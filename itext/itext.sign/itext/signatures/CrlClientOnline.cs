@@ -162,7 +162,7 @@ namespace iText.Signatures {
                         }
                         bout.Write(buf, 0, n);
                     }
-                    inp.Close();
+                    inp.Dispose();
                     ar.Add(bout.ToArray());
                     LOGGER.Info("Added CRL found at: " + urlt);
                 }

@@ -8,7 +8,8 @@ using iText.Test;
 
 namespace iText.Pdfa {
     public class PdfA2CanvasCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/pdfa/PdfA2CanvasCheckTest/";
@@ -33,7 +34,7 @@ namespace iText.Pdfa {
                 for (int i = 0; i < 29; i++) {
                     canvas.SaveState();
                 }
-                for (int i_1 = 0; i_1 < 28; i_1++) {
+                for (int i = 0; i < 28; i++) {
                     canvas.RestoreState();
                 }
                 pdfDocument.Close();
@@ -59,7 +60,7 @@ namespace iText.Pdfa {
             for (int i = 0; i < 28; i++) {
                 canvas.SaveState();
             }
-            for (int i_1 = 0; i_1 < 28; i_1++) {
+            for (int i = 0; i < 28; i++) {
                 canvas.RestoreState();
             }
             pdfDocument.Close();

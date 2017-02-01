@@ -275,10 +275,10 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 1;
             byte[] sequence = PARITY13[code[0]];
-            for (int k_1 = 0; k_1 < sequence.Length; ++k_1) {
-                int c = code[k_1 + 1];
+            for (int k = 0; k < sequence.Length; ++k) {
+                int c = code[k + 1];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1] == ODD) {
+                if (sequence[k] == ODD) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
@@ -296,8 +296,8 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 1;
-            for (int k_2 = 7; k_2 < 13; ++k_2) {
-                int c = code[k_2];
+            for (int k = 7; k < 13; ++k) {
+                int c = code[k];
                 byte[] stripes = BARS[c];
                 bars[pb++] = stripes[0];
                 bars[pb++] = stripes[1];
@@ -323,8 +323,8 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 1;
-            for (int k_1 = 0; k_1 < 4; ++k_1) {
-                int c = code[k_1];
+            for (int k = 0; k < 4; ++k) {
+                int c = code[k];
                 byte[] stripes = BARS[c];
                 bars[pb++] = stripes[0];
                 bars[pb++] = stripes[1];
@@ -336,8 +336,8 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 1;
             bars[pb++] = 1;
-            for (int k_2 = 4; k_2 < 8; ++k_2) {
-                int c = code[k_2];
+            for (int k = 4; k < 8; ++k) {
+                int c = code[k];
                 byte[] stripes = BARS[c];
                 bars[pb++] = stripes[0];
                 bars[pb++] = stripes[1];
@@ -365,10 +365,10 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 1;
             byte[] sequence = PARITYE[code[code.Length - 1]];
-            for (int k_1 = 1; k_1 < code.Length - 1; ++k_1) {
-                int c = code[k_1];
+            for (int k = 1; k < code.Length - 1; ++k) {
+                int c = code[k];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1 - 1] == (flip ? EVEN : ODD)) {
+                if (sequence[k - 1] == (flip ? EVEN : ODD)) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
@@ -405,14 +405,14 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 2;
             byte[] sequence = PARITY2[parity];
-            for (int k_1 = 0; k_1 < sequence.Length; ++k_1) {
-                if (k_1 == 1) {
+            for (int k = 0; k < sequence.Length; ++k) {
+                if (k == 1) {
                     bars[pb++] = 1;
                     bars[pb++] = 1;
                 }
-                int c = code[k_1];
+                int c = code[k];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1] == ODD) {
+                if (sequence[k] == ODD) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
@@ -443,14 +443,14 @@ namespace iText.Barcodes {
             bars[pb++] = 1;
             bars[pb++] = 2;
             byte[] sequence = PARITY5[parity];
-            for (int k_1 = 0; k_1 < sequence.Length; ++k_1) {
-                if (k_1 != 0) {
+            for (int k = 0; k < sequence.Length; ++k) {
+                if (k != 0) {
                     bars[pb++] = 1;
                     bars[pb++] = 1;
                 }
-                int c = code[k_1];
+                int c = code[k];
                 byte[] stripes = BARS[c];
-                if (sequence[k_1] == ODD) {
+                if (sequence[k] == ODD) {
                     bars[pb++] = stripes[0];
                     bars[pb++] = stripes[1];
                     bars[pb++] = stripes[2];
@@ -669,10 +669,10 @@ namespace iText.Barcodes {
                     case EAN13: {
                         canvas.SetTextMatrix(0, textStartY);
                         canvas.ShowText(code.JSubstring(0, 1));
-                        for (int k_1 = 1; k_1 < 13; ++k_1) {
-                            String c = code.JSubstring(k_1, k_1 + 1);
+                        for (int k = 1; k < 13; ++k) {
+                            String c = code.JSubstring(k, k + 1);
                             float len = font.GetWidth(c, size);
-                            float pX = keepBarX + TEXTPOS_EAN13[k_1 - 1] * x - len / 2;
+                            float pX = keepBarX + TEXTPOS_EAN13[k - 1] * x - len / 2;
                             canvas.SetTextMatrix(pX, textStartY);
                             canvas.ShowText(c);
                         }
@@ -680,10 +680,10 @@ namespace iText.Barcodes {
                     }
 
                     case EAN8: {
-                        for (int k_2 = 0; k_2 < 8; ++k_2) {
-                            String c = code.JSubstring(k_2, k_2 + 1);
+                        for (int k = 0; k < 8; ++k) {
+                            String c = code.JSubstring(k, k + 1);
                             float len = font.GetWidth(c, size);
-                            float pX = TEXTPOS_EAN8[k_2] * x - len / 2;
+                            float pX = TEXTPOS_EAN8[k] * x - len / 2;
                             canvas.SetTextMatrix(pX, textStartY);
                             canvas.ShowText(c);
                         }
@@ -693,10 +693,10 @@ namespace iText.Barcodes {
                     case UPCA: {
                         canvas.SetTextMatrix(0, textStartY);
                         canvas.ShowText(code.JSubstring(0, 1));
-                        for (int k_3 = 1; k_3 < 11; ++k_3) {
-                            String c = code.JSubstring(k_3, k_3 + 1);
+                        for (int k = 1; k < 11; ++k) {
+                            String c = code.JSubstring(k, k + 1);
                             float len = font.GetWidth(c, size);
-                            float pX = keepBarX + TEXTPOS_EAN13[k_3] * x - len / 2;
+                            float pX = keepBarX + TEXTPOS_EAN13[k] * x - len / 2;
                             canvas.SetTextMatrix(pX, textStartY);
                             canvas.ShowText(c);
                         }
@@ -708,10 +708,10 @@ namespace iText.Barcodes {
                     case UPCE: {
                         canvas.SetTextMatrix(0, textStartY);
                         canvas.ShowText(code.JSubstring(0, 1));
-                        for (int k_4 = 1; k_4 < 7; ++k_4) {
-                            String c = code.JSubstring(k_4, k_4 + 1);
+                        for (int k = 1; k < 7; ++k) {
+                            String c = code.JSubstring(k, k + 1);
                             float len = font.GetWidth(c, size);
-                            float pX = keepBarX + TEXTPOS_EAN13[k_4 - 1] * x - len / 2;
+                            float pX = keepBarX + TEXTPOS_EAN13[k - 1] * x - len / 2;
                             canvas.SetTextMatrix(pX, textStartY);
                             canvas.ShowText(c);
                         }
@@ -722,10 +722,10 @@ namespace iText.Barcodes {
 
                     case SUPP2:
                     case SUPP5: {
-                        for (int k_5 = 0; k_5 < code.Length; ++k_5) {
-                            String c = code.JSubstring(k_5, k_5 + 1);
+                        for (int k = 0; k < code.Length; ++k) {
+                            String c = code.JSubstring(k, k + 1);
                             float len = font.GetWidth(c, size);
-                            float pX = (7.5f + (9 * k_5)) * x - len / 2;
+                            float pX = (7.5f + (9 * k)) * x - len / 2;
                             canvas.SetTextMatrix(pX, textStartY);
                             canvas.ShowText(c);
                         }

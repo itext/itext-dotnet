@@ -136,6 +136,9 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
+            float borderMarginWidth = area.GetBBox().GetWidth() - layoutBox.GetWidth();
+            float minWidth = 0;
+            float maxWidth = area.GetBBox().GetWidth();
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             bool anythingPlaced = false;
@@ -248,6 +251,7 @@ namespace iText.Layout.Renderer {
                     currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                     currentTextPos = nonBreakablePartEnd + 1;
                     currentLineWidth += nonBreakablePartFullWidth;
+                    minWidth = Math.Max(nonBreakablePartFullWidth, minWidth);
                     anythingPlaced = true;
                 }
                 else {
@@ -262,7 +266,8 @@ namespace iText.Layout.Renderer {
                         line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
                         // the line does not fit because of height - full overflow
                         iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
-                        return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this);
+                        return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this, minWidth
+                             + borderMarginWidth, maxWidth);
                     }
                     else {
                         // cannot fit a word as a whole
@@ -297,6 +302,7 @@ namespace iText.Layout.Renderer {
                                             currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                             currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                             currentLineWidth += currentHyphenationChoicePreTextWidth;
+                                            minWidth = Math.Max(currentHyphenationChoicePreTextWidth, minWidth);
                                             currentTextPos += pre.Length;
                                             break;
                                         }
@@ -318,6 +324,7 @@ namespace iText.Layout.Renderer {
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                 currentLineWidth += nonBreakablePartWidthWhichDoesNotExceedAllowedWidth;
+                                minWidth = Math.Max(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth, minWidth);
                             }
                             else {
                                 // process empty line (e.g. '\n')
@@ -328,11 +335,12 @@ namespace iText.Layout.Renderer {
                             }
                         }
                         if (line.end <= line.start) {
-                            return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                            return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this, minWidth + borderMarginWidth
+                                , maxWidth);
                         }
                         else {
-                            result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null).SetWordHasBeenSplit(wordSplit
-                                );
+                            result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null, minWidth + borderMarginWidth
+                                , maxWidth).SetWordHasBeenSplit(wordSplit);
                         }
                         break;
                     }
@@ -344,7 +352,8 @@ namespace iText.Layout.Renderer {
                 if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);
-                    return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                    return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this, minWidth + borderMarginWidth
+                        , maxWidth);
                 }
                 else {
                     isPlacingForcedWhileNothing = true;
@@ -361,7 +370,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (result == null) {
                 result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
-                     : null);
+                     : null, minWidth + borderMarginWidth, maxWidth);
             }
             else {
                 iText.Layout.Renderer.TextRenderer[] split;
@@ -549,7 +558,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_574();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_579();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -622,8 +631,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_574 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_574() {
+        private sealed class _IGlyphLineFilter_579 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_579() {
             }
 
             public bool Accept(Glyph glyph) {

@@ -7,7 +7,8 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class GlyphTextEventListenerTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/GlyphTextEventListenerTest/";
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/GlyphTextEventListenerTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

@@ -165,9 +165,9 @@ namespace iText.IO.Codec {
                 strHsh_[q] = HASH_FREE;
             }
             int w = (1 << codesize) + RES_CODES;
-            for (int q_1 = 0; q_1 < w; q_1++) {
+            for (int q = 0; q < w; q++) {
                 //AddCharString((short) 0xFFFF, (byte) q);    // init with no prefix
-                AddCharString((short)-1, (byte)q_1);
+                AddCharString((short)-1, (byte)q);
             }
         }
 

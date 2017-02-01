@@ -116,7 +116,7 @@ namespace iText.Kernel.Pdf {
             if (close) {
                 base.ReleaseContent();
                 try {
-                    indexStream.Close();
+                    indexStream.Dispose();
                 }
                 catch (System.IO.IOException e) {
                     throw new PdfException(PdfException.IoException, e);

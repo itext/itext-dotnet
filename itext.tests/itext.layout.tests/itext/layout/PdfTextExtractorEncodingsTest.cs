@@ -9,7 +9,8 @@ using iText.Test;
 
 namespace iText.Layout {
     public class PdfTextExtractorEncodingsTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/PdfTextExtractorEncodingsTest/";
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/PdfTextExtractorEncodingsTest/";
 
         /// <summary>Basic Latin characters, with Unicode values less than 128</summary>
         private const String TEXT1 = "AZaz09*!";

@@ -6,7 +6,8 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf.Canvas.Parser {
     public class TextMarginFinderTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/parser/TextMarginFinderTest/";
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/parser/TextMarginFinderTest/";
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]

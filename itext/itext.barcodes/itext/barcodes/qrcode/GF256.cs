@@ -90,8 +90,8 @@ namespace iText.Barcodes.Qrcode {
                     x ^= primitive;
                 }
             }
-            for (int i_1 = 0; i_1 < 255; i_1++) {
-                logTable[expTable[i_1]] = i_1;
+            for (int i = 0; i < 255; i++) {
+                logTable[expTable[i]] = i;
             }
             // logTable[0] == 0 but this should never be used
             zero = new GF256Poly(this, new int[] { 0 });

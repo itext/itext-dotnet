@@ -14,7 +14,8 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class ListTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/ListTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/ListTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/ListTest/";
@@ -66,8 +67,8 @@ namespace iText.Layout {
                     list.Add("Item #" + i);
                 }
             }
-            foreach (List list_1 in lists) {
-                document.Add(list_1).Add(new AreaBreak());
+            foreach (List list in lists) {
+                document.Add(list).Add(new AreaBreak());
             }
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

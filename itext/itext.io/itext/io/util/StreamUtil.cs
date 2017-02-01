@@ -256,7 +256,7 @@ namespace iText.IO.Util {
                 }
                 output.Write(b, 0, read);
             }
-            output.Close();
+            output.Dispose();
             return output.ToArray();
         }
 

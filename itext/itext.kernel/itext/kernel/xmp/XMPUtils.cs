@@ -230,7 +230,7 @@ namespace iText.Kernel.XMP {
             if (value == null || value.Length == 0) {
                 throw new XMPException("Empty convert-string", XMPError.BADVALUE);
             }
-            value = value.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            value = value.ToLowerInvariant();
             try {
                 // First try interpretation as Integer (anything not 0 is true)
                 return System.Convert.ToInt32(value) != 0;

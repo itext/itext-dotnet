@@ -108,16 +108,16 @@ namespace iText.IO.Font.Otf {
                 ligatureSet[k] = openReader.rf.ReadUnsignedShort() + subTableLocation;
             }
             IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(coverage);
-            for (int k_1 = 0; k_1 < ligSetCount; ++k_1) {
-                openReader.rf.Seek(ligatureSet[k_1]);
+            for (int k = 0; k < ligSetCount; ++k) {
+                openReader.rf.Seek(ligatureSet[k]);
                 int ligatureCount = openReader.rf.ReadUnsignedShort();
                 int[] ligature = new int[ligatureCount];
                 for (int j = 0; j < ligatureCount; ++j) {
-                    ligature[j] = openReader.rf.ReadUnsignedShort() + ligatureSet[k_1];
+                    ligature[j] = openReader.rf.ReadUnsignedShort() + ligatureSet[k];
                 }
                 IList<int[]> components = new List<int[]>(ligatureCount);
-                for (int j_1 = 0; j_1 < ligatureCount; ++j_1) {
-                    openReader.rf.Seek(ligature[j_1]);
+                for (int j = 0; j < ligatureCount; ++j) {
+                    openReader.rf.Seek(ligature[j]);
                     int ligGlyph = openReader.rf.ReadUnsignedShort();
                     int compCount = openReader.rf.ReadUnsignedShort();
                     int[] component = new int[compCount];
@@ -127,7 +127,7 @@ namespace iText.IO.Font.Otf {
                     }
                     components.Add(component);
                 }
-                ligatures[coverageGlyphIds[k_1]] = components;
+                ligatures[coverageGlyphIds[k]] = components;
             }
         }
     }

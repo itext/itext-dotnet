@@ -216,7 +216,7 @@ namespace iText.Kernel {
 
         private void AddLicensedPostfix(String ownerName) {
             iTextVersion += " (" + ownerName;
-            if (!key.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith("trial")) {
+            if (!key.ToLowerInvariant().StartsWith("trial")) {
                 iTextVersion += "; licensed version)";
             }
             else {
@@ -235,25 +235,34 @@ namespace iText.Kernel {
             String licenseKeyClassPartialName = "iText.License.LicenseKey, itext.licensekey";
             String licenseKeyClassFullName = null;
 
-            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(KeyVersionAttribute), false);
-            if (customAttributes.Length > 0) {
-                String keyVersion = ((KeyVersionAttribute) customAttributes[0]).KeyVersion;
+            Assembly kernelAssembly = typeof(Version).GetAssembly();
+            Attribute keyVersionAttr = kernelAssembly.GetCustomAttribute(typeof(KeyVersionAttribute));
+            if (keyVersionAttr is KeyVersionAttribute) {
+                String keyVersion = ((KeyVersionAttribute)keyVersionAttr).KeyVersion;
                 String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
                 licenseKeyClassFullName = String.Format(format, licenseKeyClassPartialName, keyVersion);
             }
 
             Type type = null;
             if (licenseKeyClassFullName != null) {
+                String fileLoadExceptionMessage = null;
                 try {
                     type = System.Type.GetType(licenseKeyClassFullName);
                 } catch (FileLoadException fileLoadException) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
-                    logger.Error(fileLoadException.Message);
+                    fileLoadExceptionMessage = fileLoadException.Message;
                 }
-            }
 
-            if (type == null) {
-                type = System.Type.GetType(licenseKeyClassPartialName);
+                if (fileLoadExceptionMessage != null) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
+                    try {
+                        type = System.Type.GetType(licenseKeyClassPartialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type == null) {
+                        logger.Error(fileLoadExceptionMessage);
+                    }
+                }
             }
             return type;
         }

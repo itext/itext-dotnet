@@ -9,7 +9,8 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class KeepTogetherTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/KeepTogetherTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/KeepTogetherTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/KeepTogetherTest/";
@@ -54,7 +55,7 @@ namespace iText.Layout {
                 doc.Add(new Paragraph("String number" + i));
             }
             String str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaanasdadasdadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            for (int i_1 = 0; i_1 < 5; i_1++) {
+            for (int i = 0; i < 5; i++) {
                 str += str;
             }
             Paragraph p1 = new Paragraph(str);

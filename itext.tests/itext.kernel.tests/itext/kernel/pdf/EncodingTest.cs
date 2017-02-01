@@ -8,7 +8,8 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf {
     public class EncodingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/EncodingTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/EncodingTest/";
 
         public static readonly String outputFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/test/itext/kernel/pdf/EncodingTest/";
 
@@ -141,13 +142,13 @@ namespace iText.Kernel.Pdf {
             }
             canvas.SaveState().BeginText().MoveText(36, 806).SetFontAndSize(font, 12).ShowText(str).EndText();
             str = "";
-            for (int i_1 = 101; i_1 <= 190; i_1++) {
-                str += (char)i_1;
+            for (int i = 101; i <= 190; i++) {
+                str += (char)i;
             }
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 12).ShowText(str).EndText();
             str = "";
-            for (int i_2 = 191; i_2 <= 254; i_2++) {
-                str += (char)i_2;
+            for (int i = 191; i <= 254; i++) {
+                str += (char)i;
             }
             canvas.BeginText().MoveText(36, 766).ShowText(str).EndText().RestoreState();
             doc.Close();
@@ -170,13 +171,13 @@ namespace iText.Kernel.Pdf {
             }
             canvas.SaveState().BeginText().MoveText(36, 786).SetFontAndSize(font, 36).ShowText(str).EndText();
             str = "";
-            for (int i_1 = 65; i_1 <= 190; i_1++) {
-                str += (char)i_1;
+            for (int i = 65; i <= 190; i++) {
+                str += (char)i;
             }
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(font, 36).ShowText(str).EndText();
             str = "";
-            for (int i_2 = 191; i_2 <= 254; i_2++) {
-                str += (char)i_2;
+            for (int i = 191; i <= 254; i++) {
+                str += (char)i;
             }
             canvas.BeginText().MoveText(36, 726).SetFontAndSize(font, 36).ShowText(str).EndText().RestoreState();
             doc.Close();
@@ -201,14 +202,14 @@ namespace iText.Kernel.Pdf {
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 786).ShowText(str).EndText().RestoreState
                 ();
             str = "";
-            for (int i_1 = 101; i_1 <= 190; i_1++) {
-                str += (char)i_1;
+            for (int i = 101; i <= 190; i++) {
+                str += (char)i;
             }
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 746).ShowText(str).EndText().RestoreState
                 ();
             str = "";
-            for (int i_2 = 191; i_2 <= 254; i_2++) {
-                str += (char)i_2;
+            for (int i = 191; i <= 254; i++) {
+                str += (char)i;
             }
             canvas.SaveState().BeginText().SetFontAndSize(font, 36).MoveText(36, 766).ShowText(str).EndText().RestoreState
                 ();

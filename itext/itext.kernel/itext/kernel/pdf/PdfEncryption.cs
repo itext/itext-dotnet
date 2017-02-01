@@ -277,8 +277,8 @@ namespace iText.Kernel.Pdf {
             if (modified) {
                 id = GenerateNewDocumentId();
             }
-            for (int k_1 = 0; k_1 < 16; ++k_1) {
-                buf.AppendHex(id[k_1]);
+            for (int k = 0; k < 16; ++k) {
+                buf.AppendHex(id[k]);
             }
             buf.Append('>').Append(']');
             return new PdfLiteral(buf.ToByteArray());

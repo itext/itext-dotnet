@@ -180,10 +180,10 @@ namespace iText.IO.Font {
                     winansi.Put((int)c, k);
                 }
             }
-            for (int k_1 = 128; k_1 < 161; ++k_1) {
-                char c = pdfEncodingByteToChar[k_1];
+            for (int k = 128; k < 161; ++k) {
+                char c = pdfEncodingByteToChar[k];
                 if (c != 65533) {
-                    pdfEncoding.Put((int)c, k_1);
+                    pdfEncoding.Put((int)c, k);
                 }
             }
             AddExtraEncoding("Wingdings", new PdfEncodings.WingdingsConversion());
@@ -224,8 +224,7 @@ namespace iText.IO.Font {
                 }
                 return b;
             }
-            IExtraEncoding extra = extraEncodings.Get(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ));
+            IExtraEncoding extra = extraEncodings.Get(encoding.ToLowerInvariant());
             if (extra != null) {
                 byte[] b = extra.CharToByte(text, encoding);
                 if (b != null) {
@@ -354,8 +353,7 @@ namespace iText.IO.Font {
                 }
                 return new String(c);
             }
-            IExtraEncoding extra = extraEncodings.Get(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ));
+            IExtraEncoding extra = extraEncodings.Get(encoding.ToLowerInvariant());
             if (extra != null) {
                 String text = extra.ByteToChar(bytes, encoding);
                 if (text != null) {
@@ -424,7 +422,7 @@ namespace iText.IO.Font {
         /// <param name="enc">the conversion class</param>
         public static void AddExtraEncoding(String name, IExtraEncoding enc) {
             lock (extraEncodings) {
-                extraEncodings[name.ToLower(System.Globalization.CultureInfo.InvariantCulture)] = enc;
+                extraEncodings[name.ToLowerInvariant()] = enc;
             }
         }
 
@@ -699,10 +697,10 @@ namespace iText.IO.Font {
                         t1.Put(v, k);
                     }
                 }
-                for (int k_1 = 0; k_1 < 256; ++k_1) {
-                    int v = table2[k_1];
+                for (int k = 0; k < 256; ++k) {
+                    int v = table2[k];
                     if (v != 0) {
-                        t2.Put(v, k_1);
+                        t2.Put(v, k);
                     }
                 }
             }

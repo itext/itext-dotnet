@@ -589,18 +589,18 @@ namespace iText.Kernel.Pdf {
                 if (!ok) {
                     throw new PdfException(PdfException.ErrorWhileReadingObjectStream);
                 }
-                for (int k_1 = 0; k_1 < n; ++k_1) {
-                    tokens.Seek(address[k_1]);
+                for (int k = 0; k < n; ++k) {
+                    tokens.Seek(address[k]);
                     tokens.NextToken();
                     PdfObject obj;
                     if (tokens.GetTokenType() == PdfTokenizer.TokenType.Number) {
                         obj = new PdfNumber(tokens.GetByteContent());
                     }
                     else {
-                        tokens.Seek(address[k_1]);
+                        tokens.Seek(address[k]);
                         obj = ReadObject(false, true);
                     }
-                    PdfIndirectReference reference = pdfDocument.GetXref().Get(objNumber[k_1]);
+                    PdfIndirectReference reference = pdfDocument.GetXref().Get(objNumber[k]);
                     // Check if this object has no incremental updates (e.g. no append mode)
                     if (reference.GetObjStreamNumber() == objectStreamNumber) {
                         reference.SetRefersTo(obj);
@@ -1010,16 +1010,16 @@ namespace iText.Kernel.Pdf {
                     int type = 1;
                     if (wc[0] > 0) {
                         type = 0;
-                        for (int k_1 = 0; k_1 < wc[0]; ++k_1) {
+                        for (int k = 0; k < wc[0]; ++k) {
                             type = (type << 8) + (b[bptr++] & 0xff);
                         }
                     }
                     long field2 = 0;
-                    for (int k_2 = 0; k_2 < wc[1]; ++k_2) {
+                    for (int k = 0; k < wc[1]; ++k) {
                         field2 = (field2 << 8) + (b[bptr++] & 0xff);
                     }
                     int field3 = 0;
-                    for (int k_3 = 0; k_3 < wc[2]; ++k_3) {
+                    for (int k = 0; k < wc[2]; ++k) {
                         field3 = (field3 << 8) + (b[bptr++] & 0xff);
                     }
                     int @base = start;

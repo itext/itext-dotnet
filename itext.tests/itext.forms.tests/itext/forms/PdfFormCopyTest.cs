@@ -7,7 +7,8 @@ using iText.Test.Attributes;
 
 namespace iText.Forms {
     public class PdfFormCopyTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/PdfFormFieldsCopyTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfFormFieldsCopyTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/forms/PdfFormFieldsCopyTest/";
@@ -71,7 +72,9 @@ namespace iText.Forms {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+#if !NETSTANDARD1_6
         [NUnit.Framework.Timeout(60000)]
+#endif
         [NUnit.Framework.Test]
         public virtual void LargeFilePerformanceTest() {
             String srcFilename1 = sourceFolder + "frontpage.pdf";

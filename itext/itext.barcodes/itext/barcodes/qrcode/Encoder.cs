@@ -325,7 +325,7 @@ namespace iText.Barcodes.Qrcode {
             // If the last byte isn't 8-bit aligned, we'll add padding bits.
             if (numBitsInLastByte > 0) {
                 int numPaddingBits = 8 - numBitsInLastByte;
-                for (int i_1 = 0; i_1 < numPaddingBits; ++i_1) {
+                for (int i = 0; i < numPaddingBits; ++i) {
                     bits.AppendBit(0);
                 }
             }
@@ -335,8 +335,8 @@ namespace iText.Barcodes.Qrcode {
             }
             // If we have more space, we'll fill the space with padding patterns defined in 8.4.9 (p.24).
             int numPaddingBytes = numDataBytes - bits.SizeInBytes();
-            for (int i_2 = 0; i_2 < numPaddingBytes; ++i_2) {
-                if (i_2 % 2 == 0) {
+            for (int i = 0; i < numPaddingBytes; ++i) {
+                if (i % 2 == 0) {
                     bits.AppendBits(0xec, 8);
                 }
                 else {
@@ -436,20 +436,20 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("Data bytes does not match offset");
             }
             // First, place data blocks.
-            for (int i_1 = 0; i_1 < maxNumDataBytes; ++i_1) {
+            for (int i = 0; i < maxNumDataBytes; ++i) {
                 for (int j = 0; j < blocks.Count; ++j) {
                     ByteArray dataBytes = blocks[j].GetDataBytes();
-                    if (i_1 < dataBytes.Size()) {
-                        result.AppendBits(dataBytes.At(i_1), 8);
+                    if (i < dataBytes.Size()) {
+                        result.AppendBits(dataBytes.At(i), 8);
                     }
                 }
             }
             // Then, place error correction blocks.
-            for (int i_2 = 0; i_2 < maxNumEcBytes; ++i_2) {
+            for (int i = 0; i < maxNumEcBytes; ++i) {
                 for (int j = 0; j < blocks.Count; ++j) {
                     ByteArray ecBytes = blocks[j].GetErrorCorrectionBytes();
-                    if (i_2 < ecBytes.Size()) {
-                        result.AppendBits(ecBytes.At(i_2), 8);
+                    if (i < ecBytes.Size()) {
+                        result.AppendBits(ecBytes.At(i), 8);
                     }
                 }
             }
@@ -468,8 +468,8 @@ namespace iText.Barcodes.Qrcode {
             }
             new ReedSolomonEncoder(GF256.QR_CODE_FIELD).Encode(toEncode, numEcBytesInBlock);
             ByteArray ecBytes = new ByteArray(numEcBytesInBlock);
-            for (int i_1 = 0; i_1 < numEcBytesInBlock; i_1++) {
-                ecBytes.Set(i_1, toEncode[numDataBytes + i_1]);
+            for (int i = 0; i < numEcBytesInBlock; i++) {
+                ecBytes.Set(i, toEncode[numDataBytes + i]);
             }
             return ecBytes;
         }

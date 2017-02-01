@@ -172,7 +172,7 @@ namespace iText.Signatures {
             finally {
                 try {
                     if (rg != null) {
-                        rg.Close();
+                        rg.Dispose();
                     }
                 }
                 catch (System.IO.IOException e) {

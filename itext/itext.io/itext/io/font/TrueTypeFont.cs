@@ -339,12 +339,12 @@ namespace iText.IO.Font {
                 avgWidth += glyph.GetWidth();
             }
             FixSpaceIssue();
-            for (int index_1 = 0; index_1 < glyphWidths.Length; index_1++) {
-                if (codeToGlyph.ContainsKey(index_1)) {
+            for (int index = 0; index < glyphWidths.Length; index++) {
+                if (codeToGlyph.ContainsKey(index)) {
                     continue;
                 }
-                Glyph glyph = new Glyph(index_1, glyphWidths[index_1], -1);
-                codeToGlyph[index_1] = glyph;
+                Glyph glyph = new Glyph(index, glyphWidths[index], -1);
+                codeToGlyph[index] = glyph;
                 avgWidth += glyph.GetWidth();
             }
             if (codeToGlyph.Count != 0) {
@@ -372,9 +372,9 @@ namespace iText.IO.Font {
             String[] ret = new String[count];
             count = 0;
             bit = 1;
-            for (int k_1 = 0; k_1 < 64; ++k_1) {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k_1] != null) {
-                    ret[count++] = FontConstants.CODE_PAGES[k_1];
+            for (int k = 0; k < 64; ++k) {
+                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
+                    ret[count++] = FontConstants.CODE_PAGES[k];
                 }
                 bit <<= 1;
             }

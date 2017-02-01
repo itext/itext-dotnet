@@ -12,7 +12,8 @@ using iText.Test;
 
 namespace iText.Pdfa {
     public class PdfA2GraphicsCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA2GraphicsCheckTest/";
 
@@ -339,10 +340,10 @@ namespace iText.Pdfa {
             }
             canvas = new PdfCanvas(doc.AddNewPage());
             canvas.AddImage(ImageDataFactory.Create(sourceFolder + "jpeg2000/file6.jp2"), 300, 300, false);
-            for (int i_1 = 8; i_1 < 10; ++i_1) {
+            for (int i = 8; i < 10; ++i) {
                 canvas = new PdfCanvas(doc.AddNewPage());
-                canvas.AddImage(ImageDataFactory.Create(String.Format(sourceFolder + "jpeg2000/file{0}.jp2", i_1.ToString(
-                    ))), 300, 300, false);
+                canvas.AddImage(ImageDataFactory.Create(String.Format(sourceFolder + "jpeg2000/file{0}.jp2", i.ToString())
+                    ), 300, 300, false);
             }
             doc.Close();
             CompareResult(outPdf, cmpPdf);

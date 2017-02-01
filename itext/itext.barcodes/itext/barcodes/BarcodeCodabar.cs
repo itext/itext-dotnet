@@ -104,7 +104,7 @@ namespace iText.Barcodes {
         /// <param name="text">the text to create the bars</param>
         /// <returns>the bars</returns>
         public static byte[] GetBarsCodabar(String text) {
-            text = text.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            text = text.ToUpperInvariant();
             int len = text.Length;
             if (len < 2) {
                 throw new ArgumentException(PdfException.CodabarMustHaveAtLeastStartAndStopCharacter);
@@ -130,7 +130,7 @@ namespace iText.Barcodes {
             if (code.Length < 2) {
                 return code;
             }
-            String text = code.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            String text = code.ToUpperInvariant();
             int sum = 0;
             int len = text.Length;
             for (int k = 0; k < len; ++k) {
@@ -283,8 +283,8 @@ namespace iText.Barcodes {
             if (barColor != null) {
                 canvas.SetFillColor(barColor);
             }
-            for (int k_1 = 0; k_1 < bars.Length; ++k_1) {
-                float w = (bars[k_1] == 0 ? x : x * n);
+            for (int k = 0; k < bars.Length; ++k) {
+                float w = (bars[k] == 0 ? x : x * n);
                 if (print) {
                     canvas.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
                 }

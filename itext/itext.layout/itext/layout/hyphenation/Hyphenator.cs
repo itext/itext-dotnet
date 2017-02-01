@@ -203,8 +203,8 @@ namespace iText.Layout.Hyphenation {
             // try the raw XML file
             String name = key + ".xml";
             try {
-                Stream fis = new FileStream(searchDirectory + Path.DirectorySeparatorChar + name, FileMode.Open, FileAccess.Read
-                    );
+                Stream fis = new FileStream(searchDirectory + System.IO.Path.DirectorySeparatorChar + name, FileMode.Open, 
+                    FileAccess.Read);
                 return GetHyphenationTree(fis, name);
             }
             catch (System.IO.IOException ioe) {
@@ -234,7 +234,7 @@ namespace iText.Layout.Hyphenation {
             }
             finally {
                 try {
-                    @in.Close();
+                    @in.Dispose();
                 }
                 catch (Exception) {
                 }

@@ -140,8 +140,8 @@ namespace iText.IO.Font.Otf {
                 }
             }
             IList<OpenTableLookup> ret = new List<OpenTableLookup>();
-            foreach (int idx_1 in hash.ToOrderedKeys()) {
-                ret.Add(lookupList[idx_1]);
+            foreach (int idx in hash.ToOrderedKeys()) {
+                ret.Add(lookupList[idx]);
             }
             return ret;
         }

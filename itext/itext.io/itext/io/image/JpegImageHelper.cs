@@ -121,7 +121,7 @@ namespace iText.IO.Image {
             finally {
                 if (jpegStream != null) {
                     try {
-                        jpegStream.Close();
+                        jpegStream.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }
@@ -355,9 +355,9 @@ namespace iText.IO.Image {
                 }
                 byte[] ficc = new byte[total];
                 total = 0;
-                for (int k_1 = 0; k_1 < icc.Length; ++k_1) {
-                    System.Array.Copy(icc[k_1], 14, ficc, total, icc[k_1].Length - 14);
-                    total += icc[k_1].Length - 14;
+                for (int k = 0; k < icc.Length; ++k) {
+                    System.Array.Copy(icc[k], 14, ficc, total, icc[k].Length - 14);
+                    total += icc[k].Length - 14;
                 }
                 try {
                     image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorSpace()));
@@ -385,13 +385,13 @@ namespace iText.IO.Image {
                     return VALID_MARKER;
                 }
             }
-            for (int i_1 = 0; i_1 < NOPARAM_MARKERS.Length; i_1++) {
-                if (marker == NOPARAM_MARKERS[i_1]) {
+            for (int i = 0; i < NOPARAM_MARKERS.Length; i++) {
+                if (marker == NOPARAM_MARKERS[i]) {
                     return NOPARAM_MARKER;
                 }
             }
-            for (int i_2 = 0; i_2 < UNSUPPORTED_MARKERS.Length; i_2++) {
-                if (marker == UNSUPPORTED_MARKERS[i_2]) {
+            for (int i = 0; i < UNSUPPORTED_MARKERS.Length; i++) {
+                if (marker == UNSUPPORTED_MARKERS[i]) {
                     return UNSUPPORTED_MARKER;
                 }
             }

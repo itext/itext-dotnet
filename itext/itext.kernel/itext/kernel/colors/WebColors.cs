@@ -213,7 +213,7 @@ namespace iText.Kernel.Colors {
         /// <exception cref="System.ArgumentException">if the String isn't a know representation of a color.</exception>
         public static DeviceRgb GetRGBColor(String name) {
             int[] color = new int[] { 0, 0, 0, 255 };
-            String colorName = name.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            String colorName = name.ToLowerInvariant();
             bool colorStrWithoutHash = MissingHashColorFormat(colorName);
             if (colorName.StartsWith("#") || colorStrWithoutHash) {
                 if (!colorStrWithoutHash) {

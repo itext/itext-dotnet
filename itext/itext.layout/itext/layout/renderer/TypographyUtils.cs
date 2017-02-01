@@ -215,12 +215,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 // fix anchorDelta
-                for (int i_1 = 0; i_1 < reorderedLine.Count; i_1++) {
-                    Glyph glyph = reorderedLine[i_1].glyph;
+                for (int i = 0; i < reorderedLine.Count; i++) {
+                    Glyph glyph = reorderedLine[i].glyph;
                     if (glyph.HasPlacement()) {
-                        int oldAnchor = reorder[i_1] + glyph.GetAnchorDelta();
+                        int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
                         int newPos = inverseReorder[oldAnchor];
-                        int newAnchorDelta = newPos - i_1;
+                        int newAnchorDelta = newPos - i;
                         glyph.SetAnchorDelta((short)newAnchorDelta);
                     }
                 }
@@ -373,22 +373,51 @@ namespace iText.Layout.Renderer {
         private static Type GetTypographyClass(String partialName) {
             String classFullName = null;
 
-            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(TypographyVersionAttribute), false);
-            if (customAttributes.Length > 0) {
-                string typographyVersion = ((TypographyVersionAttribute)customAttributes[0]).TypographyVersion;
-                string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
-                classFullName = String.Format(format, partialName, typographyVersion);
+            Assembly layoutAssembly = typeof(TypographyUtils).GetAssembly();
+            try {
+                Attribute customAttribute = layoutAssembly.GetCustomAttribute(typeof(TypographyVersionAttribute));
+                if (customAttribute is TypographyVersionAttribute) {
+                    string typographyVersion = ((TypographyVersionAttribute) customAttribute).TypographyVersion;
+                    string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                    classFullName = String.Format(format, partialName, typographyVersion);
+                }
+            } catch (Exception ignored) {
             }
 
             Type type = null;
             if (classFullName != null) {
+                String fileLoadExceptionMessage = null;
                 try {
                     type = System.Type.GetType(classFullName);
                 } catch (FileLoadException fileLoadException) {
-                    ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
-                    logger.Error(fileLoadException.Message);
+                    fileLoadExceptionMessage = fileLoadException.Message;
+                }
+                if (fileLoadExceptionMessage != null) {
+                    // try to find typography assembly by it's partial name and check if it refers to current version of itext core
+                    try {
+                        type = System.Type.GetType(partialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type != null) {
+                        bool doesReferToCurrentVersionOfCore = false;
+                        foreach (AssemblyName assemblyName in type.GetAssembly().GetReferencedAssemblies()) {
+                            if ("itext.io".Equals(assemblyName.Name)) {
+                                doesReferToCurrentVersionOfCore = assemblyName.Version.Equals(layoutAssembly.GetName().Version);
+                                break;
+                            }
+                        }
+                        if (!doesReferToCurrentVersionOfCore) {
+                            type = null;
+                        }
+                    }
+                    if (type == null) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
+                        logger.Error(fileLoadExceptionMessage);
+                    }
                 }
             }
+
             return type;
         }
     }

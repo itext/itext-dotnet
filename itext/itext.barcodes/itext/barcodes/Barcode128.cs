@@ -743,15 +743,15 @@ namespace iText.Barcodes {
                 ais[k] = 10;
             }
             ais[37] = -1;
-            for (int k_1 = 3900; k_1 < 3940; ++k_1) {
-                ais[k_1] = -1;
+            for (int k = 3900; k < 3940; ++k) {
+                ais[k] = -1;
             }
             ais[400] = -1;
             ais[401] = -1;
             ais[402] = 20;
             ais[403] = -1;
-            for (int k_2 = 410; k_2 < 416; ++k_2) {
-                ais[k_2] = 16;
+            for (int k = 410; k < 416; ++k) {
+                ais[k] = 16;
             }
             ais[420] = -1;
             ais[421] = -1;
@@ -762,8 +762,8 @@ namespace iText.Barcodes {
             ais[426] = 6;
             ais[7001] = 17;
             ais[7002] = -1;
-            for (int k_3 = 7030; k_3 < 7040; ++k_3) {
-                ais[k_3] = -1;
+            for (int k = 7030; k < 7040; ++k) {
+                ais[k] = -1;
             }
             ais[8001] = 18;
             ais[8002] = -1;
@@ -778,8 +778,8 @@ namespace iText.Barcodes {
             ais[8100] = 10;
             ais[8101] = 14;
             ais[8102] = 6;
-            for (int k_4 = 90; k_4 < 100; ++k_4) {
-                ais[k_4] = -1;
+            for (int k = 90; k < 100; ++k) {
+                ais[k] = -1;
             }
         }
 

@@ -183,8 +183,8 @@ namespace iText.Kernel.Pdf {
                 first = 1;
                 len = 0;
             }
-            for (int i_1 = 1; i_1 < Size(); i_1++) {
-                PdfIndirectReference reference = xref[i_1];
+            for (int i = 1; i < Size(); i++) {
+                PdfIndirectReference reference = xref[i];
                 if (reference != null) {
                     if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference.IsFree() &&
                          reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED))) {
@@ -203,7 +203,7 @@ namespace iText.Kernel.Pdf {
                         len++;
                     }
                     else {
-                        first = i_1;
+                        first = i;
                         len = 1;
                     }
                 }
@@ -247,8 +247,8 @@ namespace iText.Kernel.Pdf {
                 for (int k = 0; k < sections.Count; k += 2) {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
-                    for (int i_2 = first; i_2 < first + len; i_2++) {
-                        PdfIndirectReference reference = xrefTable.Get(i_2);
+                    for (int i = first; i < first + len; i++) {
+                        PdfIndirectReference reference = xrefTable.Get(i);
                         if (reference == null) {
                             continue;
                         }
@@ -282,8 +282,8 @@ namespace iText.Kernel.Pdf {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
-                    for (int i_2 = first; i_2 < first + len; i_2++) {
-                        PdfIndirectReference reference = xrefTable.Get(i_2);
+                    for (int i = first; i < first + len; i++) {
+                        PdfIndirectReference reference = xrefTable.Get(i);
                         StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
                         StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
                         writer.WriteString(off.JSubstring(off.Length - 10, off.Length)).WriteSpace().WriteString(gen.JSubstring(gen

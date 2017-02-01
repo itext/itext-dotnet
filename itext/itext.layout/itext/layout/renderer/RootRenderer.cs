@@ -220,8 +220,8 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer resultRenderer in childRenderers) {
                 FlushSingleRenderer(resultRenderer);
             }
-            foreach (IRenderer resultRenderer_1 in positionedRenderers) {
-                FlushSingleRenderer(resultRenderer_1);
+            foreach (IRenderer resultRenderer in positionedRenderers) {
+                FlushSingleRenderer(resultRenderer);
             }
             childRenderers.Clear();
             positionedRenderers.Clear();
@@ -307,8 +307,8 @@ namespace iText.Layout.Renderer {
                     for (int i = 1; i <= 5 && originalElementHeight - delta * i > originalElementHeight / 2; i++) {
                         trySplitHeightPoints.Add(originalElementHeight - delta * i);
                     }
-                    for (int i_1 = 0; i_1 < trySplitHeightPoints.Count && !ableToProcessKeepWithNext; i_1++) {
-                        float curElementSplitHeight = trySplitHeightPoints[i_1];
+                    for (int i = 0; i < trySplitHeightPoints.Count && !ableToProcessKeepWithNext; i++) {
+                        float curElementSplitHeight = trySplitHeightPoints[i];
                         LayoutArea firstElementSplitLayoutArea = currentArea.Clone();
                         firstElementSplitLayoutArea.GetBBox().SetHeight(curElementSplitHeight).MoveUp(currentArea.GetBBox().GetHeight
                             () - curElementSplitHeight);

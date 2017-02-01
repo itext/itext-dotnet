@@ -304,8 +304,8 @@ namespace iText.IO.Font.Otf {
                 }
             }
             GlyphLine.ActualText actualText = new GlyphLine.ActualText(text);
-            for (int i_1 = left; i_1 < right; i_1++) {
-                this.actualText[i_1] = actualText;
+            for (int i = left; i < right; i++) {
+                this.actualText[i] = actualText;
             }
         }
 

@@ -81,9 +81,9 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 float maxSymbolWidth = 0;
-                for (int i_1 = 0; i_1 < childRenderers.Count; i_1++) {
-                    IRenderer symbolRenderer = symbolRenderers[i_1];
-                    IRenderer listItemRenderer = childRenderers[i_1];
+                for (int i = 0; i < childRenderers.Count; i++) {
+                    IRenderer symbolRenderer = symbolRenderers[i];
+                    IRenderer listItemRenderer = childRenderers[i];
                     if ((ListSymbolPosition)listItemRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
                         .INSIDE) {
                         maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());

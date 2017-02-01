@@ -11,7 +11,8 @@ using iText.Test.Attributes;
 
 namespace iText.Kernel.Pdf {
     public class PdfXObjectTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfXObjectTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfXObjectTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfXObjectTest/";
@@ -40,10 +41,10 @@ namespace iText.Kernel.Pdf {
                     images[i].Flush();
                 }
             }
-            for (int i_1 = 0; i_1 < 4; i_1++) {
+            for (int i = 0; i < 4; i++) {
                 PdfPage page = document.AddNewPage();
                 PdfCanvas canvas = new PdfCanvas(page);
-                canvas.AddXObject(images[i_1], PageSize.Default);
+                canvas.AddXObject(images[i], PageSize.Default);
                 page.Flush();
             }
             PdfPage page_1 = document.AddNewPage();

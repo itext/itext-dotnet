@@ -102,7 +102,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             finally {
                 if (@is != null) {
                     try {
-                        @is.Close();
+                        @is.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }

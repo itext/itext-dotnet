@@ -14,7 +14,8 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class AutoTaggingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/AutoTaggingTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/AutoTaggingTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/AutoTaggingTest/";
@@ -143,10 +144,10 @@ namespace iText.Layout {
             for (int i = 0; i < 3; ++i) {
                 table.AddHeaderCell("header " + i);
             }
-            for (int i_1 = 0; i_1 < 3; ++i_1) {
-                table.AddFooterCell("footer " + i_1);
+            for (int i = 0; i < 3; ++i) {
+                table.AddFooterCell("footer " + i);
             }
-            for (int i_2 = 0; i_2 < 5; ++i_2) {
+            for (int i = 0; i < 5; ++i) {
                 table.AddCell(CreateParagraph2());
             }
             table.AddCell(new Paragraph("little text"));
@@ -203,8 +204,8 @@ namespace iText.Layout {
             table.AddFooterCell(cell);
             table.SetSkipFirstHeader(true);
             table.SetSkipLastFooter(true);
-            for (int i_1 = 0; i_1 < 350; i_1++) {
-                table.AddCell(new Cell().Add(new Paragraph((i_1 + 1).ToString())));
+            for (int i = 0; i < 350; i++) {
+                table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
                 table.Flush();
             }
             table.Complete();
@@ -362,8 +363,8 @@ namespace iText.Layout {
             table.AddFooterCell(cell);
             table.SetSkipFirstHeader(true);
             table.SetSkipLastFooter(true);
-            for (int i_1 = 0; i_1 < 350; i_1++) {
-                table.AddCell(new Cell().Add(new Paragraph((i_1 + 1).ToString())));
+            for (int i = 0; i < 350; i++) {
+                table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
                 table.Flush();
             }
             table.Complete();

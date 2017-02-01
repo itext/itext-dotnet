@@ -1,0 +1,43 @@
+using iText.Layout.Borders;
+using iText.Layout.Properties;
+
+namespace iText.Layout.Element {
+    public class WidthUtils {
+        private const float eps = 0.00001f;
+
+        public static float ToEffectiveWidth(Paragraph p, float fullWidth) {
+            return fullWidth - GetBorderWidth(p) - GetMarginsWidth(p) - GetPaddingWidth(p) + eps;
+        }
+
+        private static float GetBorderWidth(IElement element) {
+            Border border = element.GetProperty<Border>(Property.BORDER);
+            Border rightBorder = element.GetProperty<Border>(Property.BORDER_RIGHT);
+            Border leftBorder = element.GetProperty<Border>(Property.BORDER_LEFT);
+            if (!element.HasOwnProperty(Property.BORDER_RIGHT)) {
+                rightBorder = border;
+            }
+            if (!element.HasOwnProperty(Property.BORDER_LEFT)) {
+                leftBorder = border;
+            }
+            float rightBorderWidth = rightBorder != null ? rightBorder.GetWidth() : 0;
+            float leftBorderWidth = leftBorder != null ? leftBorder.GetWidth() : 0;
+            return rightBorderWidth + leftBorderWidth;
+        }
+
+        private static float GetMarginsWidth(IElement element) {
+            float? rightMargin = element.GetProperty<float?>(Property.MARGIN_RIGHT);
+            float? leftMargin = element.GetProperty<float?>(Property.MARGIN_LEFT);
+            float rightMarginWidth = rightMargin != null ? (float)rightMargin : 0;
+            float leftMarginWidth = leftMargin != null ? (float)leftMargin : 0;
+            return rightMarginWidth + leftMarginWidth;
+        }
+
+        private static float GetPaddingWidth(IElement element) {
+            float? rightPadding = element.GetProperty<float?>(Property.PADDING_RIGHT);
+            float? leftPadding = element.GetProperty<float?>(Property.PADDING_LEFT);
+            float rightPaddingWidth = rightPadding != null ? (float)rightPadding : 0;
+            float leftPaddingWidth = leftPadding != null ? (float)leftPadding : 0;
+            return rightPaddingWidth + leftPaddingWidth;
+        }
+    }
+}

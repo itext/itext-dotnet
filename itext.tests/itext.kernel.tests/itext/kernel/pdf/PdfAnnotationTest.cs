@@ -16,7 +16,8 @@ using iText.Test;
 
 namespace iText.Kernel.Pdf {
     public class PdfAnnotationTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfAnnotationTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfAnnotationTest/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfAnnotationTest/";
@@ -682,8 +683,8 @@ namespace iText.Kernel.Pdf {
             while ((length = fis.Read(buffer)) > 0) {
                 fos.Write(buffer, 0, length);
             }
-            fos.Close();
-            fis.Close();
+            fos.Dispose();
+            fis.Dispose();
             PdfFileSpec spec = PdfFileSpec.CreateExternalFileSpec(pdfDoc, "sample.wav", true);
             PdfAction action = PdfAction.CreateRendition("sample.wav", spec, "audio/x-wav", screen);
             screen.SetAction(action);

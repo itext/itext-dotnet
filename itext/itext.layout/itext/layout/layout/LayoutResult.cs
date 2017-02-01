@@ -116,6 +116,11 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
+        /// <summary>The min and max possible width of rendered element including margins, borders, etc.</summary>
+        protected internal float minFullWidth;
+
+        protected internal float maxFullWidth;
+
         /// <summary>
         /// Creates the
         /// <see cref="LayoutResult"/>
@@ -134,12 +139,8 @@ namespace iText.Layout.Layout {
         /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
         /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            ) {
-            this.status = status;
-            this.occupiedArea = occupiedArea;
-            this.splitRenderer = splitRenderer;
-            this.overflowRenderer = overflowRenderer;
-            causeOfNothing = null;
+            )
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, null) {
         }
 
         /// <summary>
@@ -162,8 +163,23 @@ namespace iText.Layout.Layout {
         /// </param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
             , IRenderer cause)
-            : this(status, occupiedArea, splitRenderer, overflowRenderer) {
-            causeOfNothing = cause;
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, cause, 0, float.MaxValue) {
+        }
+
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , float minWidth, float maxWidth)
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, null, minWidth, maxWidth) {
+        }
+
+        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
+            , IRenderer cause, float minWidth, float maxWidth) {
+            this.status = status;
+            this.occupiedArea = occupiedArea;
+            this.splitRenderer = splitRenderer;
+            this.overflowRenderer = overflowRenderer;
+            this.causeOfNothing = cause;
+            this.minFullWidth = minWidth;
+            this.maxFullWidth = maxWidth;
         }
 
         /// <summary>
@@ -268,6 +284,14 @@ namespace iText.Layout.Layout {
         /// </returns>
         public virtual IRenderer GetCauseOfNothing() {
             return causeOfNothing;
+        }
+
+        public virtual float GetMinFullWidth() {
+            return minFullWidth;
+        }
+
+        public virtual float GetMaxFullWidth() {
+            return maxFullWidth;
         }
 
         /// <summary><inheritDoc/></summary>

@@ -67,6 +67,8 @@ namespace iText.Layout.Renderer {
             maxAscent = 0;
             maxDescent = 0;
             int childPos = 0;
+            float minWidth = 0;
+            float maxWidth = layoutBox.GetWidth();
             BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is TextRenderer) {
@@ -121,6 +123,7 @@ namespace iText.Layout.Renderer {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
                             tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                            minWidth = Math.Max(tabRenderer.GetOccupiedArea().GetBBox().GetWidth(), minWidth);
                         }
                         hangingTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
                         if (childPos == childRenderers.Count - 1) {
@@ -172,10 +175,12 @@ namespace iText.Layout.Renderer {
                     else {
                         curWidth += tabAndNextElemWidth;
                     }
+                    minWidth = Math.Max(tabWidth + childResult.GetMinFullWidth(), minWidth);
                     hangingTabStop = null;
                 }
                 else {
                     curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                    minWidth = Math.Max(childResult.GetMinFullWidth(), minWidth);
                 }
                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
                     curWidth, maxHeight));
@@ -216,14 +221,16 @@ namespace iText.Layout.Renderer {
                     IRenderer causeOfNothing = childResult.GetStatus() == LayoutResult.NOTHING ? childResult.GetCauseOfNothing
                         () : childRenderer;
                     if (split[1] == null) {
-                        result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, split[0], split[1], causeOfNothing);
+                        result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, split[0], split[1], causeOfNothing, minWidth
+                            , maxWidth);
                     }
                     else {
                         if (anythingPlaced) {
-                            result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], causeOfNothing);
+                            result = new LineLayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], causeOfNothing, minWidth
+                                , maxWidth);
                         }
                         else {
-                            result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], causeOfNothing);
+                            result = new LineLayoutResult(LayoutResult.NOTHING, null, split[0], split[1], causeOfNothing, 0, 0);
                         }
                     }
                     if (newLineOccurred) {
@@ -238,10 +245,10 @@ namespace iText.Layout.Renderer {
             }
             if (result == null) {
                 if (anythingPlaced || 0 == childRenderers.Count) {
-                    result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, null, null);
+                    result = new LineLayoutResult(LayoutResult.FULL, occupiedArea, null, null, minWidth, maxWidth);
                 }
                 else {
-                    result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, this);
+                    result = new LineLayoutResult(LayoutResult.NOTHING, null, null, this, this, 0, 0);
                 }
             }
             if (baseDirection != null && baseDirection != BaseDirection.NO_BIDI) {
@@ -284,15 +291,15 @@ namespace iText.Layout.Renderer {
                         bool reversed = false;
                         int offset = 0;
                         while (pos < lineGlyphs.Count) {
-                            IRenderer renderer_1 = lineGlyphs[pos].renderer;
-                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer_1);
+                            IRenderer renderer = lineGlyphs[pos].renderer;
+                            TextRenderer newRenderer = new TextRenderer((TextRenderer)renderer);
                             newRenderer.DeleteOwnProperty(Property.REVERSED);
                             children.Add(newRenderer);
                             ((TextRenderer)children[children.Count - 1]).line = new GlyphLine(((TextRenderer)children[children.Count -
                                  1]).line);
                             GlyphLine gl = ((TextRenderer)children[children.Count - 1]).line;
                             IList<Glyph> replacementGlyphs = new List<Glyph>();
-                            while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer_1) {
+                            while (pos < lineGlyphs.Count && lineGlyphs[pos].renderer == renderer) {
                                 if (pos + 1 < lineGlyphs.Count) {
                                     if (reorder[pos] == reorder[pos + 1] + 1 && !TextRenderer.IsSpaceGlyph(lineGlyphs[pos + 1].glyph) && !TextRenderer
                                         .IsSpaceGlyph(lineGlyphs[pos].glyph)) {
@@ -320,9 +327,9 @@ namespace iText.Layout.Renderer {
                             gl.SetGlyphs(replacementGlyphs);
                         }
                         float currentXPos = layoutContext.GetArea().GetBBox().GetLeft();
-                        foreach (IRenderer child_1 in children) {
-                            float currentWidth = ((TextRenderer)child_1).CalculateLineWidth();
-                            ((TextRenderer)child_1).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
+                        foreach (IRenderer child in children) {
+                            float currentWidth = ((TextRenderer)child).CalculateLineWidth();
+                            ((TextRenderer)child).occupiedArea.GetBBox().SetX(currentXPos).SetWidth(currentWidth);
                             currentXPos += currentWidth;
                         }
                     }

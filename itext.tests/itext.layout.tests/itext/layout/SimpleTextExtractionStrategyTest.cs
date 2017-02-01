@@ -13,7 +13,8 @@ using iText.Test;
 
 namespace iText.Layout {
     public class SimpleTextExtractionStrategyTest : ExtendedITextTest {
-        private static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/layout/SimpleTextExtractionStrategyTest/";
+        private static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/SimpleTextExtractionStrategyTest/";
 
         internal String TEXT1 = "TEXT1 TEXT1";
 

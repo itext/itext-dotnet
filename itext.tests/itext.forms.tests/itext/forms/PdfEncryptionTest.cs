@@ -3,7 +3,8 @@ using iText.Kernel.Pdf;
 
 namespace iText.Forms {
     public class PdfEncryptionTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/forms/PdfEncryptionTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfEncryptionTest/";
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]

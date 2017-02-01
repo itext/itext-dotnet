@@ -77,13 +77,13 @@ namespace iText.IO.Font.Otf {
                 }
             }
             foreach (String script in scripts) {
-                foreach (ScriptRecord sr_1 in records) {
-                    if (sr_1.tag.Equals(script)) {
-                        scriptFound = sr_1;
+                foreach (ScriptRecord sr in records) {
+                    if (sr.tag.Equals(script)) {
+                        scriptFound = sr;
                         break;
                     }
                     if (DEFAULT_SCRIPT.Equals(script)) {
-                        scriptDefault = sr_1;
+                        scriptDefault = sr;
                     }
                 }
                 if (scriptFound != null) {

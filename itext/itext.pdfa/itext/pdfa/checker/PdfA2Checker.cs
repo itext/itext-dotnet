@@ -486,8 +486,8 @@ namespace iText.Pdfa.Checker {
                 }
                 HashSet<String> names = new HashSet<String>();
                 HashSet<PdfObject> order = new HashSet<PdfObject>();
-                foreach (PdfDictionary config_1 in configList) {
-                    PdfString name = config_1.GetAsString(PdfName.Name);
+                foreach (PdfDictionary config in configList) {
+                    PdfString name = config.GetAsString(PdfName.Name);
                     if (name == null) {
                         throw new PdfAConformanceException(PdfAConformanceException.OptionalContentConfigurationDictionaryShallContainNameEntry
                             );
@@ -496,11 +496,11 @@ namespace iText.Pdfa.Checker {
                         throw new PdfAConformanceException(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries
                             );
                     }
-                    if (config_1.ContainsKey(PdfName.AS)) {
+                    if (config.ContainsKey(PdfName.AS)) {
                         throw new PdfAConformanceException(PdfAConformanceException.TheAsKeyShallNotAppearInAnyOptionalContentConfigurationDictionary
                             );
                     }
-                    PdfArray orderArray = config_1.GetAsArray(PdfName.Order);
+                    PdfArray orderArray = config.GetAsArray(PdfName.Order);
                     if (orderArray != null) {
                         FillOrderRecursively(orderArray, order);
                     }

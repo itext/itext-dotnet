@@ -8,7 +8,8 @@ using iText.Test;
 
 namespace iText.Pdfa {
     public class PdfA3EmbeddedFilesCheckTest : ExtendedITextTest {
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/pdfa/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/pdfa/";
 
         public static readonly String cmpFolder = sourceFolder + "cmp/PdfA3EmbeddedFilesCheckTest/";
 
@@ -40,7 +41,7 @@ namespace iText.Pdfa {
             MemoryStream txt = new MemoryStream();
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
-            @out.Close();
+            @out.Dispose();
             pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", PdfName.ApplicationXml, null, PdfName.
                 Source);
             pdfDocument.Close();
@@ -67,7 +68,7 @@ namespace iText.Pdfa {
             MemoryStream txt = new MemoryStream();
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
-            @out.Close();
+            @out.Dispose();
             pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, PdfName.Unspecified);
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);
@@ -117,7 +118,7 @@ namespace iText.Pdfa {
             MemoryStream txt = new MemoryStream();
             StreamWriter @out = new StreamWriter(txt);
             @out.Write("<foo><foo2>Hello world</foo2></foo>");
-            @out.Close();
+            @out.Dispose();
             pdfDocument.AddFileAttachment("foo file", txt.ToArray(), "foo.xml", null, null, null);
             pdfDocument.Close();
             CompareResult(outPdf, cmpPdf);

@@ -861,7 +861,7 @@ namespace iText.Layout.Renderer {
                 rightVerticalBorders.Add(borders[1]);
                 verticalBorders = new List<List<Border>>();
                 verticalBorders.Add(leftVerticalBorders);
-                for (int i_1 = 0; i_1 < ((Table)modelElement).GetNumberOfColumns() - 1; i_1++) {
+                for (int i = 0; i < ((Table)modelElement).GetNumberOfColumns() - 1; i++) {
                     verticalBorders.Add(new List<Border>());
                 }
                 verticalBorders.Add(rightVerticalBorders);
@@ -1089,11 +1089,11 @@ namespace iText.Layout.Renderer {
             }
             splitRenderer.verticalBorders = new List<List<Border>>();
             //splitRenderer.verticalBorders.addAll(verticalBorders);
-            for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++) {
+            for (int i = 0; i < verticalBorders.Count; i++) {
                 splitRenderer.verticalBorders.Add(new List<Border>());
                 for (int j = 0; j < rowN; j++) {
-                    if (verticalBorders[i_1].Count != 0) {
-                        splitRenderer.verticalBorders[i_1].Add(verticalBorders[i_1][j]);
+                    if (verticalBorders[i].Count != 0) {
+                        splitRenderer.verticalBorders[i].Add(verticalBorders[i][j]);
                     }
                 }
             }
@@ -1155,8 +1155,8 @@ namespace iText.Layout.Renderer {
                     break;
                 }
             }
-            foreach (IRenderer child_1 in childRenderers) {
-                CellRenderer cell = (CellRenderer)child_1;
+            foreach (IRenderer child in childRenderers) {
+                CellRenderer cell = (CellRenderer)child;
                 if (((Cell)cell.GetModelElement()).GetCol() == 0) {
                     startX = cell.GetOccupiedArea().GetBBox().GetX();
                     break;
@@ -1193,10 +1193,10 @@ namespace iText.Layout.Renderer {
                 DrawHorizontalBorder(horizontalBorders.Count - 1, startX, y1, drawContext.GetCanvas());
             }
             float x1 = startX;
-            for (int i_1 = 0; i_1 < verticalBorders.Count; i_1++) {
-                DrawVerticalBorder(i_1, startY, x1, drawContext.GetCanvas());
-                if (i_1 < columnWidths.Length) {
-                    x1 += columnWidths[i_1];
+            for (int i = 0; i < verticalBorders.Count; i++) {
+                DrawVerticalBorder(i, startY, x1, drawContext.GetCanvas());
+                if (i < columnWidths.Length) {
+                    x1 += columnWidths[i];
                 }
             }
             if (isTagged) {
@@ -1336,12 +1336,12 @@ namespace iText.Layout.Renderer {
                     for (int i = col; i < col + colspan; i++) {
                         cellWidth += columnWidths[i];
                     }
-                    for (int i_1 = 0; i_1 < col; i_1++) {
-                        colOffset += columnWidths[i_1];
+                    for (int i = 0; i < col; i++) {
+                        colOffset += columnWidths[i];
                     }
                     float rowspanOffset = 0;
-                    for (int i_2 = row - 1; i_2 > row - rowspan && i_2 >= 0; i_2--) {
-                        rowspanOffset += (float)heights[i_2];
+                    for (int i = row - 1; i > row - rowspan && i >= 0; i--) {
+                        rowspanOffset += (float)heights[i];
                     }
                     float cellLayoutBoxHeight = rowspanOffset + layoutArea.GetBBox().GetHeight();
                     Rectangle cellLayoutBox = new Rectangle(layoutArea.GetBBox().GetX() + colOffset, layoutArea.GetBBox().GetY
@@ -1413,24 +1413,24 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            for (int i_1 = 0; i_1 < colspan; i_1++) {
+            for (int i = 0; i < colspan; i++) {
                 if (hasContent) {
                     if (row + 1 == horizontalBorders.Count) {
                         horizontalBorders.Add(new List<Border>());
                     }
                     List<Border> borders = horizontalBorders[row + 1];
-                    if (borders.Count <= colN + i_1) {
-                        for (int count = borders.Count; count < colN + i_1; count++) {
+                    if (borders.Count <= colN + i) {
+                        for (int count = borders.Count; count < colN + i; count++) {
                             borders.Add(null);
                         }
                         borders.Add(cellBorders[2]);
                     }
                     else {
-                        if (borders.Count == colN + i_1) {
+                        if (borders.Count == colN + i) {
                             borders.Add(cellBorders[2]);
                         }
                         else {
-                            borders[colN + i_1] = cellBorders[2];
+                            borders[colN + i] = cellBorders[2];
                         }
                     }
                 }
@@ -1438,7 +1438,7 @@ namespace iText.Layout.Renderer {
                     if (row == horizontalBorders.Count) {
                         horizontalBorders.Add(new List<Border>());
                     }
-                    horizontalBorders[row].Add(colN + i_1, cellBorders[2]);
+                    horizontalBorders[row].Add(colN + i, cellBorders[2]);
                 }
             }
             if (rowspan > 1) {
@@ -1481,8 +1481,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            for (int i_2 = row - rowspan + 1; i_2 <= row; i_2++) {
-                CheckAndReplaceBorderInArray(verticalBorders, colN + colspan, i_2, cellBorders[1]);
+            for (int i = row - rowspan + 1; i <= row; i++) {
+                CheckAndReplaceBorderInArray(verticalBorders, colN + colspan, i, cellBorders[1]);
             }
             if (colspan > 1) {
                 for (int k = colN; k <= colspan + colN; k++) {

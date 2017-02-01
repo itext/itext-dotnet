@@ -810,8 +810,8 @@ namespace iText.Signatures {
                 MemoryStream bos = new MemoryStream();
                 PdfOutputStream os = new PdfOutputStream(bos);
                 os.Write('[');
-                for (int k_1 = 0; k_1 < range.Length; ++k_1) {
-                    os.WriteLong(range[k_1]).Write(' ');
+                for (int k = 0; k < range.Length; ++k) {
+                    os.WriteLong(range[k]).Write(' ');
                 }
                 os.Write(']');
                 System.Array.Copy(bos.ToArray(), 0, bout, (int)byteRangePosition, bos.Length);
@@ -824,8 +824,8 @@ namespace iText.Signatures {
                     MemoryStream bos = new MemoryStream();
                     PdfOutputStream os = new PdfOutputStream(bos);
                     os.Write('[');
-                    for (int k_1 = 0; k_1 < range.Length; ++k_1) {
-                        os.WriteLong(range[k_1]).Write(' ');
+                    for (int k = 0; k < range.Length; ++k) {
+                        os.WriteLong(range[k]).Write(' ');
                     }
                     os.Write(']');
                     raf.Seek(byteRangePosition);
@@ -833,7 +833,7 @@ namespace iText.Signatures {
                 }
                 catch (System.IO.IOException e) {
                     try {
-                        raf.Close();
+                        raf.Dispose();
                     }
                     catch (Exception) {
                     }
@@ -935,14 +935,14 @@ namespace iText.Signatures {
             }
             finally {
                 if (tempFile != null) {
-                    raf.Close();
+                    raf.Dispose();
                     if (originalOS != null) {
                         tempFile.Delete();
                     }
                 }
                 if (originalOS != null) {
                     try {
-                        originalOS.Close();
+                        originalOS.Dispose();
                     }
                     catch (Exception) {
                     }
