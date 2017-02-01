@@ -95,10 +95,9 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             Table table = new Table(3);
-            table.AddCell(CreateParagraph1());
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
-                ));
-            image.SetAutoScale(true);
+                )).SetWidth(100).SetAutoScale(true);
+            table.AddCell(CreateParagraph1());
             table.AddCell(image);
             table.AddCell(CreateParagraph2());
             table.AddCell(image);
