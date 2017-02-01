@@ -67,6 +67,14 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary>Creates a DashedBorder with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">width of the border</param>
+        public DashedBorder(Color color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border.DASHED;
@@ -111,9 +119,10 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SetLineWidth(width);
-            canvas.SetStrokeColor(color);
-            canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
+            canvas.SaveState().SetLineWidth(width).SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -127,8 +136,10 @@ namespace iText.Layout.Borders {
             if (adjustedGap > dash) {
                 adjustedGap -= dash;
             }
-            canvas.SaveState().SetStrokeColor(color).SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).SetLineWidth
-                (width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
+            canvas.SaveState().SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineDash(dash, adjustedGap, dash + adjustedGap / 2).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2
+                , y2).Stroke().RestoreState();
         }
 
         /// <summary>Adjusts the size of the gap between dots</summary>
@@ -141,6 +152,9 @@ namespace iText.Layout.Borders {
         /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
+            if (gapsNum == 0) {
+                return initialGap;
+            }
             return (float)(distance / gapsNum);
         }
     }

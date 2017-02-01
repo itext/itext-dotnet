@@ -101,6 +101,18 @@ namespace iText.Kernel.Font {
             return null;
         }
 
+        public override bool ContainsGlyph(String text, int from) {
+            //TODO TrueType what if font is specific?
+            int ch = text[from];
+            if (fontEncoding.IsFontSpecific()) {
+                return fontProgram.GetGlyphByCode(ch) != null;
+            }
+            else {
+                return fontEncoding.CanEncode(ch) && ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
+                    (ch)) != null;
+            }
+        }
+
         public override void Flush() {
             //TODO make subtype class member and simplify this method
             if (newFont) {

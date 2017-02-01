@@ -126,7 +126,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("DEVSIX-796")]
         [NUnit.Framework.Test]
         public virtual void SimpleBorderTest04() {
             fileName = "simpleBorderTest04.pdf";
@@ -467,6 +466,25 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void WideBorderTest04() {
+            fileName = "wideBorderTest04.pdf";
+            outFileName = destinationFolder + fileName;
+            cmpFileName = sourceFolder + cmpPrefix + fileName;
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument, new PageSize(200, 150));
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.RED, 5));
+            for (int i = 0; i < 5; i++) {
+                table.AddCell(new Cell().Add("Cell " + i));
+            }
+            table.AddCell(new Cell().Add("Cell 5").SetBorderTop(new SolidBorder(Color.GREEN, 20)));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void BorderCollapseTest01() {
             fileName = "borderCollapseTest01.pdf";
             outFileName = destinationFolder + fileName;
@@ -586,7 +604,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void InfiniteLoopTest01() {
@@ -711,6 +728,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SplitCellsTest04() {
             fileName = "splitCellsTest04.pdf";
             Document doc = CreateDocument();
@@ -777,7 +795,7 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-931")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest07() {
             fileName = "splitCellsTest07.pdf";
@@ -796,7 +814,6 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Ignore("")]
         [NUnit.Framework.Test]
         public virtual void SplitCellsTest08() {
             fileName = "splitCellsTest08.pdf";
@@ -889,6 +906,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithHeaderFooter03() {
             fileName = "tableWithHeaderFooterTest03.pdf";
             Document doc = CreateDocument();
@@ -938,6 +956,166 @@ namespace iText.Layout {
             doc.Add(table);
             doc.Add(new Table(1).AddCell("Hello").SetBorder(new SolidBorder(Color.ORANGE, 5)));
             CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest06() {
+            fileName = "tableWithHeaderFooterTest06.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(PageSize.A6.Rotate());
+            Table table = new Table(5);
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)")).SetHeight(30).SetBorderBottom(new SolidBorder
+                (Color.RED, 20));
+            table.AddHeaderCell(cell);
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page")).SetHeight(30).SetBorderTop(new SolidBorder
+                (Color.MAGENTA, 20));
+            table.AddFooterCell(cell);
+            for (int i = 0; i < 50; i++) {
+                table.AddCell(new Cell().SetBorderLeft(new SolidBorder(Color.BLUE, 0.5f)).SetBorderRight(new SolidBorder(Color
+                    .BLUE, 0.5f)).SetHeight(30).SetBorderBottom(new SolidBorder(Color.BLUE, 2 * i + 1 > 50 ? 50 : 2 * i + 
+                    1)).SetBorderTop(new SolidBorder(Color.GREEN, (50 - 2 * i + 1 >= 0) ? 50 - 2 * i + 1 : 0)).Add(new Paragraph
+                    ((i + 1).ToString())));
+            }
+            doc.Add(table);
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest07() {
+            String testName = "tableWithHeaderFooterTest07.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add("Footer"));
+            table.AddCell(new Cell().Add("0abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopq"));
+            table.AddCell(new Cell().Add("0bbbbbbbbbbbbbbbbbbbbbbbbbbbb").SetBorderBottom(new SolidBorder(50)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest08() {
+            String testName = "tableWithHeaderFooterTest08.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.AddFooterCell(new Cell(1, 2).SetHeight(50).Add("Footer"));
+            table.AddCell(new Cell().Add("Cell1").SetHeight(50));
+            table.AddCell(new Cell().Add("Cell2").SetHeight(50));
+            table.SetSkipLastFooter(true);
+            table.SetBorderBottom(new SolidBorder(Color.RED, 30));
+            doc.Add(table);
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Hello"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest09() {
+            String testName = "tableWithHeaderFooterTest09.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)), PageSize.A4.Rotate());
+            Cell headerCell1 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell headerCell2 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell tableCell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom(
+                Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell tableCell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 200)).SetBorderBottom(
+                Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell footerCell1 = new Cell().Add("I am footer").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Cell footerCell2 = new Cell().Add("I am footer").SetBorder(new SolidBorder(Color.GREEN, 30)).SetBorderBottom
+                (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            Table table = new Table(new float[] { 350, 350 }).SetBorder(new SolidBorder(Color.BLUE, 20)).AddHeaderCell
+                (headerCell1).AddHeaderCell(headerCell2).AddCell(tableCell1).AddCell(tableCell2).AddFooterCell(footerCell1
+                ).AddFooterCell(footerCell2);
+            table.GetHeader().SetBorderLeft(new SolidBorder(Color.MAGENTA, 40));
+            table.GetFooter().SetBorderRight(new SolidBorder(Color.MAGENTA, 40));
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            headerCell1 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 200)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            headerCell2 = new Cell().Add("I am header").SetBorder(new SolidBorder(Color.GREEN, 200)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            tableCell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 30)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            tableCell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 30)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER);
+            table = new Table(new float[] { 350, 350 }).SetBorder(new SolidBorder(Color.BLUE, 20)).AddHeaderCell(headerCell1
+                ).AddHeaderCell(headerCell2).AddCell(tableCell1).AddCell(tableCell2);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest10() {
+            String testName = "tableWithHeaderFooterTest10.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A6.Rotate());
+            Table table = new Table(3);
+            table.AddFooterCell(new Cell(1, 3).SetHeight(70).Add("Footer"));
+            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add("Header"));
+            for (int i = 0; i < 2; i++) {
+                table.AddCell(new Cell().Add(i + ": Bazz :").SetBorder(new SolidBorder(Color.BLACK, 10)));
+                table.AddCell(new Cell().Add("To infinity").SetBorder(new SolidBorder(Color.YELLOW, 30)));
+                table.AddCell(new Cell().Add(" and beyond!").SetBorder(new SolidBorder(Color.RED, 20)));
+            }
+            table.SetSkipLastFooter(true);
+            doc.Add(table);
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest11() {
+            String testName = "tableWithHeaderFooterTest11.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(3);
+            table.SetBorder(new SolidBorder(100));
+            table.AddFooterCell(new Cell(1, 3).SetHeight(100).Add("Footer"));
+            table.AddHeaderCell(new Cell(1, 3).SetHeight(30).Add("Header"));
+            for (int i = 0; i < 100; i++) {
+                table.AddCell(new Cell().Add(i + ": Bazz :").SetBorder(new SolidBorder(Color.BLACK, 10)));
+                table.AddCell(new Cell().Add("To infinity").SetBorder(new SolidBorder(Color.YELLOW, 30)));
+                table.AddCell(new Cell().Add(" and beyond!").SetBorder(new SolidBorder(Color.RED, 20)));
+            }
+            table.SetSkipLastFooter(true);
+            doc.Add(table);
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
         }
 
         /// <exception cref="System.IO.IOException"/>

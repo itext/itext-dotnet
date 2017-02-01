@@ -36,6 +36,8 @@ namespace iText.Kernel.XMP {
     /// <summary>Creates <code>XMPMeta</code>-instances from an <code>InputStream</code></summary>
     /// <since>30.01.2006</since>
     public sealed class XMPMetaFactory {
+        private static readonly Object staticLock = new Object();
+
         /// <summary>The singleton instance of the <code>XMPSchemaRegistry</code>.</summary>
         private static XMPSchemaRegistry schema = new XMPSchemaRegistryImpl();
 
@@ -225,30 +227,30 @@ namespace iText.Kernel.XMP {
         /// its requested.
         /// </remarks>
         /// <returns>Returns the version information.</returns>
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.Synchronized
-            )]
         public static XMPVersionInfo GetVersionInfo() {
-            if (versionInfo == null) {
-                try {
-                    int major = 5;
-                    int minor = 1;
-                    int micro = 0;
-                    int engBuild = 3;
-                    bool debug = false;
-                    // Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
-                    String message = "Adobe XMP Core 5.1.0-jc003";
-                    versionInfo = new _XMPVersionInfo_263(major, minor, micro, debug, engBuild, message);
+            lock (staticLock) {
+                if (versionInfo == null) {
+                    try {
+                        int major = 5;
+                        int minor = 1;
+                        int micro = 0;
+                        int engBuild = 3;
+                        bool debug = false;
+                        // Adobe XMP Core 5.0-jc001 DEBUG-<branch>.<changelist>, 2009 Jan 28 15:22:38-CET
+                        String message = "Adobe XMP Core 5.1.0-jc003";
+                        versionInfo = new _XMPVersionInfo_266(major, minor, micro, debug, engBuild, message);
+                    }
+                    catch (Exception e) {
+                        // EMTPY, severe error would be detected during the tests
+                        System.Console.Out.WriteLine(e);
+                    }
                 }
-                catch (Exception e) {
-                    // EMTPY, severe error would be detected during the tests
-                    System.Console.Out.WriteLine(e);
-                }
+                return versionInfo;
             }
-            return versionInfo;
         }
 
-        private sealed class _XMPVersionInfo_263 : XMPVersionInfo {
-            public _XMPVersionInfo_263(int major, int minor, int micro, bool debug, int engBuild, String message) {
+        private sealed class _XMPVersionInfo_266 : XMPVersionInfo {
+            public _XMPVersionInfo_266(int major, int minor, int micro, bool debug, int engBuild, String message) {
                 this.major = major;
                 this.minor = minor;
                 this.micro = micro;

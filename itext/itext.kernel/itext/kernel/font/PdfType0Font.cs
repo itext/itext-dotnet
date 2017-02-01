@@ -216,6 +216,42 @@ namespace iText.Kernel.Font {
             return glyph;
         }
 
+        public override bool ContainsGlyph(String text, int from) {
+            if (cidFontType == CID_FONT_TYPE_0) {
+                if (cmapEncoding.IsDirect()) {
+                    return fontProgram.GetGlyphByCode((int)text[from]) != null;
+                }
+                else {
+                    return ContainsUnicodeGlyph(text, from);
+                }
+            }
+            else {
+                if (cidFontType == CID_FONT_TYPE_2) {
+                    if (fontProgram.IsFontSpecific()) {
+                        byte[] b = PdfEncodings.ConvertToBytes(text[from], "symboltt");
+                        return b.Length > 0 && fontProgram.GetGlyph(b[0] & 0xff) != null;
+                    }
+                    else {
+                        return ContainsUnicodeGlyph(text, from);
+                    }
+                }
+                else {
+                    throw new PdfException("font.has.no.suitable.cmap");
+                }
+            }
+        }
+
+        private bool ContainsUnicodeGlyph(String text, int from) {
+            int ch;
+            if (TextUtil.IsSurrogatePair(text, from)) {
+                ch = TextUtil.ConvertToUtf32(text, from);
+            }
+            else {
+                ch = text[from];
+            }
+            return GetFontProgram().GetGlyph(ch) != null;
+        }
+
         public override byte[] ConvertToBytes(String text) {
             int len = text.Length;
             char[] glyphs = new char[len];
@@ -331,9 +367,8 @@ namespace iText.Kernel.Font {
             }
             else {
                 if (cidFontType == CID_FONT_TYPE_2) {
-                    TrueTypeFont ttf = (TrueTypeFont)fontProgram;
                     int len = content.Length;
-                    if (ttf.IsFontSpecific()) {
+                    if (fontProgram.IsFontSpecific()) {
                         byte[] b = PdfEncodings.ConvertToBytes(content, "symboltt");
                         len = b.Length;
                         for (int k = 0; k < len; ++k) {
@@ -362,6 +397,137 @@ namespace iText.Kernel.Font {
                 }
             }
             return new GlyphLine(glyphs);
+        }
+
+        public override int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs) {
+            if (cidFontType == CID_FONT_TYPE_0) {
+                if (cmapEncoding.IsDirect()) {
+                    int processed = 0;
+                    for (int k = from; k <= to; k++) {
+                        Glyph glyph = fontProgram.GetGlyphByCode((int)text[k]);
+                        if (glyph != null && (IsAppendableGlyph(glyph))) {
+                            glyphs.Add(glyph);
+                            processed++;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    return processed;
+                }
+                else {
+                    return AppendUniGlyphs(text, from, to, glyphs);
+                }
+            }
+            else {
+                if (cidFontType == CID_FONT_TYPE_2) {
+                    if (fontProgram.IsFontSpecific()) {
+                        int processed = 0;
+                        for (int k = from; k <= to; k++) {
+                            Glyph glyph = fontProgram.GetGlyph(text[k] & 0xff);
+                            if (glyph != null && (IsAppendableGlyph(glyph))) {
+                                glyphs.Add(glyph);
+                                processed++;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        return processed;
+                    }
+                    else {
+                        return AppendUniGlyphs(text, from, to, glyphs);
+                    }
+                }
+                else {
+                    throw new PdfException("font.has.no.suitable.cmap");
+                }
+            }
+        }
+
+        private int AppendUniGlyphs(String text, int from, int to, IList<Glyph> glyphs) {
+            int processed = 0;
+            for (int k = from; k <= to; ++k) {
+                int val;
+                int currentlyProcessed = processed;
+                if (TextUtil.IsSurrogatePair(text, k)) {
+                    val = TextUtil.ConvertToUtf32(text, k);
+                    processed += 2;
+                }
+                else {
+                    val = text[k];
+                    processed++;
+                }
+                Glyph glyph = GetGlyph(val);
+                if (IsAppendableGlyph(glyph)) {
+                    glyphs.Add(glyph);
+                }
+                else {
+                    processed = currentlyProcessed;
+                    break;
+                }
+            }
+            return processed;
+        }
+
+        public override int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs) {
+            int process = 1;
+            if (cidFontType == CID_FONT_TYPE_0) {
+                if (cmapEncoding.IsDirect()) {
+                    Glyph glyph = fontProgram.GetGlyphByCode((int)text[from]);
+                    if (glyph != null) {
+                        glyphs.Add(glyph);
+                    }
+                }
+                else {
+                    int ch;
+                    if (TextUtil.IsSurrogatePair(text, from)) {
+                        ch = TextUtil.ConvertToUtf32(text, from);
+                        process = 2;
+                    }
+                    else {
+                        ch = text[from];
+                    }
+                    glyphs.Add(GetGlyph(ch));
+                }
+            }
+            else {
+                if (cidFontType == CID_FONT_TYPE_2) {
+                    TrueTypeFont ttf = (TrueTypeFont)fontProgram;
+                    if (ttf.IsFontSpecific()) {
+                        byte[] b = PdfEncodings.ConvertToBytes(text, "symboltt");
+                        if (b.Length > 0) {
+                            Glyph glyph = fontProgram.GetGlyph(b[0] & 0xff);
+                            if (glyph != null) {
+                                glyphs.Add(glyph);
+                            }
+                        }
+                    }
+                    else {
+                        int ch;
+                        if (TextUtil.IsSurrogatePair(text, from)) {
+                            ch = TextUtil.ConvertToUtf32(text, from);
+                            process = 2;
+                        }
+                        else {
+                            ch = text[from];
+                        }
+                        glyphs.Add(GetGlyph(ch));
+                    }
+                }
+                else {
+                    throw new PdfException("font.has.no.suitable.cmap");
+                }
+            }
+            return process;
+        }
+
+        //TODO what if Glyphs contains only whitespaces and ignorable identifiers?
+        private bool IsAppendableGlyph(Glyph glyph) {
+            // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
+            // Character.isIdentifierIgnorable(0) gets true.
+            return glyph.GetCode() > 0 || iText.IO.Util.TextUtil.IsWhiteSpace((char)glyph.GetUnicode()) || iText.IO.Util.TextUtil.IsIdentifierIgnorable
+                (glyph.GetUnicode());
         }
 
         public override String Decode(PdfString content) {

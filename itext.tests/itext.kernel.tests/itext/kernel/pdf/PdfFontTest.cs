@@ -1074,5 +1074,87 @@ namespace iText.Kernel.Pdf {
                 , 12f, 176);
             NUnit.Framework.Assert.IsTrue(list2.Count == 5);
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void KozminNames() {
+            FontNames names = FontNamesFactory.FetchFontNames("KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "kozminpro-regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
+            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
+            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), false);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HelveticaNames() {
+            FontNames names = FontNamesFactory.FetchFontNames("Helvetica");
+            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Helvetica");
+            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Helvetica");
+            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "helvetica");
+            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 500);
+            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
+            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), false);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OtfByStringNames() {
+            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "Puritan2.otf");
+            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Puritan2");
+            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Puritan 2.0 Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Puritan 2.0");
+            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "puritan 2.0 regular");
+            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
+            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
+            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OtfByStreamNames() {
+            FontNames names = FontNamesFactory.FetchFontNames(StreamUtil.InputStreamToArray(new FileStream(fontsFolder
+                 + "Puritan2.otf", FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "Puritan2");
+            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Puritan 2.0 Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Puritan 2.0");
+            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "puritan 2.0 regular");
+            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
+            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
+            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TtfByStringNames() {
+            FontNames names = FontNamesFactory.FetchFontNames(fontsFolder + "abserif4_5.ttf");
+            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "AboriginalSerif");
+            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Aboriginal Serif");
+            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Aboriginal Serif");
+            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "aboriginal serif");
+            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
+            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
+            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TtfByStreamNames() {
+            FontNames names = FontNamesFactory.FetchFontNames(StreamUtil.InputStreamToArray(new FileStream(fontsFolder
+                 + "abserif4_5.ttf", FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.AreEqual(names.GetFontName(), "AboriginalSerif");
+            NUnit.Framework.Assert.AreEqual(names.GetFullName()[0][3], "Aboriginal Serif");
+            NUnit.Framework.Assert.AreEqual(names.GetFamilyName()[0][3], "Aboriginal Serif");
+            NUnit.Framework.Assert.AreEqual(names.GetFullNameLowerCase(), "aboriginal serif");
+            NUnit.Framework.Assert.AreEqual(names.GetStyle(), "Regular");
+            NUnit.Framework.Assert.AreEqual(names.GetFontWeight(), 400);
+            NUnit.Framework.Assert.AreEqual(names.GetFontWidth(), 5);
+            NUnit.Framework.Assert.AreEqual(names.AllowEmbedding(), true);
+        }
     }
 }

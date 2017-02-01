@@ -285,7 +285,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-962")]
         public virtual void ListItemTest02() {
             String outFileName = destinationFolder + "listItemTest02.pdf";
             String cmpFileName = sourceFolder + "cmp_listItemTest02.pdf";
@@ -379,7 +378,6 @@ namespace iText.Layout {
             nestedList.SetHeight(400);
             nestedItem.SetHeight(300);
             doc.Add(list);
-            doc.Add(new AreaBreak());
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

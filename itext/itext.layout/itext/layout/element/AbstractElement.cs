@@ -105,9 +105,9 @@ namespace iText.Layout.Element {
             Object result = base.GetProperty<T1>(property);
             if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property)) {
                 foreach (Style style in styles) {
-                    result = style.GetProperty<T1>(property);
-                    if (result != null || base.HasProperty(property)) {
-                        break;
+                    T1 foundInStyle = style.GetProperty<T1>(property);
+                    if (foundInStyle != null || style.HasProperty(property)) {
+                        result = foundInStyle;
                     }
                 }
             }

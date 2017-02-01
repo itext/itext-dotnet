@@ -117,6 +117,7 @@ namespace iText.Kernel.Pdf.Tagging {
             if (k == null) {
                 k = new PdfArray();
                 GetPdfObject().Put(PdfName.K, k);
+                SetModified();
                 if (kObj != null) {
                     k.Add(kObj);
                 }
@@ -129,6 +130,7 @@ namespace iText.Kernel.Pdf.Tagging {
             if (roleMap == null) {
                 roleMap = new PdfDictionary();
                 GetPdfObject().Put(PdfName.RoleMap, roleMap);
+                SetModified();
             }
             return roleMap;
         }
@@ -179,7 +181,9 @@ namespace iText.Kernel.Pdf.Tagging {
             GetPdfObject().Put(PdfName.ParentTree, GetParentTreeHandler().BuildParentTree());
             GetPdfObject().Put(PdfName.ParentTreeNextKey, new PdfNumber((int)GetDocument().GetNextStructParentIndex())
                 );
-            FlushAllKids(this);
+            if (!GetDocument().IsAppendMode()) {
+                FlushAllKids(this);
+            }
             base.Flush();
         }
 
@@ -244,6 +248,7 @@ namespace iText.Kernel.Pdf.Tagging {
             if (PdfStructElem.IsStructElem(structElem)) {
                 structElem.Put(PdfName.P, GetPdfObject());
             }
+            SetModified();
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {

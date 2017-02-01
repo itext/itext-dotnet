@@ -98,6 +98,10 @@ namespace iText.IO.Font {
 
         protected internal IDictionary<int, IList<String[]>> allNames;
 
+        private String fullNameLowerCase = null;
+
+        private String fontNameLowerCase = null;
+
         private String[][] fullName;
 
         private String[][] familyName;
@@ -170,6 +174,20 @@ namespace iText.IO.Font {
 
         public virtual String[][] GetFullName() {
             return fullName;
+        }
+
+        public virtual String GetFullNameLowerCase() {
+            if (fullNameLowerCase == null) {
+                fullNameLowerCase = fullName[0][3].ToLowerInvariant();
+            }
+            return fullNameLowerCase;
+        }
+
+        public virtual String GetFontNameLowerCase() {
+            if (fontNameLowerCase == null) {
+                fontNameLowerCase = fontName.ToLowerInvariant();
+            }
+            return fontNameLowerCase;
         }
 
         public virtual String GetFontName() {
@@ -364,6 +382,11 @@ namespace iText.IO.Font {
                 array[i] = list[i];
             }
             return array;
+        }
+
+        public override String ToString() {
+            String name = GetFontName();
+            return name.Length > 0 ? name : base.ToString();
         }
     }
 }

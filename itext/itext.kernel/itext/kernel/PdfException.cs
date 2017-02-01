@@ -113,8 +113,6 @@ namespace iText.Kernel {
 
         public const String CannotFindImageDataOrEI = "Cannot find image data or EI.";
 
-        public const String CannotFindThePageNumber = "Cannot find the page number {0}.";
-
         public const String CannotFlushDocumentRootTagBeforeDocumentIsClosed = "Cannot flush document root tag before document is closed.";
 
         public const String CannotFlushObject = "Cannot flush object.";
@@ -180,6 +178,7 @@ namespace iText.Kernel {
         [Obsolete]
         public const String CodabarStartStopCharacterAreOnlyExtremes = "In codabar, start/stop characters are only allowed at the extremes.";
 
+        [Obsolete]
         public const String ColorNotFound = "Color not found.";
 
         public const String ColorSpaceNotFound = "ColorSpace not found.";
@@ -325,6 +324,8 @@ namespace iText.Kernel {
 
         public const String IoException = "I/O exception.";
 
+        public const String IoExceptionWhileCreatingFont = "I/O exception while creating Font";
+
         [Obsolete]
         public const String IsNotAnAcceptableValueForTheField = "{0} is not an acceptable value for the field {1}.";
 
@@ -419,6 +420,8 @@ namespace iText.Kernel {
 
         public const String PdfVersionNotValid = "PDF version is not valid.";
 
+        public const String RequestedPageNumberIsOutOfBounds = "Requested page number {0} is out of bounds.";
+
         public const String PngFilterUnknown = "PNG filter unknown.";
 
         public const String ResourcesCannotBeNull = "Resources cannot be null.";
@@ -507,6 +510,7 @@ namespace iText.Kernel {
 
         public const String UnknownKeyAlgorithm1 = "Unknown key algorithm: {0}.";
 
+        [Obsolete]
         public const String UnknownColorFormatMustBeRGBorRRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
         public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";

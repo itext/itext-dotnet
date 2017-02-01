@@ -14,7 +14,7 @@ namespace iText.Layout.Minmaxwidth {
         }
 
         public static float ToEffectiveWidth(BlockElement b, float fullWidth) {
-            return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) + eps;
+            return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) - GetPaddingWidth(b) + eps;
         }
 
         public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {

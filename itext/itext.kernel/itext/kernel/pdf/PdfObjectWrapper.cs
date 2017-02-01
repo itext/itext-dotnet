@@ -76,9 +76,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> SetModified() {
-            if (pdfObject != null) {
-                pdfObject.SetModified();
-            }
+            pdfObject.SetModified();
             return this;
         }
 

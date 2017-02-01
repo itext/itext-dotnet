@@ -209,7 +209,7 @@ namespace iText.Layout {
         /// <returns>this object</returns>
         public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
              vertAlign, float angle) {
-            Paragraph p = new Paragraph(text);
+            Paragraph p = new Paragraph(text).SetMultipliedLeading(1).SetMargin(0);
             return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, angle);
         }
 
@@ -223,7 +223,7 @@ namespace iText.Layout {
         /// <returns>this object</returns>
         public virtual T ShowTextAlignedKerned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
              vertAlign, float radAngle) {
-            Paragraph p = new Paragraph(text).SetFontKerning(FontKerning.YES);
+            Paragraph p = new Paragraph(text).SetMultipliedLeading(1).SetMargin(0).SetFontKerning(FontKerning.YES);
             return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, radAngle);
         }
 

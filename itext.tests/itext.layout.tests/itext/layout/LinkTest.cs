@@ -67,6 +67,30 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION)]
+        public virtual void LinkTest03() {
+            String outFileName = destinationFolder + "linkTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_linkTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            PdfArray array = new PdfArray();
+            array.Add(doc.GetPdfDocument().AddNewPage().GetPdfObject());
+            array.Add(PdfName.XYZ);
+            array.Add(new PdfNumber(36));
+            array.Add(new PdfNumber(100));
+            array.Add(new PdfNumber(1));
+            PdfDestination dest = PdfDestination.MakeDestination(array);
+            Link link = new Link("TestLink", dest);
+            link.SetAction(PdfAction.CreateURI("http://itextpdf.com/", false));
+            doc.Add(new Paragraph(link));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void BorderedLinkTest() {
             String outFileName = destinationFolder + "borderedLinkTest.pdf";
             String cmpFileName = sourceFolder + "cmp_borderedLinkTest.pdf";
@@ -126,7 +150,7 @@ namespace iText.Layout {
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             PdfAction action = PdfAction.CreateURI("http://itextpdf.com/", false);
             Link link = new Link("TestLink", action);
-            doc.Add(new Paragraph(link).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
+            doc.Add(new Paragraph(link).SetMargin(0).SetRotationAngle(Math.PI / 4).SetFixedPosition(300, 623, 100));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

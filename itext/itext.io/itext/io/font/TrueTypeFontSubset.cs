@@ -146,9 +146,9 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Does the actual work of subsetting the font.</summary>
+        /// <returns>the subset font</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         /// <on>error</on>
-        /// <returns>the subset font</returns>
         internal virtual byte[] Process() {
             try {
                 CreateTableDirectory();
@@ -272,7 +272,7 @@ namespace iText.IO.Font {
             rf.Seek(directoryOffset);
             int id = rf.ReadInt();
             if (id != 0x00010000) {
-                throw new iText.IO.IOException("1.is.not.a.true.type.file").SetMessageParams(fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.NotAtTrueTypeFile).SetMessageParams(fileName);
             }
             int num_tables = rf.ReadUnsignedShort();
             rf.SkipBytes(6);
@@ -290,13 +290,15 @@ namespace iText.IO.Font {
         protected internal virtual void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams(fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
+                    );
             }
             rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
             locaShortTable = rf.ReadUnsignedShort() == 0;
             tableLocation = tableDirectory.Get("loca");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams(fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("loca", fileName
+                    );
             }
             rf.Seek(tableLocation[TABLE_OFFSET]);
             if (locaShortTable) {
@@ -372,7 +374,8 @@ namespace iText.IO.Font {
         protected internal virtual void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
+                    );
             }
             int glyph0 = 0;
             if (!glyphsUsed.Contains(glyph0)) {

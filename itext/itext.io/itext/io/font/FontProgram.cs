@@ -58,7 +58,7 @@ namespace iText.IO.Font {
 
         protected internal bool isFontSpecific;
 
-        protected internal FontNames fontNames = new FontNames();
+        protected internal FontNames fontNames;
 
         protected internal FontMetrics fontMetrics = new FontMetrics();
 
@@ -299,6 +299,11 @@ namespace iText.IO.Font {
             if (space != null) {
                 codeToGlyph[space.GetCode()] = space;
             }
+        }
+
+        public override String ToString() {
+            String name = GetFontNames().GetFontName();
+            return name.Length > 0 ? name : base.ToString();
         }
     }
 }

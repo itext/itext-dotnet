@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
@@ -73,6 +75,8 @@ namespace iText.Layout.Properties {
         public const int AUTO_SCALE_WIDTH = 5;
 
         public const int BACKGROUND = 6;
+
+        public const int BACKGROUND_IMAGE = 90;
 
         public const int BASE_DIRECTION = 7;
 
@@ -112,7 +116,23 @@ namespace iText.Layout.Properties {
 
         public const int FONT_KERNING = 22;
 
+        /// <summary>
+        /// Note, this property will be applied only if
+        /// <see cref="FONT"/>
+        /// has String value.
+        /// </summary>
+        public const int FONT_STYLE = 94;
+
+        /// <summary>
+        /// Note, this property will be applied only if
+        /// <see cref="FONT"/>
+        /// has String value.
+        /// </summary>
+        public const int FONT_WEIGHT = 95;
+
         public const int FONT_SCRIPT = 23;
+
+        public const int FONT_PROVIDER = 91;
 
         public const int FONT_SIZE = 24;
 
@@ -171,6 +191,8 @@ namespace iText.Layout.Properties {
 
         public const int MIN_HEIGHT = 85;
 
+        public const int OPACITY = 92;
+
         public const int PADDING_BOTTOM = 47;
 
         public const int PADDING_LEFT = 48;
@@ -183,6 +205,7 @@ namespace iText.Layout.Properties {
 
         public const int POSITION = 52;
 
+        [Obsolete]
         public const int REVERSED = 53;
 
         public const int RIGHT = 54;
@@ -209,6 +232,8 @@ namespace iText.Layout.Properties {
 
         public const int SKEW = 65;
 
+        public const int TABLE_LAYOUT = 93;
+
         public const int TAB_ANCHOR = 66;
 
         public const int TAB_DEFAULT = 67;
@@ -232,9 +257,9 @@ namespace iText.Layout.Properties {
 
         public const int UNDERLINE = 74;
 
-        /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_ALIGNMENT = 75;
 
+        /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;
 
         public const int WIDTH = 77;
@@ -254,7 +279,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 89;
+        private const int MAX_INHERITED_PROPERTY_ID = 95;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -267,12 +292,16 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_COLOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_KERNING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_PROVIDER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SCRIPT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SIZE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_STYLE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_WEIGHT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FORCED_PLACEMENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LEADING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_PRE_TEXT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_POSITION] = true;

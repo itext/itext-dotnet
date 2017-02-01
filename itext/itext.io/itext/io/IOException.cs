@@ -48,26 +48,12 @@ using iText.IO.Util;
 namespace iText.IO {
     /// <summary>Exception class for exceptions in io module.</summary>
     public class IOException : Exception {
-        public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit samples are not supported for horizontal differencing predictor.";
-
-        public const String _1CorruptedJfifMarker = "{0} corrupted jfif marker.";
-
-        public const String _1IsNotAValidJpegFile = "{0} is not a valid jpeg file.";
-
-        public const String _1MustHave8BitsPerComponent = "{0} must have 8 bits per component.";
-
-        public const String _1UnsupportedJpegMarker2 = "{0} unsupported jpeg marker {1}.";
-
-        public const String _1IsNotAnAfmOrPfmFontFile = "{0} is not an afm or pfm font file.";
-
-        public const String _1NotFoundAsFileOrResource = "{0} not found as file or resource.";
-
         public const String AllFillBitsPrecedingEolCodeMustBe0 = "All fill bits preceding eol code must be 0.";
+
+        public const String BadEndiannessTag0x4949Or0x4d4d = "Bad endianness tag: 0x4949 or 0x4d4d.";
 
         [Obsolete]
         public const String BadEndiannessTagNot0x4949Or0x4d4d = "Bad endianness tag not 0x4949 or 0x4d4d.";
-
-        public const String BadEndiannessTag0x4949Or0x4d4d = "Bad endianness tag: 0x4949 or 0x4d4d.";
 
         public const String BadMagicNumberShouldBe42 = "Bad magic number. Should be 42.";
 
@@ -81,9 +67,9 @@ namespace iText.IO {
 
         public const String BytesCanBeResetInByteArrayOutputStreamOnly = "Bytes can be reset in ByteArrayOutputStream only.";
 
-        public const String CannotGetTiffImageColor = "Cannot get TIFF image color.";
-
         public const String CannotFind1Frame = "Cannot find {0} frame.";
+
+        public const String CannotGetTiffImageColor = "Cannot get TIFF image color.";
 
         public const String CannotHandleBoxSizesHigherThan2_32 = "Cannot handle box sizes higher than 2^32.";
 
@@ -101,25 +87,24 @@ namespace iText.IO {
 
         public const String CcittCompressionTypeMustBeCcittg4Ccittg3_1dOrCcittg3_2d = "CCITT compression type must be CCITTG4, CCITTG3_1D or CCITTG3_2D.";
 
-        [Obsolete]
-        public const String TheCmap1WasNotFound = "The CMap {0} was not found";
+        public const String CharacterCodeException = "Character code exception.";
 
         public const String Cmap1WasNotFound = "The CMap {0} was not found.";
-
-        public const String ComponentsMustBe1_3Or4 = "Components must be 1, 3 or 4.";
-
-        public const String Compression1IsNotSupported = "Compression {0} is not supported.";
 
         public const String ColorDepthIsNotSupported = "The color depth {0} is not supported.";
 
         public const String ColorSpaceIsNotSupported = "The color space {0} is not supported.";
 
+        public const String ComponentsMustBe1_3Or4 = "Components must be 1, 3 or 4.";
+
+        public const String Compression1IsNotSupported = "Compression {0} is not supported.";
+
         public const String CompressionJpegIsOnlySupportedWithASingleStripThisImageHas1Strips = "Compression jpeg is only supported with a single strip. This image has {0} strips.";
+
+        public const String DirectoryNumberIsTooLarge = "Directory number is too large.";
 
         [Obsolete]
         public const String DirectoryNumberTooLarge = "directory.number.too.large";
-
-        public const String DirectoryNumberIsTooLarge = "Directory number is too large.";
 
         public const String EolCodeWordEncounteredInBlackRun = "EOL code word encountered in Black run.";
 
@@ -135,9 +120,9 @@ namespace iText.IO {
 
         public const String ExpectedIhdrMarker = "Expected IHDR marker.";
 
-        public const String ExpectedJpMarker = "Expected JP marker.";
-
         public const String ExpectedJp2hMarker = "Expected JP2H marker.";
+
+        public const String ExpectedJpMarker = "Expected JP marker.";
 
         public const String ExtraSamplesAreNotSupported = "Extra samples are not supported.";
 
@@ -145,26 +130,28 @@ namespace iText.IO {
 
         public const String FirstScanlineMustBe1dEncoded = "First scanline must be 1D encoded.";
 
-        public const String FontFile1NotFound = "Font file {0} not found.";
-
-        public const String ImageFormatCannotBeRecognized = "Image format cannot be recognized.";
-
-        public const String GifImageException = "GIF image exception.";
-
-        public const String GtNotExpected = "'>' not expected.";
-
-        public const String GifSignatureNotFound = "GIF signature not found.";
-
-        public const String IllegalValueForPredictorInTiffFile = "Illegal value for predictor in TIFF file.";
-
         [Obsolete]
         public const String Font1IsNotRecognized = "Font {0} is not recognized";
+
+        public const String FontFile1NotFound = "Font file {0} not found.";
 
         [Obsolete]
         public const String FontIsNotRecognized = "Font is not recognized";
 
+        public const String GifImageException = "GIF image exception.";
+
+        public const String GifSignatureNotFound = "GIF signature not found.";
+
+        public const String GtNotExpected = "'>' not expected.";
+
+        public const String IccProfileContains0ComponentsWhileImageDataContains1Components = "ICC profile contains {0} components, while the image data contains {1} components.";
+
+        public const String IllegalValueForPredictorInTiffFile = "Illegal value for predictor in TIFF file.";
+
         [Obsolete]
         public const String ImageCanNotBeAnImageMask = "Image can not be an image mask.";
+
+        public const String ImageFormatCannotBeRecognized = "Image format cannot be recognized.";
 
         public const String ImageIsNotMaskYouMustCallImageDataMakeMask = "Image is not a mask. You must call ImageData#makeMask().";
 
@@ -174,11 +161,6 @@ namespace iText.IO {
         public const String ImageMaskIsNotAMaskDidYouDoMakeMask = "Image is not a mask. You must call ImageData#makeMask().";
 
         public const String IncompletePalette = "Incomplete palette.";
-
-        [Obsolete]
-        public const String InvalidTTCFile = "{0} is not a valid TTC file.";
-
-        public const String InvalidTtcFile = "{0} is not a valid TTC file.";
 
         public const String InvalidBmpFileCompression = "Invalid BMP file compression.";
 
@@ -197,13 +179,18 @@ namespace iText.IO {
 
         public const String InvalidMagicValueForBmpFileMustBeBM = "Invalid magic value for bmp file. Must be 'BM'";
 
+        [Obsolete]
+        public const String InvalidTTCFile = "{0} is not a valid TTC file.";
+
+        public const String InvalidTtcFile = "{0} is not a valid TTC file.";
+
         public const String IoException = "I/O exception.";
 
         public const String Jbig2ImageException = "JBIG2 image exception.";
 
-        public const String JpegImageException = "JPEG image exception.";
-
         public const String Jpeg2000ImageException = "JPEG2000 image exception.";
+
+        public const String JpegImageException = "JPEG image exception.";
 
         [Obsolete]
         public const String MissingTagSForOjpegCompression = "Missing tag(s) for OJPEG compression";
@@ -212,13 +199,13 @@ namespace iText.IO {
 
         public const String NValueIsNotSupported = "N value {1} is not supported.";
 
+        public const String NotAtTrueTypeFile = "{0} is not a true type file";
+
         public const String PageNumberMustBeGtEq1 = "Page number must be >= 1.";
 
         [System.ObsoleteAttribute(@"because naming clash with Com itextpdf io font PdfEncodings may produce confusion with imports  Superseded by CharacterCodeException"
             )]
         public const String PdfEncodings = "Pdf encodings.";
-
-        public const String CharacterCodeException = "Character code exception.";
 
         public const String PdfHeaderNotFound = "PDF header not found.";
 
@@ -231,16 +218,24 @@ namespace iText.IO {
         [Obsolete]
         public const String PngFilterUnknown = "PNG filter unknown.";
 
-        public const String UnknownPngFilter = "Unknown PNG filter.";
-
         public const String PngImageException = "PNG image exception.";
+
+        public const String PrematureEofWhileReadingJpeg = "Premature EOF while reading JPEG.";
 
         [Obsolete]
         public const String PrematureEofWhileReadingJpg = "Premature EOF while reading JPEG.";
 
-        public const String PrematureEofWhileReadingJpeg = "Premature EOF while reading JPEG.";
-
         public const String ScanlineMustBeginWithEolCodeWord = "Scanline must begin with EOL code word.";
+
+        [Obsolete]
+        public const String TTCIndexDoesNotExistInFile = "TTC index doesn't exist in ttc file.";
+
+        public const String TableDoesNotExist = "Table {0} does not exist.";
+
+        public const String TableDoesNotExistsIn = "Table {0} does not exist in {1}";
+
+        [Obsolete]
+        public const String TheCmap1WasNotFound = "The CMap {0} was not found";
 
         public const String ThisImageCanNotBeAnImageMask = "This image can not be an image mask.";
 
@@ -250,14 +245,11 @@ namespace iText.IO {
 
         public const String TiffImageException = "TIFF image exception.";
 
-        [Obsolete]
-        public const String TTCIndexDoesNotExistInFile = "TTC index doesn't exist in ttc file.";
-
-        public const String TtcIndexDoesNotExistInThisTtcFile = "TTC index doesn't exist in this TTC file.";
-
         public const String TilesAreNotSupported = "Tiles are not supported.";
 
         public const String TransparencyLengthMustBeEqualTo2WithCcittImages = "Transparency length must be equal to 2 with CCITT images";
+
+        public const String TtcIndexDoesNotExistInThisTtcFile = "TTC index doesn't exist in this TTC file.";
 
         public const String TypeOfFont1IsNotRecognized = "Type of font {0} is not recognized.";
 
@@ -271,6 +263,8 @@ namespace iText.IO {
 
         public const String UnknownIOException = "Unknown I/O exception.";
 
+        public const String UnknownPngFilter = "Unknown PNG filter.";
+
         public const String UnsupportedBoxSizeEqEq0 = "Unsupported box size == 0.";
 
         public const String UnsupportedEncodingException = "Unsupported encoding exception.";
@@ -278,7 +272,19 @@ namespace iText.IO {
         [Obsolete]
         public const String WrongNumberOfComponentsInIccProfile = "ICC profile contains {0} components the image data contains {1} components.";
 
-        public const String IccProfileContains0ComponentsWhileImageDataContains1Components = "ICC profile contains {0} components, while the image data contains {1} components.";
+        public const String _1BitSamplesAreNotSupportedForHorizontalDifferencingPredictor = "{0} bit samples are not supported for horizontal differencing predictor.";
+
+        public const String _1CorruptedJfifMarker = "{0} corrupted jfif marker.";
+
+        public const String _1IsNotAValidJpegFile = "{0} is not a valid jpeg file.";
+
+        public const String _1IsNotAnAfmOrPfmFontFile = "{0} is not an afm or pfm font file.";
+
+        public const String _1MustHave8BitsPerComponent = "{0} must have 8 bits per component.";
+
+        public const String _1NotFoundAsFileOrResource = "{0} not found as file or resource.";
+
+        public const String _1UnsupportedJpegMarker2 = "{0} unsupported jpeg marker {1}.";
 
         /// <summary>Object for more details</summary>
         protected internal Object obj;
@@ -345,15 +351,6 @@ namespace iText.IO {
             }
         }
 
-        /// <summary>Sets additional params for Exception message.</summary>
-        /// <param name="messageParams">additional params.</param>
-        /// <returns>object itself.</returns>
-        public virtual iText.IO.IOException SetMessageParams(params Object[] messageParams) {
-            this.messageParams = new List<Object>();
-            this.messageParams.AddAll(messageParams);
-            return this;
-        }
-
         /// <summary>Gets additional params for Exception message.</summary>
         protected internal virtual Object[] GetMessageParams() {
             Object[] parameters = new Object[messageParams.Count];
@@ -361,6 +358,15 @@ namespace iText.IO {
                 parameters[i] = messageParams[i];
             }
             return parameters;
+        }
+
+        /// <summary>Sets additional params for Exception message.</summary>
+        /// <param name="messageParams">additional params.</param>
+        /// <returns>object itself.</returns>
+        public virtual iText.IO.IOException SetMessageParams(params Object[] messageParams) {
+            this.messageParams = new List<Object>();
+            this.messageParams.AddAll(messageParams);
+            return this;
         }
     }
 }

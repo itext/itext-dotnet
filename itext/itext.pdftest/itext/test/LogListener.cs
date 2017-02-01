@@ -42,12 +42,16 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using iText.IO.Log;
 using iText.Test.Attributes;
 using log4net;
 using log4net.Appender;
+using log4net.Config;
 using log4net.Core;
+using log4net.Layout;
+using log4net.Repository;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
@@ -55,6 +59,13 @@ namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
     public class LogListener : TestActionAttribute {
         private MemoryAppender appender;
+
+        static LogListener() {
+            ITextMemoryAppender memoryAppender = new ITextMemoryAppender();
+            memoryAppender.Layout = new PatternLayout("%message");
+            ILoggerRepository repo = LogManager.GetRepository(typeof(LogListener).GetAssembly());
+            BasicConfigurator.Configure(repo, memoryAppender);
+        }
 
         public override void BeforeTest(ITest testDetails) {
             Init();
@@ -71,6 +82,10 @@ namespace iText.Test {
         private void CheckLogMessages(ITest testDetails) {
             int checkedMessages = 0;
             LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
+            if (attributes.Length == 0) {
+                attributes = testDetails.Fixture.GetType().GetCustomAttributes(typeof(LogMessageAttribute), true)
+                    .Select(attr => (LogMessageAttribute) attr).ToArray();
+            }
             if (attributes.Length > 0) {
                 for (int i = 0; i < attributes.Length; i++) {
                     LogMessageAttribute logMessage = attributes[i];
@@ -99,7 +114,7 @@ namespace iText.Test {
 
         private bool EqualsMessageByTemplate(string message, string template) {
             if (template.IndexOf("{") > 0 && template.IndexOf("}") > 0) {
-                String templateWithoutParameters = Regex.Replace(template, "\\{[0-9]+?\\}", "(.|\\\\s)*?");
+                String templateWithoutParameters = Regex.Replace(template.Replace("''", "'"), "\\{[0-9]+?\\}", "(.|\\\\s)*?");
                 return Regex.IsMatch(message, templateWithoutParameters);
             } else {
                 return message.Contains(template);
@@ -120,7 +135,8 @@ namespace iText.Test {
         private void Init() {
             ILoggerFactory iLog = new Log4NetLoggerFactory();
             LoggerFactory.BindFactory(iLog);
-            IAppender[] iAppenders = LogManager.GetRepository().GetAppenders();
+            //LogManager.GetRepository() calls Assembly.GetCallingAssembly() so it will always be current (this) assembly
+            IAppender[] iAppenders = LogManager.GetRepository(typeof(LogListener).GetAssembly()).GetAppenders();
             appender = iAppenders[0] as MemoryAppender;
             appender.Clear();
         }

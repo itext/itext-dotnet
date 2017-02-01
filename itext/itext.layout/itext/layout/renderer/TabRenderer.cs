@@ -84,7 +84,9 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }
+            BeginElementOpacityApplying(drawContext);
             leader.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
+            EndElementOpacityApplying(drawContext);
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }

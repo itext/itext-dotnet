@@ -57,10 +57,6 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer {
-        private float? height;
-
-        private float? width;
-
         protected internal float? fixedXPosition;
 
         protected internal float? fixedYPosition;
@@ -73,6 +69,12 @@ namespace iText.Layout.Renderer {
 
         protected internal float imageHeight;
 
+        internal float[] matrix = new float[6];
+
+        private float? height;
+
+        private float? width;
+
         private float imageItselfScaledWidth;
 
         private float imageItselfScaledHeight;
@@ -82,8 +84,6 @@ namespace iText.Layout.Renderer {
         private float rotatedDeltaX;
 
         private float rotatedDeltaY;
-
-        internal float[] matrix = new float[6];
 
         /// <summary>Creates an ImageRenderer from its corresponding layout object.</summary>
         /// <param name="image">
@@ -97,18 +97,22 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
-            Rectangle layoutBox = area.GetBBox();
+            Rectangle layoutBox = area.GetBBox().Clone();
+            width = RetrieveWidth(layoutBox.GetWidth());
+            height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
+            if (IsAbsolutePosition()) {
+                ApplyAbsolutePosition(layoutBox);
+            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
-            width = RetrieveWidth(layoutBox.GetWidth());
-            height = RetrieveHeight();
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
-            imageWidth = xObject.GetWidth();
-            imageHeight = xObject.GetHeight();
+            Image modelElement = (Image)(GetModelElement());
+            PdfXObject xObject = modelElement.GetXObject();
+            imageWidth = modelElement.GetImageWidth();
+            imageHeight = modelElement.GetImageHeight();
             if (width == null && height == null) {
                 width = imageWidth;
                 height = (float)width / imageWidth * imageHeight;
@@ -154,7 +158,7 @@ namespace iText.Layout.Renderer {
                     height = RetrieveMaxHeight();
                 }
                 else {
-                    if (null != RetrieveHeight() && height != RetrieveHeight()) {
+                    if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {
                         width *= RetrieveHeight() / height;
                         height = RetrieveHeight();
                     }
@@ -220,7 +224,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             if (fixedYPosition == null) {
                 fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
@@ -268,8 +272,10 @@ namespace iText.Layout.Renderer {
                 }
             }
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
+            BeginElementOpacityApplying(drawContext);
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
+            EndElementOpacityApplying(drawContext);
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
@@ -277,7 +283,7 @@ namespace iText.Layout.Renderer {
                 canvas.CloseTag();
             }
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
+                ApplyRelativePositioningTranslation(true);
             }
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
@@ -295,7 +301,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(initialOccupiedAreaBBox, GetBorders(), false);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
             ApplyMargins(initialOccupiedAreaBBox, true);
             ApplyBorderBox(initialOccupiedAreaBBox, true);

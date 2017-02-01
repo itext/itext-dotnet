@@ -114,8 +114,7 @@ namespace iText.IO.Util {
         /// if the initial capacity is less
         /// than zero, or if the load factor is nonpositive.
         /// </exception>
-        public IntHashtable(int initialCapacity, float loadFactor)
-            : base() {
+        public IntHashtable(int initialCapacity, float loadFactor) {
             if (initialCapacity < 0) {
                 throw new ArgumentException(String.Format("Illegal Capacity: {0}", initialCapacity));
             }

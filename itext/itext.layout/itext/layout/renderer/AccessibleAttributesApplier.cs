@@ -146,9 +146,9 @@ namespace iText.Layout.Renderer {
                 ApplyBorderAttributes(renderer, attributes);
             }
             ApplyPaddingAttribute(renderer, attributes);
-            Color color = renderer.GetPropertyAsColor(Property.FONT_COLOR);
-            if (color != null && color is DeviceRgb) {
-                attributes.Put(PdfName.Color, new PdfArray(color.GetColorValue()));
+            TransparentColor transparentColor = renderer.GetPropertyAsTransparentColor(Property.FONT_COLOR);
+            if (transparentColor != null && transparentColor.GetColor() is DeviceRgb) {
+                attributes.Put(PdfName.Color, new PdfArray(transparentColor.GetColor().GetColorValue()));
             }
         }
 

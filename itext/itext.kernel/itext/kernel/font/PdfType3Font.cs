@@ -195,6 +195,12 @@ namespace iText.Kernel.Font {
             return null;
         }
 
+        public override bool ContainsGlyph(String text, int from) {
+            int ch = text[from];
+            return (fontEncoding.CanEncode(ch) || ch < 33) && ((Type3FontProgram)GetFontProgram()).GetGlyph(fontEncoding
+                .GetUnicodeDifference(ch)) != null;
+        }
+
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {
             return null;
         }

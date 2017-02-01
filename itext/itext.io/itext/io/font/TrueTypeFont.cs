@@ -74,18 +74,21 @@ namespace iText.IO.Font {
         private byte[] fontStreamBytes;
 
         protected internal TrueTypeFont() {
+            fontNames = new FontNames();
         }
 
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(String path) {
             CheckFilePath(path);
             fontParser = new OpenTypeParser(path);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(byte[] ttf) {
             fontParser = new OpenTypeParser(ttf);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
@@ -93,12 +96,14 @@ namespace iText.IO.Font {
         internal TrueTypeFont(String ttcPath, int ttcIndex) {
             CheckFilePath(ttcPath);
             fontParser = new OpenTypeParser(ttcPath, ttcIndex);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(byte[] ttc, int ttcIndex) {
             fontParser = new OpenTypeParser(ttc, ttcIndex);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
@@ -251,35 +256,7 @@ namespace iText.IO.Font {
             kerning = fontParser.ReadKerning(head.unitsPerEm);
             bBoxes = fontParser.ReadBbox(head.unitsPerEm);
             // font names group
-            fontNames.SetAllNames(fontParser.GetAllNameEntries());
-            fontNames.SetFontName(fontParser.GetPsFontName());
-            fontNames.SetFullName(fontNames.GetNames(4));
-            String[][] otfFamilyName = fontNames.GetNames(16);
-            if (otfFamilyName != null) {
-                fontNames.SetFamilyName(otfFamilyName);
-            }
-            else {
-                fontNames.SetFamilyName(fontNames.GetNames(1));
-            }
-            String[][] subfamily = fontNames.GetNames(2);
-            if (subfamily != null) {
-                fontNames.SetStyle(subfamily[0][3]);
-            }
-            String[][] otfSubFamily = fontNames.GetNames(17);
-            if (otfFamilyName != null) {
-                fontNames.SetSubfamily(otfSubFamily);
-            }
-            else {
-                fontNames.SetSubfamily(subfamily);
-            }
-            String[][] cidName = fontNames.GetNames(20);
-            if (cidName != null) {
-                fontNames.SetCidFontName(cidName[0][3]);
-            }
-            fontNames.SetWeight(os_2.usWeightClass);
-            fontNames.SetWidth(os_2.usWidthClass);
-            fontNames.SetMacStyle(head.macStyle);
-            fontNames.SetAllowEmbedding(os_2.fsType != 2);
+            fontNames = fontParser.GetFontNames();
             // font metrics group
             fontMetrics.SetUnitsPerEm(head.unitsPerEm);
             fontMetrics.UpdateBbox(head.xMin, head.yMin, head.xMax, head.yMax);
@@ -379,6 +356,14 @@ namespace iText.IO.Font {
                 bit <<= 1;
             }
             return ret;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Close() {
+            if (fontParser != null) {
+                fontParser.Close();
+            }
+            fontParser = null;
         }
     }
 }

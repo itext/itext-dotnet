@@ -168,7 +168,7 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetRotation(int degAngle) {
-            GetPdfObject().Put(PdfName.Rotate, new PdfNumber(degAngle));
+            Put(PdfName.Rotate, new PdfNumber(degAngle));
             return this;
         }
 
@@ -353,7 +353,7 @@ namespace iText.Kernel.Pdf {
                 }
                 if (resources == null) {
                     resources = new PdfDictionary();
-                    GetPdfObject().Put(PdfName.Resources, resources);
+                    Put(PdfName.Resources, resources);
                 }
                 this.resources = new PdfResources(resources);
                 this.resources.SetReadOnly(readOnly);
@@ -377,7 +377,7 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetResources(PdfResources pdfResources) {
-            GetPdfObject().Put(PdfName.Resources, pdfResources.GetPdfObject());
+            Put(PdfName.Resources, pdfResources.GetPdfObject());
             this.resources = pdfResources;
             return this;
         }
@@ -394,7 +394,7 @@ namespace iText.Kernel.Pdf {
             xmp.GetOutputStream().Write(xmpMetadata);
             xmp.Put(PdfName.Type, PdfName.Metadata);
             xmp.Put(PdfName.Subtype, PdfName.XML);
-            GetPdfObject().Put(PdfName.Metadata, xmp);
+            Put(PdfName.Metadata, xmp);
         }
 
         /// <summary>Serializes XMP Metadata to byte array and sets it.</summary>
@@ -662,7 +662,7 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetMediaBox(Rectangle rectangle) {
-            GetPdfObject().Put(PdfName.MediaBox, new PdfArray(rectangle));
+            Put(PdfName.MediaBox, new PdfArray(rectangle));
             return this;
         }
 
@@ -708,7 +708,7 @@ namespace iText.Kernel.Pdf {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage SetCropBox(Rectangle rectangle) {
-            GetPdfObject().Put(PdfName.CropBox, new PdfArray(rectangle));
+            Put(PdfName.CropBox, new PdfArray(rectangle));
             return this;
         }
 
@@ -732,7 +732,7 @@ namespace iText.Kernel.Pdf {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                 logger.Warn(iText.IO.LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE);
             }
-            GetPdfObject().Put(PdfName.ArtBox, new PdfArray(rectangle));
+            Put(PdfName.ArtBox, new PdfArray(rectangle));
             return this;
         }
 
@@ -771,7 +771,7 @@ namespace iText.Kernel.Pdf {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfPage));
                 logger.Warn(iText.IO.LogMessageConstant.ONLY_ONE_OF_ARTBOX_OR_TRIMBOX_CAN_EXIST_IN_THE_PAGE);
             }
-            GetPdfObject().Put(PdfName.TrimBox, new PdfArray(rectangle));
+            Put(PdfName.TrimBox, new PdfArray(rectangle));
             return this;
         }
 
@@ -988,7 +988,6 @@ namespace iText.Kernel.Pdf {
             if (GetDocument().IsTagged() && tagAnnotation) {
                 TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                 iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
-                // TODO what about if current tagging stream is set
                 tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
                 if (prevPage != null) {
                     tagPointer.SetPageForTagging(prevPage);
@@ -1030,6 +1029,12 @@ namespace iText.Kernel.Pdf {
                 }
                 if (annots.IsEmpty()) {
                     GetPdfObject().Remove(PdfName.Annots);
+                    SetModified();
+                }
+                else {
+                    if (annots.GetIndirectReference() == null) {
+                        SetModified();
+                    }
                 }
             }
             if (GetDocument().IsTagged()) {
@@ -1238,6 +1243,7 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
@@ -1282,7 +1288,6 @@ namespace iText.Kernel.Pdf {
             if (annots == null && create) {
                 annots = new PdfArray();
                 Put(PdfName.Annots, annots);
-                SetModified();
             }
             return annots;
         }
@@ -1307,8 +1312,7 @@ namespace iText.Kernel.Pdf {
             if (contents is PdfStream) {
                 array = new PdfArray();
                 array.Add(contents);
-                GetPdfObject().Put(PdfName.Contents, array);
-                SetModified();
+                Put(PdfName.Contents, array);
             }
             else {
                 if (contents is PdfArray) {
@@ -1336,7 +1340,9 @@ namespace iText.Kernel.Pdf {
 
         private void TryFlushPageTags() {
             try {
-                GetDocument().GetTagStructureContext().FlushPageTags(this);
+                if (!GetDocument().isClosing) {
+                    GetDocument().GetTagStructureContext().FlushPageTags(this);
+                }
                 GetDocument().GetStructTreeRoot().CreateParentTreeEntryForPage(this);
             }
             catch (Exception ex) {

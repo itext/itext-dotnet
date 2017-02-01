@@ -53,6 +53,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -111,7 +112,7 @@ namespace iText.Layout.Renderer {
             this.positionedRenderers = other.positionedRenderers;
             this.modelElement = other.modelElement;
             this.flushed = other.flushed;
-            this.occupiedArea = other.occupiedArea.Clone();
+            this.occupiedArea = other.occupiedArea != null ? other.occupiedArea.Clone() : null;
             this.parent = other.parent;
             this.properties.AddAll(other.properties);
             this.isLastRendererForModelElement = other.isLastRendererForModelElement;
@@ -136,6 +137,48 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         root.AddChild(renderer);
+                    }
+                }
+                else {
+                    if (positioning == LayoutPosition.ABSOLUTE) {
+                        // For position=absolute, if none of the top, bottom, left, right properties are provided,
+                        // the content should be displayed in the flow of the current content, not overlapping it.
+                        // The behavior is just if it would be statically positioned except it does not affect other elements
+                        iText.Layout.Renderer.AbstractRenderer positionedParent = this;
+                        bool noPositionInfo = iText.Layout.Renderer.AbstractRenderer.NoAbsolutePositionInfo(renderer);
+                        while (!positionedParent.IsPositioned() && !noPositionInfo) {
+                            IRenderer parent = positionedParent.parent;
+                            if (parent is iText.Layout.Renderer.AbstractRenderer) {
+                                positionedParent = (iText.Layout.Renderer.AbstractRenderer)parent;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        if (positionedParent == this) {
+                            positionedRenderers.Add(renderer);
+                        }
+                        else {
+                            positionedParent.AddChild(renderer);
+                        }
+                    }
+                }
+            }
+            // Fetch positioned renderers from non-positioned child because they might be stuck there because child's parent was null previously
+            if (renderer is iText.Layout.Renderer.AbstractRenderer && !((iText.Layout.Renderer.AbstractRenderer)renderer
+                ).IsPositioned() && ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers.Count > 0) {
+                // For position=absolute, if none of the top, bottom, left, right properties are provided,
+                // the content should be displayed in the flow of the current content, not overlapping it.
+                // The behavior is just if it would be statically positioned except it does not affect other elements
+                int pos = 0;
+                IList<IRenderer> childPositionedRenderers = ((iText.Layout.Renderer.AbstractRenderer)renderer).positionedRenderers;
+                while (pos < childPositionedRenderers.Count) {
+                    if (iText.Layout.Renderer.AbstractRenderer.NoAbsolutePositionInfo(childPositionedRenderers[pos])) {
+                        pos++;
+                    }
+                    else {
+                        positionedRenderers.Add(childPositionedRenderers[pos]);
+                        childPositionedRenderers.JRemoveAt(pos);
                     }
                 }
             }
@@ -273,6 +316,23 @@ namespace iText.Layout.Renderer {
             return this.GetProperty<Color>(property);
         }
 
+        /// <summary>
+        /// Returns a property with a certain key, as a
+        /// <see cref="iText.Layout.Properties.TransparentColor"/>
+        /// .
+        /// </summary>
+        /// <param name="property">
+        /// an
+        /// <see cref="iText.Layout.Properties.Property">enum value</see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Layout.Properties.TransparentColor"/>
+        /// </returns>
+        public virtual TransparentColor GetPropertyAsTransparentColor(int property) {
+            return this.GetProperty<TransparentColor>(property);
+        }
+
         /// <summary>Returns a property with a certain key, as a boolean value.</summary>
         /// <param name="property">
         /// an
@@ -310,15 +370,34 @@ namespace iText.Layout.Renderer {
             ApplyDestinationsAndAnnotation(drawContext);
             bool relativePosition = IsRelativePosition();
             if (relativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
+            BeginElementOpacityApplying(drawContext);
             DrawBackground(drawContext);
             DrawBorder(drawContext);
             DrawChildren(drawContext);
+            DrawPositionedChildren(drawContext);
+            EndElementOpacityApplying(drawContext);
             if (relativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
+                ApplyRelativePositioningTranslation(true);
             }
             flushed = true;
+        }
+
+        protected internal virtual void BeginElementOpacityApplying(DrawContext drawContext) {
+            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
+            if (opacity != null && opacity < 1f) {
+                PdfExtGState extGState = new PdfExtGState();
+                extGState.SetStrokeOpacity((float)opacity).SetFillOpacity((float)opacity);
+                drawContext.GetCanvas().SaveState().SetExtGState(extGState);
+            }
+        }
+
+        protected internal virtual void EndElementOpacityApplying(DrawContext drawContext) {
+            float? opacity = this.GetPropertyAsFloat(Property.OPACITY);
+            if (opacity != null && opacity < 1f) {
+                drawContext.GetCanvas().RestoreState();
+            }
         }
 
         /// <summary>
@@ -331,7 +410,8 @@ namespace iText.Layout.Renderer {
         /// <param name="drawContext">the context (canvas, document, etc) of this drawing operation.</param>
         public virtual void DrawBackground(DrawContext drawContext) {
             Background background = this.GetProperty<Background>(Property.BACKGROUND);
-            if (background != null) {
+            BackgroundImage backgroundImage = this.GetProperty<BackgroundImage>(Property.BACKGROUND_IMAGE);
+            if (background != null || backgroundImage != null) {
                 Rectangle bBox = GetOccupiedAreaBBox();
                 bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
                 if (isTagged) {
@@ -344,10 +424,43 @@ namespace iText.Layout.Renderer {
                         );
                     return;
                 }
-                drawContext.GetCanvas().SaveState().SetFillColor(background.GetColor()).Rectangle(backgroundArea.GetX() - 
-                    background.GetExtraLeft(), backgroundArea.GetY() - background.GetExtraBottom(), backgroundArea.GetWidth
-                    () + background.GetExtraLeft() + background.GetExtraRight(), backgroundArea.GetHeight() + background.GetExtraTop
-                    () + background.GetExtraBottom()).Fill().RestoreState();
+                if (background != null) {
+                    TransparentColor backgroundColor = new TransparentColor(background.GetColor(), background.GetOpacity());
+                    drawContext.GetCanvas().SaveState().SetFillColor(backgroundColor.GetColor());
+                    backgroundColor.ApplyFillTransparency(drawContext.GetCanvas());
+                    drawContext.GetCanvas().Rectangle(backgroundArea.GetX() - background.GetExtraLeft(), backgroundArea.GetY()
+                         - background.GetExtraBottom(), backgroundArea.GetWidth() + background.GetExtraLeft() + background.GetExtraRight
+                        (), backgroundArea.GetHeight() + background.GetExtraTop() + background.GetExtraBottom()).Fill().RestoreState
+                        ();
+                }
+                if (backgroundImage != null && backgroundImage.GetImage() != null) {
+                    ApplyBorderBox(backgroundArea, false);
+                    Rectangle imageRectangle = new Rectangle(backgroundArea.GetX(), backgroundArea.GetTop() - backgroundImage.
+                        GetImage().GetHeight(), backgroundImage.GetImage().GetWidth(), backgroundImage.GetImage().GetHeight());
+                    if (imageRectangle.GetWidth() <= 0 || imageRectangle.GetHeight() <= 0) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.AbstractRenderer));
+                        logger.Error(String.Format(iText.IO.LogMessageConstant.RECTANGLE_HAS_NEGATIVE_OR_ZERO_SIZES, "background-image"
+                            ));
+                        return;
+                    }
+                    ApplyBorderBox(backgroundArea, true);
+                    drawContext.GetCanvas().SaveState().Rectangle(backgroundArea).Clip().NewPath();
+                    float initialX = backgroundImage.IsRepeatX() ? imageRectangle.GetX() - imageRectangle.GetWidth() : imageRectangle
+                        .GetX();
+                    float initialY = backgroundImage.IsRepeatY() ? imageRectangle.GetTop() : imageRectangle.GetY();
+                    imageRectangle.SetY(initialY);
+                    do {
+                        imageRectangle.SetX(initialX);
+                        do {
+                            drawContext.GetCanvas().AddXObject(backgroundImage.GetImage(), imageRectangle);
+                            imageRectangle.MoveRight(imageRectangle.GetWidth());
+                        }
+                        while (backgroundImage.IsRepeatX() && imageRectangle.GetLeft() < backgroundArea.GetRight());
+                        imageRectangle.MoveDown(imageRectangle.GetHeight());
+                    }
+                    while (backgroundImage.IsRepeatY() && imageRectangle.GetTop() > backgroundArea.GetBottom());
+                    drawContext.GetCanvas().RestoreState();
+                }
                 if (isTagged) {
                     drawContext.GetCanvas().CloseTag();
                 }
@@ -403,24 +516,16 @@ namespace iText.Layout.Renderer {
                     canvas.OpenTag(new CanvasArtifact());
                 }
                 if (borders[0] != null) {
-                    canvas.SaveState();
                     borders[0].Draw(canvas, x1, y2, x2, y2, Border.Side.TOP, leftWidth, rightWidth);
-                    canvas.RestoreState();
                 }
                 if (borders[1] != null) {
-                    canvas.SaveState();
                     borders[1].Draw(canvas, x2, y2, x2, y1, Border.Side.RIGHT, topWidth, bottomWidth);
-                    canvas.RestoreState();
                 }
                 if (borders[2] != null) {
-                    canvas.SaveState();
                     borders[2].Draw(canvas, x2, y1, x1, y1, Border.Side.BOTTOM, rightWidth, leftWidth);
-                    canvas.RestoreState();
                 }
                 if (borders[3] != null) {
-                    canvas.SaveState();
                     borders[3].Draw(canvas, x1, y1, x1, y2, Border.Side.LEFT, bottomWidth, topWidth);
-                    canvas.RestoreState();
                 }
                 if (isTagged) {
                     canvas.CloseTag();
@@ -604,9 +709,6 @@ namespace iText.Layout.Renderer {
         /// of the renderer
         /// </returns>
         protected internal virtual Rectangle ApplyMargins(Rectangle rect, float[] margins, bool reverse) {
-            if (IsPositioned()) {
-                return rect;
-            }
             return rect.ApplyMargins<Rectangle>(margins[0], margins[1], margins[2], margins[3], reverse);
         }
 
@@ -710,11 +812,60 @@ namespace iText.Layout.Renderer {
             return rect.ApplyMargins<Rectangle>(topWidth, rightWidth, bottomWidth, leftWidth, reverse);
         }
 
-        protected internal virtual void ApplyAbsolutePositioningTranslation(bool reverse) {
-            float top = (float)this.GetPropertyAsFloat(Property.TOP);
-            float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM);
-            float left = (float)this.GetPropertyAsFloat(Property.LEFT);
-            float right = (float)this.GetPropertyAsFloat(Property.RIGHT);
+        protected internal virtual void ApplyAbsolutePosition(Rectangle rect) {
+            float? top = this.GetPropertyAsFloat(Property.TOP);
+            float? bottom = this.GetPropertyAsFloat(Property.BOTTOM);
+            float? left = this.GetPropertyAsFloat(Property.LEFT);
+            float? right = this.GetPropertyAsFloat(Property.RIGHT);
+            float initialHeight = rect.GetHeight();
+            float initialWidth = rect.GetWidth();
+            float? minHeight = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
+            if (minHeight != null && rect.GetHeight() < (float)minHeight) {
+                float difference = (float)minHeight - rect.GetHeight();
+                rect.MoveDown(difference).SetHeight(rect.GetHeight() + difference);
+            }
+            if (top != null) {
+                rect.SetHeight(rect.GetHeight() - (float)top);
+            }
+            if (left != null) {
+                rect.SetX(rect.GetX() + (float)left).SetWidth(rect.GetWidth() - (float)left);
+            }
+            if (right != null) {
+                UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
+                if (left == null && width != null) {
+                    float widthValue = width.IsPointValue() ? width.GetValue() : (width.GetValue() * initialWidth);
+                    float placeLeft = rect.GetWidth() - widthValue;
+                    if (placeLeft > 0) {
+                        float computedRight = Math.Min(placeLeft, (float)right);
+                        rect.SetX(rect.GetX() + rect.GetWidth() - computedRight - widthValue);
+                    }
+                }
+                else {
+                    if (width == null) {
+                        rect.SetWidth(rect.GetWidth() - (float)right);
+                    }
+                }
+            }
+            if (bottom != null) {
+                if (minHeight != null) {
+                    rect.SetHeight((float)minHeight + (float)bottom);
+                }
+                else {
+                    float minHeightValue = rect.GetHeight() - (float)bottom;
+                    float? currentMaxHeight = this.GetPropertyAsFloat(Property.MAX_HEIGHT);
+                    if (currentMaxHeight != null) {
+                        minHeightValue = Math.Min(minHeightValue, (float)currentMaxHeight);
+                    }
+                    SetProperty(Property.MIN_HEIGHT, minHeightValue);
+                }
+            }
+        }
+
+        protected internal virtual void ApplyRelativePositioningTranslation(bool reverse) {
+            float top = (float)this.GetPropertyAsFloat(Property.TOP, 0f);
+            float bottom = (float)this.GetPropertyAsFloat(Property.BOTTOM, 0f);
+            float left = (float)this.GetPropertyAsFloat(Property.LEFT, 0f);
+            float right = (float)this.GetPropertyAsFloat(Property.RIGHT, 0f);
             int reverseMultiplier = reverse ? -1 : 1;
             float dxRight = left != 0 ? left * reverseMultiplier : -right * reverseMultiplier;
             float dyUp = top != 0 ? -top * reverseMultiplier : bottom * reverseMultiplier;
@@ -740,16 +891,19 @@ namespace iText.Layout.Renderer {
         protected internal virtual void ApplyAction(PdfDocument document) {
             PdfAction action = this.GetProperty<PdfAction>(Property.ACTION);
             if (action != null) {
-                PdfLinkAnnotation link = new PdfLinkAnnotation(GetOccupiedArea().GetBBox());
+                PdfLinkAnnotation link = this.GetProperty<PdfLinkAnnotation>(Property.LINK_ANNOTATION);
+                if (link == null) {
+                    link = new PdfLinkAnnotation(new Rectangle(0, 0, 0, 0));
+                    Border border = this.GetProperty<Border>(Property.BORDER);
+                    if (border != null) {
+                        link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
+                    }
+                    else {
+                        link.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
+                    }
+                    SetProperty(Property.LINK_ANNOTATION, link);
+                }
                 link.SetAction(action);
-                Border border = this.GetProperty<Border>(Property.BORDER);
-                if (border != null) {
-                    link.SetBorder(new PdfArray(new float[] { 0, 0, border.GetWidth() }));
-                }
-                else {
-                    link.SetBorder(new PdfArray(new float[] { 0, 0, 0 }));
-                }
-                SetProperty(Property.LINK_ANNOTATION, link);
             }
         }
 
@@ -773,10 +927,8 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual bool IsNotFittingLayoutArea(LayoutArea layoutArea) {
-            Rectangle area = ApplyMargins(layoutArea.GetBBox().Clone(), false);
-            area = ApplyPaddings(area, false);
-            return !IsPositioned() && (occupiedArea.GetBBox().GetHeight() > area.GetHeight() || occupiedArea.GetBBox()
-                .GetWidth() > area.GetWidth());
+            return !IsPositioned() && (occupiedArea.GetBBox().GetHeight() > layoutArea.GetBBox().GetHeight() || occupiedArea
+                .GetBBox().GetWidth() > layoutArea.GetBBox().GetWidth());
         }
 
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
@@ -785,7 +937,7 @@ namespace iText.Layout.Renderer {
         /// <see>boolean</see>
         /// </returns>
         protected internal virtual bool IsPositioned() {
-            return IsFixedLayout();
+            return !IsStaticLayout();
         }
 
         /// <summary>Indicates whether the renderer's position is fixed or not.</summary>
@@ -798,9 +950,19 @@ namespace iText.Layout.Renderer {
             return System.Convert.ToInt32(LayoutPosition.FIXED).Equals(positioning);
         }
 
+        protected internal virtual bool IsStaticLayout() {
+            Object positioning = this.GetProperty<Object>(Property.POSITION);
+            return positioning == null || System.Convert.ToInt32(LayoutPosition.STATIC).Equals(positioning);
+        }
+
         protected internal virtual bool IsRelativePosition() {
             int? positioning = this.GetPropertyAsInteger(Property.POSITION);
             return System.Convert.ToInt32(LayoutPosition.RELATIVE).Equals(positioning);
+        }
+
+        protected internal virtual bool IsAbsolutePosition() {
+            int? positioning = this.GetPropertyAsInteger(Property.POSITION);
+            return System.Convert.ToInt32(LayoutPosition.ABSOLUTE).Equals(positioning);
         }
 
         protected internal virtual bool IsKeepTogether() {
@@ -971,20 +1133,39 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void OverrideHeightProperties() {
-            if (HasProperty(Property.HEIGHT)) {
-                float? height = this.GetProperty<float?>(Property.HEIGHT);
-                if (!HasProperty(Property.MAX_HEIGHT) || height < this.GetProperty<float?>(Property.MAX_HEIGHT)) {
-                    SetProperty(Property.MAX_HEIGHT, height);
+            float? height = this.GetProperty<float?>(Property.HEIGHT);
+            float? maxHeight = this.GetProperty<float?>(Property.MAX_HEIGHT);
+            float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
+            if (null != height) {
+                if (null == maxHeight || height < maxHeight) {
+                    maxHeight = height;
                 }
-                if (!HasProperty(Property.MIN_HEIGHT) || height > this.GetProperty<float?>(Property.MIN_HEIGHT)) {
-                    SetProperty(Property.MIN_HEIGHT, height);
+                else {
+                    height = maxHeight;
+                }
+                if (null == minHeight || height > minHeight) {
+                    minHeight = height;
                 }
             }
-            if (HasProperty(Property.MIN_HEIGHT)) {
-                float? minHeight = this.GetProperty<float?>(Property.MIN_HEIGHT);
-                if (HasProperty(Property.MAX_HEIGHT) && minHeight > this.GetProperty<float?>(Property.MAX_HEIGHT)) {
-                    SetProperty(Property.MAX_HEIGHT, minHeight);
-                }
+            if (null != maxHeight && null != minHeight && minHeight > maxHeight) {
+                maxHeight = minHeight;
+            }
+            if (null != maxHeight) {
+                SetProperty(Property.MAX_HEIGHT, maxHeight);
+            }
+            if (null != minHeight) {
+                SetProperty(Property.MIN_HEIGHT, minHeight);
+            }
+        }
+
+        internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
+            return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
+                (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
+        }
+
+        internal virtual void DrawPositionedChildren(DrawContext drawContext) {
+            foreach (IRenderer positionedChild in positionedRenderers) {
+                positionedChild.Draw(drawContext);
             }
         }
 

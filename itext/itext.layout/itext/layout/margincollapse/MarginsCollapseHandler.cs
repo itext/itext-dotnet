@@ -64,7 +64,7 @@ namespace iText.Layout.Margincollapse {
 
         private int processedChildrenNum = 0;
 
-        private IList<IRenderer> rendererChildren;
+        private IList<IRenderer> rendererChildren = new List<IRenderer>();
 
         public MarginsCollapseHandler(IRenderer renderer, MarginsCollapseInfo marginsCollapseInfo) {
             this.renderer = renderer;
@@ -72,13 +72,11 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void ProcessFixedHeightAdjustment(float heightDelta) {
-            collapseInfo.SetBufferSpace(collapseInfo.GetBufferSpace() + heightDelta);
+            collapseInfo.SetBufferSpaceOnTop(collapseInfo.GetBufferSpaceOnTop() + heightDelta);
+            collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() + heightDelta);
         }
 
         public virtual MarginsCollapseInfo StartChildMarginsHandling(IRenderer child, Rectangle layoutBox) {
-            if (rendererChildren == null) {
-                rendererChildren = new List<IRenderer>();
-            }
             rendererChildren.Add(child);
             int childIndex = processedChildrenNum++;
             bool childIsBlockElement = IsBlockElement(child);
@@ -111,12 +109,15 @@ namespace iText.Layout.Margincollapse {
             MarginsCollapseInfo childMarginsInfo = new MarginsCollapseInfo(ignoreChildTopMargin, ignoreChildBottomMargin
                 , childCollapseBefore, childCollapseAfter);
             if (ignoreChildTopMargin && childIndex == firstNotEmptyKidIndex) {
-                childMarginsInfo.SetBufferSpace(collapseInfo.GetBufferSpace());
+                childMarginsInfo.SetBufferSpaceOnTop(collapseInfo.GetBufferSpaceOnTop());
+            }
+            if (ignoreChildBottomMargin) {
+                childMarginsInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom());
             }
             return childMarginsInfo;
         }
 
-        public virtual void EndChildMarginsHandling() {
+        public virtual void EndChildMarginsHandling(Rectangle layoutBox) {
             int childIndex = processedChildrenNum - 1;
             if (childMarginInfo != null) {
                 if (firstNotEmptyKidIndex == childIndex && childMarginInfo.IsSelfCollapsing()) {
@@ -130,13 +131,14 @@ namespace iText.Layout.Margincollapse {
             if (firstNotEmptyKidIndex == childIndex && FirstChildMarginAdjoinedToParent(renderer)) {
                 if (!collapseInfo.IsSelfCollapsing()) {
                     GetRidOfCollapseArtifactsAtopOccupiedArea();
+                    if (childMarginInfo != null) {
+                        ProcessUsedChildBufferSpaceOnTop(layoutBox);
+                    }
                 }
             }
             if (prevChildMarginInfo != null) {
                 FixPrevChildOccupiedArea(childIndex);
-                if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop()) {
-                    collapseInfo.GetCollapseBefore().JoinMargin(prevChildMarginInfo.GetOwnCollapseAfter());
-                }
+                UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetOwnCollapseAfter());
             }
             prevChildMarginInfo = childMarginInfo;
             childMarginInfo = null;
@@ -147,7 +149,7 @@ namespace iText.Layout.Margincollapse {
             collapseInfo.GetCollapseAfter().JoinMargin(GetModelBottomMargin(renderer));
             if (!FirstChildMarginAdjoinedToParent(renderer)) {
                 float topIndent = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
-                AdjustBoxPosAndHeight(parentBBox, topIndent);
+                ApplyTopMargin(parentBBox, topIndent);
             }
             if (!LastChildMarginAdjoinedToParent(renderer)) {
                 float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
@@ -158,17 +160,15 @@ namespace iText.Layout.Margincollapse {
             IgnoreModelBottomMargin(renderer);
         }
 
-        public virtual void EndMarginsCollapse() {
-            if (prevChildMarginInfo != null && prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop
-                ()) {
-                collapseInfo.GetCollapseBefore().JoinMargin(prevChildMarginInfo.GetCollapseAfter());
+        public virtual void EndMarginsCollapse(Rectangle layoutBox) {
+            if (prevChildMarginInfo != null) {
+                UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetCollapseAfter());
             }
             bool couldBeSelfCollapsing = iText.Layout.Margincollapse.MarginsCollapseHandler.MarginsCouldBeSelfCollapsing
                 (renderer);
             if (FirstChildMarginAdjoinedToParent(renderer)) {
                 if (collapseInfo.IsSelfCollapsing() && !couldBeSelfCollapsing) {
-                    float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
-                    renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
+                    AddNotYetAppliedTopMargin(layoutBox);
                 }
             }
             collapseInfo.SetSelfCollapsing(collapseInfo.IsSelfCollapsing() && couldBeSelfCollapsing);
@@ -212,6 +212,12 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
+        private void UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(MarginsCollapse collapseAfter) {
+            if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop()) {
+                collapseInfo.GetCollapseBefore().JoinMargin(collapseAfter);
+            }
+        }
+
         private void PrepareBoxForLayoutAttempt(Rectangle layoutBox, int childIndex, bool childIsBlockElement) {
             if (prevChildMarginInfo != null) {
                 bool prevChildHasAppliedCollapseAfter = !prevChildMarginInfo.IsIgnoreOwnMarginBottom() && (!prevChildMarginInfo
@@ -231,7 +237,12 @@ namespace iText.Layout.Margincollapse {
                 if (childIndex > firstNotEmptyKidIndex) {
                     if (LastChildMarginAdjoinedToParent(renderer)) {
                         // restore layout box after inline element
-                        float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
+                        float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize() - collapseInfo.GetUsedBufferSpaceOnBottom
+                            ();
+                        // used space shall be always less or equal to collapsedMarginAfter size
+                        collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() + collapseInfo.GetUsedBufferSpaceOnBottom
+                            ());
+                        collapseInfo.SetUsedBufferSpaceOnBottom(0);
                         layoutBox.SetY(layoutBox.GetY() - bottomIndent);
                         layoutBox.SetHeight(layoutBox.GetHeight() + bottomIndent);
                     }
@@ -240,7 +251,7 @@ namespace iText.Layout.Margincollapse {
             if (!childIsBlockElement) {
                 if (childIndex == firstNotEmptyKidIndex && FirstChildMarginAdjoinedToParent(renderer)) {
                     float topIndent = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
-                    AdjustBoxPosAndHeight(layoutBox, topIndent);
+                    ApplyTopMargin(layoutBox, topIndent);
                 }
                 if (LastChildMarginAdjoinedToParent(renderer)) {
                     float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
@@ -249,22 +260,64 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
-        private void AdjustBoxPosAndHeight(Rectangle box, float topIndent) {
-            float bufferLeftovers = collapseInfo.GetBufferSpace() - topIndent;
-            if (bufferLeftovers >= 0) {
-                collapseInfo.SetBufferSpace(bufferLeftovers);
+        private void ApplyTopMargin(Rectangle box, float topIndent) {
+            float bufferLeftoversOnTop = collapseInfo.GetBufferSpaceOnTop() - topIndent;
+            float usedTopBuffer = bufferLeftoversOnTop > 0 ? topIndent : collapseInfo.GetBufferSpaceOnTop();
+            collapseInfo.SetUsedBufferSpaceOnTop(usedTopBuffer);
+            SubtractUsedTopBufferFromBottomBuffer(usedTopBuffer);
+            if (bufferLeftoversOnTop >= 0) {
+                collapseInfo.SetBufferSpaceOnTop(bufferLeftoversOnTop);
                 box.MoveDown(topIndent);
             }
             else {
-                box.MoveDown(collapseInfo.GetBufferSpace());
-                collapseInfo.SetBufferSpace(0);
-                box.SetHeight(box.GetHeight() + bufferLeftovers);
+                box.MoveDown(collapseInfo.GetBufferSpaceOnTop());
+                collapseInfo.SetBufferSpaceOnTop(0);
+                box.SetHeight(box.GetHeight() + bufferLeftoversOnTop);
             }
         }
 
         private void ApplyBottomMargin(Rectangle box, float bottomIndent) {
-            box.SetY(box.GetY() + bottomIndent);
-            box.SetHeight(box.GetHeight() - bottomIndent);
+            // Here we don't subtract used buffer space from topBuffer, because every kid is assumed to be 
+            // the last one on the page, and so every kid always has parent's bottom buffer, however only the true last kid
+            // uses it for real. Also, bottom margin are always applied after top margins, so it doesn't matter anyway.
+            float bottomIndentLeftovers = bottomIndent - collapseInfo.GetBufferSpaceOnBottom();
+            if (bottomIndentLeftovers < 0) {
+                collapseInfo.SetUsedBufferSpaceOnBottom(bottomIndent);
+                collapseInfo.SetBufferSpaceOnBottom(-bottomIndentLeftovers);
+            }
+            else {
+                collapseInfo.SetUsedBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom());
+                collapseInfo.SetBufferSpaceOnBottom(0);
+                box.SetY(box.GetY() + bottomIndentLeftovers);
+                box.SetHeight(box.GetHeight() - bottomIndentLeftovers);
+            }
+        }
+
+        private void ProcessUsedChildBufferSpaceOnTop(Rectangle layoutBox) {
+            float childUsedBufferSpaceOnTop = childMarginInfo.GetUsedBufferSpaceOnTop();
+            if (childUsedBufferSpaceOnTop > 0) {
+                if (childUsedBufferSpaceOnTop > collapseInfo.GetBufferSpaceOnTop()) {
+                    childUsedBufferSpaceOnTop = collapseInfo.GetBufferSpaceOnTop();
+                }
+                collapseInfo.SetBufferSpaceOnTop(collapseInfo.GetBufferSpaceOnTop() - childUsedBufferSpaceOnTop);
+                collapseInfo.SetUsedBufferSpaceOnTop(childUsedBufferSpaceOnTop);
+                // usage of top buffer space on child is expressed by moving layout box down instead of making it smaller,
+                // so in order to process next kids correctly, we need to move parent layout box also
+                layoutBox.MoveDown(childUsedBufferSpaceOnTop);
+                SubtractUsedTopBufferFromBottomBuffer(childUsedBufferSpaceOnTop);
+            }
+        }
+
+        private void SubtractUsedTopBufferFromBottomBuffer(float usedTopBuffer) {
+            if (collapseInfo.GetBufferSpaceOnTop() > collapseInfo.GetBufferSpaceOnBottom()) {
+                float bufferLeftoversOnTop = collapseInfo.GetBufferSpaceOnTop() - usedTopBuffer;
+                if (bufferLeftoversOnTop < collapseInfo.GetBufferSpaceOnBottom()) {
+                    collapseInfo.SetBufferSpaceOnBottom(bufferLeftoversOnTop);
+                }
+            }
+            else {
+                collapseInfo.SetBufferSpaceOnBottom(collapseInfo.GetBufferSpaceOnBottom() - usedTopBuffer);
+            }
         }
 
         private void FixPrevChildOccupiedArea(int childIndex) {
@@ -289,11 +342,17 @@ namespace iText.Layout.Margincollapse {
             }
         }
 
+        private void AddNotYetAppliedTopMargin(Rectangle layoutBox) {
+            // normally, space for margins is added when content is met, however if all kids were self-collapsing (i.e. 
+            // had no content) or if there were no kids, we need to add it when no more adjoining margins will be met
+            float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
+            renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
+            // even though all kids have been already drawn, we still need to adjust layout box in case we are in the block of fixed size  
+            ApplyTopMargin(layoutBox, indentTop);
+        }
+
         private IRenderer GetRendererChild(int index) {
-            if (rendererChildren != null) {
-                return rendererChildren[index];
-            }
-            return this.renderer.GetChildRenderers()[index];
+            return rendererChildren[index];
         }
 
         private void GetRidOfCollapseArtifactsAtopOccupiedArea() {
