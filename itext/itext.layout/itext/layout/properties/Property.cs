@@ -84,6 +84,10 @@ namespace iText.Layout.Properties {
 
         public const int BORDER = 9;
 
+        public const int BORDERS_COLLAPSED = 96;
+
+        public const int BORDERS_INITIALIZED = 97;
+
         public const int BORDER_BOTTOM = 10;
 
         public const int BORDER_LEFT = 11;
