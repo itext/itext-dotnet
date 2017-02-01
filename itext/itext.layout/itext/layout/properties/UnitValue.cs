@@ -152,5 +152,9 @@ namespace iText.Layout.Properties {
             hash = 71 * hash + iText.IO.Util.JavaUtil.FloatToIntBits(this.value);
             return hash;
         }
+
+        public override String ToString() {
+            return value + (unitType == PERCENT ? "%" : "pt");
+        }
     }
 }

@@ -113,12 +113,9 @@ namespace iText.Layout.Element {
                 throw new ArgumentException("the.widths.array.in.pdfptable.constructor.can.not.have.zero.length");
             }
             this.columnWidths = new UnitValue[columnWidths.Length];
-            float width = 0;
             for (int i = 0; i < columnWidths.Length; i++) {
                 this.columnWidths[i] = UnitValue.CreatePointValue(columnWidths[i]);
-                width += columnWidths[i];
             }
-            base.SetWidth(width);
             InitializeRows();
         }
 
@@ -194,9 +191,8 @@ namespace iText.Layout.Element {
             }
             this.columnWidths = new UnitValue[numColumns];
             for (int k = 0; k < numColumns; ++k) {
-                this.columnWidths[k] = UnitValue.CreatePointValue(1);
+                this.columnWidths[k] = UnitValue.CreatePercentValue((float)100 / numColumns);
             }
-            base.SetWidth(UnitValue.CreatePercentValue(100));
             InitializeRows();
         }
 
@@ -789,7 +785,10 @@ namespace iText.Layout.Element {
         private void EnsureHeaderIsInitialized() {
             if (header == null) {
                 header = new iText.Layout.Element.Table(columnWidths);
-                header.SetWidth(GetWidth());
+                UnitValue width = GetWidth();
+                if (width != null) {
+                    header.SetWidth(width);
+                }
                 header.SetRole(PdfName.THead);
             }
         }
@@ -797,7 +796,10 @@ namespace iText.Layout.Element {
         private void EnsureFooterIsInitialized() {
             if (footer == null) {
                 footer = new iText.Layout.Element.Table(columnWidths);
-                footer.SetWidth(GetWidth());
+                UnitValue width = GetWidth();
+                if (width != null) {
+                    footer.SetWidth(width);
+                }
                 footer.SetRole(PdfName.TFoot);
             }
         }
