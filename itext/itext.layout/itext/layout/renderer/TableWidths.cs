@@ -284,6 +284,9 @@ namespace iText.Layout.Renderer {
                                     recalculatePercents = true;
                                 }
                             }
+                            else {
+                                widths[i].finalWidth = widths[i].min;
+                            }
                         }
                         if (recalculatePercents) {
                             for (int i = 0; i < numberOfColumns; i++) {
