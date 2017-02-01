@@ -186,5 +186,65 @@ namespace iText.Layout.Renderer {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleTableTest() {
+            String outFileName = destinationFolder + "simpleTableTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_simpleTableTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Cell cell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 60)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell2 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.YELLOW, 10)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Table table = new Table(2).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2
+                .Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
+            TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
+            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            Table minTable = new Table(renderer.GetMinColumnWidth()).SetMarginTop(10).SetBorder(new SolidBorder(Color.
+                BLUE, 20)).SetWidth(minMaxWidth.GetMinWidth()).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell
+                (cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Table maxTable = new Table(renderer.GetMaxColumWidth()).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE
+                , 20)).SetWidth(minMaxWidth.GetMaxWidth()).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell
+                (cell1.Clone(true)).AddCell(cell2.Clone(true));
+            doc.Add(table);
+            doc.Add(minTable);
+            doc.Add(maxTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ColspanTableTest() {
+            String outFileName = destinationFolder + "colspanTableTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_colspanTableTest.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
+            Cell bigCell = new Cell(1, 2).Add("I am veryveryvery big cell").SetBorder(new SolidBorder(Color.RED, 60)).
+                SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Cell cell = new Cell().Add("I am cell").SetBorder(new SolidBorder(Color.YELLOW, 10)).SetBorderBottom(Border
+                .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
+            Table table = new Table(3).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell
+                .Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
+            MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            Table minTable = new Table(renderer.GetMinColumnWidth()).SetMarginTop(10).SetBorder(new SolidBorder(Color.
+                BLUE, 20)).SetWidth(minMaxWidth.GetMinWidth()).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).
+                AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            Table maxTable = new Table(renderer.GetMaxColumWidth()).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE
+                , 20)).SetWidth(minMaxWidth.GetMaxWidth()).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell
+                (cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
+            doc.Add(table);
+            doc.Add(minTable);
+            doc.Add(maxTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }

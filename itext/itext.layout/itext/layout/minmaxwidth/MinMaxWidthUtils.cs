@@ -9,6 +9,10 @@ namespace iText.Layout.Minmaxwidth {
     public class MinMaxWidthUtils {
         private const float eps = 0.0001f;
 
+        public static float GetEps() {
+            return eps;
+        }
+
         public static float ToEffectiveWidth(BlockElement b, float fullWidth) {
             return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) + eps;
         }
