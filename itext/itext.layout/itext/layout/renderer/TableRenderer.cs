@@ -753,8 +753,8 @@ namespace iText.Layout.Renderer {
                     if (marginsCollapsingEnabled) {
                         marginsCollapseHandler.EndMarginsCollapse(layoutBox);
                     }
-                    iText.Layout.Renderer.TableRenderer[] splitResult = !split && processAsLast ? Split(row + 1, false) : Split
-                        (row, hasContent);
+                    iText.Layout.Renderer.TableRenderer[] splitResult = !split && processAsLast ? Split(row + 1, false, cellWithBigRowspanAdded
+                        ) : Split(row, hasContent, cellWithBigRowspanAdded);
                     // delete #layout() related properties
                     if (null != headerRenderer || null != footerRenderer) {
                         if (null != headerRenderer || tableModel.IsEmpty()) {
@@ -1275,6 +1275,11 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row, bool hasContent) {
+            return Split(row, false, false);
+        }
+
+        protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row, bool hasContent, bool cellWithBigRowspanAdded
+            ) {
             iText.Layout.Renderer.TableRenderer splitRenderer = CreateSplitRenderer(new Table.RowRange(rowRange.GetStartRow
                 (), rowRange.GetStartRow() + row));
             splitRenderer.rows = rows.SubList(0, row);
@@ -1303,7 +1308,7 @@ namespace iText.Layout.Renderer {
             splitRenderer.totalWidthForColumns = totalWidthForColumns;
             iText.Layout.Renderer.TableRenderer overflowRenderer = CreateOverflowRenderer(new Table.RowRange(rowRange.
                 GetStartRow() + row, rowRange.GetFinishRow()));
-            if (0 == row && !hasContent) {
+            if (0 == row && !(hasContent || cellWithBigRowspanAdded)) {
                 overflowRenderer.isOriginalNonSplitRenderer = true;
             }
             overflowRenderer.rows = rows.SubList(row, rows.Count);
