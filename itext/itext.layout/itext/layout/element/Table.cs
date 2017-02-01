@@ -213,6 +213,16 @@ namespace iText.Layout.Element {
             return this;
         }
 
+        /// <summary>
+        /// Set
+        /// <see cref="iText.Layout.Properties.Property.WIDTH"/>
+        /// = 100%.
+        /// </summary>
+        public virtual iText.Layout.Element.Table UseAllAvailableWidth() {
+            SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(100));
+            return this;
+        }
+
         /// <summary>Returns the column width for the specified column.</summary>
         /// <param name="column">index of the column</param>
         /// <returns>the width of the column</returns>

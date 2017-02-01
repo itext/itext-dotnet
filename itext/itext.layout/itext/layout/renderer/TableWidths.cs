@@ -66,7 +66,7 @@ namespace iText.Layout.Renderer {
                                     pointColumns++;
                                 }
                                 else {
-                                    percentSum += widths[i].GetPercent();
+                                    percentSum += widths[i].width;
                                 }
                             }
                             float percentAddition = cellWidth.GetValue() - percentSum;
@@ -205,77 +205,86 @@ namespace iText.Layout.Renderer {
             }
             else {
                 float sumOfPercents = 0;
-                // minTableWidth included fixed columns.
+                // minTableWidth include only non percent columns.
                 float minTableWidth = 0;
                 float totalNonPercent = 0;
+                // validate sumOfPercents, last columns will be set min width, if sum > 100.
                 for (int i = 0; i < widths.Length; i++) {
                     if (widths[i].isPercent) {
-                        //some magic...
-                        if (sumOfPercents < 100 && sumOfPercents + widths[i].width >= 100) {
+                        if (sumOfPercents < 100 && sumOfPercents + widths[i].width > 100) {
                             widths[i].width -= sumOfPercents + widths[i].width - 100;
+                            sumOfPercents += widths[i].width;
+                            Warn100percent();
                         }
                         else {
                             if (sumOfPercents >= 100) {
                                 widths[i].ResetPoints(widths[i].min);
                                 minTableWidth += widths[i].width;
+                                Warn100percent();
+                            }
+                            else {
+                                sumOfPercents += widths[i].width;
                             }
                         }
-                        sumOfPercents += widths[i].width;
                     }
                     else {
                         minTableWidth += widths[i].min;
                         totalNonPercent += widths[i].width;
                     }
                 }
-                if (sumOfPercents >= 100) {
-                    sumOfPercents = 100;
-                    float remainingWidth = tableWidth - minTableWidth;
-                    bool recalculatePercents = false;
+                System.Diagnostics.Debug.Assert(sumOfPercents <= 100);
+                bool toBalance = true;
+                if (unspecifiedTableWidth) {
+                    float tableWidthBasedOnPercents = sumOfPercents < 100 ? totalNonPercent * 100 / (100 - sumOfPercents) : 0;
                     for (int i = 0; i < numberOfColumns; i++) {
                         if (widths[i].isPercent) {
-                            if (remainingWidth * widths[i].width >= widths[i].min) {
-                                widths[i].finalWidth = remainingWidth * widths[i].width / 100;
-                            }
-                            else {
-                                widths[i].finalWidth = widths[i].min;
-                                widths[i].isPercent = false;
-                                remainingWidth -= widths[i].min;
-                                sumOfPercents -= widths[i].width;
-                                recalculatePercents = true;
-                            }
+                            tableWidthBasedOnPercents = Math.Max(widths[i].max * 100 / widths[i].width, tableWidthBasedOnPercents);
                         }
                     }
-                    if (recalculatePercents) {
-                        for (int i = 0; i < numberOfColumns; i++) {
-                            if (widths[i].isPercent) {
-                                widths[i].finalWidth = remainingWidth * widths[i].width / sumOfPercents;
-                            }
-                        }
+                    if (tableWidthBasedOnPercents <= tableWidth) {
+                        tableWidth = tableWidthBasedOnPercents;
+                        //we don't need more space, columns are done.
+                        toBalance = false;
+                    }
+                }
+                if (!toBalance) {
+                    for (int i = 0; i < numberOfColumns; i++) {
+                        widths[i].finalWidth = widths[i].isPercent ? tableWidth * widths[i].width / 100 : widths[i].width;
                     }
                 }
                 else {
-                    //hasExtraSpace means that we have some extra space and(!) may extend columns.
-                    //columns shouldn't be more than its max value in case unspecified table width.
-                    //columns shouldn't be more than its percentage value.
-                    bool toBalance = true;
-                    if (unspecifiedTableWidth) {
-                        float tableWidthBasedOnPercents = totalNonPercent * 100 / (100 - sumOfPercents);
+                    if (sumOfPercents >= 100) {
+                        sumOfPercents = 100;
+                        bool recalculatePercents = false;
+                        float remainingWidth = tableWidth - minTableWidth;
                         for (int i = 0; i < numberOfColumns; i++) {
                             if (widths[i].isPercent) {
-                                tableWidthBasedOnPercents = Math.Max(widths[i].min * 100 / widths[i].width, tableWidthBasedOnPercents);
+                                if (remainingWidth * widths[i].width >= widths[i].min) {
+                                    widths[i].finalWidth = remainingWidth * widths[i].width / 100;
+                                }
+                                else {
+                                    widths[i].finalWidth = widths[i].min;
+                                    widths[i].isPercent = false;
+                                    remainingWidth -= widths[i].min;
+                                    sumOfPercents -= widths[i].width;
+                                    recalculatePercents = true;
+                                }
                             }
                         }
-                        if (tableWidthBasedOnPercents <= tableWidth) {
+                        if (recalculatePercents) {
                             for (int i = 0; i < numberOfColumns; i++) {
-                                widths[i].finalWidth = widths[i].isPercent ? tableWidthBasedOnPercents * widths[i].width / 100 : widths[i]
-                                    .width;
+                                if (widths[i].isPercent) {
+                                    widths[i].finalWidth = remainingWidth * widths[i].width / sumOfPercents;
+                                }
                             }
-                            //we don't need more space, columns are done.
-                            toBalance = false;
                         }
                     }
-                    //need to decrease some column.
-                    if (toBalance) {
+                    else {
+                        // We either have some extra space and may extend columns in case fixed table width,
+                        // or have to decrease columns to fit table width.
+                        //
+                        // columns shouldn't be more than its max value in case unspecified table width.
+                        //columns shouldn't be more than its percentage value.
                         // opposite to sumOfPercents, which is sum of percent values.
                         float totalPercent = 0;
                         float minTotalNonPercent = 0;
@@ -500,6 +509,11 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private void Warn100percent() {
+            ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
+            logger.Warn(iText.IO.LogMessageConstant.SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100);
+        }
+
         private float[] ExtractWidths() {
             float actualWidth = 0;
             float[] columnWidths = new float[widths.Length];
@@ -538,30 +552,25 @@ namespace iText.Layout.Renderer {
                 this.max = max > 0 ? Math.Min(max + MinMaxWidthUtils.GetEps(), 32760) : 0;
             }
 
-            /// <summary>Gets percents based on 1.</summary>
-            public virtual float GetPercent() {
-                return width;
-            }
-
-            public virtual TableWidths.ColumnWidthData SetPoints(float width) {
+            internal virtual TableWidths.ColumnWidthData SetPoints(float width) {
                 System.Diagnostics.Debug.Assert(!isPercent);
                 this.width = Math.Max(this.width, width);
                 return this;
             }
 
-            public virtual TableWidths.ColumnWidthData ResetPoints(float width) {
+            internal virtual TableWidths.ColumnWidthData ResetPoints(float width) {
                 this.width = width;
                 this.isPercent = false;
                 return this;
             }
 
-            public virtual TableWidths.ColumnWidthData AddPoints(float width) {
+            internal virtual TableWidths.ColumnWidthData AddPoints(float width) {
                 System.Diagnostics.Debug.Assert(!isPercent);
                 this.width += width;
                 return this;
             }
 
-            public virtual TableWidths.ColumnWidthData SetPercents(float percent) {
+            internal virtual TableWidths.ColumnWidthData SetPercents(float percent) {
                 if (isPercent) {
                     width = Math.Max(width, percent);
                 }
@@ -572,13 +581,13 @@ namespace iText.Layout.Renderer {
                 return this;
             }
 
-            public virtual TableWidths.ColumnWidthData AddPercents(float width) {
+            internal virtual TableWidths.ColumnWidthData AddPercents(float width) {
                 System.Diagnostics.Debug.Assert(isPercent);
                 this.width += width;
                 return this;
             }
 
-            public virtual TableWidths.ColumnWidthData SetFixed(bool @fixed) {
+            internal virtual TableWidths.ColumnWidthData SetFixed(bool @fixed) {
                 this.isFixed = @fixed;
                 return this;
             }
@@ -591,7 +600,7 @@ namespace iText.Layout.Renderer {
             /// <see cref="width"/>
             /// .
             /// </returns>
-            public virtual bool HasCollision() {
+            internal virtual bool HasCollision() {
                 System.Diagnostics.Debug.Assert(!isPercent);
                 return min > width;
             }
@@ -605,7 +614,7 @@ namespace iText.Layout.Renderer {
             /// <see cref="width"/>
             /// + additionalWidth).
             /// </returns>
-            public virtual bool CheckCollision(float availableWidth) {
+            internal virtual bool CheckCollision(float availableWidth) {
                 System.Diagnostics.Debug.Assert(!isPercent);
                 return min > width + availableWidth;
             }
