@@ -663,8 +663,8 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual MinMaxWidth CorrectMinMaxWidth(MinMaxWidth minMaxWidth) {
-            float? width = RetrieveWidth(0);
-            if (width != null && width > 0 && width >= minMaxWidth.GetChildrenMinWidth()) {
+            float? width = RetrieveWidth(-1);
+            if (width != null && width >= 0 && width >= minMaxWidth.GetChildrenMinWidth()) {
                 minMaxWidth.SetChildrenMaxWidth((float)width);
                 minMaxWidth.SetChildrenMinWidth((float)width);
             }
