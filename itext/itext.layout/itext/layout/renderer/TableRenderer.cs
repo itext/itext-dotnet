@@ -213,6 +213,7 @@ namespace iText.Layout.Renderer {
             else {
                 UpdateFirstRowBorders(tableModel.GetNumberOfColumns());
             }
+            // TODO save and apply left and right border max widths on each page even after they were drawn
             float topTableBorderWidth = GetMaxTopWidth(null);
             // first row own top border. We will use it in header processing
             float rightTableBorderWidth = GetMaxRightWidth(borders[1]);
@@ -1369,11 +1370,15 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = new Rectangle(availableWidth, AbstractRenderer.INF);
             float? tableWidth = RetrieveWidth(layoutBox.GetWidth());
             ApplyMargins(layoutBox, false);
-            float rightTableBorderWidth = collapsedTableBorderWidths[1];
-            float leftTableBorderWidth = collapsedTableBorderWidths[3];
+            Table tableModel = (Table)GetModelElement();
+            this.InitializeBorders(tableModel.GetLastRowBottomBorder(), true);
+            if (null != rows) {
+                this.CollapseAllBorders(GetBorders(), 0, rows.Count - 1, tableModel.GetNumberOfColumns());
+            }
+            float rightTableBorderWidth = GetMaxRightWidth(GetBorders()[1]);
+            float leftTableBorderWidth = GetMaxLeftWidth(GetBorders()[3]);
             TableRenderer.ColumnMinMaxWidth footerColWidth = null;
             TableRenderer.ColumnMinMaxWidth headerColWidth = null;
-            Table tableModel = (Table)GetModelElement();
             int numberOfColumns = tableModel.GetNumberOfColumns();
             if (tableModel.GetFooter() != null) {
                 footerRenderer = InitFooterOrHeaderRenderer(true, GetBorders());
@@ -1386,8 +1391,8 @@ namespace iText.Layout.Renderer {
                      / 2, null, null);
             }
             bool isFirstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
-            bool headerShouldBeApplied = !rows.IsEmpty() && (!isOriginalNonSplitRenderer || isFirstHeader && !tableModel
-                .IsSkipFirstHeader());
+            bool headerShouldBeApplied = (!rows.IsEmpty() || tableModel.IsComplete()) && (!isOriginalNonSplitRenderer 
+                || isFirstHeader && !tableModel.IsSkipFirstHeader());
             if (tableModel.GetHeader() != null && headerShouldBeApplied) {
                 headerRenderer = InitFooterOrHeaderRenderer(false, GetBorders());
                 headerRenderer.ProcessRendererBorders(numberOfColumns);
@@ -1397,6 +1402,9 @@ namespace iText.Layout.Renderer {
                 rightTableBorderWidth = Math.Max(rightTableBorderWidth, rightHeaderBorderWidth);
                 headerColWidth = headerRenderer.CountRegionMinMaxWidth(availableWidth - leftTableBorderWidth / 2 - rightTableBorderWidth
                      / 2, null, null);
+            }
+            if (null != rows && 0 != rows.Count) {
+                this.CorrectFirstRowTopBorders(GetBorders()[0], tableModel.GetNumberOfColumns());
             }
             // Apply halves of the borders. The other halves are applied on a Cell level
             layoutBox.ApplyMargins<Rectangle>(0, rightTableBorderWidth / 2, 0, leftTableBorderWidth / 2, false);
