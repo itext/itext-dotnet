@@ -58,6 +58,8 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Hyphenation;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
+using iText.Layout.Minmaxwidth.Handler;
 using iText.Layout.Properties;
 using iText.Layout.Splitting;
 
@@ -92,6 +94,8 @@ namespace iText.Layout.Renderer {
 
         protected internal float tabAnchorCharacterPosition = -1;
 
+        private MinMaxWidth countedMinMaxWidth;
+
         /// <summary>Creates a TextRenderer from its corresponding layout object.</summary>
         /// <param name="textElement">
         /// the
@@ -116,6 +120,7 @@ namespace iText.Layout.Renderer {
         /// <param name="text">the replacement text</param>
         public TextRenderer(Text textElement, String text)
             : base(textElement) {
+            //saved value of min max width calculations after the last layout
             this.strToBeConverted = text;
         }
 
@@ -136,9 +141,10 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            float borderMarginWidth = area.GetBBox().GetWidth() - layoutBox.GetWidth();
-            float minWidth = 0;
-            float maxFullWidth = area.GetBBox().GetWidth();
+            countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox().GetWidth
+                ());
+            SetProperty(Property.MIN_MAX_WIDTH, countedMinMaxWidth);
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             bool anythingPlaced = false;
@@ -251,7 +257,8 @@ namespace iText.Layout.Renderer {
                     currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                     currentTextPos = nonBreakablePartEnd + 1;
                     currentLineWidth += nonBreakablePartFullWidth;
-                    minWidth = Math.Max(nonBreakablePartFullWidth, minWidth);
+                    widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
+                    widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
                     anythingPlaced = true;
                 }
                 else {
@@ -266,8 +273,7 @@ namespace iText.Layout.Renderer {
                         line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
                         // the line does not fit because of height - full overflow
                         iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
-                        return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this, minWidth
-                             + borderMarginWidth, maxFullWidth);
+                        return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this);
                     }
                     else {
                         // cannot fit a word as a whole
@@ -302,7 +308,8 @@ namespace iText.Layout.Renderer {
                                             currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                             currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                             currentLineWidth += currentHyphenationChoicePreTextWidth;
-                                            minWidth = Math.Max(currentHyphenationChoicePreTextWidth, minWidth);
+                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth);
+                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth);
                                             currentTextPos += pre.Length;
                                             break;
                                         }
@@ -324,7 +331,8 @@ namespace iText.Layout.Renderer {
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                 currentLineWidth += nonBreakablePartWidthWhichDoesNotExceedAllowedWidth;
-                                minWidth = Math.Max(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth, minWidth);
+                                widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
+                                widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
                             }
                             else {
                                 // process empty line (e.g. '\n')
@@ -335,12 +343,11 @@ namespace iText.Layout.Renderer {
                             }
                         }
                         if (line.end <= line.start) {
-                            return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this, minWidth + borderMarginWidth
-                                , maxFullWidth);
+                            return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                         }
                         else {
-                            result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null, minWidth + borderMarginWidth
-                                , maxFullWidth).SetWordHasBeenSplit(wordSplit);
+                            result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null).SetWordHasBeenSplit(wordSplit
+                                );
                         }
                         break;
                     }
@@ -352,8 +359,7 @@ namespace iText.Layout.Renderer {
                 if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);
-                    return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this, minWidth + borderMarginWidth
-                        , maxFullWidth);
+                    return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
                 else {
                     isPlacingForcedWhileNothing = true;
@@ -370,7 +376,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (result == null) {
                 result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
-                     : null, minWidth + borderMarginWidth, maxFullWidth);
+                     : null);
             }
             else {
                 iText.Layout.Renderer.TextRenderer[] split;
@@ -558,7 +564,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_579();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_587();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -631,8 +637,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_579 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_579() {
+        private sealed class _IGlyphLineFilter_587 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_587() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -867,6 +873,13 @@ namespace iText.Layout.Renderer {
                 }
             }
             return count;
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            LayoutResult result = Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer
+                .INF))));
+            return result.GetStatus() != LayoutResult.NOTHING ? countedMinMaxWidth : new MinMaxWidth(0, availableWidth
+                );
         }
 
         protected internal virtual int GetNumberOfSpaces() {

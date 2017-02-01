@@ -52,6 +52,7 @@ using iText.Kernel.Pdf.Xobject;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -204,6 +205,8 @@ namespace iText.Layout.Renderer {
             if (angle != 0) {
                 ApplyRotationLayout((float)angle);
             }
+            SetProperty(Property.MIN_MAX_WIDTH, new MinMaxWidth(0, area.GetBBox().GetWidth(), occupiedArea.GetBBox().GetWidth
+                (), occupiedArea.GetBBox().GetWidth()));
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
         }
 

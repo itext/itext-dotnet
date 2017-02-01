@@ -51,6 +51,8 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
+using iText.Layout.Minmaxwidth;
+using iText.Layout.Minmaxwidth.Handler;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -68,6 +70,8 @@ namespace iText.Layout.Renderer {
 
         protected internal IList<LineRenderer> lines = null;
 
+        private MinMaxWidth countedMinMaxWidth;
+
         /// <summary>Creates a ParagraphRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -78,6 +82,7 @@ namespace iText.Layout.Renderer {
             : base(modelElement) {
         }
 
+        //saved value of min max width calculations after the last layout
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
@@ -87,13 +92,11 @@ namespace iText.Layout.Renderer {
             bool firstLineInBox = true;
             LineRenderer currentRenderer = (LineRenderer)new LineRenderer().SetParent(this);
             Rectangle parentBBox = layoutContext.GetArea().GetBBox().Clone();
-            float additionalWidth = 0;
-            float minWidth = 0;
-            float maxFullWidth = parentBBox.GetWidth();
             if (0 == childRenderers.Count) {
                 anythingPlaced = true;
                 currentRenderer = null;
             }
+            bool isPositioned = IsPositioned();
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 parentBBox.MoveDown(AbstractRenderer.INF - parentBBox.GetHeight()).SetHeight(AbstractRenderer.INF);
             }
@@ -103,28 +106,11 @@ namespace iText.Layout.Renderer {
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.StartMarginsCollapse(parentBBox);
             }
-            float marginBorderWidth = parentBBox.GetWidth();
-            ApplyMargins(parentBBox, false);
             Border[] borders = GetBorders();
-            ApplyBorderBox(parentBBox, borders, false);
-            marginBorderWidth -= parentBBox.GetWidth();
-            additionalWidth += marginBorderWidth;
-            bool isPositioned = IsPositioned();
-            if (isPositioned) {
-                float x = (float)this.GetPropertyAsFloat(Property.X);
-                float relativeX = IsFixedLayout() ? 0 : parentBBox.GetX();
-                parentBBox.SetX(relativeX + x);
-            }
-            float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
-            if (blockWidth != null && (blockWidth < parentBBox.GetWidth() || isPositioned)) {
-                parentBBox.SetWidth((float)blockWidth);
-                minWidth = parentBBox.GetWidth();
-            }
             float[] paddings = GetPaddings();
-            float paddingsWidth = parentBBox.GetWidth();
-            ApplyPaddings(parentBBox, paddings, false);
-            paddingsWidth -= parentBBox.GetWidth();
-            additionalWidth += paddingsWidth;
+            float additionalWidth = ApplyBordersPaddingsMargins(parentBBox, borders, paddings, isPositioned);
+            countedMinMaxWidth = new MinMaxWidth(additionalWidth, layoutContext.GetArea().GetBBox().GetWidth());
+            AbstractWidthHandler widthHandler = new MaxMaxWidthHandler(countedMinMaxWidth);
             float? blockMaxHeight = RetrieveMaxHeight();
             if (null != blockMaxHeight && parentBBox.GetHeight() > blockMaxHeight) {
                 parentBBox.MoveUp(parentBBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
@@ -162,7 +148,15 @@ namespace iText.Layout.Renderer {
                     layoutBox.GetHeight());
                 LineLayoutResult result = ((LineLayoutResult)((LineRenderer)currentRenderer.SetParent(this)).Layout(new LayoutContext
                     (new LayoutArea(pageNumber, childLayoutBox))));
-                minWidth = Math.Max(minWidth, result.GetMinFullWidth() + lineIndent);
+                float minChildWidth = 0;
+                float maxChildWidth = 0;
+                if (currentRenderer.HasOwnProperty(Property.MIN_MAX_WIDTH)) {
+                    MinMaxWidth childMinMaxWidth = currentRenderer.GetOwnProperty<MinMaxWidth>(Property.MIN_MAX_WIDTH);
+                    minChildWidth = childMinMaxWidth.GetMinWidth();
+                    maxChildWidth = childMinMaxWidth.GetMaxWidth();
+                }
+                widthHandler.UpdateMinChildWidth(minChildWidth + lineIndent);
+                widthHandler.UpdateMaxChildWidth(maxChildWidth + lineIndent);
                 LineRenderer processedRenderer = null;
                 if (result.GetStatus() == LayoutResult.FULL) {
                     processedRenderer = currentRenderer;
@@ -223,7 +217,7 @@ namespace iText.Layout.Renderer {
                         bool keepTogether = IsKeepTogether();
                         if (keepTogether) {
                             return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing() ? this : 
-                                result.GetCauseOfNothing(), 0, maxFullWidth);
+                                result.GetCauseOfNothing());
                         }
                         else {
                             if (marginsCollapsingEnabled) {
@@ -255,8 +249,7 @@ namespace iText.Layout.Renderer {
                                         )blockMaxHeight);
                                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ParagraphRenderer));
                                     logger.Warn(iText.IO.LogMessageConstant.CLIP_ELEMENT);
-                                    return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null, minWidth + additionalWidth, maxFullWidth
-                                        );
+                                    return new LayoutResult(LayoutResult.FULL, occupiedArea, split[0], null);
                                 }
                                 split[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
                             }
@@ -267,8 +260,7 @@ namespace iText.Layout.Renderer {
                                 split[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
                             }
                             if (anythingPlaced) {
-                                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1], minWidth + additionalWidth
-                                    , maxFullWidth);
+                                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, split[0], split[1]);
                             }
                             else {
                                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
@@ -282,17 +274,15 @@ namespace iText.Layout.Renderer {
                                         int firstNotRendered = currentRenderer.childRenderers.IndexOf(childNotRendered);
                                         currentRenderer.childRenderers.RetainAll(currentRenderer.childRenderers.SubList(0, firstNotRendered));
                                         split[1].childRenderers.RemoveAll(split[1].childRenderers.SubList(0, firstNotRendered));
-                                        return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, split[1], minWidth + additionalWidth, maxFullWidth
-                                            );
+                                        return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, split[1]);
                                     }
                                     else {
-                                        return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this, minWidth + additionalWidth, maxFullWidth
-                                            );
+                                        return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this);
                                     }
                                 }
                                 else {
                                     return new LayoutResult(LayoutResult.NOTHING, null, null, this, null == result.GetCauseOfNothing() ? this : 
-                                        result.GetCauseOfNothing(), minWidth + additionalWidth, maxFullWidth);
+                                        result.GetCauseOfNothing());
                                 }
                             }
                         }
@@ -353,22 +343,20 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
-                minWidth = occupiedArea.GetBBox().GetWidth();
-                additionalWidth = 0;
+                countedMinMaxWidth.SetChildrenMinWidth(occupiedArea.GetBBox().GetWidth());
+                countedMinMaxWidth.SetChildrenMaxWidth(occupiedArea.GetBBox().GetWidth());
+                countedMinMaxWidth.SetAdditionalWidth(0);
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this, minWidth + additionalWidth, maxFullWidth
-                            );
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
                     }
                 }
             }
             if (null == overflowRenderer) {
-                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, minWidth + additionalWidth, maxFullWidth
-                    );
+                return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
             }
             else {
-                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, overflowRenderer, minWidth + additionalWidth
-                    , maxFullWidth);
+                return new LayoutResult(LayoutResult.PARTIAL, occupiedArea, this, overflowRenderer);
             }
         }
 
@@ -449,6 +437,13 @@ namespace iText.Layout.Renderer {
             splitRenderer.parent = parent;
             splitRenderer.properties = new Dictionary<int, Object>(properties);
             return splitRenderer;
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            LayoutResult result = Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer
+                .INF))));
+            return result.GetStatus() != LayoutResult.NOTHING ? countedMinMaxWidth : new MinMaxWidth(0, availableWidth
+                );
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {

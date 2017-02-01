@@ -52,6 +52,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -1132,6 +1133,10 @@ namespace iText.Layout.Renderer {
             overflowRenderer.AddAllProperties(GetOwnProperties());
             overflowRenderer.isOriginalNonSplitRenderer = false;
             return overflowRenderer;
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            return null;
         }
 
         public override void DrawBorder(DrawContext drawContext) {

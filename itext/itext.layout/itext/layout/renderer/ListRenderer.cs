@@ -46,9 +46,11 @@ using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Font;
+using iText.Kernel.Geom;
 using iText.Kernel.Numbering;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -65,44 +67,9 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
-            if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
-                IList<IRenderer> symbolRenderers = new List<IRenderer>();
-                int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
-                for (int i = 0; i < childRenderers.Count; i++) {
-                    childRenderers[i].SetParent(this);
-                    IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers[i]);
-                    childRenderers[i].SetParent(null);
-                    symbolRenderers.Add(currentSymbolRenderer);
-                    LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout(layoutContext);
-                    currentSymbolRenderer.SetParent(null);
-                    if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
-                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
-                            );
-                    }
-                }
-                float maxSymbolWidth = 0;
-                for (int i = 0; i < childRenderers.Count; i++) {
-                    IRenderer symbolRenderer = symbolRenderers[i];
-                    IRenderer listItemRenderer = childRenderers[i];
-                    if ((ListSymbolPosition)listItemRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
-                        .INSIDE) {
-                        maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
-                    }
-                }
-                float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
-                listItemNum = 0;
-                foreach (IRenderer childRenderer in childRenderers) {
-                    childRenderer.SetParent(this);
-                    childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
-                    float calculatedMargin = (float)childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
-                    if ((ListSymbolPosition)childRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
-                        .DEFAULT) {
-                        calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
-                    }
-                    childRenderer.SetProperty(Property.MARGIN_LEFT, calculatedMargin);
-                    IRenderer symbolRenderer = symbolRenderers[listItemNum++];
-                    ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
-                }
+            LayoutResult errorResult = TryAlignListItemsHorizontally(layoutContext);
+            if (errorResult != null) {
+                return errorResult;
             }
             LayoutResult result = base.Layout(layoutContext);
             // cannot place even the first ListItemRenderer
@@ -134,6 +101,15 @@ namespace iText.Layout.Renderer {
             AbstractRenderer overflowRenderer = base.CreateOverflowRenderer(layoutResult);
             overflowRenderer.SetProperty(Property.LIST_SYMBOLS_INITIALIZED, true);
             return overflowRenderer;
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            LayoutResult errorResult = TryAlignListItemsHorizontally(new LayoutContext(new LayoutArea(1, new Rectangle
+                (availableWidth, AbstractRenderer.INF))));
+            if (errorResult != null) {
+                return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+            }
+            return base.GetMinMaxWidth(availableWidth);
         }
 
         protected internal virtual IRenderer MakeListSymbolRenderer(int index, IRenderer renderer) {
@@ -234,7 +210,7 @@ namespace iText.Layout.Renderer {
                              == ListNumberingType.ZAPF_DINGBATS_3 || numberingType == ListNumberingType.ZAPF_DINGBATS_4) {
                             String constantFont = (numberingType == ListNumberingType.GREEK_LOWER || numberingType == ListNumberingType
                                 .GREEK_UPPER) ? FontConstants.SYMBOL : FontConstants.ZAPFDINGBATS;
-                            textRenderer = new _TextRenderer_219(constantFont, textElement);
+                            textRenderer = new _TextRenderer_197(constantFont, textElement);
                             try {
                                 textRenderer.SetProperty(Property.FONT, PdfFontFactory.CreateFont(constantFont));
                             }
@@ -253,8 +229,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _TextRenderer_219 : TextRenderer {
-            public _TextRenderer_219(String constantFont, Text baseArg1)
+        private sealed class _TextRenderer_197 : TextRenderer {
+            public _TextRenderer_197(String constantFont, Text baseArg1)
                 : base(baseArg1) {
                 this.constantFont = constantFont;
             }
@@ -356,6 +332,49 @@ namespace iText.Layout.Renderer {
             else {
                 return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, this);
             }
+        }
+
+        private LayoutResult TryAlignListItemsHorizontally(LayoutContext layoutContext) {
+            if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
+                IList<IRenderer> symbolRenderers = new List<IRenderer>();
+                int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
+                for (int i = 0; i < childRenderers.Count; i++) {
+                    childRenderers[i].SetParent(this);
+                    IRenderer currentSymbolRenderer = MakeListSymbolRenderer(listItemNum++, childRenderers[i]);
+                    childRenderers[i].SetParent(null);
+                    symbolRenderers.Add(currentSymbolRenderer);
+                    LayoutResult listSymbolLayoutResult = currentSymbolRenderer.SetParent(this).Layout(layoutContext);
+                    currentSymbolRenderer.SetParent(null);
+                    if (listSymbolLayoutResult.GetStatus() != LayoutResult.FULL) {
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, listSymbolLayoutResult.GetCauseOfNothing()
+                            );
+                    }
+                }
+                float maxSymbolWidth = 0;
+                for (int i = 0; i < childRenderers.Count; i++) {
+                    IRenderer symbolRenderer = symbolRenderers[i];
+                    IRenderer listItemRenderer = childRenderers[i];
+                    if ((ListSymbolPosition)listItemRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) != ListSymbolPosition
+                        .INSIDE) {
+                        maxSymbolWidth = Math.Max(maxSymbolWidth, symbolRenderer.GetOccupiedArea().GetBBox().GetWidth());
+                    }
+                }
+                float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                listItemNum = 0;
+                foreach (IRenderer childRenderer in childRenderers) {
+                    childRenderer.SetParent(this);
+                    childRenderer.DeleteOwnProperty(Property.MARGIN_LEFT);
+                    float calculatedMargin = (float)childRenderer.GetProperty(Property.MARGIN_LEFT, (float?)0f);
+                    if ((ListSymbolPosition)childRenderer.GetProperty<Object>(Property.LIST_SYMBOL_POSITION) == ListSymbolPosition
+                        .DEFAULT) {
+                        calculatedMargin += maxSymbolWidth + (float)(symbolIndent != null ? symbolIndent : 0f);
+                    }
+                    childRenderer.SetProperty(Property.MARGIN_LEFT, calculatedMargin);
+                    IRenderer symbolRenderer = symbolRenderers[listItemNum++];
+                    ((ListItemRenderer)childRenderer).AddSymbolRenderer(symbolRenderer, maxSymbolWidth);
+                }
+            }
+            return null;
         }
     }
 }

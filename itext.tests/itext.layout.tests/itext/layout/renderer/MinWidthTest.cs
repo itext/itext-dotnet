@@ -3,12 +3,13 @@ using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
+using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
-using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Test;
 
-namespace iText.Layout {
+namespace iText.Layout.Renderer {
     public class MinWidthTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/layout/MinWidthTest/";
@@ -32,9 +33,9 @@ namespace iText.Layout {
             String str = "Hello. I am a fairly long paragraph. I really want you to process me correctly. You heard that? Correctly!!! Even if you will have to wrap me.";
             Paragraph p = new Paragraph(new Text(str).SetBorder(new SolidBorder(Color.BLACK, 5))).SetBorder(new SolidBorder
                 (Color.BLUE, 5));
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(p.CreateRendererSubTree().SetParent(doc.GetRenderer
-                ()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            p.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(p, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)p.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            p.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(p, result.GetMinWidth()));
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -54,9 +55,9 @@ namespace iText.Layout {
                 (3).SetBackgroundColor(Color.LIGHT_GRAY);
             Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
             d.Add(p);
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(d.CreateRendererSubTree().SetParent(doc.GetRenderer
-                ()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -77,9 +78,9 @@ namespace iText.Layout {
             Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
             d.Add(p);
             d.Add(new Paragraph(("iText")).SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f)));
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(d.CreateRendererSubTree().SetParent(doc.GetRenderer
-                ()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -100,9 +101,9 @@ namespace iText.Layout {
             Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
             d.Add(p);
             d.Add(new Paragraph(("iText")));
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(d.CreateRendererSubTree().SetParent(doc.GetRenderer
-                ()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -124,9 +125,9 @@ namespace iText.Layout {
             d.Add(p);
             Div dRotated = new Div().SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f));
             d.Add(dRotated.Add(new Paragraph(("iText"))));
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(d.CreateRendererSubTree().SetParent(doc.GetRenderer
-                ()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -147,9 +148,9 @@ namespace iText.Layout {
             Div dRotated = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
             dRotated.Add(p).SetRotationAngle(Math.PI * 3 / 8);
             Div d = new Div().Add(new Paragraph(("iText"))).Add(dRotated).SetBorder(new SolidBorder(Color.BLUE, 2f));
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(d.CreateRendererSubTree().SetParent(doc.GetRenderer
-                ()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
+                (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -177,9 +178,9 @@ namespace iText.Layout {
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
                 (3).SetBackgroundColor(Color.LIGHT_GRAY);
             curr.Add(p);
-            LayoutResult result = MinMaxWidthUtils.TryLayoutWithInfHeight(externalDiv.CreateRendererSubTree().SetParent
-                (doc.GetRenderer()), doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            externalDiv.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(externalDiv, result.GetMinFullWidth()));
+            MinMaxWidth result = ((AbstractRenderer)externalDiv.CreateRendererSubTree().SetParent(doc.GetRenderer())).
+                GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
+            externalDiv.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(externalDiv, result.GetMinWidth()));
             doc.Add(externalDiv);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

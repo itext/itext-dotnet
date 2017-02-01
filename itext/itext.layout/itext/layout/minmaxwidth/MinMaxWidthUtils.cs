@@ -1,10 +1,11 @@
 using iText.Kernel.Geom;
 using iText.Layout.Borders;
+using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
-namespace iText.Layout.Element {
+namespace iText.Layout.Minmaxwidth {
     public class MinMaxWidthUtils {
         private const float eps = 0.0001f;
 
@@ -12,9 +13,12 @@ namespace iText.Layout.Element {
             return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) + eps;
         }
 
-        public static LayoutResult TryLayoutWithInfHeight(IRenderer renderer, float availableWidth) {
-            return renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer.
-                INF))));
+        public static MinMaxWidth CountDefaultMinMaxWidth(IRenderer renderer, float availableWidth) {
+            LayoutResult result = renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer
+                .INF))));
+            return result.GetStatus() == LayoutResult.NOTHING ? new MinMaxWidth(0, availableWidth) : new MinMaxWidth(0
+                , availableWidth, result.GetOccupiedArea().GetBBox().GetWidth(), result.GetOccupiedArea().GetBBox().GetWidth
+                ());
         }
 
         private static float GetBorderWidth(IElement element) {

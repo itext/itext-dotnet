@@ -162,24 +162,12 @@ namespace iText.Layout.Layout {
         /// <see cref="NOTHING"/>
         /// </param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause)
-            : this(status, occupiedArea, splitRenderer, overflowRenderer, cause, 0, float.MaxValue) {
-        }
-
-        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , float minWidth, float maxWidth)
-            : this(status, occupiedArea, splitRenderer, overflowRenderer, null, minWidth, maxWidth) {
-        }
-
-        public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, float minWidth, float maxWidth) {
+            , IRenderer cause) {
             this.status = status;
             this.occupiedArea = occupiedArea;
             this.splitRenderer = splitRenderer;
             this.overflowRenderer = overflowRenderer;
             this.causeOfNothing = cause;
-            this.minFullWidth = minWidth;
-            this.maxFullWidth = maxWidth;
         }
 
         /// <summary>
@@ -284,14 +272,6 @@ namespace iText.Layout.Layout {
         /// </returns>
         public virtual IRenderer GetCauseOfNothing() {
             return causeOfNothing;
-        }
-
-        public virtual float GetMinFullWidth() {
-            return minFullWidth;
-        }
-
-        public virtual float GetMaxFullWidth() {
-            return maxFullWidth;
         }
 
         /// <summary><inheritDoc/></summary>

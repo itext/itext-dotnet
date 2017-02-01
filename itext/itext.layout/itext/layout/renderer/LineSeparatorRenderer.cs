@@ -75,7 +75,7 @@ namespace iText.Layout.Renderer {
             }
             if ((occupiedArea.GetBBox().GetHeight() < height || occupiedArea.GetBBox().GetWidth() < calculatedWidth) &&
                  !HasOwnProperty(Property.FORCED_PLACEMENT)) {
-                return new LayoutResult(LayoutResult.NOTHING, null, null, this, this, 0, 0);
+                return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
             }
             occupiedArea.GetBBox().SetWidth((float)calculatedWidth).MoveUp(occupiedArea.GetBBox().GetHeight() - height
                 ).SetHeight(height);
@@ -84,11 +84,11 @@ namespace iText.Layout.Renderer {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
-                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this, 0, parentBBox.GetWidth());
+                        return new LayoutResult(LayoutResult.NOTHING, null, null, this, this);
                     }
                 }
             }
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null, 0, occupiedArea.GetBBox().GetWidth());
+            return new LayoutResult(LayoutResult.FULL, occupiedArea, this, null);
         }
 
         /// <summary><inheritDoc/></summary>

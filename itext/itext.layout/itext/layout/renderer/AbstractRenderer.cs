@@ -58,6 +58,7 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -760,6 +761,10 @@ namespace iText.Layout.Renderer {
                 PdfPage page = document.GetPage(occupiedArea.GetPageNumber());
                 page.AddAnnotation(linkAnnotation);
             }
+        }
+
+        internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
         }
 
         [System.ObsoleteAttribute(@"Use IsNotFittingLayoutArea(iText.Layout.Layout.LayoutArea) instead.")]

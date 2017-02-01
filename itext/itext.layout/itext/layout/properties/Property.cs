@@ -171,6 +171,8 @@ namespace iText.Layout.Properties {
 
         public const int MIN_HEIGHT = 85;
 
+        public const int MIN_MAX_WIDTH = 86;
+
         public const int PADDING_BOTTOM = 47;
 
         public const int PADDING_LEFT = 48;

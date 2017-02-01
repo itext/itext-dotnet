@@ -105,16 +105,6 @@ namespace iText.Layout.Layout {
             : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
         }
 
-        public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , float minWidth, float maxWidth)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, minWidth, maxWidth) {
-        }
-
-        public TextLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause, float minWidth, float maxWidth)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause, minWidth, maxWidth) {
-        }
-
         /// <summary>
         /// Indicates whether some word in a rendered text was splitted during
         /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layout</see>
