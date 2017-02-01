@@ -135,23 +135,9 @@ namespace iText.Layout.Element {
                 throw new ArgumentException("the.widths.array.in.pdfptable.constructor.can.not.have.zero.length");
             }
             this.columnWidths = new UnitValue[columnWidths.Length];
-            float totalWidth = 0;
-            bool percentValuesPresentedInTableColumns = false;
             for (int i = 0; i < columnWidths.Length; i++) {
-                this.columnWidths[i] = columnWidths[i];
-                if (columnWidths[i].IsPointValue()) {
-                    totalWidth += columnWidths[i].GetValue();
-                }
-                else {
-                    if (columnWidths[i].IsPercentValue()) {
-                        percentValuesPresentedInTableColumns = true;
-                    }
-                }
+                this.columnWidths[i] = columnWidths[i] != null ? columnWidths[i] : UnitValue.CreatePointValue(-1);
             }
-            if (percentValuesPresentedInTableColumns) {
-                totalWidth = 0;
-            }
-            base.SetWidth(totalWidth);
             InitializeRows();
         }
 
@@ -206,21 +192,6 @@ namespace iText.Layout.Element {
         /// <param name="numColumns">the number of columns</param>
         public Table(int numColumns)
             : this(numColumns, false) {
-        }
-
-        /// <summary>Sets the full width of the table.</summary>
-        /// <param name="width">the full width of the table.</param>
-        /// <returns>this element</returns>
-        public override iText.Layout.Element.Table SetWidth(UnitValue width) {
-            if (width.IsPointValue() && width.GetValue() == 0) {
-                width = UnitValue.CreatePercentValue(100);
-            }
-            UnitValue currWidth = GetWidth();
-            if (!width.Equals(currWidth)) {
-                base.SetWidth(width);
-                CalculateWidths();
-            }
-            return this;
         }
 
         /// <summary>Returns the column width for the specified column.</summary>
@@ -721,16 +692,8 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
+        [System.ObsoleteAttribute(@"This method do nothing after implementation table column width algorithms.")]
         protected internal virtual void CalculateWidths() {
-            UnitValue width = GetWidth();
-            float total = 0;
-            int numCols = GetNumberOfColumns();
-            for (int k = 0; k < numCols; ++k) {
-                total += columnWidths[k].GetValue();
-            }
-            for (int k = 0; k < numCols; ++k) {
-                columnWidths[k] = UnitValue.CreatePointValue(width.GetValue() * columnWidths[k].GetValue() / total);
-            }
         }
 
         protected internal virtual IList<Table.RowRange> GetRowGroups() {
