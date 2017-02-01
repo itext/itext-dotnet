@@ -147,7 +147,7 @@ namespace iText.Layout.Renderer {
                         float remainWidth = 0;
                         //if there is no information, try to set max width
                         for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                            if (!widths[i].isFixed) {
+                            if (!widths[i].isFixed && !widths[i].isPercent) {
                                 remainWidth += widths[i].max - widths[i].width;
                                 flexibleCols++;
                             }
@@ -155,7 +155,7 @@ namespace iText.Layout.Renderer {
                         if (remainWidth > 0) {
                             if (flexibleCols > 0) {
                                 for (int i = cell.GetCol(); i < cell.GetCol() + cell.GetColspan(); i++) {
-                                    if (!widths[i].isFixed) {
+                                    if (!widths[i].isFixed && !widths[i].isPercent) {
                                         widths[i].AddPoints(remainWidth / flexibleCols);
                                     }
                                 }
