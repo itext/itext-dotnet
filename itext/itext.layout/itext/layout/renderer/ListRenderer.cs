@@ -67,7 +67,7 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
-            LayoutResult errorResult = TryAlignListItemsHorizontally(layoutContext);
+            LayoutResult errorResult = InitializeListSymbols(layoutContext);
             if (errorResult != null) {
                 return errorResult;
             }
@@ -104,8 +104,8 @@ namespace iText.Layout.Renderer {
         }
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LayoutResult errorResult = TryAlignListItemsHorizontally(new LayoutContext(new LayoutArea(1, new Rectangle
-                (availableWidth, AbstractRenderer.INF))));
+            LayoutResult errorResult = InitializeListSymbols(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
+                , AbstractRenderer.INF))));
             if (errorResult != null) {
                 return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
             }
@@ -334,7 +334,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private LayoutResult TryAlignListItemsHorizontally(LayoutContext layoutContext) {
+        private LayoutResult InitializeListSymbols(LayoutContext layoutContext) {
             if (!HasOwnProperty(Property.LIST_SYMBOLS_INITIALIZED)) {
                 IList<IRenderer> symbolRenderers = new List<IRenderer>();
                 int listItemNum = (int)this.GetProperty<int?>(Property.LIST_START, 1);
