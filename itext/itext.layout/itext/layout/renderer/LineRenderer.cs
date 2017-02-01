@@ -61,9 +61,6 @@ namespace iText.Layout.Renderer {
 
         protected internal byte[] levels;
 
-        private MinMaxWidth countedMinMaxWidth;
-
-        //saved value of min max width calculations after the last layout
         public override LayoutResult Layout(LayoutContext layoutContext) {
             Rectangle layoutBox = layoutContext.GetArea().GetBBox().Clone();
             occupiedArea = new LayoutArea(layoutContext.GetArea().GetPageNumber(), layoutBox.Clone().MoveDown(-layoutBox
@@ -72,9 +69,8 @@ namespace iText.Layout.Renderer {
             maxAscent = 0;
             maxDescent = 0;
             int childPos = 0;
-            countedMinMaxWidth = new MinMaxWidth(0, layoutBox.GetWidth());
-            SetProperty(Property.MIN_MAX_WIDTH, countedMinMaxWidth);
-            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
+            MinMaxWidth minMaxWidth = new MinMaxWidth(0, layoutBox.GetWidth());
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(minMaxWidth);
             BaseDirection? baseDirection = this.GetProperty<BaseDirection?>(Property.BASE_DIRECTION);
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is TextRenderer) {
@@ -153,10 +149,11 @@ namespace iText.Layout.Renderer {
                     ).GetPageNumber(), bbox)));
                 float minChildWidth = 0;
                 float maxChildWidth = 0;
-                if (childRenderer.HasOwnProperty(Property.MIN_MAX_WIDTH)) {
-                    MinMaxWidth childMinMaxWidth = childRenderer.GetOwnProperty<MinMaxWidth>(Property.MIN_MAX_WIDTH);
-                    minChildWidth = childMinMaxWidth.GetMinWidth();
-                    maxChildWidth = childMinMaxWidth.GetMaxWidth();
+                if (childResult is MinMaxWidthLayoutResult) {
+                    minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
+                        );
+                    maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
+                        );
                 }
                 float childAscent = 0;
                 float childDescent = 0;
@@ -363,6 +360,7 @@ namespace iText.Layout.Renderer {
                 LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer)result.GetSplitRenderer
                     ();
                 processed.AdjustChildrenYLine().TrimLast();
+                result.SetMinMaxWidth(minMaxWidth);
             }
             return result;
         }
@@ -536,10 +534,9 @@ namespace iText.Layout.Renderer {
         }
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LayoutResult result = ((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
-                , AbstractRenderer.INF)))));
-            return result.GetStatus() != LayoutResult.NOTHING ? countedMinMaxWidth : new MinMaxWidth(0, availableWidth
-                );
+            LineLayoutResult result = (LineLayoutResult)((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, 
+                new Rectangle(availableWidth, AbstractRenderer.INF)))));
+            return result.GetNotNullMinMaxWidth(availableWidth);
         }
 
         private IList<int[]> CreateOrGetReversedProperty(TextRenderer newRenderer) {

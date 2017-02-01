@@ -116,11 +116,6 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal IRenderer causeOfNothing;
 
-        /// <summary>The min and max possible width of rendered element including margins, borders, etc.</summary>
-        protected internal float minFullWidth;
-
-        protected internal float maxFullWidth;
-
         /// <summary>
         /// Creates the
         /// <see cref="LayoutResult"/>

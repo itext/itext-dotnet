@@ -11,5 +11,12 @@ namespace iText.Layout.Minmaxwidth.Handler {
         public abstract void UpdateMinChildWidth(float childMinWidth);
 
         public abstract void UpdateMaxChildWidth(float childMaxWidth);
+
+        public virtual void UpdateMinMaxWidth(MinMaxWidth minMaxWidth) {
+            if (minMaxWidth != null) {
+                UpdateMaxChildWidth(minMaxWidth.GetMaxWidth());
+                UpdateMinChildWidth(minMaxWidth.GetMinWidth());
+            }
+        }
     }
 }

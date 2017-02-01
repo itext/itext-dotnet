@@ -49,7 +49,7 @@ namespace iText.Layout.Layout {
     /// <see cref="iText.Layout.Renderer.LineRenderer.Layout(LayoutContext)">layouting</see>
     /// .
     /// </summary>
-    public class LineLayoutResult : LayoutResult {
+    public class LineLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>Indicates whether split was forced by new line symbol or not.</summary>
         protected internal bool splitForcedByNewline;
 

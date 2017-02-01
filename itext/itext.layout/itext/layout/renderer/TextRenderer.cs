@@ -94,8 +94,6 @@ namespace iText.Layout.Renderer {
 
         protected internal float tabAnchorCharacterPosition = -1;
 
-        private MinMaxWidth countedMinMaxWidth;
-
         /// <summary>Creates a TextRenderer from its corresponding layout object.</summary>
         /// <param name="textElement">
         /// the
@@ -120,7 +118,6 @@ namespace iText.Layout.Renderer {
         /// <param name="text">the replacement text</param>
         public TextRenderer(Text textElement, String text)
             : base(textElement) {
-            //saved value of min max width calculations after the last layout
             this.strToBeConverted = text;
         }
 
@@ -141,9 +138,8 @@ namespace iText.Layout.Renderer {
             Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
             Border[] borders = GetBorders();
             ApplyBorderBox(layoutBox, borders, false);
-            countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox().GetWidth
-                ());
-            SetProperty(Property.MIN_MAX_WIDTH, countedMinMaxWidth);
+            MinMaxWidth countedMinMaxWidth = new MinMaxWidth(area.GetBBox().GetWidth() - layoutBox.GetWidth(), area.GetBBox
+                ().GetWidth());
             AbstractWidthHandler widthHandler = new MaxSumWidthHandler(countedMinMaxWidth);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
@@ -399,6 +395,7 @@ namespace iText.Layout.Renderer {
                     result.SetStatus(LayoutResult.FULL);
                 }
             }
+            result.SetMinMaxWidth(countedMinMaxWidth);
             return result;
         }
 
@@ -564,7 +561,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_587();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_584();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (HasOwnProperty(Property.REVERSED)) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -637,8 +634,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_587 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_587() {
+        private sealed class _IGlyphLineFilter_584 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_584() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -876,10 +873,9 @@ namespace iText.Layout.Renderer {
         }
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            LayoutResult result = Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer
-                .INF))));
-            return result.GetStatus() != LayoutResult.NOTHING ? countedMinMaxWidth : new MinMaxWidth(0, availableWidth
-                );
+            TextLayoutResult result = (TextLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth
+                , AbstractRenderer.INF))));
+            return result.GetNotNullMinMaxWidth(availableWidth);
         }
 
         protected internal virtual int GetNumberOfSpaces() {

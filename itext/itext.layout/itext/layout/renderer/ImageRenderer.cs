@@ -185,7 +185,7 @@ namespace iText.Layout.Renderer {
                     isPlacingForced = true;
                 }
                 else {
-                    return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                    return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
             }
             occupiedArea.GetBBox().MoveDown((float)height);
@@ -205,9 +205,9 @@ namespace iText.Layout.Renderer {
             if (angle != 0) {
                 ApplyRotationLayout((float)angle);
             }
-            SetProperty(Property.MIN_MAX_WIDTH, new MinMaxWidth(0, area.GetBBox().GetWidth(), occupiedArea.GetBBox().GetWidth
-                (), occupiedArea.GetBBox().GetWidth()));
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
+            return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null
+                ).SetMinMaxWidth(new MinMaxWidth(0, area.GetBBox().GetWidth(), occupiedArea.GetBBox().GetWidth(), occupiedArea
+                .GetBBox().GetWidth()));
         }
 
         public override void Draw(DrawContext drawContext) {
