@@ -904,6 +904,56 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void NestedTablesCollapseTest01() {
+            String testName = "nestedTablesCollapseTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Cell cell;
+            Table outertable = new Table(1);
+            Table innertable = new Table(2);
+            // first row
+            // column 1
+            cell = new Cell().Add("Record Ref:");
+            cell.SetBorder(Border.NO_BORDER);
+            innertable.AddCell(cell);
+            // column 2
+            cell = new Cell().Add("GN Staff");
+            cell.SetPaddingLeft(2);
+            innertable.AddCell(cell);
+            // spacing
+            cell = new Cell(1, 2);
+            cell.SetHeight(3);
+            cell.SetBorder(Border.NO_BORDER);
+            innertable.AddCell(cell);
+            // second row
+            // column 1
+            cell = new Cell().Add("Hospital:");
+            cell.SetBorder(Border.NO_BORDER);
+            innertable.AddCell(cell);
+            // column 2
+            cell = new Cell().Add("Derby Royal");
+            cell.SetPaddingLeft(2);
+            innertable.AddCell(cell);
+            // spacing
+            cell = new Cell(1, 2);
+            cell.SetHeight(3);
+            cell.SetBorder(Border.NO_BORDER);
+            innertable.AddCell(cell);
+            // first nested table
+            cell = new Cell().Add(innertable);
+            outertable.AddCell(cell);
+            // add the table
+            doc.Add(outertable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void NestedTableSkipHeaderFooterTest() {
             String testName = "nestedTableSkipHeaderFooter.pdf";
             String outFileName = destinationFolder + testName;
