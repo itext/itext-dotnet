@@ -96,7 +96,6 @@ namespace iText.Layout.Renderer {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
                             tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
-                            widthHandler.UpdateMinChildWidth(tabRenderer.GetOccupiedArea().GetBBox().GetWidth());
                             widthHandler.UpdateMaxChildWidth(tabRenderer.GetOccupiedArea().GetBBox().GetWidth());
                         }
                         hangingTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
@@ -154,7 +153,7 @@ namespace iText.Layout.Renderer {
                     else {
                         curWidth += tabAndNextElemWidth;
                     }
-                    widthHandler.UpdateMinChildWidth(tabWidth + minChildWidth);
+                    widthHandler.UpdateMinChildWidth(minChildWidth);
                     widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth);
                     hangingTabStop = null;
                 }
