@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.IO.Util;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -12,7 +13,9 @@ namespace iText.Layout.Renderer {
 
         private int numberOfColumns;
 
-        private float[] collapsedTableBorders;
+        private float rightBorderMaxWidth;
+
+        private float leftBorderMaxWidth;
 
         private TableWidths.ColumnWidthData[] widths;
 
@@ -20,24 +23,27 @@ namespace iText.Layout.Renderer {
 
         private float tableWidth;
 
-        private bool unspecifiedTableWidth;
+        private bool fixedTableWidth;
 
-        internal TableWidths(TableRenderer tableRenderer, float availableWidth, float[] collapsedTableBorders) {
+        private bool fixedTableLayout = false;
+
+        private float minWidth;
+
+        internal TableWidths(TableRenderer tableRenderer, float availableWidth, bool calculateTableMaxWidth, float
+             rightBorderMaxWidth, float leftBorderMaxWidth) {
             this.tableRenderer = tableRenderer;
             numberOfColumns = ((Table)tableRenderer.GetModelElement()).GetNumberOfColumns();
-            this.collapsedTableBorders = collapsedTableBorders != null ? collapsedTableBorders : new float[] { 0, 0, 0
-                , 0 };
-            CalculateTableWidth(availableWidth);
+            this.rightBorderMaxWidth = rightBorderMaxWidth;
+            this.leftBorderMaxWidth = leftBorderMaxWidth;
+            CalculateTableWidth(availableWidth, calculateTableMaxWidth);
         }
 
         internal bool HasFixedLayout() {
-            if (unspecifiedTableWidth) {
-                return false;
-            }
-            else {
-                String layout = tableRenderer.GetProperty<String>(Property.TABLE_LAYOUT, "auto");
-                return "fixed".Equals(layout.ToLowerInvariant());
-            }
+            return fixedTableLayout;
+        }
+
+        internal float GetMinWidth() {
+            return minWidth;
         }
 
         internal float[] AutoLayout(float[] minWidths, float[] maxWidths) {
@@ -240,7 +246,7 @@ namespace iText.Layout.Renderer {
                 }
                 System.Diagnostics.Debug.Assert(sumOfPercents <= 100);
                 bool toBalance = true;
-                if (unspecifiedTableWidth) {
+                if (!fixedTableWidth) {
                     float tableWidthBasedOnPercents = sumOfPercents < 100 ? totalNonPercent * 100 / (100 - sumOfPercents) : 0;
                     for (int i = 0; i < numberOfColumns; i++) {
                         if (widths[i].isPercent) {
@@ -467,25 +473,44 @@ namespace iText.Layout.Renderer {
         }
 
         //region Common methods
-        private void CalculateTableWidth(float availableWidth) {
-            float? originalTableWidth = tableRenderer.RetrieveUnitValue(availableWidth, Property.WIDTH);
-            if (originalTableWidth == null || float.IsNaN(originalTableWidth) || originalTableWidth <= 0) {
-                tableWidth = availableWidth;
-                unspecifiedTableWidth = true;
+        private void CalculateTableWidth(float availableWidth, bool calculateTableMaxWidth) {
+            fixedTableLayout = "fixed".Equals(tableRenderer.GetProperty<String>(Property.TABLE_LAYOUT, "auto").ToLowerInvariant
+                ());
+            UnitValue width = tableRenderer.GetProperty<UnitValue>(Property.WIDTH);
+            if (fixedTableLayout && width != null && width.GetValue() >= 0) {
+                fixedTableWidth = true;
+                tableWidth = RetrieveTableWidth(width, availableWidth);
+                minWidth = width.IsPercentValue() ? 0 : tableWidth;
             }
             else {
-                tableWidth = originalTableWidth < availableWidth ? originalTableWidth : availableWidth;
-                unspecifiedTableWidth = false;
+                fixedTableLayout = false;
+                //min width will initialize later
+                minWidth = -1;
+                if (calculateTableMaxWidth) {
+                    fixedTableWidth = false;
+                    tableWidth = RetrieveTableWidth(availableWidth);
+                }
+                else {
+                    if (width != null && width.GetValue() >= 0) {
+                        fixedTableWidth = true;
+                        tableWidth = RetrieveTableWidth(width, availableWidth);
+                    }
+                    else {
+                        fixedTableWidth = false;
+                        tableWidth = RetrieveTableWidth(availableWidth);
+                    }
+                }
             }
-            tableWidth -= GetMaxLeftBorder() / 2 + GetMaxRightBorder() / 2;
         }
 
-        private float GetMaxLeftBorder() {
-            return collapsedTableBorders[3];
+        private float RetrieveTableWidth(UnitValue width, float availableWidth) {
+            return RetrieveTableWidth(width.IsPercentValue() ? width.GetValue() * availableWidth / 100 : width.GetValue
+                ());
         }
 
-        private float GetMaxRightBorder() {
-            return collapsedTableBorders[1];
+        private float RetrieveTableWidth(float width) {
+            float result = width - rightBorderMaxWidth / 2 - leftBorderMaxWidth / 2;
+            return result > 0 ? result : 0;
         }
 
         private Table GetTable() {
@@ -533,11 +558,13 @@ namespace iText.Layout.Renderer {
 
         private float[] ExtractWidths() {
             float actualWidth = 0;
+            minWidth = 0;
             float[] columnWidths = new float[widths.Length];
             for (int i = 0; i < widths.Length; i++) {
                 System.Diagnostics.Debug.Assert(widths[i].finalWidth >= 0);
                 columnWidths[i] = widths[i].finalWidth;
                 actualWidth += widths[i].finalWidth;
+                minWidth += widths[i].min;
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
@@ -680,8 +707,24 @@ namespace iText.Layout.Renderer {
                 return ((Cell)cell.GetModelElement()).GetRowspan();
             }
 
+            //TODO DEVSIX-1057, DEVSIX-1021
             internal virtual UnitValue GetWidth() {
-                return cell.GetProperty<UnitValue>(Property.WIDTH);
+                UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
+                if (widthValue == null || widthValue.IsPercentValue()) {
+                    return widthValue;
+                }
+                else {
+                    Border[] borders = cell.GetBorders();
+                    if (borders[1] != null) {
+                        widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                    }
+                    if (borders[3] != null) {
+                        widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                    }
+                    float[] paddings = cell.GetPaddings();
+                    widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
+                    return widthValue;
+                }
             }
 
             public virtual int CompareTo(TableWidths.CellInfo o) {
@@ -697,7 +740,7 @@ namespace iText.Layout.Renderer {
 
         //endregion
         public override String ToString() {
-            return "width=" + tableWidth + (unspecifiedTableWidth ? "" : "!!");
+            return "width=" + tableWidth + (fixedTableWidth ? "!!" : "");
         }
     }
 }

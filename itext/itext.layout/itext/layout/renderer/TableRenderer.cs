@@ -267,7 +267,7 @@ namespace iText.Layout.Renderer {
             InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
             CollapseAllBorders();
             if (IsOriginalRenderer()) {
-                CalculateColumnWidths(layoutBox.GetWidth(), new float[] { 0, rightBorderMaxWidth, 0, leftBorderMaxWidth });
+                CalculateColumnWidths(layoutBox.GetWidth(), false);
             }
             float tableWidth = GetTableWidth();
             if (layoutBox.GetWidth() > tableWidth) {
@@ -2261,17 +2261,22 @@ namespace iText.Layout.Renderer {
                  == this;
         }
 
-        private void CalculateColumnWidths(float availableWidth, float[] borders) {
+        /// <summary>Returns minWidth</summary>
+        private float CalculateColumnWidths(float availableWidth, bool calculateTableMaxWidth) {
             if (countedColumnWidth == null || totalWidthForColumns != availableWidth) {
-                TableWidths tableWidths = new TableWidths(this, availableWidth, borders);
+                TableWidths tableWidths = new TableWidths(this, availableWidth, calculateTableMaxWidth, rightBorderMaxWidth
+                    , leftBorderMaxWidth);
                 if (tableWidths.HasFixedLayout()) {
                     countedColumnWidth = tableWidths.FixedLayout();
+                    return tableWidths.GetMinWidth();
                 }
                 else {
                     TableRenderer.ColumnMinMaxWidth minMax = CountTableMinMaxWidth(availableWidth, false, true);
-                    countedColumnWidth = tableWidths.AutoLayout(minMax.GetMinWidth(), minMax.GetMaxWidth());
+                    countedColumnWidth = tableWidths.AutoLayout(minMax.GetMinWidths(), minMax.GetMaxWidths());
+                    return tableWidths.GetMinWidth();
                 }
             }
+            return -1;
         }
 
         private float GetTableWidth() {
@@ -2334,11 +2339,11 @@ namespace iText.Layout.Renderer {
 
             private float layoutBoxWidth;
 
-            internal virtual float[] GetMinWidth() {
+            internal virtual float[] GetMinWidths() {
                 return minWidth;
             }
 
-            internal virtual float[] GetMaxWidth() {
+            internal virtual float[] GetMaxWidths() {
                 return maxWidth;
             }
 
