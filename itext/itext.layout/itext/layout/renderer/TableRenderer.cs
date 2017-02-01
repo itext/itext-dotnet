@@ -152,7 +152,7 @@ namespace iText.Layout.Renderer {
             return (Table)GetModelElement();
         }
 
-        private void InitializeHeaderAndFooter() {
+        private void InitializeHeaderAndFooter(bool isFirstOnThePage) {
             Table table = (Table)GetModelElement();
             Border[] tableBorder = GetBorders();
             Table footerElement = table.GetFooter();
@@ -164,8 +164,8 @@ namespace iText.Layout.Renderer {
             }
             Table headerElement = table.GetHeader();
             bool isFirstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
-            bool headerShouldBeApplied = !rows.IsEmpty() && (!isOriginalNonSplitRenderer || isFirstHeader && !table.IsSkipFirstHeader
-                ()) && !true.Equals(this.GetOwnProperty<bool?>(Property.IGNORE_HEADER));
+            bool headerShouldBeApplied = !rows.IsEmpty() && (isFirstOnThePage && (!table.IsSkipFirstHeader() || !isFirstHeader
+                )) && !true.Equals(this.GetOwnProperty<bool?>(Property.IGNORE_HEADER));
             if (headerElement != null && headerShouldBeApplied) {
                 headerRenderer = InitFooterOrHeaderRenderer(false, tableBorder);
             }
@@ -264,7 +264,7 @@ namespace iText.Layout.Renderer {
             if (IsOriginalRenderer()) {
                 InitializeBorders(lastFlushedRowBottomBorder, area.IsEmptyArea());
             }
-            InitializeHeaderAndFooter();
+            InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
             CollapseAllBorders();
             if (IsOriginalRenderer()) {
                 CalculateColumnWidths(layoutBox.GetWidth(), new float[] { 0, rightBorderMaxWidth, 0, leftBorderMaxWidth });
@@ -1388,7 +1388,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(layoutBox, false);
             if (initializeBorders) {
                 InitializeBorders(((Table)GetModelElement()).GetLastRowBottomBorder(), true);
-                InitializeHeaderAndFooter();
+                InitializeHeaderAndFooter(true);
                 CollapseAllBorders();
             }
             TableRenderer.ColumnMinMaxWidth footerColWidth = null;
