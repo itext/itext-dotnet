@@ -357,9 +357,6 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (this.GetProperty<float?>(Property.ROTATION_ANGLE) != null) {
                 ApplyRotationLayout(layoutContext.GetArea().GetBBox().Clone());
-                minMaxWidth.SetChildrenMinWidth(occupiedArea.GetBBox().GetWidth());
-                minMaxWidth.SetChildrenMaxWidth(occupiedArea.GetBBox().GetWidth());
-                minMaxWidth.SetAdditionalWidth(0);
                 if (IsNotFittingLayoutArea(layoutContext.GetArea())) {
                     if (!true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                         return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, null, null, this, this);
@@ -461,7 +458,7 @@ namespace iText.Layout.Renderer {
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
             MinMaxWidthLayoutResult result = (MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle
                 (availableWidth, AbstractRenderer.INF))));
-            return MinMaxWidthUtils.CountRotationMinMaxWidth(result.GetNotNullMinMaxWidth(availableWidth), this);
+            return CountRotationMinMaxWidth(result.GetNotNullMinMaxWidth(availableWidth));
         }
 
         protected internal virtual iText.Layout.Renderer.ParagraphRenderer[] Split() {

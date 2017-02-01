@@ -36,7 +36,7 @@ namespace iText.Layout.Renderer {
                 (Color.BLUE, 5));
             MinMaxWidth result = ((AbstractRenderer)p.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            p.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(p, result.GetMinWidth()));
+            p.SetWidth(ToEffectiveWidth(p, result.GetMinWidth()));
             doc.Add(p);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -58,7 +58,7 @@ namespace iText.Layout.Renderer {
             d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -68,6 +68,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithSmallRotatedParagraph() {
             String outFileName = destinationFolder + "divSmallRotatedParagraphTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divSmallRotatedParagraphTest01.pdf";
@@ -77,11 +78,11 @@ namespace iText.Layout.Renderer {
             Paragraph p = new Paragraph(new Text(str)).SetPadding(1f).SetBorder(new SolidBorder(Color.BLACK, 2)).SetMargin
                 (3).SetBackgroundColor(Color.LIGHT_GRAY);
             Div d = new Div().SetPadding(4f).SetBorder(new SolidBorder(Color.GREEN, 5)).SetMargin(6);
-            d.Add(p);
             d.Add(new Paragraph(("iText")).SetRotationAngle(Math.PI / 8).SetBorder(new SolidBorder(Color.BLUE, 2f)));
+            d.Add(p);
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -105,7 +106,7 @@ namespace iText.Layout.Renderer {
             d.Add(new Paragraph(("iText")));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -115,6 +116,7 @@ namespace iText.Layout.Renderer {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA)]
         public virtual void DivWithSmallRotatedDiv() {
             String outFileName = destinationFolder + "divSmallRotatedDivTest01.pdf";
             String cmpFileName = sourceFolder + "cmp_divSmallRotatedDivTest01.pdf";
@@ -129,7 +131,7 @@ namespace iText.Layout.Renderer {
             d.Add(dRotated.Add(new Paragraph(("iText"))));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -152,7 +154,7 @@ namespace iText.Layout.Renderer {
             Div d = new Div().Add(new Paragraph(("iText"))).Add(dRotated).SetBorder(new SolidBorder(Color.BLUE, 2f));
             MinMaxWidth result = ((AbstractRenderer)d.CreateRendererSubTree().SetParent(doc.GetRenderer())).GetMinMaxWidth
                 (doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            d.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(d, result.GetMinWidth()));
+            d.SetWidth(ToEffectiveWidth(d, result.GetMinWidth()));
             doc.Add(d);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -182,7 +184,7 @@ namespace iText.Layout.Renderer {
             curr.Add(p);
             MinMaxWidth result = ((AbstractRenderer)externalDiv.CreateRendererSubTree().SetParent(doc.GetRenderer())).
                 GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            externalDiv.SetWidth(MinMaxWidthUtils.ToEffectiveWidth(externalDiv, result.GetMinWidth()));
+            externalDiv.SetWidth(ToEffectiveWidth(externalDiv, result.GetMinWidth()));
             doc.Add(externalDiv);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -205,14 +207,12 @@ namespace iText.Layout.Renderer {
                 .Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder
-                (Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell
-                (cell2.Clone(true));
-            Table maxTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder
-                (Color.BLUE, 20)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell
-                (cell2.Clone(true));
+            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
+                (cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
+            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
+                (cell1.Clone(true)).AddCell(cell2.Clone(true)).AddCell(cell1.Clone(true)).AddCell(cell2.Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -237,14 +237,14 @@ namespace iText.Layout.Renderer {
                 .Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder
-                (Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell
-                (cell.Clone(true)).AddCell(cell.Clone(true));
-            Table maxTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder
-                (Color.BLUE, 20)).AddCell(cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell
-                (cell.Clone(true)).AddCell(cell.Clone(true));
+            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
+                (cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
+                (cell.Clone(true));
+            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLUE, 20)).AddCell
+                (cell.Clone(true)).AddCell(bigCell.Clone(true)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell
+                (cell.Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -271,14 +271,14 @@ namespace iText.Layout.Renderer {
                 .Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder
-                (Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)
-                ).AddCell(colspanCell.Clone(true));
-            Table maxTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder
-                (Color.BLACK, 20)).AddCell(cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)
-                ).AddCell(colspanCell.Clone(true));
+            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMinWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell
+                (cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone
+                (true));
+            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMaxWidth())).SetMarginTop(10).SetBorder(new SolidBorder(Color.BLACK, 20)).AddCell
+                (cell.Clone(true)).AddCell(cell.Clone(true)).AddCell(rowspanCell.Clone(true)).AddCell(colspanCell.Clone
+                (true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -307,18 +307,16 @@ namespace iText.Layout.Renderer {
                 (cell.Clone(true)).AddHeaderCell(cell.Clone(true));
             TableRenderer renderer = (TableRenderer)table.CreateRendererSubTree().SetParent(doc.GetRenderer());
             MinMaxWidth minMaxWidth = renderer.GetMinMaxWidth(doc.GetPageEffectiveArea(PageSize.A4).GetWidth());
-            Table minTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMinWidth())).SetBorder(new SolidBorder(Color.
-                BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell
-                .Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone
-                (true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true
-                ));
-            Table maxTable = new Table(MinMaxWidthUtils.ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth
-                (MinMaxWidthUtils.ToEffectiveWidth(table, minMaxWidth.GetMaxWidth())).SetBorder(new SolidBorder(Color.
-                BLACK, 20)).SetMarginTop(20).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell
-                .Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone
-                (true)).AddHeaderCell(bigCell.Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true
-                ));
+            Table minTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMinColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMinWidth())).SetBorder(new SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell
+                (mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell
+                (cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell
+                .Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
+            Table maxTable = new Table(ToEffectiveTableColumnWidth(renderer.GetMaxColumnWidth())).SetWidth(ToEffectiveWidth
+                (table, minMaxWidth.GetMaxWidth())).SetBorder(new SolidBorder(Color.BLACK, 20)).SetMarginTop(20).AddCell
+                (mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddCell(mediumCell.Clone(true)).AddFooterCell
+                (cell.Clone(true)).AddFooterCell(cell.Clone(true)).AddFooterCell(bigCell.Clone(true)).AddHeaderCell(bigCell
+                .Clone(true)).AddHeaderCell(cell.Clone(true)).AddHeaderCell(cell.Clone(true));
             doc.Add(table);
             doc.Add(minTable);
             doc.Add(maxTable);
@@ -327,13 +325,20 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        private float[] GetTableColsWidth(float[] colWidth, Border[] borders) {
-            float[] result = colWidth.Clone();
-            if (borders[1] != null) {
-                result[colWidth.Length - 1] += borders[1].GetWidth() / 2;
+        private static float ToEffectiveWidth(BlockElement b, float fullWidth) {
+            if (b is Table) {
+                return fullWidth + ((Table)b).GetNumberOfColumns() * MinMaxWidthUtils.GetEps();
             }
-            if (borders[3] != null) {
-                result[0] += borders[3].GetWidth() / 2;
+            else {
+                return fullWidth - MinMaxWidthUtils.GetBorderWidth(b) - MinMaxWidthUtils.GetMarginsWidth(b) - MinMaxWidthUtils
+                    .GetPaddingWidth(b) + MinMaxWidthUtils.GetEps();
+            }
+        }
+
+        private static float[] ToEffectiveTableColumnWidth(float[] tableColumnWidth) {
+            float[] result = tableColumnWidth.Clone();
+            for (int i = 0; i < result.Length; ++i) {
+                result[i] += MinMaxWidthUtils.GetEps();
             }
             return result;
         }

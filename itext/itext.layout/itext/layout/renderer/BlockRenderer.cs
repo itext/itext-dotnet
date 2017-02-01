@@ -617,7 +617,45 @@ namespace iText.Layout.Renderer {
                 handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
                 handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
             }
-            return MinMaxWidthUtils.CountRotationMinMaxWidth(minMaxWidth, this);
+            return CountRotationMinMaxWidth(minMaxWidth);
+        }
+
+        //Heuristic method.
+        //We assume that the area of block stays the same when we try to layout it
+        //with different available width (available width is between min-width and max-width).
+        protected internal virtual MinMaxWidth CountRotationMinMaxWidth(MinMaxWidth minMaxWidth) {
+            float? rotation = GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (rotation != null) {
+                bool restoreRendererRotation = HasOwnProperty(Property.ROTATION_ANGLE);
+                SetProperty(Property.ROTATION_ANGLE, null);
+                LayoutResult result = Layout(new LayoutContext(new LayoutArea(1, new Rectangle(minMaxWidth.GetMaxWidth() +
+                     MinMaxWidthUtils.GetEps(), AbstractRenderer.INF))));
+                if (restoreRendererRotation) {
+                    SetProperty(Property.ROTATION_ANGLE, rotation);
+                }
+                else {
+                    DeleteOwnProperty(Property.ROTATION_ANGLE);
+                }
+                if (result.GetOccupiedArea() != null) {
+                    double a = result.GetOccupiedArea().GetBBox().GetWidth();
+                    double b = result.GetOccupiedArea().GetBBox().GetHeight();
+                    double m = minMaxWidth.GetMinWidth();
+                    double s = a * b;
+                    //Note, that the width of occupied area containing rotated block is less than the diagonal of this block, so:
+                    //width < sqrt(a^2 + b^2)
+                    //a^2 + b^2 = (s/b)^2 + b^2 >= 2s
+                    //(s/b)^2 + b^2 = 2s,  if b = s/b = sqrt(s)
+                    double resultMinWidth = Math.Sqrt(2 * s);
+                    //Note, that if the sqrt(s) < m (width of unrotated block is out of possible range), than the min value of (s/b)^2 + b^2 >= 2s should be when b = m
+                    if (Math.Sqrt(s) < minMaxWidth.GetMinWidth()) {
+                        resultMinWidth = Math.Max(resultMinWidth, Math.Sqrt((s / m) * (s / m) + m * m));
+                    }
+                    //We assume that the biggest diagonal is when block element have maxWidth.
+                    return new MinMaxWidth(0, minMaxWidth.GetAvailableWidth(), (float)resultMinWidth, (float)Math.Sqrt(a * a +
+                         b * b));
+                }
+            }
+            return minMaxWidth;
         }
 
         private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {
