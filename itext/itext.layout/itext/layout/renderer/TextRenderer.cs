@@ -138,7 +138,7 @@ namespace iText.Layout.Renderer {
             ApplyBorderBox(layoutBox, borders, false);
             float borderMarginWidth = area.GetBBox().GetWidth() - layoutBox.GetWidth();
             float minWidth = 0;
-            float maxWidth = area.GetBBox().GetWidth();
+            float maxFullWidth = area.GetBBox().GetWidth();
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
             bool anythingPlaced = false;
@@ -267,7 +267,7 @@ namespace iText.Layout.Renderer {
                         // the line does not fit because of height - full overflow
                         iText.Layout.Renderer.TextRenderer[] splitResult = Split(initialLineTextPos);
                         return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, splitResult[0], splitResult[1], this, minWidth
-                             + borderMarginWidth, maxWidth);
+                             + borderMarginWidth, maxFullWidth);
                     }
                     else {
                         // cannot fit a word as a whole
@@ -336,11 +336,11 @@ namespace iText.Layout.Renderer {
                         }
                         if (line.end <= line.start) {
                             return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this, minWidth + borderMarginWidth
-                                , maxWidth);
+                                , maxFullWidth);
                         }
                         else {
                             result = new TextLayoutResult(LayoutResult.PARTIAL, occupiedArea, null, null, minWidth + borderMarginWidth
-                                , maxWidth).SetWordHasBeenSplit(wordSplit);
+                                , maxFullWidth).SetWordHasBeenSplit(wordSplit);
                         }
                         break;
                     }
@@ -353,7 +353,7 @@ namespace iText.Layout.Renderer {
                     ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
                     ApplyMargins(occupiedArea.GetBBox(), margins, true);
                     return new TextLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this, minWidth + borderMarginWidth
-                        , maxWidth);
+                        , maxFullWidth);
                 }
                 else {
                     isPlacingForcedWhileNothing = true;
@@ -370,7 +370,7 @@ namespace iText.Layout.Renderer {
             ApplyMargins(occupiedArea.GetBBox(), margins, true);
             if (result == null) {
                 result = new TextLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForcedWhileNothing ? this
-                     : null, minWidth + borderMarginWidth, maxWidth);
+                     : null, minWidth + borderMarginWidth, maxFullWidth);
             }
             else {
                 iText.Layout.Renderer.TextRenderer[] split;

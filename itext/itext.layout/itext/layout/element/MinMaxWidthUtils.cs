@@ -1,12 +1,20 @@
+using iText.Kernel.Geom;
 using iText.Layout.Borders;
+using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
-    public class WidthUtils {
-        private const float eps = 0.00001f;
+    public class MinMaxWidthUtils {
+        private const float eps = 0.0001f;
 
-        public static float ToEffectiveWidth(Paragraph p, float fullWidth) {
-            return fullWidth - GetBorderWidth(p) - GetMarginsWidth(p) - GetPaddingWidth(p) + eps;
+        public static float ToEffectiveWidth(BlockElement b, float fullWidth) {
+            return fullWidth - GetBorderWidth(b) - GetMarginsWidth(b) + eps;
+        }
+
+        public static LayoutResult TryLayoutWithInfHeight(IRenderer renderer, float availableWidth) {
+            return renderer.Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, AbstractRenderer.
+                INF))));
         }
 
         private static float GetBorderWidth(IElement element) {
