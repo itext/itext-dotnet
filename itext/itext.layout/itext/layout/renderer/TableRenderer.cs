@@ -1435,11 +1435,13 @@ namespace iText.Layout.Renderer {
                 headerRenderer = null;
                 rightBorderMaxWidth = 0;
                 leftBorderMaxWidth = 0;
+                horizontalBorders = null;
+                verticalBorders = null;
+                //TODO do we need it?
+                // delete set properties
+                DeleteOwnProperty(Property.BORDER_BOTTOM);
+                DeleteOwnProperty(Property.BORDER_TOP);
             }
-            //TODO do we need it?
-            // delete set properties
-            //deleteOwnProperty(Property.BORDER_BOTTOM);
-            //deleteOwnProperty(Property.BORDER_TOP);
             return tableColWidth.SetLayoutBoxWidth(layoutBox.GetWidth());
         }
 
