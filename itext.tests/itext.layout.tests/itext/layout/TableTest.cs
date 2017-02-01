@@ -846,6 +846,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + "toLargeElementInTableTest01.pdf"));
             Document doc = new Document(pdfDoc);
             Table table = new Table(new float[] { 5 });
+            table.SetWidth(5).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell = new Cell();
             Paragraph p = new Paragraph(new Text("a"));
             cell.Add(p);

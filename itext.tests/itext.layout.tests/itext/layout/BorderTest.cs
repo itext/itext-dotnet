@@ -609,8 +609,9 @@ namespace iText.Layout {
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
-            Table table = new Table(new float[] { 1, 3 });
-            table.SetWidthPercent(50);
+            Table table = new Table(new UnitValue[] { UnitValue.CreatePercentValue(25), UnitValue.CreatePercentValue(75
+                ) });
+            table.SetWidthPercent(50).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
             cell = new Cell().Add("1ORD");
@@ -1126,7 +1127,7 @@ namespace iText.Layout {
             fileName = "forcedPlacementTest01.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
-            table.SetWidth(10);
+            table.SetWidth(10).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
             cell = new Cell().Add("1ORD");
