@@ -328,10 +328,12 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest02.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 50, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle
-                ((Math.PI / 2)))).AddCell(new Cell().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).
-                AddCell(new Cell().Add(new Paragraph("cell 2, 1").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell()
-                .Add(new Paragraph("cell 2, 2").SetRotationAngle((Math.PI))));
+            Table table = new Table(new float[] { 50, 50 });
+            table.SetWidth(100);
+            table.AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle((Math.PI / 2)))).AddCell(new Cell
+                ().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 1").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph("cell 2, 2").SetRotationAngle
+                ((Math.PI))));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -347,11 +349,13 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + cmpPrefix + "tableRotationTest03.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(new float[] { 25, 50 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle
-                ((Math.PI / 2)))).AddCell(new Cell().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).
-                AddCell(new Cell().Add(new Paragraph("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph("cell 2, 2"))
-                ).AddCell(new Cell().Add(new Paragraph("cell 3, 1").SetRotationAngle(-(Math.PI / 2)))).AddCell(new Cell
-                ().Add(new Paragraph("cell 3, 2").SetRotationAngle((Math.PI))));
+            Table table = new Table(new float[] { 25, 50 });
+            table.SetWidth(75).SetFixedLayout();
+            table.AddCell(new Cell().Add(new Paragraph("cell 1, 1").SetRotationAngle((Math.PI / 2)))).AddCell(new Cell
+                ().Add(new Paragraph("cell 1, 2").SetRotationAngle((Math.PI / 3)))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph("cell 2, 2"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 1").SetRotationAngle(-(Math.PI / 2)))).AddCell(new Cell().Add(new Paragraph("cell 3, 2").SetRotationAngle
+                ((Math.PI))));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -366,8 +370,10 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + cmpPrefix + "cellRotationTest01.pdf";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1).SetWidth(50).AddCell(new Cell().Add(new Paragraph("Hello")).SetRotationAngle(Math
-                .PI * 70 / 180.0).SetBackgroundColor(Color.GREEN));
+            Table table = new Table(1);
+            table.SetWidth(50);
+            table.AddCell(new Cell().Add(new Paragraph("Hello")).SetRotationAngle(Math.PI * 70 / 180.0).SetBackgroundColor
+                (Color.GREEN));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

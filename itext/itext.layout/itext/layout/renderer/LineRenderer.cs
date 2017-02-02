@@ -49,6 +49,7 @@ using iText.IO.Util;
 using iText.Kernel.Geom;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -68,6 +69,8 @@ namespace iText.Layout.Renderer {
             maxAscent = 0;
             maxDescent = 0;
             int childPos = 0;
+            MinMaxWidth minMaxWidth = new MinMaxWidth(0, layoutBox.GetWidth());
+            AbstractWidthHandler widthHandler = new MaxSumWidthHandler(minMaxWidth);
             UpdateChildrenParent();
             ResolveChildrenFonts();
             int totalNumberOfTrimmedGlyphs = TrimFirst();
@@ -92,6 +95,7 @@ namespace iText.Layout.Renderer {
                             IRenderer tabRenderer = childRenderers[childPos - 1];
                             tabRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(), bbox)));
                             curWidth += tabRenderer.GetOccupiedArea().GetBBox().GetWidth();
+                            widthHandler.UpdateMaxChildWidth(tabRenderer.GetOccupiedArea().GetBBox().GetWidth());
                         }
                         hangingTabStop = CalculateTab(childRenderer, curWidth, layoutBox.GetWidth());
                         if (childPos == childRenderers.Count - 1) {
@@ -109,6 +113,14 @@ namespace iText.Layout.Renderer {
                 }
                 childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                     ), bbox)));
+                float minChildWidth = 0;
+                float maxChildWidth = 0;
+                if (childResult is MinMaxWidthLayoutResult) {
+                    minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
+                        );
+                    maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
+                        );
+                }
                 float childAscent = 0;
                 float childDescent = 0;
                 if (childRenderer is TextRenderer) {
@@ -140,10 +152,14 @@ namespace iText.Layout.Renderer {
                     else {
                         curWidth += tabAndNextElemWidth;
                     }
+                    widthHandler.UpdateMinChildWidth(minChildWidth);
+                    widthHandler.UpdateMaxChildWidth(tabWidth + maxChildWidth);
                     hangingTabStop = null;
                 }
                 else {
                     curWidth += childResult.GetOccupiedArea().GetBBox().GetWidth();
+                    widthHandler.UpdateMinChildWidth(minChildWidth);
+                    widthHandler.UpdateMaxChildWidth(maxChildWidth);
                 }
                 occupiedArea.SetBBox(new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox.GetHeight() - maxHeight, 
                     curWidth, maxHeight));
@@ -309,6 +325,7 @@ namespace iText.Layout.Renderer {
                 LineRenderer processed = result.GetStatus() == LayoutResult.FULL ? this : (LineRenderer)result.GetSplitRenderer
                     ();
                 processed.AdjustChildrenYLine().TrimLast();
+                result.SetMinMaxWidth(minMaxWidth);
             }
             return result;
         }
@@ -479,6 +496,12 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            LineLayoutResult result = (LineLayoutResult)((LineLayoutResult)Layout(new LayoutContext(new LayoutArea(1, 
+                new Rectangle(availableWidth, AbstractRenderer.INF)))));
+            return result.GetNotNullMinMaxWidth(availableWidth);
         }
 
         private IRenderer GetLastChildRenderer() {

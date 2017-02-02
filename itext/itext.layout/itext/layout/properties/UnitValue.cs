@@ -64,7 +64,13 @@ namespace iText.Layout.Properties {
         /// <param name="value">the value to be stored.</param>
         public UnitValue(int unitType, float value) {
             this.unitType = unitType;
+            System.Diagnostics.Debug.Assert(!float.IsNaN(value));
             this.value = value;
+        }
+
+        /// <summary>Creates a copy of UnitValue object.</summary>
+        public UnitValue(iText.Layout.Properties.UnitValue unitValue)
+            : this(unitValue.unitType, unitValue.value) {
         }
 
         /// <summary>Creates a UnitValue POINT object with a specified value.</summary>
@@ -89,6 +95,43 @@ namespace iText.Layout.Properties {
         /// </returns>
         public static iText.Layout.Properties.UnitValue CreatePercentValue(float value) {
             return new iText.Layout.Properties.UnitValue(PERCENT, value);
+        }
+
+        /// <summary>Creates an array of UnitValue PERCENT objects with specified values.</summary>
+        /// <param name="values">the values to be stored.</param>
+        /// <returns>
+        /// a new normalized (Σ=100%) array of
+        /// <see cref="PERCENT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// .
+        /// </returns>
+        public static iText.Layout.Properties.UnitValue[] CreatePercentArray(float[] values) {
+            iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
+            float sum = 0;
+            foreach (float val in values) {
+                sum += val;
+            }
+            for (int i = 0; i < values.Length; i++) {
+                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePercentValue(100 * values[i] / sum);
+            }
+            return resultArray;
+        }
+
+        /// <summary>Creates an array of UnitValue POINT objects with specified values.</summary>
+        /// <param name="values">the values to be stored.</param>
+        /// <returns>
+        /// a new array of
+        /// <see cref="POINT"/>
+        /// 
+        /// <see cref="UnitValue"/>
+        /// </returns>
+        public static iText.Layout.Properties.UnitValue[] CreatePointArray(float[] values) {
+            iText.Layout.Properties.UnitValue[] resultArray = new iText.Layout.Properties.UnitValue[values.Length];
+            for (int i = 0; i < values.Length; i++) {
+                resultArray[i] = iText.Layout.Properties.UnitValue.CreatePointValue(values[i]);
+            }
+            return resultArray;
         }
 
         /// <summary>Returns the unit this value is stored in, either points (pt) or percent(%)</summary>
@@ -122,6 +165,7 @@ namespace iText.Layout.Properties {
         /// <summary>Sets the measured value stored in this object</summary>
         /// <param name="value">a <code>float</code></param>
         public virtual void SetValue(float value) {
+            System.Diagnostics.Debug.Assert(!float.IsNaN(value));
             this.value = value;
         }
 
@@ -151,6 +195,10 @@ namespace iText.Layout.Properties {
             hash = 71 * hash + this.unitType;
             hash = 71 * hash + iText.IO.Util.JavaUtil.FloatToIntBits(this.value);
             return hash;
+        }
+
+        public override String ToString() {
+            return value + (unitType == PERCENT ? "%" : "pt");
         }
     }
 }

@@ -567,7 +567,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(1);
+            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.SetMaxHeight(300);
             table.SetBorder(new SolidBorder(Color.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));
@@ -594,7 +594,7 @@ namespace iText.Layout {
             Document document = new Document(pdfDoc);
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
                 ));
-            Table table = new Table(1);
+            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.SetMaxHeight(300);
             table.SetBorder(new SolidBorder(Color.BLUE, 10));
             Cell c = new Cell().Add(img.SetHeight(500));

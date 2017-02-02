@@ -133,6 +133,29 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void IncompleteTableTest02() {
+            fileName = "incompleteTableTest02.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            Cell cell;
+            // row 1, cell 1
+            cell = new Cell().Add("One");
+            table.AddCell(cell);
+            table.StartNewRow();
+            // row 2, cell 1
+            cell = new Cell().Add("Two");
+            table.AddCell(cell);
+            // row 2, cell 2
+            cell = new Cell().Add("Three");
+            table.AddCell(cell);
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SimpleBorderTest02() {
             fileName = "simpleBorderTest02.pdf";
             Document doc = CreateDocument();
@@ -651,8 +674,8 @@ namespace iText.Layout {
         public virtual void InfiniteLoopTest01() {
             fileName = "infiniteLoopTest01.pdf";
             Document doc = CreateDocument();
-            Table table = new Table(new float[] { 1, 3 });
-            table.SetWidthPercent(50);
+            Table table = new Table(UnitValue.CreatePercentArray(new float[] { 1, 3 }));
+            table.SetWidthPercent(50).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
             cell = new Cell().Add("1ORD");
@@ -761,7 +784,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(100, 160));
             String textAlphabet = "ABCDEFGHIJKLMNOPQRSTUWXYZ";
-            Table table = new Table(1);
+            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.AddCell(new Cell().Add(textAlphabet).SetBorder(new SolidBorder(4)));
             table.AddFooterCell(new Cell().Add("Footer"));
             doc.Add(table);
@@ -797,7 +820,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 150));
             String textAlphabet = "Cell";
-            Table table = new Table(3);
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.AddCell(new Cell().Add(textAlphabet));
             table.AddCell(new Cell(2, 1).Add(textAlphabet));
             table.AddCell(new Cell().Add(textAlphabet));
@@ -843,7 +866,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 180));
             String textAlphabet = "Cell";
-            Table table = new Table(3);
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.AddCell(new Cell().Add(textAlphabet + "1"));
             table.AddCell(new Cell(2, 1).Add(textAlphabet + "222"));
             table.AddCell(new Cell().Add(textAlphabet + "3"));
@@ -862,7 +885,7 @@ namespace iText.Layout {
             Document doc = CreateDocument();
             doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 160));
             String textAlphabet = "Cell";
-            Table table = new Table(3);
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.AddCell(new Cell().Add(textAlphabet + "1"));
             table.AddCell(new Cell(2, 1).Add(textAlphabet + "2").SetBorder(new SolidBorder(Color.GREEN, 4)));
             table.AddCell(new Cell().Add(textAlphabet + "3"));
@@ -1034,7 +1057,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
-            Table table = new Table(2);
+            Table table = new Table(2).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
             table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add("Footer"));
             table.AddCell(new Cell().Add("0abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopq"));
             table.AddCell(new Cell().Add("0bbbbbbbbbbbbbbbbbbbbbbbbbbbb").SetBorderBottom(new SolidBorder(50)));
@@ -1168,7 +1191,7 @@ namespace iText.Layout {
             fileName = "forcedPlacementTest01.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
-            table.SetWidth(10);
+            table.SetWidth(10).SetProperty(Property.TABLE_LAYOUT, "fixed");
             Cell cell;
             // row 1, cell 1
             cell = new Cell().Add("1ORD");

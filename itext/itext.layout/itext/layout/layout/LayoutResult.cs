@@ -134,12 +134,8 @@ namespace iText.Layout.Layout {
         /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
         /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            ) {
-            this.status = status;
-            this.occupiedArea = occupiedArea;
-            this.splitRenderer = splitRenderer;
-            this.overflowRenderer = overflowRenderer;
-            causeOfNothing = null;
+            )
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, null) {
         }
 
         /// <summary>
@@ -161,9 +157,12 @@ namespace iText.Layout.Layout {
         /// <see cref="NOTHING"/>
         /// </param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause)
-            : this(status, occupiedArea, splitRenderer, overflowRenderer) {
-            causeOfNothing = cause;
+            , IRenderer cause) {
+            this.status = status;
+            this.occupiedArea = occupiedArea;
+            this.splitRenderer = splitRenderer;
+            this.overflowRenderer = overflowRenderer;
+            this.causeOfNothing = cause;
         }
 
         /// <summary>

@@ -53,6 +53,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -102,6 +103,7 @@ namespace iText.Layout.Renderer {
             }
             occupiedArea = new LayoutArea(pageNumber, new Rectangle(parentBBox.GetX(), parentBBox.GetY() + parentBBox.
                 GetHeight(), parentBBox.GetWidth(), 0));
+            ShrinkOccupiedAreaForAbsolutePosition();
             int currentAreaPos = 0;
             Rectangle layoutBox = areas[0].Clone();
             // the first renderer (one of childRenderers or their children) to produce LayoutResult.NOTHING
@@ -128,7 +130,10 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     if (result.GetSplitRenderer() != null) {
-                        AlignChildHorizontally(result.GetSplitRenderer(), layoutBox.GetWidth());
+                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
+                        // in case when parent box should wrap around child boxes.
+                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        AlignChildHorizontally(result.GetSplitRenderer(), occupiedArea.GetBBox().GetWidth());
                     }
                     // Save the first renderer to produce LayoutResult.NOTHING
                     if (null == causeOfNothing && null != result.GetCauseOfNothing()) {
@@ -263,7 +268,7 @@ namespace iText.Layout.Renderer {
                                         return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null);
                                     }
                                     else {
-                                        return new LayoutResult(layoutResult, null, splitRenderer, overflowRenderer, result.GetCauseOfNothing());
+                                        return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing());
                                     }
                                 }
                             }
@@ -279,7 +284,10 @@ namespace iText.Layout.Renderer {
                 if (result.GetStatus() == LayoutResult.FULL) {
                     layoutBox.SetHeight(result.GetOccupiedArea().GetBBox().GetY() - layoutBox.GetY());
                     if (childRenderer.GetOccupiedArea() != null) {
-                        AlignChildHorizontally(childRenderer, layoutBox.GetWidth());
+                        // Use occupied area's bbox width so that for absolutely positioned renderers we do not align using full width
+                        // in case when parent box should wrap around child boxes.
+                        // TODO in the latter case, all elements should be layouted first so that we know maximum width needed to place all children and then apply horizontal alignment
+                        AlignChildHorizontally(childRenderer, occupiedArea.GetBBox().GetWidth());
                     }
                 }
                 // Save the first renderer to produce LayoutResult.NOTHING
@@ -440,11 +448,6 @@ namespace iText.Layout.Renderer {
             VerticalAlignment? verticalAlignment = this.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
             if (verticalAlignment != null && verticalAlignment != VerticalAlignment.TOP && childRenderers.Count > 0) {
                 LayoutArea lastChildOccupiedArea = childRenderers[childRenderers.Count - 1].GetOccupiedArea();
-                if (lastChildOccupiedArea == null) {
-                    // TODO normally, vertical alignment applying shall not be called on the renderer which has not processed kids, or kids processed with NOTHING result,
-                    // however it seems that this is the case for the table cells in certain situations. 
-                    return;
-                }
                 float deltaY = lastChildOccupiedArea.GetBBox().GetY() - GetInnerAreaBBox().GetY();
                 switch (verticalAlignment) {
                     case VerticalAlignment.BOTTOM: {
@@ -598,6 +601,73 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(parentBBox, paddings, false);
             return parentWidth - parentBBox.GetWidth();
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            Rectangle area = new Rectangle(availableWidth, AbstractRenderer.INF);
+            float additionalWidth = ApplyBordersPaddingsMargins(area, GetBorders(), GetPaddings());
+            MinMaxWidth minMaxWidth = new MinMaxWidth(additionalWidth, availableWidth);
+            AbstractWidthHandler handler = new MaxMaxWidthHandler(minMaxWidth);
+            foreach (IRenderer childRenderer in childRenderers) {
+                MinMaxWidth childMinMaxWidth;
+                childRenderer.SetParent(this);
+                if (childRenderer is AbstractRenderer) {
+                    childMinMaxWidth = ((AbstractRenderer)childRenderer).GetMinMaxWidth(area.GetWidth());
+                }
+                else {
+                    childMinMaxWidth = MinMaxWidthUtils.CountDefaultMinMaxWidth(childRenderer, area.GetWidth());
+                }
+                handler.UpdateMaxChildWidth(childMinMaxWidth.GetMaxWidth());
+                handler.UpdateMinChildWidth(childMinMaxWidth.GetMinWidth());
+            }
+            return CountRotationMinMaxWidth(CorrectMinMaxWidth(minMaxWidth));
+        }
+
+        //Heuristic method.
+        //We assume that the area of block stays the same when we try to layout it
+        //with different available width (available width is between min-width and max-width).
+        internal virtual MinMaxWidth CountRotationMinMaxWidth(MinMaxWidth minMaxWidth) {
+            float? rotation = GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (rotation != null) {
+                bool restoreRendererRotation = HasOwnProperty(Property.ROTATION_ANGLE);
+                SetProperty(Property.ROTATION_ANGLE, null);
+                LayoutResult result = Layout(new LayoutContext(new LayoutArea(1, new Rectangle(minMaxWidth.GetMaxWidth() +
+                     MinMaxWidthUtils.GetEps(), AbstractRenderer.INF))));
+                if (restoreRendererRotation) {
+                    SetProperty(Property.ROTATION_ANGLE, rotation);
+                }
+                else {
+                    DeleteOwnProperty(Property.ROTATION_ANGLE);
+                }
+                if (result.GetOccupiedArea() != null) {
+                    double a = result.GetOccupiedArea().GetBBox().GetWidth();
+                    double b = result.GetOccupiedArea().GetBBox().GetHeight();
+                    double m = minMaxWidth.GetMinWidth();
+                    double s = a * b;
+                    //Note, that the width of occupied area containing rotated block is less than the diagonal of this block, so:
+                    //width < sqrt(a^2 + b^2)
+                    //a^2 + b^2 = (s/b)^2 + b^2 >= 2s
+                    //(s/b)^2 + b^2 = 2s,  if b = s/b = sqrt(s)
+                    double resultMinWidth = Math.Sqrt(2 * s);
+                    //Note, that if the sqrt(s) < m (width of unrotated block is out of possible range), than the min value of (s/b)^2 + b^2 >= 2s should be when b = m
+                    if (Math.Sqrt(s) < minMaxWidth.GetMinWidth()) {
+                        resultMinWidth = Math.Max(resultMinWidth, Math.Sqrt((s / m) * (s / m) + m * m));
+                    }
+                    //We assume that the biggest diagonal is when block element have maxWidth.
+                    return new MinMaxWidth(0, minMaxWidth.GetAvailableWidth(), (float)resultMinWidth, (float)Math.Sqrt(a * a +
+                         b * b));
+                }
+            }
+            return minMaxWidth;
+        }
+
+        internal virtual MinMaxWidth CorrectMinMaxWidth(MinMaxWidth minMaxWidth) {
+            float? width = RetrieveWidth(-1);
+            if (width != null && width >= 0 && width >= minMaxWidth.GetChildrenMinWidth()) {
+                minMaxWidth.SetChildrenMaxWidth((float)width);
+                minMaxWidth.SetChildrenMinWidth((float)width);
+            }
+            return minMaxWidth;
         }
 
         private IList<Point> ClipPolygon(IList<Point> points, Point clipLineBeg, Point clipLineEnd) {

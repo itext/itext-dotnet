@@ -98,70 +98,58 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with the relative column widths.
+        /// with the column widths in points.
+        /// Note, since 7.0.2 in case auto layout column width values less than min width will be ignored.
+        /// Large table must have valid column widths (&gt;= zero), fixed layout will be used for it.
+        /// By default large table has width 100%.
         /// </summary>
         /// <param name="columnWidths">the relative column widths</param>
         /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
         public Table(float[] columnWidths, bool largeTable) {
             // Start number of the row "window" (range) that this table currently contain.
             // For large tables we might contain only a few rows, not all of them, other ones might have been flushed.
-            this.isComplete = !largeTable;
             if (columnWidths == null) {
-                throw new ArgumentNullException("the.widths.array.in.table.constructor.can.not.be.null");
+                throw new ArgumentNullException("The widths array in table constructor can not be null.");
             }
             if (columnWidths.Length == 0) {
-                throw new ArgumentException("the.widths.array.in.pdfptable.constructor.can.not.have.zero.length");
+                throw new ArgumentException("The widths array in table constructor can not have zero length.");
             }
-            this.columnWidths = new UnitValue[columnWidths.Length];
-            float width = 0;
-            for (int i = 0; i < columnWidths.Length; i++) {
-                this.columnWidths[i] = UnitValue.CreatePointValue(columnWidths[i]);
-                width += columnWidths[i];
-            }
-            base.SetWidth(width);
+            this.columnWidths = NormalizeColumnWidths(columnWidths);
+            InitializeLargeTable(largeTable);
             InitializeRows();
         }
 
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with the relative column widths.
+        /// with the column widths.
+        /// Note, since 7.0.2 in case auto layout column width values less than min width will be ignored.
+        /// Large table must have valid column widths (&gt;= zero), fixed layout will be used for it.
+        /// By default large table has width 100%.
         /// </summary>
         /// <param name="columnWidths">the relative column widths</param>
         /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
         public Table(UnitValue[] columnWidths, bool largeTable) {
-            this.isComplete = !largeTable;
             if (columnWidths == null) {
-                throw new ArgumentNullException("the.widths.array.in.table.constructor.can.not.be.null");
+                throw new ArgumentNullException("The widths array in table constructor can not be null.");
             }
             if (columnWidths.Length == 0) {
-                throw new ArgumentException("the.widths.array.in.pdfptable.constructor.can.not.have.zero.length");
+                throw new ArgumentException("The widths array in table constructor can not have zero length.");
             }
-            this.columnWidths = new UnitValue[columnWidths.Length];
-            float totalWidth = 0;
-            bool percentValuesPresentedInTableColumns = false;
-            for (int i = 0; i < columnWidths.Length; i++) {
-                this.columnWidths[i] = columnWidths[i];
-                if (columnWidths[i].IsPointValue()) {
-                    totalWidth += columnWidths[i].GetValue();
-                }
-                else {
-                    if (columnWidths[i].IsPercentValue()) {
-                        percentValuesPresentedInTableColumns = true;
-                    }
-                }
+            //TODO remove in 7.1. It shall work as html tables.
+            if (HasOnlyPercents(columnWidths)) {
+                UseAllAvailableWidth();
             }
-            if (percentValuesPresentedInTableColumns) {
-                totalWidth = 0;
-            }
-            base.SetWidth(totalWidth);
+            this.columnWidths = NormalizeColumnWidths(columnWidths);
+            InitializeLargeTable(largeTable);
             InitializeRows();
         }
 
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with the relative column widths.
+        /// with column widths.
+        /// Note, since 7.0.2 in case auto layout column width values less than min width will be ignored.
         /// </summary>
         /// <param name="columnWidths">the relative column widths</param>
         public Table(UnitValue[] columnWidths)
@@ -171,11 +159,12 @@ namespace iText.Layout.Element {
         /// <summary>
         /// Constructs a
         /// <c>Table</c>
-        /// with the relative column widths.
+        /// with point column widths.
+        /// Note, since 7.0.2 in case auto layout column width values less than min width will be ignored.
         /// </summary>
-        /// <param name="columnWidths">the relative column widths</param>
-        public Table(float[] columnWidths)
-            : this(columnWidths, false) {
+        /// <param name="pointColumnWidths">the column widths in points.</param>
+        public Table(float[] pointColumnWidths)
+            : this(pointColumnWidths, false) {
         }
 
         /// <summary>
@@ -184,19 +173,25 @@ namespace iText.Layout.Element {
         /// with
         /// <paramref name="numColumns"/>
         /// columns.
+        /// Large table will have equal column widths, fixed layout will be used for it.
+        /// By default large table has width 100%.
         /// </summary>
-        /// <param name="numColumns">the number of columns</param>
+        /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
         /// <param name="largeTable">whether parts of the table will be written before all data is added.</param>
+        [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use constructor with defined column width to get predictable result."
+            )]
         public Table(int numColumns, bool largeTable) {
-            this.isComplete = !largeTable;
             if (numColumns <= 0) {
-                throw new ArgumentException("the.number.of.columns.in.pdfptable.constructor.must.be.greater.than.zero");
+                throw new ArgumentException("The number of columns in Table constructor must be greater than zero");
             }
             this.columnWidths = new UnitValue[numColumns];
             for (int k = 0; k < numColumns; ++k) {
-                this.columnWidths[k] = UnitValue.CreatePointValue(1);
+                this.columnWidths[k] = UnitValue.CreatePercentValue((float)100 / numColumns);
             }
-            base.SetWidth(UnitValue.CreatePercentValue(100));
+            //TODO remove in 7.1. It shall work as html tables.
+            UseAllAvailableWidth();
+            this.columnWidths = NormalizeColumnWidths(numColumns, true);
+            InitializeLargeTable(largeTable);
             InitializeRows();
         }
 
@@ -207,23 +202,30 @@ namespace iText.Layout.Element {
         /// <paramref name="numColumns"/>
         /// columns.
         /// </summary>
-        /// <param name="numColumns">the number of columns</param>
+        /// <param name="numColumns">the number of columns, each column will have equal percent width.</param>
+        [System.ObsoleteAttribute(@"in 7.1 each column will have undefined width. Use constructor with defined column width to get predictable result."
+            )]
         public Table(int numColumns)
             : this(numColumns, false) {
         }
 
-        /// <summary>Sets the full width of the table.</summary>
-        /// <param name="width">the full width of the table.</param>
-        /// <returns>this element</returns>
-        public override iText.Layout.Element.Table SetWidth(UnitValue width) {
-            if (width.IsPointValue() && width.GetValue() == 0) {
-                width = UnitValue.CreatePercentValue(100);
-            }
-            UnitValue currWidth = GetWidth();
-            if (!width.Equals(currWidth)) {
-                base.SetWidth(width);
-                CalculateWidths();
-            }
+        public virtual iText.Layout.Element.Table SetFixedLayout() {
+            SetProperty(Property.TABLE_LAYOUT, "fixed");
+            return this;
+        }
+
+        public virtual iText.Layout.Element.Table SetAutoLayout() {
+            SetProperty(Property.TABLE_LAYOUT, "fixed");
+            return this;
+        }
+
+        /// <summary>
+        /// Set
+        /// <see cref="iText.Layout.Properties.Property.WIDTH"/>
+        /// = 100%.
+        /// </summary>
+        public virtual iText.Layout.Element.Table UseAllAvailableWidth() {
+            SetProperty(Property.WIDTH, UnitValue.CreatePercentValue(100));
             return this;
         }
 
@@ -725,16 +727,8 @@ namespace iText.Layout.Element {
             return tagProperties;
         }
 
+        [System.ObsoleteAttribute(@"This method do nothing after implementation table column width algorithms.")]
         protected internal virtual void CalculateWidths() {
-            UnitValue width = GetWidth();
-            float total = 0;
-            int numCols = GetNumberOfColumns();
-            for (int k = 0; k < numCols; ++k) {
-                total += columnWidths[k].GetValue();
-            }
-            for (int k = 0; k < numCols; ++k) {
-                columnWidths[k] = UnitValue.CreatePointValue(width.GetValue() * columnWidths[k].GetValue() / total);
-            }
         }
 
         protected internal virtual IList<Table.RowRange> GetRowGroups() {
@@ -789,7 +783,10 @@ namespace iText.Layout.Element {
         private void EnsureHeaderIsInitialized() {
             if (header == null) {
                 header = new iText.Layout.Element.Table(columnWidths);
-                header.SetWidth(GetWidth());
+                UnitValue width = GetWidth();
+                if (width != null) {
+                    header.SetWidth(width);
+                }
                 header.SetRole(PdfName.THead);
             }
         }
@@ -797,9 +794,67 @@ namespace iText.Layout.Element {
         private void EnsureFooterIsInitialized() {
             if (footer == null) {
                 footer = new iText.Layout.Element.Table(columnWidths);
-                footer.SetWidth(GetWidth());
+                UnitValue width = GetWidth();
+                if (width != null) {
+                    footer.SetWidth(width);
+                }
                 footer.SetRole(PdfName.TFoot);
             }
+        }
+
+        private void InitializeLargeTable(bool largeTable) {
+            this.isComplete = !largeTable;
+            if (largeTable) {
+                if (HasNegativeValue(this.columnWidths)) {
+                    throw new ArgumentException("Large table must have valid column widths.");
+                }
+                SetWidth(UnitValue.CreatePercentValue(100));
+                SetFixedLayout();
+            }
+        }
+
+        private static bool HasOnlyPercents(UnitValue[] columnWidths) {
+            foreach (UnitValue col in columnWidths) {
+                if (col == null || col.IsPointValue() || col.GetValue() < 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(float[] pointColumnWidths) {
+            UnitValue[] normalized = new UnitValue[pointColumnWidths.Length];
+            for (int i = 0; i < normalized.Length; i++) {
+                normalized[i] = UnitValue.CreatePointValue(pointColumnWidths[i]);
+            }
+            return normalized;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(UnitValue[] unitColumnWidths) {
+            UnitValue[] normalized = new UnitValue[unitColumnWidths.Length];
+            for (int i = 0; i < unitColumnWidths.Length; i++) {
+                normalized[i] = unitColumnWidths[i] != null ? new UnitValue(unitColumnWidths[i]) : UnitValue.CreatePointValue
+                    (-1);
+            }
+            return normalized;
+        }
+
+        private static bool HasNegativeValue(UnitValue[] unitColumnWidths) {
+            foreach (UnitValue uv in unitColumnWidths) {
+                if (uv.GetValue() < 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static UnitValue[] NormalizeColumnWidths(int numberOfColumns, bool usePercents) {
+            UnitValue[] normalized = new UnitValue[numberOfColumns];
+            for (int i = 0; i < numberOfColumns; i++) {
+                normalized[i] = usePercents ? UnitValue.CreatePercentValue((float)100 / numberOfColumns) : UnitValue.CreatePointValue
+                    (-1);
+            }
+            return normalized;
         }
 
         /// <summary>A simple object which holds the row numbers of a section of a table.</summary>

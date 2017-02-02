@@ -49,7 +49,7 @@ namespace iText.Layout.Layout {
     /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
     /// .
     /// </summary>
-    public class TextLayoutResult : LayoutResult {
+    public class TextLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>
         /// Indicates whether some word was splitted during
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>

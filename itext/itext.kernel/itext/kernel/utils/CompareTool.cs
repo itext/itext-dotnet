@@ -351,6 +351,8 @@ namespace iText.Kernel.Utils {
         public virtual String CompareVisually(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             , IDictionary<int, IList<Rectangle>> ignoredAreas) {
             Init(outPdf, cmpPdf);
+            System.Console.Out.WriteLine("Out pdf: file:///" + UrlUtil.ToNormalizedURI(outPdf).AbsolutePath);
+            System.Console.Out.WriteLine("Cmp pdf: file:///" + UrlUtil.ToNormalizedURI(cmpPdf).AbsolutePath + "\n");
             return CompareVisually(outPath, differenceImagePrefix, ignoredAreas);
         }
 
@@ -523,6 +525,8 @@ namespace iText.Kernel.Utils {
         public virtual String CompareByContent(String outPdf, String cmpPdf, String outPath, String differenceImagePrefix
             , IDictionary<int, IList<Rectangle>> ignoredAreas, byte[] outPass, byte[] cmpPass) {
             Init(outPdf, cmpPdf);
+            System.Console.Out.WriteLine("Out pdf: file:///" + UrlUtil.ToNormalizedURI(outPdf).AbsolutePath);
+            System.Console.Out.WriteLine("Cmp pdf: file:///" + UrlUtil.ToNormalizedURI(cmpPdf).AbsolutePath + "\n");
             SetPassword(outPass, cmpPass);
             return CompareByContent(outPath, differenceImagePrefix, ignoredAreas);
         }

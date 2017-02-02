@@ -60,6 +60,7 @@ using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Font;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
@@ -559,6 +560,9 @@ namespace iText.Layout.Renderer {
             foreach (IRenderer childRenderer in childRenderers) {
                 childRenderer.Move(dxRight, dyUp);
             }
+            foreach (IRenderer childRenderer in positionedRenderers) {
+                childRenderer.Move(dxRight, dyUp);
+            }
         }
 
         /// <summary>
@@ -917,6 +921,10 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        internal virtual MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            return MinMaxWidthUtils.CountDefaultMinMaxWidth(this, availableWidth);
+        }
+
         [System.ObsoleteAttribute(@"Use IsNotFittingLayoutArea(iText.Layout.Layout.LayoutArea) instead.")]
         protected internal virtual bool IsNotFittingHeight(LayoutArea layoutArea) {
             return IsNotFittingLayoutArea(layoutArea);
@@ -1157,6 +1165,19 @@ namespace iText.Layout.Renderer {
         internal static bool NoAbsolutePositionInfo(IRenderer renderer) {
             return !renderer.HasProperty(Property.TOP) && !renderer.HasProperty(Property.BOTTOM) && !renderer.HasProperty
                 (Property.LEFT) && !renderer.HasProperty(Property.RIGHT);
+        }
+
+        internal virtual void ShrinkOccupiedAreaForAbsolutePosition() {
+            // In case of absolute positioning and not specified left, right, width values, the parent box is shrunk to fit
+            // the children. It does not occupy all the available width if it does not need to.
+            if (IsAbsolutePosition()) {
+                float? left = this.GetPropertyAsFloat(Property.LEFT);
+                float? right = this.GetPropertyAsFloat(Property.RIGHT);
+                UnitValue width = this.GetProperty<UnitValue>(Property.WIDTH);
+                if (left == null && right == null && width == null) {
+                    occupiedArea.GetBBox().SetWidth(0);
+                }
+            }
         }
 
         internal virtual void DrawPositionedChildren(DrawContext drawContext) {
