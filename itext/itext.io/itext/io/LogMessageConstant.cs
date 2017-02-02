@@ -52,7 +52,7 @@ namespace iText.IO {
 
         public const String CLIP_ELEMENT = "Element content was clipped because some height properties are set.";
 
-        public const String COLOR_NOT_FOUND = "Color \"{0}\" not found. Defaulting to black color.";
+        public const String COLOR_NOT_FOUND = "Color \"{0}\" not found.";
 
         public const String COLOR_NOT_PARSED = "Color \"{0}\" was not parsed. It has invalid value. Defaulting to black color.";
 
@@ -154,7 +154,7 @@ namespace iText.IO {
 
         public const String UNKNOWN_CMAP = "Unknown CMap {0}";
 
-        public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb. Defaulting to black color.";
+        public const String UNKNOWN_COLOR_FORMAT_MUST_BE_RGB_OR_RRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
         public const String UNKNOWN_ERROR_WHILE_PROCESSING_CMAP = "Unknown error while processing CMap.";
 
