@@ -96,7 +96,7 @@ namespace iText.Layout.Renderer {
                 minSum += width.min;
             }
             //region Process cells
-            HashSet<int> minColumns = new HashSet<int>();
+            bool[] minColumns = new bool[numberOfColumns];
             foreach (TableWidths.CellInfo cell in cells) {
                 //NOTE in automatic layout algorithm percents have higher priority
                 UnitValue cellWidth = cell.GetWidth();
@@ -142,7 +142,7 @@ namespace iText.Layout.Renderer {
                             if (!widths[cell.GetCol()].isPercent) {
                                 widths[cell.GetCol()].SetPoints(cellWidth.GetValue()).SetFixed(true);
                                 if (widths[cell.GetCol()].HasCollision()) {
-                                    minColumns.Add(cell.GetCol());
+                                    minColumns[cell.GetCol()] = true;
                                 }
                             }
                         }
@@ -217,8 +217,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            foreach (int? col in minColumns) {
-                if (!widths[col].isPercent && widths[col].isFixed && widths[col].HasCollision()) {
+            for (int col = 0; col < minColumns.Length; col++) {
+                if (minColumns[col] && !widths[col].isPercent && widths[col].isFixed && widths[col].HasCollision()) {
                     minSum += widths[col].min - widths[col].width;
                     widths[col].SetPoints(widths[col].min);
                 }
