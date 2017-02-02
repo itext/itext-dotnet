@@ -1323,7 +1323,7 @@ namespace iText.Layout.Renderer {
             //splitRenderer.horizontalBorders.addAll(horizontalBorders);
             for (int i = rowN; i < horizontalBorders.Count; i++) {
                 //TODO
-                overflowRenderer.horizontalBorders.Add((IList<Border>)((List<Border>)horizontalBorders[i]).Clone());
+                overflowRenderer.horizontalBorders.Add(new List<Border>(horizontalBorders[i]));
             }
             overflowRenderer.verticalBorders = new List<IList<Border>>();
             //splitRenderer.verticalBorders.addAll(verticalBorders);

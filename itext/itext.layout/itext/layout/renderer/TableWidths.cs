@@ -718,11 +718,11 @@ namespace iText.Layout.Renderer {
         }
 
         private class CellInfo : IComparable<TableWidths.CellInfo> {
-            private const byte HEADER = 1;
+            internal const byte HEADER = 1;
 
-            private const byte BODY = 2;
+            internal const byte BODY = 2;
 
-            private const byte FOOTER = 3;
+            internal const byte FOOTER = 3;
 
             private CellRenderer cell;
 
