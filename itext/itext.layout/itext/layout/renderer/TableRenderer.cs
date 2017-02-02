@@ -809,9 +809,6 @@ namespace iText.Layout.Renderer {
                                     bool isBigRowspannedCell = 1 != ((Cell)currentRow[col].GetModelElement()).GetRowspan();
                                     if (hasContent || isBigRowspannedCell) {
                                         columnsWithCellToBeEnlarged[col] = true;
-                                        if (isBigRowspannedCell && !processAsLast) {
-                                            childRenderers.Add(currentRow[col]);
-                                        }
                                     }
                                     else {
                                         if (Border.NO_BORDER != currentRow[col].GetProperty<Border>(Property.BORDER_TOP)) {
