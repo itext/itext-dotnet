@@ -681,7 +681,7 @@ namespace iText.Layout.Renderer {
                             if (collapsedWithNextRowBorderWidth != collapsedBorderWidth) {
                                 cell.SetBorders(collapsedWithTableBorder, 2);
                                 for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
-                                    horizontalBorders[rowN + 1][i] = collapsedWithTableBorder;
+                                    horizontalBorders[row + (hasContent ? 1 : 0)][i] = collapsedWithTableBorder;
                                 }
                                 // apply the difference between collapsed table border and own cell border
                                 cell.occupiedArea.GetBBox().MoveDown((collapsedBorderWidth - collapsedWithNextRowBorderWidth) / 2).IncreaseHeight
@@ -788,7 +788,8 @@ namespace iText.Layout.Renderer {
                                     cellOverflow.DeleteOwnProperty(Property.BORDER_TOP);
                                     if (null != cellSplit) {
                                         for (int j = col; j < col + cellOverflow.GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                            splitResult[0].horizontalBorders[row + (hasContent ? 1 : 0)][j] = currentRow[col].GetBorders()[2];
+                                            splitResult[0].horizontalBorders[row + (hasContent ? 1 : 0)][j] = GetCollapsedBorder(currentRow[col].GetBorders
+                                                ()[2], borders[2]);
                                         }
                                     }
                                     currentRow[col] = null;
@@ -802,8 +803,10 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (currentRow[col] != null) {
-                                    rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
-                                    bool isBigRowspannedCell = 1 != rowspans[col];
+                                    if (hasContent) {
+                                        rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
+                                    }
+                                    bool isBigRowspannedCell = 1 != ((Cell)currentRow[col].GetModelElement()).GetRowspan();
                                     if (hasContent || isBigRowspannedCell) {
                                         columnsWithCellToBeEnlarged[col] = true;
                                         if (isBigRowspannedCell && !processAsLast) {
@@ -816,7 +819,8 @@ namespace iText.Layout.Renderer {
                                         }
                                     }
                                     for (int j = col; j < col + currentRow[col].GetPropertyAsInteger(Property.COLSPAN); j++) {
-                                        horizontalBorders[row + (hasContent ? 1 : 0)][j] = currentRow[col].GetBorders()[2];
+                                        horizontalBorders[row + (hasContent ? 1 : 0)][j] = GetCollapsedBorder(currentRow[col].GetBorders()[2], borders
+                                            [2]);
                                     }
                                 }
                             }
@@ -1767,7 +1771,7 @@ namespace iText.Layout.Renderer {
             }
             col = 0;
             while (col < colN) {
-                if (null != rows[row][col] && row + 1 == (int)rows[row][col].GetPropertyAsInteger(Property.ROWSPAN)) {
+                if (null != rows[row][col] && row + 1 <= (int)rows[row][col].GetPropertyAsInteger(Property.ROWSPAN)) {
                     Border oldTopBorder = rows[row][col].GetBorders()[0];
                     Border resultCellTopBorder = null;
                     Border collapsedBorder = null;

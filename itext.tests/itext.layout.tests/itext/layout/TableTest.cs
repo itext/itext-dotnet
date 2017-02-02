@@ -1249,6 +1249,102 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableSplitTest01() {
+            String testName = "tableSplitTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String gretzky = "Make Gretzky great again!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableSplitTest02() {
+            String testName = "tableSplitTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String gretzky = "Make Gretzky great again!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+                )));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(image));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableSplitTest03() {
+            String testName = "tableSplitTest03.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String gretzky = "Make Gretzky great again!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell(2, 1).Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableSplitTest04() {
+            String testName = "tableSplitTest04.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String gretzky = "Make Gretzky great again!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
+                )));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell(2, 1).Add(gretzky));
+            table.AddCell(new Cell().Add(image));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
