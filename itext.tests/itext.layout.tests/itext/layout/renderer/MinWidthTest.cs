@@ -423,7 +423,7 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        private static float ToEffectiveWidth(BlockElement b, float fullWidth) {
+        private static float ToEffectiveWidth(IBlockElement b, float fullWidth) {
             if (b is Table) {
                 return fullWidth + ((Table)b).GetNumberOfColumns() * MinMaxWidthUtils.GetEps();
             }
@@ -434,9 +434,9 @@ namespace iText.Layout.Renderer {
         }
 
         private static float[] ToEffectiveTableColumnWidth(float[] tableColumnWidth) {
-            float[] result = tableColumnWidth.Clone();
+            float[] result = new float[tableColumnWidth.Length];
             for (int i = 0; i < result.Length; ++i) {
-                result[i] += MinMaxWidthUtils.GetEps();
+                result[i] = tableColumnWidth[i] + MinMaxWidthUtils.GetEps();
             }
             return result;
         }

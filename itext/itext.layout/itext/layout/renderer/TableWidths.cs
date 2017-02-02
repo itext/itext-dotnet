@@ -96,7 +96,7 @@ namespace iText.Layout.Renderer {
                 minSum += width.min;
             }
             //region Process cells
-            HashSet<int> minColumns = new HashSet<int>(numberOfColumns);
+            HashSet<int> minColumns = new HashSet<int>();
             foreach (TableWidths.CellInfo cell in cells) {
                 //NOTE in automatic layout algorithm percents have higher priority
                 UnitValue cellWidth = cell.GetWidth();
@@ -473,7 +473,7 @@ namespace iText.Layout.Renderer {
                         if (cellWidth != null && cellWidth >= 0) {
                             int colspan = ((Cell)cell.GetModelElement()).GetColspan();
                             for (int j = 0; j < colspan; j++) {
-                                columnWidths[i + j] = cellWidth / colspan;
+                                columnWidths[i + j] = (float)cellWidth / colspan;
                             }
                             remainWidth -= columnWidths[i];
                             processedColumns++;

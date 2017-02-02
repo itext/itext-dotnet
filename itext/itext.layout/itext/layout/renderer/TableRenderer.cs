@@ -650,7 +650,7 @@ namespace iText.Layout.Renderer {
                         rowHeight = 0;
                         if (split && (hasContent)) {
                             //TODO
-                            horizontalBorders.Add(row + 1, (IList<Border>)((List<Border>)horizontalBorders[row + 1]).Clone());
+                            horizontalBorders.Add(row + 1, new List<Border>(horizontalBorders[row + 1]));
                         }
                         for (col = 0; col < currentRow.Length; col++) {
                             if (hasContent || (cellWithBigRowspanAdded && null == rows[row - 1][col])) {
@@ -1395,7 +1395,7 @@ namespace iText.Layout.Renderer {
         private TableRenderer.ColumnMinMaxWidth CountTableMinMaxWidth(float availableWidth, bool initializeBorders
             , bool isTableBeingLayouted) {
             Rectangle layoutBox = new Rectangle(availableWidth, AbstractRenderer.INF);
-            float? tableWidth = RetrieveWidth(layoutBox.GetWidth());
+            float tableWidth = (float)RetrieveWidth(layoutBox.GetWidth());
             ApplyMargins(layoutBox, false);
             if (initializeBorders) {
                 InitializeBorders(((Table)GetModelElement()).GetLastRowBottomBorder(), true);
@@ -2334,9 +2334,9 @@ namespace iText.Layout.Renderer {
         }
 
         private class ColumnMinMaxWidth {
-            private float[] minWidth;
+            internal float[] minWidth;
 
-            private float[] maxWidth;
+            internal float[] maxWidth;
 
             private float layoutBoxWidth;
 

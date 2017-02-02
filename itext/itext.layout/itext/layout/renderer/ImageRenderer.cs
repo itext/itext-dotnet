@@ -220,7 +220,7 @@ namespace iText.Layout.Renderer {
             UnitValue rendererWidth = this.GetProperty<UnitValue>(Property.WIDTH);
             if (rendererWidth != null && rendererWidth.IsPercentValue()) {
                 minMaxWidth.SetChildrenMinWidth(0);
-                float coeff = imageWidth / RetrieveWidth(area.GetBBox().GetWidth());
+                float coeff = imageWidth / (float)RetrieveWidth(area.GetBBox().GetWidth());
                 minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
             }
             return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null
