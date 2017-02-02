@@ -1,7 +1,7 @@
 using iText.Layout.Minmaxwidth;
 
-namespace iText.Layout.Minmaxwidth.Handler {
-    public abstract class AbstractWidthHandler {
+namespace iText.Layout.Renderer {
+    internal abstract class AbstractWidthHandler {
         internal MinMaxWidth minMaxWidth;
 
         public AbstractWidthHandler(MinMaxWidth minMaxWidth) {

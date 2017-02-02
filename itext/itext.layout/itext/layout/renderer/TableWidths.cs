@@ -573,6 +573,12 @@ namespace iText.Layout.Renderer {
             return columnWidths;
         }
 
+        //endregion
+        //region Internal classes
+        public override String ToString() {
+            return "width=" + tableWidth + (fixedTableWidth ? "!!" : "");
+        }
+
         private class ColumnWidthData {
             internal readonly float min;
 
@@ -587,8 +593,6 @@ namespace iText.Layout.Renderer {
             internal bool isFixed = false;
 
             internal ColumnWidthData(float min, float max) {
-                //endregion
-                //region Internal classes
                 //true means that this column has cell property based width.
                 System.Diagnostics.Debug.Assert(min >= 0);
                 System.Diagnostics.Debug.Assert(max >= 0);
@@ -683,6 +687,7 @@ namespace iText.Layout.Renderer {
             private byte region;
 
             internal CellInfo(CellRenderer cell, byte region) {
+                //endregion
                 this.cell = cell;
                 this.region = region;
             }
@@ -736,11 +741,6 @@ namespace iText.Layout.Renderer {
                 }
                 return region == o.region ? GetRow() - o.GetRow() : region - o.region;
             }
-        }
-
-        //endregion
-        public override String ToString() {
-            return "width=" + tableWidth + (fixedTableWidth ? "!!" : "");
         }
     }
 }

@@ -1,9 +1,9 @@
 using System;
 using iText.Layout.Minmaxwidth;
 
-namespace iText.Layout.Minmaxwidth.Handler {
-    public class MaxSumWidthHandler : AbstractWidthHandler {
-        public MaxSumWidthHandler(MinMaxWidth minMaxWidth)
+namespace iText.Layout.Renderer {
+    internal class MaxMaxWidthHandler : AbstractWidthHandler {
+        public MaxMaxWidthHandler(MinMaxWidth minMaxWidth)
             : base(minMaxWidth) {
         }
 
@@ -12,7 +12,7 @@ namespace iText.Layout.Minmaxwidth.Handler {
         }
 
         public override void UpdateMaxChildWidth(float childMaxWidth) {
-            minMaxWidth.SetChildrenMaxWidth(minMaxWidth.GetChildrenMaxWidth() + childMaxWidth);
+            minMaxWidth.SetChildrenMaxWidth(Math.Max(minMaxWidth.GetChildrenMaxWidth(), childMaxWidth));
         }
     }
 }
