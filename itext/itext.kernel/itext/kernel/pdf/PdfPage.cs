@@ -97,6 +97,7 @@ namespace iText.Kernel.Pdf {
             if (pdfDocument.IsTagged()) {
                 structParents = (int)pdfDocument.GetNextStructParentIndex();
                 GetPdfObject().Put(PdfName.StructParents, new PdfNumber(structParents));
+                SetTabOrder(PdfName.S);
             }
         }
 
@@ -572,7 +573,7 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>Flushes page and its content stream.</summary>
         /// <remarks>
-        /// Flushes page and its content stream. If <code>flushContentStreams</code> is true, all content streams that are
+        /// Flushes page and its content stream. If <code>flushResourcesContentStreams</code> is true, all content streams that are
         /// rendered on this page (like FormXObjects, annotation appearance streams, patterns) and also all images associated
         /// with this page will also be flushed.
         /// <br />
@@ -581,14 +582,14 @@ namespace iText.Kernel.Pdf {
         /// .
         /// <br />
         /// <br />
-        /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushContentStreams</code> is true.
+        /// If <code>PdfADocument</code> is used, flushing will be applied only if <code>flushResourcesContentStreams</code> is true.
         /// </remarks>
-        /// <param name="flushContentStreams">
+        /// <param name="flushResourcesContentStreams">
         /// if true all content streams that are rendered on this page (like form xObjects,
         /// annotation appearance streams, patterns) and also all images associated with this page
         /// will be flushed.
         /// </param>
-        public virtual void Flush(bool flushContentStreams) {
+        public virtual void Flush(bool flushResourcesContentStreams) {
             // TODO log warning in case of failed flush in pdfa document case
             if (IsFlushed()) {
                 return;
@@ -600,9 +601,9 @@ namespace iText.Kernel.Pdf {
             if (resources != null && resources.IsModified() && !resources.IsReadOnly()) {
                 GetPdfObject().Put(PdfName.Resources, resources.GetPdfObject());
             }
-            if (flushContentStreams) {
+            if (flushResourcesContentStreams) {
                 GetDocument().CheckIsoConformance(this, IsoKey.PAGE);
-                FlushContentStreams();
+                FlushResourcesContentStreams();
             }
             int contentStreamCount = GetContentStreamCount();
             for (int i = 0; i < contentStreamCount; i++) {
@@ -1021,12 +1022,17 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual iText.Kernel.Pdf.PdfPage AddAnnotation(int index, PdfAnnotation annotation, bool tagAnnotation
             ) {
-            if (GetDocument().IsTagged() && tagAnnotation) {
-                TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
-                iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
-                tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
-                if (prevPage != null) {
-                    tagPointer.SetPageForTagging(prevPage);
+            if (GetDocument().IsTagged()) {
+                if (tagAnnotation) {
+                    TagTreePointer tagPointer = GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                    iText.Kernel.Pdf.PdfPage prevPage = tagPointer.GetCurrentPage();
+                    tagPointer.SetPageForTagging(this).AddAnnotationTag(annotation);
+                    if (prevPage != null) {
+                        tagPointer.SetPageForTagging(prevPage);
+                    }
+                }
+                if (GetTabOrder() == null) {
+                    SetTabOrder(PdfName.S);
                 }
             }
             PdfArray annots = GetAnnots(true);
@@ -1256,6 +1262,54 @@ namespace iText.Kernel.Pdf {
             return this;
         }
 
+        /// <summary>Sets a name specifying the tab order that shall be used for annotations on the page.</summary>
+        /// <remarks>
+        /// Sets a name specifying the tab order that shall be used for annotations on the page.
+        /// The possible values are
+        /// <see cref="PdfName.R"/>
+        /// (row order),
+        /// <see cref="PdfName.C"/>
+        /// (column order), and
+        /// <see cref="PdfName.S"/>
+        /// (structure order).
+        /// See ISO 32000 12.5, "Annotations" for details.
+        /// </remarks>
+        /// <param name="tabOrder">
+        /// a
+        /// <see cref="PdfName"/>
+        /// specifying the annotations tab order. See method description for the allowed values.
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetTabOrder(PdfName tabOrder) {
+            Put(PdfName.Tabs, tabOrder);
+            return this;
+        }
+
+        /// <summary>Gets a name specifying the tab order that shall be used for annotations on the page.</summary>
+        /// <remarks>
+        /// Gets a name specifying the tab order that shall be used for annotations on the page.
+        /// The possible values are
+        /// <see cref="PdfName.R"/>
+        /// (row order),
+        /// <see cref="PdfName.C"/>
+        /// (column order), and
+        /// <see cref="PdfName.S"/>
+        /// (structure order).
+        /// See ISO 32000 12.5, "Annotations" for details.
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="PdfName"/>
+        /// specifying the annotations tab order or null if tab order is not defined.
+        /// </returns>
+        public virtual PdfName GetTabOrder() {
+            return GetPdfObject().GetAsName(PdfName.Tabs);
+        }
+
         /// <summary>
         /// Helper method that associate specified value with specified key in the underlined
         /// <see cref="PdfDictionary"/>
@@ -1386,8 +1440,8 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void FlushContentStreams() {
-            FlushContentStreams(GetResources().GetPdfObject());
+        private void FlushResourcesContentStreams() {
+            FlushResourcesContentStreams(GetResources().GetPdfObject());
             PdfArray annots = GetAnnots(false);
             if (annots != null) {
                 for (int i = 0; i < annots.Size(); ++i) {
@@ -1399,7 +1453,7 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void FlushContentStreams(PdfDictionary resources) {
+        private void FlushResourcesContentStreams(PdfDictionary resources) {
             if (resources != null) {
                 FlushWithResources(resources.GetAsDictionary(PdfName.XObject));
                 FlushWithResources(resources.GetAsDictionary(PdfName.Pattern));
@@ -1415,7 +1469,7 @@ namespace iText.Kernel.Pdf {
                 if (obj.IsFlushed()) {
                     continue;
                 }
-                FlushContentStreams(((PdfDictionary)obj).GetAsDictionary(PdfName.Resources));
+                FlushResourcesContentStreams(((PdfDictionary)obj).GetAsDictionary(PdfName.Resources));
                 FlushMustBeIndirectObject(obj);
             }
         }
