@@ -295,10 +295,28 @@ namespace iText.Layout {
         /// <summary>Sets the font of this Element.</summary>
         /// <param name="font">
         /// a
-        /// <see cref="iText.Kernel.Font.PdfFont">font program</see>
+        /// <see cref="iText.Kernel.Font.PdfFont">font</see>
         /// </param>
         /// <returns>this Element.</returns>
         public virtual T SetFont(PdfFont font) {
+            SetProperty(Property.FONT, font);
+            return (T)(Object)this;
+        }
+
+        /// <summary>Sets the font of this Element.</summary>
+        /// <remarks>
+        /// Sets the font of this Element. Note that
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// shall be set as well.
+        /// See
+        /// <see cref="RootElement{T}.SetFontProvider(iText.Layout.Font.FontProvider)"/>
+        /// </remarks>
+        /// <param name="font">
+        /// a font name to fetch from
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// </param>
+        /// <returns>this Element.</returns>
+        public virtual T SetFont(String font) {
             SetProperty(Property.FONT, font);
             return (T)(Object)this;
         }
@@ -618,16 +636,6 @@ namespace iText.Layout {
             return SetUnderline(null, .75f, 0, 0, 7 / 24f, PdfCanvasConstants.LineCapStyle.BUTT);
         }
 
-        /// <summary>Sets default underline attributes for text.</summary>
-        /// <remarks>
-        /// Sets default underline attributes for text.
-        /// See other overloads for more fine tuning.
-        /// </remarks>
-        /// <returns>this element</returns>
-        public virtual T SetUnderline() {
-            return SetUnderline(null, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT);
-        }
-
         /// <summary>
         /// This attribute specifies the base direction of directionally neutral text
         /// (i.e., text that doesn't have inherent directionality as defined in Unicode)
@@ -638,6 +646,16 @@ namespace iText.Layout {
         [Obsolete("Will be removed in 7.1 in favor of SetBaseDirection(BaseDirection? baseDirection)")]
         public virtual T SetBaseDirection(BaseDirection baseDirection) {
             return SetBaseDirection((BaseDirection?)baseDirection);
+        }
+
+        /// <summary>Sets default underline attributes for text.</summary>
+        /// <remarks>
+        /// Sets default underline attributes for text.
+        /// See other overloads for more fine tuning.
+        /// </remarks>
+        /// <returns>this element</returns>
+        public virtual T SetUnderline() {
+            return SetUnderline(null, .75f, 0, 0, -1 / 8f, PdfCanvasConstants.LineCapStyle.BUTT);
         }
 
         /// <summary>Sets an horizontal line that can be an underline or a strikethrough.</summary>

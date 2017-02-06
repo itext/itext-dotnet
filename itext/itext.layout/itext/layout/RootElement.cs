@@ -47,6 +47,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Splitting;
@@ -97,6 +98,39 @@ namespace iText.Layout {
                 childElements.JRemoveAt(childElements.Count - 1);
             }
             return (T)(Object)this;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// if presents.
+        /// </summary>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// if exists, otherwise null.
+        /// </returns>
+        public virtual FontProvider GetFontProvider() {
+            Object fontProvider = this.GetProperty<Object>(Property.FONT_PROVIDER);
+            if (fontProvider is FontProvider) {
+                return (FontProvider)fontProvider;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// .
+        /// Note, font provider is inherited property.
+        /// </summary>
+        /// <param name="fontProvider">
+        /// instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// .
+        /// </param>
+        public virtual void SetFontProvider(FontProvider fontProvider) {
+            SetProperty(Property.FONT_PROVIDER, fontProvider);
         }
 
         public override bool HasProperty(int property) {

@@ -101,7 +101,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "'Puritan', \"FreeSans\"");
+            doc.SetFont("'Puritan', \"FreeSans\"");
             Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -121,7 +121,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "Puritan");
+            doc.SetFont("Puritan");
             Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);
@@ -142,7 +142,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
             Paragraph paragraph = new Paragraph(s);
-            paragraph.SetProperty(Property.FONT, "Courier");
+            paragraph.SetFont("Courier");
             doc.Add(paragraph);
             paragraph = new Paragraph(s);
             paragraph.SetProperty(Property.FONT, "Times-Roman");
