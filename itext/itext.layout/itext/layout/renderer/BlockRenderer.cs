@@ -119,6 +119,12 @@ namespace iText.Layout.Renderer {
                 }
                 while ((result = childRenderer.SetParent(this).Layout(new LayoutContext(new LayoutArea(pageNumber, layoutBox
                     ), childMarginsInfo))).GetStatus() != LayoutResult.FULL) {
+                    if (marginsCollapsingEnabled) {
+                        if (result.GetStatus() != LayoutResult.NOTHING) {
+                            marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
+                        }
+                        marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+                    }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
                         (Property.FILL_AVAILABLE_AREA))) {
                         occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
@@ -156,9 +162,6 @@ namespace iText.Layout.Renderer {
                     else {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             if (currentAreaPos + 1 == areas.Count) {
-                                if (marginsCollapsingEnabled) {
-                                    marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
-                                }
                                 AbstractRenderer splitRenderer = CreateSplitRenderer(LayoutResult.PARTIAL);
                                 splitRenderer.childRenderers = new List<IRenderer>(childRenderers.SubList(0, childPos));
                                 splitRenderer.childRenderers.Add(result.GetSplitRenderer());
@@ -189,11 +192,6 @@ namespace iText.Layout.Renderer {
                                 }
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-                                if (marginsCollapsingEnabled) {
-                                    marginsCollapseHandler.EndMarginsCollapse(layoutBox);
-                                    splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
-                                    splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
-                                }
                                 ApplyMargins(occupiedArea.GetBBox(), true);
                                 if (wasHeightClipped) {
                                     return new LayoutResult(LayoutResult.FULL, occupiedArea, splitRenderer, null);
@@ -251,13 +249,6 @@ namespace iText.Layout.Renderer {
                                 }
                                 ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
                                 ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-                                if (marginsCollapsingEnabled) {
-                                    marginsCollapseHandler.EndMarginsCollapse(layoutBox);
-                                    if (splitRenderer != null) {
-                                        splitRenderer.SetProperty(Property.MARGIN_TOP, this.GetPropertyAsFloat(Property.MARGIN_TOP));
-                                        splitRenderer.SetProperty(Property.MARGIN_BOTTOM, this.GetPropertyAsFloat(Property.MARGIN_BOTTOM));
-                                    }
-                                }
                                 ApplyMargins(occupiedArea.GetBBox(), true);
                                 //splitRenderer.occupiedArea = occupiedArea.clone();
                                 if (true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT)) || wasHeightClipped) {
@@ -295,6 +286,9 @@ namespace iText.Layout.Renderer {
                     causeOfNothing = result.GetCauseOfNothing();
                 }
             }
+            if (marginsCollapsingEnabled) {
+                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+            }
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                 occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), layoutBox));
             }
@@ -325,9 +319,6 @@ namespace iText.Layout.Renderer {
             }
             ApplyPaddings(occupiedArea.GetBBox(), paddings, true);
             ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
-            if (marginsCollapsingEnabled) {
-                marginsCollapseHandler.EndMarginsCollapse(layoutBox);
-            }
             if (positionedRenderers.Count > 0) {
                 LayoutArea area = new LayoutArea(occupiedArea.GetPageNumber(), occupiedArea.GetBBox().Clone());
                 ApplyBorderBox(area.GetBBox(), false);

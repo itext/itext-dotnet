@@ -89,6 +89,19 @@ namespace iText.Layout.Margincollapse {
             this.usedBufferSpaceOnBottom = 0;
         }
 
+        public virtual void CopyTo(iText.Layout.Margincollapse.MarginsCollapseInfo destInfo) {
+            destInfo.ignoreOwnMarginTop = this.ignoreOwnMarginTop;
+            destInfo.ignoreOwnMarginBottom = this.ignoreOwnMarginBottom;
+            destInfo.collapseBefore = this.collapseBefore;
+            destInfo.collapseAfter = this.collapseAfter;
+            destInfo.SetOwnCollapseAfter(ownCollapseAfter);
+            destInfo.SetSelfCollapsing(isSelfCollapsing);
+            destInfo.SetBufferSpaceOnTop(bufferSpaceOnTop);
+            destInfo.SetBufferSpaceOnBottom(bufferSpaceOnBottom);
+            destInfo.SetUsedBufferSpaceOnTop(usedBufferSpaceOnTop);
+            destInfo.SetUsedBufferSpaceOnBottom(usedBufferSpaceOnBottom);
+        }
+
         internal virtual MarginsCollapse GetCollapseBefore() {
             return this.collapseBefore;
         }
