@@ -192,6 +192,7 @@ namespace iText.Layout.Element {
         /// <see cref="Table"/>
         /// </param>
         /// <returns>this Element</returns>
+        [System.ObsoleteAttribute(@"use Add(IBlockElement) instead.")]
         public virtual iText.Layout.Element.Cell Add(Table element) {
             childElements.Add(element);
             return this;
