@@ -177,9 +177,14 @@ namespace iText.Forms.Xfa
 					PdfStream dStream = new PdfStream(SerializeDocument(form.datasetsNode));
 					dStream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
 					ar.Set(d, dStream);
-					ar.Flush();
+				    ar.SetModified();
+				    ar.Flush();
 					af.Put(PdfName.XFA, new PdfArray(ar));
-					return;
+				    af.SetModified();
+				    if (!af.IsIndirect()) {
+				        pdfDocument.GetCatalog().SetModified();
+				    }
+				    return;
 				}
 			}
 			//reader.killXref(af.get(PdfName.XFA));
@@ -188,6 +193,9 @@ namespace iText.Forms.Xfa
 			stream.Flush();
 			af.Put(PdfName.XFA, stream);
 			af.SetModified();
+		    if (!af.IsIndirect()) {
+		        pdfDocument.GetCatalog().SetModified();
+		    }
 		}
 
 		/// <summary>Extracts DOM nodes from an XFA document.</summary>
