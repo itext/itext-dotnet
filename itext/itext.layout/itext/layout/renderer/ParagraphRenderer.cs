@@ -419,6 +419,16 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        /// <summary>
+        /// Gets the lines which are the result of the
+        /// <see cref="Layout(iText.Layout.Layout.LayoutContext)"/>
+        /// .
+        /// </summary>
+        /// <returns>paragraph lines, or <code>null</code> if layout hasn't been called yet</returns>
+        public virtual IList<LineRenderer> GetLines() {
+            return lines;
+        }
+
         protected internal override float? GetFirstYLineRecursively() {
             if (lines == null || lines.Count == 0) {
                 return null;
