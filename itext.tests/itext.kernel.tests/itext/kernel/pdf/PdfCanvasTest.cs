@@ -1372,5 +1372,58 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder
                  + "cmp_" + filename, destinationFolder, "diff_"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CanvasInitializationPageNoContentsKey() {
+            String srcFile = sourceFolder + "pageNoContents.pdf";
+            String cmpFile = sourceFolder + "cmp_pageNoContentsStamp.pdf";
+            String destFile = destinationFolder + "pageNoContentsStamp.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(destFile));
+            PdfCanvas canvas = new PdfCanvas(document.GetPage(1));
+            canvas.SetLineWidth(5).Rectangle(50, 680, 300, 50).Stroke();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CanvasInitializationStampingExistingStream() {
+            String srcFile = sourceFolder + "pageWithContent.pdf";
+            String cmpFile = sourceFolder + "cmp_stampingExistingStream.pdf";
+            String destFile = destinationFolder + "stampingExistingStream.pdf";
+            PdfDocument document = new PdfDocument(new PdfReader(srcFile), new PdfWriter(destFile));
+            PdfPage page = document.GetPage(1);
+            PdfCanvas canvas = new PdfCanvas(page.GetLastContentStream(), page.GetResources(), page.GetDocument());
+            canvas.SetLineWidth(5).Rectangle(50, 680, 300, 50).Stroke();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void CanvasStampingJustCopiedStreamWithCompression() {
+            String srcFile = sourceFolder + "pageWithContent.pdf";
+            String cmpFile = sourceFolder + "cmp_stampingJustCopiedStreamWithCompression.pdf";
+            String destFile = destinationFolder + "stampingJustCopiedStreamWithCompression.pdf";
+            PdfDocument srcDocument = new PdfDocument(new PdfReader(srcFile));
+            PdfDocument document = new PdfDocument(new PdfWriter(destFile));
+            srcDocument.CopyPagesTo(1, 1, document);
+            srcDocument.Close();
+            PdfPage page = document.GetPage(1);
+            PdfCanvas canvas = new PdfCanvas(page.GetLastContentStream(), page.GetResources(), page.GetDocument());
+            canvas.SetLineWidth(5).Rectangle(50, 680, 300, 50).Stroke();
+            canvas.Release();
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destFile, cmpFile, destinationFolder, "diff_"
+                ));
+        }
     }
 }

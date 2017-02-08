@@ -230,7 +230,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </param>
         /// <param name="document">the document that the resulting content stream will be written to</param>
         public PdfCanvas(PdfStream contentStream, PdfResources resources, PdfDocument document) {
-            this.contentStream = contentStream;
+            this.contentStream = EnsureStreamDataIsReadyToBeProcessed(contentStream);
             this.resources = resources;
             this.document = document;
         }
@@ -2037,7 +2037,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 }
             }
             os.WriteBytes(ID);
-            os.WriteBytes(imageXObject.GetPdfObject().GetBytes()).WriteNewLine().WriteBytes(EI).WriteNewLine();
+            os.WriteBytes(imageXObject.GetPdfObject().GetBytes(false)).WriteNewLine().WriteBytes(EI).WriteNewLine();
             RestoreState();
         }
 
@@ -2229,9 +2229,23 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private static PdfStream GetPageStream(PdfPage page) {
-            PdfStream stream = page.GetContentStream(page.GetContentStreamCount() - 1);
+            PdfStream stream = page.GetLastContentStream();
             return stream == null || stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter) ? page.NewContentStreamAfter
                 () : stream;
+        }
+
+        private PdfStream EnsureStreamDataIsReadyToBeProcessed(PdfStream stream) {
+            if (!stream.IsFlushed()) {
+                if (stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter)) {
+                    try {
+                        stream.SetData(stream.GetBytes());
+                    }
+                    catch (Exception) {
+                    }
+                }
+            }
+            // ignore
+            return stream;
         }
 
         /// <summary>

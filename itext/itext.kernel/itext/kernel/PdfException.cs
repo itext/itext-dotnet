@@ -109,6 +109,8 @@ namespace iText.Kernel {
 
         public const String CannotGetPdfStreamBytes = "Cannot get PdfStream bytes.";
 
+        public const String CannotOperateWithFlushedPdfStream = "Cannot operate with the flushed PdfStream.";
+
         public const String CannotRetrieveMediaBoxAttribute = "Invalid PDF. There is no media box attribute for page or its parents.";
 
         public const String CannotFindImageDataOrEI = "Cannot find image data or EI.";
@@ -404,6 +406,7 @@ namespace iText.Kernel {
 
         public const String PdfObjectStreamReachMaxSize = "PdfObjectStream reach max size.";
 
+        [Obsolete]
         public const String PdfPageShallHaveContent = "PdfPage shall have content.";
 
         public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "PdfPages tree could be generated only once.";
