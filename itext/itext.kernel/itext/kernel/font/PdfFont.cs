@@ -124,6 +124,15 @@ namespace iText.Kernel.Font {
             }
         }
 
+        /// <summary>Check whether font contains glyph with specified unicode.</summary>
+        /// <param name="text">a java unicode string</param>
+        /// <param name="from">start index. one or two char may be used.</param>
+        /// <returns>
+        /// true if font contains glyph, represented with the unicode code point,
+        /// otherwise false.
+        /// </returns>
+        public abstract bool ContainsGlyph(String text, int from);
+
         public abstract GlyphLine CreateGlyphLine(String content);
 
         /// <summary>Append all supported glyphs and return number of processed chars.</summary>
@@ -148,8 +157,6 @@ namespace iText.Kernel.Font {
         /// <param name="glyphs">array for a new glyph, shall not be null.</param>
         /// <returns>number of processed chars: 2 in case surrogate pair, otherwise 1</returns>
         public abstract int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs);
-
-        public abstract bool ContainsGlyph(String text, int from);
 
         /// <summary>Converts the text into bytes to be placed in the document.</summary>
         /// <remarks>

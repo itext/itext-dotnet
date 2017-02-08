@@ -236,20 +236,34 @@ namespace iText.Kernel.Font {
                     }
                 }
                 else {
-                    throw new PdfException("font.has.no.suitable.cmap");
+                    throw new PdfException("Invalid CID font type: " + cidFontType);
                 }
             }
         }
 
-        private bool ContainsUnicodeGlyph(String text, int from) {
-            int ch;
-            if (TextUtil.IsSurrogatePair(text, from)) {
-                ch = TextUtil.ConvertToUtf32(text, from);
+        public override bool ContainsGlyph(int unicode) {
+            if (cidFontType == CID_FONT_TYPE_0) {
+                if (cmapEncoding.IsDirect()) {
+                    return fontProgram.GetGlyphByCode(unicode) != null;
+                }
+                else {
+                    return GetFontProgram().GetGlyph(unicode) != null;
+                }
             }
             else {
-                ch = text[from];
+                if (cidFontType == CID_FONT_TYPE_2) {
+                    if (fontProgram.IsFontSpecific()) {
+                        byte[] b = PdfEncodings.ConvertToBytes((char)unicode, "symboltt");
+                        return b.Length > 0 && fontProgram.GetGlyph(b[0] & 0xff) != null;
+                    }
+                    else {
+                        return GetFontProgram().GetGlyph(unicode) != null;
+                    }
+                }
+                else {
+                    throw new PdfException("Invalid CID font type: " + cidFontType);
+                }
             }
-            return GetFontProgram().GetGlyph(ch) != null;
         }
 
         public override byte[] ConvertToBytes(String text) {
@@ -756,6 +770,17 @@ namespace iText.Kernel.Font {
                     }
                 }
             }
+        }
+
+        private bool ContainsUnicodeGlyph(String text, int from) {
+            int ch;
+            if (TextUtil.IsSurrogatePair(text, from)) {
+                ch = TextUtil.ConvertToUtf32(text, from);
+            }
+            else {
+                ch = text[from];
+            }
+            return GetFontProgram().GetGlyph(ch) != null;
         }
 
         private static String GetOrdering(PdfDictionary cidFont) {

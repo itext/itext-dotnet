@@ -102,14 +102,16 @@ namespace iText.Kernel.Font {
         }
 
         public override bool ContainsGlyph(String text, int from) {
-            //TODO TrueType what if font is specific?
-            int ch = text[from];
+            return ContainsGlyph((int)text[from]);
+        }
+
+        public override bool ContainsGlyph(int unicode) {
             if (fontEncoding.IsFontSpecific()) {
-                return fontProgram.GetGlyphByCode(ch) != null;
+                return fontProgram.GetGlyphByCode(unicode) != null;
             }
             else {
-                return fontEncoding.CanEncode(ch) && ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
-                    (ch)) != null;
+                return fontEncoding.CanEncode(unicode) && ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
+                    (unicode)) != null;
             }
         }
 
