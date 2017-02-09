@@ -84,7 +84,7 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private String iTextVersion = iText + " " + release + " \u00a92000-2016 iText Group NV";
+        private String iTextVersion = iText + " " + release + " \u00a92000-2017 iText Group NV";
 
         /// <summary>The license key.</summary>
         private String key = null;
