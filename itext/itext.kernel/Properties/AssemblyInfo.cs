@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Versions.Attributes;
@@ -8,7 +8,7 @@ using Versions.Attributes;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("iText Group NV")]
 [assembly: AssemblyProduct ("iText")]
-[assembly: AssemblyCopyright ("Copyright (c) 1998-2016 iText Group NV")]
+[assembly: AssemblyCopyright ("Copyright (c) 1998-2017 iText Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("itext.kernel.tests,PublicKey=0024000004800000940000000602000000240000525" +

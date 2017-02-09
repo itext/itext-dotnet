@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("iText.Forms.Tests")]
@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("iText Group NV")]
 [assembly: AssemblyProduct ("iText")]
-[assembly: AssemblyCopyright ("Copyright (c) 1998-2016 iText Group NV")]
+[assembly: AssemblyCopyright ("Copyright (c) 1998-2017 iText Group NV")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
