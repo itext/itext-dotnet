@@ -1079,7 +1079,7 @@ namespace iText.Layout {
             table.SetHeight(200);
             doc.Add(table);
             doc.Add(new AreaBreak());
-            doc.Add(new Paragraph("Some cells' heights are setted:"));
+            doc.Add(new Paragraph("Some cells' heights are set:"));
             table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(Color.GREEN, 1))).AddCell
                 (new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(Color.YELLOW, 3)).SetHeight(300)).AddCell(new 
                 Cell().Add(textByron).SetBorder(new SolidBorder(Color.GREEN, 1))).AddCell(new Cell(1, 2).Add(textByron
@@ -1156,7 +1156,7 @@ namespace iText.Layout {
             table.SetMinHeight(300);
             doc.Add(table);
             doc.Add(new AreaBreak());
-            doc.Add(new Paragraph("Some cells' heights are setted:"));
+            doc.Add(new Paragraph("Some cells' heights are set:"));
             table = new Table(3).AddCell(new Cell().Add(textByron).SetBorder(new SolidBorder(Color.GREEN, 1))).AddCell
                 (new Cell(1, 2).Add(textByron).SetBorder(new SolidBorder(Color.YELLOW, 3)).SetMinHeight(300)).AddCell(
                 new Cell().Add(textByron).SetBorder(new SolidBorder(Color.GREEN, 1))).AddCell(new Cell(1, 2).Add(textByron
