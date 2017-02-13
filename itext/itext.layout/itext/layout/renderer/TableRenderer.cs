@@ -714,7 +714,8 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     // Correct occupied areas of all added cells
-                    CorrectCellsOccupiedAreas(splits, row, targetOverflowRowIndex, blockMinHeight, layoutBox, bottomTableBorderWidth, !split && row == rows.Count - 1);
+                    CorrectCellsOccupiedAreas(splits, row, targetOverflowRowIndex, blockMinHeight, layoutBox, bottomTableBorderWidth
+                        , !split && row == rows.Count - 1);
                 }
                 // process footer with collapsed borders
                 if ((split || processAsLast || row == rows.Count - 1) && null != footerRenderer) {
@@ -1027,21 +1028,19 @@ namespace iText.Layout.Renderer {
                     verticalBorders.Add(new List<Border>());
                 }
                 verticalBorders.Add(rightVerticalBorders);
-                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + bottomTableBorderWidth)
-                {
+                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + bottomTableBorderWidth
+                    ) {
                     float blockBottom = Math.Max(occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox
                         ().GetHeight() - bottomTableBorderWidth), layoutBox.GetBottom() + bottomTableBorderWidth);
-                    if (0 != heights.Count)
-                    {
+                    if (0 != heights.Count) {
                         heights[heights.Count - 1] = heights[heights.Count - 1] + occupiedArea.GetBBox().GetBottom() - blockBottom;
                     }
-                    else
-                    {
-                        heights.Add((occupiedArea.GetBBox().GetBottom() - blockBottom) + topTableBorderWidth / 2 + bottomTableBorderWidth / 2);
+                    else {
+                        heights.Add((occupiedArea.GetBBox().GetBottom() - blockBottom) + topTableBorderWidth / 2 + bottomTableBorderWidth
+                             / 2);
                     }
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                 }
-
             }
             // Apply bottom and top border
             if (tableModel.IsComplete()) {
@@ -1969,16 +1968,16 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private void CorrectCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex, float? blockMinHeight, Rectangle layoutBox, float bottomTableBorderWidth, bool isLastRenderer) {
+        private void CorrectCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex, float?
+             blockMinHeight, Rectangle layoutBox, float bottomTableBorderWidth, bool isLastRenderer) {
             float additionalCellHeight = 0;
-            if (isLastRenderer)
-            {
-                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + bottomTableBorderWidth / 2)
-                {
-                    additionalCellHeight = Math.Min(layoutBox.GetHeight() - bottomTableBorderWidth / 2, ((float)blockMinHeight) - occupiedArea.GetBBox().GetHeight() - bottomTableBorderWidth / 2) / heights.Count;
-                    for (int i = 0; i < heights.Count; i++)
-                    {
-                        heights[i] = (float)heights[i] + additionalCellHeight;
+            if (isLastRenderer) {
+                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + bottomTableBorderWidth
+                     / 2) {
+                    additionalCellHeight = Math.Min(layoutBox.GetHeight() - bottomTableBorderWidth / 2, blockMinHeight - occupiedArea
+                        .GetBBox().GetHeight() - bottomTableBorderWidth / 2) / heights.Count;
+                    for (int i = 0; i < heights.Count; i++) {
+                        heights[i] = heights[i] + additionalCellHeight;
                     }
                 }
             }
@@ -1988,7 +1987,7 @@ namespace iText.Layout.Renderer {
                 CellRenderer[] currentRow = rows[k];
                 for (int col = 0; col < currentRow.Length; col++) {
                     CellRenderer cell = (k < row || null == splits[col]) ? currentRow[col] : (CellRenderer)splits[col].GetSplitRenderer
-                    ();
+                        ();
                     if (cell == null) {
                         continue;
                     }
@@ -2003,7 +2002,7 @@ namespace iText.Layout.Renderer {
                     Rectangle bBox = cell.GetOccupiedArea().GetBBox();
                     bBox.MoveDown(shift);
                     bBox.SetHeight(height);
-                    cell.Move(0, - (cumulativeShift - (rowspan - 1) * additionalCellHeight));
+                    cell.Move(0, -(cumulativeShift - (rowspan - 1) * additionalCellHeight));
                     cell.ApplyVerticalAlignment();
                 }
                 cumulativeShift += additionalCellHeight;

@@ -468,10 +468,10 @@ namespace iText.IO.Image {
         /// <param name="source">image raw bytes</param>
         /// <returns><code>true</code> if first eight bytes are recognised by factory as valid image type and <code>false</code> otherwise</returns>
         public static bool IsSupportedType(byte[] source) {
-            byte[] imageType = ReadImageType(source);
-            if (imageType == null || imageType.Length < 8) {
+            if (source == null) {
                 return false;
             }
+            byte[] imageType = ReadImageType(source);
             return ImageTypeIs(imageType, gif) || ImageTypeIs(imageType, jpeg) || ImageTypeIs(imageType, jpeg2000_1)
                    || ImageTypeIs(imageType, jpeg2000_2) || ImageTypeIs(imageType, png) || ImageTypeIs(imageType, bmp)
                    || ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2) || ImageTypeIs(imageType, jbig2);
