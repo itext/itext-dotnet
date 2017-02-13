@@ -1974,8 +1974,8 @@ namespace iText.Layout.Renderer {
             if (isLastRenderer) {
                 if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + bottomTableBorderWidth
                      / 2) {
-                    additionalCellHeight = Math.Min(layoutBox.GetHeight() - bottomTableBorderWidth / 2, blockMinHeight - occupiedArea
-                        .GetBBox().GetHeight() - bottomTableBorderWidth / 2) / heights.Count;
+                    additionalCellHeight = Math.Min(layoutBox.GetHeight() - bottomTableBorderWidth / 2, (float)blockMinHeight 
+                        - occupiedArea.GetBBox().GetHeight() - bottomTableBorderWidth / 2) / heights.Count;
                     for (int i = 0; i < heights.Count; i++) {
                         heights[i] = heights[i] + additionalCellHeight;
                     }
