@@ -714,7 +714,7 @@ namespace iText.Layout.Renderer {
                         }
                     }
                     // Correct occupied areas of all added cells
-                    CorrectCellsOccupiedAreas(splits, row, targetOverflowRowIndex, blockMinHeight, layoutBox, bottomTableBorderWidth, row == rows.Count - 1);
+                    CorrectCellsOccupiedAreas(splits, row, targetOverflowRowIndex, blockMinHeight, layoutBox, bottomTableBorderWidth, !split && row == rows.Count - 1);
                 }
                 // process footer with collapsed borders
                 if ((split || processAsLast || row == rows.Count - 1) && null != footerRenderer) {
@@ -1037,7 +1037,7 @@ namespace iText.Layout.Renderer {
                     }
                     else
                     {
-                        heights.Add((occupiedArea.GetBBox().GetBottom() - blockBottom) + topTableBorderWidth / 2 + occupiedArea.GetBBox().GetHeight() / 2);
+                        heights.Add((occupiedArea.GetBBox().GetBottom() - blockBottom) + topTableBorderWidth / 2 + bottomTableBorderWidth / 2);
                     }
                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                 }
