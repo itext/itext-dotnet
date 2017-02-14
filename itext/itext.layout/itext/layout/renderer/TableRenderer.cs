@@ -667,7 +667,6 @@ namespace iText.Layout.Renderer {
                         while (0 != cellProcessingQueue.Count) {
                             TableRenderer.CellRendererInfo cellInfo = cellProcessingQueue.JRemoveFirst();
                             col = cellInfo.column;
-                            int rowN = cellInfo.finishRowInd;
                             CellRenderer cell = cellInfo.cellRenderer;
                             float collapsedWithNextRowBorderWidth = null == cell.GetBorders()[2] ? 0 : cell.GetBorders()[2].GetWidth();
                             cell.DeleteOwnProperty(Property.BORDER_BOTTOM);
@@ -1243,40 +1242,9 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth, float leftBorderWidth
-            , float rightBorderWidth) {
-            float[] scaledWidths = new float[tableModel.GetNumberOfColumns()];
-            float widthSum = 0;
-            float totalPointWidth = 0;
-            int col;
-            for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
-                UnitValue columnUnitWidth = tableModel.GetColumnWidth(col);
-                float columnWidth;
-                if (columnUnitWidth.IsPercentValue()) {
-                    columnWidth = tableWidth * columnUnitWidth.GetValue() / 100;
-                    scaledWidths[col] = columnWidth;
-                    widthSum += columnWidth;
-                }
-                else {
-                    totalPointWidth += columnUnitWidth.GetValue();
-                }
-            }
-            float freeTableSpaceWidth = tableWidth - widthSum;
-            if (totalPointWidth > 0) {
-                for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
-                    float columnWidth;
-                    UnitValue columnUnitWidth = tableModel.GetColumnWidth(col);
-                    if (columnUnitWidth.IsPointValue()) {
-                        columnWidth = (freeTableSpaceWidth / totalPointWidth) * columnUnitWidth.GetValue();
-                        scaledWidths[col] = columnWidth;
-                        widthSum += columnWidth;
-                    }
-                }
-            }
-            for (col = 0; col < tableModel.GetNumberOfColumns(); col++) {
-                scaledWidths[col] *= (tableWidth - leftBorderWidth / 2 - rightBorderWidth / 2) / widthSum;
-            }
-            return scaledWidths;
+        [System.ObsoleteAttribute(@"Method will be removed in 7.1.")]
+        protected internal virtual float[] CalculateScaledColumnWidths(Table tableModel, float tableWidth) {
+            return countedColumnWidth;
         }
 
         protected internal virtual iText.Layout.Renderer.TableRenderer[] Split(int row) {
@@ -1759,7 +1727,7 @@ namespace iText.Layout.Renderer {
 
         // collapse with table border or header bottom borders
         private void CorrectFirstRowTopBorders(Border tableBorder, int colN) {
-            int col = 0;
+            int col;
             int row = 0;
             IList<Border> topBorders = horizontalBorders[0];
             IList<Border> bordersToBeCollapsedWith = null != headerRenderer ? headerRenderer.horizontalBorders[headerRenderer
