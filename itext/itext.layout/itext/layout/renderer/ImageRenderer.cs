@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,21 +42,21 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.IO.Log;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Kernel.Pdf.Xobject;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Layout;
+using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class ImageRenderer : AbstractRenderer {
-        private float height;
-
-        private float? width;
-
         protected internal float? fixedXPosition;
 
         protected internal float? fixedYPosition;
@@ -71,6 +71,20 @@ namespace iText.Layout.Renderer {
 
         internal float[] matrix = new float[6];
 
+        private float? height;
+
+        private float? width;
+
+        private float imageItselfScaledWidth;
+
+        private float imageItselfScaledHeight;
+
+        private Rectangle initialOccupiedAreaBBox;
+
+        private float rotatedDeltaX;
+
+        private float rotatedDeltaY;
+
         /// <summary>Creates an ImageRenderer from its corresponding layout object.</summary>
         /// <param name="image">
         /// the
@@ -83,17 +97,36 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea().Clone();
-            Rectangle layoutBox = area.GetBBox();
+            Rectangle layoutBox = area.GetBBox().Clone();
+            width = RetrieveWidth(layoutBox.GetWidth());
+            height = RetrieveHeight();
             ApplyMargins(layoutBox, false);
+            Border[] borders = GetBorders();
+            ApplyBorderBox(layoutBox, borders, false);
+            if (IsAbsolutePosition()) {
+                ApplyAbsolutePosition(layoutBox);
+            }
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(layoutBox.GetX(), layoutBox.GetY() + layoutBox
                 .GetHeight(), 0, 0));
-            width = RetrieveWidth(layoutBox.GetWidth());
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
-            imageWidth = xObject.GetWidth();
-            imageHeight = xObject.GetHeight();
-            width = width == null ? imageWidth : width;
-            height = (float)width / imageWidth * imageHeight;
+            Image modelElement = (Image)(GetModelElement());
+            PdfXObject xObject = modelElement.GetXObject();
+            imageWidth = modelElement.GetImageWidth();
+            imageHeight = modelElement.GetImageHeight();
+            if (width == null && height == null) {
+                width = imageWidth;
+                height = (float)width / imageWidth * imageHeight;
+            }
+            else {
+                if (width == null) {
+                    width = (float)height / imageHeight * imageWidth;
+                }
+                else {
+                    if (height == null) {
+                        height = (float)width / imageWidth * imageHeight;
+                    }
+                }
+            }
             fixedXPosition = this.GetPropertyAsFloat(Property.X);
             fixedYPosition = this.GetPropertyAsFloat(Property.Y);
             float? horizontalScaling = this.GetPropertyAsFloat(Property.HORIZONTAL_SCALING, 1f);
@@ -106,25 +139,51 @@ namespace iText.Layout.Renderer {
             if (horizontalScaling != 1) {
                 if (xObject is PdfFormXObject) {
                     t.Scale((float)horizontalScaling, 1);
+                    width = imageWidth * (float)horizontalScaling;
                 }
-                width *= (float)horizontalScaling;
+                else {
+                    width *= (float)horizontalScaling;
+                }
             }
             if (verticalScaling != 1) {
                 if (xObject is PdfFormXObject) {
                     t.Scale(1, (float)verticalScaling);
+                    height = imageHeight * (float)verticalScaling;
                 }
-                height *= (float)verticalScaling;
+                else {
+                    height *= (float)verticalScaling;
+                }
             }
-            float imageItselfScaledWidth = (float)width;
-            float imageItselfScaledHeight = (float)height;
+            if (null != RetrieveMinHeight() && height < RetrieveMinHeight()) {
+                width *= RetrieveMinHeight() / height;
+                height = RetrieveMinHeight();
+            }
+            else {
+                if (null != RetrieveMaxHeight() && height > RetrieveMaxHeight()) {
+                    width *= RetrieveMaxHeight() / height;
+                    height = RetrieveMaxHeight();
+                }
+                else {
+                    if (null != RetrieveHeight() && !height.Equals(RetrieveHeight())) {
+                        width *= RetrieveHeight() / height;
+                        height = RetrieveHeight();
+                    }
+                }
+            }
+            imageItselfScaledWidth = (float)width;
+            imageItselfScaledHeight = (float)height;
             // See in adjustPositionAfterRotation why angle = 0 is necessary
             if (null == angle) {
                 angle = 0f;
             }
             t.Rotate((float)angle);
+            initialOccupiedAreaBBox = GetOccupiedAreaBBox().Clone();
             float scaleCoef = AdjustPositionAfterRotation((float)angle, layoutBox.GetWidth(), layoutBox.GetHeight());
             imageItselfScaledHeight *= scaleCoef;
             imageItselfScaledWidth *= scaleCoef;
+            initialOccupiedAreaBBox.MoveDown(imageItselfScaledHeight);
+            initialOccupiedAreaBBox.SetHeight(imageItselfScaledHeight);
+            initialOccupiedAreaBBox.SetWidth(imageItselfScaledWidth);
             if (xObject is PdfFormXObject) {
                 t.Scale(scaleCoef, scaleCoef);
             }
@@ -136,11 +195,14 @@ namespace iText.Layout.Renderer {
                     isPlacingForced = true;
                 }
                 else {
-                    return new LayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
+                    return new MinMaxWidthLayoutResult(LayoutResult.NOTHING, occupiedArea, null, this, this);
                 }
             }
-            occupiedArea.GetBBox().MoveDown(height);
-            occupiedArea.GetBBox().SetHeight(height);
+            occupiedArea.GetBBox().MoveDown((float)height);
+            if (borders[3] != null) {
+                height += (float)Math.Sin((float)angle) * borders[3].GetWidth();
+            }
+            occupiedArea.GetBBox().SetHeight((float)height);
             occupiedArea.GetBBox().SetWidth((float)width);
             float leftMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
             float topMargin = (float)this.GetPropertyAsFloat(Property.MARGIN_TOP);
@@ -148,12 +210,52 @@ namespace iText.Layout.Renderer {
                 TranslateImage(leftMargin, topMargin, t);
                 GetMatrix(t, imageItselfScaledWidth, imageItselfScaledHeight);
             }
+            ApplyBorderBox(occupiedArea.GetBBox(), borders, true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null);
+            if (angle != 0) {
+                ApplyRotationLayout((float)angle);
+            }
+            float unscaledWidth = occupiedArea.GetBBox().GetWidth() / scaleCoef;
+            MinMaxWidth minMaxWidth = new MinMaxWidth(0, area.GetBBox().GetWidth(), unscaledWidth, unscaledWidth);
+            UnitValue rendererWidth = this.GetProperty<UnitValue>(Property.WIDTH);
+            if (rendererWidth != null && rendererWidth.IsPercentValue()) {
+                minMaxWidth.SetChildrenMinWidth(0);
+                float coeff = imageWidth / (float)RetrieveWidth(area.GetBBox().GetWidth());
+                minMaxWidth.SetChildrenMaxWidth(unscaledWidth * coeff);
+            }
+            return new MinMaxWidthLayoutResult(LayoutResult.FULL, occupiedArea, null, null, isPlacingForced ? this : null
+                ).SetMinMaxWidth(minMaxWidth);
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ImageRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
+            ApplyMargins(occupiedArea.GetBBox(), false);
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), false);
+            bool isRelativePosition = IsRelativePosition();
+            if (isRelativePosition) {
+                ApplyRelativePositioningTranslation(false);
+            }
+            if (fixedYPosition == null) {
+                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
+            }
+            if (fixedXPosition == null) {
+                fixedXPosition = occupiedArea.GetBBox().GetX();
+            }
+            float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            if (angle != null) {
+                fixedXPosition += rotatedDeltaX;
+                fixedYPosition -= rotatedDeltaY;
+                drawContext.GetCanvas().SaveState();
+                ApplyConcatMatrix(drawContext, angle);
+            }
             base.Draw(drawContext);
+            if (angle != null) {
+                drawContext.GetCanvas().RestoreState();
+            }
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             bool isArtifact = false;
@@ -173,17 +275,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            ApplyMargins(occupiedArea.GetBBox(), false);
-            bool isRelativePosition = IsRelativePosition();
-            if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
-            }
-            if (fixedYPosition == null) {
-                fixedYPosition = occupiedArea.GetBBox().GetY() + pivotY;
-            }
-            if (fixedXPosition == null) {
-                fixedXPosition = occupiedArea.GetBBox().GetX();
-            }
             PdfCanvas canvas = drawContext.GetCanvas();
             if (isTagged) {
                 canvas.OpenTag(tagPointer.GetTagReference());
@@ -194,8 +285,10 @@ namespace iText.Layout.Renderer {
                 }
             }
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
+            BeginElementOpacityApplying(drawContext);
             canvas.AddXObject(xObject, matrix[0], matrix[1], matrix[2], matrix[3], (float)fixedXPosition + deltaX, (float
                 )fixedYPosition);
+            EndElementOpacityApplying(drawContext);
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
@@ -203,8 +296,9 @@ namespace iText.Layout.Renderer {
                 canvas.CloseTag();
             }
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
+                ApplyRelativePositioningTranslation(true);
             }
+            ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
             if (isTagged) {
                 tagPointer.MoveToParent();
@@ -215,16 +309,46 @@ namespace iText.Layout.Renderer {
             return null;
         }
 
-        protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea area) {
-            if (width > area.GetBBox().GetWidth()) {
-                SetProperty(Property.HEIGHT, area.GetBBox().GetWidth() / width * imageHeight);
-                SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetWidth()));
-                // if still image is not scaled properly
-                if (this.GetPropertyAsFloat(Property.HEIGHT) > area.GetBBox().GetHeight()) {
-                    SetProperty(Property.WIDTH, UnitValue.CreatePointValue(area.GetBBox().GetHeight() / (float)this.GetPropertyAsFloat
-                        (Property.HEIGHT) * (this.GetProperty<UnitValue>(Property.WIDTH)).GetValue()));
-                    SetProperty(Property.HEIGHT, UnitValue.CreatePointValue(area.GetBBox().GetHeight()));
-                }
+        public override Rectangle GetBorderAreaBBox() {
+            ApplyMargins(initialOccupiedAreaBBox, false);
+            ApplyBorderBox(initialOccupiedAreaBBox, GetBorders(), false);
+            bool isRelativePosition = IsRelativePosition();
+            if (isRelativePosition) {
+                ApplyRelativePositioningTranslation(false);
+            }
+            ApplyMargins(initialOccupiedAreaBBox, true);
+            ApplyBorderBox(initialOccupiedAreaBBox, true);
+            return initialOccupiedAreaBBox;
+        }
+
+        public override void Move(float dxRight, float dyUp) {
+            base.Move(dxRight, dyUp);
+            if (initialOccupiedAreaBBox != null) {
+                initialOccupiedAreaBBox.MoveRight(dxRight);
+                initialOccupiedAreaBBox.MoveUp(dyUp);
+            }
+            if (fixedXPosition != null) {
+                fixedXPosition += dxRight;
+            }
+            if (fixedYPosition != null) {
+                fixedYPosition += dyUp;
+            }
+        }
+
+        internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
+            return ((MinMaxWidthLayoutResult)Layout(new LayoutContext(new LayoutArea(1, new Rectangle(availableWidth, 
+                AbstractRenderer.INF))))).GetMinMaxWidth();
+        }
+
+        protected internal virtual iText.Layout.Renderer.ImageRenderer AutoScale(LayoutArea layoutArea) {
+            Rectangle area = layoutArea.GetBBox().Clone();
+            ApplyMargins(area, false);
+            ApplyBorderBox(area, false);
+            // if rotation was applied, width would be equal to the width of rectangle bounding the rotated image
+            float angleScaleCoef = imageWidth / (float)width;
+            if (width > angleScaleCoef * area.GetWidth()) {
+                SetProperty(Property.HEIGHT, area.GetWidth() / width * imageHeight);
+                SetProperty(Property.WIDTH, UnitValue.CreatePointValue(angleScaleCoef * area.GetWidth()));
             }
             return this;
         }
@@ -244,9 +368,9 @@ namespace iText.Layout.Renderer {
             if (angle != 0) {
                 AffineTransform t = AffineTransform.GetRotateInstance(angle);
                 Point p00 = t.Transform(new Point(0, 0), new Point());
-                Point p01 = t.Transform(new Point(0, height), new Point());
+                Point p01 = t.Transform(new Point(0, (float)height), new Point());
                 Point p10 = t.Transform(new Point((float)width, 0), new Point());
-                Point p11 = t.Transform(new Point((float)width, height), new Point());
+                Point p11 = t.Transform(new Point((float)width, (float)height), new Point());
                 double[] xValues = new double[] { p01.GetX(), p10.GetX(), p11.GetX() };
                 double[] yValues = new double[] { p01.GetY(), p10.GetY(), p11.GetY() };
                 double minX = p00.GetX();
@@ -268,11 +392,9 @@ namespace iText.Layout.Renderer {
             }
             // Rotating image can cause fitting into area problems.
             // So let's find scaling coefficient
-            // TODO
             float scaleCoeff = 1;
-            // hasProperty(Property) checks only properties field, cannot use it
             if (true.Equals(GetPropertyAsBoolean(Property.AUTO_SCALE))) {
-                scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / height);
+                scaleCoeff = Math.Min(maxWidth / (float)width, maxHeight / (float)height);
                 height *= scaleCoeff;
                 width *= scaleCoeff;
             }
@@ -286,13 +408,14 @@ namespace iText.Layout.Renderer {
                 else {
                     if (null != GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT) && (bool)GetPropertyAsBoolean(Property.AUTO_SCALE_HEIGHT
                         )) {
-                        scaleCoeff = maxHeight / height;
+                        scaleCoeff = maxHeight / (float)height;
                         height = maxHeight;
                         width *= scaleCoeff;
                     }
                 }
             }
             pivotY *= scaleCoeff;
+            deltaX *= scaleCoeff;
             return scaleCoeff;
         }
 
@@ -305,6 +428,54 @@ namespace iText.Layout.Renderer {
             if (fixedYPosition != null) {
                 fixedYPosition += (float)t.GetTranslateY();
             }
+        }
+
+        private void ApplyConcatMatrix(DrawContext drawContext, float? angle) {
+            AffineTransform rotationTransform = AffineTransform.GetRotateInstance((float)angle);
+            Rectangle rect = GetBorderAreaBBox();
+            IList<Point> rotatedPoints = TransformPoints(RectangleToPointsList(rect), rotationTransform);
+            float[] shift = CalculateShiftToPositionBBoxOfPointsAt(rect.GetX(), rect.GetY() + rect.GetHeight(), rotatedPoints
+                );
+            double[] matrix = new double[6];
+            rotationTransform.GetMatrix(matrix);
+            drawContext.GetCanvas().ConcatMatrix(matrix[0], matrix[1], matrix[2], matrix[3], shift[0], shift[1]);
+        }
+
+        private void ApplyRotationLayout(float angle) {
+            Border[] borders = GetBorders();
+            Rectangle rect = GetBorderAreaBBox();
+            float leftBorderWidth = borders[3] == null ? 0 : borders[3].GetWidth();
+            float rightBorderWidth = borders[1] == null ? 0 : borders[1].GetWidth();
+            float topBorderWidth = borders[0] == null ? 0 : borders[0].GetWidth();
+            if (leftBorderWidth != 0) {
+                float gip = (float)Math.Sqrt(Math.Pow(topBorderWidth, 2) + Math.Pow(leftBorderWidth, 2));
+                double atan = Math.Atan(topBorderWidth / leftBorderWidth);
+                if (angle < 0) {
+                    atan = -atan;
+                }
+                rotatedDeltaX = Math.Abs((float)(gip * Math.Cos(angle - atan) - leftBorderWidth));
+            }
+            else {
+                rotatedDeltaX = 0;
+            }
+            rect.MoveRight(rotatedDeltaX);
+            occupiedArea.GetBBox().SetWidth(occupiedArea.GetBBox().GetWidth() + rotatedDeltaX);
+            if (rightBorderWidth != 0) {
+                float gip = (float)Math.Sqrt(Math.Pow(topBorderWidth, 2) + Math.Pow(leftBorderWidth, 2));
+                double atan = Math.Atan(rightBorderWidth / topBorderWidth);
+                if (angle < 0) {
+                    atan = -atan;
+                }
+                rotatedDeltaY = Math.Abs((float)(gip * Math.Cos(angle - atan) - topBorderWidth));
+            }
+            else {
+                rotatedDeltaY = 0;
+            }
+            rect.MoveDown(rotatedDeltaY);
+            if (angle < 0) {
+                rotatedDeltaY += rightBorderWidth;
+            }
+            occupiedArea.GetBBox().IncreaseHeight(rotatedDeltaY);
         }
     }
 }

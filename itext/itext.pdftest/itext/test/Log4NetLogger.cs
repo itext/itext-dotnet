@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Reflection;
 using log4net;
 using log4net.Core;
 using ILogger = iText.IO.Log.ILogger;
@@ -52,7 +53,8 @@ namespace iText.Test {
         private ILog iLog;
 
         public Log4NetLogger(String name) {
-            iLog = LogManager.GetLogger(name);
+            //LogManager.GetLogger(String) calls Assembly.GetCallingAssembly(), so its value will be current (this) assembly always.
+            iLog = LogManager.GetLogger(typeof(Log4NetLogger).GetAssembly(), name);
         }
 
         public Log4NetLogger(Type type)

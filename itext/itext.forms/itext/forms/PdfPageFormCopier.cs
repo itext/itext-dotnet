@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -152,7 +151,7 @@ namespace iText.Forms {
                                         toPage.GetPdfObject().GetAsArray(PdfName.Annots).Add(clonedAnnot);
                                         toPage.RemoveAnnotation(annot);
                                         field = MergeFieldsWithTheSameName(field, PdfFormField.MakeFormField(clonedAnnot, toPage.GetDocument()));
-                                        logger.Warn(String.Format(LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString));
+                                        logger.Warn(String.Format(iText.IO.LogMessageConstant.DOCUMENT_ALREADY_HAS_FIELD, annotNameString));
                                         PdfArray kids = field.GetKids();
                                         field.GetPdfObject().Remove(PdfName.Kids);
                                         formTo.AddField(field, toPage);

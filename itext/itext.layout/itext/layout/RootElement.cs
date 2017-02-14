@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Element;
+using iText.Layout.Font;
 using iText.Layout.Properties;
 using iText.Layout.Renderer;
 using iText.Layout.Splitting;
@@ -76,10 +77,12 @@ namespace iText.Layout {
         /// <param name="element">an element with spacial margins, tabbing, and alignment</param>
         /// <returns>this element</returns>
         /// <seealso cref="iText.Layout.Element.BlockElement{T}"/>
-        public virtual T Add<T2>(BlockElement<T2> element)
-            where T2 : IElement {
+        public virtual T Add(IBlockElement element) {
             childElements.Add(element);
             EnsureRootRendererNotNull().AddChild(element.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return (T)(Object)this;
         }
 
@@ -91,7 +94,43 @@ namespace iText.Layout {
         public virtual T Add(Image image) {
             childElements.Add(image);
             EnsureRootRendererNotNull().AddChild(image.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return (T)(Object)this;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// if presents.
+        /// </summary>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// if exists, otherwise null.
+        /// </returns>
+        public virtual FontProvider GetFontProvider() {
+            Object fontProvider = this.GetProperty<Object>(Property.FONT_PROVIDER);
+            if (fontProvider is FontProvider) {
+                return (FontProvider)fontProvider;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// .
+        /// Note, font provider is inherited property.
+        /// </summary>
+        /// <param name="fontProvider">
+        /// instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// .
+        /// </param>
+        public virtual void SetFontProvider(FontProvider fontProvider) {
+            SetProperty(Property.FONT_PROVIDER, fontProvider);
         }
 
         public override bool HasProperty(int property) {
@@ -210,7 +249,7 @@ namespace iText.Layout {
         /// <returns>this object</returns>
         public virtual T ShowTextAligned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
              vertAlign, float angle) {
-            Paragraph p = new Paragraph(text);
+            Paragraph p = new Paragraph(text).SetMultipliedLeading(1).SetMargin(0);
             return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, angle);
         }
 
@@ -220,12 +259,12 @@ namespace iText.Layout {
         /// <param name="y">the point about which the text will be aligned and rotated</param>
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <param name="vertAlign">vertical alignment about the specified point</param>
-        /// <param name="angle">the angle of rotation applied to the text, in radians</param>
+        /// <param name="radAngle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
         public virtual T ShowTextAlignedKerned(String text, float x, float y, TextAlignment? textAlign, VerticalAlignment?
-             vertAlign, float angle) {
-            Paragraph p = new Paragraph(text).SetFontKerning(FontKerning.YES);
-            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, angle);
+             vertAlign, float radAngle) {
+            Paragraph p = new Paragraph(text).SetMultipliedLeading(1).SetMargin(0).SetFontKerning(FontKerning.YES);
+            return ShowTextAligned(p, x, y, pdfDocument.GetNumberOfPages(), textAlign, vertAlign, radAngle);
         }
 
         /// <summary>Convenience method to write a text aligned about the specified point</summary>
@@ -266,14 +305,14 @@ namespace iText.Layout {
         /// <param name="pageNumber">the page number to write the text</param>
         /// <param name="textAlign">horizontal alignment about the specified point</param>
         /// <param name="vertAlign">vertical alignment about the specified point</param>
-        /// <param name="angle">the angle of rotation applied to the text, in radians</param>
+        /// <param name="radAngle">the angle of rotation applied to the text, in radians</param>
         /// <returns>this object</returns>
         public virtual T ShowTextAligned(Paragraph p, float x, float y, int pageNumber, TextAlignment? textAlign, 
-            VerticalAlignment? vertAlign, float angle) {
+            VerticalAlignment? vertAlign, float radAngle) {
             Div div = new Div();
             div.SetTextAlignment(textAlign).SetVerticalAlignment(vertAlign);
-            if (angle != 0) {
-                div.SetRotationAngle(angle);
+            if (radAngle != 0) {
+                div.SetRotationAngle(radAngle);
             }
             div.SetProperty(Property.ROTATION_POINT_X, x);
             div.SetProperty(Property.ROTATION_POINT_Y, y);
@@ -301,7 +340,7 @@ namespace iText.Layout {
             if (pageNumber == 0) {
                 pageNumber = 1;
             }
-            div.SetFixedPosition(pageNumber, divX, divY, divSize).SetHeight(divSize);
+            div.SetFixedPosition(pageNumber, divX, divY, divSize).SetMinHeight(divSize);
             if (p.GetProperty<Leading>(Property.LEADING) == null) {
                 p.SetMultipliedLeading(1);
             }

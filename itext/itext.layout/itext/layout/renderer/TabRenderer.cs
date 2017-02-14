@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.IO.Log;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Draw;
@@ -63,13 +64,18 @@ namespace iText.Layout.Renderer {
         public override LayoutResult Layout(LayoutContext layoutContext) {
             LayoutArea area = layoutContext.GetArea();
             float? width = RetrieveWidth(area.GetBBox().GetWidth());
-            float? height = this.GetPropertyAsFloat(Property.HEIGHT);
+            float? height = this.GetPropertyAsFloat(Property.MIN_HEIGHT);
             occupiedArea = new LayoutArea(area.GetPageNumber(), new Rectangle(area.GetBBox().GetX(), area.GetBBox().GetY
                 () + area.GetBBox().GetHeight(), (float)width, (float)height));
             return new LayoutResult(LayoutResult.FULL, occupiedArea, null, null);
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TabRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
             ILineDrawer leader = this.GetProperty<ILineDrawer>(Property.TAB_LEADER);
             if (leader == null) {
                 return;
@@ -78,7 +84,9 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }
+            BeginElementOpacityApplying(drawContext);
             leader.Draw(drawContext.GetCanvas(), occupiedArea.GetBBox());
+            EndElementOpacityApplying(drawContext);
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }

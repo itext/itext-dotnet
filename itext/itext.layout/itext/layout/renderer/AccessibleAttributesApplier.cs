@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -146,9 +146,9 @@ namespace iText.Layout.Renderer {
                 ApplyBorderAttributes(renderer, attributes);
             }
             ApplyPaddingAttribute(renderer, attributes);
-            Color color = renderer.GetPropertyAsColor(Property.FONT_COLOR);
-            if (color != null && color is DeviceRgb) {
-                attributes.Put(PdfName.Color, new PdfArray(color.GetColorValue()));
+            TransparentColor transparentColor = renderer.GetPropertyAsTransparentColor(Property.FONT_COLOR);
+            if (transparentColor != null && transparentColor.GetColor() is DeviceRgb) {
+                attributes.Put(PdfName.Color, new PdfArray(transparentColor.GetColor().GetColorValue()));
             }
         }
 
@@ -316,30 +316,30 @@ namespace iText.Layout.Renderer {
                 for (int i = 1; i < borders.Length; i++) {
                     Border border = borders[i];
                     if (border != null) {
-                        if (!border.GetColor().Equals(borders[0].GetColor())) {
+                        if (null == borders[0] || !border.GetColor().Equals(borders[0].GetColor())) {
                             allColorsEqual = false;
                         }
-                        if (border.GetWidth() != borders[0].GetWidth()) {
+                        if (null == borders[0] || border.GetWidth() != borders[0].GetWidth()) {
                             allWidthsEqual = false;
                         }
-                        if (border.GetBorderType() != borders[0].GetBorderType()) {
+                        if (null == borders[0] || border.GetBorderType() != borders[0].GetBorderType()) {
                             allTypesEqual = false;
                         }
                     }
                 }
                 int[] borderOrder = new int[] { 0, 1, 2, 3 };
                 //TODO set depending on writing direction
-                foreach (int i_1 in borderOrder) {
-                    if (borders[i_1] != null) {
-                        if (borders[i_1].GetColor() is DeviceRgb) {
-                            borderColors.Add(new PdfArray(borders[i_1].GetColor().GetColorValue()));
+                foreach (int i in borderOrder) {
+                    if (borders[i] != null) {
+                        if (borders[i].GetColor() is DeviceRgb) {
+                            borderColors.Add(new PdfArray(borders[i].GetColor().GetColorValue()));
                             atLeastOneRgb = true;
                         }
                         else {
                             borderColors.Add(PdfNull.PDF_NULL);
                         }
-                        borderTypes.Add(TransformBorderTypeToName(borders[i_1].GetBorderType()));
-                        borderWidths.Add(new PdfNumber(borders[i_1].GetWidth()));
+                        borderTypes.Add(TransformBorderTypeToName(borders[i].GetBorderType()));
+                        borderWidths.Add(new PdfNumber(borders[i].GetWidth()));
                     }
                     else {
                         borderColors.Add(PdfNull.PDF_NULL);
@@ -489,7 +489,8 @@ namespace iText.Layout.Renderer {
 
         private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType) {
             switch (numberingType) {
-                case ListNumberingType.DECIMAL: {
+                case ListNumberingType.DECIMAL:
+                case ListNumberingType.DECIMAL_LEADING_ZERO: {
                     return PdfName.Decimal;
                 }
 

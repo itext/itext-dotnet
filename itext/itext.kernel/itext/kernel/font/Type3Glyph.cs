@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -193,11 +193,11 @@ namespace iText.Kernel.Font {
 
         private void FillBBFromBytes(byte[] bytes) {
             String str = iText.IO.Util.JavaUtil.GetStringForBytes(bytes);
-            int d0Pos = str.IndexOf(D_0_STR);
-            int d1Pos = str.IndexOf(D_1_STR);
+            int d0Pos = str.IndexOf(D_0_STR, StringComparison.Ordinal);
+            int d1Pos = str.IndexOf(D_1_STR, StringComparison.Ordinal);
             if (d0Pos != -1) {
                 isColor = true;
-                String[] bbArray = str.JSubstring(0, d0Pos - 1).Split(" ");
+                String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d0Pos - 1), " ");
                 if (bbArray.Length == 2) {
                     this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                 }
@@ -205,7 +205,7 @@ namespace iText.Kernel.Font {
             else {
                 if (d1Pos != -1) {
                     isColor = false;
-                    String[] bbArray = str.JSubstring(0, d1Pos - 1).Split(" ");
+                    String[] bbArray = iText.IO.Util.StringUtil.Split(str.JSubstring(0, d1Pos - 1), " ");
                     if (bbArray.Length == 6) {
                         this.wx = float.Parse(bbArray[0], System.Globalization.CultureInfo.InvariantCulture);
                         this.llx = float.Parse(bbArray[2], System.Globalization.CultureInfo.InvariantCulture);

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
+using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout.Element {
@@ -66,8 +67,7 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual Div Add<T>(BlockElement<T> element)
-            where T : IElement {
+        public virtual Div Add(IBlockElement element) {
             childElements.Add(element);
             return this;
         }
@@ -99,6 +99,16 @@ namespace iText.Layout.Element {
                 tagProperties = new AccessibilityProperties();
             }
             return tagProperties;
+        }
+
+        public virtual Div SetFillAvailableArea(bool fillArea) {
+            SetProperty(Property.FILL_AVAILABLE_AREA, fillArea);
+            return this;
+        }
+
+        public virtual Div SetFillAvailableAreaOnSplit(bool fillAreaOnSplit) {
+            SetProperty(Property.FILL_AVAILABLE_AREA_ON_SPLIT, fillAreaOnSplit);
+            return this;
         }
 
         protected internal override IRenderer MakeNewRenderer() {

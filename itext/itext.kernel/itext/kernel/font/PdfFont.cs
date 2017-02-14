@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -124,7 +124,47 @@ namespace iText.Kernel.Font {
             }
         }
 
+        /// <summary>Check whether font contains glyph with specified unicode.</summary>
+        /// <param name="text">a java unicode string</param>
+        /// <param name="from">start index. one or two char may be used.</param>
+        /// <returns>
+        /// true if font contains glyph, represented with the unicode code point,
+        /// otherwise false.
+        /// </returns>
+        public virtual bool ContainsGlyph(String text, int from) {
+            throw new InvalidOperationException("containsGlyph(String text, int from) must be overridden");
+        }
+
         public abstract GlyphLine CreateGlyphLine(String content);
+
+        /// <summary>Append all supported glyphs and return number of processed chars.</summary>
+        /// <remarks>
+        /// Append all supported glyphs and return number of processed chars.
+        /// Composite font supports surrogate pairs.
+        /// </remarks>
+        /// <param name="text">String to convert to glyphs.</param>
+        /// <param name="from">from index of the text.</param>
+        /// <param name="to">to index of the text.</param>
+        /// <param name="glyphs">array for a new glyphs, shall not be null.</param>
+        /// <returns>number of processed chars from text.</returns>
+        public virtual int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs) {
+            throw new InvalidOperationException("appendGlyphs(String text, int from, int to, List<Glyph> glyphs) must be overridden"
+                );
+        }
+
+        /// <summary>Append any single glyph, even notdef.</summary>
+        /// <remarks>
+        /// Append any single glyph, even notdef.
+        /// Returns number of processed chars: 2 in case surrogate pair, otherwise 1.
+        /// </remarks>
+        /// <param name="text">String to convert to glyphs.</param>
+        /// <param name="from">from index of the text.</param>
+        /// <param name="glyphs">array for a new glyph, shall not be null.</param>
+        /// <returns>number of processed chars: 2 in case surrogate pair, otherwise 1</returns>
+        public virtual int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs) {
+            throw new InvalidOperationException("appendAnyGlyph(String text, int from, List<Glyph> glyphs) must be overridden"
+                );
+        }
 
         /// <summary>Converts the text into bytes to be placed in the document.</summary>
         /// <remarks>
@@ -140,6 +180,22 @@ namespace iText.Kernel.Font {
 
         public abstract String Decode(PdfString content);
 
+        /// <summary>
+        /// Decodes a given
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// containing encoded string (e.g. from content stream) into a
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// </summary>
+        /// <param name="content">the encoded string</param>
+        /// <returns>
+        /// the
+        /// <see cref="iText.IO.Font.Otf.GlyphLine"/>
+        /// containing the glyphs encoded by the passed string
+        /// </returns>
+        public virtual GlyphLine DecodeIntoGlyphLine(PdfString content) {
+            throw new InvalidOperationException("decodeIntoGlyphLine(PdfString content) must be overridden");
+        }
+
         public abstract float GetContentWidth(PdfString content);
 
         public abstract byte[] ConvertToBytes(Glyph glyph);
@@ -148,6 +204,7 @@ namespace iText.Kernel.Font {
 
         public abstract void WriteText(String text, PdfOutputStream stream);
 
+        [Obsolete]
         public virtual void WriteText(GlyphLine text, PdfOutputStream stream) {
             WriteText(text, 0, text.Size() - 1, stream);
         }
@@ -389,11 +446,11 @@ namespace iText.Kernel.Font {
             float tokenLength = 0;
             for (int i = 0; i < text.Length; i++) {
                 char ch = text[i];
-                if (char.IsWhiteSpace(ch)) {
+                if (iText.IO.Util.TextUtil.IsWhiteSpace(ch)) {
                     lastWhiteSpace = i;
                 }
-                tokenLength += GetWidth(ch, fontSize);
-                if (tokenLength >= maxWidth || ch == '\n') {
+                float currentCharWidth = GetWidth(ch, fontSize);
+                if (tokenLength + currentCharWidth >= maxWidth || ch == '\n') {
                     if (startPos < lastWhiteSpace) {
                         resultString.Add(text.JSubstring(startPos, lastWhiteSpace));
                         startPos = lastWhiteSpace + 1;
@@ -401,11 +458,20 @@ namespace iText.Kernel.Font {
                         i = lastWhiteSpace;
                     }
                     else {
-                        resultString.Add(text.JSubstring(startPos, i + 1));
-                        startPos = i + 1;
-                        tokenLength = 0;
-                        i = i + 1;
+                        if (startPos != i) {
+                            resultString.Add(text.JSubstring(startPos, i));
+                            startPos = i;
+                            tokenLength = currentCharWidth;
+                        }
+                        else {
+                            resultString.Add(text.JSubstring(startPos, startPos + 1));
+                            startPos = i + 1;
+                            tokenLength = 0;
+                        }
                     }
+                }
+                else {
+                    tokenLength += currentCharWidth;
                 }
             }
             resultString.Add(text.Substring(startPos));
@@ -437,10 +503,12 @@ namespace iText.Kernel.Font {
             return PdfFontFactory.CheckFontDictionary(fontDic, fontType, true);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1")]
         protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic) {
             return CheckTrueTypeFontDictionary(fontDic, true);
         }
 
+        [System.ObsoleteAttribute(@"Will be removed in 7.1")]
         protected internal virtual bool CheckTrueTypeFontDictionary(PdfDictionary fontDic, bool isException) {
             if (fontDic == null || fontDic.Get(PdfName.Subtype) == null || !(fontDic.Get(PdfName.Subtype).Equals(PdfName
                 .TrueType) || fontDic.Get(PdfName.Subtype).Equals(PdfName.Type1))) {
@@ -554,6 +622,10 @@ namespace iText.Kernel.Font {
                 MarkObjectAsIndirect(obj);
                 return false;
             }
+        }
+
+        public override String ToString() {
+            return "PdfFont{" + "fontProgram=" + fontProgram + '}';
         }
     }
 }

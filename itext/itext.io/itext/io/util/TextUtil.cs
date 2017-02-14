@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using iText.IO.Font.Otf;
 
 namespace iText.IO.Util {
     /// <summary>This file is a helper class for internal usage only.</summary>
@@ -52,6 +54,19 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </remarks>
     public sealed class TextUtil {
+
+        private static HashSet<char> javaNonUnicodeCategoryWhiteSpaceChars = new HashSet<char> {
+                '\t', //  U+0009 HORIZONTAL TABULATION
+                '\n', // U+000A LINE FEED
+                '\u000B', // U+000B VERTICAL TABULATION
+                '\f', // U+000C FORM FEED
+                '\r', // U+000D CARRIAGE RETURN
+                '\u001C', // U+001C FILE SEPARATOR
+                '\u001D', // U+001D GROUP SEPARATOR
+                '\u001E', // U+001E RECORD SEPARATOR
+                '\u001F', // U+001F UNIT SEPARATOR
+            };
+
         private TextUtil() {
         }
 
@@ -182,5 +197,80 @@ namespace iText.IO.Util {
             codePoint -= 0x10000;
             return new char[] { (char)(codePoint / 0x400 + 0xd800), (char)(codePoint % 0x400 + 0xdc00) };
         }
+
+        public static bool IsWhiteSpace(char ch) {
+            if (ch == '\u00A0' || ch == '\u2007' || ch == '\u202F') {
+                // non-breaking space char
+                return false;
+            }
+
+            UnicodeCategory category = CharUnicodeInfo.GetUnicodeCategory(ch);
+            if (category == UnicodeCategory.SpaceSeparator || category == UnicodeCategory.LineSeparator ||
+                category == UnicodeCategory.ParagraphSeparator) {
+
+                return true;
+            }
+
+            return javaNonUnicodeCategoryWhiteSpaceChars.Contains(ch);
+        }
+
+
+        static int[] ignorableCodePoints = new int[]
+                {
+                    0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006, 0x0007, 0x0008, 0x000E, 0x000F, 0x0010,
+                    0x0011, 0x0012, 0x0013, 0x0014, 0x0015, 0x0016, 0x0017, 0x0018, 0x0019, 0x001A, 0x001B, 0x007F,
+                    0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087, 0x0088, 0x0089, 0x008A, 0x008B,
+                    0x008C, 0x008D, 0x008E, 0x008F, 0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
+                    0x0098, 0x0099, 0x009A, 0x009B, 0x009C, 0x009D, 0x009E, 0x009F, 0x00AD, 0x0600, 0x0601, 0x0602,
+                    0x0603, 0x06DD, 0x070F, 0x17B4, 0x17B5, 0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0x202A, 0x202B,
+                    0x202C, 0x202D, 0x202E, 0x2060, 0x2061, 0x2062, 0x2063, 0x2064, 0x206A, 0x206B, 0x206C, 0x206D,
+                    0x206E, 0x206F, 0xFEFF, 0xFFF9, 0xFFFa, 0xFFFb, 0x110BD, 0x1D173, 0x1D174, 0x1D175, 0x1D176,
+                    0x1D177, 0x1D178, 0x1D179, 0x1D17A, 0xE0001
+                };
+        /// <summary>
+        /// Determines if the specified character (Unicode code point) should be regarded
+        /// as an ignorable character in a Java identifier or a Unicode identifier.
+        /// </summary>
+        public static bool IsIdentifierIgnorable(int codePoint)
+        {
+            if (codePoint >= 0xE0020) return codePoint <= 0xE007F;
+            return Array.BinarySearch(ignorableCodePoints, codePoint) > -1;
+        }
+
+        /// <summary>
+        /// Determines if represented Glyph is '\n' or '\r' character.
+        /// </summary>
+        public static bool IsNewLine(Glyph glyph)
+        {
+            int unicode = glyph.GetUnicode();
+            return unicode == '\n' || unicode == '\r';
+        }
+
+        /// <summary>
+        /// Determines if represented Glyph is space or whitespace character.
+        /// </summary>
+        public static bool IsSpaceOrWhitespace(Glyph glyph)
+        {
+            //\r, \n, and \t are whitespaces, but not space chars.
+            //\u00a0 is SpaceChar, but not whitespace.
+            return IsWhiteSpace((char)glyph.GetUnicode()) || char.IsSeparator((char)glyph.GetUnicode());
+        }
+
+        /// <summary>
+        /// Determines if represented Glyph is ' ' (SPACE) character.
+        /// </summary>
+        public static bool IsUni0020(Glyph g)
+        {
+            return g.GetUnicode() == ' ';
+        }
+
+        public static bool IsNonPrintable(int c) {
+            return IsIdentifierIgnorable(c) || c == '\u00AD';
+        }
+
+        public static bool IsWhitespaceOrNonPrintable(int code) {
+            return IsWhiteSpace((char)code) || IsNonPrintable(code);
+        }
+
     }
 }

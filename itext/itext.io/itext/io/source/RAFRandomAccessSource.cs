@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -110,7 +110,7 @@ namespace iText.IO.Source {
         /// <summary>Closes the underlying RandomAccessFile</summary>
         /// <exception cref="System.IO.IOException"/>
         public virtual void Close() {
-            raf.Close();
+            raf.Dispose();
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -72,6 +72,18 @@ namespace iText.Layout.Element {
         public ListItem(Image image)
             : this() {
             Add(image);
+        }
+
+        public override T1 GetDefaultProperty<T1>(int property) {
+            switch (property) {
+                case Property.LIST_SYMBOL_POSITION: {
+                    return (T1)(Object)ListSymbolPosition.DEFAULT;
+                }
+
+                default: {
+                    return base.GetDefaultProperty<T1>(property);
+                }
+            }
         }
 
         /// <summary>Sets the list item symbol to be used.</summary>

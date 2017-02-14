@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -103,8 +103,9 @@ namespace iText.Kernel.Font {
             FillFontDescriptor(fontProgram, fontDescriptor);
             int dw = (fontDescriptor != null && fontDescriptor.ContainsKey(PdfName.DW)) ? (int)fontDescriptor.GetAsInt
                 (PdfName.DW) : 1000;
+            IntHashtable widths = null;
             if (toUnicode != null) {
-                IntHashtable widths = FontUtil.ConvertCompositeWidthsArray(fontDictionary.GetAsArray(PdfName.W));
+                widths = FontUtil.ConvertCompositeWidthsArray(fontDictionary.GetAsArray(PdfName.W));
                 fontProgram.avgWidth = 0;
                 foreach (int cid in toUnicode.GetCodes()) {
                     int width = widths.ContainsKey(cid) ? widths.Get(cid) : dw;
@@ -120,7 +121,8 @@ namespace iText.Kernel.Font {
                 }
             }
             if (fontProgram.codeToGlyph.Get(0) == null) {
-                fontProgram.codeToGlyph[0] = new Glyph(0, dw, -1);
+                fontProgram.codeToGlyph[0] = new Glyph(0, widths != null && widths.ContainsKey(0) ? widths.Get(0) : dw, -1
+                    );
             }
             return fontProgram;
         }

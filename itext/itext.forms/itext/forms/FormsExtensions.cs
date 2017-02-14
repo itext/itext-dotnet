@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace iText.Forms {
@@ -110,6 +111,15 @@ namespace iText.Forms {
 
         public static void Write(this Stream stream, byte[] buffer) {
             stream.Write(buffer, 0, buffer.Length);
+        }
+
+        public static Assembly GetAssembly(this Type type)
+        {
+#if !NETSTANDARD1_6
+            return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
         }
     }
 }

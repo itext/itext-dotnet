@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -165,9 +165,9 @@ namespace iText.IO.Codec {
                 strHsh_[q] = HASH_FREE;
             }
             int w = (1 << codesize) + RES_CODES;
-            for (int q_1 = 0; q_1 < w; q_1++) {
+            for (int q = 0; q < w; q++) {
                 //AddCharString((short) 0xFFFF, (byte) q);    // init with no prefix
-                AddCharString((short)-1, (byte)q_1);
+                AddCharString((short)-1, (byte)q);
             }
         }
 

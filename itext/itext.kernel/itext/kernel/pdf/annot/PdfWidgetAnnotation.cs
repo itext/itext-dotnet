@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,14 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfWidgetAnnotation : PdfAnnotation {
+        public const int HIDDEN = 1;
+
+        public const int VISIBLE_BUT_DOES_NOT_PRINT = 2;
+
+        public const int HIDDEN_BUT_PRINTABLE = 3;
+
+        public const int VISIBLE = 4;
+
         public PdfWidgetAnnotation(Rectangle rect)
             : base(rect) {
  {
@@ -155,6 +163,37 @@ namespace iText.Kernel.Pdf.Annot {
                     parent.Remove(PdfName.Kids);
                 }
             }
+        }
+
+        /// <summary>
+        /// Set the visibility flags of the Widget annotation
+        /// Options are: HIDDEN, HIDDEN_BUT_PRINTABLE, VISIBLE, VISIBLE_BUT_DOES_NOT_PRINT
+        /// </summary>
+        /// <param name="visibility">visibility option</param>
+        /// <returns>the edited widget annotation</returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfWidgetAnnotation SetVisibility(int visibility) {
+            switch (visibility) {
+                case HIDDEN: {
+                    GetPdfObject().Put(PdfName.F, new PdfNumber(PdfAnnotation.PRINT | PdfAnnotation.HIDDEN));
+                    break;
+                }
+
+                case VISIBLE_BUT_DOES_NOT_PRINT: {
+                    break;
+                }
+
+                case HIDDEN_BUT_PRINTABLE: {
+                    GetPdfObject().Put(PdfName.F, new PdfNumber(PdfAnnotation.PRINT | PdfAnnotation.NO_VIEW));
+                    break;
+                }
+
+                case VISIBLE:
+                default: {
+                    GetPdfObject().Put(PdfName.F, new PdfNumber(PdfAnnotation.PRINT));
+                    break;
+                }
+            }
+            return this;
         }
     }
 }

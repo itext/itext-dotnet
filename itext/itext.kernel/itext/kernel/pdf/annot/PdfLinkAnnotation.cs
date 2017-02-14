@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.IO.Log;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
@@ -48,6 +49,9 @@ using iText.Kernel.Pdf.Navigation;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfLinkAnnotation : PdfAnnotation {
+        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Annot.PdfLinkAnnotation
+            ));
+
         /// <summary>Highlight modes.</summary>
         public static readonly PdfName None = PdfName.N;
 
@@ -74,11 +78,20 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfObject destination) {
+            if (GetPdfObject().ContainsKey(PdfName.A)) {
+                GetPdfObject().Remove(PdfName.A);
+                logger.Warn(iText.IO.LogMessageConstant.DESTINATION_NOT_PERMITTED_WHEN_ACTION_IS_SET);
+            }
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination);
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetDestination(PdfDestination destination) {
-            return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.Dest, destination.GetPdfObject());
+            return SetDestination(destination.GetPdfObject());
+        }
+
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation RemoveDestination() {
+            GetPdfObject().Remove(PdfName.Dest);
+            return this;
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation SetAction(PdfDictionary action) {
@@ -86,7 +99,16 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public override PdfAnnotation SetAction(PdfAction action) {
+            if (GetDestinationObject() != null) {
+                RemoveDestination();
+                logger.Warn(iText.IO.LogMessageConstant.ACTION_WAS_SET_TO_LINK_ANNOTATION_WITH_DESTINATION);
+            }
             return (iText.Kernel.Pdf.Annot.PdfLinkAnnotation)Put(PdfName.A, action.GetPdfObject());
+        }
+
+        public virtual iText.Kernel.Pdf.Annot.PdfLinkAnnotation RemoveAction() {
+            GetPdfObject().Remove(PdfName.A);
+            return this;
         }
 
         public virtual PdfName GetHighlightMode() {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -89,10 +89,14 @@ namespace iText.IO.Font {
         /// <summary>Italic font style.</summary>
         public const int ITALIC = 2;
 
-        /// <summary>Underline font style.</summary>
+        /// <summary>Deprecated.</summary>
+        /// <remarks>Deprecated. Will be removed in 7.1</remarks>
+        [Obsolete]
         public const int UNDERLINE = 4;
 
-        /// <summary>Strikethru font style.</summary>
+        /// <summary>Deprecated.</summary>
+        /// <remarks>Deprecated. Will be removed in 7.1</remarks>
+        [Obsolete]
         public const int STRIKETHRU = 8;
 
         /// <summary>Bold-Italic font style.</summary>

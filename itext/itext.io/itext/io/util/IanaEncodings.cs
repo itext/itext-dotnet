@@ -5,7 +5,7 @@ using System.Text;
  * 
  *
  * This file is part of the iText project.
- * Copyright (c) 1998-2016 iText Group NV
+ * Copyright (c) 1998-2017 iText Group NV
  * Authors: Bruno Lowagie, Paulo Soares, et al.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -521,7 +521,7 @@ namespace iText.IO.Util {
         }
         
         public static int GetEncodingNumber(string name) {
-            name = name.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            name = name.ToUpperInvariant();
             if (map.ContainsKey(name))
                 return map[name];
             else
@@ -529,7 +529,7 @@ namespace iText.IO.Util {
         }
 
         public static Encoding GetEncodingEncoding(string name) {
-            String nameU = name.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            String nameU = name.ToUpperInvariant();
             if (nameU.Equals("UNICODEBIGUNMARKED"))
                 return new UnicodeEncoding(true, false);
             if (nameU.Equals("UNICODEBIG"))
@@ -540,9 +540,9 @@ namespace iText.IO.Util {
                 return new UnicodeEncoding(false, true);
             Encoding enc;
             if (map.ContainsKey(nameU))
-                enc = Encoding.GetEncoding(map[nameU], new EncoderReplacementFallback(""), new DecoderReplacementFallback());
+                enc = EncodingUtil.GetEncoding(map[nameU], new EncoderReplacementFallback(""), new DecoderReplacementFallback());
             else 
-                enc = Encoding.GetEncoding(name, new EncoderReplacementFallback(""), new DecoderReplacementFallback());
+                enc = EncodingUtil.GetEncoding(name, new EncoderReplacementFallback(""), new DecoderReplacementFallback());
             return enc;
         }
     }

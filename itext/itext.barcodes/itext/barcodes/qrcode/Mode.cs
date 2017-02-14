@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -171,14 +171,17 @@ namespace iText.Barcodes.Qrcode {
             return characterCountBitsForVersions[offset];
         }
 
+        /// <returns>the bits of the mode</returns>
         public int GetBits() {
             return bits;
         }
 
+        /// <returns>the name of the mode.</returns>
         public String GetName() {
             return name;
         }
 
+        /// <returns>the name of the mode.</returns>
         public override String ToString() {
             return name;
         }

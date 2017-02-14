@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -205,6 +205,11 @@ namespace iText.Barcodes.Dmcode {
             }
         }
 
+        /// <summary>Calculates the error correction code for the given parameters.</summary>
+        /// <param name="wd">bytearray containing the data</param>
+        /// <param name="nd">size of the data</param>
+        /// <param name="datablock">size of a datablock</param>
+        /// <param name="nc">size of a errorblock</param>
         public static void GenerateECC(byte[] wd, int nd, int datablock, int nc) {
             int blocks = (nd + 2) / datablock;
             int b;

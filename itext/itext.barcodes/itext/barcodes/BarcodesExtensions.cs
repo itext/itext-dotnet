@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,12 +44,13 @@ address: sales@itextpdf.com
 
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
+using iText.IO.Util;
 
 namespace iText.Barcodes {
     internal static class BarcodesExtensions {
         public static byte[] GetBytes(this String str, String encoding) {
-            return Encoding.GetEncoding(encoding).GetBytes(str);
+            return EncodingUtil.GetEncoding(encoding).GetBytes(str);
         }
 
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
@@ -70,6 +71,14 @@ namespace iText.Barcodes {
             }
 
             return value;
+        }
+
+        public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
+            return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
         }
     }
 }

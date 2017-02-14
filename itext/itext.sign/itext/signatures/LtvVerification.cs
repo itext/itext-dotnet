@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -368,14 +368,14 @@ namespace iText.Signatures {
                     crl.Add(ps);
                     crls.Add(ps);
                 }
-                foreach (byte[] b_1 in validated.Get(vkey).ocsps) {
-                    PdfStream ps = new PdfStream(b_1);
+                foreach (byte[] b in validated.Get(vkey).ocsps) {
+                    PdfStream ps = new PdfStream(b);
                     ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
                     ocsp.Add(ps);
                     ocsps.Add(ps);
                 }
-                foreach (byte[] b_2 in validated.Get(vkey).certs) {
-                    PdfStream ps = new PdfStream(b_2);
+                foreach (byte[] b in validated.Get(vkey).certs) {
+                    PdfStream ps = new PdfStream(b);
                     ps.SetCompressionLevel(CompressionConstants.DEFAULT_COMPRESSION);
                     ps.MakeIndirect(document);
                     cert.Add(ps);
@@ -431,8 +431,7 @@ namespace iText.Signatures {
             foreach (byte b in bytes) {
                 buf.AppendHex(b);
             }
-            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpper(System.Globalization.CultureInfo.InvariantCulture
-                );
+            return PdfEncodings.ConvertToString(buf.ToByteArray(), null).ToUpperInvariant();
         }
     }
 }

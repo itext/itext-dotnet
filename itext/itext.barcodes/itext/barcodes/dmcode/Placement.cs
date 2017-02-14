@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,10 @@ namespace iText.Barcodes.Dmcode {
         private Placement() {
         }
 
+        /// <summary>Execute the placement</summary>
+        /// <param name="nrow">number of rows</param>
+        /// <param name="ncol">number of columns</param>
+        /// <returns>array containing appropriate values for ECC200</returns>
         public static short[] DoPlacement(int nrow, int ncol) {
             int key = nrow * 1000 + ncol;
             short[] pc = cache.Get(key);

@@ -13,7 +13,7 @@ namespace Org.BouncyCastle.Crypto.Engines
     * This implementation is set to work with a 64 bit word size.</p>
     */
     public class RC564Engine
-		: IBlockCipher
+        : IBlockCipher
     {
         private static readonly int wordSize = 64;
         private static readonly int bytesPerWord = wordSize / 8;
@@ -58,9 +58,9 @@ namespace Org.BouncyCastle.Crypto.Engines
         }
 
         public virtual bool IsPartialBlockOkay
-		{
-			get { return false; }
-		}
+        {
+            get { return false; }
+        }
 
         public virtual int GetBlockSize()
         {
@@ -79,7 +79,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             bool             forEncryption,
             ICipherParameters    parameters)
         {
-            if (!(typeof(RC5Parameters).IsInstanceOfType(parameters)))
+            if (!(parameters is RC5Parameters))
             {
                 throw new ArgumentException("invalid parameter passed to RC564 init - " + Platform.GetTypeName(parameters));
             }
@@ -100,7 +100,7 @@ namespace Org.BouncyCastle.Crypto.Engines
             int     outOff)
         {
             return (forEncryption) ? EncryptBlock(input, inOff, output, outOff)
-                                        : DecryptBlock(input, inOff, output, outOff);
+                : DecryptBlock(input, inOff, output, outOff);
         }
 
         public virtual void Reset()
@@ -247,7 +247,7 @@ namespace Org.BouncyCastle.Crypto.Engines
         private long RotateLeft(long x, long y) {
             return ((long) (    (ulong) (x << (int) (y & (wordSize-1))) |
                                 ((ulong) x >> (int) (wordSize - (y & (wordSize-1)))))
-                   );
+            );
         }
 
         /**
@@ -263,7 +263,7 @@ namespace Org.BouncyCastle.Crypto.Engines
         private long RotateRight(long x, long y) {
             return ((long) (    ((ulong) x >> (int) (y & (wordSize-1))) |
                                 (ulong) (x << (int) (wordSize - (y & (wordSize-1)))))
-                   );
+            );
         }
 
         private long BytesToWord(

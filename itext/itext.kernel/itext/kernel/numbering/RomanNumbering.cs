@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,7 @@ namespace iText.Kernel.Numbering {
         /// <summary>Returns an upper case roman representation of an integer.</summary>
         /// <param name="number">a number to be converted to roman notation.</param>
         public static String ToRomanUpperCase(int number) {
-            return Convert(number).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            return Convert(number).ToUpperInvariant();
         }
 
         /// <summary>Returns a roman representation of an integer.</summary>

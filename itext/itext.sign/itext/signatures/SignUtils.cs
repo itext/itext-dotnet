@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -52,6 +53,7 @@ using System.Text;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
@@ -103,13 +105,15 @@ namespace iText.Signatures {
 
         internal static Stream GetHttpResponseForOcspRequest(byte[] request, Uri urlt) {
             HttpWebRequest con = (HttpWebRequest) WebRequest.Create(urlt);
+#if !NETSTANDARD1_6
             con.ContentLength = request.Length;
+#endif
             con.ContentType = "application/ocsp-request";
             con.Accept = "application/ocsp-response";
             con.Method = "POST";
             Stream outp = con.GetRequestStream();
             outp.Write(request, 0, request.Length);
-            outp.Close();
+            outp.Dispose();
             HttpWebResponse response = (HttpWebResponse) con.GetResponse();
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new PdfException(PdfException.InvalidHttpResponse1).SetMessageParams(response.StatusCode);
@@ -184,22 +188,24 @@ namespace iText.Signatures {
             } catch (Exception e) {
                 throw new PdfException(PdfException.FailedToGetTsaResponseFrom1).SetMessageParams(tsaUrl);
             }
+#if !NETSTANDARD1_6
             con.ContentLength = requestBytes.Length;
+#endif
             con.ContentType = "application/timestamp-query";
             con.Method = "POST";
             if ((tsaUsername != null) && !tsaUsername.Equals("")) {
                 string authInfo = tsaUsername + ":" + tsaPassword;
-                authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo), Base64FormattingOptions.None);
+                authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
                 con.Headers["Authorization"] = "Basic " + authInfo;
             }
             Stream outp = con.GetRequestStream();
             outp.Write(requestBytes, 0, requestBytes.Length);
-            outp.Close();
+            outp.Dispose();
             HttpWebResponse httpWebResponse = (HttpWebResponse) con.GetResponse();
 
             TsaResponse response = new TsaResponse();
             response.tsaResponseStream = httpWebResponse.GetResponseStream();
-            response.encoding = httpWebResponse.ContentEncoding;
+            response.encoding = httpWebResponse.Headers[HttpResponseHeader.ContentEncoding];
             return response;
         }
 
@@ -229,6 +235,10 @@ namespace iText.Signatures {
                 return true;
             }
             return false;
+        }
+
+        internal static IEnumerable CreateSigPolicyQualifiers(params SigPolicyQualifierInfo[] sigPolicyQualifierInfo) {
+            return sigPolicyQualifierInfo;
         }
 
         internal static DateTime GetTimeStampDate(TimeStampToken timeStampToken) {

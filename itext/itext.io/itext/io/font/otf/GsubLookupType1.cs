@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -97,8 +97,8 @@ namespace iText.IO.Font.Otf {
                         substitute[k] = openReader.rf.ReadUnsignedShort();
                     }
                     IList<int> coverageGlyphIds = openReader.ReadCoverageFormat(subTableLocation + coverage);
-                    for (int k_1 = 0; k_1 < glyphCount; ++k_1) {
-                        substMap.Put(coverageGlyphIds[k_1], substitute[k_1]);
+                    for (int k = 0; k < glyphCount; ++k) {
+                        substMap.Put(coverageGlyphIds[k], substitute[k]);
                     }
                 }
                 else {

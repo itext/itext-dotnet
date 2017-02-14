@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -182,7 +182,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetAttributes(PdfObject attributes) {
-            GetPdfObject().Put(PdfName.A, attributes);
+            Put(PdfName.A, attributes);
         }
 
         public virtual PdfString GetLang() {
@@ -190,7 +190,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetLang(PdfString lang) {
-            GetPdfObject().Put(PdfName.Lang, lang);
+            Put(PdfName.Lang, lang);
         }
 
         public virtual PdfString GetAlt() {
@@ -198,7 +198,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetAlt(PdfString alt) {
-            GetPdfObject().Put(PdfName.Alt, alt);
+            Put(PdfName.Alt, alt);
         }
 
         public virtual PdfString GetActualText() {
@@ -206,7 +206,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetActualText(PdfString actualText) {
-            GetPdfObject().Put(PdfName.ActualText, actualText);
+            Put(PdfName.ActualText, actualText);
         }
 
         public virtual PdfString GetE() {
@@ -214,7 +214,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetE(PdfString e) {
-            GetPdfObject().Put(PdfName.E, e);
+            Put(PdfName.E, e);
         }
 
         public virtual PdfName GetRole() {
@@ -222,7 +222,7 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetRole(PdfName role) {
-            GetPdfObject().Put(PdfName.S, role);
+            Put(PdfName.S, role);
         }
 
         public virtual iText.Kernel.Pdf.Tagging.PdfStructElem AddKid(iText.Kernel.Pdf.Tagging.PdfStructElem kid) {
@@ -264,6 +264,7 @@ namespace iText.Kernel.Pdf.Tagging {
             else {
                 GetPdfObject().Remove(PdfName.K);
             }
+            SetModified();
             IPdfStructElem removedKid = ConvertPdfObjectToIPdfStructElem(k);
             if (removedKid is PdfMcr) {
                 GetDocument().GetStructTreeRoot().GetParentTreeHandler().UnregisterMcr((PdfMcr)removedKid);
@@ -364,6 +365,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual iText.Kernel.Pdf.Tagging.PdfStructElem Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
@@ -408,8 +410,10 @@ namespace iText.Kernel.Pdf.Tagging {
                     a.Add(index, kid);
                 }
             }
+            parent.SetModified();
             if (kid is PdfDictionary && IsStructElem((PdfDictionary)kid)) {
                 ((PdfDictionary)kid).Put(PdfName.P, parent);
+                kid.SetModified();
             }
         }
 
@@ -479,6 +483,7 @@ namespace iText.Kernel.Pdf.Tagging {
                 GetPdfObject().Remove(PdfName.K);
                 removedIndex = 0;
             }
+            SetModified();
             return removedIndex;
         }
 

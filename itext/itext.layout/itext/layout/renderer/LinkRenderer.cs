@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,9 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
-using iText.Kernel.Pdf.Annot;
+using iText.IO.Log;
 using iText.Layout.Element;
 
 namespace iText.Layout.Renderer {
@@ -76,19 +74,16 @@ namespace iText.Layout.Renderer {
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.LinkRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
             base.Draw(drawContext);
             bool isRelativePosition = IsRelativePosition();
             if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(false);
+                ApplyRelativePositioningTranslation(false);
             }
-            PdfLinkAnnotation linkAnnotation = ((Link)modelElement).GetLinkAnnotation();
-            Rectangle pdfBBox = CalculateAbsolutePdfBBox();
-            linkAnnotation.SetRectangle(new PdfArray(pdfBBox));
-            if (isRelativePosition) {
-                ApplyAbsolutePositioningTranslation(true);
-            }
-            PdfPage page = drawContext.GetDocument().GetPage(occupiedArea.GetPageNumber());
-            page.AddAnnotation(linkAnnotation);
         }
 
         public override IRenderer GetNextRenderer() {

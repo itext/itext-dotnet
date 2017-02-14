@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -148,23 +148,23 @@ namespace iText.Kernel.Pdf.Layer {
             GetPdfObject().Put(PdfName.D, d);
             IList<PdfLayer> docOrder = new List<PdfLayer>(layers);
             for (int i = 0; i < docOrder.Count; i++) {
-                PdfLayer layer_1 = docOrder[i];
-                if (layer_1.GetParent() != null) {
-                    docOrder.Remove(layer_1);
+                PdfLayer layer = docOrder[i];
+                if (layer.GetParent() != null) {
+                    docOrder.Remove(layer);
                     i--;
                 }
             }
             PdfArray order = new PdfArray();
             foreach (Object element in docOrder) {
-                PdfLayer layer_1 = (PdfLayer)element;
-                GetOCGOrder(order, layer_1);
+                PdfLayer layer = (PdfLayer)element;
+                GetOCGOrder(order, layer);
             }
             d.Put(PdfName.Order, order);
             PdfArray off = new PdfArray();
-            foreach (Object element_1 in layers) {
-                PdfLayer layer_1 = (PdfLayer)element_1;
-                if (layer_1.GetTitle() == null && !layer_1.IsOn()) {
-                    off.Add(layer_1.GetIndirectReference());
+            foreach (Object element in layers) {
+                PdfLayer layer = (PdfLayer)element;
+                if (layer.GetTitle() == null && !layer.IsOn()) {
+                    off.Add(layer.GetIndirectReference());
                 }
             }
             if (off.Size() > 0) {
@@ -174,9 +174,9 @@ namespace iText.Kernel.Pdf.Layer {
                 d.Remove(PdfName.OFF);
             }
             PdfArray locked = new PdfArray();
-            foreach (PdfLayer layer_2 in layers) {
-                if (layer_2.GetTitle() == null && layer_2.IsLocked()) {
-                    locked.Add(layer_2.GetIndirectReference());
+            foreach (PdfLayer layer in layers) {
+                if (layer.GetTitle() == null && layer.IsLocked()) {
+                    locked.Add(layer.GetIndirectReference());
                 }
             }
             if (locked.Size() > 0) {

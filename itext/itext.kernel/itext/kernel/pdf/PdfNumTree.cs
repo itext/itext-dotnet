@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -134,20 +134,20 @@ namespace iText.Kernel.Pdf {
                 }
                 skip *= NODE_SIZE;
                 int tt = (numbers.Length + skip - 1) / skip;
-                for (int k_1 = 0; k_1 < tt; ++k_1) {
-                    int offset = k_1 * NODE_SIZE;
+                for (int k = 0; k < tt; ++k) {
+                    int offset = k * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
                     PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
                     PdfArray arr = new PdfArray();
-                    arr.Add(new PdfNumber((int)numbers[k_1 * skip]));
-                    arr.Add(new PdfNumber((int)numbers[Math.Min((k_1 + 1) * skip, numbers.Length) - 1]));
+                    arr.Add(new PdfNumber((int)numbers[k * skip]));
+                    arr.Add(new PdfNumber((int)numbers[Math.Min((k + 1) * skip, numbers.Length) - 1]));
                     dic.Put(PdfName.Limits, arr);
                     arr = new PdfArray();
                     for (; offset < end; ++offset) {
                         arr.Add(kids[offset]);
                     }
                     dic.Put(PdfName.Kids, arr);
-                    kids[k_1] = dic;
+                    kids[k] = dic;
                 }
                 top = tt;
             }

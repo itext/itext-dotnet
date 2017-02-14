@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 
 using System;
-using System.Runtime.CompilerServices;
 
-namespace iText.IO.Log
-{
+namespace iText.IO.Log {
     /// <summary>
     /// LoggerFactory can be used to set a logger. The logger should be created by
     /// implementing <see cref="Logger"/>. In the implementation users can choose how they
@@ -55,24 +53,44 @@ namespace iText.IO.Log
     /// </summary>
     /// <author>redlab_b</author>
     public static class LoggerFactory {
+        private static readonly object lockObj = new object();
 
-        private static ILoggerFactory loggerFactory = new NoOpLoggerFactory();
+        private static ILoggerFactory loggerFactory;
 
         public static ILogger GetLogger(Type klass) {
+            EnsureLoggerFactoryInitialized();
             return loggerFactory.GetLogger(klass);
         }
 
         public static ILogger GetLogger(String name) {
+            EnsureLoggerFactoryInitialized();
             return loggerFactory.GetLogger(name);
         }
 
         public static ILoggerFactory GetILoggerFactory() {
+            EnsureLoggerFactoryInitialized();
             return loggerFactory;
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void BindFactory(ILoggerFactory iLoggerFactory) {
-            loggerFactory = iLoggerFactory;
+            lock (lockObj) {
+                loggerFactory = iLoggerFactory;
+            }
+        }
+
+        private static void EnsureLoggerFactoryInitialized() {
+            if (loggerFactory != null) {
+                return;
+            }
+
+            lock (lockObj) {
+                if (loggerFactory == null) {
+                    Console.Error.WriteLine(
+                        "iText.IO.Log.LoggerFactory: No logger factory was bound. Defaulting to no-operation logger implementation.\n" +
+                        "iText.IO.Log.LoggerFactory: In order to bind a logger factory use iText.IO.Log.LoggerFactory.BindFactory().");
+                    BindFactory(new NoOpLoggerFactory());
+                }
+            }
         }
 
     }

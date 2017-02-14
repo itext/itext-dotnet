@@ -28,7 +28,7 @@ namespace Org.BouncyCastle.Crypto.Generators
         public void Init(
             IDerivationParameters    parameters)
         {
-            if (!(typeof(MgfParameters).IsInstanceOfType(parameters)))
+            if (!(parameters is MgfParameters))
             {
                 throw new ArgumentException("MGF parameters required for MGF1Generator");
             }
@@ -73,31 +73,31 @@ namespace Org.BouncyCastle.Crypto.Generators
             int     outOff,
             int     length)
         {
-			if ((output.Length - length) < outOff)
-			{
-				throw new DataLengthException("output buffer too small");
-			}
+            if ((output.Length - length) < outOff)
+            {
+                throw new DataLengthException("output buffer too small");
+            }
 
-			byte[]  hashBuf = new byte[hLen];
+            byte[]  hashBuf = new byte[hLen];
             byte[]  C = new byte[4];
             int     counter = 0;
 
             digest.Reset();
 
-			if (length > hLen)
-			{
-				do
-				{
-					ItoOSP(counter, C);
+            if (length > hLen)
+            {
+                do
+                {
+                    ItoOSP(counter, C);
 
-					digest.BlockUpdate(seed, 0, seed.Length);
-					digest.BlockUpdate(C, 0, C.Length);
-					digest.DoFinal(hashBuf, 0);
+                    digest.BlockUpdate(seed, 0, seed.Length);
+                    digest.BlockUpdate(C, 0, C.Length);
+                    digest.DoFinal(hashBuf, 0);
 
-					Array.Copy(hashBuf, 0, output, outOff + counter * hLen, hLen);
-				}
-				while (++counter < (length / hLen));
-			}
+                    Array.Copy(hashBuf, 0, output, outOff + counter * hLen, hLen);
+                }
+                while (++counter < (length / hLen));
+            }
 
             if ((counter * hLen) < length)
             {

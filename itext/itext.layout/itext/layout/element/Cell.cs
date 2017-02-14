@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -170,8 +170,7 @@ namespace iText.Layout.Element {
         /// <see cref="BlockElement{T}"/>
         /// </param>
         /// <returns>this Element</returns>
-        public virtual iText.Layout.Element.Cell Add<T>(BlockElement<T> element)
-            where T : IElement {
+        public virtual iText.Layout.Element.Cell Add(IBlockElement element) {
             childElements.Add(element);
             return this;
         }
@@ -183,17 +182,6 @@ namespace iText.Layout.Element {
         /// </param>
         /// <returns>this Element</returns>
         public virtual iText.Layout.Element.Cell Add(Image element) {
-            childElements.Add(element);
-            return this;
-        }
-
-        /// <summary>Adds an embedded table to the cell's contents.</summary>
-        /// <param name="element">
-        /// a nested
-        /// <see cref="Table"/>
-        /// </param>
-        /// <returns>this Element</returns>
-        public virtual iText.Layout.Element.Cell Add(Table element) {
             childElements.Add(element);
             return this;
         }
@@ -246,7 +234,7 @@ namespace iText.Layout.Element {
         }
 
         public override String ToString() {
-            return String.Format("Cell{row={0}, col={1}, rowspan={2}, colspan={3}}", row, col, rowspan, colspan);
+            return String.Format("Cell[row={0}, col={1}, rowspan={2}, colspan={3}]", row, col, rowspan, colspan);
         }
 
         public override PdfName GetRole() {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -159,7 +159,7 @@ namespace iText.Signatures {
         /// <param name="imprint">data imprint to be time-stamped</param>
         /// <returns>encoded, TSA signed data of the timeStampToken</returns>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Bouncycastle.Tsp.TSPException"/>
+        /// <exception cref="Org.BouncyCastle.Tsp.TSPException"/>
         public virtual byte[] GetTimeStampToken(byte[] imprint) {
             byte[] respBytes = null;
             // Setup the time stamp request
@@ -218,8 +218,7 @@ namespace iText.Signatures {
                 baos.Write(buffer, 0, bytesRead);
             }
             byte[] respBytes = baos.ToArray();
-            if (response.encoding != null && response.encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Equals("base64".ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
+            if (response.encoding != null && response.encoding.ToLowerInvariant().Equals("base64".ToLowerInvariant())) {
                 respBytes = System.Convert.FromBase64String(iText.IO.Util.JavaUtil.GetStringForBytes(respBytes, "US-ASCII"
                     ));
             }

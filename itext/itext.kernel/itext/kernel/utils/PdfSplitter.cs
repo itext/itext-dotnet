@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -101,7 +101,7 @@ namespace iText.Kernel.Utils {
             while (currentPage <= numOfPages) {
                 PageRange nextRange = GetNextRange(currentPage, numOfPages, size);
                 splitRanges.Add(nextRange);
-                IList<int> allPages = nextRange.GetAllPages();
+                IList<int> allPages = nextRange.GetQualifyingPageNums(numOfPages);
                 currentPage = (int)allPages[allPages.Count - 1] + 1;
             }
             return ExtractPageRanges(splitRanges);
@@ -204,7 +204,8 @@ namespace iText.Kernel.Utils {
             foreach (PageRange currentPageRange in pageRanges) {
                 PdfDocument currentPdfDocument = CreatePdfDocument(currentPageRange);
                 splitDocuments.Add(currentPdfDocument);
-                pdfDocument.CopyPagesTo(currentPageRange.GetAllPages(), currentPdfDocument);
+                pdfDocument.CopyPagesTo(currentPageRange.GetQualifyingPageNums(pdfDocument.GetNumberOfPages()), currentPdfDocument
+                    );
             }
             return splitDocuments;
         }

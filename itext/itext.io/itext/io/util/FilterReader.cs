@@ -1,7 +1,7 @@
 ﻿/*
  *
  * This file is part of the iText (R) project.
- * Copyright (c) 1998-2016 iText Group NV
+ * Copyright (c) 1998-2017 iText Group NV
  * Authors: Bruno Lowagie, Paulo Soares, et al.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@
  * address: sales@itextpdf.com
  */
 
+using System;
 using System.IO;
 
 namespace iText.IO.Util {
@@ -58,27 +59,35 @@ namespace iText.IO.Util {
     /// </summary>
     public abstract class FilterReader : TextReader {
         protected TextReader inp;
+        private Object lockObj = new Object();
 
         protected FilterReader(TextReader inp) {
-            this.inp = Synchronized(inp);
+            this.inp = inp;
         }
 
         /// <summary>
         /// Reads a single character.
         /// </summary>
         public override int Read() {
-            return inp.Read();
+            lock (lockObj) {
+                return inp.Read();
+            }
         }
 
         /// <summary>
         /// Reads characters into a portion of an array.
         /// </summary>
         public override int Read(char[] cbuf, int off, int len) {
-            return inp.Read(cbuf, off, len);
+            lock (lockObj) {
+                return inp.Read(cbuf, off, len);
+            }
         }
 
-        public override void Close() {
-            inp.Close();
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                inp.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

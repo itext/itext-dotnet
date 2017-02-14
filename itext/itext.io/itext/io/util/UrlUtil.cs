@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+#if NETSTANDARD1_6
+using System.Net.Http;
+#endif
 
 namespace iText.IO.Util {
     /// <summary>
@@ -70,10 +73,15 @@ namespace iText.IO.Util {
             if (url.IsFile) {
                 isp = new FileStream(url.LocalPath, FileMode.Open, FileAccess.Read);
             } else {
+#if !NETSTANDARD1_6
                 WebRequest req = WebRequest.Create(url);
                 req.Credentials = CredentialCache.DefaultCredentials;
                 using (WebResponse res = req.GetResponse())
                 using (Stream rs = res.GetResponseStream()) {
+#else
+                HttpClient client = new HttpClient();
+                using (Stream rs = client.GetStreamAsync(url).Result) {
+#endif
                     isp = new MemoryStream();
                     byte[] buffer = new byte[4096];
                     int read;
@@ -85,6 +93,24 @@ namespace iText.IO.Util {
             }
 
             return isp;
+        }
+
+        /// <summary>
+        /// This method makes a normalized URI from a given filename. 
+        /// </summary>
+        /// <param name="filename">a given filename</param>
+        /// <returns>a valid Uri</returns>
+        public static Uri ToNormalizedURI(String filename) {
+            return ToNormalizedURI(new FileInfo(filename));
+        }
+
+        /// <summary>
+        /// This method makes a normalized URI from a given file. 
+        /// </summary>
+        /// <param name="filename">a given file</param>
+        /// <returns>a valid Uri</returns>
+        public static Uri ToNormalizedURI(FileInfo file) {
+            return new Uri(file.FullName);
         }
     }
 }

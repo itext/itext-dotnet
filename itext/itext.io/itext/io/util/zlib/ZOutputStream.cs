@@ -81,32 +81,34 @@ namespace System.util.zlib {
         public sealed override bool CanSeek { get { return false; } }
         public sealed override bool CanWrite { get { return !closed; } }
 
-		public override void Close()
-		{
-			if (this.closed)
-				return;
+	    protected override void Dispose(bool disposing) {
+	        if (disposing) {
+	            if (this.closed)
+	                return;
 
-			try
-			{
-				try
-				{
-					Finish();
-				}
-				catch (IOException)
-				{
-					// Ignore
-				}
-			}
-			finally
-			{
-				this.closed = true;
-				End();
-				output.Close();
-				output = null;
-			}
-		}
+	            try
+	            {
+	                try
+	                {
+	                    Finish();
+	                }
+	                catch (IOException)
+	                {
+	                    // Ignore
+	                }
+	            }
+	            finally
+	            {
+	                this.closed = true;
+	                End();
+	                output.Dispose();
+	                output = null;
+	            }
+	        }
+	        base.Dispose(disposing);
+	    }
 
-		public virtual void End()
+	    public virtual void End()
 		{
 			if (z == null)
 				return;

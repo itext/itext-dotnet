@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -48,6 +48,7 @@ using System.IO;
 using  Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Asn1.Esf;
 using Org.BouncyCastle.Asn1.Ess;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Asn1.Tsp;
@@ -66,6 +67,20 @@ namespace iText.Signatures {
     /// and verifying a PKCS#7 signature.
     /// </summary>
     public class PdfPKCS7 {
+        private SignaturePolicyIdentifier signaturePolicyIdentifier;
+
+        /// <summary>Holds value of property signName.</summary>
+        private String signName;
+
+        /// <summary>Holds value of property reason.</summary>
+        private String reason;
+
+        /// <summary>Holds value of property location.</summary>
+        private String location;
+
+        /// <summary>Holds value of property signDate.</summary>
+        private DateTime signDate;
+
         /// <summary>Assembles all the elements needed to create a signature, except for the data.</summary>
         /// <param name="privKey">the private key</param>
         /// <param name="certChain">the certificate chain</param>
@@ -78,6 +93,8 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException">on error</exception>
         public PdfPKCS7(ICipherParameters privKey, X509Certificate[] certChain, String hashAlgorithm, bool hasRSAdata
             ) {
+            // Encryption provider
+            // Signature info
             // Constructors for creating new signatures
             // message digest
             digestAlgorithmOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
@@ -383,20 +400,14 @@ namespace iText.Signatures {
             }
         }
 
-        /// <summary>Holds value of property signName.</summary>
-        private String signName;
+        public virtual void SetSignaturePolicy(SignaturePolicyInfo signaturePolicy) {
+            this.signaturePolicyIdentifier = signaturePolicy.ToSignaturePolicyIdentifier();
+        }
 
-        /// <summary>Holds value of property reason.</summary>
-        private String reason;
+        public virtual void SetSignaturePolicy(SignaturePolicyIdentifier signaturePolicy) {
+            this.signaturePolicyIdentifier = signaturePolicy;
+        }
 
-        /// <summary>Holds value of property location.</summary>
-        private String location;
-
-        /// <summary>Holds value of property signDate.</summary>
-        private DateTime signDate;
-
-        // Encryption provider
-        // Signature info
         /// <summary>Getter for property sigName.</summary>
         /// <returns>Value of property sigName.</returns>
         public virtual String GetSignName() {
@@ -621,7 +632,7 @@ namespace iText.Signatures {
                 MemoryStream bOut = new MemoryStream();
                 Asn1OutputStream dout = new Asn1OutputStream(bOut);
                 dout.WriteObject(new DerOctetString(digest));
-                dout.Close();
+                dout.Dispose();
                 return bOut.ToArray();
             }
             catch (Exception e) {
@@ -697,9 +708,9 @@ namespace iText.Signatures {
                 // Get all the certificates
                 //
                 v = new Asn1EncodableVector();
-                foreach (Object element_1 in certs) {
-                    Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(((X509Certificate)element_1).GetEncoded(
-                        )));
+                foreach (Object element in certs) {
+                    Asn1InputStream tempstream = new Asn1InputStream(new MemoryStream(((X509Certificate)element).GetEncoded())
+                        );
                     v.Add(tempstream.ReadObject());
                 }
                 DerSet dercertificates = new DerSet(v);
@@ -760,7 +771,7 @@ namespace iText.Signatures {
                 MemoryStream bOut = new MemoryStream();
                 Asn1OutputStream dout = new Asn1OutputStream(bOut);
                 dout.WriteObject(new DerSequence(whole));
-                dout.Close();
+                dout.Dispose();
                 return bOut.ToArray();
             }
             catch (Exception e) {
@@ -912,6 +923,10 @@ namespace iText.Signatures {
                     v.Add(new DerSet(new DerSequence(new DerSequence(new DerSequence(aaV2)))));
                     attribute.Add(new DerSequence(v));
                 }
+                if (signaturePolicyIdentifier != null) {
+                    attribute.Add(new Org.BouncyCastle.Asn1.Cms.Attribute(Org.BouncyCastle.Asn1.Pkcs.PkcsObjectIdentifiers.IdAAEtsSigPolicyID
+                        , new DerSet(signaturePolicyIdentifier)));
+                }
                 return new DerSet(attribute);
             }
             catch (Exception e) {
@@ -1059,13 +1074,13 @@ namespace iText.Signatures {
             while (found) {
                 X509Certificate v = (X509Certificate)cc[cc.Count - 1];
                 found = false;
-                for (int k_1 = 0; k_1 < oc.Count; ++k_1) {
-                    X509Certificate issuer = (X509Certificate)oc[k_1];
+                for (int k = 0; k < oc.Count; ++k) {
+                    X509Certificate issuer = (X509Certificate)oc[k];
                     try {
                         v.Verify(issuer.GetPublicKey());
                         found = true;
-                        cc.Add(oc[k_1]);
-                        oc.JRemoveAt(k_1);
+                        cc.Add(oc[k]);
+                        oc.JRemoveAt(k);
                         break;
                     }
                     catch (Exception) {

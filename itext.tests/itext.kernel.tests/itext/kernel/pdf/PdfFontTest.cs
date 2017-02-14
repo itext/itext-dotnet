@@ -1,7 +1,48 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2017 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Collections.Generic;
 using System.IO;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -16,9 +57,11 @@ namespace iText.Kernel.Pdf {
     public class PdfFontTest : ExtendedITextTest {
         public const int PageCount = 1;
 
-        public static readonly String sourceFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/PdfFontTest/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfFontTest/";
 
-        public static readonly String fontsFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory + "/../../resources/itext/kernel/pdf/fonts/";
+        public static readonly String fontsFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/fonts/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/kernel/pdf/PdfFontTest/";
@@ -29,7 +72,7 @@ namespace iText.Kernel.Pdf {
 
         internal const String pangramme = "Amazingly few discothegues provide jukeboxes" + "but it now while sayingly ABEFGHJKNOPQRSTUWYZ?";
 
-        [NUnit.Framework.TestFixtureSetUp]
+        [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
             CreateDestinationFolder(destinationFolder);
         }
@@ -576,7 +619,7 @@ namespace iText.Kernel.Pdf {
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
             PdfDictionary pdfDictionary = (PdfDictionary)inputPdfDoc1.GetPdfObject(4);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
@@ -604,7 +647,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfFont, 72).ShowText("New Hello world").EndText
@@ -684,7 +727,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello world"
@@ -712,7 +755,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfTrueTypeFont = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello World"
@@ -738,7 +781,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(reader, writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont((PdfDictionary)pdfDoc.GetPdfObject(6));
+            PdfFont pdfTrueTypeFont = pdfDoc.GetFont((PdfDictionary)pdfDoc.GetPdfObject(6));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("New Hello World"
@@ -766,7 +809,7 @@ namespace iText.Kernel.Pdf {
             writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
             PdfDocument pdfDoc = new PdfDocument(writer);
             pdfDoc.GetDocumentInfo().SetAuthor(author).SetCreator(creator).SetTitle(title);
-            PdfFont pdfType1Font = PdfFontFactory.CreateFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
+            PdfFont pdfType1Font = inputPdfDoc1.GetFont(((PdfDictionary)pdfDictionary.CopyTo(pdfDoc)));
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 756).SetFontAndSize(pdfType1Font, 10).ShowText("New MyriadPro-Bold font."
@@ -794,6 +837,34 @@ namespace iText.Kernel.Pdf {
             PdfPage page = pdfDoc.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
+            canvas.Rectangle(100, 500, 100, 100).Fill();
+            canvas.Release();
+            page.Flush();
+            pdfDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TestType1FontUpdateContent2() {
+            String inputFileName1 = sourceFolder + "DocumentWithCMR10Afm.pdf";
+            String filename = destinationFolder + "DocumentWithCMR10Afm2_updated.pdf";
+            String cmpFilename = sourceFolder + "cmp_DocumentWithCMR10Afm2_updated.pdf";
+            PdfReader reader = new PdfReader(inputFileName1);
+            PdfWriter writer = new PdfWriter(filename).SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(reader, writer);
+            PdfDictionary pdfDictionary = (PdfDictionary)pdfDoc.GetPdfObject(4);
+            PdfFont pdfType1Font = pdfDoc.GetFont(pdfDictionary);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfType1Font, 72).ShowText("New Hello world"
+                ).EndText().RestoreState();
+            PdfFont pdfType1Font2 = pdfDoc.GetFont(pdfDictionary);
+            NUnit.Framework.Assert.AreEqual(pdfType1Font, pdfType1Font2);
+            canvas.SaveState().BeginText().MoveText(36, 620).SetFontAndSize(pdfType1Font2, 72).ShowText("New Hello world2"
                 ).EndText().RestoreState();
             canvas.Rectangle(100, 500, 100, 100).Fill();
             canvas.Release();
@@ -838,11 +909,11 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
+        [LogMessage(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE)]
         public virtual void CreateWrongPfb() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
-            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm), null);
+            PdfFont font = PdfFontFactory.CreateFont(FontProgramFactory.CreateType1Font(afm, afm, false), null);
             byte[] streamContent = ((Type1Font)((PdfType1Font)font).GetFontProgram()).GetFontStreamBytes();
             NUnit.Framework.Assert.IsTrue(streamContent == null, "Empty stream content expected");
         }
@@ -853,7 +924,8 @@ namespace iText.Kernel.Pdf {
         public virtual void AutoDetect1() {
             byte[] afm = StreamUtil.InputStreamToArray(new FileStream(fontsFolder + "cmr10.afm", FileMode.Open, FileAccess.Read
                 ));
-            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm) is Type1Font, "Type1 font expected");
+            NUnit.Framework.Assert.IsTrue(FontProgramFactory.CreateFont(afm, false) is Type1Font, "Type1 font expected"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -901,7 +973,24 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(LogMessageConstant.FONT_HAS_INVALID_GLYPH, Count = 131)]
+        public virtual void TestPdfFontFactoryTtc() {
+            String filename = destinationFolder + "testPdfFontFactoryTtc.pdf";
+            String cmpFilename = sourceFolder + "cmp_testPdfFontFactoryTtc.pdf";
+            String txt = "The quick brown fox";
+            PdfDocument doc = new PdfDocument(new PdfWriter(filename));
+            PdfPage page = doc.AddNewPage();
+            PdfFont font = PdfFontFactory.CreateFont(fontsFolder + "uming.ttc,1");
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 680).SetFontAndSize(font, 12).ShowText(txt).EndText().RestoreState
+                ();
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void TestWriteTTC() {
             String filename = destinationFolder + "DocumentWithTTC.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithTTC.pdf";
@@ -1022,10 +1111,81 @@ namespace iText.Kernel.Pdf {
         public virtual void TestSplitString() {
             PdfFont font = PdfFontFactory.CreateFont();
             IList<String> list1 = font.SplitString("Hello", 12f, 10);
-            NUnit.Framework.Assert.IsTrue(list1.Count == 2);
+            NUnit.Framework.Assert.IsTrue(list1.Count == 3);
             IList<String> list2 = font.SplitString("Digitally signed by Dmitry Trusevich\nDate: 2015.10.25 14:43:56 MSK\nReason: Test 1\nLocation: Ghent"
                 , 12f, 176);
             NUnit.Framework.Assert.IsTrue(list2.Count == 5);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void KozminNames() {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "KozMinPro-Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "KozMinPro-Regular".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void HelveticaNames() {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor("Helvetica");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Helvetica");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Helvetica".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "helvetica");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 500);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OtfByStringNames() {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "Puritan2.otf"
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Puritan 2.0 Regular".ToLowerInvariant(
+                ));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Puritan 2.0".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void OtfByStreamNames() {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
+                (new FileStream(fontsFolder + "Puritan2.otf", FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "Puritan2");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Puritan 2.0 Regular".ToLowerInvariant(
+                ));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Puritan 2.0".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Normal");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TtfByStringNames() {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontsFolder + "abserif4_5.ttf"
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Aboriginal Serif".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Aboriginal Serif".ToLowerInvariant()
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TtfByStreamNames() {
+            FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(StreamUtil.InputStreamToArray
+                (new FileStream(fontsFolder + "abserif4_5.ttf", FileMode.Open, FileAccess.Read)));
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontName(), "AboriginalSerif");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFullNameLowerCase(), "Aboriginal Serif".ToLowerInvariant());
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFamilyNameLowerCase(), "Aboriginal Serif".ToLowerInvariant()
+                );
+            NUnit.Framework.Assert.AreEqual(descriptor.GetStyle(), "Regular");
+            NUnit.Framework.Assert.AreEqual(descriptor.GetFontWeight(), 400);
         }
     }
 }

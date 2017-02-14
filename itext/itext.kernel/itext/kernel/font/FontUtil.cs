@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Font;
 using iText.IO.Font.Cmap;
 using iText.IO.Log;
@@ -67,7 +66,7 @@ namespace iText.Kernel.Font {
                 }
                 catch (Exception) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(CMapToUnicode));
-                    logger.Error(LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
+                    logger.Error(iText.IO.LogMessageConstant.UNKNOWN_ERROR_WHILE_PROCESSING_CMAP);
                     cMapToUnicode = CMapToUnicode.EmptyCMapToUnicodeMap;
                 }
             }
@@ -119,9 +118,9 @@ namespace iText.Kernel.Font {
             if (widthsArray == null) {
                 return res;
             }
-            for (int i_1 = 0; i_1 < widthsArray.Size() && first + i_1 < 256; i_1++) {
-                PdfNumber number = widthsArray.GetAsNumber(i_1);
-                res[first + i_1] = number != null ? number.IntValue() : missingWidth;
+            for (int i = 0; i < widthsArray.Size() && first + i < 256; i++) {
+                PdfNumber number = widthsArray.GetAsNumber(i);
+                res[first + i] = number != null ? number.IntValue() : missingWidth;
             }
             return res;
         }

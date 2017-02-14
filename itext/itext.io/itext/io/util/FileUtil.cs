@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@ namespace iText.IO.Util {
         private static int tempFileCounter = 0;
 
         public static String GetFontsDir() {
-            return Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
+            return Path.Combine(Environment.GetEnvironmentVariable("windir"), "fonts");
         }
 
         public static bool FileExists(String path) {
@@ -80,6 +80,8 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    // Guarantee invariant order in all environments
+                    files = files.OrderBy(file => file.Name).ToArray();
                     String[] list = new String[files.Length];
                     for (int i = 0; i < files.Length; i++) {
                         list[i] = files[i].FullName;
@@ -99,6 +101,8 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    // Guarantee invariant order in all environments
+                    files = files.OrderBy(file => file.Name).ToArray();
                     List<FileInfo> list = new List<FileInfo>();
                     foreach (FileInfo f in files) {
                         if (filter.Accept(f)) {
@@ -117,6 +121,8 @@ namespace iText.IO.Util {
                 DirectoryInfo dir = new DirectoryInfo(path);
                 if (dir.Exists) {
                     FileInfo[] files = dir.GetFiles("*.*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                    // Guarantee invariant order in all environments
+                    files = files.OrderBy(file => file.Name).ToArray();
                     var list = new LinkedList<String>();
                     for (int i = 0; i < files.Length; i++) {
                         if (filter.Accept(files[i].Name)) {
@@ -131,7 +137,7 @@ namespace iText.IO.Util {
 
         /// <exception cref="System.ArgumentException"/>
         public static StreamWriter CreatePrintWriter(Stream output, String encoding) {
-            return new StreamWriter(output, Encoding.GetEncoding(encoding));
+            return new StreamWriter(output, EncodingUtil.GetEncoding(encoding));
         }
 
         public static Stream GetBufferedOutputStream(String filename) {
@@ -176,6 +182,18 @@ namespace iText.IO.Util {
             public bool Accept(FileInfo pathname) {
                 return Accept(pathname.Name);
             }
+        }
+
+        public static String GetParentDirectory(String path) {
+            return Directory.GetParent(path).FullName;
+        }
+
+        public static String GetBaseDirectory() {
+#if !NETSTANDARD1_6
+            return AppDomain.CurrentDomain.BaseDirectory;
+#else
+            return AppContext.BaseDirectory;
+#endif
         }
     }
 }

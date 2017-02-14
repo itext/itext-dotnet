@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -128,6 +128,10 @@ namespace iText.Kernel.Pdf {
             else {
                 return iText.IO.Util.JavaUtil.IntegerCompare(minor, o.minor);
             }
+        }
+
+        public override bool Equals(Object obj) {
+            return GetType() == obj.GetType() && CompareTo((iText.Kernel.Pdf.PdfVersion)obj) == 0;
         }
 
         private static iText.Kernel.Pdf.PdfVersion CreatePdfVersion(int major, int minor) {

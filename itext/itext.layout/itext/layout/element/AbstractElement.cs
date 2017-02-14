@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -105,9 +105,9 @@ namespace iText.Layout.Element {
             Object result = base.GetProperty<T1>(property);
             if (styles != null && styles.Count > 0 && result == null && !base.HasProperty(property)) {
                 foreach (Style style in styles) {
-                    result = style.GetProperty<T1>(property);
-                    if (result != null || base.HasProperty(property)) {
-                        break;
+                    T1 foundInStyle = style.GetProperty<T1>(property);
+                    if (foundInStyle != null || style.HasProperty(property)) {
+                        result = foundInStyle;
                     }
                 }
             }
@@ -127,6 +127,12 @@ namespace iText.Layout.Element {
             }
             styles.Add(style);
             return (T)(Object)this;
+        }
+
+        /// <summary>Gets the child elements of this elements</summary>
+        /// <returns>a list of children</returns>
+        public virtual IList<IElement> GetChildren() {
+            return childElements;
         }
 
         protected internal abstract IRenderer MakeNewRenderer();

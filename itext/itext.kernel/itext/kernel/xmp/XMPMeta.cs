@@ -39,7 +39,11 @@ namespace iText.Kernel.XMP {
     /// to a String, byte-array or <code>OutputStream</code>.
     /// </remarks>
     /// <since>20.01.2006</since>
-    public interface XMPMeta : ICloneable {
+    public interface XMPMeta
+#if !NETSTANDARD1_6
+ : ICloneable
+#endif
+ {
         // ---------------------------------------------------------------------------------------------
         // Basic property manipulation functions
         /// <summary>

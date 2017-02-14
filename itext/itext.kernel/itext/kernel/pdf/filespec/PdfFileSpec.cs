@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,17 @@ namespace iText.Kernel.Pdf.Filespec {
                 (doc);
         }
 
+        /// <summary>Embed a file to a PdfDocument.</summary>
+        /// <param name="doc">PdfDocument to add the file to</param>
+        /// <param name="fileStore">byte[] containing the file</param>
+        /// <param name="description">file description</param>
+        /// <param name="fileDisplay">actual file name stored in the pdf</param>
+        /// <param name="mimeType">mime-type of the file</param>
+        /// <param name="fileParameter">Pdfdictionary containing fil parameters</param>
+        /// <param name="afRelationshipValue">AFRelationship key value, @see AFRelationshipValue. If <CODE>null</CODE>, @see AFRelationshipValue.Unspecified will be added.
+        ///     </param>
+        /// <param name="isUnicodeFileName"/>
+        /// <returns>PdfFileSpec containing the file specification of the file as Pdfobject</returns>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, byte[] fileStore
             , String description, String fileDisplay, PdfName mimeType, PdfDictionary fileParameter, PdfName afRelationshipValue
             , bool isUnicodeFileName) {
@@ -84,6 +95,14 @@ namespace iText.Kernel.Pdf.Filespec {
                 );
         }
 
+        /// <param name="doc"/>
+        /// <param name="filePath"/>
+        /// <param name="description"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="mimeType"/>
+        /// <param name="afRelationshipValue"/>
+        /// <param name="isUnicodeFileName"/>
+        /// <returns/>
         /// <exception cref="System.IO.IOException"/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, String filePath
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
@@ -93,6 +112,14 @@ namespace iText.Kernel.Pdf.Filespec {
                 );
         }
 
+        /// <param name="doc"/>
+        /// <param name="is"/>
+        /// <param name="description"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="mimeType"/>
+        /// <param name="afRelationshipValue"/>
+        /// <param name="isUnicodeFileName"/>
+        /// <returns/>
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, Stream @is, String
              description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
             ) {
@@ -101,6 +128,14 @@ namespace iText.Kernel.Pdf.Filespec {
                 );
         }
 
+        /// <param name="doc"/>
+        /// <param name="stream"/>
+        /// <param name="description"/>
+        /// <param name="fileDisplay"/>
+        /// <param name="mimeType"/>
+        /// <param name="afRelationshipValue"/>
+        /// <param name="isUnicodeFileName"/>
+        /// <returns/>
         private static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateEmbeddedFileSpec(PdfDocument doc, PdfStream stream
             , String description, String fileDisplay, PdfName mimeType, PdfName afRelationshipValue, bool isUnicodeFileName
             ) {

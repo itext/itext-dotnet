@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -60,24 +60,28 @@ namespace iText.IO.Util {
         /// </param>
         /// <returns>the decoded data</returns>
         public static byte[] FlateDecode(byte[] input, bool strict) {
-            MemoryStream stream = new MemoryStream(input);
-            ZInflaterInputStream zip = new ZInflaterInputStream(stream);
-            MemoryStream output = new MemoryStream();
-            byte[] b = new byte[strict ? 4092 : 1];
-            try {
-                int n;
-                while ((n = zip.Read(b, 0, b.Length)) > 0) {
-                    output.Write(b, 0, n);
+            using (MemoryStream stream = new MemoryStream(input)) {
+                using (ZInflaterInputStream zip = new ZInflaterInputStream(stream)) {
+                    MemoryStream output = new MemoryStream();
+                    byte[] b = new byte[strict ? 4092 : 1];
+                    try {
+                        int n;
+                        while ((n = zip.Read(b, 0, b.Length)) > 0) {
+                            output.Write(b, 0, n);
+                        }
+                        zip.Dispose();
+                        output.Dispose();
+                        return output.ToArray();
+                    }
+                    catch {
+                        if (strict)
+                            return null;
+                        return output.ToArray();
+                    }
                 }
-                zip.Close();
-                output.Close();
-                return output.ToArray();
-            } catch {
-                if (strict)
-                    return null;
-                return output.ToArray();
             }
         }
+    
 
         /// <summary>Decodes a stream that has the FlateDecode filter.</summary>
         /// <param name="input">the input data</param>

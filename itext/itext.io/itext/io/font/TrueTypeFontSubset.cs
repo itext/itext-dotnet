@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@ namespace iText.IO.Font {
 
         internal static readonly String[] tableNamesCmap = new String[] { "cmap", "OS/2" };
 
-        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2", "name" };
+        internal static readonly String[] tableNamesExtra = new String[] { "cmap", "OS/2", "name", "post" };
 
         internal static readonly int[] entrySelectors = new int[] { 0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3
             , 4, 4, 4, 4, 4 };
@@ -146,9 +146,9 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Does the actual work of subsetting the font.</summary>
+        /// <returns>the subset font</returns>
         /// <exception cref="System.IO.IOException">on error</exception>
         /// <on>error</on>
-        /// <returns>the subset font</returns>
         internal virtual byte[] Process() {
             try {
                 CreateTableDirectory();
@@ -206,14 +206,14 @@ namespace iText.IO.Font {
             WriteFontShort((1 << selector) * 16);
             WriteFontShort(selector);
             WriteFontShort((tablesUsed - (1 << selector)) * 16);
-            foreach (String name_1 in tableNames) {
+            foreach (String name in tableNames) {
                 int len;
-                tableLocation = tableDirectory.Get(name_1);
+                tableLocation = tableDirectory.Get(name);
                 if (tableLocation == null) {
                     continue;
                 }
-                WriteFontString(name_1);
-                switch (name_1) {
+                WriteFontString(name);
+                switch (name) {
                     case "glyf": {
                         WriteFontInt(CalculateChecksum(newGlyfTable));
                         len = glyfTableRealSize;
@@ -236,12 +236,12 @@ namespace iText.IO.Font {
                 WriteFontInt(len);
                 reference += len + 3 & ~3;
             }
-            foreach (String name_2 in tableNames) {
-                tableLocation = tableDirectory.Get(name_2);
+            foreach (String name in tableNames) {
+                tableLocation = tableDirectory.Get(name);
                 if (tableLocation == null) {
                     continue;
                 }
-                switch (name_2) {
+                switch (name) {
                     case "glyf": {
                         System.Array.Copy(newGlyfTable, 0, outFont, fontPtr, newGlyfTable.Length);
                         fontPtr += newGlyfTable.Length;
@@ -272,7 +272,7 @@ namespace iText.IO.Font {
             rf.Seek(directoryOffset);
             int id = rf.ReadInt();
             if (id != 0x00010000) {
-                throw new iText.IO.IOException("1.is.not.a.true.type.file").SetMessageParams(fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.NotAtTrueTypeFile).SetMessageParams(fileName);
             }
             int num_tables = rf.ReadUnsignedShort();
             rf.SkipBytes(6);
@@ -290,13 +290,15 @@ namespace iText.IO.Font {
         protected internal virtual void ReadLoca() {
             int[] tableLocation = tableDirectory.Get("head");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2", "head").SetMessageParams(fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
+                    );
             }
             rf.Seek(tableLocation[TABLE_OFFSET] + HEAD_LOCA_FORMAT_OFFSET);
             locaShortTable = rf.ReadUnsignedShort() == 0;
             tableLocation = tableDirectory.Get("loca");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2", "loca").SetMessageParams(fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("loca", fileName
+                    );
             }
             rf.Seek(tableLocation[TABLE_OFFSET]);
             if (locaShortTable) {
@@ -332,13 +334,13 @@ namespace iText.IO.Font {
             newGlyfTable = new byte[glyfSize];
             int glyfPtr = 0;
             int listGlyf = 0;
-            for (int k_1 = 0; k_1 < newLocaTable.Length; ++k_1) {
-                newLocaTable[k_1] = glyfPtr;
-                if (listGlyf < activeGlyphs.Length && activeGlyphs[listGlyf] == k_1) {
+            for (int k = 0; k < newLocaTable.Length; ++k) {
+                newLocaTable[k] = glyfPtr;
+                if (listGlyf < activeGlyphs.Length && activeGlyphs[listGlyf] == k) {
                     ++listGlyf;
-                    newLocaTable[k_1] = glyfPtr;
-                    int start = locaTable[k_1];
-                    int len = locaTable[k_1 + 1] - start;
+                    newLocaTable[k] = glyfPtr;
+                    int start = locaTable[k];
+                    int len = locaTable[k + 1] - start;
                     if (len > 0) {
                         rf.Seek(tableGlyphOffset + start);
                         rf.ReadFully(newGlyfTable, glyfPtr, len);
@@ -372,7 +374,8 @@ namespace iText.IO.Font {
         protected internal virtual void FlatGlyphs() {
             int[] tableLocation = tableDirectory.Get("glyf");
             if (tableLocation == null) {
-                throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
+                throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
+                    );
             }
             int glyph0 = 0;
             if (!glyphsUsed.Contains(glyph0)) {

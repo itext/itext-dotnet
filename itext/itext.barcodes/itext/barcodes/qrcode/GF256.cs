@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -90,8 +90,8 @@ namespace iText.Barcodes.Qrcode {
                     x ^= primitive;
                 }
             }
-            for (int i_1 = 0; i_1 < 255; i_1++) {
-                logTable[expTable[i_1]] = i_1;
+            for (int i = 0; i < 255; i++) {
+                logTable[expTable[i]] = i;
             }
             // logTable[0] == 0 but this should never be used
             zero = new GF256Poly(this, new int[] { 0 });

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO.Util;
 
 namespace iText.IO.Font {
     /// <summary>Provides methods for creating various types of fonts.</summary>
@@ -51,240 +50,140 @@ namespace iText.IO.Font {
         /// <summary>This is the default value of the <VAR>cached</VAR> variable.</summary>
         private static bool DEFAULT_CACHED = true;
 
+        private static FontRegisterProvider fontRegisterProvider = new FontRegisterProvider();
+
         private FontProgramFactory() {
         }
 
-        private static FontRegisterProvider fontRegisterProvider = new FontRegisterProvider();
-
-        /// <summary>Creates a new font.</summary>
-        /// <remarks>
-        /// Creates a new font. This will always be the default Helvetica font (not embedded).
-        /// This method is introduced because Helvetica is used in many examples.
-        /// </remarks>
-        /// <returns>a BaseFont object (Helvetica, Winansi, not embedded)</returns>
+        /// <summary>Creates a new standard Helvetica font program file.</summary>
+        /// <returns>
+        /// a
+        /// <see cref="FontProgram"/>
+        /// object with Helvetica font description
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont() {
             return CreateFont(FontConstants.HELVETICA);
         }
 
-        /// <summary>Creates a new font.</summary>
+        /// <summary>Creates a new font program.</summary>
         /// <remarks>
-        /// Creates a new font. This font can be one of the 14 built in types,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or collection) or a CJK font from the
-        /// Adobe Asian Font Pack. TrueType fonts and CJK fonts can have an optional style modifier
+        /// Creates a new font program. This font program can be one of the 14 built in fonts,
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or one from collection) or
+        /// a CJK font from the Adobe Asian Font Pack.
+        /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
         /// <p/>
-        /// Besides the common encodings described by name, custom encodings
-        /// can also be made. These encodings will only work for the single byte fonts
-        /// Type1 and TrueType. The encoding string starts with a '#'
-        /// followed by "simple" or "full". If "simple" there is a decimal for the first character position and then a list
-        /// of hex values representing the Unicode codes that compose that encoding.<br />
-        /// The "simple" encoding is recommended for TrueType fonts
-        /// as the "full" encoding risks not matching the character with the right glyph
-        /// if not done with care.<br />
-        /// The "full" encoding is specially aimed at Type1 fonts where the glyphs have to be
-        /// described by non standard names like the Tex math fonts. Each group of three elements
-        /// compose a code position: the one byte code order in decimal or as 'x' (x cannot be the space), the name and the Unicode character
-        /// used to access the glyph. The space must be assigned to character position 32 otherwise
-        /// text justification will not work.
-        /// <p/>
-        /// Example for a "simple" encoding that includes the Unicode
-        /// character space, A, B and ecyrillic:
-        /// <PRE>
-        /// "# simple 32 0020 0041 0042 0454"
-        /// </PRE>
-        /// <p/>
-        /// Example for a "full" encoding for a Type1 Tex font:
-        /// <PRE>
-        /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
-        /// </PRE>
-        /// <p/>
-        /// This method calls:<br />
-        /// <PRE>
-        /// createFont(name, null, true);
-        /// </PRE>
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
-        /// <returns>returns a new font. This font may come from the cache</returns>
+        /// <returns>
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// . This font program may come from the cache
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(String fontProgram) {
             return CreateFont(fontProgram, null, DEFAULT_CACHED);
         }
 
-        /// <summary>Creates a new font.</summary>
+        /// <summary>Creates a new font program.</summary>
         /// <remarks>
-        /// Creates a new font. This font can be one of the 14 built in types,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or collection) or a CJK font from the
-        /// Adobe Asian Font Pack. TrueType fonts and CJK fonts can have an optional style modifier
+        /// Creates a new font program. This font program can be one of the 14 built in fonts,
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or one from collection) or
+        /// a CJK font from the Adobe Asian Font Pack.
+        /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
         /// The fonts are cached and if they already exist they are extracted from the cache,
         /// not parsed again.
         /// <p/>
-        /// Besides the common encodings described by name, custom encodings
-        /// can also be made. These encodings will only work for the single byte fonts
-        /// Type1 and TrueType. The encoding string starts with a '#'
-        /// followed by "simple" or "full". If "simple" there is a decimal for the first character position and then a list
-        /// of hex values representing the Unicode codes that compose that encoding.<br />
-        /// The "simple" encoding is recommended for TrueType fonts
-        /// as the "full" encoding risks not matching the character with the right glyph
-        /// if not done with care.<br />
-        /// The "full" encoding is specially aimed at Type1 fonts where the glyphs have to be
-        /// described by non standard names like the Tex math fonts. Each group of three elements
-        /// compose a code position: the one byte code order in decimal or as 'x' (x cannot be the space), the name and the Unicode character
-        /// used to access the glyph. The space must be assigned to character position 32 otherwise
-        /// text justification will not work.
-        /// <p/>
-        /// Example for a "simple" encoding that includes the Unicode
-        /// character space, A, B and ecyrillic:
-        /// <PRE>
-        /// "# simple 32 0020 0041 0042 0454"
-        /// </PRE>
-        /// <p/>
-        /// Example for a "full" encoding for a Type1 Tex font:
-        /// <PRE>
-        /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
-        /// </PRE>
-        /// <p/>
-        /// This method calls:<br />
-        /// <PRE>
-        /// createFont(name, encoding, embedded, true, null, null);
-        /// </PRE>
         /// </remarks>
         /// <param name="fontProgram">the name of the font or its location on file</param>
-        /// <param name="cached">
-        /// <code>true</code> if the font comes from the cache or is added to
-        /// the cache if new, false if the font is always created new
-        /// </param>
-        /// <returns>returns a new font. This font may come from the cache</returns>
+        /// <param name="cached">whether to to cache this font program after it has been loaded</param>
+        /// <returns>
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// . This font program may come from the cache
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(String fontProgram, bool cached) {
             return CreateFont(fontProgram, null, cached);
         }
 
-        /// <summary>Creates a new font.</summary>
+        /// <summary>Creates a new font program.</summary>
         /// <remarks>
-        /// Creates a new font. This font can be one of the 14 built in types,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or collection) or a CJK font from the
-        /// Adobe Asian Font Pack. TrueType fonts and CJK fonts can have an optional style modifier
+        /// Creates a new font program. This font program can be one of the 14 built in fonts,
+        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a CJK font from the Adobe Asian Font Pack.
+        /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
-        /// Besides the common encodings described by name, custom encodings
-        /// can also be made. These encodings will only work for the single byte fonts
-        /// Type1 and TrueType. The encoding string starts with a '#'
-        /// followed by "simple" or "full". If "simple" there is a decimal for the first character position and then a list
-        /// of hex values representing the Unicode codes that compose that encoding.<br />
-        /// The "simple" encoding is recommended for TrueType fonts
-        /// as the "full" encoding risks not matching the character with the right glyph
-        /// if not done with care.<br />
-        /// The "full" encoding is specially aimed at Type1 fonts where the glyphs have to be
-        /// described by non standard names like the Tex math fonts. Each group of three elements
-        /// compose a code position: the one byte code order in decimal or as 'x' (x cannot be the space), the name and the Unicode character
-        /// used to access the glyph. The space must be assigned to character position 32 otherwise
-        /// text justification will not work.
+        /// The fonts are cached and if they already exist they are extracted from the cache,
+        /// not parsed again.
         /// <p/>
-        /// Example for a "simple" encoding that includes the Unicode
-        /// character space, A, B and ecyrillic:
-        /// <PRE>
-        /// "# simple 32 0020 0041 0042 0454"
-        /// </PRE>
-        /// <p/>
-        /// Example for a "full" encoding for a Type1 Tex font:
-        /// <PRE>
-        /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
-        /// </PRE>
         /// </remarks>
-        /// <param name="fontProgram">
-        /// the true type font or the afm in a byte array
-        /// an exception if the font is not recognized. Note that even if true an exception may be thrown in some circumstances.
-        /// This parameter is useful for FontProgramFactory that may have to check many invalid font names before finding the right one
-        /// </param>
+        /// <param name="fontProgram">the byte contents of the font program</param>
         /// <returns>
-        /// returns a new font. This font may come from the cache but only if cached
-        /// is true, otherwise it will always be created new
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// . This font program may come from the cache
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(byte[] fontProgram) {
             return CreateFont(null, fontProgram, DEFAULT_CACHED);
         }
 
-        /// <summary>Creates a new font.</summary>
+        /// <summary>Creates a new font program.</summary>
         /// <remarks>
-        /// Creates a new font. This font can be one of the 14 built in types,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or collection) or a CJK font from the
-        /// Adobe Asian Font Pack. TrueType fonts and CJK fonts can have an optional style modifier
+        /// Creates a new font program. This font program can be one of the 14 built in fonts,
+        /// a Type 1 font referred to by an AFM or PFM file, a TrueType font (simple only) or
+        /// a CJK font from the Adobe Asian Font Pack.
+        /// TrueType fonts and CJK fonts can have an optional style modifier
         /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
         /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
+        /// the font is embedded. Fonts in TrueType Collections are addressed by index such as "msgothic.ttc,1".
         /// This would get the second font (indexes start at 0), in this case "MS PGothic".
         /// <p/>
-        /// The fonts may or may not be cached depending on the flag <CODE>cached</CODE>.
-        /// If the <CODE>byte</CODE> arrays are present the font will be
-        /// read from them instead of the name. A name is still required to identify
-        /// the font type.
+        /// The fonts are cached and if they already exist they are extracted from the cache,
+        /// not parsed again.
         /// <p/>
-        /// Besides the common encodings described by name, custom encodings
-        /// can also be made. These encodings will only work for the single byte fonts
-        /// Type1 and TrueType. The encoding string starts with a '#'
-        /// followed by "simple" or "full". If "simple" there is a decimal for the first character position and then a list
-        /// of hex values representing the Unicode codes that compose that encoding.<br />
-        /// The "simple" encoding is recommended for TrueType fonts
-        /// as the "full" encoding risks not matching the character with the right glyph
-        /// if not done with care.<br />
-        /// The "full" encoding is specially aimed at Type1 fonts where the glyphs have to be
-        /// described by non standard names like the Tex math fonts. Each group of three elements
-        /// compose a code position: the one byte code order in decimal or as 'x' (x cannot be the space), the name and the Unicode character
-        /// used to access the glyph. The space must be assigned to character position 32 otherwise
-        /// text justification will not work.
-        /// <p/>
-        /// Example for a "simple" encoding that includes the Unicode
-        /// character space, A, B and ecyrillic:
-        /// <PRE>
-        /// "# simple 32 0020 0041 0042 0454"
-        /// </PRE>
-        /// <p/>
-        /// Example for a "full" encoding for a Type1 Tex font:
-        /// <PRE>
-        /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
-        /// </PRE>
         /// </remarks>
-        /// <param name="name">the name of the font or its location on file</param>
-        /// <param name="font">the true type font or the afm in a byte array</param>
-        /// <param name="cached">
-        /// true if the font comes from the cache or is added to
-        /// the cache if new, false if the font is always created new
-        /// </param>
+        /// <param name="fontProgram">the byte contents of the font program</param>
+        /// <param name="cached">whether to to cache this font program</param>
         /// <returns>
-        /// returns a new font. This font may come from the cache but only if cached
-        /// is true, otherwise it will always be created new
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// . This font program may come from the cache
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateFont(String name, byte[] font, bool cached) {
+        public static FontProgram CreateFont(byte[] fontProgram, bool cached) {
+            return CreateFont(null, fontProgram, cached);
+        }
+
+        /// <summary>This method is deprecated and will be made private in 7.1</summary>
+        /// <exception cref="System.IO.IOException"/>
+        [System.ObsoleteAttribute(@"Use CreateFont(byte[], bool) or CreateFont(System.String, bool)")]
+        public static FontProgram CreateFont(String name, byte[] fontProgram, bool cached) {
             String baseName = FontProgram.GetBaseName(name);
             //yes, we trying to find built-in standard font with original name, not baseName.
             bool isBuiltinFonts14 = FontConstants.BUILTIN_FONTS_14.Contains(name);
             bool isCidFont = !isBuiltinFonts14 && FontCache.IsPredefinedCidFont(baseName);
             FontProgram fontFound;
-            String fontKey = null;
+            FontCacheKey fontKey = null;
             if (cached) {
-                if (name != null) {
-                    fontKey = name;
-                }
-                else {
-                    fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(font));
-                }
+                fontKey = CreateFontCacheKey(name, fontProgram);
                 fontFound = FontCache.GetFont(fontKey);
                 if (fontFound != null) {
                     return fontFound;
@@ -292,15 +191,15 @@ namespace iText.IO.Font {
             }
             FontProgram fontBuilt = null;
             if (name == null) {
-                if (font != null) {
+                if (fontProgram != null) {
                     try {
-                        fontBuilt = new TrueTypeFont(font);
+                        fontBuilt = new TrueTypeFont(fontProgram);
                     }
                     catch (Exception) {
                     }
                     if (fontBuilt == null) {
                         try {
-                            fontBuilt = new Type1Font(null, null, font, null);
+                            fontBuilt = new Type1Font(null, null, fontProgram, null);
                         }
                         catch (Exception) {
                         }
@@ -308,24 +207,37 @@ namespace iText.IO.Font {
                 }
             }
             else {
-                if (isBuiltinFonts14 || name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm") ||
-                     name.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm")) {
-                    fontBuilt = new Type1Font(name, null, font, null);
+                if (isBuiltinFonts14 || name.ToLowerInvariant().EndsWith(".afm") || name.ToLowerInvariant().EndsWith(".pfm"
+                    )) {
+                    fontBuilt = new Type1Font(name, null, null, null);
                 }
                 else {
-                    if (baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".ttf") || baseName.ToLower
-                        (System.Globalization.CultureInfo.InvariantCulture).EndsWith(".otf") || baseName.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                        ).IndexOf(".ttc,") > 0) {
-                        if (font != null) {
-                            fontBuilt = new TrueTypeFont(font);
-                        }
-                        else {
-                            fontBuilt = new TrueTypeFont(name);
-                        }
+                    if (isCidFont) {
+                        fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
                     }
                     else {
-                        if (isCidFont) {
-                            fontBuilt = new CidFont(name, FontCache.GetCompatibleCmaps(baseName));
+                        if (baseName.ToLowerInvariant().EndsWith(".ttf") || baseName.ToLowerInvariant().EndsWith(".otf")) {
+                            if (fontProgram != null) {
+                                fontBuilt = new TrueTypeFont(fontProgram);
+                            }
+                            else {
+                                fontBuilt = new TrueTypeFont(name);
+                            }
+                        }
+                        else {
+                            int ttcSplit = baseName.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
+                            if (ttcSplit > 0) {
+                                try {
+                                    String ttcName = baseName.JSubstring(0, ttcSplit + 4);
+                                    //count(.ttc) = 4
+                                    int ttcIndex = System.Convert.ToInt32(baseName.Substring(ttcSplit + 5));
+                                    //count(.ttc,) = 5)
+                                    fontBuilt = new TrueTypeFont(ttcName, ttcIndex);
+                                }
+                                catch (FormatException nfe) {
+                                    throw new iText.IO.IOException(nfe.Message, nfe);
+                                }
+                            }
                         }
                     }
                 }
@@ -341,69 +253,15 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;
         }
 
-        // todo make comment relevant to type 1 font creation
-        /// <summary>Creates a new font.</summary>
-        /// <remarks>
-        /// Creates a new font. This font can be one of the 14 built in types,
-        /// a Type1 font referred to by an AFM or PFM file, a TrueType font (simple or collection) or a CJK font from the
-        /// Adobe Asian Font Pack. TrueType fonts and CJK fonts can have an optional style modifier
-        /// appended to the name. These modifiers are: Bold, Italic and BoldItalic. An
-        /// example would be "STSong-Light,Bold". Note that this modifiers do not work if
-        /// the font is embedded. Fonts in TrueType collections are addressed by index such as "msgothic.ttc,1".
-        /// This would get the second font (indexes start at 0), in this case "MS PGothic".
-        /// <p/>
-        /// The fonts may or may not be cached depending on the flag <CODE>cached</CODE>.
-        /// If the <CODE>byte</CODE> arrays are present the font will be
-        /// read from them instead of the name. A name is still required to identify
-        /// the font type.
-        /// <p/>
-        /// Besides the common encodings described by name, custom encodings
-        /// can also be made. These encodings will only work for the single byte fonts
-        /// Type1 and TrueType. The encoding string starts with a '#'
-        /// followed by "simple" or "full". If "simple" there is a decimal for the first character position and then a list
-        /// of hex values representing the Unicode codes that compose that encoding.<br />
-        /// The "simple" encoding is recommended for TrueType fonts
-        /// as the "full" encoding risks not matching the character with the right glyph
-        /// if not done with care.<br />
-        /// The "full" encoding is specially aimed at Type1 fonts where the glyphs have to be
-        /// described by non standard names like the Tex math fonts. Each group of three elements
-        /// compose a code position: the one byte code order in decimal or as 'x' (x cannot be the space), the name and the Unicode character
-        /// used to access the glyph. The space must be assigned to character position 32 otherwise
-        /// text justification will not work.
-        /// <p/>
-        /// Example for a "simple" encoding that includes the Unicode
-        /// character space, A, B and ecyrillic:
-        /// <PRE>
-        /// "# simple 32 0020 0041 0042 0454"
-        /// </PRE>
-        /// <p/>
-        /// Example for a "full" encoding for a Type1 Tex font:
-        /// <PRE>
-        /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
-        /// </PRE>
-        /// </remarks>
-        /// <param name="name">the name of the font or its location on file</param>
-        /// <param name="cached">
-        /// true if the font comes from the cache or is added to
-        /// the cache if new, false if the font is always created new
-        /// </param>
-        /// <param name="afm">the afm or pfm metrics file in a byte array</param>
-        /// <param name="pfb">the pfb in a byte array</param>
-        /// <returns>
-        /// returns a new font. This font may come from the cache but only if cached
-        /// is true, otherwise it will always be created new
-        /// </returns>
+        /// <summary>This method is deprecated and will be completely removed in 7.1</summary>
         /// <exception cref="System.IO.IOException"/>
+        [System.ObsoleteAttribute(@"Use CreateType1Font(byte[], byte[]) or CreateType1Font(System.String, System.String) instead"
+            )]
         public static FontProgram CreateType1Font(String name, byte[] afm, byte[] pfb, bool cached) {
             FontProgram fontProgram;
-            String fontKey = null;
+            FontCacheKey fontKey = null;
             if (cached) {
-                if (name != null) {
-                    fontKey = name;
-                }
-                else {
-                    fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(afm));
-                }
+                fontKey = CreateFontCacheKey(name, afm);
                 fontProgram = FontCache.GetFont(fontKey);
                 if (fontProgram != null) {
                     return fontProgram;
@@ -413,95 +271,111 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
         }
 
+        /// <summary>Creates a new Type 1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
+        /// <param name="afm">the contents of the AFM or PFM metrics file</param>
+        /// <param name="pfb">the contents of the PFB file</param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// instance
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateType1Font(byte[] afm, byte[] pfb) {
-            return CreateType1Font(null, afm, pfb, false);
+            return CreateType1Font(afm, pfb, DEFAULT_CACHED);
         }
 
+        /// <summary>Creates a new Type 1 font by the byte contents of the corresponding AFM/PFM and PFB files</summary>
+        /// <param name="afm">the contents of the AFM or PFM metrics file</param>
+        /// <param name="pfb">the contents of the PFB file</param>
+        /// <param name="cached">
+        /// specifies whether to cache the created
+        /// <see cref="FontProgram"/>
+        /// or not
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// instance
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
-        public static FontProgram CreateType1Font(String metricsPath, String binaryPath, bool cached) {
-            FontProgram fontProgram;
-            if (cached && metricsPath != null) {
-                fontProgram = FontCache.GetFont(metricsPath);
-                if (fontProgram != null) {
-                    return fontProgram;
-                }
-            }
-            fontProgram = new Type1Font(metricsPath, binaryPath, null, null);
-            return cached && metricsPath != null ? FontCache.SaveFont(fontProgram, metricsPath) : fontProgram;
+        public static FontProgram CreateType1Font(byte[] afm, byte[] pfb, bool cached) {
+            return CreateType1Font(null, null, afm, pfb, cached);
         }
 
+        /// <summary>Creates a new Type 1 font by the corresponding AFM/PFM and PFB files</summary>
+        /// <param name="metricsPath">path to the AFM or PFM metrics file</param>
+        /// <param name="binaryPath">path to the contents of the PFB file</param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// instance
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateType1Font(String metricsPath, String binaryPath) {
             return CreateType1Font(metricsPath, binaryPath, DEFAULT_CACHED);
         }
 
-        /// <summary>
-        /// Creates a new True Type font from ttc file,
-        /// <p/>
-        /// The fonts may or may not be cached depending on the flag <CODE>cached</CODE>.
-        /// </summary>
-        /// <remarks>
-        /// Creates a new True Type font from ttc file,
-        /// <p/>
-        /// The fonts may or may not be cached depending on the flag <CODE>cached</CODE>.
-        /// If the <CODE>byte</CODE> arrays are present the font will be
-        /// read from them instead of the name. A name is still required to identify
-        /// the font type.
-        /// <p/>
-        /// Besides the common encodings described by name, custom encodings
-        /// can also be made. These encodings will only work for the single byte fonts
-        /// Type1 and TrueType. The encoding string starts with a '#'
-        /// followed by "simple" or "full". If "simple" there is a decimal for the first character position and then a list
-        /// of hex values representing the Unicode codes that compose that encoding.<br />
-        /// The "simple" encoding is recommended for TrueType fonts
-        /// as the "full" encoding risks not matching the character with the right glyph
-        /// if not done with care.<br />
-        /// The "full" encoding is specially aimed at Type1 fonts where the glyphs have to be
-        /// described by non standard names like the Tex math fonts. Each group of three elements
-        /// compose a code position: the one byte code order in decimal or as 'x' (x cannot be the space), the name and the Unicode character
-        /// used to access the glyph. The space must be assigned to character position 32 otherwise
-        /// text justification will not work.
-        /// <p/>
-        /// Example for a "simple" encoding that includes the Unicode
-        /// character space, A, B and ecyrillic:
-        /// <PRE>
-        /// "# simple 32 0020 0041 0042 0454"
-        /// </PRE>
-        /// <p/>
-        /// Example for a "full" encoding for a Type1 Tex font:
-        /// <PRE>
-        /// "# full 'A' nottriangeqlleft 0041 'B' dividemultiply 0042 32 space 0020"
-        /// </PRE>
-        /// </remarks>
-        /// <param name="ttc">location  of true type collection file (*.ttc)</param>
-        /// <param name="ttcIndex">the encoding to be applied to this font</param>
+        /// <summary>Creates a new Type 1 font by the corresponding AFM/PFM and PFB files</summary>
+        /// <param name="metricsPath">path to the AFM or PFM metrics file</param>
+        /// <param name="binaryPath">path to the contents of the PFB file</param>
+        /// <param name="cached">
+        /// specifies whether to cache the created
+        /// <see cref="FontProgram"/>
+        /// or not
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// instance
+        /// </returns>
+        /// <exception cref="System.IO.IOException"/>
+        public static FontProgram CreateType1Font(String metricsPath, String binaryPath, bool cached) {
+            return CreateType1Font(metricsPath, binaryPath, null, null, cached);
+        }
+
+        /// <summary>Creates a new TrueType font program from ttc (TrueType Collection) file.</summary>
+        /// <param name="ttc">location  of TrueType Collection file (*.ttc)</param>
+        /// <param name="ttcIndex">the index of the font file from the collection to be read</param>
         /// <param name="cached">
         /// true if the font comes from the cache or is added to
         /// the cache if new, false if the font is always created new
         /// </param>
         /// <returns>
-        /// returns a new font. This font may come from the cache but only if cached
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// instance. This font may come from the cache but only if cached
         /// is true, otherwise it will always be created new
         /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(String ttc, int ttcIndex, bool cached) {
+            FontCacheKey fontCacheKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
-                FontProgram fontFound = FontCache.GetFont(ttc + ttcIndex);
+                FontProgram fontFound = FontCache.GetFont(fontCacheKey);
                 if (fontFound != null) {
                     return fontFound;
                 }
             }
             FontProgram fontBuilt = new TrueTypeFont(ttc, ttcIndex);
-            return cached ? FontCache.SaveFont(fontBuilt, ttc + ttcIndex) : fontBuilt;
+            return cached ? FontCache.SaveFont(fontBuilt, fontCacheKey) : fontBuilt;
         }
 
+        /// <summary>Creates a new TrueType font program from ttc (TrueType Collection) file bytes.</summary>
+        /// <param name="ttc">the content of a TrueType Collection file (*.ttc)</param>
+        /// <param name="ttcIndex">the index of the font file from the collection to be read</param>
+        /// <param name="cached">
+        /// true if the font comes from the cache or is added to
+        /// the cache if new, false if the font is always created new
+        /// </param>
+        /// <returns>
+        /// returns a new
+        /// <see cref="FontProgram"/>
+        /// instance. This font may come from the cache but only if cached
+        /// is true, otherwise it will always be created new
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateFont(byte[] ttc, int ttcIndex, bool cached) {
-            String fontKey = null;
+            FontCacheKey fontKey = FontCacheKey.Create(ttc, ttcIndex);
             if (cached) {
-                fontKey = iText.IO.Util.JavaUtil.IntegerToString(ArrayUtil.HashCode(ttc)) + iText.IO.Util.JavaUtil.IntegerToString
-                    (ttcIndex);
                 FontProgram fontFound = FontCache.GetFont(fontKey);
                 if (fontFound != null) {
                     return fontFound;
@@ -511,16 +385,74 @@ namespace iText.IO.Font {
             return cached ? FontCache.SaveFont(fontBuilt, fontKey) : fontBuilt;
         }
 
+        /// <summary>Creates a FontProgram from the font file that has been previously registered.</summary>
+        /// <param name="fontName">
+        /// either a font alias, if the font file has been registered with an alias,
+        /// or just a font name otherwise
+        /// </param>
+        /// <param name="style">
+        /// the style of the font to look for. Possible values are listed in
+        /// <see cref="FontConstants"/>
+        /// .
+        /// See
+        /// <see cref="FontConstants.BOLD"/>
+        /// ,
+        /// <see cref="FontConstants.ITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.NORMAL"/>
+        /// ,
+        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.UNDEFINED"/>
+        /// </param>
+        /// <param name="cached">whether to try to get the font program from cache</param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName, int style, bool cached) {
             return fontRegisterProvider.GetFont(fontName, style, cached);
         }
 
+        /// <summary>Creates a FontProgram from the font file that has been previously registered.</summary>
+        /// <param name="fontName">
+        /// either a font alias, if the font file has been registered with an alias,
+        /// or just a font name otherwise
+        /// </param>
+        /// <param name="style">
+        /// the style of the font to look for. Possible values are listed in
+        /// <see cref="FontConstants"/>
+        /// .
+        /// See
+        /// <see cref="FontConstants.BOLD"/>
+        /// ,
+        /// <see cref="FontConstants.ITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.NORMAL"/>
+        /// ,
+        /// <see cref="FontConstants.BOLDITALIC"/>
+        /// ,
+        /// <see cref="FontConstants.UNDEFINED"/>
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName, int style) {
             return fontRegisterProvider.GetFont(fontName, style);
         }
 
+        /// <summary>Creates a FontProgram from the font file that has been previously registered.</summary>
+        /// <param name="fontName">
+        /// either a font alias, if the font file has been registered with an alias,
+        /// or just a font name otherwise
+        /// </param>
+        /// <returns>
+        /// created
+        /// <see cref="FontProgram"/>
+        /// </returns>
         /// <exception cref="System.IO.IOException"/>
         public static FontProgram CreateRegisteredFont(String fontName) {
             return fontRegisterProvider.GetFont(fontName, FontConstants.UNDEFINED);
@@ -534,8 +466,13 @@ namespace iText.IO.Font {
             fontRegisterProvider.RegisterFontFamily(familyName, fullName, path);
         }
 
-        /// <summary>Register a ttf- or a ttc-file.</summary>
-        /// <param name="path">the path to a ttf- or ttc-file</param>
+        /// <summary>Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.</summary>
+        /// <remarks>
+        /// Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.
+        /// In case if TrueType Collection (.ttc), an additional parameter may be specified defining the index of the font
+        /// to be registered, e.g. "path/to/font/collection.ttc,0". The index is zero-based.
+        /// </remarks>
+        /// <param name="path">the path to a font file</param>
         public static void RegisterFont(String path) {
             RegisterFont(path, null);
         }
@@ -577,10 +514,37 @@ namespace iText.IO.Font {
         }
 
         /// <summary>Checks if a certain font is registered.</summary>
-        /// <param name="fontname">the name of the font that has to be checked.</param>
+        /// <param name="fontName">the name of the font that has to be checked.</param>
         /// <returns>true if the font is found</returns>
-        public static bool IsRegisteredFont(String fontname) {
-            return fontRegisterProvider.IsRegisteredFont(fontname);
+        public static bool IsRegisteredFont(String fontName) {
+            return fontRegisterProvider.IsRegisteredFont(fontName);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private static FontProgram CreateType1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb, 
+            bool cached) {
+            FontProgram fontProgram;
+            FontCacheKey fontKey = null;
+            if (cached) {
+                fontKey = CreateFontCacheKey(metricsPath, afm);
+                fontProgram = FontCache.GetFont(fontKey);
+                if (fontProgram != null) {
+                    return fontProgram;
+                }
+            }
+            fontProgram = new Type1Font(metricsPath, binaryPath, afm, pfb);
+            return cached ? FontCache.SaveFont(fontProgram, fontKey) : fontProgram;
+        }
+
+        private static FontCacheKey CreateFontCacheKey(String name, byte[] fontProgram) {
+            FontCacheKey key;
+            if (name != null) {
+                key = FontCacheKey.Create(name);
+            }
+            else {
+                key = FontCacheKey.Create(fontProgram);
+            }
+            return key;
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -70,8 +70,8 @@ namespace iText.IO.Font {
 
         private const String W2_PROP = "W2";
 
-        private static IDictionary<String, FontProgram> fontCache = new ConcurrentDictionary<String, FontProgram>(
-            );
+        private static IDictionary<FontCacheKey, FontProgram> fontCache = new ConcurrentDictionary<FontCacheKey, FontProgram
+            >();
 
         static FontCache() {
             try {
@@ -159,17 +159,22 @@ namespace iText.IO.Font {
         }
 
         public static FontProgram GetFont(String fontName) {
-            String key = GetFontCacheKey(fontName);
-            FontProgram font = null;
+            return fontCache.Get(FontCacheKey.Create(fontName));
+        }
+
+        internal static FontProgram GetFont(FontCacheKey key) {
             return fontCache.Get(key);
         }
 
         public static FontProgram SaveFont(FontProgram font, String fontName) {
-            FontProgram fontFound = GetFont(fontName);
+            return SaveFont(font, FontCacheKey.Create(fontName));
+        }
+
+        internal static FontProgram SaveFont(FontProgram font, FontCacheKey key) {
+            FontProgram fontFound = fontCache.Get(key);
             if (fontFound != null) {
                 return fontFound;
             }
-            String key = GetFontCacheKey(fontName);
             fontCache[key] = font;
             return font;
         }
@@ -182,7 +187,7 @@ namespace iText.IO.Font {
                 p.Load(resource);
                 foreach (KeyValuePair<Object, Object> entry in p) {
                     String value = (String)entry.Value;
-                    String[] splitValue = value.Split(" ");
+                    String[] splitValue = iText.IO.Util.StringUtil.Split(value, " ");
                     ICollection<String> set = new HashSet<String>();
                     foreach (String s in splitValue) {
                         if (s.Length != 0) {
@@ -194,7 +199,7 @@ namespace iText.IO.Font {
             }
             finally {
                 if (resource != null) {
-                    resource.Close();
+                    resource.Dispose();
                 }
             }
         }
@@ -215,7 +220,7 @@ namespace iText.IO.Font {
             }
             finally {
                 if (resource != null) {
-                    resource.Close();
+                    resource.Dispose();
                 }
             }
         }
@@ -239,10 +244,6 @@ namespace iText.IO.Font {
                 throw new iText.IO.IOException(iText.IO.IOException.IoException, e);
             }
             return cmap;
-        }
-
-        private static String GetFontCacheKey(String fontName) {
-            return fontName;
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.Kernel;
@@ -72,11 +71,16 @@ namespace iText.Kernel.Pdf {
         /// <summary>Contains the business logic for cryptography.</summary>
         protected internal PdfEncryption crypto;
 
+        /// <summary>Create a pdfOutputSteam writing to the passed OutputStream.</summary>
+        /// <param name="outputStream">Outputstream to write to.</param>
         public PdfOutputStream(Stream outputStream)
             : base(outputStream) {
         }
 
         // For internal usage only
+        /// <summary>Write a PdfObject to the outputstream.</summary>
+        /// <param name="pdfObject">PdfObject to write</param>
+        /// <returns>this PdfOutPutStream</returns>
         public virtual iText.Kernel.Pdf.PdfOutputStream Write(PdfObject pdfObject) {
             if (pdfObject.CheckState(PdfObject.MUST_BE_INDIRECT) && document != null) {
                 pdfObject.MakeIndirect(document);
@@ -161,7 +165,7 @@ namespace iText.Kernel.Pdf {
                 PdfObject value = pdfDictionary.Get(key, false);
                 if (value == null) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfOutputStream));
-                    logger.Warn(String.Format(LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key));
+                    logger.Warn(String.Format(iText.IO.LogMessageConstant.INVALID_KEY_VALUE_KEY_0_HAS_NULL_VALUE, key));
                     value = PdfNull.PDF_NULL;
                 }
                 if ((value.GetObjectType() == PdfObject.NUMBER || value.GetObjectType() == PdfObject.LITERAL || value.GetObjectType
@@ -352,7 +356,7 @@ namespace iText.Kernel.Pdf {
                     this.Write((PdfDictionary)pdfStream);
                     WriteBytes(iText.Kernel.Pdf.PdfOutputStream.stream);
                     byteArrayStream.WriteTo(this);
-                    byteArrayStream.Close();
+                    byteArrayStream.Dispose();
                     WriteBytes(iText.Kernel.Pdf.PdfOutputStream.endstream);
                 }
             }

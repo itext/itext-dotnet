@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -91,6 +91,12 @@ namespace iText.IO.Image {
         /// <summary>sequence preceding Photoshop resolution data</summary>
         private static readonly byte[] PS_8BIM_RESO = new byte[] { 0x38, 0x42, 0x49, 0x4d, 0x03, (byte)0xed };
 
+        /// <summary>Process the passed Image data as a JPEG image.</summary>
+        /// <remarks>
+        /// Process the passed Image data as a JPEG image.
+        /// Image is loaded and all image attributes are initialized and/or updated.
+        /// </remarks>
+        /// <param name="image">the image to process as a JPEG image</param>
         public static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.JPEG) {
                 throw new ArgumentException("JPEG image expected");
@@ -115,7 +121,7 @@ namespace iText.IO.Image {
             finally {
                 if (jpegStream != null) {
                     try {
-                        jpegStream.Close();
+                        jpegStream.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }
@@ -349,9 +355,9 @@ namespace iText.IO.Image {
                 }
                 byte[] ficc = new byte[total];
                 total = 0;
-                for (int k_1 = 0; k_1 < icc.Length; ++k_1) {
-                    System.Array.Copy(icc[k_1], 14, ficc, total, icc[k_1].Length - 14);
-                    total += icc[k_1].Length - 14;
+                for (int k = 0; k < icc.Length; ++k) {
+                    System.Array.Copy(icc[k], 14, ficc, total, icc[k].Length - 14);
+                    total += icc[k].Length - 14;
                 }
                 try {
                     image.SetProfile(IccProfile.GetInstance(ficc, image.GetColorSpace()));
@@ -379,13 +385,13 @@ namespace iText.IO.Image {
                     return VALID_MARKER;
                 }
             }
-            for (int i_1 = 0; i_1 < NOPARAM_MARKERS.Length; i_1++) {
-                if (marker == NOPARAM_MARKERS[i_1]) {
+            for (int i = 0; i < NOPARAM_MARKERS.Length; i++) {
+                if (marker == NOPARAM_MARKERS[i]) {
                     return NOPARAM_MARKER;
                 }
             }
-            for (int i_2 = 0; i_2 < UNSUPPORTED_MARKERS.Length; i_2++) {
-                if (marker == UNSUPPORTED_MARKERS[i_2]) {
+            for (int i = 0; i < UNSUPPORTED_MARKERS.Length; i++) {
+                if (marker == UNSUPPORTED_MARKERS[i]) {
                     return UNSUPPORTED_MARKER;
                 }
             }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -63,6 +63,7 @@ namespace iText.Barcodes.Qrcode {
 
         private const int DEFAULT_SIZE_IN_BYTES = 32;
 
+        /// <summary>Create a bitvector usng the default size</summary>
         public BitVector() {
             // For efficiency, start out with some room to work.
             sizeInBits = 0;
@@ -70,6 +71,9 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Return the bit value at "index".
+        /// <summary>Return the bit value at "index".</summary>
+        /// <param name="index">index in the vector</param>
+        /// <returns>bit value at "index"</returns>
         public int At(int index) {
             if (index < 0 || index >= sizeInBits) {
                 throw new ArgumentException("Bad index: " + index);
@@ -78,17 +82,19 @@ namespace iText.Barcodes.Qrcode {
             return (value >> (7 - (index & 0x7))) & 1;
         }
 
-        // Return the number of bits in the bit vector.
+        /// <returns>the number of bits in the bit vector.</returns>
         public int Size() {
             return sizeInBits;
         }
 
-        // Return the number of bytes in the bit vector.
+        /// <returns>the number of bytes in the bit vector.</returns>
         public int SizeInBytes() {
             return (sizeInBits + 7) >> 3;
         }
 
         // Append one bit to the bit vector.
+        /// <summary>Append the a bit to the bit vector</summary>
+        /// <param name="bit">0 or 1</param>
         public void AppendBit(int bit) {
             if (!(bit == 0 || bit == 1)) {
                 throw new ArgumentException("Bad bit");
@@ -104,13 +110,23 @@ namespace iText.Barcodes.Qrcode {
             ++sizeInBits;
         }
 
-        // Append "numBits" bits in "value" to the bit vector.
-        // REQUIRES: 0<= numBits <= 32.
         //
-        // Examples:
-        // - appendBits(0x00, 1) adds 0.
-        // - appendBits(0x00, 4) adds 0000.
-        // - appendBits(0xff, 8) adds 11111111.
+        // REQUIRES:
+        //
+        //
+        //
+        //
+        //
+        /// <summary>Append "numBits" bits in "value" to the bit vector.</summary>
+        /// <remarks>
+        /// Append "numBits" bits in "value" to the bit vector.
+        /// Examples:
+        /// - appendBits(0x00, 1) adds 0.
+        /// - appendBits(0x00, 4) adds 0000.
+        /// - appendBits(0xff, 8) adds 11111111.
+        /// </remarks>
+        /// <param name="value">int interpreted as bitvector</param>
+        /// <param name="numBits">0&lt;= numBits &lt;= 32.</param>
         public void AppendBits(int value, int numBits) {
             if (numBits < 0 || numBits > 32) {
                 throw new ArgumentException("Num bits must be between 0 and 32");
@@ -131,7 +147,8 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Append "bits".
+        /// <summary>Append a different BitVector to this BitVector</summary>
+        /// <param name="bits">BitVector to append</param>
         public void AppendBitVector(iText.Barcodes.Qrcode.BitVector bits) {
             int size = bits.Size();
             for (int i = 0; i < size; ++i) {
@@ -139,7 +156,8 @@ namespace iText.Barcodes.Qrcode {
             }
         }
 
-        // Modify the bit vector by XOR'ing with "other"
+        /// <summary>XOR the contents of this bitvector with the contetns of "other"</summary>
+        /// <param name="other">Bitvector of equal length</param>
         public void Xor(iText.Barcodes.Qrcode.BitVector other) {
             if (sizeInBits != other.Size()) {
                 throw new ArgumentException("BitVector sizes don't match");
@@ -153,6 +171,7 @@ namespace iText.Barcodes.Qrcode {
         }
 
         // Return String like "01110111" for debugging.
+        /// <returns>String representation of the bitvector</returns>
         public override String ToString() {
             StringBuilder result = new StringBuilder(sizeInBits);
             for (int i = 0; i < sizeInBits; ++i) {
@@ -171,14 +190,24 @@ namespace iText.Barcodes.Qrcode {
             return result.ToString();
         }
 
-        // Callers should not assume that array.length is the exact number of bytes needed to hold
-        // sizeInBits - it will typically be larger for efficiency.
+        //
+        //
+        /// <summary>
+        /// Callers should not assume that array.length is the exact number of bytes needed to hold
+        /// sizeInBits - it will typically be larger for efficiency.
+        /// </summary>
+        /// <returns>size of the array containing the bitvector</returns>
         public byte[] GetArray() {
             return array;
         }
 
-        // Add a new byte to the end, possibly reallocating and doubling the size of the array if we've
-        // run out of room.
+        //
+        //
+        /// <summary>
+        /// Add a new byte to the end, possibly reallocating and doubling the size of the array if we've
+        /// run out of room.
+        /// </summary>
+        /// <param name="value">byte to add.</param>
         private void AppendByte(int value) {
             if ((sizeInBits >> 3) == array.Length) {
                 byte[] newArray = new byte[(array.Length << 1)];

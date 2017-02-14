@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.Text;
+using iText.IO.Font.Otf;
 using iText.IO.Util;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -116,7 +118,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>the text to render</returns>
         public virtual String GetText() {
             if (text == null) {
-                text = gs.GetFont().Decode(@string);
+                GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
+                if (!IsReversedChars()) {
+                    text = gl.ToUnicodeString(gl.start, gl.end);
+                }
+                else {
+                    StringBuilder sb = new StringBuilder(gl.end - gl.start);
+                    for (int i = gl.end - 1; i >= gl.start; i--) {
+                        sb.Append(gl.Get(i).GetUnicodeChars());
+                    }
+                    text = sb.ToString();
+                }
             }
             return text;
         }
@@ -321,7 +333,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         /// <summary>Gets /ActualText tag entry value if this text chunk is marked content.</summary>
-        /// <returns>/ActualText value</returns>
+        /// <returns>/ActualText value or <code>null</code> if none found</returns>
         public virtual String GetActualText() {
             String lastActualText = null;
             foreach (CanvasTag tag in canvasTagHierarchy) {
@@ -331,6 +343,25 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 }
             }
             return lastActualText;
+        }
+
+        /// <summary>
+        /// Determines if the text represented by this
+        /// <see cref="TextRenderInfo"/>
+        /// instance is written in a text showing operator
+        /// wrapped by /ReversedChars marked content sequence
+        /// </summary>
+        /// <returns><code>true</code> if this text block lies within /ReversedChars block, <code>false</code> otherwise
+        ///     </returns>
+        public virtual bool IsReversedChars() {
+            foreach (CanvasTag tag in canvasTagHierarchy) {
+                if (tag != null) {
+                    if (PdfName.ReversedChars.Equals(tag.GetRole())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>Gets hierarchy of the canvas tags that wraps given text.</summary>

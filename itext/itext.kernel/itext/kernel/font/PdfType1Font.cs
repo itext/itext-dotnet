@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,8 +56,7 @@ namespace iText.Kernel.Font {
             if ((encoding == null || encoding.Length == 0) && type1Font.IsFontSpecific()) {
                 encoding = FontEncoding.FONT_SPECIFIC;
             }
-            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Equals(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
+            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLowerInvariant().Equals(encoding.ToLowerInvariant())) {
                 fontEncoding = FontEncoding.CreateFontSpecificEncoding();
             }
             else {
@@ -72,7 +71,6 @@ namespace iText.Kernel.Font {
         internal PdfType1Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            CheckFontDictionary(fontDictionary, PdfName.Type1);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             //if there is no FontDescriptor, it is most likely one of the Standard Font with StandardEncoding as base encoding.
             bool fillStandardEncoding = !fontDictionary.ContainsKey(PdfName.FontDescriptor);
@@ -118,6 +116,24 @@ namespace iText.Kernel.Font {
                 return glyph;
             }
             return null;
+        }
+
+        public override bool ContainsGlyph(String text, int from) {
+            return ContainsGlyph((int)text[from]);
+        }
+
+        public override bool ContainsGlyph(int unicode) {
+            if (fontEncoding.CanEncode(unicode)) {
+                if (fontEncoding.IsFontSpecific()) {
+                    return ((Type1Font)GetFontProgram()).GetGlyphByCode(unicode) != null;
+                }
+                else {
+                    return ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode)) != null;
+                }
+            }
+            else {
+                return false;
+            }
         }
 
         protected internal override bool IsBuiltInFont() {

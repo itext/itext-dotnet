@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,10 +43,8 @@ address: sales@itextpdf.com
 */
 using System;
 
-namespace iText.IO.Log
-{
-    public class NoOpLoggerFactory : ILoggerFactory
-    {
+namespace iText.IO.Log {
+    public class NoOpLoggerFactory : ILoggerFactory {
         private ILogger logger = new NoOpLogger();
 
         public ILogger GetLogger(Type klass) {

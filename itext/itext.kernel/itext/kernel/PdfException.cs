@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -109,6 +109,8 @@ namespace iText.Kernel {
 
         public const String CannotGetPdfStreamBytes = "Cannot get PdfStream bytes.";
 
+        public const String CannotOperateWithFlushedPdfStream = "Cannot operate with the flushed PdfStream.";
+
         public const String CannotRetrieveMediaBoxAttribute = "Invalid PDF. There is no media box attribute for page or its parents.";
 
         public const String CannotFindImageDataOrEI = "Cannot find image data or EI.";
@@ -178,6 +180,7 @@ namespace iText.Kernel {
         [Obsolete]
         public const String CodabarStartStopCharacterAreOnlyExtremes = "In codabar, start/stop characters are only allowed at the extremes.";
 
+        [Obsolete]
         public const String ColorNotFound = "Color not found.";
 
         public const String ColorSpaceNotFound = "ColorSpace not found.";
@@ -323,6 +326,8 @@ namespace iText.Kernel {
 
         public const String IoException = "I/O exception.";
 
+        public const String IoExceptionWhileCreatingFont = "I/O exception while creating Font";
+
         [Obsolete]
         public const String IsNotAnAcceptableValueForTheField = "{0} is not an acceptable value for the field {1}.";
 
@@ -401,6 +406,7 @@ namespace iText.Kernel {
 
         public const String PdfObjectStreamReachMaxSize = "PdfObjectStream reach max size.";
 
+        [Obsolete]
         public const String PdfPageShallHaveContent = "PdfPage shall have content.";
 
         public const String PdfPagesTreeCouldBeGeneratedOnlyOnce = "PdfPages tree could be generated only once.";
@@ -416,6 +422,8 @@ namespace iText.Kernel {
         public const String PdfIndirectObjectBelongsToOtherPdfDocument = "Pdf indirect object belongs to other PDF document. Copy object to current pdf document.";
 
         public const String PdfVersionNotValid = "PDF version is not valid.";
+
+        public const String RequestedPageNumberIsOutOfBounds = "Requested page number {0} is out of bounds.";
 
         public const String PngFilterUnknown = "PNG filter unknown.";
 
@@ -505,6 +513,7 @@ namespace iText.Kernel {
 
         public const String UnknownKeyAlgorithm1 = "Unknown key algorithm: {0}.";
 
+        [Obsolete]
         public const String UnknownColorFormatMustBeRGBorRRGGBB = "Unknown color format: must be rgb or rrggbb.";
 
         public const String UnsupportedDefaultColorSpaceName1 = "Unsupported default color space name. Was {0}, but should be DefaultCMYK, DefaultGray or DefaultRGB";

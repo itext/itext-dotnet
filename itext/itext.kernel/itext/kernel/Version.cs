@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,10 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.IO;
 using System.Reflection;
+using Versions.Attributes;
+using iText.IO.Log;
 
 namespace iText.Kernel {
     /// <summary>This class contains version information about iText.</summary>
@@ -57,7 +60,7 @@ namespace iText.Kernel {
         private static String AGPL = " (AGPL-version)";
 
         /// <summary>The iText version instance.</summary>
-        private static Version version = null;
+        private static iText.Kernel.Version version = null;
 
         /// <summary>This String contains the name of the product.</summary>
         /// <remarks>
@@ -72,7 +75,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private static String release = "7.0.1";
+        private static String release = "7.0.2";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
@@ -81,7 +84,7 @@ namespace iText.Kernel {
         /// iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        private String iTextVersion = iText + " " + release + " \u00a92000-2016 iText Group NV";
+        private String iTextVersion = iText + " " + release + " \u00a92000-2017 iText Group NV";
 
         /// <summary>The license key.</summary>
         private String key = null;
@@ -94,14 +97,13 @@ namespace iText.Kernel {
         /// Note that iText Group requests that you retain the iText producer line
         /// in every PDF that is created or manipulated using iText.
         /// </remarks>
-        public static Version GetInstance() {
+        public static iText.Kernel.Version GetInstance() {
             if (version == null) {
-                version = new Version();
+                version = new iText.Kernel.Version();
                 lock (version) {
                     try {
-                        String licenseKeyClassFullName = "iText.License.LicenseKey, itext.licensekey";
                         String licenseeInfoMethodName = "GetLicenseeInfo";
-                        Type klass = System.Type.GetType(licenseKeyClassFullName);
+                        Type klass = GetLicenseKeyClass();
                         if (klass != null) {
                             MethodInfo m = klass.GetMethod(licenseeInfoMethodName);
                             String[] info = (String[])m.Invoke(System.Activator.CreateInstance(klass), null);
@@ -163,7 +165,7 @@ namespace iText.Kernel {
         /// <summary>Checks if the AGPL version is used.</summary>
         /// <returns>returns true if the AGPL version is used.</returns>
         public static bool IsAGPLVersion() {
-            return GetInstance().GetVersion().IndexOf(AGPL) > 0;
+            return GetInstance().GetVersion().IndexOf(AGPL, StringComparison.Ordinal) > 0;
         }
 
         /// <summary>Is the license expired?</summary>
@@ -214,7 +216,7 @@ namespace iText.Kernel {
 
         private void AddLicensedPostfix(String ownerName) {
             iTextVersion += " (" + ownerName;
-            if (!key.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith("trial")) {
+            if (!key.ToLowerInvariant().StartsWith("trial")) {
                 iTextVersion += "; licensed version)";
             }
             else {
@@ -227,6 +229,42 @@ namespace iText.Kernel {
             if (cause != null && cause.Message != null && cause.Message.Contains("expired")) {
                 expired = true;
             }
+        }
+
+        private static Type GetLicenseKeyClass() {
+            String licenseKeyClassPartialName = "iText.License.LicenseKey, itext.licensekey";
+            String licenseKeyClassFullName = null;
+
+            Assembly kernelAssembly = typeof(Version).GetAssembly();
+            Attribute keyVersionAttr = kernelAssembly.GetCustomAttribute(typeof(KeyVersionAttribute));
+            if (keyVersionAttr is KeyVersionAttribute) {
+                String keyVersion = ((KeyVersionAttribute)keyVersionAttr).KeyVersion;
+                String format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                licenseKeyClassFullName = String.Format(format, licenseKeyClassPartialName, keyVersion);
+            }
+
+            Type type = null;
+            if (licenseKeyClassFullName != null) {
+                String fileLoadExceptionMessage = null;
+                try {
+                    type = System.Type.GetType(licenseKeyClassFullName);
+                } catch (FileLoadException fileLoadException) {
+                    fileLoadExceptionMessage = fileLoadException.Message;
+                }
+
+                if (fileLoadExceptionMessage != null) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(Version));
+                    try {
+                        type = System.Type.GetType(licenseKeyClassPartialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type == null) {
+                        logger.Error(fileLoadExceptionMessage);
+                    }
+                }
+            }
+            return type;
         }
     }
 }

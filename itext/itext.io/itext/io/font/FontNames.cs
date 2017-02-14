@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -301,7 +301,7 @@ namespace iText.IO.Font {
         }
 
         protected internal static int ConvertFontWeight(String weight) {
-            String fontWeight = weight.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            String fontWeight = weight.ToLowerInvariant();
             switch (fontWeight) {
                 case "ultralight": {
                     return 100;
@@ -364,6 +364,11 @@ namespace iText.IO.Font {
                 array[i] = list[i];
             }
             return array;
+        }
+
+        public override String ToString() {
+            String name = GetFontName();
+            return name.Length > 0 ? name : base.ToString();
         }
     }
 }

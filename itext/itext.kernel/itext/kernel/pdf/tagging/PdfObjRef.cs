@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,7 @@ namespace iText.Kernel.Pdf.Tagging {
             EnsureObjectIsAddedToDocument(parentObject);
             PdfDocument doc = parentObject.GetIndirectReference().GetDocument();
             annot.GetPdfObject().Put(PdfName.StructParent, new PdfNumber((int)doc.GetNextStructParentIndex()));
+            annot.SetModified();
             PdfDictionary dict = (PdfDictionary)GetPdfObject();
             dict.Put(PdfName.Type, PdfName.OBJR);
             dict.Put(PdfName.Obj, annot.GetPdfObject());

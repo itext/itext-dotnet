@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,11 +46,15 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using iText.IO.Log;
 using iText.IO.Util;
 
 namespace iText.Signatures {
     /// <summary>This class consists of some methods that allow you to verify certificates.</summary>
     public class CertificateVerification {
+        /// <summary>The Logger instance.</summary>
+        private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(CrlClientOnline));
+
         /// <summary>Verifies a single certificate for the current date.</summary>
         /// <param name="cert">the certificate to verify</param>
         /// <param name="crls">the certificate revocation list or <CODE>null</CODE></param>
@@ -201,16 +205,22 @@ namespace iText.Signatures {
         /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
         public static bool VerifyOcspCertificates(BasicOcspResp ocsp, List<X509Certificate> keystore) {
+            IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
                     try {
                         return SignUtils.IsSignatureValid(ocsp, certStoreX509);
                     }
-                    catch (Exception) {
+                    catch (Exception ex) {
+                        exceptionsThrown.Add(ex);
                     }
                 }
             }
-            catch (Exception) {
+            catch (Exception e) {
+                exceptionsThrown.Add(e);
+            }
+            foreach (Exception ex in exceptionsThrown) {
+                LOGGER.Error(ex.Message, ex);
             }
             return false;
         }
@@ -221,17 +231,23 @@ namespace iText.Signatures {
         /// <param name="provider">the provider or <CODE>null</CODE> to use the BouncyCastle provider</param>
         /// <returns><CODE>true</CODE> is a certificate was found</returns>
         public static bool VerifyTimestampCertificates(TimeStampToken ts, List<X509Certificate> keystore) {
+            IList<Exception> exceptionsThrown = new List<Exception>();
             try {
                 foreach (X509Certificate certStoreX509 in SignUtils.GetCertificates(keystore)) {
                     try {
                         SignUtils.IsSignatureValid(ts, certStoreX509);
                         return true;
                     }
-                    catch (Exception) {
+                    catch (Exception ex) {
+                        exceptionsThrown.Add(ex);
                     }
                 }
             }
-            catch (Exception) {
+            catch (Exception e) {
+                exceptionsThrown.Add(e);
+            }
+            foreach (Exception ex in exceptionsThrown) {
+                LOGGER.Error(ex.Message, ex);
             }
             return false;
         }

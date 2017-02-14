@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -81,17 +81,40 @@ namespace iText.Barcodes.Qrcode {
         /// <remarks>
         /// Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
         /// internally by chooseMode(). On success, store the result in "qrCode".
+        /// <p>
         /// We recommend you to use QRCode.EC_LEVEL_L (the lowest level) for
         /// "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
         /// strong error correction for this purpose.
+        /// <p>
         /// Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
         /// with which clients can specify the encoding mode. For now, we don't need the functionality.
         /// </remarks>
+        /// <param name="content">String to encode</param>
+        /// <param name="ecLevel">Error-correction level to use</param>
+        /// <param name="qrCode">QR code to store the result in</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void Encode(String content, ErrorCorrectionLevel ecLevel, QRCode qrCode) {
             Encode(content, ecLevel, null, qrCode);
         }
 
+        /// <summary>Encode "bytes" with the error correction level "ecLevel".</summary>
+        /// <remarks>
+        /// Encode "bytes" with the error correction level "ecLevel". The encoding mode will be chosen
+        /// internally by chooseMode(). On success, store the result in "qrCode".
+        /// <p>
+        /// We recommend you to use QRCode.EC_LEVEL_L (the lowest level) for
+        /// "getECLevel" since our primary use is to show QR code on desktop screens. We don't need very
+        /// strong error correction for this purpose.
+        /// <p>
+        /// Note that there is no way to encode bytes in MODE_KANJI. We might want to add EncodeWithMode()
+        /// with which clients can specify the encoding mode. For now, we don't need the functionality.
+        /// </remarks>
+        /// <param name="content">String to encode</param>
+        /// <param name="ecLevel">Error-correction level to use</param>
+        /// <param name="hints">Optional Map containing  encoding and suggested minimum version to use</param>
+        /// <param name="qrCode">QR code to store the result in</param>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public static void Encode(String content, ErrorCorrectionLevel ecLevel, IDictionary<EncodeHintType, Object
             > hints, QRCode qrCode) {
@@ -159,6 +182,9 @@ namespace iText.Barcodes.Qrcode {
             return -1;
         }
 
+        /// <summary>Choose the best mode by examining the content.</summary>
+        /// <param name="content">content to examine</param>
+        /// <returns>mode to use</returns>
         public static Mode ChooseMode(String content) {
             return ChooseMode(content, null);
         }
@@ -168,8 +194,10 @@ namespace iText.Barcodes.Qrcode {
         /// Choose the best mode by examining the content. Note that 'encoding' is used as a hint;
         /// if it is Shift_JIS, and the input is only double-byte Kanji, then we return
         /// <see cref="Mode.KANJI"/>
-        /// .
         /// </remarks>
+        /// <param name="content">content to examine</param>
+        /// <param name="encoding">hint for the encoding to use</param>
+        /// <returns>mode to use</returns>
         public static Mode ChooseMode(String content, String encoding) {
             if ("Shift_JIS".Equals(encoding)) {
                 // Choose Kanji mode if all input are double-byte characters
@@ -297,7 +325,7 @@ namespace iText.Barcodes.Qrcode {
             // If the last byte isn't 8-bit aligned, we'll add padding bits.
             if (numBitsInLastByte > 0) {
                 int numPaddingBits = 8 - numBitsInLastByte;
-                for (int i_1 = 0; i_1 < numPaddingBits; ++i_1) {
+                for (int i = 0; i < numPaddingBits; ++i) {
                     bits.AppendBit(0);
                 }
             }
@@ -307,8 +335,8 @@ namespace iText.Barcodes.Qrcode {
             }
             // If we have more space, we'll fill the space with padding patterns defined in 8.4.9 (p.24).
             int numPaddingBytes = numDataBytes - bits.SizeInBytes();
-            for (int i_2 = 0; i_2 < numPaddingBytes; ++i_2) {
-                if (i_2 % 2 == 0) {
+            for (int i = 0; i < numPaddingBytes; ++i) {
+                if (i % 2 == 0) {
                     bits.AppendBits(0xec, 8);
                 }
                 else {
@@ -408,20 +436,20 @@ namespace iText.Barcodes.Qrcode {
                 throw new WriterException("Data bytes does not match offset");
             }
             // First, place data blocks.
-            for (int i_1 = 0; i_1 < maxNumDataBytes; ++i_1) {
+            for (int i = 0; i < maxNumDataBytes; ++i) {
                 for (int j = 0; j < blocks.Count; ++j) {
                     ByteArray dataBytes = blocks[j].GetDataBytes();
-                    if (i_1 < dataBytes.Size()) {
-                        result.AppendBits(dataBytes.At(i_1), 8);
+                    if (i < dataBytes.Size()) {
+                        result.AppendBits(dataBytes.At(i), 8);
                     }
                 }
             }
             // Then, place error correction blocks.
-            for (int i_2 = 0; i_2 < maxNumEcBytes; ++i_2) {
+            for (int i = 0; i < maxNumEcBytes; ++i) {
                 for (int j = 0; j < blocks.Count; ++j) {
                     ByteArray ecBytes = blocks[j].GetErrorCorrectionBytes();
-                    if (i_2 < ecBytes.Size()) {
-                        result.AppendBits(ecBytes.At(i_2), 8);
+                    if (i < ecBytes.Size()) {
+                        result.AppendBits(ecBytes.At(i), 8);
                     }
                 }
             }
@@ -440,8 +468,8 @@ namespace iText.Barcodes.Qrcode {
             }
             new ReedSolomonEncoder(GF256.QR_CODE_FIELD).Encode(toEncode, numEcBytesInBlock);
             ByteArray ecBytes = new ByteArray(numEcBytesInBlock);
-            for (int i_1 = 0; i_1 < numEcBytesInBlock; i_1++) {
-                ecBytes.Set(i_1, toEncode[numDataBytes + i_1]);
+            for (int i = 0; i < numEcBytesInBlock; i++) {
+                ecBytes.Set(i, toEncode[numDataBytes + i]);
             }
             return ecBytes;
         }

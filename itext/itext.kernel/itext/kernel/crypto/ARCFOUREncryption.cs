@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -66,10 +66,10 @@ namespace iText.Kernel.Crypto {
             x = 0;
             y = 0;
             byte tmp;
-            for (int k_1 = 0; k_1 < 256; ++k_1) {
-                index2 = (key[index1 + off] + state[k_1] + index2) & 255;
-                tmp = state[k_1];
-                state[k_1] = state[index2];
+            for (int k = 0; k < 256; ++k) {
+                index2 = (key[index1 + off] + state[k] + index2) & 255;
+                tmp = state[k];
+                state[k] = state[index2];
                 state[index2] = tmp;
                 index1 = (index1 + 1) % len;
             }

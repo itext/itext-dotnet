@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -134,12 +134,8 @@ namespace iText.Layout.Layout {
         /// <param name="splitRenderer">the renderer to draw the splitted part of the content</param>
         /// <param name="overflowRenderer">the renderer to draw the overflowed part of the content</param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            ) {
-            this.status = status;
-            this.occupiedArea = occupiedArea;
-            this.splitRenderer = splitRenderer;
-            this.overflowRenderer = overflowRenderer;
-            causeOfNothing = null;
+            )
+            : this(status, occupiedArea, splitRenderer, overflowRenderer, null) {
         }
 
         /// <summary>
@@ -161,9 +157,12 @@ namespace iText.Layout.Layout {
         /// <see cref="NOTHING"/>
         /// </param>
         public LayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause)
-            : this(status, occupiedArea, splitRenderer, overflowRenderer) {
-            causeOfNothing = cause;
+            , IRenderer cause) {
+            this.status = status;
+            this.occupiedArea = occupiedArea;
+            this.splitRenderer = splitRenderer;
+            this.overflowRenderer = overflowRenderer;
+            this.causeOfNothing = cause;
         }
 
         /// <summary>
@@ -174,6 +173,15 @@ namespace iText.Layout.Layout {
         /// <returns>the status</returns>
         public virtual int GetStatus() {
             return status;
+        }
+
+        /// <summary>
+        /// Sets the status of
+        /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)"/>
+        /// .
+        /// </summary>
+        public virtual void SetStatus(int status) {
+            this.status = status;
         }
 
         /// <summary>

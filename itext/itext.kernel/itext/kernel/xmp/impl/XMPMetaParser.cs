@@ -32,6 +32,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using iText.IO.Util;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -170,7 +171,7 @@ namespace iText.Kernel.XMP.Impl
 
 				if (options.GetFixControlChars()) {
 					try {
-						StreamReader streamReader = new StreamReader(buffer.GetByteStream(), Encoding.GetEncoding(buffer.GetEncoding()));
+						StreamReader streamReader = new StreamReader(buffer.GetByteStream(), EncodingUtil.GetEncoding(buffer.GetEncoding()));
                         FixASCIIControlsReader fixReader = new FixASCIIControlsReader(streamReader);
 						doc.Load(GetSecureXmlReader(fixReader));
 						return doc;

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -78,8 +78,8 @@ namespace iText.IO.Codec {
                 field.WriteField(stream);
             }
             WriteLong(0, stream);
-            foreach (TiffWriter.FieldBase field_1 in ifd.Values) {
-                field_1.WriteValue(stream);
+            foreach (TiffWriter.FieldBase field in ifd.Values) {
+                field.WriteValue(stream);
             }
         }
 
@@ -266,7 +266,7 @@ namespace iText.IO.Codec {
             }
             else {
                 int off = 0;
-                byte[] rowBuf = usePredictor ? new byte[stride] : null;
+                byte[] rowBuf = new byte[stride];
                 for (int i = 0; i < height; i++) {
                     System.Array.Copy(b, off, rowBuf, 0, stride);
                     for (int j = stride - 1; j >= samplesPerPixel; j--) {

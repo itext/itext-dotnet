@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -76,9 +76,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public virtual iText.Kernel.Pdf.PdfObjectWrapper<T> SetModified() {
-            if (pdfObject != null) {
-                pdfObject.SetModified();
-            }
+            pdfObject.SetModified();
             return this;
         }
 

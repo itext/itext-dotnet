@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -51,11 +51,11 @@ using iText.Layout.Renderer;
 namespace iText.Layout.Element {
     /// <summary>
     /// A layout element that represents a self-contained block of textual and
-    /// grpahical information.
+    /// graphical information.
     /// </summary>
     /// <remarks>
     /// A layout element that represents a self-contained block of textual and
-    /// grpahical information.
+    /// graphical information.
     /// It is a
     /// <see cref="BlockElement{T}"/>
     /// which essentially acts as a container for

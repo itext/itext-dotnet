@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,6 +41,8 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
+
 namespace iText.Layout.Properties {
     /// <summary>
     /// An enum of property names that are used for graphical properties of layout
@@ -74,6 +76,8 @@ namespace iText.Layout.Properties {
 
         public const int BACKGROUND = 6;
 
+        public const int BACKGROUND_IMAGE = 90;
+
         public const int BASE_DIRECTION = 7;
 
         public const int BOLD_SIMULATION = 8;
@@ -92,9 +96,15 @@ namespace iText.Layout.Properties {
 
         public const int CHARACTER_SPACING = 15;
 
+        public const int COLLAPSING_MARGINS = 89;
+
         public const int COLSPAN = 16;
 
         public const int DESTINATION = 17;
+
+        public const int FILL_AVAILABLE_AREA = 86;
+
+        public const int FILL_AVAILABLE_AREA_ON_SPLIT = 87;
 
         public const int FIRST_LINE_INDENT = 18;
 
@@ -106,13 +116,33 @@ namespace iText.Layout.Properties {
 
         public const int FONT_KERNING = 22;
 
+        /// <summary>String value.</summary>
+        /// <remarks>
+        /// String value. 'normal'|'italic'|'oblique'
+        /// Note, this property will be applied only if
+        /// <see cref="FONT"/>
+        /// has String value.
+        /// </remarks>
+        public const int FONT_STYLE = 94;
+
+        /// <summary>String value.</summary>
+        /// <remarks>
+        /// String value. 'normal'|'bold'|number
+        /// Note, this property will be applied only if
+        /// <see cref="FONT"/>
+        /// has String value.
+        /// </remarks>
+        public const int FONT_WEIGHT = 95;
+
         public const int FONT_SCRIPT = 23;
+
+        public const int FONT_PROVIDER = 91;
 
         public const int FONT_SIZE = 24;
 
-        public const int FULL = 25;
-
         public const int FORCED_PLACEMENT = 26;
+
+        public const int FULL = 25;
 
         public const int HEIGHT = 27;
 
@@ -122,6 +152,10 @@ namespace iText.Layout.Properties {
         public const int HORIZONTAL_SCALING = 29;
 
         public const int HYPHENATION = 30;
+
+        public const int IGNORE_FOOTER = 96;
+
+        public const int IGNORE_HEADER = 97;
 
         public const int ITALIC_SIMULATION = 31;
 
@@ -135,6 +169,8 @@ namespace iText.Layout.Properties {
 
         public const int LINE_DRAWER = 35;
 
+        public const int LINK_ANNOTATION = 88;
+
         public const int LIST_START = 36;
 
         public const int LIST_SYMBOL = 37;
@@ -143,11 +179,13 @@ namespace iText.Layout.Properties {
 
         public const int LIST_SYMBOL_INDENT = 39;
 
-        public const int LIST_SYMBOLS_INITIALIZED = 40;
-
         public const int LIST_SYMBOL_PRE_TEXT = 41;
 
+        public const int LIST_SYMBOL_POSITION = 83;
+
         public const int LIST_SYMBOL_POST_TEXT = 42;
+
+        public const int LIST_SYMBOLS_INITIALIZED = 40;
 
         public const int MARGIN_BOTTOM = 43;
 
@@ -156,6 +194,12 @@ namespace iText.Layout.Properties {
         public const int MARGIN_RIGHT = 45;
 
         public const int MARGIN_TOP = 46;
+
+        public const int MAX_HEIGHT = 84;
+
+        public const int MIN_HEIGHT = 85;
+
+        public const int OPACITY = 92;
 
         public const int PADDING_BOTTOM = 47;
 
@@ -169,6 +213,7 @@ namespace iText.Layout.Properties {
 
         public const int POSITION = 52;
 
+        [Obsolete]
         public const int REVERSED = 53;
 
         public const int RIGHT = 54;
@@ -195,6 +240,8 @@ namespace iText.Layout.Properties {
 
         public const int SKEW = 65;
 
+        public const int TABLE_LAYOUT = 93;
+
         public const int TAB_ANCHOR = 66;
 
         public const int TAB_DEFAULT = 67;
@@ -218,9 +265,9 @@ namespace iText.Layout.Properties {
 
         public const int UNDERLINE = 74;
 
-        /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_ALIGNMENT = 75;
 
+        /// <summary>Value of 1 is equivalent to no scaling</summary>
         public const int VERTICAL_SCALING = 76;
 
         public const int WIDTH = 77;
@@ -240,7 +287,7 @@ namespace iText.Layout.Properties {
         /// </summary>
         private static readonly bool[] INHERITED_PROPERTIES;
 
-        private const int MAX_INHERITED_PROPERTY_ID = 82;
+        private const int MAX_INHERITED_PROPERTY_ID = 95;
 
         static Property() {
             INHERITED_PROPERTIES = new bool[MAX_INHERITED_PROPERTY_ID + 1];
@@ -248,19 +295,21 @@ namespace iText.Layout.Properties {
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BASE_DIRECTION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.BOLD_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.CHARACTER_SPACING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.COLLAPSING_MARGINS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FIRST_LINE_INDENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_COLOR] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_KERNING] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_PROVIDER] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SCRIPT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_SIZE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_STYLE] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.FONT_WEIGHT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.FORCED_PLACEMENT] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.HYPHENATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.ITALIC_SIMULATION] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.KEEP_TOGETHER] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_PRE_TEXT] = true;
-            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LIST_SYMBOL_POST_TEXT] = true;
+            INHERITED_PROPERTIES[iText.Layout.Properties.Property.LEADING] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPACING_RATIO] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.SPLIT_CHARACTERS] = true;
             INHERITED_PROPERTIES[iText.Layout.Properties.Property.STROKE_COLOR] = true;

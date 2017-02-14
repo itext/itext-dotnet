@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -47,6 +47,9 @@ using iText.IO.Font;
 
 namespace iText.Kernel.Pdf {
     public class PdfDocumentInfo : PdfObjectWrapper<PdfDictionary> {
+        /// <summary>Create a PdfDocumentInfo based on the passed PdfDictionary and linked to the passed PdfDocument.</summary>
+        /// <param name="pdfObject">PdfDictionary containing PdfDocumentInfo</param>
+        /// <param name="pdfDocument">PdfDocument the PdfDocumentInfo corresponds to.</param>
         public PdfDocumentInfo(PdfDictionary pdfObject, PdfDocument pdfDocument)
             : base(pdfObject == null ? new PdfDictionary() : pdfObject) {
             if (pdfDocument.GetWriter() != null) {
@@ -59,10 +62,13 @@ namespace iText.Kernel.Pdf {
             : this(pdfObject, null) {
         }
 
+        /// <summary>Create a default, empty PdfDocumentInfo and link it to the passed PdfDocument</summary>
+        /// <param name="pdfDocument"/>
         public PdfDocumentInfo(PdfDocument pdfDocument)
             : this(new PdfDictionary(), pdfDocument) {
         }
 
+        //Samuel: Wouldn't this raise a nullpointer exception?
         public virtual iText.Kernel.Pdf.PdfDocumentInfo SetTitle(String title) {
             GetPdfObject().Put(PdfName.Title, new PdfString(title, PdfEncodings.UNICODE_BIG));
             return this;

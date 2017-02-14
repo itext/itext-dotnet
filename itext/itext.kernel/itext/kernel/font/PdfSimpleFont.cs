@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -71,19 +71,78 @@ namespace iText.Kernel.Font {
 
         public override GlyphLine CreateGlyphLine(String content) {
             IList<Glyph> glyphs = new List<Glyph>(content.Length);
-            for (int i = 0; i < content.Length; i++) {
-                Glyph glyph;
-                if (fontEncoding.IsFontSpecific()) {
-                    glyph = fontProgram.GetGlyphByCode(content[i]);
+            if (fontEncoding.IsFontSpecific()) {
+                for (int i = 0; i < content.Length; i++) {
+                    Glyph glyph = fontProgram.GetGlyphByCode(content[i]);
+                    if (glyph != null) {
+                        glyphs.Add(glyph);
+                    }
                 }
-                else {
-                    glyph = GetGlyph((int)content[i]);
-                }
-                if (glyph != null) {
-                    glyphs.Add(glyph);
+            }
+            else {
+                for (int i = 0; i < content.Length; i++) {
+                    Glyph glyph = GetGlyph((int)content[i]);
+                    if (glyph != null) {
+                        glyphs.Add(glyph);
+                    }
                 }
             }
             return new GlyphLine(glyphs);
+        }
+
+        public override int AppendGlyphs(String text, int from, int to, IList<Glyph> glyphs) {
+            int processed = 0;
+            if (fontEncoding.IsFontSpecific()) {
+                for (int i = from; i <= to; i++) {
+                    Glyph glyph = fontProgram.GetGlyphByCode(text[i] & 0xFF);
+                    if (glyph != null) {
+                        glyphs.Add(glyph);
+                        processed++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else {
+                for (int i = from; i <= to; i++) {
+                    Glyph glyph = GetGlyph((int)text[i]);
+                    if (glyph != null && (ContainsGlyph(text, i) || IsAppendableGlyph(glyph))) {
+                        glyphs.Add(glyph);
+                        processed++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            return processed;
+        }
+
+        public override int AppendAnyGlyph(String text, int from, IList<Glyph> glyphs) {
+            Glyph glyph;
+            if (fontEncoding.IsFontSpecific()) {
+                glyph = fontProgram.GetGlyphByCode(text[from]);
+            }
+            else {
+                glyph = GetGlyph((int)text[from]);
+            }
+            if (glyph != null) {
+                glyphs.Add(glyph);
+            }
+            return 1;
+        }
+
+        /// <summary>Checks whether the glyph is appendable, i.e.</summary>
+        /// <remarks>Checks whether the glyph is appendable, i.e. has valid unicode and code values</remarks>
+        /// <param name="glyph">
+        /// not-null
+        /// <see cref="iText.IO.Font.Otf.Glyph"/>
+        /// </param>
+        private bool IsAppendableGlyph(Glyph glyph) {
+            // If font is specific and glyph.getCode() = 0, unicode value will be also 0.
+            // Character.isIdentifierIgnorable(0) gets true.
+            return glyph.GetCode() > 0 || TextUtil.IsWhitespaceOrNonPrintable(glyph.GetUnicode());
         }
 
         public override FontProgram GetFontProgram() {
@@ -173,6 +232,7 @@ namespace iText.Kernel.Font {
         }
 
         public override String Decode(PdfString content) {
+            // TODO refactor using decodeIntoGlyphLine?
             byte[] contentBytes = content.GetValueBytes();
             StringBuilder builder = new StringBuilder(contentBytes.Length);
             foreach (byte b in contentBytes) {
@@ -192,7 +252,27 @@ namespace iText.Kernel.Font {
             return builder.ToString();
         }
 
+        /// <summary><inheritDoc/></summary>
+        public override GlyphLine DecodeIntoGlyphLine(PdfString content) {
+            byte[] contentBytes = content.GetValueBytes();
+            IList<Glyph> glyphs = new List<Glyph>(contentBytes.Length);
+            foreach (byte b in contentBytes) {
+                int code = b & 0xff;
+                int uni = fontEncoding.GetUnicode(code);
+                if (uni > -1) {
+                    glyphs.Add(GetGlyph(uni));
+                }
+                else {
+                    if (fontEncoding.GetBaseEncoding() == null) {
+                        glyphs.Add(fontProgram.GetGlyphByCode(code));
+                    }
+                }
+            }
+            return new GlyphLine(glyphs);
+        }
+
         public override float GetContentWidth(PdfString content) {
+            // TODO refactor using decodeIntoGlyphLine?
             float width = 0;
             byte[] contentBytes = content.GetValueBytes();
             foreach (byte b in contentBytes) {
@@ -279,9 +359,9 @@ namespace iText.Kernel.Font {
                         break;
                     }
                 }
-                for (int k_1 = lastChar; k_1 >= firstChar; --k_1) {
-                    if (!FontConstants.notdef.Equals(fontEncoding.GetDifference(k_1))) {
-                        lastChar = k_1;
+                for (int k = lastChar; k >= firstChar; --k) {
+                    if (!FontConstants.notdef.Equals(fontEncoding.GetDifference(k))) {
+                        lastChar = k;
                         break;
                     }
                 }
@@ -289,13 +369,13 @@ namespace iText.Kernel.Font {
                 enc.Put(PdfName.Type, PdfName.Encoding);
                 PdfArray diff = new PdfArray();
                 bool gap = true;
-                for (int k_2 = firstChar; k_2 <= lastChar; ++k_2) {
-                    if (shortTag[k_2] != 0) {
+                for (int k = firstChar; k <= lastChar; ++k) {
+                    if (shortTag[k] != 0) {
                         if (gap) {
-                            diff.Add(new PdfNumber(k_2));
+                            diff.Add(new PdfNumber(k));
                             gap = false;
                         }
-                        diff.Add(new PdfName(fontEncoding.GetDifference(k_2)));
+                        diff.Add(new PdfName(fontEncoding.GetDifference(k)));
                     }
                     else {
                         gap = true;

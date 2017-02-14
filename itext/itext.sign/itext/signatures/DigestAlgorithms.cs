@@ -1,7 +1,7 @@
 /*
 *
 * This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 * Authors: Bruno Lowagie, Paulo Soares, et al.
 *
 * This program is free software; you can redistribute it and/or modify
@@ -195,7 +195,7 @@ namespace iText.Signatures {
         /// <param name="name">The name of the digest algorithm.</param>
         /// <returns>An oid.</returns>
         public static String GetAllowedDigest(String name) {
-            return allowedDigests.Get(name.ToUpper(System.Globalization.CultureInfo.InvariantCulture));
+            return allowedDigests.Get(name.ToUpperInvariant());
         }
     }
 }

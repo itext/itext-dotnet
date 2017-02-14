@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using Org.BouncyCastle.X509;
 
 namespace iText.Kernel.Pdf {
@@ -83,7 +84,13 @@ namespace iText.Kernel.Pdf {
             , int encryptionAlgorithm) {
             ClearEncryption();
             this.userPassword = userPassword;
-            this.ownerPassword = ownerPassword;
+            if (ownerPassword != null) {
+                this.ownerPassword = ownerPassword;
+            }
+            else {
+                int r = (int)(int.MaxValue * iText.IO.Util.JavaUtil.Random());
+                this.ownerPassword = iText.IO.Util.JavaUtil.IntegerToHexString(r).GetBytes();
+            }
             this.standardEncryptPermissions = permissions;
             this.encryptionAlgorithm = encryptionAlgorithm;
             return this;

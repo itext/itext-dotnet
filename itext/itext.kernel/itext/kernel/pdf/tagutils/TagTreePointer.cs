@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -617,7 +618,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             IPdfStructElem parent = GetCurrentStructElem().GetParent();
             if (parent == null) {
-                //TODO log that parent is flushed
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagTreePointer));
+                logger.Warn(iText.IO.LogMessageConstant.ATTEMPT_TO_MOVE_TO_FLUSHED_PARENT);
                 MoveToRoot();
             }
             else {
@@ -960,6 +962,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (pageObject == null) {
                 pageObject = kidPage;
                 elem.GetPdfObject().Put(PdfName.Pg, kidPage);
+                elem.SetModified();
             }
             return kidPage.Equals(pageObject);
         }

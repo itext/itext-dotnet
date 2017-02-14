@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -240,6 +240,8 @@ namespace iText.Forms {
             if (field.GetKids() != null) {
                 IterateFields(field.GetKids(), fields);
             }
+            //There's an issue described in DEVSIX-573. When you create multiple fields with different fonts those font may
+            // have same names (F1, F2, etc). So only first of them will be save in default resources.
             if (field.GetFormType() != null && (field.GetFormType().Equals(PdfName.Tx) || field.GetFormType().Equals(PdfName
                 .Ch))) {
                 IList<PdfDictionary> resources = GetResources(field.GetPdfObject());
@@ -692,8 +694,8 @@ namespace iText.Forms {
                 initialPageResourceClones[i] = resources == null ? null : resources.Clone();
             }
             PdfPage page;
-            foreach (PdfFormField field_1 in fields) {
-                PdfDictionary fieldObject = field_1.GetPdfObject();
+            foreach (PdfFormField field in fields) {
+                PdfDictionary fieldObject = field.GetPdfObject();
                 page = GetFieldPage(fieldObject);
                 if (page == null) {
                     continue;
@@ -713,7 +715,7 @@ namespace iText.Forms {
                 }
                 if (generateAppearance) {
                     if (appDic == null || asNormal == null) {
-                        field_1.RegenerateField();
+                        field.RegenerateField();
                         appDic = fieldObject.GetAsDictionary(PdfName.AP);
                     }
                 }
@@ -736,8 +738,7 @@ namespace iText.Forms {
                     if (xObject != null && xObject.GetPdfObject().Get(PdfName.Subtype) != null) {
                         Rectangle box = fieldObject.GetAsRectangle(PdfName.Rect);
                         if (page.IsFlushed()) {
-                            throw new PdfException(PdfException.PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing
-                                );
+                            throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                         }
                         PdfCanvas canvas = new PdfCanvas(page);
                         // Here we avoid circular reference which might occur when page resources and the appearance xObject's
@@ -998,8 +999,7 @@ namespace iText.Forms {
             PdfDictionary pageDic = annot.GetPageObject();
             if (pageDic != null) {
                 if (warnIfPageFlushed && pageDic.IsFlushed()) {
-                    throw new PdfException(PdfException.PageWasAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing
-                        );
+                    throw new PdfException(PdfException.PageAlreadyFlushedUseAddFieldAppearanceToPageMethodBeforePageFlushing);
                 }
                 PdfDocument doc = pageDic.GetIndirectReference().GetDocument();
                 PdfPage widgetPage = doc.GetPage(pageDic);

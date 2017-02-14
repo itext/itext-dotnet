@@ -82,8 +82,8 @@ namespace iText.Kernel.XMP.Impl {
                 ascii[idx] = INVALID;
             }
             // valid bytes
-            for (int idx_1 = 0; idx_1 < base64.Length; idx_1++) {
-                ascii[base64[idx_1]] = (byte)idx_1;
+            for (int idx = 0; idx < base64.Length; idx++) {
+                ascii[base64[idx]] = (byte)idx;
             }
             // whitespaces
             ascii[0x09] = WHITESPACE;

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Image;
 using iText.IO.Log;
 using iText.Kernel;
@@ -347,7 +346,7 @@ namespace iText.Layout.Element {
                 )this.GetProperty<bool?>(Property.AUTO_SCALE_WIDTH) || (bool)this.GetProperty<bool?>(Property.AUTO_SCALE_HEIGHT
                 ))) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Element.Image));
-                logger.Warn(LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
+                logger.Warn(iText.IO.LogMessageConstant.IMAGE_HAS_AMBIGUOUS_SCALE);
             }
             SetProperty(Property.AUTO_SCALE, autoScale);
             return this;
@@ -441,6 +440,16 @@ namespace iText.Layout.Element {
         /// <returns>the original height of the image</returns>
         public virtual float GetImageHeight() {
             return xObject.GetHeight();
+        }
+
+        public virtual iText.Layout.Element.Image SetMaxHeight(float maxHeight) {
+            SetProperty(Property.HEIGHT, maxHeight);
+            return (iText.Layout.Element.Image)(Object)this;
+        }
+
+        public virtual iText.Layout.Element.Image SetMinHeight(float minHeight) {
+            SetProperty(Property.HEIGHT, minHeight);
+            return (iText.Layout.Element.Image)(Object)this;
         }
 
         /// <summary>Gets scaled width of the image.</summary>

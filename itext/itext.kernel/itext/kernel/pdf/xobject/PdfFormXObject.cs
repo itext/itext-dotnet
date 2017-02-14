@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -195,13 +195,15 @@ namespace iText.Kernel.Pdf.Xobject {
         /// <summary>Gets width based on XObject's BBox.</summary>
         /// <returns>float value.</returns>
         public override float GetWidth() {
-            return GetBBox() == null ? 0 : GetBBox().GetAsNumber(2).FloatValue();
+            return GetBBox() == null ? 0 : GetBBox().GetAsNumber(2).FloatValue() - GetBBox().GetAsNumber(0).FloatValue
+                ();
         }
 
         /// <summary>Gets height based on XObject's BBox.</summary>
         /// <returns>float value.</returns>
         public override float GetHeight() {
-            return GetBBox() == null ? 0 : GetBBox().GetAsNumber(3).FloatValue();
+            return GetBBox() == null ? 0 : GetBBox().GetAsNumber(3).FloatValue() - GetBBox().GetAsNumber(1).FloatValue
+                ();
         }
 
         /// <summary>

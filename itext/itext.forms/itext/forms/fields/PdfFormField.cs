@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,12 +44,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Codec;
 using iText.IO.Font;
 using iText.IO.Image;
 using iText.IO.Log;
 using iText.IO.Source;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
@@ -123,6 +123,8 @@ namespace iText.Forms.Fields {
         public const int VISIBLE_BUT_DOES_NOT_PRINT = 2;
 
         public const int HIDDEN_BUT_PRINTABLE = 3;
+
+        public const int VISIBLE = 4;
 
         public static readonly int FF_READ_ONLY = MakeFieldFlag(1);
 
@@ -1393,6 +1395,7 @@ namespace iText.Forms.Fields {
             else {
                 RegenerateField();
             }
+            this.SetModified();
             return this;
         }
 
@@ -2110,8 +2113,12 @@ namespace iText.Forms.Fields {
             return this;
         }
 
-        /// <param name="visibility"/>
-        /// <returns>the edited field</returns>
+        /// <summary>
+        /// Set the visibility flags of the form field annotation
+        /// Options are: HIDDEN, HIDDEN_BUT_PRINTABLE, VISIBLE, VISIBLE_BUT_DOES_NOT_PRINT
+        /// </summary>
+        /// <param name="visibility">visibility option</param>
+        /// <returns>the edited form field annotation</returns>
         public virtual iText.Forms.Fields.PdfFormField SetVisibility(int visibility) {
             switch (visibility) {
                 case HIDDEN: {
@@ -2128,6 +2135,7 @@ namespace iText.Forms.Fields {
                     break;
                 }
 
+                case VISIBLE:
                 default: {
                     GetPdfObject().Put(PdfName.F, new PdfNumber(PdfAnnotation.PRINT));
                     break;
@@ -2212,7 +2220,7 @@ namespace iText.Forms.Fields {
                     else {
                         //Avoid NPE when handling corrupt pdfs
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Forms.Fields.PdfFormField));
-                        logger.Error(LogMessageConstant.INCORRECT_PAGEROTATION);
+                        logger.Error(iText.IO.LogMessageConstant.INCORRECT_PAGEROTATION);
                         matrix = new PdfArray(new double[] { 1, 0, 0, 1, 0, 0 });
                     }
                     //Apply field rotation
@@ -2347,22 +2355,24 @@ namespace iText.Forms.Fields {
                     else {
                         if ((ff & PdfButtonFormField.FF_RADIO) != 0) {
                             PdfArray kids = GetKids();
-                            for (int i = 0; i < kids.Size(); i++) {
-                                PdfObject kid = kids.Get(i);
-                                if (kid.IsIndirectReference()) {
-                                    kid = ((PdfIndirectReference)kid).GetRefersTo();
+                            if (null != kids) {
+                                for (int i = 0; i < kids.Size(); i++) {
+                                    PdfObject kid = kids.Get(i);
+                                    if (kid.IsIndirectReference()) {
+                                        kid = ((PdfIndirectReference)kid).GetRefersTo();
+                                    }
+                                    iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
+                                    PdfWidgetAnnotation widget = field.GetWidgets()[0];
+                                    PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);
+                                    String state;
+                                    if (buttonValues.Get(new PdfName(value)) != null) {
+                                        state = value;
+                                    }
+                                    else {
+                                        state = "Off";
+                                    }
+                                    widget.SetAppearanceState(new PdfName(state));
                                 }
-                                iText.Forms.Fields.PdfFormField field = new iText.Forms.Fields.PdfFormField((PdfDictionary)kid);
-                                PdfWidgetAnnotation widget = field.GetWidgets()[0];
-                                PdfDictionary buttonValues = field.GetPdfObject().GetAsDictionary(PdfName.AP).GetAsDictionary(PdfName.N);
-                                String state;
-                                if (buttonValues.Get(new PdfName(value)) != null) {
-                                    state = value;
-                                }
-                                else {
-                                    state = "Off";
-                                }
-                                widget.SetAppearanceState(new PdfName(state));
                             }
                         }
                         else {
@@ -2623,7 +2633,7 @@ namespace iText.Forms.Fields {
         /// <summary>Gets the appearance state names.</summary>
         /// <returns>an array of Strings containing the names of the appearance states</returns>
         public virtual String[] GetAppearanceStates() {
-            ICollection<String> names = new HashSet<String>();
+            ICollection<String> names = new LinkedHashSet<String>();
             PdfString stringOpt = GetPdfObject().GetAsString(PdfName.Opt);
             if (stringOpt != null) {
                 names.Add(stringOpt.ToUnicodeString());
@@ -2788,30 +2798,42 @@ namespace iText.Forms.Fields {
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual Object[] GetFontAndSize(PdfDictionary asNormal) {
             Object[] fontAndSize = new Object[2];
-            PdfDictionary resources = null;
-            if (asNormal != null) {
-                resources = asNormal.GetAsDictionary(PdfName.Resources);
-            }
-            if (resources == null) {
-                PdfDocument document = GetDocument();
-                if (document != null) {
-                    PdfDictionary acroformDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
-                    if (acroformDictionary != null) {
-                        resources = acroformDictionary.GetAsDictionary(PdfName.DR);
-                    }
+            PdfDictionary normalResources = null;
+            PdfDictionary defaultResources = null;
+            PdfDocument document = GetDocument();
+            if (document != null) {
+                PdfDictionary acroformDictionary = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.AcroForm);
+                if (acroformDictionary != null) {
+                    defaultResources = acroformDictionary.GetAsDictionary(PdfName.DR);
                 }
             }
-            if (resources != null) {
-                PdfDictionary fontDic = resources.GetAsDictionary(PdfName.Font);
+            if (asNormal != null) {
+                normalResources = asNormal.GetAsDictionary(PdfName.Resources);
+            }
+            if (defaultResources != null || normalResources != null) {
+                PdfDictionary normalFontDic = normalResources != null ? normalResources.GetAsDictionary(PdfName.Font) : null;
+                PdfDictionary defaultFontDic = defaultResources != null ? defaultResources.GetAsDictionary(PdfName.Font) : 
+                    null;
                 PdfString defaultAppearance = GetDefaultAppearance();
-                if (fontDic != null && defaultAppearance != null) {
+                if ((normalFontDic != null || defaultFontDic != null) && defaultAppearance != null) {
                     Object[] dab = SplitDAelements(defaultAppearance.ToUnicodeString());
                     PdfName fontName = new PdfName(dab[DA_FONT].ToString());
+                    PdfDictionary requiredFontDictionary = null;
+                    if (normalFontDic != null && null != normalFontDic.GetAsDictionary(fontName)) {
+                        requiredFontDictionary = normalFontDic.GetAsDictionary(fontName);
+                    }
+                    else {
+                        if (defaultFontDic != null) {
+                            requiredFontDictionary = defaultFontDic.GetAsDictionary(fontName);
+                        }
+                    }
                     if (font != null) {
                         fontAndSize[0] = font;
                     }
                     else {
-                        fontAndSize[0] = PdfFontFactory.CreateFont(fontDic.GetAsDictionary(fontName));
+                        PdfFont dicFont = document != null ? document.GetFont(requiredFontDictionary) : PdfFontFactory.CreateFont(
+                            requiredFontDictionary);
+                        fontAndSize[0] = dicFont;
                     }
                     if (fontSize != 0) {
                         fontAndSize[1] = fontSize;

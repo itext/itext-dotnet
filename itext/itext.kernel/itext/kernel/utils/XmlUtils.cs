@@ -1,6 +1,6 @@
 ﻿/*
     This file is part of the iText (R) project.
-    Copyright (c) 1998-2016 iText Group NV
+    Copyright (c) 1998-2017 iText Group NV
     Authors: Bruno Lowagie, Paulo Soares, et al.
 
     This program is free software; you can redistribute it and/or modify
@@ -51,8 +51,10 @@ using System.Xml.Linq;
 namespace iText.Kernel.Utils {
     class XmlUtils {
         public static void WriteXmlDocToStream(XmlDocument xmlReport, Stream stream) {
-            XmlTextWriter writer = new XmlTextWriter(stream, Encoding.Default);
-            writer.Formatting = Formatting.Indented;
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = Encoding.UTF8;
+            settings.Indent = true;
+            XmlWriter writer = XmlWriter.Create(stream, settings);
             xmlReport.WriteTo(writer);
             writer.Flush();
         }

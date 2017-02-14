@@ -576,8 +576,8 @@ namespace Org.BouncyCastle.Crypto.Engines
 			bool           forEncryption,
 			ICipherParameters  parameters)
 		{
-			if (typeof(KeyParameter).IsInstanceOfType(parameters))
-			{
+		    if (parameters is KeyParameter)
+		    {
 				workingKey = GenerateWorkingKey(((KeyParameter)parameters).GetKey());
 				this.forEncryption = forEncryption;
 				return;

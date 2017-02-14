@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -143,12 +143,16 @@ namespace iText.Layout {
         /// </param>
         /// <returns>this element</returns>
         public virtual iText.Layout.Document Add(AreaBreak areaBreak) {
+            CheckClosingStatus();
             childElements.Add(areaBreak);
             EnsureRootRendererNotNull().AddChild(areaBreak.CreateRendererSubTree());
+            if (immediateFlush) {
+                childElements.JRemoveAt(childElements.Count - 1);
+            }
             return this;
         }
 
-        public override iText.Layout.Document Add<T>(BlockElement<T> element) {
+        public override iText.Layout.Document Add(IBlockElement element) {
             CheckClosingStatus();
             base.Add(element);
             if (element is ILargeElement) {
@@ -209,13 +213,6 @@ namespace iText.Layout {
             foreach (IElement element in childElements) {
                 rootRenderer.AddChild(element.CreateRendererSubTree());
             }
-        }
-
-        protected internal override RootRenderer EnsureRootRendererNotNull() {
-            if (rootRenderer == null) {
-                rootRenderer = new DocumentRenderer(this, immediateFlush);
-            }
-            return rootRenderer;
         }
 
         /// <summary>Gets the left margin, measured in points</summary>
@@ -295,6 +292,13 @@ namespace iText.Layout {
         public virtual Rectangle GetPageEffectiveArea(PageSize pageSize) {
             return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin, pageSize.GetWidth
                 () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
+        }
+
+        protected internal override RootRenderer EnsureRootRendererNotNull() {
+            if (rootRenderer == null) {
+                rootRenderer = new DocumentRenderer(this, immediateFlush);
+            }
+            return rootRenderer;
         }
 
         /// <summary>Checks whether a method is invoked at the closed document</summary>

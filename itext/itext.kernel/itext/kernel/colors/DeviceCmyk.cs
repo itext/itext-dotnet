@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,6 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel.Pdf.Colorspace;
 
@@ -100,7 +99,7 @@ namespace iText.Kernel.Colors {
                  1 ? 1 : (y > 0 ? y : 0), k > 1 ? 1 : (k > 0 ? k : 0) }) {
             if (c > 1 || c < 0 || m > 1 || m < 0 || y > 1 || y < 0 || k > 1 || k < 0) {
                 ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Kernel.Colors.DeviceCmyk));
-                LOGGER.Warn(LogMessageConstant.COLORANT_INTENSITIES_INVALID);
+                LOGGER.Warn(iText.IO.LogMessageConstant.COLORANT_INTENSITIES_INVALID);
             }
         }
 

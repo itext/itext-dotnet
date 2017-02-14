@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,13 @@ namespace iText.IO.Util {
     /// </summary>
     public static class EncodingUtil {
 
-        public static Encoding ISO_8859_1 = Encoding.GetEncoding("ISO-8859-1");
+        static EncodingUtil() {
+#if NETSTANDARD1_6
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
+        }
+
+        public static Encoding ISO_8859_1 = EncodingUtil.GetEncoding("ISO-8859-1");
 
         /// <exception cref="java.nio.charset.CharacterCodingException"/>
         public static byte[] ConvertToBytes(char[] chars, String encoding) {
@@ -70,7 +76,7 @@ namespace iText.IO.Util {
         }
 
         public static String ConvertToString(byte[] bytes, String encoding) {
-            String nameU = encoding.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            String nameU = encoding.ToUpperInvariant();
             Encoding enc = null;
             if (nameU.Equals("UNICODEBIGUNMARKED"))
                 enc = new UnicodeEncoding(true, false);
@@ -98,6 +104,22 @@ namespace iText.IO.Util {
             if (enc != null)
                 return enc.GetString(bytes, offset, bytes.Length - offset);
             return IanaEncodings.GetEncodingEncoding(encoding).GetString(bytes);
+        }
+
+        public static Encoding GetEncoding(String encodingName) {
+            return Encoding.GetEncoding(encodingName);
+        }
+
+        public static Encoding GetEncoding(int encodingName) {
+            return Encoding.GetEncoding(encodingName);
+        }
+
+        public static Encoding GetEncoding(String encodingName, EncoderFallback encoderFallback, DecoderFallback decoderFallback) {
+            return Encoding.GetEncoding(encodingName, encoderFallback, decoderFallback);
+        }
+
+        public static Encoding GetEncoding(int encodingName, EncoderFallback encoderFallback, DecoderFallback decoderFallback) {
+            return Encoding.GetEncoding(encodingName, encoderFallback, decoderFallback);
         }
     }
 }

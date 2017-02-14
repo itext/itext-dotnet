@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -61,6 +61,12 @@ namespace iText.Layout.Layout {
         /// As far as layout is concerned, the object is at its original position.
         /// </remarks>
         public const int RELATIVE = 2;
+
+        /// <summary>
+        /// Absolute positioned objects are positioned relative to the containing block, which is the nearest enclosing
+        /// ancestor block with a position other than 'static'.
+        /// </summary>
+        public const int ABSOLUTE = 3;
 
         /// <summary>Fixed positioned objects are positioned relative to the viewport, i.e., the page area of the current page.
         ///     </summary>

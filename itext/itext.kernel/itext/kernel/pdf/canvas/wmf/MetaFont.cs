@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -146,7 +146,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             catch (ArgumentException) {
                 faceName = iText.IO.Util.JavaUtil.GetStringForBytes(name, 0, k);
             }
-            faceName = faceName.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            faceName = faceName.ToLowerInvariant();
         }
 
         /// <summary>Returns the Font.</summary>

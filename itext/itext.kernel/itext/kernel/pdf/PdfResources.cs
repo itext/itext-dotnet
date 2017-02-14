@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -125,7 +125,8 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds font to resources and register PdfFont in the document for further flushing.</summary>
         /// <returns>added font resource name.</returns>
         public virtual PdfName AddFont(PdfDocument pdfDocument, PdfFont font) {
-            pdfDocument.GetDocumentFonts().Add(font);
+            font.MakeIndirect(pdfDocument);
+            pdfDocument.AddFont(font);
             return AddResource(font, fontNamesGen);
         }
 
@@ -179,6 +180,11 @@ namespace iText.Kernel.Pdf {
                     ToString());
             }
             return AddResource(image, imageNamesGen);
+        }
+
+        public virtual PdfImageXObject GetImage(PdfName name) {
+            PdfStream image = GetResource(PdfName.Image).GetAsStream(name);
+            return image != null ? new PdfImageXObject(image) : null;
         }
 
         /// <summary>
@@ -255,6 +261,11 @@ namespace iText.Kernel.Pdf {
             return name;
         }
 
+        public virtual PdfFormXObject GetForm(PdfName name) {
+            PdfStream form = GetResource(PdfName.Form).GetAsStream(name);
+            return form != null ? new PdfFormXObject(form) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Extgstate.PdfExtGState"/>
@@ -308,6 +319,11 @@ namespace iText.Kernel.Pdf {
             return AddResource(extGState, egsNamesGen);
         }
 
+        public virtual PdfExtGState GetPdfExtGState(PdfName name) {
+            PdfDictionary dic = GetResource(PdfName.ExtGState).GetAsDictionary(name);
+            return dic != null ? new PdfExtGState(dic) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="PdfDictionary"/>
@@ -346,6 +362,10 @@ namespace iText.Kernel.Pdf {
             return AddResource(properties, propNamesGen);
         }
 
+        public virtual PdfObject GetProperties(PdfName name) {
+            return GetResourceObject(PdfName.Properties, name);
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfColorSpace"/>
@@ -374,6 +394,11 @@ namespace iText.Kernel.Pdf {
         /// <returns>added color space resources name.</returns>
         public virtual PdfName AddColorSpace(PdfObject colorSpace) {
             return AddResource(colorSpace, csNamesGen);
+        }
+
+        public virtual PdfColorSpace GetColorSpace(PdfName name) {
+            PdfObject colorSpace = GetResourceObject(PdfName.ColorSpace, name);
+            return colorSpace != null ? PdfColorSpace.MakeColorSpace(colorSpace) : null;
         }
 
         /// <summary>
@@ -431,6 +456,11 @@ namespace iText.Kernel.Pdf {
             return AddResource(pattern, patternNamesGen);
         }
 
+        public virtual PdfPattern GetPattern(PdfName name) {
+            PdfObject pattern = GetResourceObject(PdfName.Pattern, name);
+            return pattern is PdfDictionary ? PdfPattern.GetPatternInstance((PdfDictionary)pattern) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="iText.Kernel.Pdf.Colorspace.PdfShading"/>
@@ -484,6 +514,11 @@ namespace iText.Kernel.Pdf {
                     ().ToString());
             }
             return AddResource(shading, shadingNamesGen);
+        }
+
+        public virtual PdfShading GetShading(PdfName name) {
+            PdfObject shading = GetResourceObject(PdfName.Shading, name);
+            return shading is PdfDictionary ? PdfShading.MakeShading((PdfDictionary)shading) : null;
         }
 
         protected internal virtual bool IsReadOnly() {
@@ -667,6 +702,42 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfDictionary GetResource(PdfName resType) {
             return GetPdfObject().GetAsDictionary(resType);
+        }
+
+        /// <summary>
+        /// Get the
+        /// <see cref="PdfObject"/>
+        /// object with specified type and name.
+        /// </summary>
+        /// <param name="resType">
+        /// the resource type. Should be
+        /// <see cref="PdfName.ColorSpace"/>
+        /// ,
+        /// <see cref="PdfName.ExtGState"/>
+        /// ,
+        /// <see cref="PdfName.Pattern"/>
+        /// ,
+        /// <see cref="PdfName.Shading"/>
+        /// ,
+        /// <see cref="PdfName.XObject"/>
+        /// ,
+        /// <see cref="PdfName.Font"/>
+        /// .
+        /// </param>
+        /// <param name="resName">the name of the resource object.</param>
+        /// <returns>
+        /// the
+        /// <see cref="PdfObject"/>
+        /// with specified name in the resources of specified type or
+        /// <see langword="null"/>
+        /// in case of incorrect type or missing resource with such name.
+        /// </returns>
+        public virtual PdfObject GetResourceObject(PdfName resType, PdfName resName) {
+            PdfDictionary resource = GetResource(resType);
+            if (resource != null) {
+                return resource.Get(resName);
+            }
+            return null;
         }
 
         protected internal override bool IsWrappedObjectMustBeIndirect() {

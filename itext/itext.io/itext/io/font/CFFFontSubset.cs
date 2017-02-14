@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -251,7 +251,7 @@ namespace iText.IO.Font {
                     int l = 0;
                     // Read the first in the first range
                     int first = GetCard16();
-                    for (int i_1 = 0; i_1 < nRanges; i_1++) {
+                    for (int i = 0; i < nRanges; i++) {
                         // Read the FD index
                         int fd = GetCard8();
                         // Read the first of the next range
@@ -517,9 +517,9 @@ namespace iText.IO.Font {
                 }
             }
             // For all Lsubrs used, check recursively for Lsubr & Gsubr used
-            for (int i_1 = 0; i_1 < lSubr.Count; i_1++) {
+            for (int i = 0; i < lSubr.Count; i++) {
                 // Pop the subr value from the hash
-                int Subr = (int)lSubr[i_1];
+                int Subr = (int)lSubr[i];
                 // Ensure the Lsubr call is valid
                 if (Subr < SubrsOffsets.Length - 1 && Subr >= 0) {
                     // Read and process the subr
@@ -937,16 +937,16 @@ namespace iText.IO.Font {
             byte[] NewObjects = new byte[Offset + unusedCount];
             // Build the new Object array
             int unusedOffset = 0;
-            for (int i_1 = 0; i_1 < Offsets.Length - 1; ++i_1) {
-                int start = NewOffsets[i_1];
-                int end = NewOffsets[i_1 + 1];
-                NewOffsets[i_1] = start + unusedOffset;
+            for (int i = 0; i < Offsets.Length - 1; ++i) {
+                int start = NewOffsets[i];
+                int end = NewOffsets[i + 1];
+                NewOffsets[i] = start + unusedOffset;
                 // If start != End then the Object is used
                 // So, we will copy the object data from the font file
                 if (start != end) {
                     // All offsets are Global Offsets relative to the beginning of the font file.
                     // Jump the file pointer to the start address to read from.
-                    buf.Seek(Offsets[i_1]);
+                    buf.Seek(Offsets[i]);
                     // Read from the buffer and write into the array at start.
                     buf.ReadFully(NewObjects, start + unusedOffset, end - start);
                 }
@@ -1159,14 +1159,14 @@ namespace iText.IO.Font {
                 item.Increment(currentOffset);
             }
             // Compute the Xref for each of the offset items
-            foreach (CFFFont.Item item_1 in OutputList) {
-                item_1.Xref();
+            foreach (CFFFont.Item item in OutputList) {
+                item.Xref();
             }
             int size = currentOffset[0];
             byte[] b = new byte[size];
             // Emit all the items into the new byte array
-            foreach (CFFFont.Item item_2 in OutputList) {
-                item_2.Emit(b);
+            foreach (CFFFont.Item item in OutputList) {
+                item.Emit(b);
             }
             // Return the new stream
             return b;

@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,14 @@ namespace iText.IO.Util {
         }
 
         public static Regex RegexCompile(String s) {
-            return new Regex(s);
+            return RegexCompile(s, RegexOptions.None);
+        }
+
+        public static Regex RegexCompile(String s, RegexOptions options) {
+            Regex regex = new Regex(s, options);
+            //This is needed so the method throw an exception in case of invalid regular expression.
+            regex.IsMatch("");
+            return regex;
         }
 
         public static Match Match(Regex r, String s) {
@@ -65,11 +72,23 @@ namespace iText.IO.Util {
         }
 
         public static String Group(Match match, int index) {
-            return match.Groups[index].Value;
+            return match.Groups[index].Success ? match.Groups[index].Value : null;
+        }
+
+        public static String Group(Match match) {
+            return Group(match, 0);
         }
 
         public static String Normalize(String s, NormalizationForm form) {
             return s.Normalize(form);
+        }
+
+        public static String[] Split(String srcStr, String splitSequence) {
+            if (splitSequence.Length == 1) {
+                return srcStr.Split(splitSequence.ToCharArray());
+            } else {
+                return Regex.Split(srcStr, splitSequence);
+            }
         }
     }
 }

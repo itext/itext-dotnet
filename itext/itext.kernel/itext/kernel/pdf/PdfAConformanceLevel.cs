@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -90,7 +90,7 @@ namespace iText.Kernel.Pdf {
         }
 
         public static iText.Kernel.Pdf.PdfAConformanceLevel GetConformanceLevel(String part, String conformance) {
-            String lowLetter = conformance.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            String lowLetter = conformance.ToUpperInvariant();
             bool aLevel = lowLetter.Equals("A");
             bool bLevel = lowLetter.Equals("B");
             bool uLevel = lowLetter.Equals("U");

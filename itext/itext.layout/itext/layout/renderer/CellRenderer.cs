@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -51,6 +52,8 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class CellRenderer : BlockRenderer {
+        protected internal IDictionary<int, Object> oldProperties = new Dictionary<int, Object>();
+
         /// <summary>Creates a CellRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -59,6 +62,7 @@ namespace iText.Layout.Renderer {
         /// </param>
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
+            // TODO delete after refactoring
             SetProperty(Property.ROWSPAN, modelElement.GetRowspan());
             SetProperty(Property.COLSPAN, modelElement.GetColspan());
         }
@@ -66,6 +70,10 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override IPropertyContainer GetModelElement() {
             return (Cell)base.GetModelElement();
+        }
+
+        protected internal override float? RetrieveWidth(float parentBoxWidth) {
+            return null;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -94,7 +102,8 @@ namespace iText.Layout.Renderer {
             Matrix ctm = canvas.GetGraphicsState().GetCtm();
             // Avoid rotation
             float? angle = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
-            bool avoidRotation = null != angle && null != this.GetProperty<Background>(Property.BACKGROUND);
+            bool avoidRotation = null != angle && HasProperty(Property.BACKGROUND);
+            bool restoreRotation = HasOwnProperty(Property.ROTATION_ANGLE);
             if (avoidRotation) {
                 AffineTransform transform = new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6)
                     , ctm.Get(7));
@@ -106,12 +115,17 @@ namespace iText.Layout.Renderer {
                 }
                 transform.Concatenate(new AffineTransform());
                 canvas.ConcatMatrix(transform);
-                DeleteProperty(Property.ROTATION_ANGLE);
+                SetProperty(Property.ROTATION_ANGLE, null);
             }
             base.DrawBackground(drawContext);
             // restore concat matrix and rotation angle
             if (avoidRotation) {
-                SetProperty(Property.ROTATION_ANGLE, angle);
+                if (restoreRotation) {
+                    SetProperty(Property.ROTATION_ANGLE, angle);
+                }
+                else {
+                    DeleteOwnProperty(Property.ROTATION_ANGLE);
+                }
                 canvas.ConcatMatrix(new AffineTransform(ctm.Get(0), ctm.Get(1), ctm.Get(3), ctm.Get(4), ctm.Get(6), ctm.Get
                     (7)));
             }
@@ -133,6 +147,25 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
+        }
+
+        protected internal virtual IRenderer SaveProperties() {
+            if (null != properties) {
+                oldProperties = new Dictionary<int, Object>();
+            }
+            else {
+                oldProperties.Clear();
+            }
+            oldProperties.AddAll(properties);
+            return this;
+        }
+
+        protected internal virtual IRenderer RestoreProperties() {
+            if (null != oldProperties) {
+                properties.Clear();
+                properties.AddAll(oldProperties);
+            }
+            return this;
         }
     }
 }

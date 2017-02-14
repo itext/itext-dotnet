@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -58,7 +58,7 @@ namespace iText.IO.Font {
 
         protected internal bool isFontSpecific;
 
-        protected internal FontNames fontNames = new FontNames();
+        protected internal FontNames fontNames;
 
         protected internal FontMetrics fontMetrics = new FontMetrics();
 
@@ -212,7 +212,7 @@ namespace iText.IO.Font {
         }
 
         protected internal virtual void SetFontWidth(String fontWidth) {
-            fontWidth = fontWidth.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            fontWidth = fontWidth.ToLowerInvariant();
             int fontWidthValue = FontNames.FWIDTH_NORMAL;
             switch (fontWidth) {
                 case "ultracondensed": {
@@ -299,6 +299,11 @@ namespace iText.IO.Font {
             if (space != null) {
                 codeToGlyph[space.GetCode()] = space;
             }
+        }
+
+        public override String ToString() {
+            String name = GetFontNames().GetFontName();
+            return name.Length > 0 ? name : base.ToString();
         }
     }
 }

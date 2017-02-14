@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -286,9 +286,9 @@ namespace iText.IO.Font {
                     k++;
                 }
             }
-            for (int k_1 = 0; k_1 < 256; k_1++) {
-                if (differences[k_1] == null) {
-                    differences[k_1] = FontConstants.notdef;
+            for (int k = 0; k < 256; k++) {
+                if (differences[k] == null) {
+                    differences[k] = FontConstants.notdef;
                 }
             }
         }
@@ -350,7 +350,7 @@ namespace iText.IO.Font {
         /// <param name="enc">the encoding to be normalized</param>
         /// <returns>the normalized encoding</returns>
         protected internal static String NormalizeEncoding(String enc) {
-            String tmp = enc == null ? "" : enc.ToLower(System.Globalization.CultureInfo.InvariantCulture);
+            String tmp = enc == null ? "" : enc.ToLowerInvariant();
             switch (tmp) {
                 case "":
                 case "winansi":

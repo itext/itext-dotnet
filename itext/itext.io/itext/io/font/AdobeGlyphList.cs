@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -69,7 +69,7 @@ namespace iText.IO.Font {
                     }
                     stream.Write(buf, 0, size);
                 }
-                resource.Close();
+                resource.Dispose();
                 resource = null;
                 String s = PdfEncodings.ConvertToString(stream.ToArray(), null);
                 StringTokenizer tk = new StringTokenizer(s, "\r\n");
@@ -105,7 +105,7 @@ namespace iText.IO.Font {
             finally {
                 if (resource != null) {
                     try {
-                        resource.Close();
+                        resource.Dispose();
                     }
                     catch (Exception) {
                     }
@@ -119,8 +119,7 @@ namespace iText.IO.Font {
             if (names2unicode.ContainsKey(name)) {
                 v = (int)names2unicode.Get(name);
             }
-            if (v == -1 && name.Length == 7 && name.ToLower(System.Globalization.CultureInfo.InvariantCulture).StartsWith
-                ("uni")) {
+            if (v == -1 && name.Length == 7 && name.ToLowerInvariant().StartsWith("uni")) {
                 try {
                     return System.Convert.ToInt32(name.Substring(3), 16);
                 }

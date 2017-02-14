@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Log;
+using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout.Element;
@@ -53,6 +55,8 @@ namespace iText.Layout.Renderer {
         protected internal IRenderer symbolRenderer;
 
         protected internal float symbolAreaWidth;
+
+        private bool symbolAddedInside;
 
         /// <summary>Creates a ListItemRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
@@ -70,14 +74,27 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null) {
-                // TODO this is actually MinHeight.
-                SetProperty(Property.HEIGHT, symbolRenderer.GetOccupiedArea().GetBBox().GetHeight());
+            if (symbolRenderer != null && this.GetProperty<Object>(Property.HEIGHT) == null && !IsListSymbolEmpty(symbolRenderer
+                )) {
+                float[] ascenderDescender = CalculateAscenderDescender();
+                float minHeight = Math.Max(symbolRenderer.GetOccupiedArea().GetBBox().GetHeight(), ascenderDescender[0] - 
+                    ascenderDescender[1]);
+                SetProperty(Property.MIN_HEIGHT, minHeight);
             }
-            return base.Layout(layoutContext);
+            ApplyListSymbolPosition();
+            LayoutResult result = base.Layout(layoutContext);
+            if (LayoutResult.PARTIAL == result.GetStatus()) {
+                result.GetOverflowRenderer().DeleteOwnProperty(Property.MIN_HEIGHT);
+            }
+            return result;
         }
 
         public override void Draw(DrawContext drawContext) {
+            if (occupiedArea == null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.ListItemRenderer));
+                logger.Error(iText.IO.LogMessageConstant.OCCUPIED_AREA_HAS_NOT_BEEN_INITIALIZED);
+                return;
+            }
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             TagTreePointer tagPointer = null;
             if (isTagged) {
@@ -99,11 +116,30 @@ namespace iText.Layout.Renderer {
             }
             base.Draw(drawContext);
             // It will be null in case of overflow (only the "split" part will contain symbol renderer.
-            if (symbolRenderer != null) {
+            if (symbolRenderer != null && !symbolAddedInside) {
                 symbolRenderer.SetParent(parent);
                 float x = occupiedArea.GetBBox().GetX();
+                ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
+                    , Property.LIST_SYMBOL_POSITION);
+                if (symbolPosition != ListSymbolPosition.DEFAULT) {
+                    float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                    x -= symbolAreaWidth + (float)(symbolIndent == null ? 0 : symbolIndent);
+                    if (symbolPosition == ListSymbolPosition.OUTSIDE) {
+                        x += (float)this.GetPropertyAsFloat(Property.MARGIN_LEFT);
+                    }
+                }
+                ApplyMargins(occupiedArea.GetBBox(), false);
+                ApplyBorderBox(occupiedArea.GetBBox(), false);
                 if (childRenderers.Count > 0) {
-                    float? yLine = ((AbstractRenderer)childRenderers[0]).GetFirstYLineRecursively();
+                    float? yLine = null;
+                    for (int i = 0; i < childRenderers.Count; i++) {
+                        if (childRenderers[i].GetOccupiedArea().GetBBox().GetHeight() > 0) {
+                            yLine = ((AbstractRenderer)childRenderers[i]).GetFirstYLineRecursively();
+                            if (yLine != null) {
+                                break;
+                            }
+                        }
+                    }
                     if (yLine != null) {
                         if (symbolRenderer is TextRenderer) {
                             ((TextRenderer)symbolRenderer).MoveYLineTo((float)yLine);
@@ -118,9 +154,17 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - symbolRenderer
-                        .GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
+                    if (symbolRenderer is TextRenderer) {
+                        ((TextRenderer)symbolRenderer).MoveYLineTo(occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight
+                            () - CalculateAscenderDescender()[0]);
+                    }
+                    else {
+                        symbolRenderer.Move(0, occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - symbolRenderer
+                            .GetOccupiedArea().GetBBox().GetHeight() - symbolRenderer.GetOccupiedArea().GetBBox().GetY());
+                    }
                 }
+                ApplyBorderBox(occupiedArea.GetBBox(), true);
+                ApplyMargins(occupiedArea.GetBBox(), true);
                 ListSymbolAlignment listSymbolAlignment = (ListSymbolAlignment)parent.GetProperty<ListSymbolAlignment?>(Property
                     .LIST_SYMBOL_ALIGNMENT, ListSymbolAlignment.RIGHT);
                 float xPosition = x - symbolRenderer.GetOccupiedArea().GetBBox().GetX();
@@ -128,12 +172,16 @@ namespace iText.Layout.Renderer {
                     xPosition += symbolAreaWidth - symbolRenderer.GetOccupiedArea().GetBBox().GetWidth();
                 }
                 symbolRenderer.Move(xPosition, 0);
-                if (isTagged) {
-                    tagPointer.AddTag(0, PdfName.Lbl);
-                }
-                symbolRenderer.Draw(drawContext);
-                if (isTagged) {
-                    tagPointer.MoveToParent();
+                if (symbolRenderer.GetOccupiedArea().GetBBox().GetRight() > parent.GetOccupiedArea().GetBBox().GetLeft()) {
+                    if (isTagged) {
+                        tagPointer.AddTag(0, PdfName.Lbl);
+                    }
+                    BeginElementOpacityApplying(drawContext);
+                    symbolRenderer.Draw(drawContext);
+                    EndElementOpacityApplying(drawContext);
+                    if (isTagged) {
+                        tagPointer.MoveToParent();
+                    }
                 }
             }
             if (isTagged) {
@@ -172,6 +220,63 @@ namespace iText.Layout.Renderer {
             // TODO retain all the properties ?
             overflowRenderer.SetProperty(Property.MARGIN_LEFT, this.GetProperty<Object>(Property.MARGIN_LEFT));
             return overflowRenderer;
+        }
+
+        private void ApplyListSymbolPosition() {
+            if (symbolRenderer != null) {
+                ListSymbolPosition symbolPosition = (ListSymbolPosition)ListRenderer.GetListItemOrListProperty(this, parent
+                    , Property.LIST_SYMBOL_POSITION);
+                if (symbolPosition == ListSymbolPosition.INSIDE) {
+                    if (childRenderers.Count > 0 && childRenderers[0] is ParagraphRenderer) {
+                        ParagraphRenderer paragraphRenderer = (ParagraphRenderer)childRenderers[0];
+                        float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                        if (symbolIndent != null) {
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                        }
+                        paragraphRenderer.childRenderers.Add(0, symbolRenderer);
+                        symbolAddedInside = true;
+                    }
+                    else {
+                        if (childRenderers.Count > 0 && childRenderers[0] is ImageRenderer) {
+                            IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                            float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                            if (symbolIndent != null) {
+                                symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                            }
+                            paragraphRenderer.AddChild(symbolRenderer);
+                            paragraphRenderer.AddChild(childRenderers[0]);
+                            childRenderers[0] = paragraphRenderer;
+                            symbolAddedInside = true;
+                        }
+                    }
+                    if (!symbolAddedInside) {
+                        IRenderer paragraphRenderer = new Paragraph().SetMargin(0).CreateRendererSubTree();
+                        float? symbolIndent = this.GetPropertyAsFloat(Property.LIST_SYMBOL_INDENT);
+                        if (symbolIndent != null) {
+                            symbolRenderer.SetProperty(Property.MARGIN_RIGHT, symbolIndent);
+                        }
+                        paragraphRenderer.AddChild(symbolRenderer);
+                        childRenderers.Add(0, paragraphRenderer);
+                        symbolAddedInside = true;
+                    }
+                }
+            }
+        }
+
+        private bool IsListSymbolEmpty(IRenderer listSymbolRenderer) {
+            return listSymbolRenderer is TextRenderer && ((TextRenderer)listSymbolRenderer).GetText().ToString().Length
+                 == 0;
+        }
+
+        private float[] CalculateAscenderDescender() {
+            PdfFont listItemFont = ResolveFirstPdfFont();
+            float? fontSize = this.GetPropertyAsFloat(Property.FONT_SIZE);
+            if (listItemFont != null && fontSize != null) {
+                float[] ascenderDescender = TextRenderer.CalculateAscenderDescender(listItemFont);
+                return new float[] { (float)fontSize * ascenderDescender[0] / TextRenderer.TEXT_SPACE_COEFF, (float)fontSize
+                     * ascenderDescender[1] / TextRenderer.TEXT_SPACE_COEFF };
+            }
+            return new float[] { 0, 0 };
         }
     }
 }

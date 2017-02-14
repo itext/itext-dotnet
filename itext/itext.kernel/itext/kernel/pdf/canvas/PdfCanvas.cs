@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -230,7 +230,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </param>
         /// <param name="document">the document that the resulting content stream will be written to</param>
         public PdfCanvas(PdfStream contentStream, PdfResources resources, PdfDocument document) {
-            this.contentStream = contentStream;
+            this.contentStream = EnsureStreamDataIsReadyToBeProcessed(contentStream);
             this.resources = resources;
             this.document = document;
         }
@@ -441,7 +441,6 @@ namespace iText.Kernel.Pdf.Canvas {
                 throw new PdfException(PdfException.FontSizeIsTooSmall, size);
             }
             currentGs.SetFontSize(size);
-            font.MakeIndirect(document);
             PdfName fontName = resources.AddFont(document, font);
             currentGs.SetFont(font);
             contentStream.GetOutputStream().Write(fontName).WriteSpace().WriteFloat(size).WriteSpace().WriteBytes(Tf);
@@ -618,6 +617,18 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <param name="text">text to show.</param>
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text) {
+            return ShowText(text, new ActualTextIterator(text));
+        }
+
+        /// <summary>Shows text (operator Tj).</summary>
+        /// <param name="text">text to show.</param>
+        /// <param name="iterator">
+        /// iterator over parts of the glyph line that should be wrapped into some marked content groups,
+        /// e.g. /ActualText or /ReversedChars
+        /// </param>
+        /// <returns>current canvas.</returns>
+        public virtual iText.Kernel.Pdf.Canvas.PdfCanvas ShowText(GlyphLine text, IEnumerator<GlyphLine.GlyphLinePart
+            > iterator) {
             document.CheckShowTextIsoConformance(currentGs, resources);
             PdfFont font;
             if ((font = currentGs.GetFont()) == null) {
@@ -626,13 +637,19 @@ namespace iText.Kernel.Pdf.Canvas {
             float fontSize = currentGs.GetFontSize() / 1000f;
             float charSpacing = currentGs.GetCharSpacing();
             float scaling = currentGs.GetHorizontalScaling() / 100f;
-            for (ActualTextIterator iterator = new ActualTextIterator(text); iterator.HasNext(); ) {
-                GlyphLine.GlyphLinePart glyphLinePart = iterator.Next();
+            IList<GlyphLine.GlyphLinePart> glyphLineParts = EnumeratorToList(iterator);
+            for (int partIndex = 0; partIndex < glyphLineParts.Count; ++partIndex) {
+                GlyphLine.GlyphLinePart glyphLinePart = glyphLineParts[partIndex];
                 if (glyphLinePart.actualText != null) {
                     PdfDictionary properties = new PdfDictionary();
                     properties.Put(PdfName.ActualText, new PdfString(glyphLinePart.actualText, PdfEncodings.UNICODE_BIG).SetHexWriting
                         (true));
                     BeginMarkedContent(PdfName.Span, properties);
+                }
+                else {
+                    if (glyphLinePart.reversed) {
+                        BeginMarkedContent(PdfName.ReversedChars);
+                    }
                 }
                 int sub = glyphLinePart.start;
                 for (int i = glyphLinePart.start; i < glyphLinePart.end; i++) {
@@ -704,7 +721,12 @@ namespace iText.Kernel.Pdf.Canvas {
                 if (glyphLinePart.actualText != null) {
                     EndMarkedContent();
                 }
-                if (glyphLinePart.end > sub && iterator.HasNext()) {
+                else {
+                    if (glyphLinePart.reversed) {
+                        EndMarkedContent();
+                    }
+                }
+                if (glyphLinePart.end > sub && partIndex + 1 < glyphLineParts.Count) {
                     contentStream.GetOutputStream().WriteFloat(GetSubrangeWidth(text, sub, glyphLinePart.end - 1), true).WriteSpace
                         ().WriteFloat(0).WriteSpace().WriteBytes(Td);
                 }
@@ -2015,7 +2037,7 @@ namespace iText.Kernel.Pdf.Canvas {
                 }
             }
             os.WriteBytes(ID);
-            os.WriteBytes(imageXObject.GetPdfObject().GetBytes()).WriteNewLine().WriteBytes(EI).WriteNewLine();
+            os.WriteBytes(imageXObject.GetPdfObject().GetBytes(false)).WriteNewLine().WriteBytes(EI).WriteNewLine();
             RestoreState();
         }
 
@@ -2207,9 +2229,23 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private static PdfStream GetPageStream(PdfPage page) {
-            PdfStream stream = page.GetContentStream(page.GetContentStreamCount() - 1);
+            PdfStream stream = page.GetLastContentStream();
             return stream == null || stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter) ? page.NewContentStreamAfter
                 () : stream;
+        }
+
+        private PdfStream EnsureStreamDataIsReadyToBeProcessed(PdfStream stream) {
+            if (!stream.IsFlushed()) {
+                if (stream.GetOutputStream() == null || stream.ContainsKey(PdfName.Filter)) {
+                    try {
+                        stream.SetData(stream.GetBytes());
+                    }
+                    catch (Exception) {
+                    }
+                }
+            }
+            // ignore
+            return stream;
         }
 
         /// <summary>
@@ -2262,24 +2298,32 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         private void ApplyRotation(PdfPage page) {
-            iText.Kernel.Geom.Rectangle rectagle = page.GetPageSizeWithRotation();
+            iText.Kernel.Geom.Rectangle rectangle = page.GetPageSizeWithRotation();
             int rotation = page.GetRotation();
             switch (rotation) {
                 case 90: {
-                    ConcatMatrix(0, 1, -1, 0, rectagle.GetTop(), 0);
+                    ConcatMatrix(0, 1, -1, 0, rectangle.GetTop(), 0);
                     break;
                 }
 
                 case 180: {
-                    ConcatMatrix(-1, 0, 0, -1, rectagle.GetRight(), rectagle.GetTop());
+                    ConcatMatrix(-1, 0, 0, -1, rectangle.GetRight(), rectangle.GetTop());
                     break;
                 }
 
                 case 270: {
-                    ConcatMatrix(0, -1, 1, 0, 0, rectagle.GetRight());
+                    ConcatMatrix(0, -1, 1, 0, 0, rectangle.GetRight());
                     break;
                 }
             }
+        }
+
+        private static IList<T> EnumeratorToList<T>(IEnumerator<T> enumerator) {
+            IList<T> list = new List<T>();
+            while (enumerator.MoveNext()) {
+                list.Add(enumerator.Current);
+            }
+            return list;
         }
     }
 }

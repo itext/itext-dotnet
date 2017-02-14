@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Log;
 
 namespace iText.IO.Source {
@@ -216,12 +215,12 @@ namespace iText.IO.Source {
                     }
                     else {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
-                        logger.Error(LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
+                        logger.Error(iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
                     }
                 }
                 catch (Exception ex) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Source.GroupedRandomAccessSource));
-                    logger.Error(LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
+                    logger.Error(iText.IO.LogMessageConstant.ONE_OF_GROUPED_SOURCES_CLOSING_FAILED, ex);
                 }
             }
             if (firstThrownIOExc != null) {

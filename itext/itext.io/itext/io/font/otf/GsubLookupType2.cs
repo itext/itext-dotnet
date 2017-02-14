@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -65,8 +65,11 @@ namespace iText.IO.Font.Otf {
             if (!openReader.IsSkip(g.GetCode(), lookupFlag)) {
                 int[] substSequence = substMap.Get(g.GetCode());
                 if (substSequence != null) {
-                    line.SubstituteOneToMany(openReader, substSequence);
-                    changed = true;
+                    // The use of multiple substitution for deletion of an input glyph is prohibited. GlyphCount should always be greater than 0.
+                    if (substSequence.Length > 0) {
+                        line.SubstituteOneToMany(openReader, substSequence);
+                        changed = true;
+                    }
                 }
             }
             line.idx++;

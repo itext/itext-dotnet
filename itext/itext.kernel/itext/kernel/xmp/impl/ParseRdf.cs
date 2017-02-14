@@ -31,6 +31,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Xml;
+using iText.IO.Util;
 using iText.Kernel.XMP;
 using iText.Kernel.XMP.Options;
 
@@ -1099,7 +1100,7 @@ namespace iText.Kernel.XMP.Impl
 
 			string value = node.Value;
 			for (int i = 0; i < value.Length; i++) {
-				if (!char.IsWhiteSpace(value[i])) {
+				if (!TextUtil.IsWhiteSpace(value[i])) {
 					return false;
 				}
 			}

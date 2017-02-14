@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,7 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace iText.IO.Util {
@@ -54,16 +55,28 @@ namespace iText.IO.Util {
     /// Be aware that it's API and functionality may be changed in future.
     /// </summary>
     public static class JavaUtil {
+        public static String GetStringForChars(char[] chars) {
+            return new String(chars);
+        }
+
+        public static String GetStringForChars(char[] chars, int offset, int length) {
+            return new String(chars, offset, length);
+        }
+
         public static String GetStringForBytes(byte[] bytes, int offset, int length) {
             return Encoding.UTF8.GetString(bytes, offset, length);
         }
 
         public static String GetStringForBytes(byte[] bytes, int offset, int length, String encoding) {
-            return Encoding.GetEncoding(encoding).GetString(bytes, offset, length);
+            return EncodingUtil.GetEncoding(encoding).GetString(bytes, offset, length);
         }
 
         public static String GetStringForBytes(byte[] bytes, String encoding) {
             return GetStringForBytes(bytes, 0, bytes.Length, encoding);
+        }
+
+        public static String GetStringForBytes(byte[] bytes, Encoding encoding) {
+            return encoding.GetString(bytes);
         }
 
         public static String GetStringForBytes(byte[] bytes) {
@@ -96,6 +109,44 @@ namespace iText.IO.Util {
 
         public static String IntegerToOctalString(int i) {
             return Convert.ToString(i, 8);
+        }
+
+        public static bool DictionariesEquals<TKey, TValue>(IDictionary<TKey, TValue> that, IDictionary<TKey, TValue> other) {
+            if (other == that)
+                return true;
+            if (that == null || other == null)
+                return false;
+
+            return !that.Except(other).Any();
+        }
+
+        public static int DictionaryHashCode<TKey, TValue>(IDictionary<TKey, TValue> dict) {
+            int result = 0;
+            if (dict != null) {
+                foreach (KeyValuePair<TKey, TValue> entry in dict) {
+                    result += entry.GetHashCode();
+                }
+            }
+            return result;
+        }
+
+        public static bool SetEquals<T>(ISet<T> that, ISet<T> other) {
+            if (other == that)
+                return true;
+            if (that == null || other == null)
+                return false;
+
+            return that.SetEquals(other);
+        }
+
+        public static int SetHashCode<T>(ISet<T> set) {
+            int result = 0;
+            if (set != null) {
+                foreach (T value in set) {
+                    result += value.GetHashCode();
+                }
+            }
+            return result;
         }
 
         public static bool ArraysEquals<T>(T[] a, T[] a2) {
@@ -232,6 +283,15 @@ namespace iText.IO.Util {
             return copy;
         }
 
+        public static T[] ArraysCopyOfRange<T>(T[] original, int from, int to) {
+            int newLength = to - from;
+            if (newLength < 0)
+                throw new ArgumentException(from + " > " + to);
+            T[] copy = new T[newLength];
+            System.Array.Copy(original, from, copy, 0, Math.Min(original.Length - from, newLength));
+            return copy;
+        }
+
         public static Stream CorrectWavFile(Stream stream) {
             String header = "";
             for (int i = 0; i < 4; i++) {
@@ -246,7 +306,7 @@ namespace iText.IO.Util {
         }
 
         public static int CharacterDigit(char ch, int radix) {
-            return Convert.ToInt32(ch.ToString(CultureInfo.InvariantCulture), radix);
+            return Convert.ToInt32(new String(new[] {ch}), radix);
         }
 
         public static String CharToString(char ch) {

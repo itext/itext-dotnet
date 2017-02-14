@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -135,8 +135,8 @@ namespace iText.IO.Font.Otf {
             }
             IList<IList<GposAnchor[]>> ligatureArray = OtfReadCommon.ReadLigatureArray(openReader, classCount, ligatureArrayLocation
                 );
-            for (int k_1 = 0; k_1 < ligatureCoverage.Count; ++k_1) {
-                markToLigature.ligatures[ligatureCoverage[k_1]] = ligatureArray[k_1];
+            for (int k = 0; k < ligatureCoverage.Count; ++k) {
+                markToLigature.ligatures[ligatureCoverage[k]] = ligatureArray[k];
             }
             marksligatures.Add(markToLigature);
         }

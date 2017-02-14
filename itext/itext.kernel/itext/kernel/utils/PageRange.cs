@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,16 +44,19 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using iText.IO.Util;
 
 namespace iText.Kernel.Utils {
     /// <summary>
-    /// Class representing a page range, for instance a page range can contain
-    /// pages 5, then pages 10 through 15, then page 18, then page 21 and so on.
+    /// Class representing a page range, for instance a page range can contain pages
+    /// 5, then pages 10 through 15, then page 18, then page 21 and so on.
     /// </summary>
     public class PageRange {
-        private IList<int> sequenceStarts = new List<int>();
+        private static readonly Regex SEQUENCE_PATTERN = iText.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)?");
 
-        private IList<int> sequenceEnds = new List<int>();
+        private static readonly Regex SINGLE_PAGE_PATTERN = iText.IO.Util.StringUtil.RegexCompile("(\\d+)");
+
+        private IList<PageRange.IPageRangePart> sequences = new List<PageRange.IPageRangePart>();
 
         /// <summary>
         /// Constructs an empty
@@ -66,66 +69,145 @@ namespace iText.Kernel.Utils {
         /// <summary>
         /// Constructs a
         /// <see cref="PageRange"/>
-        /// instance from a range in a string form, for example: "1-12, 15, 45-66".
+        /// instance from a range in a string form,
+        /// for example: "1-12, 15, 45-66". More advanced forms are also available,
+        /// for example:
+        /// - "3-" to indicate from page 3 to the last page
+        /// - "odd" for all odd pages
+        /// - "even" for all even pages
+        /// - "3- & odd" for all odd pages starting from page 3
+        /// A complete example for pages 1 to 5, page 8 then odd pages starting from
+        /// page 9: "1-5, 8, odd & 9-".
         /// </summary>
-        /// <param name="pageRange">the page range</param>
+        /// <param name="pageRange">a String of page ranges</param>
         public PageRange(String pageRange) {
             pageRange = iText.IO.Util.StringUtil.ReplaceAll(pageRange, "\\s+", "");
-            Regex sequencePattern = iText.IO.Util.StringUtil.RegexCompile("(\\d+)-(\\d+)");
-            Regex singlePagePattern = iText.IO.Util.StringUtil.RegexCompile("(\\d+)");
-            foreach (String pageRangePart in pageRange.Split(",")) {
-                Match matcher;
-                if ((matcher = iText.IO.Util.StringUtil.Match(sequencePattern, pageRangePart)).Success) {
-                    sequenceStarts.Add(System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1)));
-                    sequenceEnds.Add(System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 2)));
-                }
-                else {
-                    if ((matcher = iText.IO.Util.StringUtil.Match(singlePagePattern, pageRangePart)).Success) {
-                        int pageNumber = System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1));
-                        sequenceStarts.Add(pageNumber);
-                        sequenceEnds.Add(pageNumber);
-                    }
+            foreach (String pageRangePart in iText.IO.Util.StringUtil.Split(pageRange, ",")) {
+                PageRange.IPageRangePart cond = GetRangeObject(pageRangePart);
+                if (cond != null) {
+                    sequences.Add(cond);
                 }
             }
         }
 
+        private static PageRange.IPageRangePart GetRangeObject(String rangeDef) {
+            if (rangeDef.Contains("&")) {
+                IList<PageRange.IPageRangePart> conditions = new List<PageRange.IPageRangePart>();
+                foreach (String pageRangeCond in iText.IO.Util.StringUtil.Split(rangeDef, "&")) {
+                    PageRange.IPageRangePart cond = GetRangeObject(pageRangeCond);
+                    if (cond != null) {
+                        conditions.Add(cond);
+                    }
+                }
+                if (conditions.Count > 0) {
+                    return new PageRange.PageRangePartAnd(conditions.ToArray(new PageRange.IPageRangePart[] {  }));
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                Match matcher;
+                if ((matcher = iText.IO.Util.StringUtil.Match(SEQUENCE_PATTERN, rangeDef)).Success) {
+                    int start = System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1));
+                    if (iText.IO.Util.StringUtil.Group(matcher, 2) != null) {
+                        return new PageRange.PageRangePartSequence(start, System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher
+                            , 2)));
+                    }
+                    else {
+                        return new PageRange.PageRangePartAfter(start);
+                    }
+                }
+                else {
+                    if ((matcher = iText.IO.Util.StringUtil.Match(SINGLE_PAGE_PATTERN, rangeDef)).Success) {
+                        return new PageRange.PageRangePartSingle(System.Convert.ToInt32(iText.IO.Util.StringUtil.Group(matcher, 1)
+                            ));
+                    }
+                    else {
+                        if ("odd".EqualsIgnoreCase(rangeDef)) {
+                            return PageRange.PageRangePartOddEven.ODD;
+                        }
+                        else {
+                            if ("even".EqualsIgnoreCase(rangeDef)) {
+                                return PageRange.PageRangePartOddEven.EVEN;
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+
+        /// <summary>Adds any page range part to this page range.</summary>
+        /// <remarks>
+        /// Adds any page range part to this page range. Users may define and plug in
+        /// custom implementations for behavior not found in the standard library.
+        /// </remarks>
+        /// <param name="part">
+        /// a custom implementation of
+        /// <see cref="IPageRangePart"/>
+        /// </param>
+        /// <returns>this range, already modified</returns>
+        public virtual iText.Kernel.Utils.PageRange AddPageRangePart(PageRange.IPageRangePart part) {
+            sequences.Add(part);
+            return this;
+        }
+
         /// <summary>Adds a page sequence to the range.</summary>
         /// <param name="startPageNumber">the starting page number of the sequence</param>
-        /// <param name="endPageNumber">the finishing page number of the sequnce</param>
+        /// <param name="endPageNumber">the finishing page number of the sequence</param>
         /// <returns>this range, already modified</returns>
         public virtual iText.Kernel.Utils.PageRange AddPageSequence(int startPageNumber, int endPageNumber) {
-            sequenceStarts.Add(startPageNumber);
-            sequenceEnds.Add(endPageNumber);
-            return this;
+            return AddPageRangePart(new PageRange.PageRangePartSequence(startPageNumber, endPageNumber));
         }
 
         /// <summary>Adds a single page to the range.</summary>
         /// <param name="pageNumber">the page number to add</param>
         /// <returns>this range, already modified</returns>
         public virtual iText.Kernel.Utils.PageRange AddSinglePage(int pageNumber) {
-            sequenceStarts.Add(pageNumber);
-            sequenceEnds.Add(pageNumber);
-            return this;
+            return AddPageRangePart(new PageRange.PageRangePartSingle(pageNumber));
         }
 
-        /// <summary>Gets the list if pages that have been added to the range so far.</summary>
+        /// <summary>Gets the list of pages that have been added to the range so far.</summary>
+        /// <remarks>
+        /// Gets the list of pages that have been added to the range so far.
+        /// This method has been deprecated in favor of an alternative method that
+        /// requires the user to supply the total number of pages in the document.
+        /// This number is necessary in order to limit open-ended ranges like "4-".
+        /// </remarks>
         /// <returns>the list containing page numbers added to the range</returns>
+        [System.ObsoleteAttribute(@"Please use GetQualifyingPageNums(int)")]
         public virtual IList<int> GetAllPages() {
+            // supply a reasonably high default for users who haven't switched
+            return GetQualifyingPageNums(10000);
+        }
+
+        /// <summary>Gets the list of pages that have been added to the range so far.</summary>
+        /// <param name="nbPages">
+        /// number of pages of the document to get the pages, to list
+        /// only the pages eligible for this document.
+        /// </param>
+        /// <returns>
+        /// the list containing page numbers added to the range matching this
+        /// document
+        /// </returns>
+        public virtual IList<int> GetQualifyingPageNums(int nbPages) {
             IList<int> allPages = new List<int>();
-            for (int ind = 0; ind < sequenceStarts.Count; ind++) {
-                for (int pageInRange = (int)sequenceStarts[ind]; pageInRange <= sequenceEnds[ind]; pageInRange++) {
-                    allPages.Add(pageInRange);
-                }
+            foreach (PageRange.IPageRangePart sequence in sequences) {
+                allPages.AddAll(sequence.GetAllPagesInRange(nbPages));
             }
             return allPages;
         }
 
         /// <summary>Checks if a given page is present in the range built so far.</summary>
         /// <param name="pageNumber">the page number to check</param>
-        /// <returns><code>true</code> if the page is present in this range, <code>false</code> otherwise</returns>
+        /// <returns>
+        /// <code>true</code> if the page is present in this range,
+        /// <code>false</code> otherwise
+        /// </returns>
         public virtual bool IsPageInRange(int pageNumber) {
-            for (int ind = 0; ind < sequenceStarts.Count; ind++) {
-                if (sequenceStarts[ind] <= pageNumber && pageNumber <= sequenceEnds[ind]) {
+            foreach (PageRange.IPageRangePart sequence in sequences) {
+                if (sequence.IsPageInRange(pageNumber)) {
                     return true;
                 }
             }
@@ -138,12 +220,237 @@ namespace iText.Kernel.Utils {
                 return false;
             }
             iText.Kernel.Utils.PageRange other = (iText.Kernel.Utils.PageRange)obj;
-            return sequenceStarts.Equals(other.sequenceStarts) && sequenceEnds.Equals(other.sequenceEnds);
+            return System.Linq.Enumerable.SequenceEqual(sequences, other.sequences);
         }
 
         /// <summary><inheritDoc/></summary>
         public override int GetHashCode() {
-            return sequenceStarts.GetHashCode() * 31 + sequenceEnds.GetHashCode();
+            return sequences.GetHashCode();
+        }
+
+        /// <summary>Inner interface for range parts definition</summary>
+        public interface IPageRangePart {
+            //public List<Integer> getAllPages();
+            IList<int> GetAllPagesInRange(int nbPages);
+
+            bool IsPageInRange(int pageNumber);
+        }
+
+        /// <summary>Class for range part containing a single page</summary>
+        public class PageRangePartSingle : PageRange.IPageRangePart {
+            private readonly int page;
+
+            public PageRangePartSingle(int page) {
+                this.page = page;
+            }
+
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
+                if (page <= nbPages) {
+                    return JavaCollectionsUtil.SingletonList(page);
+                }
+                else {
+                    return JavaCollectionsUtil.EmptyList<int>();
+                }
+            }
+
+            public virtual bool IsPageInRange(int pageNumber) {
+                return page == pageNumber;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override bool Equals(Object obj) {
+                if (!(obj is PageRange.PageRangePartSingle)) {
+                    return false;
+                }
+                PageRange.PageRangePartSingle other = (PageRange.PageRangePartSingle)obj;
+                return page == other.page;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override int GetHashCode() {
+                return page;
+            }
+        }
+
+        /// <summary>
+        /// Class for range part containing a range of pages represented by a start
+        /// and an end page
+        /// </summary>
+        public class PageRangePartSequence : PageRange.IPageRangePart {
+            private readonly int start;
+
+            private readonly int end;
+
+            public PageRangePartSequence(int start, int end) {
+                this.start = start;
+                this.end = end;
+            }
+
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
+                IList<int> allPages = new List<int>();
+                for (int pageInRange = start; pageInRange <= end && pageInRange <= nbPages; pageInRange++) {
+                    allPages.Add(pageInRange);
+                }
+                return allPages;
+            }
+
+            public virtual bool IsPageInRange(int pageNumber) {
+                return start <= pageNumber && pageNumber <= end;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override bool Equals(Object obj) {
+                if (!(obj is PageRange.PageRangePartSequence)) {
+                    return false;
+                }
+                PageRange.PageRangePartSequence other = (PageRange.PageRangePartSequence)obj;
+                return start == other.start && end == other.end;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override int GetHashCode() {
+                return start * 31 + end;
+            }
+        }
+
+        /// <summary>
+        /// Class for range part containing a range of pages for all pages after a
+        /// given start page
+        /// </summary>
+        public class PageRangePartAfter : PageRange.IPageRangePart {
+            private readonly int start;
+
+            public PageRangePartAfter(int start) {
+                this.start = start;
+            }
+
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
+                IList<int> allPages = new List<int>();
+                for (int pageInRange = start; pageInRange <= nbPages; pageInRange++) {
+                    allPages.Add(pageInRange);
+                }
+                return allPages;
+            }
+
+            public virtual bool IsPageInRange(int pageNumber) {
+                return start <= pageNumber;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override bool Equals(Object obj) {
+                if (!(obj is PageRange.PageRangePartAfter)) {
+                    return false;
+                }
+                PageRange.PageRangePartAfter other = (PageRange.PageRangePartAfter)obj;
+                return start == other.start;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override int GetHashCode() {
+                return start * 31 + -1;
+            }
+        }
+
+        /// <summary>Class for range part for all even or odd pages.</summary>
+        /// <remarks>
+        /// Class for range part for all even or odd pages. The class contains only 2
+        /// instances, one for odd pages and one for even pages.
+        /// </remarks>
+        public class PageRangePartOddEven : PageRange.IPageRangePart {
+            private readonly bool isOdd;
+
+            private readonly int mod;
+
+            public static readonly PageRange.PageRangePartOddEven ODD = new PageRange.PageRangePartOddEven(true);
+
+            public static readonly PageRange.PageRangePartOddEven EVEN = new PageRange.PageRangePartOddEven(false);
+
+            private PageRangePartOddEven(bool isOdd) {
+                this.isOdd = isOdd;
+                if (isOdd) {
+                    mod = 1;
+                }
+                else {
+                    mod = 0;
+                }
+            }
+
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
+                IList<int> allPages = new List<int>();
+                for (int pageInRange = (mod == 0 ? 2 : mod); pageInRange <= nbPages; pageInRange += 2) {
+                    allPages.Add(pageInRange);
+                }
+                return allPages;
+            }
+
+            public virtual bool IsPageInRange(int pageNumber) {
+                return pageNumber % 2 == mod;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override bool Equals(Object obj) {
+                if (!(obj is PageRange.PageRangePartOddEven)) {
+                    return false;
+                }
+                PageRange.PageRangePartOddEven other = (PageRange.PageRangePartOddEven)obj;
+                return isOdd == other.isOdd;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override int GetHashCode() {
+                if (isOdd) {
+                    return 127;
+                }
+                return 128;
+            }
+        }
+
+        /// <summary>Class for range part based on several range parts.</summary>
+        /// <remarks>
+        /// Class for range part based on several range parts. A 'and' is performed
+        /// between all conditions. This allows for example to configure odd pages
+        /// between page 19 and 25.
+        /// </remarks>
+        public class PageRangePartAnd : PageRange.IPageRangePart {
+            private readonly IList<PageRange.IPageRangePart> conditions = new List<PageRange.IPageRangePart>();
+
+            public PageRangePartAnd(params PageRange.IPageRangePart[] conditions) {
+                this.conditions.AddAll(iText.IO.Util.JavaUtil.ArraysAsList(conditions));
+            }
+
+            public virtual IList<int> GetAllPagesInRange(int nbPages) {
+                IList<int> allPages = new List<int>();
+                if (!conditions.IsEmpty()) {
+                    allPages.AddAll(conditions[0].GetAllPagesInRange(nbPages));
+                }
+                foreach (PageRange.IPageRangePart cond in conditions) {
+                    allPages.RetainAll(cond.GetAllPagesInRange(nbPages));
+                }
+                return allPages;
+            }
+
+            public virtual bool IsPageInRange(int pageNumber) {
+                foreach (PageRange.IPageRangePart cond in conditions) {
+                    if (!cond.IsPageInRange(pageNumber)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override bool Equals(Object obj) {
+                if (!(obj is PageRange.PageRangePartAnd)) {
+                    return false;
+                }
+                PageRange.PageRangePartAnd other = (PageRange.PageRangePartAnd)obj;
+                return System.Linq.Enumerable.SequenceEqual(conditions, other.conditions);
+            }
+
+            /// <summary><inheritDoc/></summary>
+            public override int GetHashCode() {
+                return conditions.GetHashCode();
+            }
         }
     }
 }

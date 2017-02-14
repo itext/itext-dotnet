@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1018,16 +1018,16 @@ namespace iText.Barcodes {
                 codewords[dest + k] = 0;
             }
             int lastE = Alength - 1;
-            for (int k_1 = 0; k_1 < lenCodewords; ++k_1) {
-                int t1 = codewords[k_1] + codewords[dest];
+            for (int k = 0; k < lenCodewords; ++k) {
+                int t1 = codewords[k] + codewords[dest];
                 for (int e = 0; e <= lastE; ++e) {
                     int t2 = t1 * A[lastE - e] % MOD;
                     int t3 = MOD - t2;
                     codewords[dest + e] = ((e == lastE ? 0 : codewords[dest + e + 1]) + t3) % MOD;
                 }
             }
-            for (int k_2 = 0; k_2 < Alength; ++k_2) {
-                codewords[dest + k_2] = (MOD - codewords[dest + k_2]) % MOD;
+            for (int k = 0; k < Alength; ++k) {
+                codewords[dest + k] = (MOD - codewords[dest + k]) % MOD;
             }
         }
 

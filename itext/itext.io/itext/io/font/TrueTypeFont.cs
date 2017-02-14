@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
 using iText.IO.Util;
@@ -75,18 +74,21 @@ namespace iText.IO.Font {
         private byte[] fontStreamBytes;
 
         protected internal TrueTypeFont() {
+            fontNames = new FontNames();
         }
 
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(String path) {
             CheckFilePath(path);
             fontParser = new OpenTypeParser(path);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
         public TrueTypeFont(byte[] ttf) {
             fontParser = new OpenTypeParser(ttf);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
@@ -94,12 +96,14 @@ namespace iText.IO.Font {
         internal TrueTypeFont(String ttcPath, int ttcIndex) {
             CheckFilePath(ttcPath);
             fontParser = new OpenTypeParser(ttcPath, ttcIndex);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
         /// <exception cref="System.IO.IOException"/>
         internal TrueTypeFont(byte[] ttc, int ttcIndex) {
             fontParser = new OpenTypeParser(ttc, ttcIndex);
+            fontParser.LoadTables(true);
             InitializeFontProperties();
         }
 
@@ -252,35 +256,7 @@ namespace iText.IO.Font {
             kerning = fontParser.ReadKerning(head.unitsPerEm);
             bBoxes = fontParser.ReadBbox(head.unitsPerEm);
             // font names group
-            fontNames.SetAllNames(fontParser.GetAllNameEntries());
-            fontNames.SetFontName(fontParser.GetPsFontName());
-            fontNames.SetFullName(fontNames.GetNames(4));
-            String[][] otfFamilyName = fontNames.GetNames(16);
-            if (otfFamilyName != null) {
-                fontNames.SetFamilyName(otfFamilyName);
-            }
-            else {
-                fontNames.SetFamilyName(fontNames.GetNames(1));
-            }
-            String[][] subfamily = fontNames.GetNames(2);
-            if (subfamily != null) {
-                fontNames.SetStyle(subfamily[0][3]);
-            }
-            String[][] otfSubFamily = fontNames.GetNames(17);
-            if (otfFamilyName != null) {
-                fontNames.SetSubfamily(otfSubFamily);
-            }
-            else {
-                fontNames.SetSubfamily(subfamily);
-            }
-            String[][] cidName = fontNames.GetNames(20);
-            if (cidName != null) {
-                fontNames.SetCidFontName(cidName[0][3]);
-            }
-            fontNames.SetWeight(os_2.usWeightClass);
-            fontNames.SetWidth(os_2.usWidthClass);
-            fontNames.SetMacStyle(head.macStyle);
-            fontNames.SetAllowEmbedding(os_2.fsType != 2);
+            fontNames = fontParser.GetFontNames();
             // font metrics group
             fontMetrics.SetUnitsPerEm(head.unitsPerEm);
             fontMetrics.UpdateBbox(head.xMin, head.yMin, head.xMax, head.yMax);
@@ -318,28 +294,34 @@ namespace iText.IO.Font {
             fontIdentification.SetPanose(os_2.panose);
             IDictionary<int, int[]> cmap = GetActiveCmap();
             int[] glyphWidths = fontParser.GetGlyphWidthsByIndex();
+            int maxGlyphId = fontMetrics.GetMaxGlyphId();
             unicodeToGlyph = new LinkedDictionary<int, Glyph>(cmap.Count);
-            codeToGlyph = new LinkedDictionary<int, Glyph>(glyphWidths.Length);
+            codeToGlyph = new LinkedDictionary<int, Glyph>(maxGlyphId);
             avgWidth = 0;
             foreach (int charCode in cmap.Keys) {
                 int index = cmap.Get(charCode)[0];
-                if (index >= glyphWidths.Length) {
+                if (index >= maxGlyphId) {
                     ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.IO.Font.TrueTypeFont));
-                    LOGGER.Warn(String.Format(LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName(), index));
+                    LOGGER.Warn(String.Format(iText.IO.LogMessageConstant.FONT_HAS_INVALID_GLYPH, GetFontNames().GetFontName()
+                        , index));
                     continue;
                 }
                 Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes[index] : null);
                 unicodeToGlyph[charCode] = glyph;
-                codeToGlyph[index] = glyph;
+                // This is done on purpose to keep the mapping to glyphs with smaller unicode values, in contrast with
+                // larger values which often represent different forms of other characters.
+                if (!codeToGlyph.ContainsKey(index)) {
+                    codeToGlyph[index] = glyph;
+                }
                 avgWidth += glyph.GetWidth();
             }
             FixSpaceIssue();
-            for (int index_1 = 0; index_1 < glyphWidths.Length; index_1++) {
-                if (codeToGlyph.ContainsKey(index_1)) {
+            for (int index = 0; index < glyphWidths.Length; index++) {
+                if (codeToGlyph.ContainsKey(index)) {
                     continue;
                 }
-                Glyph glyph = new Glyph(index_1, glyphWidths[index_1], -1);
-                codeToGlyph[index_1] = glyph;
+                Glyph glyph = new Glyph(index, glyphWidths[index], -1);
+                codeToGlyph[index] = glyph;
                 avgWidth += glyph.GetWidth();
             }
             if (codeToGlyph.Count != 0) {
@@ -367,13 +349,21 @@ namespace iText.IO.Font {
             String[] ret = new String[count];
             count = 0;
             bit = 1;
-            for (int k_1 = 0; k_1 < 64; ++k_1) {
-                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k_1] != null) {
-                    ret[count++] = FontConstants.CODE_PAGES[k_1];
+            for (int k = 0; k < 64; ++k) {
+                if ((cp & bit) != 0 && FontConstants.CODE_PAGES[k] != null) {
+                    ret[count++] = FontConstants.CODE_PAGES[k];
                 }
                 bit <<= 1;
             }
             return ret;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        public virtual void Close() {
+            if (fontParser != null) {
+                fontParser.Close();
+            }
+            fontParser = null;
         }
     }
 }

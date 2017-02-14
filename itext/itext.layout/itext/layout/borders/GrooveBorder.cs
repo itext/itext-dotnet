@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -100,6 +100,30 @@ namespace iText.Layout.Borders {
         /// </param>
         public GrooveBorder(DeviceGray color, float width)
             : base(color, width) {
+        }
+
+        /// <summary>Creates a GrooveBorder instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        public GrooveBorder(DeviceRgb color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
+        /// <summary>Creates a GrooveBorder instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        public GrooveBorder(DeviceCmyk color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
+        /// <summary>Creates a GrooveBorder instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        public GrooveBorder(DeviceGray color, float width, float opacity)
+            : base(color, width, opacity) {
         }
 
         /// <summary><inheritDoc/></summary>

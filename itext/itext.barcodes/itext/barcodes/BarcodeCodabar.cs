@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,10 +42,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO.Font;
 using iText.Kernel;
 using iText.Kernel.Colors;
-using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas;
@@ -90,28 +88,23 @@ namespace iText.Barcodes {
             // b
             // c
             // d
-            try {
-                x = 0.8f;
-                n = 2;
-                font = PdfFontFactory.CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
-                size = 8;
-                baseline = size;
-                barHeight = size * 3;
-                textAlignment = ALIGN_CENTER;
-                generateChecksum = false;
-                checksumText = false;
-                startStopText = false;
-            }
-            catch (Exception e) {
-                throw new PdfException(e.Message, e.InnerException);
-            }
+            x = 0.8f;
+            n = 2;
+            font = document.GetDefaultFont();
+            size = 8;
+            baseline = size;
+            barHeight = size * 3;
+            textAlignment = ALIGN_CENTER;
+            generateChecksum = false;
+            checksumText = false;
+            startStopText = false;
         }
 
         /// <summary>Creates the bars.</summary>
         /// <param name="text">the text to create the bars</param>
         /// <returns>the bars</returns>
         public static byte[] GetBarsCodabar(String text) {
-            text = text.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            text = text.ToUpperInvariant();
             int len = text.Length;
             if (len < 2) {
                 throw new ArgumentException(PdfException.CodabarMustHaveAtLeastStartAndStopCharacter);
@@ -137,7 +130,7 @@ namespace iText.Barcodes {
             if (code.Length < 2) {
                 return code;
             }
-            String text = code.ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+            String text = code.ToUpperInvariant();
             int sum = 0;
             int len = text.Length;
             for (int k = 0; k < len; ++k) {
@@ -290,8 +283,8 @@ namespace iText.Barcodes {
             if (barColor != null) {
                 canvas.SetFillColor(barColor);
             }
-            for (int k_1 = 0; k_1 < bars.Length; ++k_1) {
-                float w = (bars[k_1] == 0 ? x : x * n);
+            for (int k = 0; k < bars.Length; ++k) {
+                float w = (bars[k] == 0 ? x : x * n);
                 if (print) {
                     canvas.Rectangle(barStartX, barStartY, w - inkSpreading, barHeight);
                 }

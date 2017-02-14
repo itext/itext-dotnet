@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,8 @@ namespace iText.Kernel.Pdf {
             items = GetNames();
         }
 
+        /// <summary>Retrieves the names stored in the name tree</summary>
+        /// <returns>Map containing the PdfObjects stored in the tree</returns>
         public virtual IDictionary<String, PdfObject> GetNames() {
             if (items.Count > 0) {
                 return items;
@@ -107,6 +109,9 @@ namespace iText.Kernel.Pdf {
             return items;
         }
 
+        /// <summary>Add an entry to the name tree</summary>
+        /// <param name="key">key of the entry</param>
+        /// <param name="value">object to add</param>
         public virtual void AddEntry(String key, PdfObject value) {
             if (items.Keys.Contains(key)) {
                 throw new PdfException(PdfException.NameAlreadyExistsInTheNameTree);
@@ -115,10 +120,13 @@ namespace iText.Kernel.Pdf {
             items[key] = value;
         }
 
+        /// <returns>True if the object has been modified, false otherwise.</returns>
         public virtual bool IsModified() {
             return modified;
         }
 
+        /// <summary>Build a PdfDictionary containing the name tree</summary>
+        /// <returns>PdfDictionary containing the name tree</returns>
         public virtual PdfDictionary BuildTree() {
             String[] names = new String[items.Count];
             names = items.Keys.ToArray(names);
@@ -165,20 +173,20 @@ namespace iText.Kernel.Pdf {
                 }
                 skip *= NODE_SIZE;
                 int tt = (names.Length + skip - 1) / skip;
-                for (int i_1 = 0; i_1 < tt; ++i_1) {
-                    int offset = i_1 * NODE_SIZE;
+                for (int i = 0; i < tt; ++i) {
+                    int offset = i * NODE_SIZE;
                     int end = Math.Min(offset + NODE_SIZE, top);
                     PdfDictionary dic = ((PdfDictionary)new PdfDictionary().MakeIndirect(catalog.GetDocument()));
                     PdfArray arr = new PdfArray();
-                    arr.Add(new PdfString(names[i_1 * skip], null));
-                    arr.Add(new PdfString(names[Math.Min((i_1 + 1) * skip, names.Length) - 1], null));
+                    arr.Add(new PdfString(names[i * skip], null));
+                    arr.Add(new PdfString(names[Math.Min((i + 1) * skip, names.Length) - 1], null));
                     dic.Put(PdfName.Limits, arr);
                     arr = new PdfArray();
                     for (; offset < end; ++offset) {
                         arr.Add(kids[offset]);
                     }
                     dic.Put(PdfName.Kids, arr);
-                    kids[i_1] = dic;
+                    kids[i] = dic;
                 }
                 top = tt;
             }

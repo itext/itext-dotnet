@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -55,6 +55,7 @@ namespace iText.IO.Font {
 
         internal CidFont(String fontName, ICollection<String> cmaps) {
             compatibleCmaps = cmaps;
+            fontNames = new FontNames();
             InitializeCidFontNameAndStyle(fontName);
             IDictionary<String, Object> fontDesc = CidFontProperties.GetAllFonts().Get(fontNames.GetFontName());
             if (fontDesc == null) {
@@ -99,6 +100,7 @@ namespace iText.IO.Font {
             else {
                 fontNames.SetFontName(fontName);
             }
+            fontNames.SetFullName(new String[][] { new String[] { "", "", "", fontNames.GetFontName() } });
         }
 
         private void InitializeCidFontProperties(IDictionary<String, Object> fontDesc) {

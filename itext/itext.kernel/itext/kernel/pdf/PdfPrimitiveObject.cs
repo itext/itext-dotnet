@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Log;
 
 namespace iText.Kernel.Pdf {
@@ -84,7 +83,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
-                logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                logger.Warn(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }
@@ -95,7 +94,7 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
-                logger.Warn(LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+                logger.Warn(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
             }
             return this;
         }

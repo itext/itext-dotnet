@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using iText.IO.Source;
-using iText.Kernel;
 
 namespace iText.Kernel.Pdf {
     internal class PdfXrefTable {
@@ -138,6 +137,7 @@ namespace iText.Kernel.Pdf {
                 }
                 if (reference.GetGenNumber() < MAX_GENERATION) {
                     freeReferences.Add(reference.GetObjNumber());
+                    EnsureCount(Math.Max(this.count, reference.GetObjNumber()));
                     xref[reference.GetObjNumber()] = null;
                 }
             }
@@ -183,8 +183,8 @@ namespace iText.Kernel.Pdf {
                 first = 1;
                 len = 0;
             }
-            for (int i_1 = 1; i_1 < Size(); i_1++) {
-                PdfIndirectReference reference = xref[i_1];
+            for (int i = 1; i < Size(); i++) {
+                PdfIndirectReference reference = xref[i];
                 if (reference != null) {
                     if ((document.properties.appendMode && !reference.CheckState(PdfObject.MODIFIED)) || (reference.IsFree() &&
                          reference.GetGenNumber() == 0) || (!reference.CheckState(PdfObject.FLUSHED))) {
@@ -203,7 +203,7 @@ namespace iText.Kernel.Pdf {
                         len++;
                     }
                     else {
-                        first = i_1;
+                        first = i;
                         len = 1;
                     }
                 }
@@ -247,8 +247,8 @@ namespace iText.Kernel.Pdf {
                 for (int k = 0; k < sections.Count; k += 2) {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
-                    for (int i_2 = first; i_2 < first + len; i_2++) {
-                        PdfIndirectReference reference = xrefTable.Get(i_2);
+                    for (int i = first; i < first + len; i++) {
+                        PdfIndirectReference reference = xrefTable.Get(i);
                         if (reference == null) {
                             continue;
                         }
@@ -282,8 +282,8 @@ namespace iText.Kernel.Pdf {
                     first = (int)sections[k];
                     len = (int)sections[k + 1];
                     writer.WriteInteger(first).WriteSpace().WriteInteger(len).WriteByte((byte)'\n');
-                    for (int i_2 = first; i_2 < first + len; i_2++) {
-                        PdfIndirectReference reference = xrefTable.Get(i_2);
+                    for (int i = first; i < first + len; i++) {
+                        PdfIndirectReference reference = xrefTable.Get(i);
                         StringBuilder off = new StringBuilder("0000000000").Append(reference.GetOffset());
                         StringBuilder gen = new StringBuilder("00000").Append(reference.GetGenNumber());
                         writer.WriteString(off.JSubstring(off.Length - 10, off.Length)).WriteSpace().WriteString(gen.JSubstring(gen
@@ -333,7 +333,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         protected internal static void WriteKeyInfo(PdfWriter writer) {
             String platform = " for .NET";
-            Version version = Version.GetInstance();
+            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
             String k = version.GetKey();
             if (k == null) {
                 k = "iText";

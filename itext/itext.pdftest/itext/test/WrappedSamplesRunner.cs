@@ -1,6 +1,6 @@
 /*
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,7 @@ namespace iText.Test {
 
         protected Type sampleClass;
 
-        private RunnerParams sampleClassParams;
+        protected RunnerParams sampleClassParams;
 
         private String errorMessage;
 
@@ -83,9 +83,9 @@ namespace iText.Test {
 
             sampleClass = sampleClassParams.sampleType;
             System.Console.Out.WriteLine("Starting test " + sampleClassParams);
-
-            string oldCurrentDir = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = NUnit.Framework.TestContext.CurrentContext.TestDirectory;
+            
+            string oldCurrentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(NUnit.Framework.TestContext.CurrentContext.TestDirectory);
 
             RunMain();
 
@@ -99,7 +99,7 @@ namespace iText.Test {
             System.Console.Out.WriteLine("Test executed successfully, comparing results...");
             ComparePdf(outPath, dest, cmp);
 
-            Environment.CurrentDirectory = oldCurrentDir;
+            Directory.SetCurrentDirectory(oldCurrentDir);
 
             if (errorMessage != null) {
                 NUnit.Framework.Assert.Fail(errorMessage);
@@ -126,7 +126,8 @@ namespace iText.Test {
                 return null;
             }
             int i = dest.LastIndexOf("/");
-            return "../../cmpfiles/" + dest.Substring(14, (i + 1) - 14) + "cmp_" + dest.Substring(i + 1);
+            int j = dest.LastIndexOf("/chapter");
+            return "../../cmpfiles/" + dest.Substring(j, (i + 1) - j) + "cmp_" + dest.Substring(i + 1);
         }
 
         protected internal virtual String GetOutPath(String dest) {
@@ -200,7 +201,7 @@ namespace iText.Test {
 
             WrappedSamplesRunner.RunnerParams runnerParams = new WrappedSamplesRunner.RunnerParams();
             runnerParams.sampleType = classType;
-            Attribute attribute = Attribute.GetCustomAttribute(classType, typeof(WrapToTestAttribute));
+            Attribute attribute = classType.GetCustomAttribute(typeof(WrapToTestAttribute));
             if (attribute == null) {
                 if (searchConfig.IsToMarkTestsWithoutAnnotationAsIgnored() && IsLookLikeTest(classType)) {
                     runnerParams.ignoreMessage = String.Format("Class {0} seems to be a test but it doesn't have WrapToTest annotation."

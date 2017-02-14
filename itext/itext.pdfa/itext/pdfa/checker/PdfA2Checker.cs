@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -133,15 +133,15 @@ namespace iText.Pdfa.Checker {
                     PdfObject colorSpace = shadingDictionary.Get(PdfName.ColorSpace);
                     CheckColorSpace(PdfColorSpace.MakeColorSpace(colorSpace), currentColorSpaces, true, true);
                     PdfDictionary extGStateDict = ((PdfDictionary)pattern.GetPdfObject()).GetAsDictionary(PdfName.ExtGState);
-                    CanvasGraphicsState gState = new _CanvasGraphicsState_152(extGStateDict);
+                    CanvasGraphicsState gState = new _CanvasGraphicsState_153(extGStateDict);
                     CheckExtGState(gState);
                 }
             }
             CheckColorSpace(color.GetColorSpace(), currentColorSpaces, true, fill);
         }
 
-        private sealed class _CanvasGraphicsState_152 : CanvasGraphicsState {
-            public _CanvasGraphicsState_152(PdfDictionary extGStateDict) {
+        private sealed class _CanvasGraphicsState_153 : CanvasGraphicsState {
+            public _CanvasGraphicsState_153(PdfDictionary extGStateDict) {
                 this.extGStateDict = extGStateDict;
  {
                     this.UpdateFromExtGState(new PdfExtGState(extGStateDict));
@@ -486,8 +486,8 @@ namespace iText.Pdfa.Checker {
                 }
                 HashSet<String> names = new HashSet<String>();
                 HashSet<PdfObject> order = new HashSet<PdfObject>();
-                foreach (PdfDictionary config_1 in configList) {
-                    PdfString name = config_1.GetAsString(PdfName.Name);
+                foreach (PdfDictionary config in configList) {
+                    PdfString name = config.GetAsString(PdfName.Name);
                     if (name == null) {
                         throw new PdfAConformanceException(PdfAConformanceException.OptionalContentConfigurationDictionaryShallContainNameEntry
                             );
@@ -496,11 +496,11 @@ namespace iText.Pdfa.Checker {
                         throw new PdfAConformanceException(PdfAConformanceException.ValueOfNameEntryShallBeUniqueAmongAllOptionalContentConfigurationDictionaries
                             );
                     }
-                    if (config_1.ContainsKey(PdfName.AS)) {
+                    if (config.ContainsKey(PdfName.AS)) {
                         throw new PdfAConformanceException(PdfAConformanceException.TheAsKeyShallNotAppearInAnyOptionalContentConfigurationDictionary
                             );
                     }
-                    PdfArray orderArray = config_1.GetAsArray(PdfName.Order);
+                    PdfArray orderArray = config.GetAsArray(PdfName.Order);
                     if (orderArray != null) {
                         FillOrderRecursively(orderArray, order);
                     }
@@ -705,7 +705,7 @@ namespace iText.Pdfa.Checker {
                 transparencyIsUsed = true;
             }
             if (PdfName.JPXDecode.Equals(image.Get(PdfName.Filter))) {
-                Jpeg2000ImageData jpgImage = (Jpeg2000ImageData)ImageDataFactory.CreateJpeg2000(image.GetBytes());
+                Jpeg2000ImageData jpgImage = (Jpeg2000ImageData)ImageDataFactory.CreateJpeg2000(image.GetBytes(false));
                 Jpeg2000ImageData.Parameters @params = jpgImage.GetParameters();
                 /* Concerning !params.isJpxBaseline check
                 *

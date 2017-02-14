@@ -3,7 +3,7 @@ using System.IO;
 /*
  *
  * This file is part of the iText project.
- * Copyright (c) 1998-2016 iText Group NV
+ * Copyright (c) 1998-2017 iText Group NV
  * Authors: Bruno Lowagie, Paulo Soares, et al.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -175,17 +175,21 @@ namespace System.util.zlib {
             z.free();
             z=null;
         }
-        
-        public override void Close() {
-            try{
-                try{Finish();}
-                catch (IOException) {}
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) {
+                try {
+                    try {
+                        Finish();
+                    } catch (IOException) {
+                    }
+                } finally {
+                    End();
+                    outp.Dispose();
+                    outp = null;
+                }
             }
-            finally{
-                End();
-                outp.Close();
-                outp=null;
-            }
+            base.Dispose(disposing);
         }
     }
 }

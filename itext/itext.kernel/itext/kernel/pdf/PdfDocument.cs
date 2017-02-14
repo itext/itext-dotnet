@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,7 +44,6 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Text;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
@@ -76,6 +75,7 @@ namespace iText.Kernel.Pdf {
         /// </remarks>
         protected internal PageSize defaultPageSize = PageSize.Default;
 
+        [System.NonSerialized]
         protected internal EventDispatcher eventDispatcher = new EventDispatcher();
 
         /// <summary>PdfWriter associated with the document.</summary>
@@ -107,6 +107,12 @@ namespace iText.Kernel.Pdf {
         /// <summary>Document version.</summary>
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
+        /// <summary>The ID entry that represents a change in a document.</summary>
+        protected internal PdfString modifiedDocumentId;
+
+        /// <summary>The original second id when the document is read initially.</summary>
+        private PdfString originalModifiedDocumentId;
+
         /// <summary>List of indirect objects used in the document.</summary>
         internal readonly PdfXrefTable xref = new PdfXrefTable();
 
@@ -129,9 +135,17 @@ namespace iText.Kernel.Pdf {
         /// <summary>flag determines whether to write unused objects to result document</summary>
         protected internal bool flushUnusedObjects = false;
 
-        protected internal ICollection<PdfFont> documentFonts = new HashSet<PdfFont>();
+        private IDictionary<PdfIndirectReference, PdfFont> documentFonts = new Dictionary<PdfIndirectReference, PdfFont
+            >();
 
+        private PdfFont defaultFont = null;
+
+        [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
+
+        private static long lastDocumentId = new long();
+
+        private long documentId;
 
         /// <summary>Yet not copied link annotations from the other documents.</summary>
         /// <remarks>
@@ -148,6 +162,7 @@ namespace iText.Kernel.Pdf {
             if (reader == null) {
                 throw new ArgumentNullException("reader");
             }
+            documentId = IncrementDocumentId();
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -164,6 +179,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
+            documentId = IncrementDocumentId();
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -192,6 +208,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
+            documentId = IncrementDocumentId();
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
@@ -199,11 +216,11 @@ namespace iText.Kernel.Pdf {
                 ();
             if (properties.appendMode && writerHasEncryption) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
+                logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_APPEND);
             }
             if (properties.preserveEncryption && writerHasEncryption) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Warn(LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
+                logger.Warn(iText.IO.LogMessageConstant.WRITER_ENCRYPTION_IS_IGNORED_PRESERVE);
             }
             Open(writer.properties.pdfVersion);
         }
@@ -242,7 +259,7 @@ namespace iText.Kernel.Pdf {
                 AddCustomMetadataExtensions(xmpMeta);
                 try {
                     xmpMeta.SetProperty(XMPConst.NS_DC, PdfConst.Format, "application/pdf");
-                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, Version.GetInstance().GetVersion());
+                    xmpMeta.SetProperty(XMPConst.NS_PDF, PdfConst.Producer, iText.Kernel.Version.GetInstance().GetVersion());
                     SetXmpMetadata(xmpMeta);
                 }
                 catch (XMPException) {
@@ -609,11 +626,27 @@ namespace iText.Kernel.Pdf {
                         }
                         catalog.GetPdfObject().Put(PdfName.Metadata, xmp);
                     }
+                    String producer = null;
+                    if (reader == null) {
+                        producer = iText.Kernel.Version.GetInstance().GetVersion();
+                    }
+                    else {
+                        if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
+                            producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
+                        }
+                        producer = AddModifiedPostfix(producer);
+                    }
+                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     CheckIsoConformance();
                     PdfObject crypto_1 = null;
                     if (properties.appendMode) {
                         if (structTreeRoot != null && structTreeRoot.GetPdfObject().IsModified()) {
                             TryFlushTagStructure();
+                        }
+                        else {
+                            if (tagStructureContext != null) {
+                                tagStructureContext.RemoveAllConnectionsToTags();
+                            }
                         }
                         if (catalog.IsOCPropertiesMayHaveChanged() && catalog.GetOCProperties(false).GetPdfObject().IsModified()) {
                             catalog.GetOCProperties(false).Flush();
@@ -644,9 +677,6 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     else {
-                        if (structTreeRoot != null) {
-                            TryFlushTagStructure();
-                        }
                         if (catalog.IsOCPropertiesMayHaveChanged()) {
                             catalog.GetPdfObject().Put(PdfName.OCProperties, catalog.GetOCProperties(false).GetPdfObject());
                             catalog.GetOCProperties(false).Flush();
@@ -663,6 +693,9 @@ namespace iText.Kernel.Pdf {
                         }
                         for (int pageNum = 1; pageNum <= GetNumberOfPages(); pageNum++) {
                             GetPage(pageNum).Flush();
+                        }
+                        if (structTreeRoot != null) {
+                            TryFlushTagStructure();
                         }
                         catalog.GetPdfObject().Flush(false);
                         info.Flush();
@@ -700,9 +733,32 @@ namespace iText.Kernel.Pdf {
                             originalFileID = PdfEncryption.GenerateNewDocumentId();
                         }
                     }
+                    byte[] secondId;
+                    if (modifiedDocumentId != null) {
+                        secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
+                    }
+                    else {
+                        if (originalModifiedDocumentId != null) {
+                            PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
+                            if (!originalModifiedDocumentId.Equals(newModifiedId)) {
+                                secondId = ByteUtils.GetIsoBytes(newModifiedId.GetValue());
+                            }
+                            else {
+                                secondId = PdfEncryption.GenerateNewDocumentId();
+                            }
+                        }
+                        else {
+                            if (isModified) {
+                                secondId = PdfEncryption.GenerateNewDocumentId();
+                            }
+                            else {
+                                secondId = originalFileID;
+                            }
+                        }
+                    }
                     // if originalFIleID comes from crypto, it means that no need in checking modified state.
                     // For crypto purposes new documentId always generated.
-                    fileId = PdfEncryption.CreateInfoId(originalFileID, isModified);
+                    fileId = PdfEncryption.CreateInfoId(originalFileID, secondId);
                     // The following two operators prevents the possible inconsistency between root and info
                     // entries existing in the trailer object and corresponding fields. This inconsistency
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
@@ -724,11 +780,11 @@ namespace iText.Kernel.Pdf {
             finally {
                 if (writer != null && IsCloseWriter()) {
                     try {
-                        writer.Close();
+                        writer.Dispose();
                     }
                     catch (Exception e) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                        logger.Error(LogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
+                        logger.Error(iText.IO.LogMessageConstant.PDF_WRITER_CLOSING_FAILED, e);
                     }
                 }
                 if (reader != null && IsCloseReader()) {
@@ -737,7 +793,7 @@ namespace iText.Kernel.Pdf {
                     }
                     catch (Exception e) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                        logger.Error(LogMessageConstant.PDF_READER_CLOSING_FAILED, e);
+                        logger.Error(iText.IO.LogMessageConstant.PDF_READER_CLOSING_FAILED, e);
                     }
                 }
             }
@@ -984,7 +1040,7 @@ namespace iText.Kernel.Pdf {
                 }
                 else {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                    logger.Warn(LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
+                    logger.Warn(iText.IO.LogMessageConstant.NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT);
                 }
             }
             if (catalog.IsOutlineMode()) {
@@ -1410,10 +1466,79 @@ namespace iText.Kernel.Pdf {
             this.userProperties = userProperties;
         }
 
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
+        /// The second one should be the same entry, unless the document has been modified. iText will by default generate
+        /// a modified id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="modifiedDocumentId">the new modified document id</param>
+        public virtual void SetModifiedDocumentId(PdfString modifiedDocumentId) {
+            this.modifiedDocumentId = modifiedDocumentId;
+        }
+
+        /// <summary>
+        /// Create a new instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// or load already created one.
+        /// Note, PdfFont which created with
+        /// <see cref="iText.Kernel.Font.PdfFontFactory.CreateFont(PdfDictionary)"/>
+        /// won't be cached
+        /// until it will be added to
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// or
+        /// <see cref="PdfResources"/>
+        /// .
+        /// </summary>
+        public virtual PdfFont GetFont(PdfDictionary dictionary) {
+            System.Diagnostics.Debug.Assert(dictionary.GetIndirectReference() != null);
+            if (documentFonts.ContainsKey(dictionary.GetIndirectReference())) {
+                return documentFonts.Get(dictionary.GetIndirectReference());
+            }
+            else {
+                return AddFont(PdfFontFactory.CreateFont(dictionary));
+            }
+        }
+
+        /// <summary>Gets default font for the document: Helvetica, WinAnsi.</summary>
+        /// <remarks>
+        /// Gets default font for the document: Helvetica, WinAnsi.
+        /// One instance per document.
+        /// </remarks>
+        /// <returns>
+        /// instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// or
+        /// <see langword="null"/>
+        /// on error.
+        /// </returns>
+        public virtual PdfFont GetDefaultFont() {
+            if (defaultFont == null) {
+                try {
+                    defaultFont = PdfFontFactory.CreateFont();
+                    defaultFont.MakeIndirect(this);
+                    AddFont(defaultFont);
+                }
+                catch (System.IO.IOException e) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
+                    logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_CREATING_DEFAULT_FONT, e);
+                    defaultFont = null;
+                }
+            }
+            return defaultFont;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
+        }
+
+        /// <summary>Adds PdfFont without an checks</summary>
+        /// <returns>the same PdfFont instance.</returns>
+        internal virtual PdfFont AddFont(PdfFont font) {
+            documentFonts[font.GetPdfObject().GetIndirectReference()] = font;
+            return font;
         }
 
         /// <summary>
@@ -1491,6 +1616,10 @@ namespace iText.Kernel.Pdf {
                     }
                     pdfVersion = reader.headerPdfVersion;
                     trailer = new PdfDictionary(reader.trailer);
+                    PdfArray id = reader.trailer.GetAsArray(PdfName.ID);
+                    if (id != null) {
+                        originalModifiedDocumentId = id.GetAsString(1);
+                    }
                     catalog = new PdfCatalog((PdfDictionary)trailer.Get(PdfName.Root, true));
                     if (catalog.GetPdfObject().ContainsKey(PdfName.Version)) {
                         // The version of the PDF specification to which the document conforms (for example, 1.4)
@@ -1532,40 +1661,29 @@ namespace iText.Kernel.Pdf {
                         writer.crypto = reader.decrypt;
                     }
                     writer.document = this;
+                    String producer = null;
                     if (reader == null) {
                         catalog = new PdfCatalog(this);
                         info = new PdfDocumentInfo(this).AddCreationDate();
-                        info.AddModDate();
-                        info.GetPdfObject().Put(PdfName.Producer, new PdfString(Version.GetInstance().GetVersion()));
+                        producer = iText.Kernel.Version.GetInstance().GetVersion();
                     }
                     else {
-                        info.AddModDate();
-                        String producer = null;
                         if (info.GetPdfObject().ContainsKey(PdfName.Producer)) {
                             producer = info.GetPdfObject().GetAsString(PdfName.Producer).ToUnicodeString();
                         }
-                        Version version = Version.GetInstance();
-                        if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
-                            producer = version.GetVersion();
-                        }
-                        else {
-                            int idx = producer.IndexOf("; modified using");
-                            StringBuilder buf;
-                            if (idx == -1) {
-                                buf = new StringBuilder(producer);
-                            }
-                            else {
-                                buf = new StringBuilder(producer.JSubstring(0, idx));
-                            }
-                            buf.Append("; modified using ");
-                            buf.Append(version.GetVersion());
-                            producer = buf.ToString();
-                        }
-                        info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
+                        producer = AddModifiedPostfix(producer);
                     }
+                    info.AddModDate();
+                    info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     trailer = new PdfDictionary();
                     trailer.Put(PdfName.Root, catalog.GetPdfObject().GetIndirectReference());
                     trailer.Put(PdfName.Info, info.GetPdfObject().GetIndirectReference());
+                    if (reader != null) {
+                        // If the reader's trailer contains an ID entry, let's copy it over to the new trailer
+                        if (reader.trailer.ContainsKey(PdfName.ID)) {
+                            trailer.Put(PdfName.ID, reader.trailer.GetAsArray(PdfName.ID));
+                        }
+                    }
                 }
                 if (properties.appendMode) {
                     // Due to constructor reader and writer not null.
@@ -1635,7 +1753,7 @@ namespace iText.Kernel.Pdf {
             }
             catch (XMPException e) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+                logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
 
@@ -1677,7 +1795,7 @@ namespace iText.Kernel.Pdf {
                             }
                             else {
                                 if (PdfName.Keywords.Equals(key)) {
-                                    foreach (String v in value.Split(",|;")) {
+                                    foreach (String v in iText.IO.Util.StringUtil.Split(value, ",|;")) {
                                         if (v.Trim().Length > 0) {
                                             xmpMeta.AppendArrayItem(XMPConst.NS_DC, PdfConst.Subject, new PropertyOptions(PropertyOptions.ARRAY), v.Trim
                                                 (), null);
@@ -1724,7 +1842,7 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </returns>
         protected internal virtual ICollection<PdfFont> GetDocumentFonts() {
-            return documentFonts;
+            return documentFonts.Values;
         }
 
         protected internal virtual void FlushFonts() {
@@ -1808,7 +1926,7 @@ namespace iText.Kernel.Pdf {
                 structTreeRoot = null;
                 structParentIndex = -1;
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfDocument));
-                logger.Error(LogMessageConstant.TAG_STRUCTURE_INIT_FAILED, ex);
+                logger.Error(iText.IO.LogMessageConstant.TAG_STRUCTURE_INIT_FAILED, ex);
             }
         }
 
@@ -1999,6 +2117,73 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
+        }
+
+        private long GetDocumentId() {
+            return documentId;
+        }
+
+        /// <summary>A structure storing documentId, object number and generation number.</summary>
+        /// <remarks>
+        /// A structure storing documentId, object number and generation number. This structure is using to calculate
+        /// an unique object key during the copy process.
+        /// </remarks>
+        internal class IndirectRefDescription {
+            private long docId;
+
+            private int objNr;
+
+            private int genNr;
+
+            internal IndirectRefDescription(PdfIndirectReference reference) {
+                this.docId = reference.GetDocument().GetDocumentId();
+                this.objNr = reference.GetObjNumber();
+                this.genNr = reference.GetGenNumber();
+            }
+
+            public override int GetHashCode() {
+                int result = (int)docId;
+                result *= 31;
+                result += objNr;
+                result *= 31;
+                result += genNr;
+                return result;
+            }
+
+            public override bool Equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || GetType() != o.GetType()) {
+                    return false;
+                }
+                PdfDocument.IndirectRefDescription that = (PdfDocument.IndirectRefDescription)o;
+                return docId == that.docId && objNr == that.objNr && genNr == that.genNr;
+            }
+        }
+
+        private String AddModifiedPostfix(String producer) {
+            iText.Kernel.Version version = iText.Kernel.Version.GetInstance();
+            if (producer == null || !version.GetVersion().Contains(version.GetProduct())) {
+                return version.GetVersion();
+            }
+            else {
+                int idx = producer.IndexOf("; modified using", StringComparison.Ordinal);
+                StringBuilder buf;
+                if (idx == -1) {
+                    buf = new StringBuilder(producer);
+                }
+                else {
+                    buf = new StringBuilder(producer.JSubstring(0, idx));
+                }
+                buf.Append("; modified using ");
+                buf.Append(version.GetVersion());
+                return buf.ToString();
+            }
+        }
+
+        private long IncrementDocumentId() {
+            return System.Threading.Interlocked.Increment(ref lastDocumentId);
         }
 
         void System.IDisposable.Dispose() {

@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -45,12 +45,21 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace iText.Layout {
     internal static class LayoutExtensions {
         public static String JSubstring(this String str, int beginIndex, int endIndex) {
             return str.Substring(beginIndex, endIndex - beginIndex);
+        }
+
+        public static String JSubstring(this StringBuilder sb, int beginIndex, int endIndex) {
+            return sb.ToString(beginIndex, endIndex - beginIndex);
+        }
+
+        public static bool EqualsIgnoreCase(this String str, String anotherString) {
+            return String.Equals(str, anotherString, StringComparison.OrdinalIgnoreCase);
         }
 
         public static void JGetChars(this String str, int srcBegin, int srcEnd, char[] dst, int dstBegin) {
@@ -87,22 +96,20 @@ namespace iText.Layout {
             }
         }
 
-        public static bool RemoveAll<T>(this IList<T> list, ICollection<T> c)
-        {
-            bool modefied = false;
-            foreach (T item in c)
-            {
-                if (list.Remove(item)) modefied = true;
-            }
-            return modefied;
+        public static bool RemoveAll<T>(this IList<T> list, ICollection<T> c) {
+            return BatchRemove(list, c, false);
         }
 
         // Removes from this list all of its elements that are not contained in the specified collection.
         public static bool RetainAll<T>(this IList<T> list, ICollection<T> c) {
+            return BatchRemove(list, c, true);
+        }
+
+        private static bool BatchRemove<T>(IList<T> list, ICollection<T> c, bool complement) {
             bool modified = false;
             int j = 0;
             for (int i = 0; i < list.Count; ++i) {
-                if (c.Contains(list[i])) {
+                if (c.Contains(list[i]) == complement) {
                     list[j++] = list[i];
                 }
             }
@@ -127,7 +134,7 @@ namespace iText.Layout {
             return 0 == queue.Count();
         }
 
-        public static KeyValuePair<K, V> HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) {
+        public static KeyValuePair<K, V>? HigherEntry<K, V>(this SortedDictionary<K, V> dict, K key) {
             List<K> list = dict.Keys.ToList();
             int index = list.BinarySearch(key, dict.Comparer);
             if (index < 0) {
@@ -136,7 +143,7 @@ namespace iText.Layout {
                 index++;
             }
             if (index == list.Count) {
-                return default(KeyValuePair<K, V>);
+                return null;
             } else {
                 return new KeyValuePair<K, V>(list[index], dict[list[index]]);
             }
@@ -173,5 +180,34 @@ namespace iText.Layout {
 
             return value;
         }
+
+        public static Assembly GetAssembly(this Type type) {
+#if !NETSTANDARD1_6
+            return type.Assembly;
+#else
+            return type.GetTypeInfo().Assembly;
+#endif
+        }
+
+#if !NETSTANDARD1_6
+        public static Attribute GetCustomAttribute(this Assembly assembly, Type attributeType) {
+            object[] customAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(attributeType, false);
+            if (customAttributes.Length > 0 && customAttributes[0] is Attribute) {
+                return customAttributes[0] as Attribute;
+            } else {
+                return null;
+            }
+        }
+#endif
+
+#if NETSTANDARD1_6
+        public static MethodInfo GetMethod(this Type type, String methodName, Type[] parameterTypes) {
+            return type.GetTypeInfo().GetMethod(methodName, parameterTypes);
+        }
+
+        public static ConstructorInfo GetConstructor(this Type type, Type[] parameterTypes) {
+            return type.GetTypeInfo().GetConstructor(parameterTypes);
+        }
+#endif
     }
 }

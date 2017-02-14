@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -133,12 +133,15 @@ namespace iText.Barcodes.Qrcode {
                 return result;
             }
             int result_1 = coefficients[0];
-            for (int i_1 = 1; i_1 < size; i_1++) {
-                result_1 = GF256.AddOrSubtract(field.Multiply(a, result_1), coefficients[i_1]);
+            for (int i = 1; i < size; i++) {
+                result_1 = GF256.AddOrSubtract(field.Multiply(a, result_1), coefficients[i]);
             }
             return result_1;
         }
 
+        /// <summary>GF addition or subtraction (they are identical for a GF(2^n)</summary>
+        /// <param name="other">the other GF-poly</param>
+        /// <returns>new GF256Poly obtained by summing this GF and other</returns>
         internal iText.Barcodes.Qrcode.GF256Poly AddOrSubtract(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
@@ -166,6 +169,9 @@ namespace iText.Barcodes.Qrcode {
             return new iText.Barcodes.Qrcode.GF256Poly(field, sumDiff);
         }
 
+        /// <summary>GF multiplication</summary>
+        /// <param name="other">the other GF-poly</param>
+        /// <returns>new GF-poly obtained by multiplying this  with other</returns>
         internal iText.Barcodes.Qrcode.GF256Poly Multiply(iText.Barcodes.Qrcode.GF256Poly other) {
             if (!field.Equals(other.field)) {
                 throw new ArgumentException("GF256Polys do not have same GF256 field");
@@ -187,6 +193,9 @@ namespace iText.Barcodes.Qrcode {
             return new iText.Barcodes.Qrcode.GF256Poly(field, product);
         }
 
+        /// <summary>GF scalar multiplication</summary>
+        /// <param name="scalar">scalar</param>
+        /// <returns>new GF-poly obtained by multiplying every element of this with the scalar.</returns>
         internal iText.Barcodes.Qrcode.GF256Poly Multiply(int scalar) {
             if (scalar == 0) {
                 return field.GetZero();
@@ -239,6 +248,7 @@ namespace iText.Barcodes.Qrcode {
             return new iText.Barcodes.Qrcode.GF256Poly[] { quotient, remainder };
         }
 
+        /// <returns>String representation of the Galois Field polynomial.</returns>
         public override String ToString() {
             StringBuilder result = new StringBuilder(8 * GetDegree());
             for (int degree = GetDegree(); degree >= 0; degree--) {

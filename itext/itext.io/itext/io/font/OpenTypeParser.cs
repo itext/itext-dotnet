@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ using iText.IO.Source;
 using iText.IO.Util;
 
 namespace iText.IO.Font {
-    internal class OpenTypeParser {
+    internal class OpenTypeParser : IDisposable {
         /// <summary>The components of table 'head'.</summary>
         protected internal class HeaderTable {
             internal int flags;
@@ -261,21 +261,21 @@ namespace iText.IO.Font {
         /// <exception cref="System.IO.IOException"/>
         public OpenTypeParser(byte[] ttf) {
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttf));
-            Process();
+            InitializeSfntTables();
         }
 
         /// <exception cref="System.IO.IOException"/>
         public OpenTypeParser(byte[] ttc, int ttcIndex) {
             this.ttcIndex = ttcIndex;
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateSource(ttc));
-            Process();
+            InitializeSfntTables();
         }
 
         /// <exception cref="System.IO.IOException"/>
         public OpenTypeParser(String ttcPath, int ttcIndex) {
             this.ttcIndex = ttcIndex;
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(ttcPath));
-            Process();
+            InitializeSfntTables();
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -287,7 +287,7 @@ namespace iText.IO.Font {
                 ttcIndex = System.Convert.ToInt32(nameBase.Substring(ttcName.Length + 1));
             }
             raf = new RandomAccessFileOrArray(new RandomAccessSourceFactory().CreateBestSource(fileName));
-            Process();
+            InitializeSfntTables();
         }
 
         /// <summary>Gets the Postscript font name.</summary>
@@ -330,6 +330,40 @@ namespace iText.IO.Font {
 
         public virtual int[] GetGlyphWidthsByIndex() {
             return glyphWidthsByIndex;
+        }
+
+        public virtual FontNames GetFontNames() {
+            FontNames fontNames = new FontNames();
+            fontNames.SetAllNames(GetAllNameEntries());
+            fontNames.SetFontName(GetPsFontName());
+            fontNames.SetFullName(fontNames.GetNames(4));
+            String[][] otfFamilyName = fontNames.GetNames(16);
+            if (otfFamilyName != null) {
+                fontNames.SetFamilyName(otfFamilyName);
+            }
+            else {
+                fontNames.SetFamilyName(fontNames.GetNames(1));
+            }
+            String[][] subfamily = fontNames.GetNames(2);
+            if (subfamily != null) {
+                fontNames.SetStyle(subfamily[0][3]);
+            }
+            String[][] otfSubFamily = fontNames.GetNames(17);
+            if (otfFamilyName != null) {
+                fontNames.SetSubfamily(otfSubFamily);
+            }
+            else {
+                fontNames.SetSubfamily(subfamily);
+            }
+            String[][] cidName = fontNames.GetNames(20);
+            if (cidName != null) {
+                fontNames.SetCidFontName(cidName[0][3]);
+            }
+            fontNames.SetWeight(os_2.usWeightClass);
+            fontNames.SetWidth(os_2.usWidthClass);
+            fontNames.SetMacStyle(head.macStyle);
+            fontNames.SetAllowEmbedding(os_2.fsType != 2);
+            return fontNames;
         }
 
         public virtual bool IsCff() {
@@ -397,9 +431,16 @@ namespace iText.IO.Font {
             return sb.Process();
         }
 
-        /// <summary>Reads the font data.</summary>
         /// <exception cref="System.IO.IOException"/>
-        protected internal virtual void Process() {
+        public virtual void Close() {
+            if (raf != null) {
+                raf.Close();
+            }
+            raf = null;
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void InitializeSfntTables() {
             tables = new LinkedDictionary<String, int[]>();
             if (ttcIndex >= 0) {
                 int dirIdx = ttcIndex;
@@ -455,14 +496,29 @@ namespace iText.IO.Font {
                 table_location[1] = raf.ReadInt();
                 tables[tag] = table_location;
             }
-            CheckCff();
-            ReadHheaTable();
+        }
+
+        /// <summary>Reads the font data.</summary>
+        /// <param name="all">if true, all tables will be read, otherwise only 'head', 'name', and 'os/2'.</param>
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual void LoadTables(bool all) {
             ReadNameTable();
             ReadHeadTable();
             ReadOs_2Table();
             ReadPostTable();
-            ReadGlyphWidths();
-            ReadCmapTable();
+            if (all) {
+                CheckCff();
+                ReadHheaTable();
+                ReadGlyphWidths();
+                ReadCmapTable();
+            }
+        }
+
+        /// <summary>Reads the font data.</summary>
+        /// <exception cref="System.IO.IOException"/>
+        [Obsolete]
+        protected internal virtual void Process() {
+            LoadTables(true);
         }
 
         /// <summary>Gets the name from a composed TTC file name.</summary>
@@ -477,7 +533,7 @@ namespace iText.IO.Font {
             if (name == null) {
                 return null;
             }
-            int idx = name.ToLower(System.Globalization.CultureInfo.InvariantCulture).IndexOf(".ttc,");
+            int idx = name.ToLowerInvariant().IndexOf(".ttc,", StringComparison.Ordinal);
             if (idx < 0) {
                 return name;
             }
@@ -518,17 +574,25 @@ namespace iText.IO.Font {
             table_location = tables.Get("hmtx");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("hmtx", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("hmtx", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("hmtx");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("hmtx");
                 }
             }
+            glyphWidthsByIndex = new int[Math.Max(ReadMaxGlyphId(), numberOfHMetrics)];
             raf.Seek(table_location[0]);
-            glyphWidthsByIndex = new int[numberOfHMetrics];
             for (int k = 0; k < numberOfHMetrics; ++k) {
                 glyphWidthsByIndex[k] = raf.ReadUnsignedShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
                 int leftSideBearing = raf.ReadShort() * TrueTypeFont.UNITS_NORMALIZATION / unitsPerEm;
+            }
+            // If the font is monospaced, only one entry need be in the array, but that entry is required.
+            // The last entry applies to all subsequent glyphs.
+            if (numberOfHMetrics > 0) {
+                for (int k = numberOfHMetrics; k < glyphWidthsByIndex.Length; k++) {
+                    glyphWidthsByIndex[k] = glyphWidthsByIndex[numberOfHMetrics - 1];
+                }
             }
         }
 
@@ -586,10 +650,11 @@ namespace iText.IO.Font {
             tableLocation = tables.Get("head");
             if (tableLocation == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("head", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("head");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("head");
                 }
             }
             raf.Seek(tableLocation[0] + FontConstants.HEAD_LOCA_FORMAT_OFFSET);
@@ -617,10 +682,11 @@ namespace iText.IO.Font {
             tableLocation = tables.Get("glyf");
             if (tableLocation == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("glyf", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("glyf", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("glyf");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("glyf");
                 }
             }
             int tableGlyphOffset = tableLocation[0];
@@ -653,14 +719,14 @@ namespace iText.IO.Font {
         /// <exception cref="iText.IO.IOException">on error</exception>
         /// <exception cref="System.IO.IOException">on error</exception>
         private void ReadNameTable() {
-            int[] table_location;
-            table_location = tables.Get("name");
+            int[] table_location = tables.Get("name");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("name", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("name", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("name");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("name");
                 }
             }
             allNameEntries = new LinkedDictionary<int, IList<String[]>>();
@@ -700,14 +766,14 @@ namespace iText.IO.Font {
         /// <exception cref="iText.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
         private void ReadHheaTable() {
-            int[] table_location;
-            table_location = tables.Get("hhea");
+            int[] table_location = tables.Get("hhea");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("hhea", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("hhea", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("hhea");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("hhea");
                 }
             }
             raf.Seek(table_location[0] + 4);
@@ -729,14 +795,14 @@ namespace iText.IO.Font {
         /// <exception cref="iText.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
         private void ReadHeadTable() {
-            int[] table_location;
-            table_location = tables.Get("head");
+            int[] table_location = tables.Get("head");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("head", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("head", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("head");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("head");
                 }
             }
             raf.Seek(table_location[0] + 16);
@@ -763,14 +829,14 @@ namespace iText.IO.Font {
         /// <exception cref="iText.IO.IOException">the font is invalid.</exception>
         /// <exception cref="System.IO.IOException">the font file could not be read.</exception>
         private void ReadOs_2Table() {
-            int[] table_location;
-            table_location = tables.Get("OS/2");
+            int[] table_location = tables.Get("OS/2");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("os/2", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("os/2", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("os/2");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("os/2");
                 }
             }
             os_2 = new OpenTypeParser.WindowsMetrics();
@@ -853,14 +919,14 @@ namespace iText.IO.Font {
         /// </remarks>
         /// <exception cref="System.IO.IOException">the font file could not be read</exception>
         private void ReadCmapTable() {
-            int[] table_location;
-            table_location = tables.Get("cmap");
+            int[] table_location = tables.Get("cmap");
             if (table_location == null) {
                 if (fileName != null) {
-                    throw new iText.IO.IOException("table.1.does.not.exist.in.2").SetMessageParams("cmap", fileName);
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExistsIn).SetMessageParams("cmap", fileName
+                        );
                 }
                 else {
-                    throw new iText.IO.IOException("table.1.does.not.exist").SetMessageParams("cmap");
+                    throw new iText.IO.IOException(iText.IO.IOException.TableDoesNotExist).SetMessageParams("cmap");
                 }
             }
             raf.Seek(table_location[0]);
@@ -1034,33 +1100,33 @@ namespace iText.IO.Font {
             }
             raf.SkipBytes(2);
             int[] startCount = new int[segCount];
-            for (int k_1 = 0; k_1 < segCount; ++k_1) {
-                startCount[k_1] = raf.ReadUnsignedShort();
+            for (int k = 0; k < segCount; ++k) {
+                startCount[k] = raf.ReadUnsignedShort();
             }
             int[] idDelta = new int[segCount];
-            for (int k_2 = 0; k_2 < segCount; ++k_2) {
-                idDelta[k_2] = raf.ReadUnsignedShort();
+            for (int k = 0; k < segCount; ++k) {
+                idDelta[k] = raf.ReadUnsignedShort();
             }
             int[] idRO = new int[segCount];
-            for (int k_3 = 0; k_3 < segCount; ++k_3) {
-                idRO[k_3] = raf.ReadUnsignedShort();
+            for (int k = 0; k < segCount; ++k) {
+                idRO[k] = raf.ReadUnsignedShort();
             }
             int[] glyphId = new int[table_lenght / 2 - 8 - segCount * 4];
-            for (int k_4 = 0; k_4 < glyphId.Length; ++k_4) {
-                glyphId[k_4] = raf.ReadUnsignedShort();
+            for (int k = 0; k < glyphId.Length; ++k) {
+                glyphId[k] = raf.ReadUnsignedShort();
             }
-            for (int k_5 = 0; k_5 < segCount; ++k_5) {
+            for (int k = 0; k < segCount; ++k) {
                 int glyph;
-                for (int j = startCount[k_5]; j <= endCount[k_5] && j != 0xFFFF; ++j) {
-                    if (idRO[k_5] == 0) {
-                        glyph = j + idDelta[k_5] & 0xFFFF;
+                for (int j = startCount[k]; j <= endCount[k] && j != 0xFFFF; ++j) {
+                    if (idRO[k] == 0) {
+                        glyph = j + idDelta[k] & 0xFFFF;
                     }
                     else {
-                        int idx = k_5 + idRO[k_5] / 2 - segCount + j - startCount[k_5];
+                        int idx = k + idRO[k] / 2 - segCount + j - startCount[k];
                         if (idx >= glyphId.Length) {
                             continue;
                         }
-                        glyph = glyphId[idx] + idDelta[k_5] & 0xFFFF;
+                        glyph = glyphId[idx] + idDelta[k] & 0xFFFF;
                     }
                     int[] r = new int[2];
                     r[0] = glyph;
@@ -1119,6 +1185,10 @@ namespace iText.IO.Font {
                 }
             }
             return h;
+        }
+
+        void System.IDisposable.Dispose() {
+            Close();
         }
     }
 }

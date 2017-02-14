@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ namespace iText.Layout.Layout {
     /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
     /// .
     /// </summary>
-    public class TextLayoutResult : LayoutResult {
+    public class TextLayoutResult : MinMaxWidthLayoutResult {
         /// <summary>
         /// Indicates whether some word was splitted during
         /// <see cref="iText.Layout.Renderer.TextRenderer.Layout(LayoutContext)">layout</see>
@@ -140,6 +140,7 @@ namespace iText.Layout.Layout {
         /// <remarks>
         /// Indicates whether split was forced by new line symbol in rendered text.
         /// The value will be set as true if, for example, the rendered text contains '\n' symbol.
+        /// This value can also be true even if the text was fully placed, but had line break at the end.
         /// </remarks>
         /// <returns>whether split was forced by new line or not.</returns>
         public virtual bool IsSplitForcedByNewline() {
@@ -148,7 +149,7 @@ namespace iText.Layout.Layout {
 
         /// <summary>
         /// Sets
-        /// <see cref="SetSplitForcedByNewline(bool)"/>
+        /// <see cref="IsSplitForcedByNewline()"/>
         /// </summary>
         /// <param name="isSplitForcedByNewline">indicates that split was forced by new line symbol in rendered text.</param>
         /// <returns>

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -67,8 +67,7 @@ namespace iText.Kernel.Font {
             if ((encoding == null || encoding.Length == 0) && ttf.IsFontSpecific()) {
                 encoding = FontEncoding.FONT_SPECIFIC;
             }
-            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLower(System.Globalization.CultureInfo.InvariantCulture
-                ).Equals(encoding.ToLower(System.Globalization.CultureInfo.InvariantCulture))) {
+            if (encoding != null && FontEncoding.FONT_SPECIFIC.ToLowerInvariant().Equals(encoding.ToLowerInvariant())) {
                 fontEncoding = FontEncoding.CreateFontSpecificEncoding();
             }
             else {
@@ -79,7 +78,6 @@ namespace iText.Kernel.Font {
         internal PdfTrueTypeFont(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             newFont = false;
-            CheckFontDictionary(fontDictionary, PdfName.TrueType);
             CMapToUnicode toUni = FontUtil.ProcessToUnicode(fontDictionary.Get(PdfName.ToUnicode));
             fontEncoding = DocFontEncoding.CreateDocFontEncoding(fontDictionary.Get(PdfName.Encoding), toUni, false);
             fontProgram = DocTrueTypeFont.CreateFontProgram(fontDictionary, fontEncoding);
@@ -101,6 +99,20 @@ namespace iText.Kernel.Font {
                 return glyph;
             }
             return null;
+        }
+
+        public override bool ContainsGlyph(String text, int from) {
+            return ContainsGlyph((int)text[from]);
+        }
+
+        public override bool ContainsGlyph(int unicode) {
+            if (fontEncoding.IsFontSpecific()) {
+                return fontProgram.GetGlyphByCode(unicode) != null;
+            }
+            else {
+                return fontEncoding.CanEncode(unicode) && ((TrueTypeFont)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference
+                    (unicode)) != null;
+            }
         }
 
         public override void Flush() {

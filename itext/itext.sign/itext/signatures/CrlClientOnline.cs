@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -162,7 +162,7 @@ namespace iText.Signatures {
                         }
                         bout.Write(buf, 0, n);
                     }
-                    inp.Close();
+                    inp.Dispose();
                     ar.Add(bout.ToArray());
                     LOGGER.Info("Added CRL found at: " + urlt);
                 }

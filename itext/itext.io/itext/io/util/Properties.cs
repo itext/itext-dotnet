@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -110,7 +110,7 @@ namespace iText.IO.Util {
 
         public virtual void Load(Stream inStream) {
             if (inStream == null) return;
-            StreamReader inp = new StreamReader(inStream, Encoding.GetEncoding(1252));
+            StreamReader inp = new StreamReader(inStream, EncodingUtil.GetEncoding(1252));
             while (true) {
                 // Get next line
                 String line = inp.ReadLine();

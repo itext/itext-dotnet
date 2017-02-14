@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -120,10 +120,10 @@ namespace iText.IO.Font {
                 );
             Properties p = new Properties();
             p.Load(resource);
-            resource.Close();
+            resource.Dispose();
             foreach (Object key in p.Keys) {
                 String value = p.GetProperty((String)key);
-                String[] sp = value.Split(" ");
+                String[] sp = iText.IO.Util.StringUtil.Split(value, " ");
                 ICollection<String> hs = new HashSet<String>();
                 foreach (String s in sp) {
                     if (s.Length > 0) {
@@ -140,7 +140,7 @@ namespace iText.IO.Font {
             Stream resource = ResourceUtil.GetResourceStream(FontConstants.CMAP_RESOURCE_PATH + name);
             Properties p = new Properties();
             p.Load(resource);
-            resource.Close();
+            resource.Dispose();
             IntHashtable W = CreateMetric(p.GetProperty("W"));
             p.Remove("W");
             IntHashtable W2 = CreateMetric(p.GetProperty("W2"));

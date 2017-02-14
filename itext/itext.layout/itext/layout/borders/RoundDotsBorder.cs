@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,9 +46,9 @@ using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
 
 namespace iText.Layout.Borders {
-    /// <summary>Draws a border with rounded dots aroudn the element it's been set to.</summary>
+    /// <summary>Draws a border with rounded dots around the element it's been set to.</summary>
     /// <remarks>
-    /// Draws a border with rounded dots aroudn the element it's been set to. For square dots see
+    /// Draws a border with rounded dots around the element it's been set to. For square dots see
     /// <see cref="DottedBorder"/>
     /// .
     /// </remarks>
@@ -67,6 +67,14 @@ namespace iText.Layout.Borders {
         /// <param name="width">width of the border</param>
         public RoundDotsBorder(Color color, float width)
             : base(color, width) {
+        }
+
+        /// <summary>Creates a RoundDotsBorder with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">width of the border</param>
+        public RoundDotsBorder(Color color, float width, float opacity)
+            : base(color, width, opacity) {
         }
 
         /// <summary><inheritDoc/></summary>
@@ -109,10 +117,10 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SetStrokeColor(color);
-            canvas.SetLineWidth(width);
-            canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
-            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
+            canvas.SaveState().SetStrokeColor(transparentColor.GetColor()).SetLineWidth(width).SetLineCapStyle(PdfCanvasConstants.LineCapStyle
+                .ROUND);
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -129,7 +137,8 @@ namespace iText.Layout.Borders {
             if (isHorizontal) {
                 x2 -= width;
             }
-            canvas.SetStrokeColor(color);
+            canvas.SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
             canvas.SetLineWidth(width);
             canvas.SetLineCapStyle(PdfCanvasConstants.LineCapStyle.ROUND);
             canvas.SetLineDash(0, adjustedGap, adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
@@ -145,6 +154,9 @@ namespace iText.Layout.Borders {
         /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
+            if (gapsNum == 0) {
+                return initialGap;
+            }
             return (float)(distance / gapsNum);
         }
     }

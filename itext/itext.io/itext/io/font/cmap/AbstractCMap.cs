@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -100,10 +100,10 @@ namespace iText.IO.Font.Cmap {
             if (code.IsString()) {
                 sout = DecodeStringToByte(code.ToString());
             }
-            int start = a1[a1.Length - 1] & 0xff;
-            int end = a2[a2.Length - 1] & 0xff;
+            int start = ByteArrayToInt(a1);
+            int end = ByteArrayToInt(a2);
             for (int k = start; k <= end; ++k) {
-                a1[a1.Length - 1] = (byte)k;
+                IntToByteArray(k, a1);
                 String mark = PdfEncodings.ConvertToString(a1, null);
                 if (code.IsArray()) {
                     IList<CMapObject> codes = (List<CMapObject>)code.GetValue();
@@ -119,7 +119,7 @@ namespace iText.IO.Font.Cmap {
                             CMapObject s1 = new CMapObject(CMapObject.HEX_STRING, sout);
                             AddChar(mark, s1);
                             System.Diagnostics.Debug.Assert(sout != null);
-                            ++sout[sout.Length - 1];
+                            IntToByteArray(ByteArrayToInt(sout) + 1, sout);
                         }
                     }
                 }
@@ -154,6 +154,22 @@ namespace iText.IO.Font.Cmap {
                     return PdfEncodings.ConvertToString(bytes, PdfEncodings.PDF_DOC_ENCODING);
                 }
             }
+        }
+
+        private static void IntToByteArray(int n, byte[] b) {
+            for (int k = b.Length - 1; k >= 0; --k) {
+                b[k] = (byte)n;
+                n = (int)(((uint)n) >> 8);
+            }
+        }
+
+        private static int ByteArrayToInt(byte[] b) {
+            int n = 0;
+            for (int k = 0; k < b.Length; ++k) {
+                n = n << 8;
+                n |= b[k] & 0xff;
+            }
+            return n;
         }
     }
 }

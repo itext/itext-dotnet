@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -46,7 +46,6 @@ using System.IO;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.X509;
-using iText.IO;
 using iText.IO.Log;
 using iText.IO.Util;
 
@@ -123,10 +122,10 @@ namespace iText.Signatures {
                         }
                         else {
                             if (status is RevokedStatus) {
-                                throw new System.IO.IOException(LogMessageConstant.OCSP_STATUS_IS_REVOKED);
+                                throw new System.IO.IOException(iText.IO.LogMessageConstant.OCSP_STATUS_IS_REVOKED);
                             }
                             else {
-                                throw new System.IO.IOException(LogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
+                                throw new System.IO.IOException(iText.IO.LogMessageConstant.OCSP_STATUS_IS_UNKNOWN);
                             }
                         }
                     }
@@ -144,7 +143,7 @@ namespace iText.Signatures {
         /// <returns>an OCSP request</returns>
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
+        /// <exception cref="Org.BouncyCastle.Operator.OperatorException"/>
         /// <exception cref="Org.BouncyCastle.Security.Certificates.CertificateEncodingException"/>
         private static OcspReq GenerateOCSPRequest(X509Certificate issuerCert, BigInteger serialNumber) {
             //Add provider BC
@@ -158,7 +157,7 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="Org.BouncyCastle.Ocsp.OcspException"/>
         /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="Org.Bouncycastle.Operator.OperatorException"/>
+        /// <exception cref="Org.BouncyCastle.Operator.OperatorException"/>
         private OcspResp GetOcspResponse(X509Certificate checkCert, X509Certificate rootCert, String url) {
             if (checkCert == null || rootCert == null) {
                 return null;

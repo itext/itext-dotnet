@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -1438,6 +1438,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Table = CreateDirectName("Table");
 
+        public static readonly iText.Kernel.Pdf.PdfName Tabs = CreateDirectName("Tabs");
+
         public static readonly iText.Kernel.Pdf.PdfName TBody = CreateDirectName("TBody");
 
         public static readonly iText.Kernel.Pdf.PdfName TD = CreateDirectName("TD");
@@ -1482,6 +1484,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName TOC = CreateDirectName("TOC");
 
         public static readonly iText.Kernel.Pdf.PdfName TOCI = CreateDirectName("TOCI");
+
+        public static readonly iText.Kernel.Pdf.PdfName TP = CreateDirectName("TP");
 
         public static readonly iText.Kernel.Pdf.PdfName Toggle = CreateDirectName("Toggle");
 
@@ -1681,6 +1685,8 @@ namespace iText.Kernel.Pdf {
             return new iText.Kernel.Pdf.PdfName(name, true);
         }
 
+        /// <summary>Create a PdfName from the passed string</summary>
+        /// <param name="value"/>
         public PdfName(String value)
             : base() {
             System.Diagnostics.Debug.Assert(value != null);
@@ -1692,6 +1698,8 @@ namespace iText.Kernel.Pdf {
             this.value = value;
         }
 
+        /// <summary>Create a PdfName from the passed bytes</summary>
+        /// <param name="content"/>
         public PdfName(byte[] content)
             : base(content) {
         }
@@ -1711,6 +1719,10 @@ namespace iText.Kernel.Pdf {
             return value;
         }
 
+        /// <summary>Compare this PdfName to o.</summary>
+        /// <param name="o">PdfName to compare this object to/</param>
+        /// <returns>Comparison between both values or, if one of the values is null, Comparison between contents. If one of the values and one of the contents are equal to null, generate values and compare those.
+        ///     </returns>
         public virtual int CompareTo(iText.Kernel.Pdf.PdfName o) {
             if (value != null && o.value != null) {
                 return string.CompareOrdinal(value, o.value);

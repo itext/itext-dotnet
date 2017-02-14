@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -56,7 +56,7 @@ namespace iText.Layout.Element {
     /// can be delimited by padding, a border, and/or a margin.
     /// </summary>
     /// 
-    public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement
+    public abstract class BlockElement<T> : AbstractElement<T>, IAccessibleElement, IBlockElement
         where T : IElement {
         /// <summary>Creates a BlockElement.</summary>
         protected internal BlockElement() {
@@ -321,6 +321,21 @@ namespace iText.Layout.Element {
         /// <returns>this element</returns>
         public virtual T SetRotationAngle(double angleInRadians) {
             SetProperty(Property.ROTATION_ANGLE, (float)angleInRadians);
+            return (T)(Object)this;
+        }
+
+        public override T SetHeight(float height) {
+            base.SetHeight(height);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMaxHeight(float maxHeight) {
+            SetProperty(Property.MAX_HEIGHT, maxHeight);
+            return (T)(Object)this;
+        }
+
+        public virtual T SetMinHeight(float minHeight) {
+            SetProperty(Property.MIN_HEIGHT, minHeight);
             return (T)(Object)this;
         }
 

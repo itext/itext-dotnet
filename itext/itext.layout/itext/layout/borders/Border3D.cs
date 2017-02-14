@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -62,23 +62,47 @@ namespace iText.Layout.Borders {
 
         /// <summary>Creates a Border3D instance with the specified width and color.</summary>
         /// <param name="color">color of the border</param>
-        /// <param name="width">with of the border</param>
+        /// <param name="width">width of the border</param>
         protected internal Border3D(DeviceRgb color, float width)
             : base(color, width) {
         }
 
         /// <summary>Creates a Border3D instance with the specified width and color.</summary>
         /// <param name="color">color of the border</param>
-        /// <param name="width">with of the border</param>
+        /// <param name="width">width of the border</param>
         protected internal Border3D(DeviceCmyk color, float width)
             : base(color, width) {
         }
 
         /// <summary>Creates a Border3D instance with the specified width and color.</summary>
         /// <param name="color">color of the border</param>
-        /// <param name="width">with of the border</param>
+        /// <param name="width">width of the border</param>
         protected internal Border3D(DeviceGray color, float width)
             : base(color, width) {
+        }
+
+        /// <summary>Creates a Border3D instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        protected internal Border3D(DeviceRgb color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
+        /// <summary>Creates a Border3D instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        protected internal Border3D(DeviceCmyk color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
+        /// <summary>Creates a Border3D instance with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">opacity of the border</param>
+        protected internal Border3D(DeviceGray color, float width, float opacity)
+            : base(color, width, opacity) {
         }
 
         /// <summary><inheritDoc/></summary>
@@ -125,6 +149,7 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
+            canvas.SaveState();
             SetInnerHalfColor(canvas, borderSide);
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
             switch (borderSide) {
@@ -162,20 +187,23 @@ namespace iText.Layout.Borders {
             }
             SetOuterHalfColor(canvas, borderSide);
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
+            canvas.RestoreState();
         }
 
         /// <summary><inheritDoc/></summary>
         public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
-            canvas.SaveState().SetStrokeColor(color).SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
-                ();
+            canvas.SaveState().SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineWidth(width).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
 
         /// <summary>
         /// Makes the
-        /// <see cref="Border.color">color of the border</see>
+        /// <see cref="Border.transparentColor">color of the border</see>
         /// darker and returns the result
         /// </summary>
         protected internal virtual Color GetDarkerColor() {
+            Color color = this.transparentColor.GetColor();
             if (color is DeviceRgb) {
                 return DeviceRgb.MakeDarker((DeviceRgb)color);
             }

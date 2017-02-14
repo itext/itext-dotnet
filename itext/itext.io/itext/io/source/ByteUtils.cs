@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -250,7 +250,7 @@ namespace iText.IO.Source {
                     if (fracLen > 0) {
                         buf.Prepend((byte)'.');
                     }
-                    for (int i_1 = 0; i_1 < intLen; i_1++) {
+                    for (int i = 0; i < intLen; i++) {
                         buf.Prepend(bytes[v % 10]);
                         v /= 10;
                     }

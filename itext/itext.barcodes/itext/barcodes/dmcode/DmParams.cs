@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,14 @@ address: sales@itextpdf.com
 */
 namespace iText.Barcodes.Dmcode {
     public class DmParams {
+        /// <summary>Creates a DM code parameter block</summary>
+        /// <param name="height">total height</param>
+        /// <param name="width">total width</param>
+        /// <param name="heightSection">height of a single section</param>
+        /// <param name="widthSection">width of a single section</param>
+        /// <param name="dataSize">size of the data</param>
+        /// <param name="dataBlock">size of a data-block</param>
+        /// <param name="errorBlock">size of a error-correction block</param>
         public DmParams(int height, int width, int heightSection, int widthSection, int dataSize, int dataBlock, int
              errorBlock) {
             this.height = height;

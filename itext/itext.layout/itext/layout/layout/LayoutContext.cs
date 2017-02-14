@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Layout.Margincollapse;
 
 namespace iText.Layout.Layout {
     /// <summary>
@@ -57,8 +58,15 @@ namespace iText.Layout.Layout {
         /// </summary>
         protected internal LayoutArea area;
 
+        protected internal MarginsCollapseInfo marginsCollapseInfo;
+
         public LayoutContext(LayoutArea area) {
             this.area = area;
+        }
+
+        public LayoutContext(LayoutArea area, MarginsCollapseInfo marginsCollapseInfo) {
+            this.area = area;
+            this.marginsCollapseInfo = marginsCollapseInfo;
         }
 
         /// <summary>
@@ -69,6 +77,10 @@ namespace iText.Layout.Layout {
         /// <returns>the area for content layouting.</returns>
         public virtual LayoutArea GetArea() {
             return area;
+        }
+
+        public virtual MarginsCollapseInfo GetMarginsCollapseInfo() {
+            return marginsCollapseInfo;
         }
 
         /// <summary><inheritDoc/></summary>

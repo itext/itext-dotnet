@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using iText.IO;
 using iText.IO.Log;
 using iText.Kernel.Font;
 using iText.Kernel.Log;
@@ -265,7 +264,7 @@ namespace iText.Pdfa {
                 }
                 catch (XMPException exc) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
-                    logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
+                    logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, exc);
                 }
             }
         }
@@ -281,7 +280,7 @@ namespace iText.Pdfa {
             }
             catch (XMPException e) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Pdfa.PdfADocument));
-                logger.Error(LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
+                logger.Error(iText.IO.LogMessageConstant.EXCEPTION_WHILE_UPDATING_XMPMETADATA, e);
             }
         }
 

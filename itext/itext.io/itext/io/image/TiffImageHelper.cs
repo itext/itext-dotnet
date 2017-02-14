@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -64,6 +64,8 @@ namespace iText.IO.Image {
             //ByteArrayOutputStream stream;
         }
 
+        /// <summary>Processes the ImageData as a TIFF image.</summary>
+        /// <param name="image">image to process.</param>
         public static void ProcessImage(ImageData image) {
             if (image.GetOriginalType() != ImageType.TIFF) {
                 throw new ArgumentException("TIFF image expected");
@@ -99,7 +101,10 @@ namespace iText.IO.Image {
                 if (dir.IsTagPresent(TIFFConstants.TIFFTAG_TILEWIDTH)) {
                     throw new iText.IO.IOException(iText.IO.IOException.TilesAreNotSupported);
                 }
-                int compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                int compression = TIFFConstants.COMPRESSION_NONE;
+                if (dir.IsTagPresent(TIFFConstants.TIFFTAG_COMPRESSION)) {
+                    compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                }
                 switch (compression) {
                     case TIFFConstants.COMPRESSION_CCITTRLEW:
                     case TIFFConstants.COMPRESSION_CCITTRLE:
@@ -317,7 +322,10 @@ namespace iText.IO.Image {
         private static void ProcessTiffImageColor(TIFFDirectory dir, RandomAccessFileOrArray s, TiffImageHelper.TiffParameters
              tiff) {
             try {
-                int compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                int compression = TIFFConstants.COMPRESSION_NONE;
+                if (dir.IsTagPresent(TIFFConstants.TIFFTAG_COMPRESSION)) {
+                    compression = (int)dir.GetFieldAsLong(TIFFConstants.TIFFTAG_COMPRESSION);
+                }
                 int predictor = 1;
                 TIFFLZWDecoder lzwDecoder = null;
                 switch (compression) {
@@ -585,7 +593,7 @@ namespace iText.IO.Image {
                                 .PHOTOMETRIC_MINISBLACK ? RawImageData.CCITT_BLACKIS1 : 0, g4.Close(), null);
                         }
                         else {
-                            zip.Close();
+                            zip.Dispose();
                             RawImageHelper.UpdateRawImageParameters(tiff.image, w, h, samplePerPixel - extraSamples, bitsPerSample, stream
                                 .ToArray());
                             tiff.image.SetDeflated(true);
@@ -622,22 +630,22 @@ namespace iText.IO.Image {
                         // as usually, some tiff producers just put values from 0 to 255.
                         // Let's check for these broken tiffs.
                         bool colormapBroken = true;
-                        for (int k_1 = 0; k_1 < palette.Length; ++k_1) {
-                            if (palette[k_1] != 0) {
+                        for (int k = 0; k < palette.Length; ++k) {
+                            if (palette[k] != 0) {
                                 colormapBroken = false;
                                 break;
                             }
                         }
                         if (colormapBroken) {
-                            for (int k_2 = 0; k_2 < gColor; ++k_2) {
-                                palette[k_2 * 3] = (byte)rgb[k_2];
-                                palette[k_2 * 3 + 1] = (byte)rgb[k_2 + gColor];
-                                palette[k_2 * 3 + 2] = (byte)rgb[k_2 + bColor];
+                            for (int k = 0; k < gColor; ++k) {
+                                palette[k * 3] = (byte)rgb[k];
+                                palette[k * 3 + 1] = (byte)rgb[k + gColor];
+                                palette[k * 3 + 2] = (byte)rgb[k + bColor];
                             }
                         }
                         Object[] indexed = new Object[4];
-                        indexed[0] = "Indexed";
-                        indexed[1] = "DeviceRGB";
+                        indexed[0] = "/Indexed";
+                        indexed[1] = "/DeviceRGB";
                         indexed[2] = gColor - 1;
                         indexed[3] = PdfEncodings.ConvertToString(palette, null);
                         tiff.additional = new Dictionary<String, Object>();
@@ -651,7 +659,7 @@ namespace iText.IO.Image {
                     tiff.image.SetRotation(rotation);
                 }
                 if (extraSamples > 0) {
-                    mzip.Close();
+                    mzip.Dispose();
                     RawImageData mimg = (RawImageData)ImageDataFactory.CreateRawImage(null);
                     RawImageHelper.UpdateRawImageParameters(mimg, w, h, 1, bitsPerSample, mstream.ToArray());
                     mimg.MakeMask();

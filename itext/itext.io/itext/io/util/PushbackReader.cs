@@ -177,9 +177,9 @@ namespace iText.IO.Util {
 		/// Closing a previously closed stream has no effect.
 		/// </summary>
 		/// <exception cref="IOException">  If an I/O error occurs </exception>
-		public override void Close() {
-			base.Close();
-			_buf = null;
-		}
+	    protected override void Dispose(bool disposing) {
+		    _buf = null;
+	        base.Dispose(disposing);
+	    }
 	}
 }

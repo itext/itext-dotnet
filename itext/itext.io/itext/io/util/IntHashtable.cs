@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -60,13 +60,15 @@ namespace iText.IO.Util {
     /// <author>Stephen Colebourne</author>
     /// <author>Bruno Lowagie (change Objects as keys into int values)</author>
     /// <author>Paulo Soares (added extra methods)</author>
-    public class IntHashtable : ICloneable {
+    public class IntHashtable
+#if !NETSTANDARD1_6
+ : ICloneable
+#endif
+ {
         /// <summary>The hash table data.</summary>
-        [System.NonSerialized]
         private IntHashtable.Entry[] table;
 
         /// <summary>The total number of entries in the hash table.</summary>
-        [System.NonSerialized]
         private int count;
 
         /// <summary>The table is rehashed when its size exceeds this threshold.</summary>
@@ -112,8 +114,7 @@ namespace iText.IO.Util {
         /// if the initial capacity is less
         /// than zero, or if the load factor is nonpositive.
         /// </exception>
-        public IntHashtable(int initialCapacity, float loadFactor)
-            : base() {
+        public IntHashtable(int initialCapacity, float loadFactor) {
             if (initialCapacity < 0) {
                 throw new ArgumentException(String.Format("Illegal Capacity: {0}", initialCapacity));
             }

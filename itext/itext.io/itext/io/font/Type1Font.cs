@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
-using iText.IO;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
 using iText.IO.Source;
@@ -81,15 +80,21 @@ namespace iText.IO.Font {
             }
         }
 
+        protected internal Type1Font() {
+            fontNames = new FontNames();
+        }
+
         /// <exception cref="System.IO.IOException"/>
-        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb) {
+        protected internal Type1Font(String metricsPath, String binaryPath, byte[] afm, byte[] pfb)
+            : this() {
             CheckFilePath(metricsPath);
             CheckFilePath(binaryPath);
             fontParser = new Type1Parser(metricsPath, binaryPath, afm, pfb);
             Process();
         }
 
-        protected internal Type1Font(String baseFont) {
+        protected internal Type1Font(String baseFont)
+            : this() {
             GetFontNames().SetFontName(baseFont);
         }
 
@@ -189,7 +194,7 @@ namespace iText.IO.Font {
                 for (int k = 0; k < 3; ++k) {
                     if (raf.Read() != 0x80) {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Type1Font));
-                        logger.Error(LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
+                        logger.Error(iText.IO.LogMessageConstant.START_MARKER_MISSING_IN_PFB_FILE);
                         return null;
                     }
                     if (raf.Read() != PFB_TYPES[k]) {

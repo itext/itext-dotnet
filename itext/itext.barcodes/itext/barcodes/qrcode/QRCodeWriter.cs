@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -50,11 +50,29 @@ namespace iText.Barcodes.Qrcode {
     public sealed class QRCodeWriter {
         private const int QUIET_ZONE_SIZE = 4;
 
+        /// <summary>Encode a string into a QR code with dimensions width x height, using error-correction level L and the smallest version for which he contents fit into the QR-code?
+        ///     </summary>
+        /// <param name="contents">String to encode into the QR code</param>
+        /// <param name="width">width of the QR-code</param>
+        /// <param name="height">height of the QR-code</param>
+        /// <returns>2D Greyscale map containing the visual representation of the QR-code, stored as a Bytematrix</returns>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height) {
             return Encode(contents, width, height, null);
         }
 
+        /// <summary>Encode a string into a QR code with dimensions width x height.</summary>
+        /// <remarks>
+        /// Encode a string into a QR code with dimensions width x height. Hints contains suggestions for error-correction level and version.
+        /// The default error-correction level is L, the default version is the smallest version for which the contents will fit into the QR-code.
+        /// </remarks>
+        /// <param name="contents">String to encode into the QR code</param>
+        /// <param name="width">width of the QR-code</param>
+        /// <param name="height">height of the QR-code</param>
+        /// <param name="hints">Map containing suggestions for error-correction level and version</param>
+        /// <returns>2D Greyscale map containing the visual representation of the QR-code, stored as a Bytematrix</returns>
+        /// <exception cref="WriterException"/>
         /// <exception cref="iText.Barcodes.Qrcode.WriterException"/>
         public ByteMatrix Encode(String contents, int width, int height, IDictionary<EncodeHintType, Object> hints
             ) {
@@ -104,15 +122,15 @@ namespace iText.Barcodes.Qrcode {
             }
             // 2. Expand the QR image to the multiple
             byte[][] inputArray = input.GetArray();
-            for (int y_1 = 0; y_1 < inputHeight; y_1++) {
+            for (int y = 0; y < inputHeight; y++) {
                 // a. Write the white pixels at the left of each row
                 for (int x = 0; x < leftPadding; x++) {
                     row[x] = (byte)255;
                 }
                 // b. Write the contents of this row of the barcode
                 int offset = leftPadding;
-                for (int x_1 = 0; x_1 < inputWidth; x_1++) {
-                    byte value = (inputArray[y_1][x_1] == 1) ? (byte)0 : (byte)255;
+                for (int x = 0; x < inputWidth; x++) {
+                    byte value = (inputArray[y][x] == 1) ? (byte)0 : (byte)255;
                     for (int z = 0; z < multiple; z++) {
                         row[offset + z] = value;
                     }
@@ -120,19 +138,19 @@ namespace iText.Barcodes.Qrcode {
                 }
                 // c. Write the white pixels at the right of each row
                 offset = leftPadding + (inputWidth * multiple);
-                for (int x_2 = offset; x_2 < outputWidth; x_2++) {
-                    row[x_2] = (byte)255;
+                for (int x = offset; x < outputWidth; x++) {
+                    row[x] = (byte)255;
                 }
                 // d. Write the completed row multiple times
-                offset = topPadding + (y_1 * multiple);
-                for (int z_1 = 0; z_1 < multiple; z_1++) {
-                    System.Array.Copy(row, 0, outputArray[offset + z_1], 0, outputWidth);
+                offset = topPadding + (y * multiple);
+                for (int z = 0; z < multiple; z++) {
+                    System.Array.Copy(row, 0, outputArray[offset + z], 0, outputWidth);
                 }
             }
             // 3. Write the white lines at the bottom
             int offset_1 = topPadding + (inputHeight * multiple);
-            for (int y_2 = offset_1; y_2 < outputHeight; y_2++) {
-                SetRowColor(outputArray[y_2], (byte)255);
+            for (int y = offset_1; y < outputHeight; y++) {
+                SetRowColor(outputArray[y], (byte)255);
             }
             return output;
         }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -172,7 +172,7 @@ namespace iText.Signatures {
                         throw new ArgumentException();
                     }
                     /*MessageLocalization.getComposedMessage("badly.formated.directory.string")*/
-                    String id = token.JSubstring(0, index).ToUpper(System.Globalization.CultureInfo.InvariantCulture);
+                    String id = token.JSubstring(0, index).ToUpperInvariant();
                     String value = token.Substring(index + 1);
                     IList<String> vs = values.Get(id);
                     if (vs == null) {

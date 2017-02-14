@@ -1,7 +1,7 @@
 ﻿/*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -42,62 +42,65 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using iText.IO.Log;
 using iText.Test.Attributes;
 using log4net;
 using log4net.Appender;
+using log4net.Config;
 using log4net.Core;
+using log4net.Layout;
+using log4net.Repository;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace iText.Test
-{
+namespace iText.Test {
     [AttributeUsage(AttributeTargets.Class)]
-    public class LogListener : TestActionAttribute
-    {
-        private static string LEFT_CURLY_BRACES = "{";
-        private static string RIGHT_CURLY_BRACES = "}";
+    public class LogListener : TestActionAttribute {
         private MemoryAppender appender;
 
-		public override void BeforeTest(ITest testDetails)
-        {
+        static LogListener() {
+            ITextMemoryAppender memoryAppender = new ITextMemoryAppender();
+            memoryAppender.Layout = new PatternLayout("%message");
+            ILoggerRepository repo = LogManager.GetRepository(typeof(LogListener).GetAssembly());
+            BasicConfigurator.Configure(repo, memoryAppender);
+        }
+
+        public override void BeforeTest(ITest testDetails) {
             Init();
         }
 
-		public override void AfterTest(ITest testDetails)
-        {
+        public override void AfterTest(ITest testDetails) {
             CheckLogMessages(testDetails);
         }
 
-        public override ActionTargets Targets
-        {
+        public override ActionTargets Targets {
             get { return ActionTargets.Test; }
         }
 
-        private void CheckLogMessages(ITest testDetails)
-        {
+        private void CheckLogMessages(ITest testDetails) {
             int checkedMessages = 0;
             LogMessageAttribute[] attributes = testDetails.Method.GetCustomAttributes<LogMessageAttribute>(true);
-            if (attributes.Length > 0)
-            {
-                for (int i = 0; i < attributes.Length; i++)
-                {
+            if (attributes.Length == 0) {
+                attributes = testDetails.Fixture.GetType().GetCustomAttributes(typeof(LogMessageAttribute), true)
+                    .Select(attr => (LogMessageAttribute) attr).ToArray();
+            }
+            if (attributes.Length > 0) {
+                for (int i = 0; i < attributes.Length; i++) {
                     LogMessageAttribute logMessage = attributes[i];
                     int foundCount = Contains(logMessage.GetMessageTemplate());
                     if (foundCount != logMessage.Count && !logMessage.Ignore) {
-                        Assert.Fail("{0} Expected to find {1}, but found {2} messages with the following content: \"{3}\"",
+                        Assert.Fail(
+                            "{0} Expected to find {1}, but found {2} messages with the following content: \"{3}\"",
                             testDetails.FullName, logMessage.Count, foundCount, logMessage.GetMessageTemplate());
-                    }
-                    else
-                    {
+                    } else {
                         checkedMessages += foundCount;
                     }
                 }
             }
-            
-            if (GetSize() > checkedMessages)
-            {
+
+            if (GetSize() > checkedMessages) {
                 Assert.Fail("{0}: The test does not check the message logging - {1} messages",
                     testDetails.FullName,
                     GetSize() - checkedMessages);
@@ -108,60 +111,37 @@ namespace iText.Test
         * compare  parametrized message with  base template, for example:
         *  "Hello fox1 , World  fox2 !" with "Hello {0} , World {1} !"
         * */
-        private bool EqualsMessageByTemplate(string message, string template)
-        {
-            if (template.IndexOf(RIGHT_CURLY_BRACES) > 0 && template.IndexOf(LEFT_CURLY_BRACES) > 0)
-            {
 
-                Regex rgx = new Regex("\\{.*?\\} ?");
-                String templateWithoutParameters = rgx.Replace(template, "");
-                String[] splitTemplate = Regex.Split(templateWithoutParameters, "\\s+");
-                int prevPosition = 0;
-                for (int i = 0; i < splitTemplate.Length; i++)
-                {
-                    int foundedIndex = message.IndexOf(splitTemplate[i], prevPosition);
-                    if (foundedIndex < 0 && foundedIndex < prevPosition)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        prevPosition = foundedIndex;
-                    }
-                }
-                return true;
-            }
-            else
-            {
+        private bool EqualsMessageByTemplate(string message, string template) {
+            if (template.IndexOf("{") > 0 && template.IndexOf("}") > 0) {
+                String templateWithoutParameters = Regex.Replace(template.Replace("''", "'"), "\\{[0-9]+?\\}", "(.)*?");
+                return Regex.IsMatch(message, templateWithoutParameters, RegexOptions.Singleline);
+            } else {
                 return message.Contains(template);
             }
         }
 
-        private int Contains(String loggingStatement)
-        {
+        private int Contains(String loggingStatement) {
             LoggingEvent[] eventList = appender.GetEvents();
             int index = 0;
-            for (int i = 0; i < eventList.Length; i++)
-            {
-                if (EqualsMessageByTemplate(eventList[i].RenderedMessage, loggingStatement))
-                {
+            for (int i = 0; i < eventList.Length; i++) {
+                if (EqualsMessageByTemplate(eventList[i].RenderedMessage, loggingStatement)) {
                     index++;
                 }
             }
             return index;
         }
 
-        private void Init()
-        {
+        private void Init() {
             ILoggerFactory iLog = new Log4NetLoggerFactory();
             LoggerFactory.BindFactory(iLog);
-            IAppender[] iAppenders = LogManager.GetRepository().GetAppenders();
+            //LogManager.GetRepository() calls Assembly.GetCallingAssembly() so it will always be current (this) assembly
+            IAppender[] iAppenders = LogManager.GetRepository(typeof(LogListener).GetAssembly()).GetAppenders();
             appender = iAppenders[0] as MemoryAppender;
             appender.Clear();
         }
 
-        private int GetSize()
-        {
+        private int GetSize() {
             return appender.GetEvents().Length;
         }
     }

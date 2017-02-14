@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -202,7 +202,7 @@ namespace iText.IO.Image {
             finally {
                 if (pngStream != null) {
                     try {
-                        pngStream.Close();
+                        pngStream.Dispose();
                     }
                     catch (System.IO.IOException) {
                     }
@@ -957,11 +957,11 @@ namespace iText.IO.Image {
                 priorRow = prev[i] & 0xff;
                 curr[i] = (byte)(raw + priorRow / 2);
             }
-            for (int i_1 = bpp; i_1 < count; i_1++) {
-                raw = curr[i_1] & 0xff;
-                priorPixel = curr[i_1 - bpp] & 0xff;
-                priorRow = prev[i_1] & 0xff;
-                curr[i_1] = (byte)(raw + (priorPixel + priorRow) / 2);
+            for (int i = bpp; i < count; i++) {
+                raw = curr[i] & 0xff;
+                priorPixel = curr[i - bpp] & 0xff;
+                priorRow = prev[i] & 0xff;
+                curr[i] = (byte)(raw + (priorPixel + priorRow) / 2);
             }
         }
 
@@ -993,12 +993,12 @@ namespace iText.IO.Image {
                 priorRow = prev[i] & 0xff;
                 curr[i] = (byte)(raw + priorRow);
             }
-            for (int i_1 = bpp; i_1 < count; i_1++) {
-                raw = curr[i_1] & 0xff;
-                priorPixel = curr[i_1 - bpp] & 0xff;
-                priorRow = prev[i_1] & 0xff;
-                priorRowPixel = prev[i_1 - bpp] & 0xff;
-                curr[i_1] = (byte)(raw + PaethPredictor(priorPixel, priorRow, priorRowPixel));
+            for (int i = bpp; i < count; i++) {
+                raw = curr[i] & 0xff;
+                priorPixel = curr[i - bpp] & 0xff;
+                priorRow = prev[i] & 0xff;
+                priorRowPixel = prev[i - bpp] & 0xff;
+                curr[i] = (byte)(raw + PaethPredictor(priorPixel, priorRow, priorRowPixel));
             }
         }
 

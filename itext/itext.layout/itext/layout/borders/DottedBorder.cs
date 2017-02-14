@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -72,6 +72,14 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary>Creates a DottedBorder with the specified width, color and opacity.</summary>
+        /// <param name="color">color of the border</param>
+        /// <param name="width">width of the border</param>
+        /// <param name="opacity">width of the border</param>
+        public DottedBorder(Color color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border.DOTTED;
@@ -115,9 +123,10 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SetLineWidth(width);
-            canvas.SetStrokeColor(color);
-            canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke();
+            canvas.SaveState().SetLineWidth(width).SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -130,8 +139,10 @@ namespace iText.Layout.Borders {
             if (adjustedGap > width) {
                 adjustedGap -= width;
             }
-            canvas.SaveState().SetLineWidth(width).SetStrokeColor(color).SetLineDash(width, adjustedGap, width + adjustedGap
-                 / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
+            canvas.SaveState().SetLineWidth(width).SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.SetLineDash(width, adjustedGap, width + adjustedGap / 2).MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState
+                ();
         }
 
         /// <summary>Adjusts the size of the gap between dots</summary>
@@ -144,6 +155,9 @@ namespace iText.Layout.Borders {
         /// <returns>the adjusted size of the gap</returns>
         protected internal virtual float GetDotsGap(double distance, float initialGap) {
             double gapsNum = System.Math.Ceiling(distance / initialGap);
+            if (gapsNum == 0) {
+                return initialGap;
+            }
             return (float)(distance / gapsNum);
         }
     }

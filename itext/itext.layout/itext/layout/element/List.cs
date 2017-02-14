@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -75,7 +75,6 @@ namespace iText.Layout.Element {
         /// </summary>
         public List()
             : base() {
-            SetListSymbol(DEFAULT_LIST_SYMBOL);
         }
 
         /// <summary>Creates a List with a custom numbering type.</summary>
@@ -87,12 +86,20 @@ namespace iText.Layout.Element {
 
         public override T1 GetDefaultProperty<T1>(int property) {
             switch (property) {
+                case Property.LIST_SYMBOL: {
+                    return (T1)(Object)new Text(DEFAULT_LIST_SYMBOL);
+                }
+
                 case Property.LIST_SYMBOL_PRE_TEXT: {
                     return (T1)(Object)"";
                 }
 
                 case Property.LIST_SYMBOL_POST_TEXT: {
                     return (T1)(Object)". ";
+                }
+
+                case Property.LIST_SYMBOL_POSITION: {
+                    return (T1)(Object)ListSymbolPosition.DEFAULT;
                 }
 
                 default: {

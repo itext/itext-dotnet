@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -77,13 +77,13 @@ namespace iText.IO.Font.Otf {
                 }
             }
             foreach (String script in scripts) {
-                foreach (ScriptRecord sr_1 in records) {
-                    if (sr_1.tag.Equals(script)) {
-                        scriptFound = sr_1;
+                foreach (ScriptRecord sr in records) {
+                    if (sr.tag.Equals(script)) {
+                        scriptFound = sr;
                         break;
                     }
                     if (DEFAULT_SCRIPT.Equals(script)) {
-                        scriptDefault = sr_1;
+                        scriptDefault = sr;
                     }
                 }
                 if (scriptFound != null) {

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -100,7 +100,7 @@ namespace iText.IO.Font {
                 finally {
                     if (resource != null) {
                         try {
-                            resource.Close();
+                            resource.Dispose();
                         }
                         catch (Exception) {
                         }
@@ -110,11 +110,11 @@ namespace iText.IO.Font {
             }
             else {
                 if (afmPath != null) {
-                    if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".afm")) {
+                    if (afmPath.ToLowerInvariant().EndsWith(".afm")) {
                         return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
                     }
                     else {
-                        if (afmPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfm")) {
+                        if (afmPath.ToLowerInvariant().EndsWith(".pfm")) {
                             MemoryStream ba = new MemoryStream();
                             RandomAccessFileOrArray rf = new RandomAccessFileOrArray(sourceFactory.CreateBestSource(afmPath));
                             Pfm2afm.Convert(rf, ba);
@@ -159,8 +159,7 @@ namespace iText.IO.Font {
                 return new RandomAccessFileOrArray(sourceFactory.CreateSource(pfbData));
             }
             else {
-                if (pfbPath != null && pfbPath.ToLower(System.Globalization.CultureInfo.InvariantCulture).EndsWith(".pfb")
-                    ) {
+                if (pfbPath != null && pfbPath.ToLowerInvariant().EndsWith(".pfb")) {
                     return new RandomAccessFileOrArray(sourceFactory.CreateBestSource(pfbPath));
                 }
                 else {

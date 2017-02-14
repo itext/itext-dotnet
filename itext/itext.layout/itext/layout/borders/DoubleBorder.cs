@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,20 @@ namespace iText.Layout.Borders {
             : base(color, width) {
         }
 
+        /// <summary>
+        /// Creates a DoubleBorder with the specified width for both the two borders as the space in between them and
+        /// the specified color for the two borders.
+        /// </summary>
+        /// <remarks>
+        /// Creates a DoubleBorder with the specified width for both the two borders as the space in between them and
+        /// the specified color for the two borders. The space in between the two borders is either colorless or will
+        /// be filled with the background color of the element, if a color has been set.
+        /// </remarks>
+        /// <param name="width">width of the borders and the space between them</param>
+        public DoubleBorder(Color color, float width, float opacity)
+            : base(color, width, opacity) {
+        }
+
         /// <summary><inheritDoc/></summary>
         public override int GetBorderType() {
             return Border.DOUBLE;
@@ -126,7 +140,8 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SetFillColor(color);
+            canvas.SaveState().SetFillColor(transparentColor.GetColor());
+            transparentColor.ApplyFillTransparency(canvas);
             canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
             switch (borderSide) {
                 case Border.Side.TOP: {
@@ -177,7 +192,7 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill();
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).LineTo(x3, y3).LineTo(x4, y4).LineTo(x1, y1).Fill().RestoreState();
         }
 
         /// <summary><inheritDoc/></summary>
@@ -207,8 +222,9 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1).LineTo(x2, y2).Stroke()
-                .RestoreState();
+            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
             switch (borderSide) {
                 case Border.Side.TOP: {
                     //                x1 -= 2*thirdOfWidth;
@@ -239,8 +255,9 @@ namespace iText.Layout.Borders {
                     break;
                 }
             }
-            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(color).MoveTo(x1, y1).LineTo(x2, y2).Stroke()
-                .RestoreState();
+            canvas.SaveState().SetLineWidth(thirdOfWidth).SetStrokeColor(transparentColor.GetColor());
+            transparentColor.ApplyStrokeTransparency(canvas);
+            canvas.MoveTo(x1, y1).LineTo(x2, y2).Stroke().RestoreState();
         }
     }
 }

@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -82,7 +82,6 @@ namespace iText.Kernel.Font {
         internal PdfType3Font(PdfDictionary fontDictionary)
             : base(fontDictionary) {
             EnsureObjectIsAddedToDocument(fontDictionary);
-            CheckFontDictionary(fontDictionary, PdfName.Type3);
             subset = true;
             embedded = true;
             fontProgram = new Type3FontProgram(false);
@@ -194,6 +193,15 @@ namespace iText.Kernel.Font {
                 return glyph;
             }
             return null;
+        }
+
+        public override bool ContainsGlyph(String text, int from) {
+            return ContainsGlyph((int)text[from]);
+        }
+
+        public override bool ContainsGlyph(int unicode) {
+            return (fontEncoding.CanEncode(unicode) || unicode < 33) && ((Type3FontProgram)GetFontProgram()).GetGlyph(
+                fontEncoding.GetUnicodeDifference(unicode)) != null;
         }
 
         protected internal override PdfDictionary GetFontDescriptor(String fontName) {

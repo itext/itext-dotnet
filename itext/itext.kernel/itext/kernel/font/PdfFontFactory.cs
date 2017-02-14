@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,10 @@ namespace iText.Kernel.Font {
     /// <summary>
     /// This class provides helpful methods for creating fonts ready to be used in a
     /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+    /// Note, just created
+    /// <see cref="PdfFont"/>
+    /// is almost empty until it will be flushed,
+    /// because it is impossible to fulfill font data until flush.
     /// </summary>
     public sealed class PdfFontFactory {
         /// <summary>This is the default encoding to use.</summary>
@@ -63,23 +67,39 @@ namespace iText.Kernel.Font {
         private static bool DEFAULT_CACHED = true;
 
         /// <summary>
-        /// Creates a default font, namely
+        /// Creates a new instance of default font, namely
         /// <see cref="iText.IO.Font.FontConstants.HELVETICA"/>
-        /// standard font with
+        /// standard font
+        /// with
         /// <see cref="iText.IO.Font.PdfEncodings.WINANSI"/>
         /// encoding.
+        /// Note, if you want to reuse the same instance of default font, you may use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetDefaultFont()"/>
+        /// .
         /// </summary>
         /// <returns>created font</returns>
         /// <exception cref="System.IO.IOException">if error occurred while creating the font, e.g. metrics loading failure
         ///     </exception>
         public static PdfFont CreateFont() {
-            return CreateFont(FontConstants.HELVETICA, PdfEncodings.WINANSI);
+            return CreateFont(FontConstants.HELVETICA, DEFAULT_ENCODING);
         }
 
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>
-        /// by existing font dictionary.
+        /// by already existing font dictionary.
+        /// Note, the font won't be added to any document,
+        /// until you add it to
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// .
+        /// While adding to
+        /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas"/>
+        /// , or to
+        /// <see cref="iText.Kernel.Pdf.PdfResources"/>
+        /// the font will be made indirect implicitly.
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetFont(iText.Kernel.Pdf.PdfDictionary)"/>
+        /// method is strongly recommended if you want to get PdfFont by both
+        /// existing font dictionary, or just created and hasn't flushed yet.
         /// </summary>
         /// <param name="fontDictionary">the font dictionary to create the font from</param>
         /// <returns>
@@ -152,9 +172,9 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>
-        /// instance from the TrueTypeCollection represented by its byte contents.
+        /// instance from the TrueType Collection represented by its byte contents.
         /// </summary>
-        /// <param name="ttc">the byte contents of the TrueTypeCollection</param>
+        /// <param name="ttc">the byte contents of the TrueType Collection</param>
         /// <param name="ttcIndex">the index of the font in the collection, zero-based</param>
         /// <param name="encoding">
         /// the encoding of the font to be created. See
@@ -167,7 +187,7 @@ namespace iText.Kernel.Font {
         /// <see cref="PdfFont"/>
         /// instance
         /// </returns>
-        /// <exception cref="System.IO.IOException">in case the contents of the TrueTypeCollection is mal-formed or an error occurred during reading the font
+        /// <exception cref="System.IO.IOException">in case the contents of the TrueType Collection is mal-formed or an error occurred during reading the font
         ///     </exception>
         public static PdfFont CreateTtcFont(byte[] ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
             FontProgram fontProgram = FontProgramFactory.CreateFont(ttc, ttcIndex, cached);
@@ -177,7 +197,7 @@ namespace iText.Kernel.Font {
         /// <summary>
         /// Creates a
         /// <see cref="PdfFont"/>
-        /// instance from the TrueTypeCollection given by the path to the .ttc file.
+        /// instance from the TrueType Collection given by the path to the .ttc file.
         /// </summary>
         /// <param name="ttc">the path of the .ttc file</param>
         /// <param name="ttcIndex">the index of the font in the collection, zero-based</param>
@@ -193,7 +213,7 @@ namespace iText.Kernel.Font {
         /// instance
         /// </returns>
         /// <exception cref="System.IO.IOException">
-        /// in case the file is not found, contents of the TrueTypeCollection is mal-formed
+        /// in case the file is not found, contents of the TrueType Collection is mal-formed
         /// or an error occurred during reading the font
         /// </exception>
         public static PdfFont CreateTtcFont(String ttc, int ttcIndex, String encoding, bool embedded, bool cached) {
@@ -446,7 +466,7 @@ namespace iText.Kernel.Font {
         /// </returns>
         /// <exception cref="System.IO.IOException">this exception is actually never thrown. Will be removed in 7.1.</exception>
         public static PdfFont CreateFont(byte[] fontProgram, String encoding, bool embedded, bool cached) {
-            FontProgram fp = FontProgramFactory.CreateFont(null, fontProgram, cached);
+            FontProgram fp = FontProgramFactory.CreateFont(fontProgram, cached);
             return CreateFont(fp, encoding, embedded);
         }
 
@@ -590,7 +610,7 @@ namespace iText.Kernel.Font {
         /// <summary>Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.</summary>
         /// <remarks>
         /// Registers a .ttf, .otf, .afm, .pfm, or a .ttc font file.
-        /// In case if TrueTypeCollection (.ttc), an additional parameter may be specified defining the index of the font
+        /// In case if TrueType Collection (.ttc), an additional parameter may be specified defining the index of the font
         /// to be registered, e.g. "path/to/font/collection.ttc,0". The index is zero-based.
         /// </remarks>
         /// <param name="path">the path to a font file</param>

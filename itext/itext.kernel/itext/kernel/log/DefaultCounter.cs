@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,6 @@ address: sales@itextpdf.com
 */
 using System;
 using iText.IO.Codec;
-using iText.Kernel;
 
 namespace iText.Kernel.Log {
     /// <summary>Default implementation of the Counter interface that essentially doesn't do anything.</summary>
@@ -88,9 +87,9 @@ namespace iText.Kernel.Log {
 
         private void PlusOne() {
             if (++count > repeat_level) {
-                if (Version.IsAGPLVersion() || Version.IsExpired()) {
+                if (iText.Kernel.Version.IsAGPLVersion() || iText.Kernel.Version.IsExpired()) {
                     String message = iText.IO.Util.JavaUtil.GetStringForBytes(message_1);
-                    if (Version.IsExpired()) {
+                    if (iText.Kernel.Version.IsExpired()) {
                         message = iText.IO.Util.JavaUtil.GetStringForBytes(message_2);
                     }
                     level++;

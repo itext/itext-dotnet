@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -97,7 +97,7 @@ namespace iText.Kernel.Utils {
         /// <param name="charset">the charset of the resultant XML file</param>
         /// <exception cref="System.IO.IOException"/>
         public virtual void ConvertToXml(Stream os, String charset) {
-            @out = new StreamWriter(os, System.Text.Encoding.GetEncoding(charset));
+            @out = new StreamWriter(os, iText.IO.Util.EncodingUtil.GetEncoding(charset));
             if (rootTag != null) {
                 @out.Write("<" + rootTag + ">" + Environment.NewLine);
             }
@@ -112,7 +112,7 @@ namespace iText.Kernel.Utils {
                 @out.Write("</" + rootTag + ">");
             }
             @out.Flush();
-            @out.Close();
+            @out.Dispose();
         }
 
         /// <summary>Sets the name of the root tag of the resultant XML file</summary>

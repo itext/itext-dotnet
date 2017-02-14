@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -86,9 +86,9 @@ namespace iText.Barcodes {
             byte[] bars = new byte[text.Length * 5 + 2];
             bars[0] = 1;
             bars[bars.Length - 1] = 1;
-            for (int k_1 = 0; k_1 < text.Length; ++k_1) {
-                int c = text[k_1] - '0';
-                System.Array.Copy(BARS[c], 0, bars, k_1 * 5 + 1, 5);
+            for (int k = 0; k < text.Length; ++k) {
+                int c = text[k] - '0';
+                System.Array.Copy(BARS[c], 0, bars, k * 5 + 1, 5);
             }
             return bars;
         }

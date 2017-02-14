@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 using iText.Kernel.Colors;
 using iText.Kernel.Pdf.Canvas;
+using iText.Layout.Properties;
 
 namespace iText.Layout.Borders {
     /// <summary>Represents a border.</summary>
@@ -90,7 +91,12 @@ namespace iText.Layout.Borders {
 
         /// <summary>The color of the border.</summary>
         /// <seealso cref="iText.Kernel.Colors.Color"/>
+        [System.ObsoleteAttribute(@"use transparentColor instead")]
         protected internal Color color;
+
+        /// <summary>The color of the border.</summary>
+        /// <seealso cref="iText.Layout.Properties.TransparentColor"/>
+        protected internal TransparentColor transparentColor;
 
         /// <summary>The width of the border.</summary>
         protected internal float width;
@@ -100,6 +106,8 @@ namespace iText.Layout.Borders {
 
         /// <summary>The hash value for the border.</summary>
         private int hash;
+
+        private Border.Side tmpSide = Border.Side.NONE;
 
         /// <summary>
         /// Creates a
@@ -125,6 +133,24 @@ namespace iText.Layout.Borders {
         /// <param name="width">the width which the border should have</param>
         protected internal Border(Color color, float width) {
             this.color = color;
+            this.transparentColor = new TransparentColor(color);
+            this.width = width;
+        }
+
+        /// <summary>
+        /// Creates a
+        /// <see cref="Border">border</see>
+        /// with given width,
+        /// <see cref="iText.Kernel.Colors.Color">color</see>
+        /// and opacity.
+        /// </summary>
+        /// <param name="color">the color which the border should have</param>
+        /// <param name="width">the width which the border should have</param>
+        /// <param name="opacity">the opacity which border should have; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </param>
+        protected internal Border(Color color, float width, float opacity) {
+            this.color = color;
+            this.transparentColor = new TransparentColor(color, opacity);
             this.width = width;
         }
 
@@ -157,8 +183,51 @@ namespace iText.Layout.Borders {
         /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
         /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
         /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1.0. use Draw(iText.Kernel.Pdf.Canvas.PdfCanvas, float, float, float, float, Side, float, float) instead"
+            )]
         public abstract void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
             , float borderWidthAfter);
+
+        /// <summary>
+        /// <p>
+        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
+        /// drawing direction.
+        /// </summary>
+        /// <remarks>
+        /// <p>
+        /// All borders are supposed to be drawn in such way, that inner content of the element is on the right from the
+        /// drawing direction. Borders are drawn in this order: top, right, bottom, left.
+        /// </p>
+        /// <p>
+        /// Given points specify the line which lies on the border of the content area,
+        /// therefore the border itself should be drawn to the left from the drawing direction.
+        /// </p>
+        /// <p>
+        /// <code>borderWidthBefore</code> and <code>borderWidthAfter</code> parameters are used to
+        /// define the widths of the borders that are before and after the current border, e.g. for
+        /// the bottom border, <code>borderWidthBefore</code> specifies width of the right border and
+        /// <code>borderWidthAfter</code> - width of the left border. Those width are used to handle areas
+        /// of border joins.
+        /// </p>
+        /// </remarks>
+        /// <param name="canvas">PdfCanvas to be written to</param>
+        /// <param name="x1">x coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="y1">y coordinate of the beginning point of the element side, that should be bordered</param>
+        /// <param name="x2">x coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="y2">y coordinate of the ending point of the element side, that should be bordered</param>
+        /// <param name="side">
+        /// the
+        /// <see cref="Side"/>
+        /// , that represents element side, that should be bordered
+        /// </param>
+        /// <param name="borderWidthBefore">defines width of the border that is before the current one</param>
+        /// <param name="borderWidthAfter">defines width of the border that is after the current one</param>
+        public virtual void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, Border.Side side, float
+             borderWidthBefore, float borderWidthAfter) {
+            tmpSide = side;
+            Draw(canvas, x1, y1, x2, y2, borderWidthBefore, borderWidthAfter);
+            tmpSide = Border.Side.NONE;
+        }
 
         /// <summary>Draws the border of a cell.</summary>
         /// <param name="canvas">PdfCanvas to be written to</param>
@@ -185,7 +254,17 @@ namespace iText.Layout.Borders {
         /// <see cref="iText.Kernel.Colors.Color">color</see>
         /// </returns>
         public virtual Color GetColor() {
-            return color;
+            return transparentColor.GetColor();
+        }
+
+        /// <summary>
+        /// Gets the opacity of the
+        /// <see cref="Border">border</see>
+        /// </summary>
+        /// <returns>the border opacity; a float between 0 and 1, where 1 stands for fully opaque color and 0 - for fully transparent
+        ///     </returns>
+        public virtual float GetOpacity() {
+            return transparentColor.GetOpacity();
         }
 
         /// <summary>
@@ -205,6 +284,7 @@ namespace iText.Layout.Borders {
         /// </summary>
         public virtual void SetColor(Color color) {
             this.color = color;
+            this.transparentColor = new TransparentColor(color, this.transparentColor.GetOpacity());
         }
 
         /// <summary>
@@ -226,8 +306,9 @@ namespace iText.Layout.Borders {
             }
             if (anObject is iText.Layout.Borders.Border) {
                 iText.Layout.Borders.Border anotherBorder = (iText.Layout.Borders.Border)anObject;
-                if (anotherBorder.GetBorderType() != GetBorderType() || anotherBorder.GetColor() != GetColor() || anotherBorder
-                    .GetWidth() != GetWidth()) {
+                if (anotherBorder.GetBorderType() != GetBorderType() || !anotherBorder.GetColor().Equals(GetColor()) || anotherBorder
+                    .GetWidth() != GetWidth() || anotherBorder.transparentColor.GetOpacity() != transparentColor.GetOpacity
+                    ()) {
                     return false;
                 }
             }
@@ -242,6 +323,7 @@ namespace iText.Layout.Borders {
             int h = hash;
             if (h == 0) {
                 h = (int)GetWidth() * 31 + GetColor().GetHashCode();
+                h = h * 31 + (int)transparentColor.GetOpacity();
                 hash = h;
             }
             return h;
@@ -294,7 +376,7 @@ namespace iText.Layout.Borders {
                     }
                 }
             }
-            return Border.Side.NONE;
+            return tmpSide;
         }
 
         /// <summary>Enumerates the different sides of the rectangle.</summary>
@@ -303,7 +385,7 @@ namespace iText.Layout.Borders {
         /// The rectangle sides are expected to be parallel to corresponding page sides
         /// Otherwise the result is Side.NONE
         /// </remarks>
-        protected internal enum Side {
+        public enum Side {
             NONE,
             TOP,
             RIGHT,

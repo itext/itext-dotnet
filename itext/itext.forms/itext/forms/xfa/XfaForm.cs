@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -177,9 +177,14 @@ namespace iText.Forms.Xfa
 					PdfStream dStream = new PdfStream(SerializeDocument(form.datasetsNode));
 					dStream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
 					ar.Set(d, dStream);
-					ar.Flush();
+				    ar.SetModified();
+				    ar.Flush();
 					af.Put(PdfName.XFA, new PdfArray(ar));
-					return;
+				    af.SetModified();
+				    if (!af.IsIndirect()) {
+				        pdfDocument.GetCatalog().SetModified();
+				    }
+				    return;
 				}
 			}
 			//reader.killXref(af.get(PdfName.XFA));
@@ -188,6 +193,9 @@ namespace iText.Forms.Xfa
 			stream.Flush();
 			af.Put(PdfName.XFA, stream);
 			af.SetModified();
+		    if (!af.IsIndirect()) {
+		        pdfDocument.GetCatalog().SetModified();
+		    }
 		}
 
 		/// <summary>Extracts DOM nodes from an XFA document.</summary>
@@ -608,17 +616,24 @@ namespace iText.Forms.Xfa
 		/// <exception cref="System.IO.IOException">on error</exception>
 		private static byte[] SerializeDocument(XNode n)
 		{
-            MemoryStream fout = new MemoryStream();
+		    MemoryStream fout = new MemoryStream();
 		    if (n != null) {
+		        if (n is XDocument) {
+		            fout.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>".GetBytes(Encoding.UTF8));
+		        }
 		        XmlWriterSettings settings = new XmlWriterSettings {
-		            Encoding = new UpperCaseUTF8Encoding(false),
-                    OmitXmlDeclaration = !(n is XDocument)
-                };
-		        XmlWriter writer = XmlTextWriter.Create(fout, settings);
-                n.WriteTo(writer);
+		            Encoding = new UTF8Encoding(false),
+		            OmitXmlDeclaration = true,
+		        };
+		        XmlWriter writer = XmlWriter.Create(fout, settings);
+		        n.WriteTo(writer);
+#if !NETSTANDARD1_6
                 writer.Close();
-		    }
-            fout.Close();
+#else
+                writer.Dispose();
+#endif
+            }
+            fout.Dispose();
 		    return fout.ToArray();
 		}
 
@@ -649,7 +664,7 @@ namespace iText.Forms.Xfa
 					bout.Write(b);
 				}
 			}
-			bout.Close();
+			bout.Dispose();
 			InitXfaForm(new MemoryStream(bout.ToArray()));
 		}
 
@@ -672,7 +687,6 @@ namespace iText.Forms.Xfa
 			if (xfaNodes.ContainsKey("datasets"))
 			{
 				datasetsNode = (XElement)xfaNodes["datasets"];
-				datasetsSom = new Xml2SomDatasets(datasetsNode.FirstNode);
                 XElement dataNode = FindDataNode(datasetsNode);
                 datasetsSom = new Xml2SomDatasets(dataNode != null ? dataNode : datasetsNode.FirstNode);
 			}
@@ -718,48 +732,9 @@ namespace iText.Forms.Xfa
 
         private XElement FindDataNode(XElement datasetsNode)
 	    {
-	        return datasetsNode.Element("{xfa}data");
+            //return datasetsNode.Element("{xfa}data");
+            XName name = XName.Get("data", "http://www.xfa.org/schema/xfa-data/1.0/");
+            return datasetsNode.Element(name);
 	    }
-
-
-        private class UpperCaseUTF8Encoding : UTF8Encoding
-        {
-            // Code from a blog http://www.distribucon.com/blog/CategoryView,category,XML.aspx
-            //
-            // Dan Miser - Thoughts from Dan Miser
-            // Tuesday, January 29, 2008 
-            // He used the Reflector to understand the heirarchy of the encoding class
-            //
-            //      Back to Reflector, and I notice that the Encoding.WebName is the property used to
-            //      write out the encoding string. I now create a descendant class of UTF8Encoding.
-            //      The class is listed below. Now I just call XmlTextWriter, passing in
-            //      UpperCaseUTF8Encoding.UpperCaseUTF8 for the Encoding type, and everything works
-            //      perfectly. - Dan Miser
-
-            public UpperCaseUTF8Encoding() : base() {
-            }
-
-            public UpperCaseUTF8Encoding(bool encoderShouldEmitUTF8Identifier) : base(encoderShouldEmitUTF8Identifier) {
-            }
-
-            public override string WebName
-            {
-                get { return base.WebName.ToUpper(); }
-            }
-
-            public static UpperCaseUTF8Encoding UpperCaseUTF8
-            {
-                get
-                {
-                    if (upperCaseUtf8Encoding == null)
-                    {
-                        upperCaseUtf8Encoding = new UpperCaseUTF8Encoding();
-                    }
-                    return upperCaseUtf8Encoding;
-                }
-            }
-
-            private static UpperCaseUTF8Encoding upperCaseUtf8Encoding = null;
-        }
     }
 }

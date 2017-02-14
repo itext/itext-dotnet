@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -388,7 +388,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                             int sx = @in.ReadShort();
                             int sy = @in.ReadShort();
                             cb.MoveTo(state.TransformX(sx), state.TransformY(sy));
-                            for (int k_1 = 1; k_1 < len; ++k_1) {
+                            for (int k = 1; k < len; ++k) {
                                 int x = @in.ReadShort();
                                 int y = @in.ReadShort();
                                 cb.LineTo(state.TransformX(x), state.TransformY(y));
@@ -852,7 +852,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
                 while ((b = imgIn.Read()) != -1) {
                     @out.Write(b);
                 }
-                imgIn.Close();
+                imgIn.Dispose();
                 data = @out.ToArray();
             }
             else {
@@ -899,7 +899,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
             }
             WriteDWord(os, 3);
             WriteWord(os, 0);
-            os.Close();
+            os.Dispose();
             return os.ToArray();
         }
 

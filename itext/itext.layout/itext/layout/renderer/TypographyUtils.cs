@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using Versions.Attributes;
 using iText.IO.Font;
 using iText.IO.Font.Otf;
 using iText.IO.Log;
@@ -94,10 +96,12 @@ namespace iText.Layout.Renderer {
         private static IDictionary<TypographyUtils.TypographyMethodSignature, MemberInfo> cachedMethods = new Dictionary
             <TypographyUtils.TypographyMethodSignature, MemberInfo>();
 
+        private const String typographyNotFoundException = "Cannot find pdfCalligraph module, which was implicitly required by one of the layout properties";
+
         static TypographyUtils() {
             bool moduleFound = false;
             try {
-                Type type = System.Type.GetType(TYPOGRAPHY_PACKAGE + SHAPER);
+                Type type = GetTypographyClass(TYPOGRAPHY_PACKAGE + SHAPER);
                 if (type != null) {
                     moduleFound = true;
                 }
@@ -115,8 +119,7 @@ namespace iText.Layout.Renderer {
 
         internal static void ApplyOtfScript(FontProgram fontProgram, GlyphLine text, UnicodeScript? script) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
-                    );
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_OTF_SCRIPT, new Type[] { typeof(TrueTypeFont), typeof(GlyphLine
@@ -127,8 +130,7 @@ namespace iText.Layout.Renderer {
         //            Shaper.applyOtfScript((TrueTypeFont)fontProgram, text, script);
         internal static void ApplyKerning(FontProgram fontProgram, GlyphLine text) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
-                    );
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 CallMethod(TYPOGRAPHY_PACKAGE + SHAPER, APPLY_KERNING, new Type[] { typeof(FontProgram), typeof(GlyphLine)
@@ -137,10 +139,9 @@ namespace iText.Layout.Renderer {
         }
 
         //            Shaper.applyKerning(fontProgram, text);
-        internal static byte[] GetBidiLevels(BaseDirection baseDirection, int[] unicodeIds) {
+        internal static byte[] GetBidiLevels(BaseDirection? baseDirection, int[] unicodeIds) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
-                    );
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 byte direction;
@@ -184,8 +185,7 @@ namespace iText.Layout.Renderer {
         internal static int[] ReorderLine(IList<LineRenderer.RendererGlyph> line, byte[] lineLevels, byte[] levels
             ) {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
-                    );
+                logger.Warn(typographyNotFoundException);
             }
             else {
                 if (levels == null) {
@@ -215,12 +215,12 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 // fix anchorDelta
-                for (int i_1 = 0; i_1 < reorderedLine.Count; i_1++) {
-                    Glyph glyph = reorderedLine[i_1].glyph;
+                for (int i = 0; i < reorderedLine.Count; i++) {
+                    Glyph glyph = reorderedLine[i].glyph;
                     if (glyph.HasPlacement()) {
-                        int oldAnchor = reorder[i_1] + glyph.GetAnchorDelta();
+                        int oldAnchor = reorder[i] + glyph.GetAnchorDelta();
                         int newPos = inverseReorder[oldAnchor];
-                        int newAnchorDelta = newPos - i_1;
+                        int newAnchorDelta = newPos - i;
                         glyph.SetAnchorDelta((short)newAnchorDelta);
                     }
                 }
@@ -233,8 +233,7 @@ namespace iText.Layout.Renderer {
 
         internal static ICollection<UnicodeScript> GetSupportedScripts() {
             if (!TYPOGRAPHY_MODULE_INITIALIZED) {
-                logger.Warn("Cannot find advanced typography module, which was implicitly required by one of the layout properties"
-                    );
+                logger.Warn(typographyNotFoundException);
                 return null;
             }
             else {
@@ -323,7 +322,7 @@ namespace iText.Layout.Renderer {
         private static Type FindClass(String className) {
             Type c = cachedClasses.Get(className);
             if (c == null) {
-                c = System.Type.GetType(className);
+                c = GetTypographyClass(className);
                 cachedClasses[className] = c;
             }
             return c;
@@ -369,6 +368,57 @@ namespace iText.Layout.Renderer {
                 result = 31 * result + (methodName != null ? methodName.GetHashCode() : 0);
                 return result;
             }
+        }
+
+        private static Type GetTypographyClass(String partialName) {
+            String classFullName = null;
+
+            Assembly layoutAssembly = typeof(TypographyUtils).GetAssembly();
+            try {
+                Attribute customAttribute = layoutAssembly.GetCustomAttribute(typeof(TypographyVersionAttribute));
+                if (customAttribute is TypographyVersionAttribute) {
+                    string typographyVersion = ((TypographyVersionAttribute) customAttribute).TypographyVersion;
+                    string format = "{0}, Version={1}, Culture=neutral, PublicKeyToken=8354ae6d2174ddca";
+                    classFullName = String.Format(format, partialName, typographyVersion);
+                }
+            } catch (Exception ignored) {
+            }
+
+            Type type = null;
+            if (classFullName != null) {
+                String fileLoadExceptionMessage = null;
+                try {
+                    type = System.Type.GetType(classFullName);
+                } catch (FileLoadException fileLoadException) {
+                    fileLoadExceptionMessage = fileLoadException.Message;
+                }
+                if (fileLoadExceptionMessage != null) {
+                    // try to find typography assembly by it's partial name and check if it refers to current version of itext core
+                    try {
+                        type = System.Type.GetType(partialName);
+                    } catch {
+                        // ignore
+                    }
+                    if (type != null) {
+                        bool doesReferToCurrentVersionOfCore = false;
+                        foreach (AssemblyName assemblyName in type.GetAssembly().GetReferencedAssemblies()) {
+                            if ("itext.io".Equals(assemblyName.Name)) {
+                                doesReferToCurrentVersionOfCore = assemblyName.Version.Equals(layoutAssembly.GetName().Version);
+                                break;
+                            }
+                        }
+                        if (!doesReferToCurrentVersionOfCore) {
+                            type = null;
+                        }
+                    }
+                    if (type == null) {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(TypographyUtils));
+                        logger.Error(fileLoadExceptionMessage);
+                    }
+                }
+            }
+
+            return type;
         }
     }
 }

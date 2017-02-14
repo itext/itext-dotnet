@@ -1,7 +1,7 @@
 /*
 
 This file is part of the iText (R) project.
-Copyright (c) 1998-2016 iText Group NV
+Copyright (c) 1998-2017 iText Group NV
 Authors: Bruno Lowagie, Paulo Soares, et al.
 
 This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.Kernel.Geom {
+    /// <summary>Class that represent rectangle object.</summary>
     public class Rectangle {
         private static float EPS = 1e-4f;
 
@@ -55,6 +56,11 @@ namespace iText.Kernel.Geom {
 
         protected internal float height;
 
+        /// <summary>Creates new instance.</summary>
+        /// <param name="x">the x coordinate of lower left point</param>
+        /// <param name="y">the y coordinate of lower left point</param>
+        /// <param name="width">the width value</param>
+        /// <param name="height">the height value</param>
         public Rectangle(float x, float y, float width, float height) {
             this.x = x;
             this.y = y;
@@ -62,10 +68,21 @@ namespace iText.Kernel.Geom {
             this.height = height;
         }
 
+        /// <summary>Creates new instance of rectangle with (0, 0) as the lower left point.</summary>
+        /// <param name="width">the width value</param>
+        /// <param name="height">the height value</param>
         public Rectangle(float width, float height)
             : this(0, 0, width, height) {
         }
 
+        /// <summary>
+        /// Creates the copy of given
+        /// <see cref="Rectangle"/>
+        /// </summary>
+        /// <param name="rect">
+        /// the copied
+        /// <see cref="Rectangle"/>
+        /// </param>
         public Rectangle(iText.Kernel.Geom.Rectangle rect)
             : this(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight()) {
         }
@@ -283,26 +300,66 @@ namespace iText.Kernel.Geom {
             return y;
         }
 
+        /// <summary>Decreases the y coordinate.</summary>
+        /// <param name="move">the value on which the position will be changed.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle MoveDown(float move) {
             y -= move;
             return this;
         }
 
+        /// <summary>Increases the y coordinate.</summary>
+        /// <param name="move">the value on which the position will be changed.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle MoveUp(float move) {
             y += move;
             return this;
         }
 
+        /// <summary>Increases the x coordinate.</summary>
+        /// <param name="move">the value on which the position will be changed.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle MoveRight(float move) {
             x += move;
             return this;
         }
 
+        /// <summary>Decreases the x coordinate.</summary>
+        /// <param name="move">the value on which the position will be changed.</param>
+        /// <returns>
+        /// this
+        /// <see cref="Rectangle"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Geom.Rectangle MoveLeft(float move) {
             x -= move;
             return this;
         }
 
+        /// <summary>Change the rectangle according the specified margins.</summary>
+        /// <param name="topIndent">the value on which the top y coordinate will change.</param>
+        /// <param name="rightIndent">the value on which the right x coordinate will change.</param>
+        /// <param name="bottomIndent">the value on which the bottom y coordinate will change.</param>
+        /// <param name="leftIndent">the value on which the left x coordinate will change.</param>
+        /// <param name="reverse">
+        /// if
+        /// <see langword="true"/>
+        /// the rectangle will expand, otherwise it will shrink
+        /// </param>
+        /// 
+        /// <returns>this instance that is cast to type T.</returns>
         public virtual T ApplyMargins<T>(float topIndent, float rightIndent, float bottomIndent, float leftIndent, 
             bool reverse)
             where T : iText.Kernel.Geom.Rectangle {
@@ -313,6 +370,18 @@ namespace iText.Kernel.Geom {
             return (T)this;
         }
 
+        /// <summary>Checks if rectangle have common points with line, specified by two points.</summary>
+        /// <param name="x1">the x coordinate of first line's point.</param>
+        /// <param name="y1">the y coordinate of first line's point.</param>
+        /// <param name="x2">the x coordinate of second line's point.</param>
+        /// <param name="y2">the y coordinate of second line's point.</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if rectangle have common points with line and
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool IntersectsLine(float x1, float y1, float x2, float y2) {
             double rx1 = GetX();
             double ry1 = GetY();
@@ -323,6 +392,8 @@ namespace iText.Kernel.Geom {
                 y1, x2, y2);
         }
 
+        /// <summary>Gets the string representation of rectangle.</summary>
+        /// <returns>the string representation of rectangle.</returns>
         public override String ToString() {
             return "Rectangle: " + GetWidth() + 'x' + GetHeight();
         }
@@ -333,10 +404,37 @@ namespace iText.Kernel.Geom {
             return new iText.Kernel.Geom.Rectangle(x, y, width, height);
         }
 
+        /// <summary>Compares instance of this rectangle with given deviation equals to 0.0001</summary>
+        /// <param name="that">
+        /// the
+        /// <see cref="Rectangle"/>
+        /// to compare with.
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the difference between corresponding rectangle values is less than deviation and
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool EqualsWithEpsilon(iText.Kernel.Geom.Rectangle that) {
             return EqualsWithEpsilon(that, EPS);
         }
 
+        /// <summary>Compares instance of this rectangle with given deviation.</summary>
+        /// <param name="that">
+        /// the
+        /// <see cref="Rectangle"/>
+        /// to compare with.
+        /// </param>
+        /// <param name="eps">the deviation value.</param>
+        /// <returns>
+        /// 
+        /// <see langword="true"/>
+        /// if the difference between corresponding rectangle values is less than deviation and
+        /// <see langword="false"/>
+        /// otherwise.
+        /// </returns>
         public virtual bool EqualsWithEpsilon(iText.Kernel.Geom.Rectangle that, float eps) {
             float dx = Math.Abs(x - that.x);
             float dy = Math.Abs(y - that.y);
