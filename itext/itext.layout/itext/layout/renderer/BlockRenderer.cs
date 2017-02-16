@@ -219,7 +219,9 @@ namespace iText.Layout.Renderer {
                                 }
                                 AbstractRenderer overflowRenderer = CreateOverflowRenderer(layoutResult);
                                 IList<IRenderer> overflowRendererChildren = new List<IRenderer>();
-                                overflowRendererChildren.Add(result.GetOverflowRenderer());
+                                if (result.GetOverflowRenderer() != null) {
+                                    overflowRendererChildren.Add(result.GetOverflowRenderer());
+                                }
                                 overflowRendererChildren.AddAll(childRenderers.SubList(childPos + 1, childRenderers.Count));
                                 overflowRenderer.childRenderers = overflowRendererChildren;
                                 if (keepTogether) {

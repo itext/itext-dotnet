@@ -121,5 +121,20 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideDiv01Test() {
+            String outFileName = destinationFolder + "areaBreakInsideDiv01.pdf";
+            String cmpFileName = sourceFolder + "cmp_areaBreakInsideDiv01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div div = new Div().Add(new Paragraph("Hello")).Add(new AreaBreak()).Add(new Paragraph("World"));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
     }
 }
