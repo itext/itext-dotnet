@@ -345,6 +345,19 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return lastActualText;
         }
 
+        /// <summary>Gets /E tag (expansion text) entry value if this text chunk is marked content.</summary>
+        /// <returns>/E value or <code>null</code> if none found</returns>
+        public virtual String GetExpansionText() {
+            String expansionText = null;
+            foreach (CanvasTag tag in canvasTagHierarchy) {
+                expansionText = tag.GetExpansionText();
+                if (expansionText != null) {
+                    break;
+                }
+            }
+            return expansionText;
+        }
+
         /// <summary>
         /// Determines if the text represented by this
         /// <see cref="TextRenderInfo"/>
