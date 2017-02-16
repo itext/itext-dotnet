@@ -130,7 +130,7 @@ namespace iText.Layout.Renderer {
                                 logger.Warn(String.Format(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, ""));
                             }
                             else {
-                                if (currentArea.IsEmptyArea() && !(renderer is AreaBreakRenderer)) {
+                                if (currentArea.IsEmptyArea() && result.GetAreaBreak() == null) {
                                     if (true.Equals(result.GetOverflowRenderer().GetModelElement().GetProperty<bool?>(Property.KEEP_TOGETHER))
                                         ) {
                                         result.GetOverflowRenderer().GetModelElement().SetProperty(Property.KEEP_TOGETHER, false);
@@ -198,7 +198,7 @@ namespace iText.Layout.Renderer {
                         if (true.Equals(renderer.GetProperty<bool?>(Property.FORCED_PLACEMENT))) {
                             ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                             logger.Warn(iText.IO.LogMessageConstant.ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED);
-                            UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                            ShrinkCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
                         }
                         else {
                             keepWithNextHangingRenderer = renderer;
@@ -207,7 +207,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         if (result.GetStatus() != LayoutResult.NOTHING) {
-                            UpdateCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
+                            ShrinkCurrentAreaAndProcessRenderer(renderer, resultRenderers, result);
                         }
                     }
                 }
@@ -289,7 +289,7 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult);
 
-        protected internal virtual void UpdateCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
+        protected internal virtual void ShrinkCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
             , LayoutResult result) {
             if (currentArea != null) {
                 float resultHeight = result.GetOccupiedArea().GetBBox().GetHeight();
@@ -322,7 +322,7 @@ namespace iText.Layout.Renderer {
                 bool ableToProcessKeepWithNext = false;
                 if (renderer.SetParent(this).Layout(new LayoutContext(rest)).GetStatus() != LayoutResult.NOTHING) {
                     // The area break will not be introduced and we are safe to place everything as is
-                    UpdateCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
+                    ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                         );
                     ableToProcessKeepWithNext = true;
                 }
@@ -356,10 +356,10 @@ namespace iText.Layout.Renderer {
                                     ableToProcessKeepWithNext = true;
                                     currentArea = firstElementSplitLayoutArea;
                                     currentPageNumber = firstElementSplitLayoutArea.GetPageNumber();
-                                    UpdateCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetSplitRenderer(), new List<IRenderer>(
+                                    ShrinkCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetSplitRenderer(), new List<IRenderer>(
                                         ), firstElementSplitLayoutResult);
                                     UpdateCurrentAndInitialArea(firstElementSplitLayoutResult);
-                                    UpdateCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetOverflowRenderer(), new List<IRenderer
+                                    ShrinkCurrentAreaAndProcessRenderer(firstElementSplitLayoutResult.GetOverflowRenderer(), new List<IRenderer
                                         >(), firstElementOverflowLayoutResult);
                                 }
                             }
@@ -383,7 +383,7 @@ namespace iText.Layout.Renderer {
                             ));
                         if (secondElementLayoutResult.GetStatus() != LayoutResult.NOTHING) {
                             ableToProcessKeepWithNext = true;
-                            UpdateCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
+                            ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                                 );
                         }
                     }
@@ -395,7 +395,7 @@ namespace iText.Layout.Renderer {
                 if (!ableToProcessKeepWithNext) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(RootRenderer));
                     logger.Warn(iText.IO.LogMessageConstant.RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT);
-                    UpdateCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
+                    ShrinkCurrentAreaAndProcessRenderer(keepWithNextHangingRenderer, new List<IRenderer>(), keepWithNextHangingRendererLayoutResult
                         );
                 }
                 keepWithNextHangingRenderer = null;

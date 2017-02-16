@@ -146,14 +146,20 @@ namespace iText.Layout.Renderer {
                         causeOfNothing = result.GetCauseOfNothing();
                     }
                     // have more areas
-                    if (currentAreaPos + 1 < areas.Count) {
+                    if (currentAreaPos + 1 < areas.Count && !(result.GetAreaBreak() != null && result.GetAreaBreak().GetAreaType
+                        () == AreaBreakType.NEXT_PAGE)) {
                         if (result.GetStatus() == LayoutResult.PARTIAL) {
                             childRenderers[childPos] = result.GetSplitRenderer();
                             // TODO linkedList would make it faster
                             childRenderers.Add(childPos + 1, result.GetOverflowRenderer());
                         }
                         else {
-                            childRenderers[childPos] = result.GetOverflowRenderer();
+                            if (result.GetOverflowRenderer() != null) {
+                                childRenderers[childPos] = result.GetOverflowRenderer();
+                            }
+                            else {
+                                childRenderers.JRemoveAt(childPos);
+                            }
                             childPos--;
                         }
                         layoutBox = areas[++currentAreaPos].Clone();
@@ -258,10 +264,12 @@ namespace iText.Layout.Renderer {
                                 }
                                 else {
                                     if (layoutResult != LayoutResult.NOTHING) {
-                                        return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null);
+                                        return new LayoutResult(layoutResult, occupiedArea, splitRenderer, overflowRenderer, null).SetAreaBreak(result
+                                            .GetAreaBreak());
                                     }
                                     else {
-                                        return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing());
+                                        return new LayoutResult(layoutResult, null, null, overflowRenderer, result.GetCauseOfNothing()).SetAreaBreak
+                                            (result.GetAreaBreak());
                                     }
                                 }
                             }
@@ -269,8 +277,10 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 anythingPlaced = true;
-                occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
-                    ()));
+                if (result.GetOccupiedArea() != null) {
+                    occupiedArea.SetBBox(Rectangle.GetCommonRectangle(occupiedArea.GetBBox(), result.GetOccupiedArea().GetBBox
+                        ()));
+                }
                 if (marginsCollapsingEnabled) {
                     marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                 }
