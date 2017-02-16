@@ -289,18 +289,8 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract LayoutArea UpdateCurrentArea(LayoutResult overflowResult);
 
-        private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
-            AlignChildHorizontally(renderer, currentArea.GetBBox().GetWidth());
-            if (immediateFlush) {
-                FlushSingleRenderer(renderer);
-            }
-            else {
-                resultRenderers.Add(renderer);
-            }
-        }
-
-        private void UpdateCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers, LayoutResult
-             result) {
+        protected internal virtual void UpdateCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers
+            , LayoutResult result) {
             if (currentArea != null) {
                 float resultHeight = result.GetOccupiedArea().GetBBox().GetHeight();
                 currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultHeight);
@@ -311,6 +301,16 @@ namespace iText.Layout.Renderer {
             }
             if (!immediateFlush) {
                 childRenderers.AddAll(resultRenderers);
+            }
+        }
+
+        private void ProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers) {
+            AlignChildHorizontally(renderer, currentArea.GetBBox().GetWidth());
+            if (immediateFlush) {
+                FlushSingleRenderer(renderer);
+            }
+            else {
+                resultRenderers.Add(renderer);
             }
         }
 
