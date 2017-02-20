@@ -456,8 +456,11 @@ namespace iText.Kernel.Pdf {
                         foreach (PdfPage oldPage in page2page.Keys) {
                             if (oldPage.GetPdfObject() == pageObject) {
                                 array.Set(0, page2page.Get(oldPage).GetPdfObject());
+                                //Create new Array
+                                PdfArray copiedArray = new PdfArray(array);
+                                copiedArray.MakeIndirect(toDocument);
                                 d = new PdfStringDestination(name);
-                                toDocument.AddNamedDestination(name, array);
+                                toDocument.AddNamedDestination(name, copiedArray);
                             }
                         }
                     }
