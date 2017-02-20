@@ -1049,6 +1049,24 @@ namespace iText.Layout.Renderer {
             range[1] -= shift;
         }
 
+        internal override PdfFont ResolveFirstFont(String font, FontProvider provider, FontCharacteristics fc) {
+            FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
+                (String)font), fc);
+            IList<Glyph> resolvedGlyphs;
+            PdfFont currentFont;
+            //try to find find font that can render at least one glyph.
+            while (!strategy.EndOfText()) {
+                resolvedGlyphs = strategy.NextGlyphs();
+                currentFont = strategy.GetCurrentFont();
+                foreach (Glyph glyph in resolvedGlyphs) {
+                    if (currentFont.ContainsGlyph(glyph.GetUnicode())) {
+                        return currentFont;
+                    }
+                }
+            }
+            return base.ResolveFirstFont(font, provider, fc);
+        }
+
         private static int NumberOfElementsLessThan(List<int> numbers, int n) {
             int x = numbers.BinarySearch(n);
             if (x >= 0) {

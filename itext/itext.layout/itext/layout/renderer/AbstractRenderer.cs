@@ -1198,7 +1198,6 @@ namespace iText.Layout.Renderer {
         }
 
         internal virtual PdfFont ResolveFirstPdfFont() {
-            // TODO this mechanism does not take text into account
             Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
                 return (PdfFont)font;
@@ -1211,13 +1210,18 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily((String)font), fc).BestMatch().GetPdfFont
-                        (provider);
+                    return ResolveFirstFont((String)font, provider, fc);
                 }
                 else {
                     throw new InvalidOperationException("String or PdfFont expected as value of FONT property");
                 }
             }
+        }
+
+        // TODO this mechanism does not take text into account
+        internal virtual PdfFont ResolveFirstFont(String font, FontProvider provider, FontCharacteristics fc) {
+            return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch().GetPdfFont(provider
+                );
         }
 
         public abstract IRenderer GetNextRenderer();
