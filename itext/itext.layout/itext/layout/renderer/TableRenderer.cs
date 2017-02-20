@@ -89,10 +89,6 @@ namespace iText.Layout.Renderer {
 
         private IList<float> heights = new List<float>();
 
-        private float[] countedMinColumnWidth;
-
-        private float[] countedMaxColumnWidth;
-
         private float[] countedColumnWidth = null;
 
         private float totalWidthForColumns;
@@ -115,7 +111,6 @@ namespace iText.Layout.Renderer {
         public TableRenderer(Table modelElement, Table.RowRange rowRange)
             : base(modelElement) {
             // Row range of the current renderer. For large tables it may contain only a few rows.
-            //TODO remove
             SetRowRange(rowRange);
         }
 
@@ -1360,7 +1355,7 @@ namespace iText.Layout.Renderer {
         }
 
         internal override MinMaxWidth GetMinMaxWidth(float availableWidth) {
-            bool isTableBeingLayouted = true;
+            bool isTableBeingLayouted = false;
             InitializeTableLayoutBorders(isTableBeingLayouted);
             TableWidths tableWidths = new TableWidths(this, availableWidth, true, rightBorderMaxWidth, leftBorderMaxWidth
                 );
@@ -1399,8 +1394,6 @@ namespace iText.Layout.Renderer {
                 headerColWidth = headerRenderer.CountRegionMinMaxWidth(null, null);
             }
             TableRenderer.ColumnMinMaxWidth tableColWidth = CountRegionMinMaxWidth(headerColWidth, footerColWidth);
-            countedMaxColumnWidth = tableColWidth.maxWidth;
-            countedMinColumnWidth = tableColWidth.minWidth;
             if (initializeBorders) {
                 CleanTableLayoutBorders(isTableBeingLayouted);
             }
@@ -1493,14 +1486,6 @@ namespace iText.Layout.Renderer {
             }
             DeleteOwnProperty(Property.BORDER_BOTTOM);
             DeleteOwnProperty(Property.BORDER_TOP);
-        }
-
-        internal virtual float[] GetMinColumnWidth() {
-            return countedMinColumnWidth;
-        }
-
-        internal virtual float[] GetMaxColumnWidth() {
-            return countedMaxColumnWidth;
         }
 
         public override void DrawBorder(DrawContext drawContext) {
