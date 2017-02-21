@@ -236,9 +236,11 @@ namespace iText.Layout.Renderer {
             int row;
             int col;
             if (IsPositioned()) {
-                float x = (float)this.GetPropertyAsFloat(Property.X);
-                float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
-                layoutBox.SetX(relativeX + x);
+                if (IsFixedLayout()) {
+                    float x = (float)this.GetPropertyAsFloat(Property.X);
+                    float relativeX = IsFixedLayout() ? 0 : layoutBox.GetX();
+                    layoutBox.SetX(relativeX + x);
+                }
             }
             Table tableModel = (Table)GetModelElement();
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
@@ -1075,9 +1077,11 @@ namespace iText.Layout.Renderer {
                 ExtendLastRow(rows[rows.Count - 1], layoutBox);
             }
             if (IsPositioned()) {
-                float y = (float)this.GetPropertyAsFloat(Property.Y);
-                float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
-                Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
+                if (IsFixedLayout()) {
+                    float y = (float)this.GetPropertyAsFloat(Property.Y);
+                    float relativeY = IsFixedLayout() ? 0 : layoutBox.GetY();
+                    Move(0, relativeY + y - occupiedArea.GetBBox().GetY());
+                }
             }
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
