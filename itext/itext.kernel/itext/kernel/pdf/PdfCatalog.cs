@@ -440,9 +440,8 @@ namespace iText.Kernel.Pdf {
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
                         PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument);
-                        PdfArray array = new PdfArray((PdfArray)dest);
                         copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
-                        d = new PdfExplicitDestination(array);
+                        d = new PdfExplicitDestination(copiedArray);
                     }
                 }
             }
