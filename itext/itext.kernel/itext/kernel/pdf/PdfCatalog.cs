@@ -439,8 +439,9 @@ namespace iText.Kernel.Pdf {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
+                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument);
                         PdfArray array = new PdfArray((PdfArray)dest);
-                        array.Set(0, page2page.Get(oldPage).GetPdfObject());
+                        copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
                         d = new PdfExplicitDestination(array);
                     }
                 }
@@ -455,12 +456,9 @@ namespace iText.Kernel.Pdf {
                         PdfObject pageObject = array.Get(0);
                         foreach (PdfPage oldPage in page2page.Keys) {
                             if (oldPage.GetPdfObject() == pageObject) {
-                                array.Set(0, page2page.Get(oldPage).GetPdfObject());
-                                //Create new Array
-                                PdfArray copiedArray = new PdfArray(array);
-                                copiedArray.MakeIndirect(toDocument);
+                                PdfArray copiedArray = ((PdfArray)array.CopyTo(toDocument));
+                                copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
                                 d = new PdfStringDestination(name);
-                                toDocument.AddNamedDestination(name, copiedArray);
                             }
                         }
                     }
