@@ -2051,53 +2051,13 @@ namespace iText.Kernel.Pdf {
             if (null == oldParent) {
                 return;
             }
-            ICollection<String> names = toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Keys;
-            IDictionary<String, PdfObject> srcNamedDestinations = catalog.GetNameTree(PdfName.Dests).GetNames();
             foreach (PdfOutline outline in oldParent.GetAllChildren()) {
                 if (outlinesToCopy.Contains(outline)) {
-                    PdfDestination dest = outline.GetDestination();
-                    if (dest is PdfStringDestination) {
-                        String name = ((PdfString)dest.GetPdfObject()).ToUnicodeString();
-                        if (!names.Contains(name)) {
-                            PdfArray array = new PdfArray();
-                            array.AddAll((PdfArray)srcNamedDestinations.Get(name));
-                            PdfObject pageObject = array.Get(0);
-                            if (!pageObject.IsNumber()) {
-                                PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
-                                PdfPage newPage = page2page.Get(oldPage);
-                                if (oldPage == null || newPage == null) {
-                                    dest = null;
-                                }
-                                else {
-                                    array.Set(0, newPage.GetPdfObject());
-                                }
-                            }
-                            if (dest != null) {
-                                toDocument.AddNamedDestination(name, ((PdfArray)array.MakeIndirect(toDocument)));
-                            }
-                        }
-                    }
-                    else {
-                        if (dest is PdfExplicitDestination) {
-                            PdfArray destArray = new PdfArray();
-                            destArray.AddAll((PdfArray)dest.GetPdfObject());
-                            PdfObject pageObject = destArray.Get(0);
-                            if (!pageObject.IsNumber()) {
-                                PdfPage oldPage = catalog.GetPageTree().GetPage((PdfDictionary)pageObject);
-                                PdfPage newPage = page2page.Get(oldPage);
-                                if (oldPage == null || newPage == null) {
-                                    dest = null;
-                                }
-                                else {
-                                    destArray.Set(0, newPage.GetPdfObject());
-                                    dest = new PdfExplicitDestination(destArray);
-                                }
-                            }
-                        }
-                    }
+                    PdfObject destObjToCopy = outline.GetDestination().GetPdfObject();
+                    PdfDestination copiedDest = GetCatalog().CopyDestination(destObjToCopy, page2page, toDocument);
                     PdfOutline child = newParent.AddOutline(outline.GetTitle());
-                    if (dest != null) {
-                        child.AddDestination(dest);
+                    if (copiedDest != null) {
+                        child.AddDestination(copiedDest);
                     }
                     CloneOutlines(outlinesToCopy, child, outline, page2page, toDocument);
                 }

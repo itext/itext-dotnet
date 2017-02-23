@@ -439,9 +439,10 @@ namespace iText.Kernel.Pdf {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
-                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument);
-                        copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
+                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false);
                         d = new PdfExplicitDestination(copiedArray);
+                        break;
                     }
                 }
             }
@@ -449,21 +450,43 @@ namespace iText.Kernel.Pdf {
                 if (dest.IsString()) {
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
                     IDictionary<String, PdfObject> dests = destsTree.GetNames();
-                    String name = ((PdfString)dest).ToUnicodeString();
-                    PdfArray array = (PdfArray)dests.Get(name);
-                    if (array != null) {
-                        PdfObject pageObject = array.Get(0);
+                    String srcDestName = ((PdfString)dest).ToUnicodeString();
+                    PdfArray srcDestArray = (PdfArray)dests.Get(srcDestName);
+                    if (srcDestArray != null) {
+                        PdfObject pageObject = srcDestArray.Get(0);
                         foreach (PdfPage oldPage in page2page.Keys) {
                             if (oldPage.GetPdfObject() == pageObject) {
-                                PdfArray copiedArray = ((PdfArray)array.CopyTo(toDocument));
-                                copiedArray.Set(0, page2page.Get(oldPage).GetPdfObject());
-                                d = new PdfStringDestination(name);
+                                d = new PdfStringDestination(srcDestName);
+                                if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
+                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                                    PdfArray copiedArray = ((PdfArray)srcDestArray.CopyTo(toDocument, false));
+                                    toDocument.AddNamedDestination(srcDestName, copiedArray);
+                                }
+                                break;
                             }
                         }
                     }
                 }
             }
             return d;
+        }
+
+        private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, String
+             srcDestName, PdfArray srcDestArray, PdfPage oldPage) {
+            PdfArray sameNameDest = (PdfArray)toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Get(srcDestName
+                );
+            bool equalSameNameDestExists = false;
+            if (sameNameDest != null && sameNameDest.GetAsDictionary(0) != null) {
+                PdfIndirectReference existingDestPageRef = sameNameDest.GetAsDictionary(0).GetIndirectReference();
+                PdfIndirectReference newDestPageRef = page2page.Get(oldPage).GetPdfObject().GetIndirectReference();
+                if (equalSameNameDestExists = existingDestPageRef.Equals(newDestPageRef) && sameNameDest.Size() == srcDestArray
+                    .Size()) {
+                    for (int i = 1; i < sameNameDest.Size(); ++i) {
+                        equalSameNameDestExists = equalSameNameDestExists && sameNameDest.Get(i).Equals(srcDestArray.Get(i));
+                    }
+                }
+            }
+            return equalSameNameDestExists;
         }
 
         private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {

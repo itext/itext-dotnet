@@ -348,6 +348,7 @@ namespace iText.Kernel {
 
         public const String NumberOfEntriesInThisXrefSubsectionNotFound = "Number of entries in this xref subsection not found.";
 
+        [Obsolete]
         public const String NameAlreadyExistsInTheNameTree = "Name already exists in the name tree.";
 
         public const String NoCompatibleEncryptionFound = "No compatible encryption found.";
