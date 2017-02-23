@@ -1197,6 +1197,9 @@ namespace iText.Layout.Renderer {
             return fc;
         }
 
+        // This method is intended to get first valid PdfFont in this renderer, based of font property.
+        // It is usually done for counting some layout characteristics like ascender or descender.
+        // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         internal virtual PdfFont ResolveFirstPdfFont() {
             Object font = this.GetProperty<Object>(Property.FONT);
             if (font is PdfFont) {
@@ -1210,7 +1213,7 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    return ResolveFirstFont((String)font, provider, fc);
+                    return ResolveFirstPdfFont((String)font, provider, fc);
                 }
                 else {
                     throw new InvalidOperationException("String or PdfFont expected as value of FONT property");
@@ -1218,8 +1221,12 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        // This method is intended to get first valid PdfFont described in font string,
+        // with specific FontCharacteristics with the help of specified font provider.
+        // This method is intended to be called from previous method that deals with Font Property.
+        // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         // TODO this mechanism does not take text into account
-        internal virtual PdfFont ResolveFirstFont(String font, FontProvider provider, FontCharacteristics fc) {
+        internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
             return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch().GetPdfFont(provider
                 );
         }

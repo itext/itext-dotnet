@@ -1049,12 +1049,12 @@ namespace iText.Layout.Renderer {
             range[1] -= shift;
         }
 
-        internal override PdfFont ResolveFirstFont(String font, FontProvider provider, FontCharacteristics fc) {
+        internal override PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
             FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                 (String)font), fc);
             IList<Glyph> resolvedGlyphs;
             PdfFont currentFont;
-            //try to find find font that can render at least one glyph.
+            //try to find first font that can render at least one glyph.
             while (!strategy.EndOfText()) {
                 resolvedGlyphs = strategy.NextGlyphs();
                 currentFont = strategy.GetCurrentFont();
@@ -1064,7 +1064,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            return base.ResolveFirstFont(font, provider, fc);
+            return base.ResolveFirstPdfFont(font, provider, fc);
         }
 
         private static int NumberOfElementsLessThan(List<int> numbers, int n) {
