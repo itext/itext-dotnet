@@ -187,7 +187,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method sets a page layout of the document</summary>
         /// <param name="pageLayout"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
             if (pageLayout.Equals(PdfName.SinglePage) || pageLayout.Equals(PdfName.OneColumn) || pageLayout.Equals(PdfName
                 .TwoColumnLeft) || pageLayout.Equals(PdfName.TwoColumnRight) || pageLayout.Equals(PdfName.TwoPageLeft)
@@ -206,7 +205,6 @@ namespace iText.Kernel.Pdf {
         /// screen
         /// </summary>
         /// <param name="preferences"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
         }
@@ -288,7 +286,6 @@ namespace iText.Kernel.Pdf {
         /// stored in the PDF document.
         /// </summary>
         /// <param name="collection"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
             GetPdfObject().Put(PdfName.Collection, collection.GetPdfObject());
             return this;
@@ -321,7 +318,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>this method return map containing all pages of the document with associated outlines.</summary>
-        /// <returns/>
+        /// <returns>map containing all pages of the document with associated outlines</returns>
         internal virtual IDictionary<PdfObject, IList<PdfOutline>> GetPagesWithOutlines() {
             return pagesWithOutlines;
         }

@@ -57,7 +57,6 @@ namespace iText.Kernel.Pdf.Collection {
         /// <summary>Sets the value of the collection item.</summary>
         /// <param name="key"/>
         /// <param name="value"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionItem AddItem(String key, String value) {
             PdfCollectionField field = schema.GetField(key);
             GetPdfObject().Put(new PdfName(key), field.GetValue(value));
@@ -89,7 +88,6 @@ namespace iText.Kernel.Pdf.Collection {
         /// </remarks>
         /// <param name="key"/>
         /// <param name="prefix"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionItem SetPrefix(String key, String prefix) {
             PdfName fieldName = new PdfName(key);
             PdfObject obj = GetPdfObject().Get(fieldName);

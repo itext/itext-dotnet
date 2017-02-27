@@ -67,7 +67,6 @@ namespace iText.Kernel.Events {
 
         /// <summary>Checks if event dispatcher as an event handler assigned for a certain event type.</summary>
         /// <param name="type"/>
-        /// <returns/>
         bool HasEventHandler(String type);
 
         /// <summary>Removes event handler.</summary>

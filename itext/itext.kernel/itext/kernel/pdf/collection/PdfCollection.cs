@@ -66,7 +66,6 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Sets the Collection schema dictionary.</summary>
         /// <param name="schema">an overview of the collection fields</param>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollection SetSchema(PdfCollectionSchema schema) {
             GetPdfObject().Put(PdfName.Schema, schema.GetPdfObject());
             return this;
@@ -81,7 +80,6 @@ namespace iText.Kernel.Pdf.Collection {
         /// in the user interface.
         /// </summary>
         /// <param name="documentName">a string that identifies an entry in the EmbeddedFiles name tree</param>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollection SetInitialDocument(String documentName) {
             GetPdfObject().Put(PdfName.D, new PdfString(documentName));
             return this;
@@ -93,7 +91,6 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Sets the initial view.</summary>
         /// <param name="viewType"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollection SetView(int viewType) {
             switch (viewType) {
                 default: {
@@ -120,7 +117,6 @@ namespace iText.Kernel.Pdf.Collection {
 
         /// <summary>Sets the Collection sort dictionary.</summary>
         /// <param name="sort"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollection SetSort(PdfCollectionSort sort) {
             GetPdfObject().Put(PdfName.Sort, sort.GetPdfObject());
             return this;

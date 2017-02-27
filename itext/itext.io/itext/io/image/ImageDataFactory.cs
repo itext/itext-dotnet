@@ -272,7 +272,7 @@ namespace iText.IO.Image {
         /// <summary>Returns a specified frame of the gif image</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frame">number of frame to be returned</param>
-        /// <returns/>
+        /// <returns>GifImageData instance.</returns>
         public static ImageData CreateGifFrame(byte[] bytes, int frame) {
             byte[] imageType = ReadImageType(bytes);
             if (ImageTypeIs(imageType, gif)) {
@@ -286,7 +286,7 @@ namespace iText.IO.Image {
         /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
         /// <param name="bytes">byte array of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image</param>
-        /// <returns/>
+        /// <returns>All frames of gif image.</returns>
         public static IList<ImageData> CreateGifFrames(byte[] bytes, int[] frameNumbers) {
             byte[] imageType = ReadImageType(bytes);
             if (ImageTypeIs(imageType, gif)) {
@@ -305,7 +305,7 @@ namespace iText.IO.Image {
         /// <summary>Returns <CODE>List</CODE> of gif image frames</summary>
         /// <param name="url">url of gif image</param>
         /// <param name="frameNumbers">array of frame numbers of gif image</param>
-        /// <returns/>
+        /// <returns>All frames of gif image.</returns>
         public static IList<ImageData> CreateGifFrames(Uri url, int[] frameNumbers) {
             byte[] imageType = ReadImageType(url);
             if (ImageTypeIs(imageType, gif)) {
