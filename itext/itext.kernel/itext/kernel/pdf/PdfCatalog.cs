@@ -509,6 +509,24 @@ namespace iText.Kernel.Pdf {
                 outline.SetDestination(destination);
                 AddOutlineToPage(outline, names);
             }
+            else {
+                //Take into account outlines that specify their destination through an action
+                PdfDictionary action = item.GetAsDictionary(PdfName.A);
+                if (action != null) {
+                    PdfName actionType = action.GetAsName(PdfName.S);
+                    //Check if it a go to action
+                    if (actionType.Equals(PdfName.GoTo)) {
+                        //Retrieve destination if it is.
+                        PdfObject destObject = action.Get(PdfName.D);
+                        if (destObject != null) {
+                            //Page is always the first object
+                            PdfDestination destination = PdfDestination.MakeDestination(destObject);
+                            outline.SetDestination(destination);
+                            AddOutlineToPage(outline, names);
+                        }
+                    }
+                }
+            }
             parent.GetAllChildren().Add(outline);
             PdfDictionary processItem = item.GetAsDictionary(PdfName.First);
             if (processItem != null) {
