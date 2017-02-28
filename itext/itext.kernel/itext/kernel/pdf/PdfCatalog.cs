@@ -515,7 +515,7 @@ namespace iText.Kernel.Pdf {
                 if (action != null) {
                     PdfName actionType = action.GetAsName(PdfName.S);
                     //Check if it a go to action
-                    if (actionType.Equals(PdfName.GoTo)) {
+                    if (PdfName.GoTo.Equals(actionType)) {
                         //Retrieve destination if it is.
                         PdfObject destObject = action.Get(PdfName.D);
                         if (destObject != null) {
