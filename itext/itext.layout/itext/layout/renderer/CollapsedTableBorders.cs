@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -10,6 +12,8 @@ namespace iText.Layout.Renderer {
 
         private IList<Border> bottomBorderCollapseWith;
 
+        private int startRow = -1;
+
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns)
             : base(rows, numberOfColumns) {
         }
@@ -17,30 +21,31 @@ namespace iText.Layout.Renderer {
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders
             )
             : base(rows, numberOfColumns, tableBoundingBorders) {
+            // TODO
             // region constructors
             topBorderCollapseWith = new List<Border>();
             bottomBorderCollapseWith = new List<Border>();
         }
 
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders
-            , bool isLargeTable)
+            , int startRow)
             : this(rows, numberOfColumns, tableBoundingBorders) {
-            this.isLargeTable = isLargeTable;
+            this.startRow = startRow;
         }
 
         // endregion
         // region collapsing and correction
-        protected internal virtual iText.Layout.Renderer.CollapsedTableBorders CollapseAllBordersAndEmptyRows(IList
-            <CellRenderer[]> rows, Border[] tableBorders, int startRow, int finishRow) {
+        protected internal virtual iText.Layout.Renderer.CollapsedTableBorders CollapseAllBordersAndEmptyRows() {
             CellRenderer[] currentRow;
             int[] rowsToDelete = new int[numberOfColumns];
-            for (int row = startRow; row <= finishRow; row++) {
+            for (int row = rowRange.GetStartRow() - (int)Math.Max(startRow, 0); row <= rowRange.GetFinishRow() - (int)
+                Math.Max(startRow, 0); row++) {
                 currentRow = rows[row];
                 bool hasCells = false;
                 for (int col = 0; col < numberOfColumns; col++) {
                     if (null != currentRow[col]) {
                         int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
-                        PrepareBuildingBordersArrays(currentRow[col], tableBorders, numberOfColumns, row, col);
+                        PrepareBuildingBordersArrays(currentRow[col], tableBoundingBorders, numberOfColumns, row, col);
                         BuildBordersArrays(currentRow[col], row, col);
                         hasCells = true;
                         if (rowsToDelete[col] > 0) {
@@ -64,18 +69,19 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (!hasCells) {
-                    rows.Remove(currentRow);
-                    row--;
-                    finishRow--;
-                    for (int i = 0; i < numberOfColumns; i++) {
-                        rowsToDelete[i]++;
-                    }
-                    if (row == finishRow) {
-                        ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
-                        logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
-                    }
                 }
             }
+            // FIXME
+            //                rows.remove(currentRow);
+            //                row--;
+            //                finishRow--;
+            //                for (int i = 0; i < numberOfColumns; i++) {
+            //                    rowsToDelete[i]++;
+            //                }
+            //                if (row == finishRow) {
+            //                    Logger logger = LoggerFactory.getLogger(TableRenderer.class);
+            //                    logger.warn(LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+            //                }
             return this;
         }
 
@@ -98,7 +104,8 @@ namespace iText.Layout.Renderer {
             }
             // process right border
             borderList = GetVerticalBorder(col + colspan);
-            for (int i = rowRange.GetStartRow() + row - rowspan + 1; i < rowRange.GetStartRow() + row + 1; i++) {
+            for (int i = rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + row - rowspan + 1; i < rowRange.GetStartRow
+                () - (int)Math.Max(startRow, 0) + row + 1; i++) {
                 border = borderList[i];
                 if (null != border && border.GetWidth() > indents[1]) {
                     indents[1] = border.GetWidth();
@@ -114,7 +121,8 @@ namespace iText.Layout.Renderer {
             }
             // process left border
             borderList = GetVerticalBorder(col);
-            for (int i = rowRange.GetStartRow() + row - rowspan + 1; i < rowRange.GetStartRow() + row + 1; i++) {
+            for (int i = rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + row - rowspan + 1; i < rowRange.GetStartRow
+                () - (int)Math.Max(startRow, 0) + row + 1; i++) {
                 border = borderList[i];
                 if (null != border && border.GetWidth() > indents[3]) {
                     indents[3] = border.GetWidth();
@@ -130,20 +138,20 @@ namespace iText.Layout.Renderer {
         public virtual Border GetWidestHorizontalBorder(int row, bool forceNotToProcessAsFirst, bool forceNotToProcessWithLast
             ) {
             Border theWidestBorder = null;
-            if (row >= 0 && row < horizontalBorders.Count) {
-                theWidestBorder = GetWidestBorder(GetHorizontalBorder(row, forceNotToProcessAsFirst, forceNotToProcessWithLast
-                    ));
-            }
+            //        if (row >= 0 && row < horizontalBorders.size()) {
+            theWidestBorder = GetWidestBorder(GetHorizontalBorder(row, forceNotToProcessAsFirst, forceNotToProcessWithLast
+                ));
+            //        }
             return theWidestBorder;
         }
 
         public virtual Border GetWidestHorizontalBorder(int row, int start, int end, bool forceNotToProcessAsFirst
             , bool forceNotToProcessAsLast) {
             Border theWidestBorder = null;
-            if (row >= 0 && row < horizontalBorders.Count) {
-                theWidestBorder = GetWidestBorder(GetHorizontalBorder(row, forceNotToProcessAsFirst, forceNotToProcessAsLast
-                    ), start, end);
-            }
+            //        if (row >= 0 && row < horizontalBorders.size()) {
+            theWidestBorder = GetWidestBorder(GetHorizontalBorder(row, forceNotToProcessAsFirst, forceNotToProcessAsLast
+                ), start, end);
+            //        }
             return theWidestBorder;
         }
 
@@ -231,9 +239,10 @@ namespace iText.Layout.Renderer {
                     int col = 0;
                     int row = index;
                     while (col < numberOfColumns) {
-                        if (null != rows[row][col] && row == (int)rows[row][col].GetPropertyAsInteger(Property.ROWSPAN) + (int)((Cell
-                            )rows[row][col].GetModelElement()).GetRow() - 1) {
-                            CellRenderer cell = rows[row][col];
+                        if (null != rows[row - (int)Math.Max(startRow, 0)][col] && row == (int)rows[row - (int)Math.Max(startRow, 
+                            0)][col].GetPropertyAsInteger(Property.ROWSPAN) + (int)((Cell)rows[row - (int)Math.Max(startRow, 0)][col
+                            ].GetModelElement()).GetRow() - 1) {
+                            CellRenderer cell = rows[row - (int)Math.Max(startRow, 0)][col];
                             Border cellModelTopBorder = GetCellSideBorder(((Cell)cell.GetModelElement()), Property.BORDER_TOP);
                             int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                             if (null == firstBorderOnCurrentPage[col] || (null != cellModelTopBorder && cellModelTopBorder.GetWidth() 
@@ -256,17 +265,17 @@ namespace iText.Layout.Renderer {
                 return firstBorderOnCurrentPage;
             }
             else {
-                if (((index == rowRange.GetFinishRow() + 1 && !forceNotToProcessAsLast) || index == horizontalBorders.Count
-                     - 1)) {
+                if (((index == rowRange.GetFinishRow() + 1 && !forceNotToProcessAsLast) || index - (int)Math.Max(startRow, 
+                    0) == horizontalBorders.Count - 1)) {
                     IList<Border> lastBorderOnCurrentPage = GetBorderList(bottomBorderCollapseWith, tableBoundingBorders[2], numberOfColumns
                         );
                     if (0 != rows.Count) {
                         int col = 0;
                         int row = index - 1;
                         while (col < numberOfColumns) {
-                            if (null != rows[row][col]) {
+                            if (null != rows[row - (int)Math.Max(startRow, 0)][col]) {
                                 // TODO
-                                CellRenderer cell = rows[row][col];
+                                CellRenderer cell = rows[row - (int)Math.Max(startRow, 0)][col];
                                 Border cellModelBottomBorder = GetCellSideBorder(((Cell)cell.GetModelElement()), Property.BORDER_BOTTOM);
                                 int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                                 if (null == lastBorderOnCurrentPage[col] || (null != cellModelBottomBorder && cellModelBottomBorder.GetWidth
@@ -289,7 +298,7 @@ namespace iText.Layout.Renderer {
                     return lastBorderOnCurrentPage;
                 }
                 else {
-                    return horizontalBorders[index];
+                    return horizontalBorders[index - Math.Max(startRow, 0)];
                 }
             }
         }
@@ -298,7 +307,12 @@ namespace iText.Layout.Renderer {
         // region setters
         public virtual iText.Layout.Renderer.CollapsedTableBorders SetTopBorderCollapseWith(IList<Border> topBorderCollapseWith
             ) {
-            this.topBorderCollapseWith.Clear();
+            if (null != this.topBorderCollapseWith) {
+                this.topBorderCollapseWith.Clear();
+            }
+            else {
+                this.topBorderCollapseWith = new List<Border>();
+            }
             if (null != topBorderCollapseWith) {
                 this.topBorderCollapseWith.AddAll(topBorderCollapseWith);
             }
@@ -307,7 +321,12 @@ namespace iText.Layout.Renderer {
 
         public virtual iText.Layout.Renderer.CollapsedTableBorders SetBottomBorderCollapseWith(IList<Border> bottomBorderCollapseWith
             ) {
-            this.bottomBorderCollapseWith.Clear();
+            if (null != this.bottomBorderCollapseWith) {
+                this.bottomBorderCollapseWith.Clear();
+            }
+            else {
+                this.bottomBorderCollapseWith = new List<Border>();
+            }
             if (null != bottomBorderCollapseWith) {
                 this.bottomBorderCollapseWith.AddAll(bottomBorderCollapseWith);
             }
@@ -479,6 +498,115 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        // endregion
+        // region draw
+        protected internal override TableBorders DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas
+            , float[] countedColumnWidth) {
+            IList<Border> borders = GetHorizontalBorder(rowRange.GetStartRow() + i);
+            /*- (int) Math.max(startRow, 0)*/
+            float x1 = startX;
+            float x2 = x1 + countedColumnWidth[0];
+            if (i == 0) {
+                if (true) {
+                    /*bordersHandler.getFirstVerticalBorder().size() > verticalBordersIndexOffset && bordersHandler.getLastVerticalBorder().size() > verticalBordersIndexOffset*/
+                    Border firstBorder = GetFirstVerticalBorder()[rowRange.GetStartRow() - (int)Math.Max(startRow, 0)];
+                    if (firstBorder != null) {
+                        x1 -= firstBorder.GetWidth() / 2;
+                    }
+                }
+            }
+            else {
+                if (i == rowRange.GetFinishRow() - rowRange.GetStartRow() + 1) {
+                    if (true) {
+                        /*bordersHandler.getFirstVerticalBorder().size() > verticalBordersIndexOffset &&
+                        bordersHandler.getLastVerticalBorder().size() > verticalBordersIndexOffset*/
+                        Border firstBorder = GetFirstVerticalBorder()[rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + rowRange
+                            .GetFinishRow() - rowRange.GetStartRow() + 1 - 1];
+                        if (firstBorder != null) {
+                            x1 -= firstBorder.GetWidth() / 2;
+                        }
+                    }
+                }
+            }
+            int j;
+            for (j = 1; j < borders.Count; j++) {
+                Border prevBorder = borders[j - 1];
+                Border curBorder = borders[j];
+                if (prevBorder != null) {
+                    if (!prevBorder.Equals(curBorder)) {
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                        x1 = x2;
+                    }
+                }
+                else {
+                    x1 += countedColumnWidth[j - 1];
+                    x2 = x1;
+                }
+                if (curBorder != null) {
+                    x2 += countedColumnWidth[j];
+                }
+            }
+            Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
+            if (lastBorder != null) {
+                if (true) {
+                    /*bordersHandler.getVerticalBorder(j).size() > verticalBordersIndexOffset*/
+                    if (i == 0) {
+                        if (GetVerticalBorder(j)[rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + i] != null) {
+                            x2 += GetVerticalBorder(j)[rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + i].GetWidth() / 2;
+                        }
+                    }
+                    else {
+                        if (i == rowRange.GetFinishRow() - rowRange.GetStartRow() + 1 && GetVerticalBorder(j).Count >= rowRange.GetStartRow
+                            () - (int)Math.Max(startRow, 0) + i - 1 && GetVerticalBorder(j)[rowRange.GetStartRow() - (int)Math.Max
+                            (startRow, 0) + i - 1] != null) {
+                            x2 += GetVerticalBorder(j)[rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + i - 1].GetWidth() / 2;
+                        }
+                    }
+                }
+                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+            }
+            return this;
+        }
+
+        protected internal override TableBorders DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas
+            , IList<float> heights) {
+            IList<Border> borders = GetVerticalBorder(i);
+            float y1 = startY;
+            float y2 = y1;
+            if (!heights.IsEmpty()) {
+                y2 = y1 - (float)heights[0];
+            }
+            int j;
+            for (j = 1; j < heights.Count; j++) {
+                Border prevBorder = borders[rowRange.GetStartRow() + j - 1];
+                /*- (int) Math.max(startRow, 0)*/
+                Border curBorder = borders[rowRange.GetStartRow() + j];
+                /*- (int) Math.max(startRow, 0)*/
+                if (prevBorder != null) {
+                    if (!prevBorder.Equals(curBorder)) {
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+                        y1 = y2;
+                    }
+                }
+                else {
+                    y1 -= (float)heights[j - 1];
+                    y2 = y1;
+                }
+                if (curBorder != null) {
+                    y2 -= (float)heights[j];
+                }
+            }
+            if (borders.Count == 0) {
+                return this;
+            }
+            Border lastBorder = borders[rowRange.GetStartRow() - (int)Math.Max(startRow, 0) + j - 1];
+            if (lastBorder != null) {
+                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+            }
+            return this;
         }
         // endregion
     }

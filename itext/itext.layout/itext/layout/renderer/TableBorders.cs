@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -18,20 +19,13 @@ namespace iText.Layout.Renderer {
 
         protected internal Table.RowRange rowRange;
 
-        protected internal bool isLargeTable;
-
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             // TODO Maybe Table ?
-            this.rows = rows;
+            this.rows = new List<CellRenderer[]>(rows);
             this.numberOfColumns = numberOfColumns;
             verticalBorders = new List<IList<Border>>();
             horizontalBorders = new List<IList<Border>>();
             tableBoundingBorders = new Border[4];
-        }
-
-        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, bool isLargeTable)
-            : this(rows, numberOfColumns) {
-            this.isLargeTable = isLargeTable;
         }
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders)
@@ -39,44 +33,35 @@ namespace iText.Layout.Renderer {
             SetTableBoundingBorders(tableBoundingBorders);
         }
 
-        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders, bool isLargeTable
-            )
-            : this(rows, numberOfColumns, tableBoundingBorders) {
-            this.isLargeTable = isLargeTable;
-        }
-
         protected internal virtual void InitializeBorders(IList<Border> lastFlushedRowBottomBorder, bool isFirstOnPage
             ) {
             IList<Border> tempBorders;
             // initialize vertical borders
-            if (0 != rows.Count) {
-                while (numberOfColumns + 1 > verticalBorders.Count) {
-                    tempBorders = new List<Border>();
-                    while (rows.Count > tempBorders.Count) {
-                        tempBorders.Add(null);
-                    }
-                    verticalBorders.Add(tempBorders);
+            while (numberOfColumns + 1 > verticalBorders.Count) {
+                tempBorders = new List<Border>();
+                while (Math.Max(rows.Count, 1) > tempBorders.Count) {
+                    tempBorders.Add(null);
                 }
+                verticalBorders.Add(tempBorders);
             }
             // initialize horizontal borders
-            while (rows.Count + 1 > horizontalBorders.Count) {
+            while (Math.Max(rows.Count, 1) + 1 > horizontalBorders.Count) {
                 tempBorders = new List<Border>();
                 while (numberOfColumns > tempBorders.Count) {
                     tempBorders.Add(null);
                 }
                 horizontalBorders.Add(tempBorders);
             }
-            // Notice that the first row on the page shouldn't collapse with the last on the previous one
-            if (null != lastFlushedRowBottomBorder && 0 < lastFlushedRowBottomBorder.Count && !isFirstOnPage) {
-                // TODO
-                tempBorders = new List<Border>();
-                foreach (Border border in lastFlushedRowBottomBorder) {
-                    tempBorders.Add(border);
-                }
-                horizontalBorders[0] = tempBorders;
-            }
         }
 
+        // Notice that the first row on the page shouldn't collapse with the last on the previous one
+        //        if (null != lastFlushedRowBottomBorder && 0 < lastFlushedRowBottomBorder.size() && !isFirstOnPage) { // TODO
+        //            tempBorders = new ArrayList<Border>();
+        //            for (Border border : lastFlushedRowBottomBorder) {
+        //                tempBorders.add(border);
+        //            }
+        //            horizontalBorders.set(horizontalBorders.size()-1, tempBorders);
+        //        }
         protected internal virtual iText.Layout.Renderer.TableBorders SetTableBoundingBorders(Border[] borders) {
             tableBoundingBorders = new Border[4];
             if (null != borders) {
@@ -87,26 +72,17 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal virtual iText.Layout.Renderer.TableBorders NormalizeRowRange() {
-            if (isLargeTable) {
-                this.rowRange = new Table.RowRange(0, rowRange.GetFinishRow() - rowRange.GetStartRow());
-            }
-            return this;
-        }
-
         protected internal virtual iText.Layout.Renderer.TableBorders SetRowRange(Table.RowRange rowRange) {
             this.rowRange = rowRange;
             return this;
         }
 
         protected internal virtual iText.Layout.Renderer.TableBorders SetStartRow(int row) {
-            this.rowRange = new Table.RowRange(row, rowRange.GetFinishRow());
-            return this;
+            return SetRowRange(new Table.RowRange(row, rowRange.GetFinishRow()));
         }
 
         protected internal virtual iText.Layout.Renderer.TableBorders SetFinishRow(int row) {
-            this.rowRange = new Table.RowRange(rowRange.GetStartRow(), row);
-            return this;
+            return SetRowRange(new Table.RowRange(rowRange.GetStartRow(), row));
         }
 
         // region getters
@@ -168,17 +144,17 @@ namespace iText.Layout.Renderer {
 
         public virtual Border GetWidestHorizontalBorder(int row) {
             Border theWidestBorder = null;
-            if (row >= 0 && row < horizontalBorders.Count) {
-                theWidestBorder = GetWidestBorder(GetHorizontalBorder(row));
-            }
+            //        if (row >= 0 && row < horizontalBorders.size()) {
+            theWidestBorder = GetWidestBorder(GetHorizontalBorder(row));
+            //        }
             return theWidestBorder;
         }
 
         public virtual Border GetWidestHorizontalBorder(int row, int start, int end) {
             Border theWidestBorder = null;
-            if (row >= 0 && row < horizontalBorders.Count) {
-                theWidestBorder = GetWidestBorder(GetHorizontalBorder(row), start, end);
-            }
+            //        if (row >= 0 && row < horizontalBorders.size()) {
+            theWidestBorder = GetWidestBorder(GetHorizontalBorder(row), start, end);
+            //        }
             return theWidestBorder;
         }
 
@@ -338,6 +314,14 @@ namespace iText.Layout.Renderer {
             }
             return borderList;
         }
+
+        // endregion
+        // region draw
+        protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(int i, float startX, float
+             y1, PdfCanvas canvas, float[] countedColumnWidth);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(int i, float startY, float
+             x1, PdfCanvas canvas, IList<float> heights);
         // endregion
     }
 }
