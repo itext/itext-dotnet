@@ -432,8 +432,8 @@ namespace iText.Kernel.Font {
                 if (iText.IO.Util.TextUtil.IsWhiteSpace(ch)) {
                     lastWhiteSpace = i;
                 }
-                tokenLength += GetWidth(ch, fontSize);
-                if (tokenLength >= maxWidth || ch == '\n') {
+                float currentCharWidth = GetWidth(ch, fontSize);
+                if (tokenLength + currentCharWidth >= maxWidth || ch == '\n') {
                     if (startPos < lastWhiteSpace) {
                         resultString.Add(text.JSubstring(startPos, lastWhiteSpace));
                         startPos = lastWhiteSpace + 1;
@@ -441,11 +441,20 @@ namespace iText.Kernel.Font {
                         i = lastWhiteSpace;
                     }
                     else {
-                        resultString.Add(text.JSubstring(startPos, i + 1));
-                        startPos = i + 1;
-                        tokenLength = 0;
-                        i = i + 1;
+                        if (startPos != i) {
+                            resultString.Add(text.JSubstring(startPos, i));
+                            startPos = i;
+                            tokenLength = currentCharWidth;
+                        }
+                        else {
+                            resultString.Add(text.JSubstring(startPos, startPos + 1));
+                            startPos = i + 1;
+                            tokenLength = 0;
+                        }
                     }
+                }
+                else {
+                    tokenLength += currentCharWidth;
                 }
             }
             resultString.Add(text.Substring(startPos));

@@ -46,6 +46,7 @@ using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
@@ -82,6 +83,23 @@ namespace iText.Layout {
             List list = new List(ListNumberingType.DECIMAL).SetSymbolIndent(20).Add("One").Add("Two").Add("Three").Add
                 ("Four").Add((ListItem)new ListItem("Roman List").Add(romanList)).Add("Five").Add("Six").Add((ListItem
                 )new ListItem().Add(romanList2));
+            document.Add(list);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NestedListTest02() {
+            String outFileName = destinationFolder + "nestedListTest02.pdf";
+            String cmpFileName = sourceFolder + "cmp_nestedListTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            List nestedList = new List().SetSymbolIndent(20).SetMarginLeft(25).Add("One").Add("Two").Add("Three");
+            List list = new List(ListNumberingType.DECIMAL).SetSymbolIndent(20).Add("One").Add("Two").Add("Three").Add
+                ("Four").Add((ListItem)new ListItem().Add(nestedList));
             document.Add(list);
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -456,6 +474,28 @@ namespace iText.Layout {
             style.SetProperty(Property.LIST_SYMBOL, new Text("* "));
             list.AddStyle(style);
             NUnit.Framework.Assert.AreEqual("* ", ((Text)list.GetProperty<Object>(Property.LIST_SYMBOL)).GetText());
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ListItemNullSymbol() {
+            String outFileName = destinationFolder + "listItemNullSymbol.pdf";
+            String cmpFileName = sourceFolder + "cmp_listItemNullSymbol.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            List list = new List();
+            list.Add(new ListItem("List item 1"));
+            Text listSymbolText = null;
+            ListItem listItem2 = new ListItem("List item 2").SetListSymbol(listSymbolText);
+            list.Add(listItem2);
+            list.Add(new ListItem("List item 3"));
+            doc.Add(list);
+            doc.Add(new LineSeparator(new DashedLine()));
+            list.SetListSymbol(ListNumberingType.ENGLISH_LOWER);
+            doc.Add(list);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff_"));
         }
     }
 }

@@ -52,7 +52,6 @@ using iText.Layout.Element;
 using iText.Layout.Layout;
 using iText.Layout.Margincollapse;
 using iText.Layout.Minmaxwidth;
-using iText.Layout.Minmaxwidth.Handler;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {

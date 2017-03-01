@@ -284,7 +284,7 @@ namespace iText.Layout.Renderer {
             InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
             //collapseAllBorders();
             if (IsOriginalRenderer()) {
-                CalculateColumnWidths(layoutBox.GetWidth(), new float[] { 0, rightBorderMaxWidth, 0, leftBorderMaxWidth });
+                CalculateColumnWidths(layoutBox.GetWidth(), false);
             }
             float tableWidth = GetTableWidth();
             if (layoutBox.GetWidth() > tableWidth) {
@@ -695,7 +695,7 @@ namespace iText.Layout.Renderer {
                                 cell.SetBorders(collapsedWithTableBorder, 2);
                                 // TODO
                                 //                            for (int i = col; i < col + cell.getPropertyAsInteger(Property.COLSPAN); i++) {
-                                //                                bordersHandler.horizontalBorders.get(rowN + 1).set(i, collapsedWithTableBorder);
+                                //                                bordersHandler.horizontalBorders.get(row + (hasContent ? 1 : 0)).set(i, collapsedWithTableBorder);
                                 //                            }
                                 // apply the difference between collapsed table border and own cell border
                                 cell.occupiedArea.GetBBox().MoveDown((collapsedBorderWidth - collapsedWithNextRowBorderWidth) / 2).IncreaseHeight
@@ -804,7 +804,7 @@ namespace iText.Layout.Renderer {
                                     // TODO
                                     //                                if (null != cellSplit) {
                                     //                                    for (int j = col; j < col + cellOverflow.getPropertyAsInteger(Property.COLSPAN); j++) {
-                                    //                                        splitResult[0].horizontalBorders.get(row + (hasContent ? 1 : 0)).set(j, currentRow[col].getBorders()[2]);
+                                    //                                        splitResult[0].horizontalBorders.get(row + (hasContent ? 1 : 0)).set(j, getCollapsedBorder(currentRow[col].getBorders()[2], borders[2]));
                                     //                                    }
                                     //                                }
                                     currentRow[col] = null;
@@ -838,7 +838,7 @@ namespace iText.Layout.Renderer {
                         }
                         // TODO
                         //                            for (int j = col; j < col + currentRow[col].getPropertyAsInteger(Property.COLSPAN); j++) {
-                        //                                horizontalBorders.get(row + (hasContent ? 1 : 0)).set(j, currentRow[col].getBorders()[2]);
+                        //                                horizontalBorders.get(row + (hasContent ? 1 : 0)).set(j, getCollapsedBorder(currentRow[col].getBorders()[2], borders[2]));
                         //                            }
                         int minRowspan = int.MaxValue;
                         for (col = 0; col < rowspans.Length; col++) {
@@ -1857,17 +1857,22 @@ namespace iText.Layout.Renderer {
                  == this;
         }
 
-        private void CalculateColumnWidths(float availableWidth, float[] borders) {
+        /// <summary>Returns minWidth</summary>
+        private float CalculateColumnWidths(float availableWidth, bool calculateTableMaxWidth) {
             if (countedColumnWidth == null || totalWidthForColumns != availableWidth) {
-                TableWidths tableWidths = new TableWidths(this, availableWidth, borders);
+                TableWidths tableWidths = new TableWidths(this, availableWidth, calculateTableMaxWidth, rightBorderMaxWidth
+                    , leftBorderMaxWidth);
                 if (tableWidths.HasFixedLayout()) {
                     countedColumnWidth = tableWidths.FixedLayout();
+                    return tableWidths.GetMinWidth();
                 }
                 else {
                     TableRenderer.ColumnMinMaxWidth minMax = CountTableMinMaxWidth(availableWidth, false, true);
-                    countedColumnWidth = tableWidths.AutoLayout(minMax.GetMinWidth(), minMax.GetMaxWidth());
+                    countedColumnWidth = tableWidths.AutoLayout(minMax.GetMinWidths(), minMax.GetMaxWidths());
+                    return tableWidths.GetMinWidth();
                 }
             }
+            return -1;
         }
 
         private float GetTableWidth() {
@@ -1930,11 +1935,11 @@ namespace iText.Layout.Renderer {
 
             private float layoutBoxWidth;
 
-            internal virtual float[] GetMinWidth() {
+            internal virtual float[] GetMinWidths() {
                 return minWidth;
             }
 
-            internal virtual float[] GetMaxWidth() {
+            internal virtual float[] GetMaxWidths() {
                 return maxWidth;
             }
 

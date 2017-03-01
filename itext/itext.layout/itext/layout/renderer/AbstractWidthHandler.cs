@@ -1,8 +1,7 @@
 /*
-
 This file is part of the iText (R) project.
 Copyright (c) 1998-2017 iText Group NV
-Authors: Bruno Lowagie, Paulo Soares, et al.
+Authors: iText Software.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License version 3
@@ -42,43 +41,24 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using iText.Layout.Minmaxwidth;
-using iText.Layout.Renderer;
 
-namespace iText.Layout.Layout {
-    /// <summary>
-    /// Represents the result of content
-    /// <see cref="iText.Layout.Renderer.IRenderer.Layout(LayoutContext)">layouting</see>
-    /// .
-    /// </summary>
-    public class MinMaxWidthLayoutResult : LayoutResult {
-        protected internal MinMaxWidth minMaxWidth;
+namespace iText.Layout.Renderer {
+    internal abstract class AbstractWidthHandler {
+        internal MinMaxWidth minMaxWidth;
 
-        public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            )
-            : base(status, occupiedArea, splitRenderer, overflowRenderer) {
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
-        public MinMaxWidthLayoutResult(int status, LayoutArea occupiedArea, IRenderer splitRenderer, IRenderer overflowRenderer
-            , IRenderer cause)
-            : base(status, occupiedArea, splitRenderer, overflowRenderer, cause) {
-            minMaxWidth = new MinMaxWidth(0, 0);
-        }
-
-        public virtual MinMaxWidth GetNotNullMinMaxWidth(float availableWidth) {
-            if (minMaxWidth == null) {
-                minMaxWidth = new MinMaxWidth(0, availableWidth);
-            }
-            return GetMinMaxWidth();
-        }
-
-        public virtual MinMaxWidth GetMinMaxWidth() {
-            return minMaxWidth;
-        }
-
-        public virtual iText.Layout.Layout.MinMaxWidthLayoutResult SetMinMaxWidth(MinMaxWidth minMaxWidth) {
+        public AbstractWidthHandler(MinMaxWidth minMaxWidth) {
             this.minMaxWidth = minMaxWidth;
-            return this;
+        }
+
+        public abstract void UpdateMinChildWidth(float childMinWidth);
+
+        public abstract void UpdateMaxChildWidth(float childMaxWidth);
+
+        public virtual void UpdateMinMaxWidth(MinMaxWidth minMaxWidth) {
+            if (minMaxWidth != null) {
+                UpdateMaxChildWidth(minMaxWidth.GetMaxWidth());
+                UpdateMinChildWidth(minMaxWidth.GetMinWidth());
+            }
         }
     }
 }

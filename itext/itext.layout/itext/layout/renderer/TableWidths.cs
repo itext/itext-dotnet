@@ -1,7 +1,50 @@
+/*
+This file is part of the iText (R) project.
+Copyright (c) 1998-2017 iText Group NV
+Authors: iText Software.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3
+as published by the Free Software Foundation with the addition of the
+following permission added to Section 15 as permitted in Section 7(a):
+FOR ANY PART OF THE COVERED WORK IN WHICH THE COPYRIGHT IS OWNED BY
+ITEXT GROUP. ITEXT GROUP DISCLAIMS THE WARRANTY OF NON INFRINGEMENT
+OF THIRD PARTY RIGHTS
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU Affero General Public License for more details.
+You should have received a copy of the GNU Affero General Public License
+along with this program; if not, see http://www.gnu.org/licenses or write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA, 02110-1301 USA, or download the license from the following URL:
+http://itextpdf.com/terms-of-use/
+
+The interactive user interfaces in modified source and object code versions
+of this program must display Appropriate Legal Notices, as required under
+Section 5 of the GNU Affero General Public License.
+
+In accordance with Section 7(b) of the GNU Affero General Public License,
+a covered work must retain the producer line in every PDF that is created
+or manipulated using iText.
+
+You can be released from the requirements of the license by purchasing
+a commercial license. Buying such a license is mandatory as soon as you
+develop commercial activities involving the iText software without
+disclosing the source code of your own applications.
+These activities include: offering paid services to customers as an ASP,
+serving PDFs on the fly in a web application, shipping iText with a closed
+source product.
+
+For more information, please contact iText Software Corp. at this
+address: sales@itextpdf.com
+*/
 using System;
 using System.Collections.Generic;
 using iText.IO.Log;
 using iText.IO.Util;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
@@ -12,7 +55,9 @@ namespace iText.Layout.Renderer {
 
         private int numberOfColumns;
 
-        private float[] collapsedTableBorders;
+        private float rightBorderMaxWidth;
+
+        private float leftBorderMaxWidth;
 
         private TableWidths.ColumnWidthData[] widths;
 
@@ -20,24 +65,27 @@ namespace iText.Layout.Renderer {
 
         private float tableWidth;
 
-        private bool unspecifiedTableWidth;
+        private bool fixedTableWidth;
 
-        internal TableWidths(TableRenderer tableRenderer, float availableWidth, float[] collapsedTableBorders) {
+        private bool fixedTableLayout = false;
+
+        private float minWidth;
+
+        internal TableWidths(TableRenderer tableRenderer, float availableWidth, bool calculateTableMaxWidth, float
+             rightBorderMaxWidth, float leftBorderMaxWidth) {
             this.tableRenderer = tableRenderer;
             numberOfColumns = ((Table)tableRenderer.GetModelElement()).GetNumberOfColumns();
-            this.collapsedTableBorders = collapsedTableBorders != null ? collapsedTableBorders : new float[] { 0, 0, 0
-                , 0 };
-            CalculateTableWidth(availableWidth);
+            this.rightBorderMaxWidth = rightBorderMaxWidth;
+            this.leftBorderMaxWidth = leftBorderMaxWidth;
+            CalculateTableWidth(availableWidth, calculateTableMaxWidth);
         }
 
         internal bool HasFixedLayout() {
-            if (unspecifiedTableWidth) {
-                return false;
-            }
-            else {
-                String layout = tableRenderer.GetProperty<String>(Property.TABLE_LAYOUT, "auto");
-                return "fixed".Equals(layout.ToLowerInvariant());
-            }
+            return fixedTableLayout;
+        }
+
+        internal float GetMinWidth() {
+            return minWidth;
         }
 
         internal float[] AutoLayout(float[] minWidths, float[] maxWidths) {
@@ -240,7 +288,7 @@ namespace iText.Layout.Renderer {
                 }
                 System.Diagnostics.Debug.Assert(sumOfPercents <= 100);
                 bool toBalance = true;
-                if (unspecifiedTableWidth) {
+                if (!fixedTableWidth) {
                     float tableWidthBasedOnPercents = sumOfPercents < 100 ? totalNonPercent * 100 / (100 - sumOfPercents) : 0;
                     for (int i = 0; i < numberOfColumns; i++) {
                         if (widths[i].isPercent) {
@@ -467,25 +515,44 @@ namespace iText.Layout.Renderer {
         }
 
         //region Common methods
-        private void CalculateTableWidth(float availableWidth) {
-            float? originalTableWidth = tableRenderer.RetrieveUnitValue(availableWidth, Property.WIDTH);
-            if (originalTableWidth == null || float.IsNaN(originalTableWidth) || originalTableWidth <= 0) {
-                tableWidth = availableWidth;
-                unspecifiedTableWidth = true;
+        private void CalculateTableWidth(float availableWidth, bool calculateTableMaxWidth) {
+            fixedTableLayout = "fixed".Equals(tableRenderer.GetProperty<String>(Property.TABLE_LAYOUT, "auto").ToLowerInvariant
+                ());
+            UnitValue width = tableRenderer.GetProperty<UnitValue>(Property.WIDTH);
+            if (fixedTableLayout && width != null && width.GetValue() >= 0) {
+                fixedTableWidth = true;
+                tableWidth = RetrieveTableWidth(width, availableWidth);
+                minWidth = width.IsPercentValue() ? 0 : tableWidth;
             }
             else {
-                tableWidth = originalTableWidth < availableWidth ? originalTableWidth : availableWidth;
-                unspecifiedTableWidth = false;
+                fixedTableLayout = false;
+                //min width will initialize later
+                minWidth = -1;
+                if (calculateTableMaxWidth) {
+                    fixedTableWidth = false;
+                    tableWidth = RetrieveTableWidth(availableWidth);
+                }
+                else {
+                    if (width != null && width.GetValue() >= 0) {
+                        fixedTableWidth = true;
+                        tableWidth = RetrieveTableWidth(width, availableWidth);
+                    }
+                    else {
+                        fixedTableWidth = false;
+                        tableWidth = RetrieveTableWidth(availableWidth);
+                    }
+                }
             }
-            tableWidth -= GetMaxLeftBorder() / 2 + GetMaxRightBorder() / 2;
         }
 
-        private float GetMaxLeftBorder() {
-            return collapsedTableBorders[3];
+        private float RetrieveTableWidth(UnitValue width, float availableWidth) {
+            return RetrieveTableWidth(width.IsPercentValue() ? width.GetValue() * availableWidth / 100 : width.GetValue
+                ());
         }
 
-        private float GetMaxRightBorder() {
-            return collapsedTableBorders[1];
+        private float RetrieveTableWidth(float width) {
+            float result = width - rightBorderMaxWidth / 2 - leftBorderMaxWidth / 2;
+            return result > 0 ? result : 0;
         }
 
         private Table GetTable() {
@@ -533,17 +600,25 @@ namespace iText.Layout.Renderer {
 
         private float[] ExtractWidths() {
             float actualWidth = 0;
+            minWidth = 0;
             float[] columnWidths = new float[widths.Length];
             for (int i = 0; i < widths.Length; i++) {
                 System.Diagnostics.Debug.Assert(widths[i].finalWidth >= 0);
                 columnWidths[i] = widths[i].finalWidth;
                 actualWidth += widths[i].finalWidth;
+                minWidth += widths[i].min;
             }
             if (actualWidth > tableWidth + MinMaxWidthUtils.GetEps() * widths.Length) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableWidths));
                 logger.Warn(iText.IO.LogMessageConstant.TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH);
             }
             return columnWidths;
+        }
+
+        //endregion
+        //region Internal classes
+        public override String ToString() {
+            return "width=" + tableWidth + (fixedTableWidth ? "!!" : "");
         }
 
         private class ColumnWidthData {
@@ -560,8 +635,6 @@ namespace iText.Layout.Renderer {
             internal bool isFixed = false;
 
             internal ColumnWidthData(float min, float max) {
-                //endregion
-                //region Internal classes
                 //true means that this column has cell property based width.
                 System.Diagnostics.Debug.Assert(min >= 0);
                 System.Diagnostics.Debug.Assert(max >= 0);
@@ -656,6 +729,7 @@ namespace iText.Layout.Renderer {
             private byte region;
 
             internal CellInfo(CellRenderer cell, byte region) {
+                //endregion
                 this.cell = cell;
                 this.region = region;
             }
@@ -680,8 +754,24 @@ namespace iText.Layout.Renderer {
                 return ((Cell)cell.GetModelElement()).GetRowspan();
             }
 
+            //TODO DEVSIX-1057, DEVSIX-1021
             internal virtual UnitValue GetWidth() {
-                return cell.GetProperty<UnitValue>(Property.WIDTH);
+                UnitValue widthValue = cell.GetProperty<UnitValue>(Property.WIDTH);
+                if (widthValue == null || widthValue.IsPercentValue()) {
+                    return widthValue;
+                }
+                else {
+                    Border[] borders = cell.GetBorders();
+                    if (borders[1] != null) {
+                        widthValue.SetValue(widthValue.GetValue() + borders[1].GetWidth() / 2);
+                    }
+                    if (borders[3] != null) {
+                        widthValue.SetValue(widthValue.GetValue() + borders[3].GetWidth() / 2);
+                    }
+                    float[] paddings = cell.GetPaddings();
+                    widthValue.SetValue(widthValue.GetValue() + paddings[1] + paddings[3]);
+                    return widthValue;
+                }
             }
 
             public virtual int CompareTo(TableWidths.CellInfo o) {
@@ -693,11 +783,6 @@ namespace iText.Layout.Renderer {
                 }
                 return region == o.region ? GetRow() - o.GetRow() : region - o.region;
             }
-        }
-
-        //endregion
-        public override String ToString() {
-            return "width=" + tableWidth + (unspecifiedTableWidth ? "" : "!!");
         }
     }
 }
