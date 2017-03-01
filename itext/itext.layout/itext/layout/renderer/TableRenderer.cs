@@ -1004,9 +1004,11 @@ namespace iText.Layout.Renderer {
                                     occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
                                 }
                             }
+                            ApplyMargins(occupiedArea.GetBBox(), true);
                             return new LayoutResult(LayoutResult.FULL, occupiedArea, splitResult[0], null);
                         }
                         else {
+                            ApplyMargins(occupiedArea.GetBBox(), true);
                             if (HasProperty(Property.HEIGHT)) {
                                 splitResult[1].SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
                             }

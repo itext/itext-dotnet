@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using iText.IO.Log;
+using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
@@ -19,6 +20,12 @@ namespace iText.Layout.Renderer {
         private int horizontalBordersIndexOffset = 0;
 
         private int verticalBordersIndexOffset = 0;
+
+        private static Border noBorder;
+
+        static TableBorders() {
+            noBorder = new TableBorders.NoBorder();
+        }
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             this.rows = rows;
@@ -261,7 +268,7 @@ namespace iText.Layout.Renderer {
                 while (numberOfColumns + 1 > verticalBorders.Count) {
                     tempBorders = new List<Border>();
                     while (rows.Count > tempBorders.Count) {
-                        tempBorders.Add(null);
+                        tempBorders.Add(noBorder);
                     }
                     verticalBorders.Add(tempBorders);
                 }
@@ -271,7 +278,7 @@ namespace iText.Layout.Renderer {
             while (rows.Count + 1 > horizontalBorders.Count) {
                 tempBorders = new List<Border>();
                 while (numberOfColumns > tempBorders.Count) {
-                    tempBorders.Add(null);
+                    tempBorders.Add(noBorder);
                 }
                 horizontalBorders.Add(tempBorders);
             }
@@ -648,7 +655,7 @@ namespace iText.Layout.Renderer {
             //            }
             //        }
             Border neighbour = borders[j];
-            if (neighbour == null) {
+            if (neighbour == null || noBorder.Equals(neighbour)) {
                 borders[j] = borderToAdd;
                 return true;
             }
@@ -709,12 +716,31 @@ namespace iText.Layout.Renderer {
         protected internal virtual iText.Layout.Renderer.TableBorders UpdateBorder(IList<Border> oldBorder, IList<
             Border> newBorders, bool[] isOldBorder) {
             for (int i = 0; i < oldBorder.Count; i++) {
-                if (!isOldBorder[i]) {
+                if (!isOldBorder[i] && !noBorder.Equals(oldBorder[i])) {
                     oldBorder[i] = newBorders[i];
                 }
             }
             return this;
         }
-        // endregion
+
+        private class NoBorder : Border {
+            protected internal NoBorder()
+                : base(0) {
+            }
+
+            // endregion
+            public override void Draw(PdfCanvas canvas, float x1, float y1, float x2, float y2, float borderWidthBefore
+                , float borderWidthAfter) {
+                return;
+            }
+
+            public override void DrawCellBorder(PdfCanvas canvas, float x1, float y1, float x2, float y2) {
+                return;
+            }
+
+            public override int GetBorderType() {
+                return -1;
+            }
+        }
     }
 }
