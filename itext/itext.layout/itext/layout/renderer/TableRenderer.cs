@@ -171,17 +171,6 @@ namespace iText.Layout.Renderer {
             return isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer();
         }
 
-        protected internal static TableBorders ProcessRendererBorders(iText.Layout.Renderer.TableRenderer renderer
-            ) {
-            // Revise when separated borders will be implemented
-            renderer.bordersHandler = new CollapsedTableBorders(renderer.rows, ((Table)renderer.GetModelElement()).GetNumberOfColumns
-                (), renderer.GetBorders());
-            renderer.bordersHandler.InitializeBorders();
-            renderer.bordersHandler.SetRowRange(renderer.rowRange.GetStartRow(), renderer.rowRange.GetFinishRow());
-            ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
-            return renderer.bordersHandler;
-        }
-
         /// <summary><inheritDoc/></summary>
         public override LayoutResult Layout(LayoutContext layoutContext) {
             OverrideHeightProperties();
@@ -433,16 +422,24 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.SetProperty(Property.MARGIN_BOTTOM, 0);
                                     overflowRenderer.SetProperty(Property.MARGIN_LEFT, 0);
                                     overflowRenderer.SetProperty(Property.MARGIN_RIGHT, 0);
+                                    overflowRenderer.DeleteOwnProperty(Property.BORDER_BOTTOM);
                                     overflowRenderer.rowRange = new Table.RowRange(0, rows.Count - row - 1);
-                                    ProcessRendererBorders(overflowRenderer);
+                                    overflowRenderer.bordersHandler = bordersHandler;
+                                    // save old bordersHandler properties
+                                    bordersHandler.SkipFooter(overflowRenderer.GetBorders());
+                                    if (null != headerRenderer) {
+                                        bordersHandler.SkipHeader(overflowRenderer.GetBorders());
+                                    }
+                                    int savedStartRow = overflowRenderer.bordersHandler.startRow;
+                                    overflowRenderer.bordersHandler.SetStartRow(row);
                                     PrepareFooterOrHeaderRendererForLayout(overflowRenderer, layoutBox.GetWidth());
                                     LayoutResult res = overflowRenderer.Layout(new LayoutContext(potentialArea));
+                                    bordersHandler.SetStartRow(savedStartRow);
                                     if (LayoutResult.FULL == res.GetStatus()) {
                                         footerRenderer = null;
                                         // fix layout area and table bottom border
                                         layoutBox.IncreaseHeight(footerHeight).MoveDown(footerHeight);
                                         DeleteOwnProperty(Property.BORDER_BOTTOM);
-                                        bordersHandler.SkipFooter(GetBorders());
                                         bordersHandler.SetFinishRow(rowRange.GetStartRow() + row);
                                         widestRowBottomBorder = bordersHandler.GetWidestHorizontalBorder(rowRange.GetStartRow() + row + 1);
                                         bordersHandler.SetFinishRow(rowRange.GetFinishRow());
@@ -455,6 +452,12 @@ namespace iText.Layout.Renderer {
                                             }
                                         }
                                         continue;
+                                    }
+                                    else {
+                                        if (null != headerRenderer) {
+                                            bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
+                                        }
+                                        bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, true);
                                     }
                                 }
                                 // Here we look for a cell with big rowspan (i.e. one which would not be normally processed in
@@ -546,7 +549,6 @@ namespace iText.Layout.Renderer {
                         bordersHandler.ApplyBottomTableBorder(occupiedArea.GetBBox(), layoutBox, tableModel.IsEmpty(), false, true
                             );
                     }
-                    ProcessRendererBorders(footerRenderer);
                     layoutBox.MoveDown(footerRenderer.occupiedArea.GetBBox().GetHeight()).IncreaseHeight(footerRenderer.occupiedArea
                         .GetBBox().GetHeight());
                     // apply the difference to set footer and table left/right margins identical
@@ -756,7 +758,6 @@ namespace iText.Layout.Renderer {
             }
             // process footer renderer with collapsed borders
             if (tableModel.IsComplete() && 0 != lastFlushedRowBottomBorder.Count && null != footerRenderer) {
-                ProcessRendererBorders(footerRenderer);
                 layoutBox.MoveDown(footerRenderer.occupiedArea.GetBBox().GetHeight()).IncreaseHeight(footerRenderer.occupiedArea
                     .GetBBox().GetHeight());
                 // apply the difference to set footer and table left/right margins identical
@@ -1456,6 +1457,11 @@ namespace iText.Layout.Renderer {
             renderer.SetBorders(CollapsedTableBorders.GetCollapsedBorder(borders[outerBorder], tableBorders[outerBorder
                 ]), outerBorder);
             SetBorders(Border.NO_BORDER, outerBorder);
+            renderer.bordersHandler = new CollapsedTableBorders(renderer.rows, ((Table)renderer.GetModelElement()).GetNumberOfColumns
+                (), renderer.GetBorders());
+            renderer.bordersHandler.InitializeBorders();
+            renderer.bordersHandler.SetRowRange(renderer.rowRange.GetStartRow(), renderer.rowRange.GetFinishRow());
+            ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
             // update bounding borders
             bordersHandler.SetTableBoundingBorders(GetBorders());
             return renderer;

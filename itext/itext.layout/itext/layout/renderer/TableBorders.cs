@@ -65,6 +65,8 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
 
+        protected internal abstract iText.Layout.Renderer.TableBorders SkipHeader(Border[] borders);
+
         protected internal abstract iText.Layout.Renderer.TableBorders CollapseTableWithFooter(iText.Layout.Renderer.TableBorders
              footerBordersHandler, bool hasContent);
 
@@ -188,19 +190,19 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual Border GetWidestVerticalBorder(int col) {
-            return BorderUtil.GetWidestBorder(GetVerticalBorder(col));
+            return TableBorderUtil.GetWidestBorder(GetVerticalBorder(col));
         }
 
         public virtual Border GetWidestVerticalBorder(int col, int start, int end) {
-            return BorderUtil.GetWidestBorder(GetVerticalBorder(col), start, end);
+            return TableBorderUtil.GetWidestBorder(GetVerticalBorder(col), start, end);
         }
 
         public virtual Border GetWidestHorizontalBorder(int row) {
-            return BorderUtil.GetWidestBorder(GetHorizontalBorder(row));
+            return TableBorderUtil.GetWidestBorder(GetHorizontalBorder(row));
         }
 
         public virtual Border GetWidestHorizontalBorder(int row, int start, int end) {
-            return BorderUtil.GetWidestBorder(GetHorizontalBorder(row), start, end);
+            return TableBorderUtil.GetWidestBorder(GetHorizontalBorder(row), start, end);
         }
 
         public virtual IList<Border> GetFirstHorizontalBorder() {
