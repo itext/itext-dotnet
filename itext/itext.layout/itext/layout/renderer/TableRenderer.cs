@@ -178,38 +178,43 @@ namespace iText.Layout.Renderer {
             Border[] tableBorder = GetBorders();
             int numberOfColumns = GetTable().GetNumberOfColumns();
             // collapse all cell borders
-            if (null != rows && !isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
-                UpdateFirstRowBorders(numberOfColumns);
+            if (null != rows && !IsFooterRenderer() && !IsHeaderRenderer()) {
+                if (isOriginalNonSplitRenderer) {
+                    bordersHandler.CollapseAllBordersAndEmptyRows(rows, GetBorders(), 0, rows.Count - 1, numberOfColumns);
+                }
+                else {
+                    UpdateFirstRowBorders(numberOfColumns);
+                }
             }
-            //
             if (isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
                 rightBorderMaxWidth = bordersHandler.GetMaxRightWidth(tableBorder[1]);
                 leftBorderMaxWidth = bordersHandler.GetMaxLeftWidth(tableBorder[3]);
             }
+            // TODO process header / footer
+            if (footerRenderer != null) {
+                footerRenderer.ProcessRendererBorders(numberOfColumns);
+                float rightFooterBorderWidth = footerRenderer.bordersHandler.GetMaxRightWidth(footerRenderer.GetBorders()[
+                    1]);
+                float leftFooterBorderWidth = footerRenderer.bordersHandler.GetMaxLeftWidth(footerRenderer.GetBorders()[3]
+                    );
+                if (isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
+                    leftBorderMaxWidth = Math.Max(leftBorderMaxWidth, leftFooterBorderWidth);
+                    rightBorderMaxWidth = Math.Max(rightBorderMaxWidth, rightFooterBorderWidth);
+                }
+            }
+            if (headerRenderer != null) {
+                headerRenderer.ProcessRendererBorders(numberOfColumns);
+                float rightHeaderBorderWidth = headerRenderer.bordersHandler.GetMaxRightWidth(headerRenderer.GetBorders()[
+                    1]);
+                float leftHeaderBorderWidth = headerRenderer.bordersHandler.GetMaxLeftWidth(headerRenderer.GetBorders()[3]
+                    );
+                if (isOriginalNonSplitRenderer && !IsHeaderRenderer() && !IsFooterRenderer()) {
+                    leftBorderMaxWidth = Math.Max(leftBorderMaxWidth, leftHeaderBorderWidth);
+                    rightBorderMaxWidth = Math.Max(rightBorderMaxWidth, rightHeaderBorderWidth);
+                }
+            }
         }
 
-        // TODO process header / footer
-        //        if (footerRenderer != null) {
-        //            footerRenderer.processRendererBorders(numberOfColumns);
-        //            float rightFooterBorderWidth = footerRenderer.getMaxRightWidth(footerRenderer.getBorders()[1]);
-        //            float leftFooterBorderWidth = footerRenderer.getMaxLeftWidth(footerRenderer.getBorders()[3]);
-        //
-        //            if (isOriginalNonSplitRenderer && !isFooterRenderer() && !isHeaderRenderer()) {
-        //                leftBorderMaxWidth = Math.max(leftBorderMaxWidth, leftFooterBorderWidth);
-        //                rightBorderMaxWidth = Math.max(rightBorderMaxWidth, rightFooterBorderWidth);
-        //            }
-        //        }
-        //
-        //        if (headerRenderer != null) {
-        //            headerRenderer.processRendererBorders(numberOfColumns);
-        //            float rightHeaderBorderWidth = headerRenderer.getMaxRightWidth(headerRenderer.getBorders()[1]);
-        //            float leftHeaderBorderWidth = headerRenderer.getMaxLeftWidth(headerRenderer.getBorders()[3]);
-        //
-        //            if (isOriginalNonSplitRenderer && !isHeaderRenderer() && !isFooterRenderer()) {
-        //                leftBorderMaxWidth = Math.max(leftBorderMaxWidth, leftHeaderBorderWidth);
-        //                rightBorderMaxWidth = Math.max(rightBorderMaxWidth, rightHeaderBorderWidth);
-        //            }
-        //        }
         // important to invoke on each new page
         private void UpdateFirstRowBorders(int colN) {
             int col = 0;
@@ -339,7 +344,6 @@ namespace iText.Layout.Renderer {
                     bordersHandler.SetTableBoundingBorders(GetBorders());
                 }
                 bordersHandler.InitializeBorders(lastFlushedRowBottomBorder, area.IsEmptyArea());
-                bordersHandler.CollapseAllBordersAndEmptyRows(rows, GetBorders(), 0, rows.Count - 1, numberOfColumns);
             }
             else {
                 if (!IsFooterRenderer() && !IsHeaderRenderer()) {
@@ -397,14 +401,8 @@ namespace iText.Layout.Renderer {
                 float headerHeight = result.GetOccupiedArea().GetBBox().GetHeight();
                 layoutBox.DecreaseHeight(headerHeight);
                 occupiedArea.GetBBox().MoveDown(headerHeight).IncreaseHeight(headerHeight);
-                float maxHeaderBottomBorderWidth = 0;
-                IList<Border> rowBorders = headerRenderer.bordersHandler.horizontalBorders[headerRenderer.bordersHandler.horizontalBorders
-                    .Count - 1];
-                foreach (Border border in rowBorders) {
-                    if (null != border && maxHeaderBottomBorderWidth < border.GetWidth()) {
-                        maxHeaderBottomBorderWidth = border.GetWidth();
-                    }
-                }
+                float maxHeaderBottomBorderWidth = headerRenderer.bordersHandler.GetMaxBottomWidth(headerRenderer.bordersHandler
+                    .tableBoundingBorders[2]);
                 if (!tableModel.IsEmpty()) {
                     if (maxHeaderBottomBorderWidth < topTableBorderWidth) {
                         // fix
@@ -429,7 +427,7 @@ namespace iText.Layout.Renderer {
                 CorrectFirstRowTopBorders(borders[0], numberOfColumns);
             }
             float bottomTableBorderWidth = null == borders[2] ? 0 : borders[2].GetWidth();
-            if (IsOriginalRenderer()) {
+            if (isOriginalNonSplitRenderer) {
                 bordersHandler.UpdateTopBorder();
             }
             topTableBorderWidth = bordersHandler.GetMaxTopWidth(borders[0]);
@@ -484,7 +482,7 @@ namespace iText.Layout.Renderer {
                 IRenderer firstCauseOfNothing = null;
                 // the width of the widest bottom border of the row
                 bottomTableBorderWidth = 0;
-                Border widestRowBottomBorder = bordersHandler.GetWidestBorder(row + 1);
+                Border widestRowBottomBorder = bordersHandler.GetWidestHorizontalBorder(row + 1);
                 // if cell is in the last row on the page, its borders shouldn't collapse with the next row borders
                 bool processAsLast = false;
                 while (cellProcessingQueue.Count > 0) {
@@ -600,7 +598,7 @@ namespace iText.Layout.Renderer {
                                 }
                                 //                                LayoutArea potentialArea = new LayoutArea(area.getPageNumber(), layoutBox.clone());
                                 //                                // Fix layout area
-                                //                                Border widestRowTopBorder = bordersHandler.getWidestBorder(row);
+                                //                                Border widestRowTopBorder = bordersHandler.getWidestHorizontalBorder(row);
                                 //                                if (null != widestRowTopBorder) {
                                 //                                    potentialArea.getBBox().moveDown(widestRowTopBorder.getWidth() / 2).increaseHeight(widestRowTopBorder.getWidth() / 2);
                                 //                                }
@@ -1454,6 +1452,7 @@ namespace iText.Layout.Renderer {
             if (initializeBorders) {
                 // FIXME
                 bordersHandler.InitializeBorders(((Table)GetModelElement()).GetLastRowBottomBorder(), true);
+                bordersHandler.SetTableBoundingBorders(GetBorders());
                 InitializeHeaderAndFooter(true);
                 if (!isTableBeingLayouted) {
                     SaveCellsProperties();
@@ -1855,6 +1854,8 @@ namespace iText.Layout.Renderer {
             renderer.SetBorders(TableBorders.GetCollapsedBorder(borders[outerBorder], tableBorders[outerBorder]), outerBorder
                 );
             SetBorders(Border.NO_BORDER, outerBorder);
+            // update bounding borders
+            bordersHandler.SetTableBoundingBorders(GetBorders());
             return renderer;
         }
 
@@ -1870,7 +1871,8 @@ namespace iText.Layout.Renderer {
         }
 
         private iText.Layout.Renderer.TableRenderer ProcessRendererBorders(int numberOfColumns) {
-            // FIXME
+            bordersHandler = new TableBorders(rows, numberOfColumns);
+            bordersHandler.SetTableBoundingBorders(GetBorders());
             bordersHandler.InitializeBorders(new List<Border>(), true);
             bordersHandler.CollapseAllBordersAndEmptyRows(rows, GetBorders(), rowRange.GetStartRow(), rowRange.GetFinishRow
                 (), numberOfColumns);

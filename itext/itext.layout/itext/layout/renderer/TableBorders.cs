@@ -125,7 +125,7 @@ namespace iText.Layout.Renderer {
                         curPageIndex = lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN);
                     }
                     if (0 == nextPageIndex) {
-                        row = splitRow + 1;
+                        row = splitRow;
                         while (row < rows.Count && null == rows[row][col]) {
                             row++;
                         }
@@ -280,64 +280,54 @@ namespace iText.Layout.Renderer {
 
         //endregion
         // region getters
-        protected internal virtual Border GetWidestBorder(int row) {
+        protected internal virtual Border GetWidestHorizontalBorder(int row) {
             Border theWidestBorder = null;
             if (row < horizontalBorders.Count) {
-                IList<Border> list = horizontalBorders[row];
-                foreach (Border border in list) {
-                    if (null != border && (null == theWidestBorder || border.GetWidth() > theWidestBorder.GetWidth())) {
-                        theWidestBorder = border;
-                    }
-                }
+                theWidestBorder = GetWidestBorder(horizontalBorders[row]);
             }
             return theWidestBorder;
         }
 
-        protected internal virtual float GetMaxTopWidth(Border tableTopBorder) {
-            float width = null == tableTopBorder ? 0 : tableTopBorder.GetWidth();
-            IList<Border> topBorders = horizontalBorders[0];
-            if (0 != topBorders.Count) {
-                foreach (Border border in topBorders) {
-                    if (null != border) {
-                        if (border.GetWidth() > width) {
-                            width = border.GetWidth();
-                        }
-                    }
-                }
+        protected internal virtual Border GetWidestVerticalBorder(int col) {
+            Border theWidestBorder = null;
+            if (col < verticalBorders.Count) {
+                theWidestBorder = GetWidestBorder(verticalBorders[col]);
+            }
+            return theWidestBorder;
+        }
+
+        protected internal virtual float GetMaxTopWidth(Border tableBorder) {
+            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+            Border widestBorder = GetWidestHorizontalBorder(0);
+            if (null != widestBorder && widestBorder.GetWidth() >= width) {
+                width = widestBorder.GetWidth();
             }
             return width;
         }
 
-        protected internal virtual float GetMaxRightWidth(Border tableRightBorder) {
-            float width = null == tableRightBorder ? 0 : tableRightBorder.GetWidth();
-            if (0 != verticalBorders.Count) {
-                IList<Border> rightBorders = verticalBorders[verticalBorders.Count - 1];
-                if (0 != rightBorders.Count) {
-                    foreach (Border border in rightBorders) {
-                        if (null != border) {
-                            if (border.GetWidth() > width) {
-                                width = border.GetWidth();
-                            }
-                        }
-                    }
-                }
+        protected internal virtual float GetMaxRightWidth(Border tableBorder) {
+            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+            Border widestBorder = GetWidestVerticalBorder(horizontalBorders.Count - 1);
+            if (null != widestBorder && widestBorder.GetWidth() >= width) {
+                width = widestBorder.GetWidth();
             }
             return width;
         }
 
-        protected internal virtual float GetMaxLeftWidth(Border tableLeftBorder) {
-            float width = null == tableLeftBorder ? 0 : tableLeftBorder.GetWidth();
-            if (0 != verticalBorders.Count) {
-                IList<Border> leftBorders = verticalBorders[0];
-                if (0 != leftBorders.Count) {
-                    foreach (Border border in leftBorders) {
-                        if (null != border) {
-                            if (border.GetWidth() > width) {
-                                width = border.GetWidth();
-                            }
-                        }
-                    }
-                }
+        protected internal virtual float GetMaxLeftWidth(Border tableBorder) {
+            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+            Border widestBorder = GetWidestVerticalBorder(0);
+            if (null != widestBorder && widestBorder.GetWidth() >= width) {
+                width = widestBorder.GetWidth();
+            }
+            return width;
+        }
+
+        protected internal virtual float GetMaxBottomWidth(Border tableBorder) {
+            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+            Border widestBorder = GetWidestHorizontalBorder(horizontalBorders.Count - 1);
+            if (null != widestBorder && widestBorder.GetWidth() >= width) {
+                width = widestBorder.GetWidth();
             }
             return width;
         }
@@ -563,6 +553,18 @@ namespace iText.Layout.Renderer {
             }
             //                }
             return cellModelSideBorder;
+        }
+
+        private static Border GetWidestBorder(IList<Border> borderList) {
+            Border theWidestBorder = null;
+            if (0 != borderList.Count) {
+                foreach (Border border in borderList) {
+                    if (null != border && (null == theWidestBorder || border.GetWidth() > theWidestBorder.GetWidth())) {
+                        theWidestBorder = border;
+                    }
+                }
+            }
+            return theWidestBorder;
         }
 
         // endregion

@@ -1376,6 +1376,50 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleHeaderFooterTableTest01() {
+            String testName = "simpleHeaderFooterTableTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String gretzky = "Make Gretzky great again!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
+            for (int i = 0; i < 10; i++) {
+                table.AddCell(new Cell().Add(gretzky));
+            }
+            table.AddHeaderCell(new Cell(1, 2).SetHeight(30).Add(gretzky).SetBorder(new SolidBorder(Color.RED, 0.5f)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleHeaderFooterTableTest02() {
+            String testName = "simpleHeaderFooterTableTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            String gretzky = "Make Gretzky great again!";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
+            Table table = new Table(2);
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
+            for (int i = 0; i < 10; i++) {
+                table.AddCell(new Cell().Add(gretzky));
+            }
+            table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add(gretzky).SetBorder(new SolidBorder(Color.RED, 0.5f)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
