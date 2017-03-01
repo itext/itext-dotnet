@@ -60,13 +60,13 @@ namespace iText.Layout.Renderer {
         // endregion
         // region area occupation
         protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
-             layoutBox, bool isEmpty, bool isComplete, bool reverse);
+             layoutBox, bool isEmpty, bool force, bool reverse);
 
         protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
              layoutBox, bool reverse);
 
         protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
-             layoutBox, bool isEmpty, bool reverse);
+             layoutBox, bool isEmpty, bool force, bool reverse);
 
         protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
              layoutBox, bool reverse);

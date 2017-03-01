@@ -545,12 +545,12 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle layoutBox, bool isEmpty
-            , bool isComplete, bool reverse) {
+            , bool force, bool reverse) {
             if (!isEmpty) {
                 return ApplyTopBorder(occupiedBox, layoutBox, reverse);
             }
             else {
-                if (isComplete) {
+                if (force) {
                     // process empty table
                     ApplyTopBorder(occupiedBox, layoutBox, reverse);
                     return ApplyTopBorder(occupiedBox, layoutBox, reverse);
@@ -560,9 +560,16 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal override TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle layoutBox, bool
-             isEmpty, bool reverse) {
+             isEmpty, bool force, bool reverse) {
             if (!isEmpty) {
                 return ApplyBottomBorder(occupiedBox, layoutBox, reverse);
+            }
+            else {
+                if (force) {
+                    // process empty table
+                    ApplyBottomBorder(occupiedBox, layoutBox, reverse);
+                    return ApplyBottomBorder(occupiedBox, layoutBox, reverse);
+                }
             }
             return this;
         }
