@@ -47,16 +47,16 @@ namespace iText.Layout.Renderer {
         // endregion
         // region collapsing and correction
         protected internal virtual iText.Layout.Renderer.TableBorders CollapseAllBordersAndEmptyRows(IList<CellRenderer
-            []> rows, Border[] tableBorders, int startRow, int finishRow, int colN) {
+            []> rows, Border[] tableBorders, int startRow, int finishRow) {
             CellRenderer[] currentRow;
-            int[] rowsToDelete = new int[colN];
+            int[] rowsToDelete = new int[numberOfColumns];
             for (int row = startRow; row <= finishRow; row++) {
                 currentRow = rows[row];
                 bool hasCells = false;
-                for (int col = 0; col < colN; col++) {
+                for (int col = 0; col < numberOfColumns; col++) {
                     if (null != currentRow[col]) {
                         int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
-                        PrepareBuildingBordersArrays(currentRow[col], tableBorders, colN, row, col);
+                        PrepareBuildingBordersArrays(currentRow[col], tableBorders, numberOfColumns, row, col);
                         BuildBordersArrays(currentRow[col], row, col);
                         hasCells = true;
                         if (rowsToDelete[col] > 0) {
@@ -83,7 +83,7 @@ namespace iText.Layout.Renderer {
                     rows.Remove(currentRow);
                     row--;
                     finishRow--;
-                    for (int i = 0; i < colN; i++) {
+                    for (int i = 0; i < numberOfColumns; i++) {
                         rowsToDelete[i]++;
                     }
                     if (row == finishRow) {
@@ -337,8 +337,9 @@ namespace iText.Layout.Renderer {
             return theWidestBorder;
         }
 
-        public virtual float GetMaxTopWidth(Border tableBorder) {
-            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+        public virtual float GetMaxTopWidth(bool collapseWithTableBorder) {
+            float width = collapseWithTableBorder ? null == tableBoundingBorders[0] ? 0 : tableBoundingBorders[0].GetWidth
+                () : 0;
             Border widestBorder = GetWidestHorizontalBorder(horizontalBordersIndexOffset);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
@@ -346,8 +347,9 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        public virtual float GetMaxBottomWidth(Border tableBorder) {
-            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+        public virtual float GetMaxBottomWidth(bool collapseWithTableBorder) {
+            float width = collapseWithTableBorder ? null == tableBoundingBorders[2] ? 0 : tableBoundingBorders[2].GetWidth
+                () : 0;
             Border widestBorder = GetWidestHorizontalBorder(horizontalBorders.Count - 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
@@ -355,8 +357,9 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        public virtual float GetMaxRightWidth(Border tableBorder) {
-            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+        public virtual float GetMaxRightWidth(bool collapseWithTableBorder) {
+            float width = collapseWithTableBorder ? null == tableBoundingBorders[1] ? 0 : tableBoundingBorders[1].GetWidth
+                () : 0;
             Border widestBorder = GetWidestVerticalBorder(verticalBorders.Count - 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
@@ -364,8 +367,9 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        public virtual float GetMaxLeftWidth(Border tableBorder) {
-            float width = null == tableBorder ? 0 : tableBorder.GetWidth();
+        public virtual float GetMaxLeftWidth(bool collapseWithTableBorder) {
+            float width = collapseWithTableBorder ? null == tableBoundingBorders[3] ? 0 : tableBoundingBorders[3].GetWidth
+                () : 0;
             Border widestBorder = GetWidestVerticalBorder(0);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
