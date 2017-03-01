@@ -6,19 +6,19 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class TableBorders {
-        protected internal IList<IList<Border>> horizontalBorders;
+        private IList<IList<Border>> horizontalBorders;
 
-        protected internal IList<IList<Border>> verticalBorders;
+        private IList<IList<Border>> verticalBorders;
 
-        protected internal Border[] tableBoundingBorders = null;
+        private Border[] tableBoundingBorders = null;
 
-        protected internal IList<CellRenderer[]> rows;
+        private IList<CellRenderer[]> rows;
 
-        protected internal readonly int numberOfColumns;
+        private readonly int numberOfColumns;
 
-        protected internal int horizontalBordersIndexOffset = 0;
+        private int horizontalBordersIndexOffset = 0;
 
-        protected internal int verticalBordersIndexOffset = 0;
+        private int verticalBordersIndexOffset = 0;
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             this.rows = rows;
@@ -288,7 +288,7 @@ namespace iText.Layout.Renderer {
 
         //endregion
         // region getters
-        protected internal virtual Border GetWidestHorizontalBorder(int row) {
+        public virtual Border GetWidestHorizontalBorder(int row) {
             Border theWidestBorder = null;
             if (row >= 0 && row < horizontalBorders.Count) {
                 theWidestBorder = GetWidestBorder(horizontalBorders[row]);
@@ -296,7 +296,15 @@ namespace iText.Layout.Renderer {
             return theWidestBorder;
         }
 
-        protected internal virtual Border GetWidestVerticalBorder(int col) {
+        public virtual Border GetWidestHorizontalBorder(int row, int start, int end) {
+            Border theWidestBorder = null;
+            if (row >= 0 && row < horizontalBorders.Count) {
+                theWidestBorder = GetWidestBorder(horizontalBorders[row], start, end);
+            }
+            return theWidestBorder;
+        }
+
+        public virtual Border GetWidestVerticalBorder(int col) {
             Border theWidestBorder = null;
             if (col >= 0 && col < verticalBorders.Count) {
                 theWidestBorder = GetWidestBorder(verticalBorders[col]);
@@ -304,7 +312,15 @@ namespace iText.Layout.Renderer {
             return theWidestBorder;
         }
 
-        protected internal virtual float GetMaxTopWidth(Border tableBorder) {
+        public virtual Border GetWidestVerticalBorder(int col, int start, int end) {
+            Border theWidestBorder = null;
+            if (col >= 0 && col < verticalBorders.Count) {
+                theWidestBorder = GetWidestBorder(verticalBorders[col], start, end);
+            }
+            return theWidestBorder;
+        }
+
+        public virtual float GetMaxTopWidth(Border tableBorder) {
             float width = null == tableBorder ? 0 : tableBorder.GetWidth();
             Border widestBorder = GetWidestHorizontalBorder(horizontalBordersIndexOffset);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -313,7 +329,7 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        protected internal virtual float GetMaxBottomWidth(Border tableBorder) {
+        public virtual float GetMaxBottomWidth(Border tableBorder) {
             float width = null == tableBorder ? 0 : tableBorder.GetWidth();
             Border widestBorder = GetWidestHorizontalBorder(horizontalBorders.Count - 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -322,7 +338,7 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        protected internal virtual float GetMaxRightWidth(Border tableBorder) {
+        public virtual float GetMaxRightWidth(Border tableBorder) {
             float width = null == tableBorder ? 0 : tableBorder.GetWidth();
             Border widestBorder = GetWidestVerticalBorder(verticalBorders.Count - 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -331,7 +347,7 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        protected internal virtual float GetMaxLeftWidth(Border tableBorder) {
+        public virtual float GetMaxLeftWidth(Border tableBorder) {
             float width = null == tableBorder ? 0 : tableBorder.GetWidth();
             Border widestBorder = GetWidestVerticalBorder(0);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
@@ -340,12 +356,57 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
-        protected internal virtual int GetCurrentHorizontalBordersIndexOffset() {
+        public virtual IList<Border> GetHorizontalBorder(int row) {
+            return horizontalBorders[row];
+        }
+
+        public virtual IList<Border> GetVerticalBorder(int col) {
+            return verticalBorders[col];
+        }
+
+        // TODO after split this info is not valid
+        public virtual IList<Border> GetFirstHorizontalBorder() {
+            // TODO maybe on page
+            return horizontalBorders[horizontalBordersIndexOffset];
+        }
+
+        public virtual IList<Border> GetLastHorizontalBorder() {
+            // TODO maybe on page
+            return horizontalBorders[horizontalBorders.Count - 1];
+        }
+
+        public virtual IList<Border> GetFirstVerticalBorder() {
+            // TODO maybe on page
+            return verticalBorders[0];
+        }
+
+        public virtual IList<Border> GetLastVerticalBorder() {
+            // TODO maybe on page
+            return verticalBorders[verticalBorders.Count - 1];
+        }
+
+        public virtual int GetHorizontalBordersIndexOffset() {
             return horizontalBordersIndexOffset;
         }
 
-        protected internal virtual int GetCurrentVerticalBordersIndexOffset() {
+        public virtual int GetVerticalBordersIndexOffset() {
             return verticalBordersIndexOffset;
+        }
+
+        public virtual int GetNumberOfColumns() {
+            return numberOfColumns;
+        }
+
+        public virtual Border[] GetTableBoundingBorders() {
+            return tableBoundingBorders;
+        }
+
+        public virtual int GetVerticalBordersSize() {
+            return verticalBorders.Count;
+        }
+
+        public virtual int GetHorizontalBordersSize() {
+            return verticalBorders.Count;
         }
 
         // endregion
@@ -522,7 +583,7 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static Border GetCellSideBorder(Cell cellModel, int borderType) {
+        public static Border GetCellSideBorder(Cell cellModel, int borderType) {
             Border cellModelSideBorder = cellModel.GetProperty(borderType);
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
                 cellModelSideBorder = cellModel.GetProperty(Property.BORDER);
@@ -536,10 +597,22 @@ namespace iText.Layout.Renderer {
             return cellModelSideBorder;
         }
 
-        private static Border GetWidestBorder(IList<Border> borderList) {
+        public static Border GetWidestBorder(IList<Border> borderList) {
             Border theWidestBorder = null;
             if (0 != borderList.Count) {
                 foreach (Border border in borderList) {
+                    if (null != border && (null == theWidestBorder || border.GetWidth() > theWidestBorder.GetWidth())) {
+                        theWidestBorder = border;
+                    }
+                }
+            }
+            return theWidestBorder;
+        }
+
+        public static Border GetWidestBorder(IList<Border> borderList, int start, int end) {
+            Border theWidestBorder = null;
+            if (0 != borderList.Count) {
+                foreach (Border border in borderList.SubList(start, end)) {
                     if (null != border && (null == theWidestBorder || border.GetWidth() > theWidestBorder.GetWidth())) {
                         theWidestBorder = border;
                     }

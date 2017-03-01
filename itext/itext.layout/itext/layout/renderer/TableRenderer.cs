@@ -227,8 +227,8 @@ namespace iText.Layout.Renderer {
                     Border collapsedBottomBorder = null;
                     int colspan = (int)rows[row][col].GetPropertyAsInteger(Property.COLSPAN);
                     for (int i = col; i < col + colspan; i++) {
-                        collapsedBottomBorder = TableBorders.GetCollapsedBorder(collapsedBottomBorder, bordersHandler.horizontalBorders
-                            [horizontalBordersIndexOffset + row + 1][i]);
+                        collapsedBottomBorder = TableBorders.GetCollapsedBorder(collapsedBottomBorder, bordersHandler.GetHorizontalBorder
+                            (horizontalBordersIndexOffset + row + 1)[i]);
                     }
                     rows[row][col].SetBorders(collapsedBottomBorder, 2);
                     col += colspan;
@@ -246,8 +246,8 @@ namespace iText.Layout.Renderer {
         // collapse with table border or header bottom borders
         protected internal virtual void CorrectFirstRowTopBorders(Border tableBorder, int colN) {
             int row = 0;
-            IList<Border> bordersToBeCollapsedWith = null != headerRenderer ? headerRenderer.bordersHandler.horizontalBorders
-                [headerRenderer.bordersHandler.horizontalBorders.Count - 1] : new List<Border>();
+            IList<Border> bordersToBeCollapsedWith = null != headerRenderer ? headerRenderer.bordersHandler.GetLastHorizontalBorder
+                () : new List<Border>();
             if (null == headerRenderer) {
                 for (int col = 0; col < colN; col++) {
                     bordersToBeCollapsedWith.Add(tableBorder);
@@ -406,7 +406,7 @@ namespace iText.Layout.Renderer {
                 layoutBox.MoveUp(footerHeight).DecreaseHeight(footerHeight);
                 if (!tableModel.IsEmpty()) {
                     float maxFooterTopBorderWidth = footerRenderer.bordersHandler.GetMaxTopWidth(footerRenderer.bordersHandler
-                        .tableBoundingBorders[0]);
+                        .GetTableBoundingBorders()[0]);
                     footerRenderer.occupiedArea.GetBBox().DecreaseHeight(maxFooterTopBorderWidth);
                     layoutBox.MoveDown(maxFooterTopBorderWidth).IncreaseHeight(maxFooterTopBorderWidth);
                 }
@@ -429,7 +429,7 @@ namespace iText.Layout.Renderer {
                 layoutBox.DecreaseHeight(headerHeight);
                 occupiedArea.GetBBox().MoveDown(headerHeight).IncreaseHeight(headerHeight);
                 float maxHeaderBottomBorderWidth = headerRenderer.bordersHandler.GetMaxBottomWidth(headerRenderer.bordersHandler
-                    .tableBoundingBorders[2]);
+                    .GetTableBoundingBorders()[2]);
                 if (!tableModel.IsEmpty()) {
                     if (maxHeaderBottomBorderWidth < topBorderMaxWidth) {
                         // fix
@@ -550,7 +550,8 @@ namespace iText.Layout.Renderer {
                     }
                     Border oldBottomBorder = cell.GetBorders()[2];
                     Border collapsedBottomBorder = TableBorders.GetCollapsedBorder(oldBottomBorder, footerRenderer != null ? footerRenderer
-                        .bordersHandler.horizontalBorders[0][col] : borders[2]);
+                        .bordersHandler.GetFirstHorizontalBorder()[col] : borders[2]);
+                    //FIXME
                     if (collapsedBottomBorder != null) {
                         float diff = Math.Max(collapsedBottomBorder.GetWidth(), null != widestRowBottomBorder ? widestRowBottomBorder
                             .GetWidth() : 0);
@@ -736,8 +737,8 @@ namespace iText.Layout.Renderer {
                 }
                 if (split || processAsLast || row == rows.Count - 1) {
                     if (hasContent || 0 != row) {
-                        horizontalBordersIndexOffset = bordersHandler.GetCurrentHorizontalBordersIndexOffset();
-                        verticalBordersIndexOffset = bordersHandler.GetCurrentVerticalBordersIndexOffset();
+                        horizontalBordersIndexOffset = bordersHandler.GetHorizontalBordersIndexOffset();
+                        verticalBordersIndexOffset = bordersHandler.GetVerticalBordersIndexOffset();
                         bordersHandler.ProcessSplit(row, split, hasContent, cellWithBigRowspanAdded);
                     }
                     // Correct layout area of the last row rendered on the page
@@ -764,7 +765,8 @@ namespace iText.Layout.Renderer {
                             cell.DeleteOwnProperty(Property.BORDER_BOTTOM);
                             Border cellOwnBottomBorder = cell.GetBorders()[2];
                             Border collapsedWithTableBorder = TableBorders.GetCollapsedBorder(cellOwnBottomBorder, footerRenderer != null
-                                 ? footerRenderer.bordersHandler.horizontalBorders[0][col] : borders[2]);
+                                 ? footerRenderer.bordersHandler.GetFirstHorizontalBorder()[col] : borders[2]);
+                            // FIXME
                             if (null != collapsedWithTableBorder && bottomTableBorderWidth < collapsedWithTableBorder.GetWidth()) {
                                 bottomTableBorderWidth = collapsedWithTableBorder.GetWidth();
                             }
@@ -807,7 +809,7 @@ namespace iText.Layout.Renderer {
                     bool[] useFooterBorders = new bool[numberOfColumns];
                     if (!tableModel.IsEmpty()) {
                         useFooterBorders = CollapseFooterBorders(0 != lastFlushedRowBottomBorder.Count && 0 == row ? lastFlushedRowBottomBorder
-                             : bordersHandler.horizontalBorders[horizontalBordersIndexOffset + lastRow], numberOfColumns, rows.Count
+                             : bordersHandler.GetHorizontalBorder(horizontalBordersIndexOffset + lastRow), numberOfColumns, rows.Count
                             );
                         layoutBox.IncreaseHeight(bottomTableBorderWidth / 2);
                         occupiedArea.GetBBox().MoveUp(bottomTableBorderWidth / 2).DecreaseHeight(bottomTableBorderWidth / 2);
@@ -828,7 +830,7 @@ namespace iText.Layout.Renderer {
                     // fix footer borders
                     if (!tableModel.IsEmpty()) {
                         footerRenderer.bordersHandler.UpdateTopBorder(0 != lastFlushedRowBottomBorder.Count && 0 == row ? lastFlushedRowBottomBorder
-                             : bordersHandler.horizontalBorders[horizontalBordersIndexOffset + lastRow], useFooterBorders);
+                             : bordersHandler.GetHorizontalBorder(horizontalBordersIndexOffset + lastRow), useFooterBorders);
                     }
                 }
                 if (!split) {
@@ -1079,7 +1081,8 @@ namespace iText.Layout.Renderer {
             else {
                 // the bottom border should be processed and placed lately
                 if (0 != heights.Count) {
-                    bordersHandler.horizontalBorders[bordersHandler.horizontalBorders.Count - 1].Clear();
+                    bordersHandler.GetLastHorizontalBorder().Clear();
+                    // FIXME
                     heights[heights.Count - 1] = heights[heights.Count - 1] - bottomTableBorderWidth / 2;
                 }
                 if (null == footerRenderer) {
@@ -1332,8 +1335,8 @@ namespace iText.Layout.Renderer {
             overflowRenderer.rows = rows.SubList(row, rows.Count);
             splitRenderer.occupiedArea = occupiedArea;
             overflowRenderer.bordersHandler = bordersHandler;
-            overflowRenderer.horizontalBordersIndexOffset = bordersHandler.horizontalBordersIndexOffset;
-            overflowRenderer.verticalBordersIndexOffset = bordersHandler.verticalBordersIndexOffset;
+            overflowRenderer.horizontalBordersIndexOffset = bordersHandler.GetHorizontalBordersIndexOffset();
+            overflowRenderer.verticalBordersIndexOffset = bordersHandler.GetVerticalBordersIndexOffset();
             return new iText.Layout.Renderer.TableRenderer[] { splitRenderer, overflowRenderer };
         }
 
@@ -1599,7 +1602,7 @@ namespace iText.Layout.Renderer {
             if (countedColumnWidth.Length > 0) {
                 x1 += countedColumnWidth[0];
             }
-            for (int i = 1; i < bordersHandler.numberOfColumns; i++) {
+            for (int i = 1; i < bordersHandler.GetNumberOfColumns(); i++) {
                 DrawVerticalBorder(i, startY, x1, drawContext.GetCanvas());
                 if (i < countedColumnWidth.Length) {
                     x1 += countedColumnWidth[i];
@@ -1615,21 +1618,20 @@ namespace iText.Layout.Renderer {
             // draw left
             DrawVerticalBorder(0, startY, startX, drawContext.GetCanvas());
             // draw right
-            DrawVerticalBorder(bordersHandler.numberOfColumns, startY, x1, drawContext.GetCanvas());
+            DrawVerticalBorder(bordersHandler.GetNumberOfColumns(), startY, x1, drawContext.GetCanvas());
             if (isTagged) {
                 drawContext.GetCanvas().CloseTag();
             }
         }
 
         private void DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas) {
-            IList<Border> borders = bordersHandler.horizontalBorders[horizontalBordersIndexOffset + i];
+            IList<Border> borders = bordersHandler.GetHorizontalBorder(horizontalBordersIndexOffset + i);
             float x1 = startX;
             float x2 = x1 + countedColumnWidth[0];
             if (i == 0) {
-                if (bordersHandler.verticalBorders != null && bordersHandler.verticalBorders.Count > 0 && bordersHandler.verticalBorders
-                    [0].Count > verticalBordersIndexOffset && bordersHandler.verticalBorders[bordersHandler.numberOfColumns
-                    ].Count > verticalBordersIndexOffset) {
-                    Border firstBorder = bordersHandler.verticalBorders[0][verticalBordersIndexOffset];
+                if (bordersHandler.GetFirstVerticalBorder().Count > verticalBordersIndexOffset && bordersHandler.GetLastVerticalBorder
+                    ().Count > verticalBordersIndexOffset) {
+                    Border firstBorder = bordersHandler.GetFirstVerticalBorder()[verticalBordersIndexOffset];
                     if (firstBorder != null) {
                         x1 -= firstBorder.GetWidth() / 2;
                     }
@@ -1637,11 +1639,10 @@ namespace iText.Layout.Renderer {
             }
             else {
                 if (i == heights.Count) {
-                    if (bordersHandler.verticalBorders != null && bordersHandler.verticalBorders.Count > 0 && bordersHandler.verticalBorders
-                        [0].Count > verticalBordersIndexOffset && bordersHandler.verticalBorders[bordersHandler.numberOfColumns
-                        ] != null && bordersHandler.verticalBorders[bordersHandler.numberOfColumns].Count > verticalBordersIndexOffset
-                         && bordersHandler.verticalBorders[0] != null) {
-                        Border firstBorder = bordersHandler.verticalBorders[0][verticalBordersIndexOffset + heights.Count - 1];
+                    if (bordersHandler.GetFirstVerticalBorder().Count > verticalBordersIndexOffset && bordersHandler.GetLastVerticalBorder
+                        ().Count > verticalBordersIndexOffset) {
+                        Border firstBorder = bordersHandler.GetFirstVerticalBorder()[verticalBordersIndexOffset + heights.Count - 
+                            1];
                         if (firstBorder != null) {
                             x1 -= firstBorder.GetWidth() / 2;
                         }
@@ -1669,17 +1670,16 @@ namespace iText.Layout.Renderer {
             }
             Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
             if (lastBorder != null) {
-                if (bordersHandler.verticalBorders != null && bordersHandler.verticalBorders.Count > j && bordersHandler.verticalBorders
-                    [j] != null && bordersHandler.verticalBorders[j].Count > verticalBordersIndexOffset) {
+                if (bordersHandler.GetVerticalBorder(j).Count > verticalBordersIndexOffset) {
                     if (i == 0) {
-                        if (bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i] != null) {
-                            x2 += bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i].GetWidth() / 2;
+                        if (bordersHandler.GetVerticalBorder(j)[verticalBordersIndexOffset + i] != null) {
+                            x2 += bordersHandler.GetVerticalBorder(j)[verticalBordersIndexOffset + i].GetWidth() / 2;
                         }
                     }
                     else {
-                        if (i == heights.Count && bordersHandler.verticalBorders[j].Count >= verticalBordersIndexOffset + i - 1 &&
-                             bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i - 1] != null) {
-                            x2 += bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i - 1].GetWidth() / 2;
+                        if (i == heights.Count && bordersHandler.GetVerticalBorder(j).Count >= verticalBordersIndexOffset + i - 1 
+                            && bordersHandler.GetVerticalBorder(j)[verticalBordersIndexOffset + i - 1] != null) {
+                            x2 += bordersHandler.GetVerticalBorder(j)[verticalBordersIndexOffset + i - 1].GetWidth() / 2;
                         }
                     }
                 }
@@ -1688,7 +1688,7 @@ namespace iText.Layout.Renderer {
         }
 
         private void DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas) {
-            IList<Border> borders = bordersHandler.verticalBorders[i];
+            IList<Border> borders = bordersHandler.GetVerticalBorder(i);
             float y1 = startY;
             float y2 = y1;
             if (!heights.IsEmpty()) {
