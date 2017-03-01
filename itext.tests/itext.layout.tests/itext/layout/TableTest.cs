@@ -1299,28 +1299,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TableSplitTest00() {
-            String testName = "tableSplitTest00.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
-            String gretzky = "Make Gretzky great again!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
-            Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 15));
-            for (int col = 0; col < 100; col++) {
-                table.AddCell(new Cell().Add(gretzky));
-                table.AddCell(new Cell().Add(gretzky));
-            }
-            doc.Add(table);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , testName + "_diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         public virtual void TableSplitTest01() {
             String testName = "tableSplitTest01.pdf";
             String outFileName = destinationFolder + testName;
