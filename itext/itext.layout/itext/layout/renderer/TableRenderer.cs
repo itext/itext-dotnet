@@ -971,20 +971,19 @@ namespace iText.Layout.Renderer {
                             if (!tableModel.IsComplete() || 0 != lastFlushedRowBottomBorder.Count) {
                                 bottomTableBorderWidth = null == widestLustFlushedBorder ? 0f : widestLustFlushedBorder.GetWidth();
                                 occupiedArea.GetBBox().MoveDown(bottomTableBorderWidth).IncreaseHeight(bottomTableBorderWidth);
+                                bordersHandler.UpdateTopBorder(lastFlushedRowBottomBorder, new bool[numberOfColumns]);
                                 // TODO
                                 //                            splitResult[0].horizontalBorders.clear();
                                 //                            splitResult[0].horizontalBorders.add(lastFlushedRowBottomBorder);
                                 // hack to process 'margins'
                                 splitResult[0].SetBorders(widestLustFlushedBorder, 2);
                                 splitResult[0].SetBorders(Border.NO_BORDER, 0);
+                                // TODO
+                                splitResult[0].SetBorders(bordersHandler.GetWidestVerticalBorder(0), 3);
+                                splitResult[0].SetBorders(bordersHandler.GetWidestVerticalBorder(numberOfColumns), 1);
                             }
                         }
                     }
-                    // TODO
-                    //                            if (0 != splitResult[0].verticalBorders.size()) {
-                    //                                splitResult[0].setBorders(splitResult[0].verticalBorders.get(0).get(0), 3);
-                    //                                splitResult[0].setBorders(splitResult[0].verticalBorders.get(verticalBorders.size() - 1).get(0), 1);
-                    //                            }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA)) || true.Equals(GetPropertyAsBoolean(Property
                         .FILL_AVAILABLE_AREA_ON_SPLIT))) {
                         ExtendLastRow(currentRow, layoutBox);

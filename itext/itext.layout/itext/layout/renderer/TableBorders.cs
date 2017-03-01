@@ -175,7 +175,7 @@ namespace iText.Layout.Renderer {
                     for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
                         lastBorderOnCurrentPage[i] = cellCollapsedBottomBorder;
                     }
-                    col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
+                    col += cell.GetPropertyAsInteger(Property.COLSPAN) - 1;
                 }
             }
             if (horizontalBordersIndexOffset + splitRow != horizontalBorders.Count - 1) {
@@ -189,7 +189,7 @@ namespace iText.Layout.Renderer {
                         for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
                             firstBorderOnTheNextPage[i] = cellCollapsedTopBorder;
                         }
-                        col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
+                        col += cell.GetPropertyAsInteger(Property.COLSPAN) - 1;
                     }
                 }
             }
@@ -254,15 +254,35 @@ namespace iText.Layout.Renderer {
         // region intialisers
         protected internal virtual void InitializeBorders(IList<Border> lastFlushedRowBottomBorder, bool isFirstOnPage
             ) {
-            // initialize borders
-            if (null == horizontalBorders) {
-                horizontalBorders = new List<IList<Border>>();
-                horizontalBorders.Add(new List<Border>(lastFlushedRowBottomBorder));
-                verticalBorders = new List<IList<Border>>();
+            IList<Border> tempBorders;
+            // initialize vertical borders
+            verticalBorders = new List<IList<Border>>();
+            if (0 != rows.Count) {
+                while (numberOfColumns + 1 > verticalBorders.Count) {
+                    tempBorders = new List<Border>();
+                    while (rows.Count > tempBorders.Count) {
+                        tempBorders.Add(null);
+                    }
+                    verticalBorders.Add(tempBorders);
+                }
             }
-            // The first row on the page shouldn't collapse with the last on the previous one
-            if (0 != lastFlushedRowBottomBorder.Count && isFirstOnPage) {
-                horizontalBorders[0].Clear();
+            // initialize horizontal borders
+            horizontalBorders = new List<IList<Border>>();
+            while (rows.Count + 1 > horizontalBorders.Count) {
+                tempBorders = new List<Border>();
+                while (numberOfColumns > tempBorders.Count) {
+                    tempBorders.Add(null);
+                }
+                horizontalBorders.Add(tempBorders);
+            }
+            // Notice that the first row on the page shouldn't collapse with the last on the previous one
+            if (null != lastFlushedRowBottomBorder && 0 < lastFlushedRowBottomBorder.Count && !isFirstOnPage) {
+                // TODO
+                tempBorders = new List<Border>();
+                foreach (Border border in lastFlushedRowBottomBorder) {
+                    tempBorders.Add(border);
+                }
+                horizontalBorders[0] = tempBorders;
             }
         }
 
@@ -532,28 +552,28 @@ namespace iText.Layout.Renderer {
         // region lowlevel logic
         protected internal virtual bool CheckAndReplaceBorderInArray(IList<IList<Border>> borderArray, int i, int 
             j, Border borderToAdd, bool hasPriority) {
-            if (borderArray.Count <= i) {
-                for (int count = borderArray.Count; count <= i; count++) {
-                    borderArray.Add(new List<Border>());
-                }
-            }
+            //        if (borderArray.size() <= i) {
+            //            for (int count = borderArray.size(); count <= i; count++) {
+            //                borderArray.add(new ArrayList<Border>());
+            //            }
+            //        }
             IList<Border> borders = borderArray[i];
-            if (borders.IsEmpty()) {
-                for (int count = 0; count < j; count++) {
-                    borders.Add(null);
-                }
-                borders.Add(borderToAdd);
-                return true;
-            }
-            if (borders.Count == j) {
-                borders.Add(borderToAdd);
-                return true;
-            }
-            if (borders.Count < j) {
-                for (int count = borders.Count; count <= j; count++) {
-                    borders.Add(count, null);
-                }
-            }
+            //        if (borders.isEmpty()) {
+            //            for (int count = 0; count < j; count++) {
+            //                borders.add(null);
+            //            }
+            //            borders.add(borderToAdd);
+            //            return true;
+            //        }
+            //        if (borders.size() == j) {
+            //            borders.add(borderToAdd);
+            //            return true;
+            //        }
+            //        if (borders.size() < j) {
+            //            for (int count = borders.size(); count <= j; count++) {
+            //                borders.add(count, null);
+            //            }
+            //        }
             Border neighbour = borders[j];
             if (neighbour == null) {
                 borders[j] = borderToAdd;
