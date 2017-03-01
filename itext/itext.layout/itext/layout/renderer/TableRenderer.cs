@@ -378,6 +378,8 @@ namespace iText.Layout.Renderer {
                         );
                     bordersHandler.ApplyCellIndents(cellArea.GetBBox(), cellIndents[0], cellIndents[1], cellIndents[2] + widestRowBottomBorderWidth
                         , cellIndents[3], false);
+                    // update cell width
+                    cellWidth = cellArea.GetBBox().GetWidth();
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                     // width of BlockRenderer depends on child areas, while in cell case it is hardly define.

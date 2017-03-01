@@ -232,7 +232,7 @@ namespace iText.Layout.Renderer {
                     return lastBorderOnCurrentPage;
                 }
                 else {
-                    return horizontalBorders[index - Math.Max(largeTableIndexOffset, 0)];
+                    return horizontalBorders[index - largeTableIndexOffset];
                 }
             }
         }
