@@ -1506,34 +1506,6 @@ namespace iText.Layout.Renderer {
             return sum + bordersHandler.GetRightBorderMaxWidth() / 2 + bordersHandler.GetLeftBorderMaxWidth() / 2;
         }
 
-        protected internal virtual iText.Layout.Renderer.TableRenderer SaveCellsProperties() {
-            CellRenderer[] currentRow;
-            int colN = ((Table)GetModelElement()).GetNumberOfColumns();
-            for (int row = 0; row < rows.Count; row++) {
-                currentRow = rows[row];
-                for (int col = 0; col < colN; col++) {
-                    if (null != currentRow[col]) {
-                        currentRow[col].SaveProperties();
-                    }
-                }
-            }
-            return this;
-        }
-
-        protected internal virtual iText.Layout.Renderer.TableRenderer RestoreCellsProperties() {
-            CellRenderer[] currentRow;
-            int colN = ((Table)GetModelElement()).GetNumberOfColumns();
-            for (int row = 0; row < rows.Count; row++) {
-                currentRow = rows[row];
-                for (int col = 0; col < colN; col++) {
-                    if (null != currentRow[col]) {
-                        currentRow[col].RestoreProperties();
-                    }
-                }
-            }
-            return this;
-        }
-
         /// <summary>This are a structs used for convenience in layout.</summary>
         private class CellRendererInfo {
             public CellRenderer cellRenderer;

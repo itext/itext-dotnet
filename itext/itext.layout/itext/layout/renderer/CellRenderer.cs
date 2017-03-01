@@ -42,7 +42,6 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
-using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
@@ -52,8 +51,6 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class CellRenderer : BlockRenderer {
-        protected internal IDictionary<int, Object> oldProperties = new Dictionary<int, Object>();
-
         /// <summary>Creates a CellRenderer from its corresponding layout object.</summary>
         /// <param name="modelElement">
         /// the
@@ -62,7 +59,6 @@ namespace iText.Layout.Renderer {
         /// </param>
         public CellRenderer(Cell modelElement)
             : base(modelElement) {
-            // TODO delete after refactoring
             SetProperty(Property.ROWSPAN, modelElement.GetRowspan());
             SetProperty(Property.COLSPAN, modelElement.GetColspan());
         }
@@ -94,7 +90,6 @@ namespace iText.Layout.Renderer {
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
-            overflowRenderer.oldProperties.AddAll(oldProperties);
             return overflowRenderer;
         }
 
@@ -145,25 +140,6 @@ namespace iText.Layout.Renderer {
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             return new iText.Layout.Renderer.CellRenderer(((Cell)GetModelElement()));
-        }
-
-        protected internal virtual IRenderer SaveProperties() {
-            if (null != properties) {
-                oldProperties = new Dictionary<int, Object>();
-            }
-            else {
-                oldProperties.Clear();
-            }
-            oldProperties.AddAll(properties);
-            return this;
-        }
-
-        protected internal virtual IRenderer RestoreProperties() {
-            if (null != oldProperties) {
-                properties.Clear();
-                properties.AddAll(oldProperties);
-            }
-            return this;
         }
     }
 }
