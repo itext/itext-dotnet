@@ -1097,40 +1097,13 @@ namespace iText.Layout.Renderer {
             }
             // if table is empty we still need to process table borders
             if (0 == childRenderers.Count && null == headerRenderer && null == footerRenderer) {
-                IList<Border> topHorizontalBorders = new List<Border>();
-                IList<Border> bottomHorizontalBorders = new List<Border>();
-                for (int i = 0; i < numberOfColumns; i++) {
-                    bottomHorizontalBorders.Add(Border.NO_BORDER);
-                }
-                IList<Border> leftVerticalBorders = new List<Border>();
-                IList<Border> rightVerticalBorders = new List<Border>();
-                // process bottom border of the last added row
+                bordersHandler.ProcessEmptyTable(tableModel.IsComplete() ? lastFlushedRowBottomBorder : null);
                 if (tableModel.IsComplete() && 0 != lastFlushedRowBottomBorder.Count) {
-                    bottomHorizontalBorders = lastFlushedRowBottomBorder;
                     // hack to process 'margins'
                     SetBorders(widestLustFlushedBorder, 2);
                     SetBorders(Border.NO_BORDER, 0);
                 }
-                // collapse with table bottom border
-                for (int i = 0; i < bottomHorizontalBorders.Count; i++) {
-                    Border border = bottomHorizontalBorders[i];
-                    if (null == border || (null != borders[2] && border.GetWidth() < borders[2].GetWidth())) {
-                        bottomHorizontalBorders[i] = borders[2];
-                    }
-                    topHorizontalBorders.Add(borders[0]);
-                }
             }
-            // TODO
-            //            horizontalBorders.set(0, topHorizontalBorders);
-            //            horizontalBorders.add(bottomHorizontalBorders);
-            //            leftVerticalBorders.add(borders[3]);
-            //            rightVerticalBorders.add(borders[1]);
-            //            verticalBorders = new ArrayList<>();
-            //            verticalBorders.add(leftVerticalBorders);
-            //            for (int i = 0; i < numberOfColumns - 1; i++) {
-            //                verticalBorders.add(new ArrayList<Border>());
-            //            }
-            //            verticalBorders.add(rightVerticalBorders);
             // Apply bottom and top border
             if (tableModel.IsComplete()) {
                 if (null == footerRenderer) {
@@ -1473,7 +1446,8 @@ namespace iText.Layout.Renderer {
             float tableWidth = (float)RetrieveWidth(layoutBox.GetWidth());
             ApplyMargins(layoutBox, false);
             if (initializeBorders) {
-                // FIXME
+                bordersHandler = new TableBorders(rows, ((Table)GetModelElement()).GetNumberOfColumns());
+                bordersHandler.SetTableBoundingBorders(GetBorders());
                 bordersHandler.InitializeBorders(((Table)GetModelElement()).GetLastRowBottomBorder(), true);
                 bordersHandler.SetTableBoundingBorders(GetBorders());
                 InitializeHeaderAndFooter(true);

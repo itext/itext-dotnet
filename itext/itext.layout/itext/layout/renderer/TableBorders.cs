@@ -114,6 +114,42 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
+        protected internal virtual iText.Layout.Renderer.TableBorders ProcessEmptyTable(IList<Border> lastFlushedBorder
+            ) {
+            IList<Border> topHorizontalBorders = new List<Border>();
+            IList<Border> bottomHorizontalBorders = new List<Border>();
+            if (null != lastFlushedBorder && 0 != lastFlushedBorder.Count) {
+                bottomHorizontalBorders = lastFlushedBorder;
+            }
+            else {
+                for (int i = 0; i < numberOfColumns; i++) {
+                    bottomHorizontalBorders.Add(Border.NO_BORDER);
+                }
+            }
+            IList<Border> leftVerticalBorders = new List<Border>();
+            IList<Border> rightVerticalBorders = new List<Border>();
+            // collapse with table bottom border
+            for (int i = 0; i < bottomHorizontalBorders.Count; i++) {
+                Border border = bottomHorizontalBorders[i];
+                if (null == border || (null != tableBoundingBorders[2] && border.GetWidth() < tableBoundingBorders[2].GetWidth
+                    ())) {
+                    bottomHorizontalBorders[i] = tableBoundingBorders[2];
+                }
+                topHorizontalBorders.Add(tableBoundingBorders[0]);
+            }
+            horizontalBorders[0] = topHorizontalBorders;
+            horizontalBorders.Add(bottomHorizontalBorders);
+            leftVerticalBorders.Add(tableBoundingBorders[3]);
+            rightVerticalBorders.Add(tableBoundingBorders[1]);
+            verticalBorders = new List<IList<Border>>();
+            verticalBorders.Add(leftVerticalBorders);
+            for (int i = 0; i < numberOfColumns - 1; i++) {
+                verticalBorders.Add(new List<Border>());
+            }
+            verticalBorders.Add(rightVerticalBorders);
+            return this;
+        }
+
         protected internal virtual iText.Layout.Renderer.TableBorders ProcessSplit(int splitRow, bool split, bool 
             hasContent, bool cellWithBigRowspanAdded) {
             return ProcessSplit(splitRow, split, hasContent, cellWithBigRowspanAdded, null);
