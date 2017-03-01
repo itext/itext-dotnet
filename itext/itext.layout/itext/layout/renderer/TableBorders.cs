@@ -21,7 +21,7 @@ namespace iText.Layout.Renderer {
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             // TODO Maybe Table ?
-            this.rows = new List<CellRenderer[]>(rows);
+            this.rows = rows;
             this.numberOfColumns = numberOfColumns;
             verticalBorders = new List<IList<Border>>();
             horizontalBorders = new List<IList<Border>>();
@@ -178,6 +178,14 @@ namespace iText.Layout.Renderer {
             return numberOfColumns;
         }
 
+        public virtual int GetStartRow() {
+            return rowRange.GetStartRow();
+        }
+
+        public virtual int GetFinishRow() {
+            return rowRange.GetFinishRow();
+        }
+
         public virtual Border[] GetTableBoundingBorders() {
             return tableBoundingBorders;
         }
@@ -231,28 +239,6 @@ namespace iText.Layout.Renderer {
 
         // endregion
         //region static
-        /// <summary>Returns the collapsed border.</summary>
-        /// <remarks>
-        /// Returns the collapsed border. We process collapse
-        /// if the table border width is strictly greater than cell border width.
-        /// </remarks>
-        /// <param name="cellBorder">cell border</param>
-        /// <param name="tableBorder">table border</param>
-        /// <returns>the collapsed border</returns>
-        public static Border GetCollapsedBorder(Border cellBorder, Border tableBorder) {
-            if (null != tableBorder) {
-                if (null == cellBorder || cellBorder.GetWidth() < tableBorder.GetWidth()) {
-                    return tableBorder;
-                }
-            }
-            if (null != cellBorder) {
-                return cellBorder;
-            }
-            else {
-                return Border.NO_BORDER;
-            }
-        }
-
         public static Border GetCellSideBorder(Cell cellModel, int borderType) {
             Border cellModelSideBorder = cellModel.GetProperty(borderType);
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
