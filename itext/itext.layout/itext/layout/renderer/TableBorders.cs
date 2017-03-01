@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -19,6 +20,10 @@ namespace iText.Layout.Renderer {
 
         protected internal Table.RowRange rowRange;
 
+        protected internal float leftBorderMaxWidth;
+
+        protected internal float rightBorderMaxWidth;
+
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             // TODO Maybe Table ?
             this.rows = rows;
@@ -33,8 +38,11 @@ namespace iText.Layout.Renderer {
             SetTableBoundingBorders(tableBoundingBorders);
         }
 
-        protected internal virtual void InitializeBorders(IList<Border> lastFlushedRowBottomBorder, bool isFirstOnPage
-            ) {
+        protected internal abstract iText.Layout.Renderer.TableBorders UpdateOnNewPage(bool isOriginalNonSplitRenderer
+            , bool isFooterOrHeader, TableRenderer currentRenderer, TableRenderer headerRenderer, TableRenderer footerRenderer
+            );
+
+        protected internal virtual iText.Layout.Renderer.TableBorders InitializeBorders() {
             IList<Border> tempBorders;
             // initialize vertical borders
             while (numberOfColumns + 1 > verticalBorders.Count) {
@@ -52,16 +60,9 @@ namespace iText.Layout.Renderer {
                 }
                 horizontalBorders.Add(tempBorders);
             }
+            return this;
         }
 
-        // Notice that the first row on the page shouldn't collapse with the last on the previous one
-        //        if (null != lastFlushedRowBottomBorder && 0 < lastFlushedRowBottomBorder.size() && !isFirstOnPage) { // TODO
-        //            tempBorders = new ArrayList<Border>();
-        //            for (Border border : lastFlushedRowBottomBorder) {
-        //                tempBorders.add(border);
-        //            }
-        //            horizontalBorders.set(horizontalBorders.size()-1, tempBorders);
-        //        }
         protected internal virtual iText.Layout.Renderer.TableBorders SetTableBoundingBorders(Border[] borders) {
             tableBoundingBorders = new Border[4];
             if (null != borders) {
@@ -89,6 +90,14 @@ namespace iText.Layout.Renderer {
         public abstract IList<Border> GetVerticalBorder(int index);
 
         public abstract IList<Border> GetHorizontalBorder(int index);
+
+        public virtual float GetLeftBorderMaxWidth() {
+            return leftBorderMaxWidth;
+        }
+
+        public virtual float GetRightBorderMaxWidth() {
+            return rightBorderMaxWidth;
+        }
 
         public virtual float GetMaxTopWidth() {
             float width = 0;
@@ -301,6 +310,17 @@ namespace iText.Layout.Renderer {
             return borderList;
         }
 
+        protected internal static iText.Layout.Renderer.TableBorders ProcessRendererBorders(TableRenderer renderer
+            ) {
+            renderer.bordersHandler = new CollapsedTableBorders(renderer.rows, ((Table)renderer.GetModelElement()).GetNumberOfColumns
+                ());
+            renderer.bordersHandler.SetTableBoundingBorders(renderer.GetBorders());
+            renderer.bordersHandler.InitializeBorders();
+            renderer.bordersHandler.SetRowRange(renderer.rowRange);
+            ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
+            return renderer.bordersHandler;
+        }
+
         // endregion
         // region draw
         protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(int i, float startX, float
@@ -308,6 +328,39 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(int i, float startY, float
              x1, PdfCanvas canvas, IList<float> heights);
+
+        // endregion
+        // region area occupation
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool isEmpty, bool isComplete, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool isEmpty, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool reverse);
+
+        //    abstract protected TableBorders applyLeftAndRightBorder(Rectangle occupiedArea, Rectangle layoutBox, boolean reverse) {
+        //
+        //    }
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyCellIndents(Rectangle box, float topIndent
+            , float rightIndent, float bottomIndent, float leftIndent, bool reverse);
+
+        protected internal abstract float GetCellVerticalAddition(float[] indents);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderFooter(iText.Layout.Renderer.TableBorders
+             footerBordersHandler, bool changeThis);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderHeader(iText.Layout.Renderer.TableBorders
+             headerBordersHandler, bool changeThis);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderHeaderOccupiedArea(Rectangle occupiedBox
+            , Rectangle layoutBox);
         // endregion
     }
 }
