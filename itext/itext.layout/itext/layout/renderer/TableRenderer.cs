@@ -545,7 +545,9 @@ namespace iText.Layout.Renderer {
                     }
                     LayoutResult cellResult = cell.SetParent(this).Layout(new LayoutContext(cellArea));
                     // we need to disable collapsing with the next row
-                    if (!processAsLast && LayoutResult.NOTHING == cellResult.GetStatus()) {
+                    if (!processAsLast && LayoutResult.NOTHING == cellResult.GetStatus() && !true.Equals(this.GetOwnProperty<bool?
+                        >(Property.IGNORE_FOOTER))) {
+                        // TODO There should be only one property for header / footer and processing as last ignoring
                         processAsLast = true;
                         // undo collapsing with the next row
                         widestRowBottomBorder = null;
@@ -567,11 +569,13 @@ namespace iText.Layout.Renderer {
                         }
                         continue;
                     }
-                    if (collapsedBottomBorder != null && null != cellResult.GetOccupiedArea()) {
-                        // apply the difference between collapsed table border and own cell border
-                        cellResult.GetOccupiedArea().GetBBox().MoveUp((collapsedBottomBorder.GetWidth() - (oldBottomBorder == null
-                             ? 0 : oldBottomBorder.GetWidth())) / 2).DecreaseHeight((collapsedBottomBorder.GetWidth() - (oldBottomBorder
-                             == null ? 0 : oldBottomBorder.GetWidth())) / 2);
+                    if (collapsedBottomBorder != null) {
+                        if (null != cellResult.GetOccupiedArea()) {
+                            // apply the difference between collapsed table border and own cell border
+                            cellResult.GetOccupiedArea().GetBBox().MoveUp((collapsedBottomBorder.GetWidth() - (oldBottomBorder == null
+                                 ? 0 : oldBottomBorder.GetWidth())) / 2).DecreaseHeight((collapsedBottomBorder.GetWidth() - (oldBottomBorder
+                                 == null ? 0 : oldBottomBorder.GetWidth())) / 2);
+                        }
                         cell.SetProperty(Property.BORDER_BOTTOM, oldBottomBorder);
                     }
                     cell.SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
@@ -606,7 +610,8 @@ namespace iText.Layout.Renderer {
                                 // This is a case when last footer should be skipped and we might face an end of the table.
                                 // We check if we can fit all the rows right now and the split occurred only because we reserved
                                 // space for footer before, and if yes we skip footer and write all the content right now.
-                                if (null != footerRenderer && tableModel.IsSkipLastFooter() && tableModel.IsComplete()) {
+                                bool skipLastFooter = null != footerRenderer && tableModel.IsSkipLastFooter() && tableModel.IsComplete();
+                                if (skipLastFooter) {
                                     LayoutArea potentialArea = new LayoutArea(area.GetPageNumber(), layoutBox.Clone());
                                     // Fix layout area
                                     Border widestRowTopBorder = bordersHandler.GetWidestHorizontalBorder(rowRange.GetStartRow() + row);
@@ -628,7 +633,11 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.rowRange = new Table.RowRange(0, rows.Count - row - 1);
                                     overflowRenderer.ProcessRendererBorders(numberOfColumns);
                                     PrepareFooterOrHeaderRendererForLayout(overflowRenderer, layoutBox.GetWidth());
-                                    if (LayoutResult.FULL == overflowRenderer.Layout(new LayoutContext(potentialArea)).GetStatus()) {
+                                    //                                this.saveCellsProperties();
+                                    LayoutResult res = overflowRenderer.Layout(new LayoutContext(potentialArea));
+                                    //                                this.restoreCellsProperties();
+                                    //                                currentRow[col] = (CellRenderer) cellResult.getSplitRenderer();
+                                    if (LayoutResult.FULL == res.GetStatus()) {
                                         footerRenderer = null;
                                         // fix layout area and table bottom border
                                         layoutBox.IncreaseHeight(footerHeight).MoveDown(footerHeight);
@@ -948,7 +957,13 @@ namespace iText.Layout.Renderer {
                             }
                         }
                     }
-                    //bordersHandler.updateTopBorder(lastFlushedRowBottomBorder, new boolean[numberOfColumns]); // FIXME LARGE TABLE
+                    else {
+                        //bordersHandler.updateTopBorder(lastFlushedRowBottomBorder, new boolean[numberOfColumns]); // FIXME LARGE TABLE
+                        if (0 == this.childRenderers.Count) {
+                            occupiedArea.GetBBox().MoveUp(topBorderMaxWidth / 2).DecreaseHeight(topBorderMaxWidth / 2);
+                            layoutBox.IncreaseHeight(topBorderMaxWidth / 2);
+                        }
+                    }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA)) || true.Equals(GetPropertyAsBoolean(Property
                         .FILL_AVAILABLE_AREA_ON_SPLIT))) {
                         ExtendLastRow(currentRow, layoutBox);
@@ -1012,12 +1027,8 @@ namespace iText.Layout.Renderer {
                             if (HasProperty(Property.MAX_HEIGHT)) {
                                 splitResult[1].SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight());
                             }
-                            if (status != LayoutResult.NOTHING) {
-                                return new LayoutResult(status, occupiedArea, splitResult[0], splitResult[1], null);
-                            }
-                            else {
-                                return new LayoutResult(status, null, splitResult[0], splitResult[1], firstCauseOfNothing);
-                            }
+                            return new LayoutResult(status, status != LayoutResult.NOTHING ? occupiedArea : null, splitResult[0], splitResult
+                                [1], null == firstCauseOfNothing ? this : firstCauseOfNothing);
                         }
                     }
                 }

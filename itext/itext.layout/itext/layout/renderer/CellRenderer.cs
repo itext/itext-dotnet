@@ -94,6 +94,7 @@ namespace iText.Layout.Renderer {
             overflowRenderer.parent = parent;
             overflowRenderer.modelElement = modelElement;
             overflowRenderer.AddAllProperties(GetOwnProperties());
+            overflowRenderer.oldProperties.AddAll(oldProperties);
             return overflowRenderer;
         }
 
