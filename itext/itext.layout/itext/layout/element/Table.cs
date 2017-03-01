@@ -215,7 +215,7 @@ namespace iText.Layout.Element {
         }
 
         public virtual iText.Layout.Element.Table SetAutoLayout() {
-            SetProperty(Property.TABLE_LAYOUT, "fixed");
+            SetProperty(Property.TABLE_LAYOUT, "auto");
             return this;
         }
 

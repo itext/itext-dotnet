@@ -302,9 +302,11 @@ namespace iText.Layout.Renderer {
         private void UpdateCurrentAreaAndProcessRenderer(IRenderer renderer, IList<IRenderer> resultRenderers, LayoutResult
              result) {
             if (currentArea != null) {
-                currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - result.GetOccupiedArea().GetBBox().GetHeight
-                    ());
-                currentArea.SetEmptyArea(false);
+                float resultHeight = result.GetOccupiedArea().GetBBox().GetHeight();
+                currentArea.GetBBox().SetHeight(currentArea.GetBBox().GetHeight() - resultHeight);
+                if (currentArea.IsEmptyArea() && resultHeight > 0) {
+                    currentArea.SetEmptyArea(false);
+                }
                 ProcessRenderer(renderer, resultRenderers);
             }
             if (!immediateFlush) {

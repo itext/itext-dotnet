@@ -46,8 +46,6 @@ using iText.Kernel;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Layout.Element;
-using iText.Layout.Font;
-using iText.Layout.Properties;
 using iText.Layout.Renderer;
 
 namespace iText.Layout {
@@ -294,39 +292,6 @@ namespace iText.Layout {
         public virtual Rectangle GetPageEffectiveArea(PageSize pageSize) {
             return new Rectangle(pageSize.GetLeft() + leftMargin, pageSize.GetBottom() + bottomMargin, pageSize.GetWidth
                 () - leftMargin - rightMargin, pageSize.GetHeight() - bottomMargin - topMargin);
-        }
-
-        /// <summary>
-        /// Gets
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// if presents.
-        /// </summary>
-        /// <returns>
-        /// instance of
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// if exists, otherwise null.
-        /// </returns>
-        public virtual FontProvider GetFontProvider() {
-            Object fontProvider = this.GetProperty<Object>(Property.FONT_PROVIDER);
-            if (fontProvider is FontProvider) {
-                return (FontProvider)fontProvider;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Sets
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
-        /// Note, font provider is inherited property.
-        /// </summary>
-        /// <param name="fontProvider">
-        /// instance of
-        /// <see cref="iText.Layout.Font.FontProvider"/>
-        /// .
-        /// </param>
-        public virtual void SetFontProvider(FontProvider fontProvider) {
-            SetProperty(Property.FONT_PROVIDER, fontProvider);
         }
 
         protected internal override RootRenderer EnsureRootRendererNotNull() {

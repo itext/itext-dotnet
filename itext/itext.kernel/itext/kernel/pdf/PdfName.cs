@@ -1438,6 +1438,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Table = CreateDirectName("Table");
 
+        public static readonly iText.Kernel.Pdf.PdfName Tabs = CreateDirectName("Tabs");
+
         public static readonly iText.Kernel.Pdf.PdfName TBody = CreateDirectName("TBody");
 
         public static readonly iText.Kernel.Pdf.PdfName TD = CreateDirectName("TD");

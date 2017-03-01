@@ -627,7 +627,7 @@ namespace iText.Layout.Renderer {
         //We assume that the area of block stays the same when we try to layout it
         //with different available width (available width is between min-width and max-width).
         internal virtual MinMaxWidth CountRotationMinMaxWidth(MinMaxWidth minMaxWidth) {
-            float? rotation = GetPropertyAsFloat(Property.ROTATION_ANGLE);
+            float? rotation = this.GetPropertyAsFloat(Property.ROTATION_ANGLE);
             if (rotation != null) {
                 bool restoreRendererRotation = HasOwnProperty(Property.ROTATION_ANGLE);
                 SetProperty(Property.ROTATION_ANGLE, null);

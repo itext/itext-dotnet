@@ -295,7 +295,6 @@ namespace iText.Layout.Renderer {
         public virtual void SimpleTableTest() {
             String outFileName = destinationFolder + "simpleTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_simpleTableTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Cell cell1 = new Cell().Add("I am table").SetBorder(new SolidBorder(Color.RED, 60)).SetBorderBottom(Border
                 .NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
@@ -325,7 +324,6 @@ namespace iText.Layout.Renderer {
         public virtual void ColspanTableTest() {
             String outFileName = destinationFolder + "colspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanTableTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Cell bigCell = new Cell(1, 2).Add("I am veryveryvery big cell").SetBorder(new SolidBorder(Color.RED, 60)).
                 SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
@@ -357,7 +355,6 @@ namespace iText.Layout.Renderer {
         public virtual void ColspanRowspanTableTest() {
             String outFileName = destinationFolder + "colspanRowspanTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_colspanRowspanTableTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Cell colspanCell = new Cell(1, 2).Add("I am veryveryvery big cell").SetBorder(new SolidBorder(Color.RED, 60
                 )).SetBorderBottom(Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
@@ -391,7 +388,6 @@ namespace iText.Layout.Renderer {
         public virtual void HeaderFooterTableTest() {
             String outFileName = destinationFolder + "headerFooterTableTest.pdf";
             String cmpFileName = sourceFolder + "cmp_headerFooterTableTest.pdf";
-            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(new PdfDocument(new PdfWriter(outFileName)));
             Cell bigCell = new Cell().Add("veryveryveryvery big cell").SetBorder(new SolidBorder(Color.RED, 40)).SetBorderBottom
                 (Border.NO_BORDER).SetBorderTop(Border.NO_BORDER).SetPadding(0);
@@ -423,7 +419,7 @@ namespace iText.Layout.Renderer {
                 , "diff"));
         }
 
-        private static float ToEffectiveWidth(BlockElement b, float fullWidth) {
+        private static float ToEffectiveWidth(IBlockElement b, float fullWidth) {
             if (b is Table) {
                 return fullWidth + ((Table)b).GetNumberOfColumns() * MinMaxWidthUtils.GetEps();
             }
@@ -434,9 +430,9 @@ namespace iText.Layout.Renderer {
         }
 
         private static float[] ToEffectiveTableColumnWidth(float[] tableColumnWidth) {
-            float[] result = tableColumnWidth.Clone();
+            float[] result = new float[tableColumnWidth.Length];
             for (int i = 0; i < result.Length; ++i) {
-                result[i] += MinMaxWidthUtils.GetEps();
+                result[i] = tableColumnWidth[i] + MinMaxWidthUtils.GetEps();
             }
             return result;
         }
