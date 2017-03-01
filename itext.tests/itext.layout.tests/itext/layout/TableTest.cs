@@ -755,12 +755,9 @@ namespace iText.Layout {
             String longTextContent = "1. " + textContent + "2. " + textContent + "3. " + textContent + "4. " + textContent
                  + "5. " + textContent + "6. " + textContent + "7. " + textContent + "8. " + textContent + "9. " + textContent;
             Table table = new Table(new float[] { 250, 250 }).AddCell(new Cell().Add(new Paragraph("cell 1, 1\n" + textContent
-                ))).AddCell(new Cell(6, 1).Add(new Paragraph("cell 1, 1 and 2\n" + longTextContent))).AddCell(new Cell
+                ))).AddCell(new Cell(2, 1).Add(new Paragraph("cell 1, 1 and 2\n" + longTextContent))).AddCell(new Cell
                 ().Add(new Paragraph("cell 2, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 1\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 4, 1\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 5, 1\n" + textContent))).AddCell(new Cell().Add(new Paragraph("cell 6, 1\n"
-                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 7, 1\n" + textContent))).AddCell(new Cell
-                ().Add(new Paragraph("cell 7, 2\n" + textContent)));
+                 + textContent))).AddCell(new Cell().Add(new Paragraph("cell 3, 2\n" + textContent)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
@@ -899,6 +896,32 @@ namespace iText.Layout {
             cell.Add(p);
             table.AddCell(cell);
             doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SimpleNestedTablesTest01() {
+            String testName = "simpleNestedTablesTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Cell cell;
+            Table outertable = new Table(1);
+            Table innertable = new Table(1);
+            cell = new Cell().Add("I'm a cell in an inner table.");
+            cell.SetBorder(Border.NO_BORDER);
+            innertable.AddCell(cell);
+            cell = new Cell().Add(innertable);
+            outertable.AddCell(cell);
+            //        cell = new Cell().add("I'm a cell in a outer table.");
+            //        outertable.addCell(cell);
+            // add the table
+            doc.Add(outertable);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));
@@ -1185,25 +1208,19 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            //        doc.add(new Table(1)
-            //                .addCell(new Cell().setPadding(0).setMargin(0).setBorder(Border.NO_BORDER))
-            //                .addCell(new Cell().setPadding(0).setMargin(0).setBorder(Border.NO_BORDER))
-            //                .addCell(new Cell().setPadding(0).setMargin(0).setBorder(Border.NO_BORDER))
-            //                .addCell(new Cell().setPadding(0).setMargin(0).setBorder(Border.NO_BORDER))
-            //                .addCell(new Cell().add("Hello"))
-            //        );
-            //        doc.add(new Table(1).setBorder(new SolidBorder(Color.ORANGE, 2)).addCell("Is my occupied area correct?"));
-            //        doc.add(new AreaBreak());
-            //
-            //
+            doc.Add(new Table(1).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new 
+                Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin
+                (0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER
+                )).AddCell(new Cell().Add("Hello")));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
             doc.Add(new Table(1).SetBorderTop(new SolidBorder(Color.ORANGE, 50)).SetBorderBottom(new SolidBorder(Color
                 .MAGENTA, 100)));
-            //        doc.add(new Table(1).setBorder(new SolidBorder(Color.ORANGE, 2)).addCell("Is my occupied area correct?"));
-            //        doc.add(new AreaBreak());
-            //
-            //        doc.add(new Table(1).setMinHeight(300).setBorderRight(new SolidBorder(Color.ORANGE, 5)).setBorderTop(new SolidBorder(100)).setBorderBottom(new SolidBorder(Color.BLUE, 50)));
-            //        doc.add(new Table(1).setBorder(new SolidBorder(Color.ORANGE, 2)).addCell("Is my occupied area correct?"));
-            //
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
+            doc.Add(new Table(1).SetMinHeight(300).SetBorderRight(new SolidBorder(Color.ORANGE, 5)).SetBorderTop(new SolidBorder
+                (100)).SetBorderBottom(new SolidBorder(Color.BLUE, 50)));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , testName + "_diff"));

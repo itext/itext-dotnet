@@ -614,6 +614,32 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CLIP_ELEMENT, Count = 2)]
+        public virtual void ImageInTableTest03() {
+            String outFileName = destinationFolder + "imageInTableTest03.pdf";
+            String cmpFileName = sourceFolder + "cmp_imageInTableTest03.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDoc);
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + "Desert.jpg"
+                ));
+            Table table = new Table(1).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            table.SetMaxHeight(800);
+            table.SetBorder(new SolidBorder(Color.BLUE, 10));
+            for (int i = 0; i < 31; i++) {
+                table.AddCell("Cell" + i);
+            }
+            Cell c = new Cell().Add(img.SetHeight(500));
+            table.AddCell(c);
+            document.Add(table);
+            document.Add(new Table(1).AddCell("Is my occupied area right?"));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [NUnit.Framework.Ignore("DEVSIX-1045")]
         public virtual void FixedPositionImageTest01() {
             String outFileName = destinationFolder + "fixedPositionImageTest01.pdf";
