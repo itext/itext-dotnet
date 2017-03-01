@@ -785,6 +785,33 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void BigRowspanTest07() {
+            String testName = "bigRowspanTest07.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(2);
+            for (int i = 0; i < 100; i++) {
+                Cell cell = new Cell();
+                cell.Add("Cell " + i);
+                Cell cell2 = new Cell(2, 1);
+                cell2.Add("Cell with Rowspan");
+                Cell cell3 = new Cell();
+                cell3.Add("Cell " + i + ".2");
+                table.AddCell(cell);
+                table.AddCell(cell2);
+                table.AddCell(cell3);
+            }
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void DifferentPageOrientationTest01() {
             String testName = "differentPageOrientationTest01.pdf";
             String outFileName = destinationFolder + testName;
