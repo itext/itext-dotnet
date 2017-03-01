@@ -972,7 +972,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
-        public virtual void TableWithHeaderFooter03() {
+        public virtual void TableWithHeaderFooterTest03() {
             fileName = "tableWithHeaderFooterTest03.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
@@ -992,7 +992,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TableWithHeaderFooter04() {
+        public virtual void TableWithHeaderFooterTest04() {
             fileName = "tableWithHeaderFooterTest04.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);
@@ -1007,7 +1007,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void TableWithHeaderFooter05() {
+        public virtual void TableWithHeaderFooterTest05() {
             fileName = "tableWithHeaderFooterTest05.pdf";
             Document doc = CreateDocument();
             Table table = new Table(1);

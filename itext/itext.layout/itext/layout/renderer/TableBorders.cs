@@ -207,21 +207,21 @@ namespace iText.Layout.Renderer {
             IList<Border> topHorizontalBorders = new List<Border>();
             IList<Border> bottomHorizontalBorders = new List<Border>();
             if (null != lastFlushedBorder && 0 != lastFlushedBorder.Count) {
-                bottomHorizontalBorders = lastFlushedBorder;
+                topHorizontalBorders = lastFlushedBorder;
             }
             else {
                 for (int i = 0; i < numberOfColumns; i++) {
-                    bottomHorizontalBorders.Add(Border.NO_BORDER);
+                    topHorizontalBorders.Add(Border.NO_BORDER);
                 }
             }
             // collapse with table bottom border
-            for (int i = 0; i < bottomHorizontalBorders.Count; i++) {
-                Border border = bottomHorizontalBorders[i];
-                if (null == border || (null != tableBoundingBorders[2] && border.GetWidth() < tableBoundingBorders[2].GetWidth
+            for (int i = 0; i < topHorizontalBorders.Count; i++) {
+                Border border = topHorizontalBorders[i];
+                if (null == border || (null != tableBoundingBorders[0] && border.GetWidth() < tableBoundingBorders[0].GetWidth
                     ())) {
-                    bottomHorizontalBorders[i] = tableBoundingBorders[2];
+                    topHorizontalBorders[i] = tableBoundingBorders[0];
                 }
-                topHorizontalBorders.Add(tableBoundingBorders[0]);
+                bottomHorizontalBorders.Add(tableBoundingBorders[2]);
             }
             // TODO Think about initialization and building border arrays
             horizontalBorders[horizontalBordersIndexOffset] = topHorizontalBorders;
