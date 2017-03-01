@@ -25,7 +25,6 @@ namespace iText.Layout.Renderer {
         protected internal float rightBorderMaxWidth;
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
-            // TODO Maybe Table ?
             this.rows = rows;
             this.numberOfColumns = numberOfColumns;
             verticalBorders = new List<IList<Border>>();
@@ -38,10 +37,57 @@ namespace iText.Layout.Renderer {
             SetTableBoundingBorders(tableBoundingBorders);
         }
 
+        // region abstract
+        // region draw
+        protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(int i, float startX, float
+             y1, PdfCanvas canvas, float[] countedColumnWidth);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(int i, float startY, float
+             x1, PdfCanvas canvas, IList<float> heights);
+
+        // endregion
+        // region area occupation
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool isEmpty, bool isComplete, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool isEmpty, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
+             layoutBox, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderFooter(iText.Layout.Renderer.TableBorders
+             footerBordersHandler, bool hasContent);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderHeader(iText.Layout.Renderer.TableBorders
+             headerBordersHandler, bool changeThis);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderHeaderOccupiedArea(Rectangle occupiedBox
+            , Rectangle layoutBox);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyCellIndents(Rectangle box, float topIndent
+            , float rightIndent, float bottomIndent, float leftIndent, bool reverse);
+
+        // endregion
+        // region getters
+        public abstract IList<Border> GetVerticalBorder(int index);
+
+        public abstract IList<Border> GetHorizontalBorder(int index);
+
+        protected internal abstract float GetCellVerticalAddition(float[] indents);
+
+        // endregion
         protected internal abstract iText.Layout.Renderer.TableBorders UpdateOnNewPage(bool isOriginalNonSplitRenderer
             , bool isFooterOrHeader, TableRenderer currentRenderer, TableRenderer headerRenderer, TableRenderer footerRenderer
             );
 
+        // endregion
+        // region init
         protected internal virtual iText.Layout.Renderer.TableBorders InitializeBorders() {
             IList<Border> tempBorders;
             // initialize vertical borders
@@ -63,6 +109,8 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
+        // endregion
+        // region setters
         protected internal virtual iText.Layout.Renderer.TableBorders SetTableBoundingBorders(Border[] borders) {
             tableBoundingBorders = new Border[4];
             if (null != borders) {
@@ -86,11 +134,8 @@ namespace iText.Layout.Renderer {
             return SetRowRange(new Table.RowRange(rowRange.GetStartRow(), row));
         }
 
+        // endregion
         // region getters
-        public abstract IList<Border> GetVerticalBorder(int index);
-
-        public abstract IList<Border> GetHorizontalBorder(int index);
-
         public virtual float GetLeftBorderMaxWidth() {
             return leftBorderMaxWidth;
         }
@@ -152,19 +197,11 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual Border GetWidestHorizontalBorder(int row) {
-            Border theWidestBorder = null;
-            //        if (row >= 0 && row < horizontalBorders.size()) {
-            theWidestBorder = GetWidestBorder(GetHorizontalBorder(row));
-            //        }
-            return theWidestBorder;
+            return GetWidestBorder(GetHorizontalBorder(row));
         }
 
         public virtual Border GetWidestHorizontalBorder(int row, int start, int end) {
-            Border theWidestBorder = null;
-            //        if (row >= 0 && row < horizontalBorders.size()) {
-            theWidestBorder = GetWidestBorder(GetHorizontalBorder(row), start, end);
-            //        }
-            return theWidestBorder;
+            return GetWidestBorder(GetHorizontalBorder(row), start, end);
         }
 
         public virtual IList<Border> GetFirstHorizontalBorder() {
@@ -320,47 +357,6 @@ namespace iText.Layout.Renderer {
             ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
             return renderer.bordersHandler;
         }
-
-        // endregion
-        // region draw
-        protected internal abstract iText.Layout.Renderer.TableBorders DrawHorizontalBorder(int i, float startX, float
-             y1, PdfCanvas canvas, float[] countedColumnWidth);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders DrawVerticalBorder(int i, float startY, float
-             x1, PdfCanvas canvas, IList<float> heights);
-
-        // endregion
-        // region area occupation
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
-             layoutBox, bool isEmpty, bool isComplete, bool reverse);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
-             layoutBox, bool isEmpty, bool reverse);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyTopBorder(Rectangle occupiedBox, Rectangle
-             layoutBox, bool reverse);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
-             layoutBox, bool reverse);
-
-        //    abstract protected TableBorders applyLeftAndRightBorder(Rectangle occupiedArea, Rectangle layoutBox, boolean reverse) {
-        //
-        //    }
-        protected internal abstract iText.Layout.Renderer.TableBorders ApplyCellIndents(Rectangle box, float topIndent
-            , float rightIndent, float bottomIndent, float leftIndent, bool reverse);
-
-        protected internal abstract float GetCellVerticalAddition(float[] indents);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderFooter(iText.Layout.Renderer.TableBorders
-             footerBordersHandler, bool changeThis);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderHeader(iText.Layout.Renderer.TableBorders
-             headerBordersHandler, bool changeThis);
-
-        protected internal abstract iText.Layout.Renderer.TableBorders ConsiderHeaderOccupiedArea(Rectangle occupiedBox
-            , Rectangle layoutBox);
         // endregion
     }
 }
