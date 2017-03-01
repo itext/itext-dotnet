@@ -108,6 +108,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("")]
         public virtual void IncompleteTableTest01() {
             fileName = "incompleteTableTest01.pdf";
             Document doc = CreateDocument();
@@ -133,6 +134,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("")]
         public virtual void IncompleteTableTest02() {
             fileName = "incompleteTableTest02.pdf";
             Document doc = CreateDocument();
@@ -910,6 +912,27 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(textAlphabet + "4").SetBorder(new SolidBorder(Color.GREEN, 2)));
             table.AddCell(new Cell().Add(textAlphabet + "5"));
             table.AddCell(new Cell().Add(textAlphabet + "5"));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SplitCellsTest10() {
+            fileName = "splitCellsTest10.pdf";
+            Document doc = CreateDocument();
+            doc.GetPdfDocument().SetDefaultPageSize(new PageSize(130, 180));
+            String textAlphabet = "Cell";
+            Table table = new Table(3).SetWidth(UnitValue.CreatePercentValue(100)).SetFixedLayout();
+            table.AddCell(new Cell().Add(textAlphabet + "1").SetBackgroundColor(Color.YELLOW));
+            table.AddCell(new Cell(2, 1).Add(textAlphabet + "222222222").SetBackgroundColor(Color.YELLOW));
+            table.AddCell(new Cell().Add(textAlphabet + "3").SetBackgroundColor(Color.YELLOW));
+            table.AddCell(new Cell().SetBackgroundColor(Color.YELLOW).Add(new Paragraph(textAlphabet + "4")).SetKeepTogether
+                (true));
+            table.AddCell(new Cell().SetBackgroundColor(Color.YELLOW).Add(new Paragraph(textAlphabet + "5")).SetKeepTogether
+                (true));
+            table.SetBorderBottom(new SolidBorder(Color.BLUE, 1));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

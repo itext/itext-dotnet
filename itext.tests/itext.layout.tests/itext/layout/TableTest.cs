@@ -904,32 +904,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void SimpleNestedTablesTest01() {
-            String testName = "simpleNestedTablesTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc);
-            Cell cell;
-            Table outertable = new Table(1);
-            Table innertable = new Table(1);
-            cell = new Cell().Add("I'm a cell in an inner table.");
-            cell.SetBorder(Border.NO_BORDER);
-            innertable.AddCell(cell);
-            cell = new Cell().Add(innertable);
-            outertable.AddCell(cell);
-            //        cell = new Cell().add("I'm a cell in a outer table.");
-            //        outertable.addCell(cell);
-            // add the table
-            doc.Add(outertable);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , testName + "_diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
         public virtual void NestedTablesCollapseTest01() {
             String testName = "nestedTablesCollapseTest01.pdf";
             String outFileName = destinationFolder + testName;
@@ -1013,7 +987,7 @@ namespace iText.Layout {
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
             Table innerTable = new Table(1);
             for (int i = 0; i < 4; i++) {
-                innerTable.AddCell(new Cell().Add("He`llo" + i));
+                innerTable.AddCell(new Cell().Add("Hello" + i));
             }
             Table outerTable = new Table(1).AddCell(new Cell().Add(innerTable));
             outerTable.SetMarginTop(10);
@@ -1386,50 +1360,6 @@ namespace iText.Layout {
             table.AddCell(new Cell().Add(image));
             table.AddCell(new Cell().Add(gretzky));
             table.AddCell(new Cell().Add(gretzky));
-            doc.Add(table);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , testName + "_diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void SimpleHeaderFooterTableTest01() {
-            String testName = "simpleHeaderFooterTableTest01.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
-            String gretzky = "Make Gretzky great again!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
-            Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 15));
-            for (int i = 0; i < 10; i++) {
-                table.AddCell(new Cell().Add(gretzky));
-            }
-            table.AddHeaderCell(new Cell(1, 2).SetHeight(30).Add(gretzky).SetBorder(new SolidBorder(Color.RED, 0.5f)));
-            doc.Add(table);
-            doc.Close();
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
-                , testName + "_diff"));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        [NUnit.Framework.Test]
-        public virtual void SimpleHeaderFooterTableTest02() {
-            String testName = "simpleHeaderFooterTableTest02.pdf";
-            String outFileName = destinationFolder + testName;
-            String cmpFileName = sourceFolder + "cmp_" + testName;
-            String gretzky = "Make Gretzky great again!";
-            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
-            Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
-            Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 15));
-            for (int i = 0; i < 10; i++) {
-                table.AddCell(new Cell().Add(gretzky));
-            }
-            table.AddFooterCell(new Cell(1, 2).SetHeight(30).Add(gretzky).SetBorder(new SolidBorder(Color.RED, 0.5f)));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder

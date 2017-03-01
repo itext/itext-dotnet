@@ -8,33 +8,45 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public abstract class TableBorders {
-        protected internal IList<IList<Border>> horizontalBorders;
+        protected internal IList<IList<Border>> horizontalBorders = new List<IList<Border>>();
 
-        protected internal IList<IList<Border>> verticalBorders;
+        protected internal IList<IList<Border>> verticalBorders = new List<IList<Border>>();
 
         protected internal readonly int numberOfColumns;
 
-        protected internal Border[] tableBoundingBorders;
+        protected internal Border[] tableBoundingBorders = new Border[4];
 
         protected internal IList<CellRenderer[]> rows;
 
-        protected internal Table.RowRange rowRange;
+        protected internal int startRow;
+
+        protected internal int finishRow;
 
         protected internal float leftBorderMaxWidth;
 
         protected internal float rightBorderMaxWidth;
 
+        protected internal int largeTableIndexOffset = 0;
+
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             this.rows = rows;
             this.numberOfColumns = numberOfColumns;
-            verticalBorders = new List<IList<Border>>();
-            horizontalBorders = new List<IList<Border>>();
-            tableBoundingBorders = new Border[4];
         }
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders)
             : this(rows, numberOfColumns) {
             SetTableBoundingBorders(tableBoundingBorders);
+        }
+
+        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, int largeTableIndexOffset)
+            : this(rows, numberOfColumns) {
+            this.largeTableIndexOffset = largeTableIndexOffset;
+        }
+
+        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders, int largeTableIndexOffset
+            )
+            : this(rows, numberOfColumns, tableBoundingBorders) {
+            this.largeTableIndexOffset = largeTableIndexOffset;
         }
 
         // region abstract
@@ -58,6 +70,9 @@ namespace iText.Layout.Renderer {
 
         protected internal abstract iText.Layout.Renderer.TableBorders ApplyBottomBorder(Rectangle occupiedBox, Rectangle
              layoutBox, bool reverse);
+
+        protected internal abstract iText.Layout.Renderer.TableBorders ApplyLeftAndRightBorder(Rectangle layoutBox
+            , bool reverse);
 
         protected internal abstract iText.Layout.Renderer.TableBorders SkipFooter(Border[] borders);
 
@@ -93,13 +108,13 @@ namespace iText.Layout.Renderer {
             // initialize vertical borders
             while (numberOfColumns + 1 > verticalBorders.Count) {
                 tempBorders = new List<Border>();
-                while (Math.Max(rows.Count, 1) > tempBorders.Count) {
+                while ((int)Math.Max(rows.Count, 1) > tempBorders.Count) {
                     tempBorders.Add(null);
                 }
                 verticalBorders.Add(tempBorders);
             }
             // initialize horizontal borders
-            while (Math.Max(rows.Count, 1) + 1 > horizontalBorders.Count) {
+            while ((int)Math.Max(rows.Count, 1) + 1 > horizontalBorders.Count) {
                 tempBorders = new List<Border>();
                 while (numberOfColumns > tempBorders.Count) {
                     tempBorders.Add(null);
@@ -121,17 +136,20 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal virtual iText.Layout.Renderer.TableBorders SetRowRange(Table.RowRange rowRange) {
-            this.rowRange = rowRange;
+        protected internal virtual iText.Layout.Renderer.TableBorders SetRowRange(int startRow, int finishRow) {
+            this.startRow = startRow;
+            this.finishRow = finishRow;
             return this;
         }
 
         protected internal virtual iText.Layout.Renderer.TableBorders SetStartRow(int row) {
-            return SetRowRange(new Table.RowRange(row, rowRange.GetFinishRow()));
+            this.startRow = row;
+            return this;
         }
 
         protected internal virtual iText.Layout.Renderer.TableBorders SetFinishRow(int row) {
-            return SetRowRange(new Table.RowRange(rowRange.GetStartRow(), row));
+            this.finishRow = row;
+            return this;
         }
 
         // endregion
@@ -146,7 +164,7 @@ namespace iText.Layout.Renderer {
 
         public virtual float GetMaxTopWidth() {
             float width = 0;
-            Border widestBorder = GetWidestHorizontalBorder(rowRange.GetStartRow());
+            Border widestBorder = GetWidestHorizontalBorder(startRow);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
             }
@@ -155,7 +173,7 @@ namespace iText.Layout.Renderer {
 
         public virtual float GetMaxBottomWidth() {
             float width = 0;
-            Border widestBorder = GetWidestHorizontalBorder(rowRange.GetFinishRow() + 1);
+            Border widestBorder = GetWidestHorizontalBorder(finishRow + 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
             }
@@ -181,19 +199,11 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual Border GetWidestVerticalBorder(int col) {
-            Border theWidestBorder = null;
-            if (col >= 0 && col < verticalBorders.Count) {
-                theWidestBorder = GetWidestBorder(GetVerticalBorder(col));
-            }
-            return theWidestBorder;
+            return GetWidestBorder(GetVerticalBorder(col));
         }
 
         public virtual Border GetWidestVerticalBorder(int col, int start, int end) {
-            Border theWidestBorder = null;
-            if (col >= 0 && col < verticalBorders.Count) {
-                theWidestBorder = GetWidestBorder(GetVerticalBorder(col), start, end);
-            }
-            return theWidestBorder;
+            return GetWidestBorder(GetVerticalBorder(col), start, end);
         }
 
         public virtual Border GetWidestHorizontalBorder(int row) {
@@ -205,11 +215,11 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual IList<Border> GetFirstHorizontalBorder() {
-            return GetHorizontalBorder(rowRange.GetStartRow());
+            return GetHorizontalBorder(startRow);
         }
 
         public virtual IList<Border> GetLastHorizontalBorder() {
-            return GetHorizontalBorder(rowRange.GetFinishRow() + 1);
+            return GetHorizontalBorder(finishRow + 1);
         }
 
         public virtual IList<Border> GetFirstVerticalBorder() {
@@ -225,11 +235,11 @@ namespace iText.Layout.Renderer {
         }
 
         public virtual int GetStartRow() {
-            return rowRange.GetStartRow();
+            return startRow;
         }
 
         public virtual int GetFinishRow() {
-            return rowRange.GetFinishRow();
+            return finishRow;
         }
 
         public virtual Border[] GetTableBoundingBorders() {
@@ -249,7 +259,7 @@ namespace iText.Layout.Renderer {
             IList<Border> borderList;
             Border border;
             // process top border
-            borderList = GetHorizontalBorder(rowRange.GetStartRow() + row - rowspan + 1);
+            borderList = GetHorizontalBorder(startRow + row - rowspan + 1);
             for (int i = col; i < col + colspan; i++) {
                 border = borderList[i];
                 if (null != border && border.GetWidth() > indents[0]) {
@@ -258,14 +268,14 @@ namespace iText.Layout.Renderer {
             }
             // process right border
             borderList = GetVerticalBorder(col + colspan);
-            for (int i = rowRange.GetStartRow() + row - rowspan + 1; i < rowRange.GetStartRow() + row + 1; i++) {
+            for (int i = startRow + row - rowspan + 1; i < startRow + row + 1; i++) {
                 border = borderList[i];
                 if (null != border && border.GetWidth() > indents[1]) {
                     indents[1] = border.GetWidth();
                 }
             }
             // process bottom border
-            borderList = GetHorizontalBorder(rowRange.GetStartRow() + row + 1);
+            borderList = GetHorizontalBorder(startRow + row + 1);
             for (int i = col; i < col + colspan; i++) {
                 border = borderList[i];
                 if (null != border && border.GetWidth() > indents[2]) {
@@ -274,7 +284,7 @@ namespace iText.Layout.Renderer {
             }
             // process left border
             borderList = GetVerticalBorder(col);
-            for (int i = rowRange.GetStartRow() + row - rowspan + 1; i < rowRange.GetStartRow() + row + 1; i++) {
+            for (int i = startRow + row - rowspan + 1; i < startRow + row + 1; i++) {
                 border = borderList[i];
                 if (null != border && border.GetWidth() > indents[3]) {
                     indents[3] = border.GetWidth();
@@ -345,17 +355,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             return borderList;
-        }
-
-        protected internal static iText.Layout.Renderer.TableBorders ProcessRendererBorders(TableRenderer renderer
-            ) {
-            renderer.bordersHandler = new CollapsedTableBorders(renderer.rows, ((Table)renderer.GetModelElement()).GetNumberOfColumns
-                ());
-            renderer.bordersHandler.SetTableBoundingBorders(renderer.GetBorders());
-            renderer.bordersHandler.InitializeBorders();
-            renderer.bordersHandler.SetRowRange(renderer.rowRange);
-            ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
-            return renderer.bordersHandler;
         }
         // endregion
     }
