@@ -100,8 +100,8 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal virtual iText.Layout.Renderer.TableBorders ProcessSplit(int splitRow, bool hasContent, 
-            bool cellWithBigRowspanAdded) {
+        protected internal virtual iText.Layout.Renderer.TableBorders ProcessSplit(int splitRow, bool split, bool 
+            hasContent, bool cellWithBigRowspanAdded) {
             CellRenderer[] currentRow = rows[splitRow];
             CellRenderer[] lastRowOnCurrentPage = new CellRenderer[numberOfColumns];
             CellRenderer[] firstRowOnTheNextPage = new CellRenderer[numberOfColumns];
@@ -141,20 +141,36 @@ namespace iText.Layout.Renderer {
                 curPageIndex--;
                 nextPageIndex--;
             }
+            verticalBordersIndexOffset += splitRow;
+            splitRow += horizontalBordersIndexOffset;
             if (hasContent) {
-                AddNewBorder(splitRow + 1);
-                // the last row on current page
+                if (split) {
+                    AddNewHorizontalBorder(splitRow + 1);
+                    // the last row on current page
+                    AddNewVerticalBorder(verticalBordersIndexOffset);
+                    verticalBordersIndexOffset++;
+                }
                 splitRow++;
             }
-            AddNewBorder(splitRow + 1);
+            if (split) {
+                AddNewHorizontalBorder(splitRow + 1);
+            }
             // the first row on the next page
-            splitRow += horizontalBordersIndexOffset;
+            // here splitRow is the last horizontal border index on current page
+            // and splitRow + 1 is the first horizontal border index on the next page
             IList<Border> lastBorderOnCurrentPage = horizontalBorders[splitRow];
             for (int col = 0; col < numberOfColumns; col++) {
                 CellRenderer cell = lastRowOnCurrentPage[col];
                 Border cellModelBottomBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER_BOTTOM);
                 if (null == cellModelBottomBorder) {
                     cellModelBottomBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER);
+                    if (null == cellModelBottomBorder) {
+                        cellModelBottomBorder = ((Cell)cell.GetModelElement()).GetDefaultProperty(Property.BORDER_BOTTOM);
+                        // TODO
+                        if (null == cellModelBottomBorder) {
+                            cellModelBottomBorder = ((Cell)cell.GetModelElement()).GetDefaultProperty(Property.BORDER);
+                        }
+                    }
                 }
                 Border cellCollapsedBottomBorder = GetCollapsedBorder(cellModelBottomBorder, tableBoundingBorders[2]);
                 // fix the last border on the page
@@ -170,6 +186,13 @@ namespace iText.Layout.Renderer {
                     Border cellModelTopBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER_TOP);
                     if (null == cellModelTopBorder) {
                         cellModelTopBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER);
+                        if (null == cellModelTopBorder) {
+                            cellModelTopBorder = ((Cell)cell.GetModelElement()).GetDefaultProperty(Property.BORDER_BOTTOM);
+                            // TODO
+                            if (null == cellModelTopBorder) {
+                                cellModelTopBorder = ((Cell)cell.GetModelElement()).GetDefaultProperty(Property.BORDER);
+                            }
+                        }
                     }
                     Border cellCollapsedTopBorder = GetCollapsedBorder(cellModelTopBorder, tableBoundingBorders[0]);
                     // fix the last border on the page
@@ -595,8 +618,16 @@ namespace iText.Layout.Renderer {
         }
 
         // TODO
-        protected internal virtual iText.Layout.Renderer.TableBorders AddNewBorder(int row) {
-            horizontalBorders.Add(row, (IList<Border>)((List<Border>)horizontalBorders[row]).Clone());
+        protected internal virtual iText.Layout.Renderer.TableBorders AddNewHorizontalBorder(int index) {
+            horizontalBorders.Add(index, (IList<Border>)((List<Border>)horizontalBorders[index]).Clone());
+            return this;
+        }
+
+        // TODO
+        protected internal virtual iText.Layout.Renderer.TableBorders AddNewVerticalBorder(int index) {
+            for (int i = 0; i < numberOfColumns + 1; i++) {
+                verticalBorders[i].Add(index, verticalBorders[i][index]);
+            }
             return this;
         }
 

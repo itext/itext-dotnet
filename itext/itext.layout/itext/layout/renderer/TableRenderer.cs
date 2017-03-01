@@ -174,23 +174,21 @@ namespace iText.Layout.Renderer {
         }
 
         private void CollapseAllBorders() {
+            // TODO
+            Border[] tableBorder = GetBorders();
+            int numberOfColumns = GetTable().GetNumberOfColumns();
+            // collapse all cell borders
+            if (null != rows && !isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
+                UpdateFirstRowBorders(numberOfColumns);
+            }
+            //
+            if (isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer()) {
+                rightBorderMaxWidth = bordersHandler.GetMaxRightWidth(tableBorder[1]);
+                leftBorderMaxWidth = bordersHandler.GetMaxLeftWidth(tableBorder[3]);
+            }
         }
 
-        // TODO
-        //        Border[] tableBorder = getBorders();
-        //        int numberOfColumns = getTable().getNumberOfColumns();
-        //        // collapse all cell borders
-        //        if (null != rows && isOriginalNonSplitRenderer && !isFooterRenderer() && !isHeaderRenderer()) {
-        //            collapseAllBordersAndEmptyRows(tableBorder, 0, rows.size() - 1, numberOfColumns);
-        //        } else {
-        //            updateFirstRowBorders(numberOfColumns);
-        //        }
-        //
-        //        if (isOriginalNonSplitRenderer && !isFooterRenderer() && !isHeaderRenderer()) {
-        //            rightBorderMaxWidth = getMaxRightWidth(tableBorder[1]);
-        //            leftBorderMaxWidth = getMaxLeftWidth(tableBorder[3]);
-        //        }
-        //
+        // TODO process header / footer
         //        if (footerRenderer != null) {
         //            footerRenderer.processRendererBorders(numberOfColumns);
         //            float rightFooterBorderWidth = footerRenderer.getMaxRightWidth(footerRenderer.getBorders()[1]);
@@ -211,6 +209,73 @@ namespace iText.Layout.Renderer {
         //                leftBorderMaxWidth = Math.max(leftBorderMaxWidth, leftHeaderBorderWidth);
         //                rightBorderMaxWidth = Math.max(rightBorderMaxWidth, rightHeaderBorderWidth);
         //            }
+        //        }
+        // important to invoke on each new page
+        private void UpdateFirstRowBorders(int colN) {
+            int col = 0;
+            int row = 0;
+            while (col < colN) {
+                if (null != rows[row][col]) {
+                    // we may have deleted collapsed border property trying to process the row as last on the page
+                    Border collapsedBottomBorder = null;
+                    int colspan = (int)rows[row][col].GetPropertyAsInteger(Property.COLSPAN);
+                    for (int i = col; i < col + colspan; i++) {
+                        collapsedBottomBorder = TableBorders.GetCollapsedBorder(collapsedBottomBorder, bordersHandler.horizontalBorders
+                            [horizontalBordersIndexOffset + row + 1][i]);
+                    }
+                    rows[row][col].SetBorders(collapsedBottomBorder, 2);
+                    col += colspan;
+                    row = 0;
+                }
+                else {
+                    row++;
+                    if (row == rows.Count) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        // collapse with table border or header bottom borders
+        protected internal virtual void CorrectFirstRowTopBorders(Border tableBorder, int colN) {
+            int row = 0;
+            IList<Border> bordersToBeCollapsedWith = null != headerRenderer ? headerRenderer.bordersHandler.horizontalBorders
+                [headerRenderer.bordersHandler.horizontalBorders.Count - 1] : new List<Border>();
+            if (null == headerRenderer) {
+                for (int col = 0; col < colN; col++) {
+                    bordersToBeCollapsedWith.Add(tableBorder);
+                }
+            }
+            int col_1 = 0;
+            while (col_1 < colN) {
+                if (null != rows[row][col_1] && row + 1 == (int)rows[row][col_1].GetPropertyAsInteger(Property.ROWSPAN)) {
+                    Border oldTopBorder = rows[row][col_1].GetBorders()[0];
+                    Border resultCellTopBorder = null;
+                    Border collapsedBorder = null;
+                    int colspan = (int)rows[row][col_1].GetPropertyAsInteger(Property.COLSPAN);
+                    for (int i = col_1; i < col_1 + colspan; i++) {
+                        collapsedBorder = TableBorders.GetCollapsedBorder(oldTopBorder, bordersToBeCollapsedWith[i]);
+                        if (null == resultCellTopBorder || (null != collapsedBorder && resultCellTopBorder.GetWidth() < collapsedBorder
+                            .GetWidth())) {
+                            resultCellTopBorder = collapsedBorder;
+                        }
+                    }
+                    rows[row][col_1].SetBorders(resultCellTopBorder, 0);
+                    col_1 += colspan;
+                    row = 0;
+                }
+                else {
+                    row++;
+                    if (row == rows.Count) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        // TODO
+        //        if (null != headerRenderer) {
+        //            headerRenderer.bordersHandler.horizontalBorders.set(headerRenderer.bordersHandler.horizontalBorders.size() - 1, topBorders);
         //        }
         private bool IsOriginalRenderer() {
             return isOriginalNonSplitRenderer && !IsFooterRenderer() && !IsHeaderRenderer();
@@ -282,7 +347,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
-            //collapseAllBorders();
+            CollapseAllBorders();
             if (IsOriginalRenderer()) {
                 CalculateColumnWidths(layoutBox.GetWidth(), false);
             }
@@ -360,11 +425,10 @@ namespace iText.Layout.Renderer {
                 }
             }
             Border[] borders = GetBorders();
+            if (null != rows && 0 != rows.Count) {
+                CorrectFirstRowTopBorders(borders[0], numberOfColumns);
+            }
             float bottomTableBorderWidth = null == borders[2] ? 0 : borders[2].GetWidth();
-            // TODO
-            //        if (null != rows && 0 != rows.size()) {
-            //            bordersHandler.correctFirstRowTopBorders(borders[0], numberOfColumns);
-            //        }
             if (IsOriginalRenderer()) {
                 bordersHandler.UpdateTopBorder();
             }
@@ -652,19 +716,14 @@ namespace iText.Layout.Renderer {
                     borders = GetBorders();
                 }
                 if (split || processAsLast || row == rows.Count - 1) {
-                    //if (split) {
-                    horizontalBordersIndexOffset = bordersHandler.GetCurrentHorizontalBordersIndexOffset();
-                    verticalBordersIndexOffset = bordersHandler.GetCurrentVerticalBordersIndexOffset();
-                    //                    bordersHandler.updateTopBorder();
-                    bordersHandler.ProcessSplit(row, hasContent, cellWithBigRowspanAdded);
-                    //}
+                    if (hasContent || 0 != row) {
+                        horizontalBordersIndexOffset = bordersHandler.GetCurrentHorizontalBordersIndexOffset();
+                        verticalBordersIndexOffset = bordersHandler.GetCurrentVerticalBordersIndexOffset();
+                        bordersHandler.ProcessSplit(row, split, hasContent, cellWithBigRowspanAdded);
+                    }
                     // Correct layout area of the last row rendered on the page
                     if (heights.Count != 0) {
                         rowHeight = 0;
-                        // TODO
-                        //                    if (split && (hasContent)) {
-                        //                        bordersHandler.addNewBorder(row + 1);
-                        //                    }
                         for (col = 0; col < currentRow.Length; col++) {
                             if (hasContent || (cellWithBigRowspanAdded && null == rows[row - 1][col])) {
                                 if (null != currentRow[col]) {
@@ -1313,27 +1372,9 @@ namespace iText.Layout.Renderer {
             iText.Layout.Renderer.TableRenderer splitRenderer = CreateSplitRenderer(new Table.RowRange(rowRange.GetStartRow
                 (), rowRange.GetStartRow() + row));
             splitRenderer.rows = rows.SubList(0, row);
-            int rowN = row;
-            if (hasContent) {
-                rowN++;
-            }
             splitRenderer.bordersHandler = bordersHandler;
-            // TODO set rowrange or something
-            //        splitRenderer.horizontalBorders = new ArrayList<>();
-            //        //splitRenderer.horizontalBorders.addAll(horizontalBorders);
-            //        for (int i = 0; i <= rowN; i++) {
-            //            splitRenderer.horizontalBorders.add(horizontalBorders.get(i));
-            //        }
-            //        splitRenderer.verticalBorders = new ArrayList<>();
-            //        //splitRenderer.verticalBorders.addAll(verticalBorders);
-            //        for (int i = 0; i < verticalBorders.size(); i++) {
-            //            splitRenderer.verticalBorders.add(new ArrayList<Border>());
-            //            for (int j = 0; j < ((0 == rowN) ? 1 : rowN); j++) {
-            //                if (verticalBorders.get(i).size() != 0) {
-            //                    splitRenderer.verticalBorders.get(i).add(verticalBorders.get(i).get(j));
-            //                }
-            //            }
-            //        }
+            splitRenderer.horizontalBordersIndexOffset = horizontalBordersIndexOffset;
+            splitRenderer.verticalBordersIndexOffset = verticalBordersIndexOffset;
             splitRenderer.heights = heights;
             splitRenderer.columnWidths = columnWidths;
             splitRenderer.countedColumnWidth = countedColumnWidth;
@@ -1345,24 +1386,9 @@ namespace iText.Layout.Renderer {
             }
             overflowRenderer.rows = rows.SubList(row, rows.Count);
             splitRenderer.occupiedArea = occupiedArea;
-            // TODO set rowrange or something
-            //        overflowRenderer.horizontalBorders = new ArrayList<>();
-            //        //splitRenderer.horizontalBorders.addAll(horizontalBorders);
-            //        for (int i = rowN; i < horizontalBorders.size(); i++) {
-            //            //TODO
-            //            overflowRenderer.horizontalBorders.add((List<Border>) ((ArrayList<Border>) horizontalBorders.get(i)).clone());
-            //        }
-            //        overflowRenderer.verticalBorders = new ArrayList<>();
-            //        //splitRenderer.verticalBorders.addAll(verticalBorders);
-            //        for (int i = 0; i < verticalBorders.size(); i++) {
-            //            overflowRenderer.verticalBorders.add(new ArrayList<Border>());
-            //            for (int j = row; j < verticalBorders.get(i).size(); j++) {
-            //                if (verticalBorders.get(i).size() != 0) {
-            //                    overflowRenderer.verticalBorders.get(i).add(verticalBorders.get(i).get(j));
-            //                }
-            //            }
-            //        }
             overflowRenderer.bordersHandler = bordersHandler;
+            overflowRenderer.horizontalBordersIndexOffset = bordersHandler.horizontalBordersIndexOffset;
+            overflowRenderer.verticalBordersIndexOffset = bordersHandler.verticalBordersIndexOffset;
             return new iText.Layout.Renderer.TableRenderer[] { splitRenderer, overflowRenderer };
         }
 
@@ -1602,12 +1628,16 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 drawContext.GetCanvas().OpenTag(new CanvasArtifact());
             }
+            // Draw bounding borders. Vertical borders are the last to draw in order to collapse with header / footer
+            if (drawTop) {
+                DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas());
+            }
             float y1 = startY;
             if (heights.Count > 0) {
                 y1 -= (float)heights[0];
             }
             for (int i = 1; i < heights.Count; i++) {
-                DrawHorizontalBorder(horizontalBordersIndexOffset + i, startX, y1, drawContext.GetCanvas());
+                DrawHorizontalBorder(i, startX, y1, drawContext.GetCanvas());
                 if (i < heights.Count) {
                     y1 -= (float)heights[i];
                 }
@@ -1617,7 +1647,7 @@ namespace iText.Layout.Renderer {
                 x1 += countedColumnWidth[0];
             }
             for (int i = 1; i < bordersHandler.numberOfColumns; i++) {
-                DrawVerticalBorder(verticalBordersIndexOffset + i, startY, x1, drawContext.GetCanvas());
+                DrawVerticalBorder(i, startY, x1, drawContext.GetCanvas());
                 if (i < countedColumnWidth.Length) {
                     x1 += countedColumnWidth[i];
                 }
