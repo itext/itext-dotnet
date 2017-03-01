@@ -276,10 +276,6 @@ namespace iText.Layout.Renderer {
                     }
                 }
             }
-            // TODO add collapse method !!!
-            if (null != headerRenderer) {
-                headerRenderer.bordersHandler.UpdateBottomBorder(bordersHandler.horizontalBorders[0], new bool[colN]);
-            }
         }
 
         protected internal virtual bool[] CollapseFooterBorders(IList<Border> tableBottomBorders, int colNum, int 
@@ -454,11 +450,9 @@ namespace iText.Layout.Renderer {
             Border[] borders = GetBorders();
             if (null != rows && 0 != rows.Count) {
                 CorrectFirstRowTopBorders(borders[0], numberOfColumns);
+                bordersHandler.CorrectTopBorder(null == headerRenderer ? null : headerRenderer.bordersHandler);
             }
             float bottomTableBorderWidth = null == borders[2] ? 0 : borders[2].GetWidth();
-            if (isOriginalNonSplitRenderer) {
-                bordersHandler.CorrectTopBorder();
-            }
             topTableBorderWidth = bordersHandler.GetMaxTopWidth(borders[0]);
             // Apply halves of the borders. The other halves are applied on a Cell level
             layoutBox.ApplyMargins<Rectangle>(0, rightBorderMaxWidth / 2, 0, leftBorderMaxWidth / 2, false);

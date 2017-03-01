@@ -86,16 +86,26 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal virtual iText.Layout.Renderer.TableBorders CorrectTopBorder() {
-            // TODO update with header
-            // TODO Update cell properties
-            IList<Border> topBorders = horizontalBorders[horizontalBordersIndexOffset];
-            Border topTableBorder = tableBoundingBorders[0];
-            for (int col = 0; col < numberOfColumns; col++) {
-                if (null == topBorders[col] || (null != topTableBorder && topBorders[col].GetWidth() < topTableBorder.GetWidth
-                    ())) {
-                    topBorders[col] = topTableBorder;
+        protected internal virtual iText.Layout.Renderer.TableBorders CorrectTopBorder(iText.Layout.Renderer.TableBorders
+             headerTableBorders) {
+            IList<Border> topBorders;
+            if (null != headerTableBorders) {
+                topBorders = headerTableBorders.horizontalBorders[headerTableBorders.horizontalBorders.Count - 1];
+            }
+            else {
+                topBorders = new List<Border>();
+                for (int col = 0; col < numberOfColumns; col++) {
+                    topBorders.Add(tableBoundingBorders[0]);
                 }
+            }
+            for (int col = 0; col < numberOfColumns; col++) {
+                topBorders[col] = GetCollapsedBorder(horizontalBorders[horizontalBordersIndexOffset][col], topBorders[col]
+                    );
+            }
+            UpdateTopBorder(topBorders, new bool[numberOfColumns]);
+            if (null != headerTableBorders) {
+                headerTableBorders.UpdateBottomBorder(horizontalBorders[horizontalBordersIndexOffset], new bool[numberOfColumns
+                    ]);
             }
             return this;
         }
