@@ -68,6 +68,8 @@ namespace iText.IO {
 
         public const String DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT = "DirectOnly object cannot be indirect";
 
+        public const String DOCFONT_HAS_ILLEGAL_DIFFERENCES = "Document Font has illegal differences array. Entry {0} references a glyph ID over 255 and will be ignored.";
+
         public const String ELEMENT_DOES_NOT_FIT_AREA = "Element does not fit current area. {0}";
 
         public const String ELEMENT_WAS_FORCE_PLACED_KEEP_WITH_NEXT_WILL_BE_IGNORED = "Element was placed in a forced way. Keep with next property will be ignored";
@@ -105,6 +107,8 @@ namespace iText.IO {
         public const String CALCULATE_HASHCODE_FOR_MODIFIED_PDFNUMBER = "Calculate hashcode for modified PdfNumber.";
 
         public const String MAKE_COPY_OF_CATALOG_DICTIONARY_IS_FORBIDDEN = "Make copy of Catalog dictionary is forbidden.";
+
+        public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
 
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 

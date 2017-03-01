@@ -186,17 +186,6 @@ namespace iText.Layout.Element {
             return this;
         }
 
-        /// <summary>Adds an embedded table to the cell's contents.</summary>
-        /// <param name="element">
-        /// a nested
-        /// <see cref="Table"/>
-        /// </param>
-        /// <returns>this Element</returns>
-        public virtual iText.Layout.Element.Cell Add(Table element) {
-            childElements.Add(element);
-            return this;
-        }
-
         /// <summary>Directly adds a String of text to this cell.</summary>
         /// <remarks>
         /// Directly adds a String of text to this cell. The content is wrapped in a

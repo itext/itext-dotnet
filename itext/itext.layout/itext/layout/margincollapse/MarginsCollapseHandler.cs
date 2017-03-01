@@ -50,6 +50,8 @@ namespace iText.Layout.Margincollapse {
     /// <summary>
     /// Rules of the margins collapsing are taken from Mozilla Developer Network:
     /// https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Model/Mastering_margin_collapsing
+    /// See also:
+    /// https://www.w3.org/TR/CSS2/box.html#collapsing-margins
     /// </summary>
     public class MarginsCollapseHandler {
         private IRenderer renderer;
@@ -66,7 +68,13 @@ namespace iText.Layout.Margincollapse {
 
         private IList<IRenderer> rendererChildren = new List<IRenderer>();
 
+        private Rectangle backupLayoutBox;
+
+        private MarginsCollapseInfo backupCollapseInfo;
+
         public MarginsCollapseHandler(IRenderer renderer, MarginsCollapseInfo marginsCollapseInfo) {
+            // Layout box and collapse info are saved before processing the next kid, in order to be able to restore it in case 
+            // the next kid is not placed. These values are not null only between startChildMarginsHandling and endChildMarginsHandling calls.
             this.renderer = renderer;
             this.collapseInfo = marginsCollapseInfo != null ? marginsCollapseInfo : new MarginsCollapseInfo();
         }
@@ -80,6 +88,9 @@ namespace iText.Layout.Margincollapse {
             rendererChildren.Add(child);
             int childIndex = processedChildrenNum++;
             bool childIsBlockElement = IsBlockElement(child);
+            backupLayoutBox = layoutBox.Clone();
+            backupCollapseInfo = new MarginsCollapseInfo();
+            collapseInfo.CopyTo(backupCollapseInfo);
             PrepareBoxForLayoutAttempt(layoutBox, childIndex, childIsBlockElement);
             if (childIsBlockElement) {
                 childMarginInfo = CreateMarginsInfoForBlockChild(childIndex);
@@ -138,10 +149,12 @@ namespace iText.Layout.Margincollapse {
             }
             if (prevChildMarginInfo != null) {
                 FixPrevChildOccupiedArea(childIndex);
-                UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetOwnCollapseAfter());
+                UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(prevChildMarginInfo.GetOwnCollapseAfter());
             }
             prevChildMarginInfo = childMarginInfo;
             childMarginInfo = null;
+            backupLayoutBox = null;
+            backupCollapseInfo = null;
         }
 
         public virtual void StartMarginsCollapse(Rectangle parentBBox) {
@@ -161,13 +174,17 @@ namespace iText.Layout.Margincollapse {
         }
 
         public virtual void EndMarginsCollapse(Rectangle layoutBox) {
+            if (backupLayoutBox != null) {
+                RestoreLayoutBoxAfterFailedLayoutAttempt(layoutBox);
+            }
             if (prevChildMarginInfo != null) {
-                UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(prevChildMarginInfo.GetCollapseAfter());
+                UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(prevChildMarginInfo.GetCollapseAfter());
             }
             bool couldBeSelfCollapsing = iText.Layout.Margincollapse.MarginsCollapseHandler.MarginsCouldBeSelfCollapsing
                 (renderer);
+            bool blockHasNoKidsWithContent = collapseInfo.IsSelfCollapsing();
             if (FirstChildMarginAdjoinedToParent(renderer)) {
-                if (collapseInfo.IsSelfCollapsing() && !couldBeSelfCollapsing) {
+                if (blockHasNoKidsWithContent && !couldBeSelfCollapsing) {
                     AddNotYetAppliedTopMargin(layoutBox);
                 }
             }
@@ -210,10 +227,22 @@ namespace iText.Layout.Margincollapse {
                     OverrideModelBottomMargin(renderer, collapsedMargins);
                 }
             }
+            if (LastChildMarginAdjoinedToParent(renderer) && (prevChildMarginInfo != null || blockHasNoKidsWithContent
+                )) {
+                // Adjust layout box here in order to make it represent the available area left.
+                float collapsedMargins = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
+                // May be in case of self-collapsed margins it would make more sense to apply this value to topMargin, 
+                // because that way the layout box would represent the area left after the empty self-collapsed block, not 
+                // before it. However at the same time any considerations about the layout (i.e. content) area in case 
+                // of the self-collapsed block seem to be invalid, because self-collapsed block shall have content area 
+                // of zero height.
+                ApplyBottomMargin(layoutBox, collapsedMargins);
+            }
         }
 
-        private void UpdatePrevKidIfSelfCollapsedAndTopAdjoinedToParent(MarginsCollapse collapseAfter) {
+        private void UpdateCollapseBeforeIfPrevKidIsFirstAndSelfCollapsed(MarginsCollapse collapseAfter) {
             if (prevChildMarginInfo.IsSelfCollapsing() && prevChildMarginInfo.IsIgnoreOwnMarginTop()) {
+                // prevChildMarginInfo.isIgnoreOwnMarginTop() is true only if it's the first kid and is adjoined to parent margin
                 collapseInfo.GetCollapseBefore().JoinMargin(collapseAfter);
             }
         }
@@ -254,10 +283,19 @@ namespace iText.Layout.Margincollapse {
                     ApplyTopMargin(layoutBox, topIndent);
                 }
                 if (LastChildMarginAdjoinedToParent(renderer)) {
+                    // if not adjoined - bottom margin have been already applied on startMarginsCollapse
                     float bottomIndent = collapseInfo.GetCollapseAfter().GetCollapsedMarginsSize();
                     ApplyBottomMargin(layoutBox, bottomIndent);
                 }
             }
+        }
+
+        private void RestoreLayoutBoxAfterFailedLayoutAttempt(Rectangle layoutBox) {
+            layoutBox.SetX(backupLayoutBox.GetX()).SetY(backupLayoutBox.GetY()).SetWidth(backupLayoutBox.GetWidth()).SetHeight
+                (backupLayoutBox.GetHeight());
+            backupCollapseInfo.CopyTo(collapseInfo);
+            backupLayoutBox = null;
+            backupCollapseInfo = null;
         }
 
         private void ApplyTopMargin(Rectangle box, float topIndent) {
@@ -347,7 +385,8 @@ namespace iText.Layout.Margincollapse {
             // had no content) or if there were no kids, we need to add it when no more adjoining margins will be met
             float indentTop = collapseInfo.GetCollapseBefore().GetCollapsedMarginsSize();
             renderer.GetOccupiedArea().GetBBox().MoveDown(indentTop);
-            // even though all kids have been already drawn, we still need to adjust layout box in case we are in the block of fixed size  
+            // Even though all kids have been already drawn, we still need to adjust layout box here 
+            // in order to make it represent the available area for element content (e.g. needed for fixed height elements).      
             ApplyTopMargin(layoutBox, indentTop);
         }
 
@@ -365,7 +404,6 @@ namespace iText.Layout.Margincollapse {
                 (renderer) && !HasTopPadding(renderer) && !HasPositiveHeight(renderer);
         }
 
-        // table is never self-collapsing for now
         private static bool FirstChildMarginAdjoinedToParent(IRenderer parent) {
             return !(parent is RootRenderer) && !(parent is TableRenderer) && !HasTopBorders(parent) && !HasTopPadding
                 (parent);
@@ -400,7 +438,14 @@ namespace iText.Layout.Margincollapse {
         //
         // || (includingMaxHeight && styles.containsKey(CssConstants.MAX_HEIGHT));
         private static bool HasPositiveHeight(IRenderer renderer) {
-            return renderer.GetOccupiedArea().GetBBox().GetHeight() > 0;
+            float height = renderer.GetOccupiedArea().GetBBox().GetHeight();
+            if (height == 0) {
+                float? heightPropVal = renderer.GetProperty<float?>(Property.HEIGHT);
+                float? minHeightPropVal = renderer.GetProperty<float?>(Property.MIN_HEIGHT);
+                height = minHeightPropVal != null ? (float)minHeightPropVal : heightPropVal != null ? (float)heightPropVal
+                     : 0;
+            }
+            return height > 0;
         }
 
         private static bool HasTopPadding(IRenderer renderer) {

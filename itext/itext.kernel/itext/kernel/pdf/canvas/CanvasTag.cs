@@ -197,10 +197,18 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         public virtual String GetActualText() {
-            PdfString actualText = properties.GetAsString(PdfName.ActualText);
+            return GetPropertyAsString(PdfName.ActualText);
+        }
+
+        public virtual String GetExpansionText() {
+            return GetPropertyAsString(PdfName.E);
+        }
+
+        private String GetPropertyAsString(PdfName name) {
+            PdfString text = properties.GetAsString(name);
             String result = null;
-            if (actualText != null) {
-                result = actualText.ToUnicodeString();
+            if (text != null) {
+                result = text.ToUnicodeString();
             }
             return result;
         }

@@ -58,7 +58,6 @@ namespace iText.Kernel.Pdf.Collection {
         /// <summary>Adds a Collection field to the Schema.</summary>
         /// <param name="name">the name of the collection field</param>
         /// <param name="field">a Collection Field</param>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionSchema AddField(String name, PdfCollectionField field
             ) {
             GetPdfObject().Put(new PdfName(name), field.GetPdfObject());

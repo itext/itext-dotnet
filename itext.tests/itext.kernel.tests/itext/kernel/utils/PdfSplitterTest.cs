@@ -74,7 +74,7 @@ namespace iText.Kernel.Utils {
             }
             for (int i = 1; i <= 3; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument1_" + i
-                    .ToString() + ".pdf", sourceFolder + "cmp/" + "splitDocument1_" + i.ToString() + ".pdf", destinationFolder
+                    .ToString() + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument1_" + i.ToString() + ".pdf", destinationFolder
                     , "diff_"));
             }
         }
@@ -108,7 +108,7 @@ namespace iText.Kernel.Utils {
             new _PdfSplitter_116(inputPdfDoc).SplitByPageCount(60, new _IDocumentReadyListener_127());
             for (int i = 1; i <= 3; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument2_" + i
-                    .ToString() + ".pdf", sourceFolder + "cmp/" + "splitDocument2_" + i.ToString() + ".pdf", destinationFolder
+                    .ToString() + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument2_" + i.ToString() + ".pdf", destinationFolder
                     , "diff_"));
             }
         }
@@ -160,7 +160,7 @@ namespace iText.Kernel.Utils {
             }
             for (int i = 1; i <= 2; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument3_" + i
-                     + ".pdf", sourceFolder + "cmp/" + "splitDocument3_" + i.ToString() + ".pdf", destinationFolder, "diff_"
+                     + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument3_" + i.ToString() + ".pdf", destinationFolder, "diff_"
                     ));
             }
         }
@@ -201,7 +201,7 @@ namespace iText.Kernel.Utils {
             }
             for (int i = 1; i <= 2; i++) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitDocument4_" + i
-                     + ".pdf", sourceFolder + "cmp/" + "splitDocument4_" + i.ToString() + ".pdf", destinationFolder, "diff_"
+                     + ".pdf", sourceFolder + "cmp/" + "cmp_splitDocument4_" + i.ToString() + ".pdf", destinationFolder, "diff_"
                     ));
             }
         }
@@ -256,7 +256,7 @@ namespace iText.Kernel.Utils {
             }
             for (int i = 1; i <= 4; ++i) {
                 NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(destinationFolder + "splitBySize_part" + 
-                    i + ".pdf", sourceFolder + "cmp/" + "splitBySize_part" + i + ".pdf", destinationFolder, "diff_"));
+                    i + ".pdf", sourceFolder + "cmp/" + "cmp_splitBySize_part" + i + ".pdf", destinationFolder, "diff_"));
             }
         }
 

@@ -456,6 +456,25 @@ namespace iText.IO.Image {
             return new RawImageData(bytes, ImageType.RAW);
         }
 
+        /// <summary>Checks if the type of image (based on first 8 bytes) is supported by factory.
+        /// <br/>
+        /// <br/>
+        /// <b>Note:</b>if this method returns <code>true</code> it doesn't means that <see cref="Create(byte[])"/> won't throw exception
+        /// </summary>
+        /// <param name="source">image raw bytes</param>
+        /// <returns><code>true</code> if first eight bytes are recognised by factory as valid image type and <code>false</code> otherwise</returns>
+        public static bool IsSupportedType(byte[] source)
+        {
+            byte[] imageType = ReadImageType(source);
+            if (imageType == null || imageType.Length < 8)
+            {
+                return false;
+            }
+            return ImageTypeIs(imageType, gif) || ImageTypeIs(imageType, jpeg) || ImageTypeIs(imageType, jpeg2000_1)
+                   || ImageTypeIs(imageType, jpeg2000_2) || ImageTypeIs(imageType, png) || ImageTypeIs(imageType, bmp)
+                   || ImageTypeIs(imageType, tiff_1) || ImageTypeIs(imageType, tiff_2) || ImageTypeIs(imageType, jbig2);
+        }
+
         private static ImageData CreateImageInstance(Uri source, bool recoverImage) {
             byte[] imageType = ReadImageType(source);
             if (ImageTypeIs(imageType, gif)) {

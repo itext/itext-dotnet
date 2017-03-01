@@ -705,7 +705,7 @@ namespace iText.Pdfa.Checker {
                 transparencyIsUsed = true;
             }
             if (PdfName.JPXDecode.Equals(image.Get(PdfName.Filter))) {
-                Jpeg2000ImageData jpgImage = (Jpeg2000ImageData)ImageDataFactory.CreateJpeg2000(image.GetBytes());
+                Jpeg2000ImageData jpgImage = (Jpeg2000ImageData)ImageDataFactory.CreateJpeg2000(image.GetBytes(false));
                 Jpeg2000ImageData.Parameters @params = jpgImage.GetParameters();
                 /* Concerning !params.isJpxBaseline check
                 *

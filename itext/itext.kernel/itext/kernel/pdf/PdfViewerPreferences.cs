@@ -76,42 +76,36 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method sets HideToolBar flag to true or false</summary>
         /// <param name="hideToolbar"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideToolbar(bool hideToolbar) {
             return Put(PdfName.HideToolbar, new PdfBoolean(hideToolbar));
         }
 
         /// <summary>This method sets HideMenuBar flag to true or false</summary>
         /// <param name="hideMenubar"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideMenubar(bool hideMenubar) {
             return Put(PdfName.HideMenubar, new PdfBoolean(hideMenubar));
         }
 
         /// <summary>This method sets HideWindowUI flag to true or false</summary>
         /// <param name="hideWindowUI"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideWindowUI(bool hideWindowUI) {
             return Put(PdfName.HideWindowUI, new PdfBoolean(hideWindowUI));
         }
 
         /// <summary>This method sets FitWindow flag to true or false</summary>
         /// <param name="fitWindow"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetFitWindow(bool fitWindow) {
             return Put(PdfName.FitWindow, new PdfBoolean(fitWindow));
         }
 
         /// <summary>This method sets CenterWindow flag to true or false</summary>
         /// <param name="centerWindow"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetCenterWindow(bool centerWindow) {
             return Put(PdfName.CenterWindow, new PdfBoolean(centerWindow));
         }
 
         /// <summary>This method sets DisplayDocTitle flag to true or false</summary>
         /// <param name="displayDocTitle"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDisplayDocTitle(bool displayDocTitle) {
             return Put(PdfName.DisplayDocTitle, new PdfBoolean(displayDocTitle));
         }
@@ -122,7 +116,6 @@ namespace iText.Kernel.Pdf {
         /// This entry is meaningful only if the value of the PageMode entry in the Catalog dictionary is FullScreen
         /// </remarks>
         /// <param name="nonFullScreenPageMode"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetNonFullScreenPageMode(PdfViewerPreferences.PdfViewerPreferencesConstants
              nonFullScreenPageMode) {
             switch (nonFullScreenPageMode) {
@@ -155,7 +148,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method sets predominant reading order of text.</summary>
         /// <param name="direction"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDirection(PdfViewerPreferences.PdfViewerPreferencesConstants
              direction) {
             switch (direction) {
@@ -181,7 +173,6 @@ namespace iText.Kernel.Pdf {
         /// viewing the document on the screen.
         /// </summary>
         /// <param name="pageBoundary"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetViewArea(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_AREA, pageBoundary);
@@ -192,7 +183,6 @@ namespace iText.Kernel.Pdf {
         /// viewing the document on the screen.
         /// </summary>
         /// <param name="pageBoundary"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetViewClip(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.VIEW_CLIP, pageBoundary);
@@ -203,7 +193,6 @@ namespace iText.Kernel.Pdf {
         /// rendered when printing the document.
         /// </summary>
         /// <param name="pageBoundary"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintArea(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_AREA, pageBoundary);
@@ -214,7 +203,6 @@ namespace iText.Kernel.Pdf {
         /// printing the document.
         /// </summary>
         /// <param name="pageBoundary"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintClip(PdfViewerPreferences.PdfViewerPreferencesConstants
              pageBoundary) {
             return SetPageBoundary(PdfViewerPreferences.PdfViewerPreferencesConstants.PRINT_CLIP, pageBoundary);
@@ -229,7 +217,6 @@ namespace iText.Kernel.Pdf {
         /// document. Valid values are None and AppDefault.
         /// </remarks>
         /// <param name="printScaling"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintScaling(PdfViewerPreferences.PdfViewerPreferencesConstants
              printScaling) {
             switch (printScaling) {
@@ -257,7 +244,6 @@ namespace iText.Kernel.Pdf {
         /// The following values are valid: Simplex, DuplexFlipShortEdge, DuplexFlipLongEdge.
         /// </remarks>
         /// <param name="duplex"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDuplex(PdfViewerPreferences.PdfViewerPreferencesConstants
              duplex) {
             switch (duplex) {
@@ -285,7 +271,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method sets PickTrayByPDFSize flag to true or false.</summary>
         /// <param name="pickTrayByPdfSize"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPickTrayByPDFSize(bool pickTrayByPdfSize) {
             return Put(PdfName.PickTrayByPDFSize, new PdfBoolean(pickTrayByPdfSize));
         }
@@ -293,7 +278,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method sets the page numbers used to initialize the print dialog box when the file is printed.
         ///     </summary>
         /// <param name="printPageRange"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPrintPageRange(int[] printPageRange) {
             return Put(PdfName.PrintPageRange, new PdfArray(printPageRange));
         }
@@ -301,7 +285,6 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method sets the number of copies that shall be printed when the print dialog is opened for this file.
         ///     </summary>
         /// <param name="numCopies"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetNumCopies(int numCopies) {
             return Put(PdfName.NumCopies, new PdfNumber(numCopies));
         }

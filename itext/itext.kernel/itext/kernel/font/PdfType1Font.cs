@@ -119,13 +119,16 @@ namespace iText.Kernel.Font {
         }
 
         public override bool ContainsGlyph(String text, int from) {
-            int ch = text[from];
-            if (fontEncoding.CanEncode(ch)) {
+            return ContainsGlyph((int)text[from]);
+        }
+
+        public override bool ContainsGlyph(int unicode) {
+            if (fontEncoding.CanEncode(unicode)) {
                 if (fontEncoding.IsFontSpecific()) {
-                    return ((Type1Font)GetFontProgram()).GetGlyphByCode(ch) != null;
+                    return ((Type1Font)GetFontProgram()).GetGlyphByCode(unicode) != null;
                 }
                 else {
-                    return ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(ch)) != null;
+                    return ((Type1Font)GetFontProgram()).GetGlyph(fontEncoding.GetUnicodeDifference(unicode)) != null;
                 }
             }
             else {

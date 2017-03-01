@@ -729,7 +729,6 @@ namespace iText.Layout.Renderer {
             private byte region;
 
             internal CellInfo(CellRenderer cell, byte region) {
-                //endregion
                 this.cell = cell;
                 this.region = region;
             }
@@ -784,5 +783,6 @@ namespace iText.Layout.Renderer {
                 return region == o.region ? GetRow() - o.GetRow() : region - o.region;
             }
         }
+        //endregion
     }
 }

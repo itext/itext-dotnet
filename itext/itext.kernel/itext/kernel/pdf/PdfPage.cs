@@ -196,7 +196,7 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IndexOutOfRangeException">if the index is out of range</exception>
         public virtual PdfStream GetContentStream(int index) {
             int count = GetContentStreamCount();
-            if (index >= count) {
+            if (index >= count || index < 0) {
                 throw new IndexOutOfRangeException(String.Format("Index: {0}, Size: {1}", index, count));
             }
             PdfObject contents = GetPdfObject().Get(PdfName.Contents);
@@ -1409,21 +1409,26 @@ namespace iText.Kernel.Pdf {
                     array = (PdfArray)contents;
                 }
                 else {
-                    throw new PdfException(PdfException.PdfPageShallHaveContent);
+                    array = null;
                 }
             }
             PdfStream contentStream = ((PdfStream)new PdfStream().MakeIndirect(GetDocument()));
-            if (before) {
-                array.Add(0, contentStream);
+            if (array != null) {
+                if (before) {
+                    array.Add(0, contentStream);
+                }
+                else {
+                    array.Add(contentStream);
+                }
+                if (array.GetIndirectReference() != null) {
+                    array.SetModified();
+                }
+                else {
+                    SetModified();
+                }
             }
             else {
-                array.Add(contentStream);
-            }
-            if (null != array.GetIndirectReference()) {
-                array.SetModified();
-            }
-            else {
-                SetModified();
+                Put(PdfName.Contents, contentStream);
             }
             return contentStream;
         }

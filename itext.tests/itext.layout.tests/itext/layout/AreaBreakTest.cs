@@ -41,11 +41,14 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout.Element;
+using iText.Layout.Layout;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 using iText.Test;
 
 namespace iText.Layout {
@@ -120,6 +123,86 @@ namespace iText.Layout {
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideDiv01Test() {
+            String outFileName = destinationFolder + "areaBreakInsideDiv01.pdf";
+            String cmpFileName = sourceFolder + "cmp_areaBreakInsideDiv01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div div = new Div().Add(new Paragraph("Hello")).Add(new AreaBreak()).Add(new Paragraph("World"));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideDiv02Test() {
+            String outFileName = destinationFolder + "areaBreakInsideDiv02.pdf";
+            String cmpFileName = sourceFolder + "cmp_areaBreakInsideDiv02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div div = new Div().Add(new Paragraph("Hello")).Add(new AreaBreak(PageSize.A5)).Add(new AreaBreak(PageSize
+                .A6)).Add(new Paragraph("World"));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideDiv03Test() {
+            String outFileName = destinationFolder + "areaBreakInsideDiv03.pdf";
+            String cmpFileName = sourceFolder + "cmp_areaBreakInsideDiv03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div div = new Div().Add(new Paragraph("Hello")).Add(new AreaBreak()).Add(new Paragraph("World"));
+            div.SetNextRenderer(new AreaBreakTest.DivRendererWithAreas(div));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AreaBreakInsideDiv04Test() {
+            String outFileName = destinationFolder + "areaBreakInsideDiv04.pdf";
+            String cmpFileName = sourceFolder + "cmp_areaBreakInsideDiv04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            Div div = new Div().Add(new Paragraph("Hello")).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
+                ("World"));
+            div.SetNextRenderer(new AreaBreakTest.DivRendererWithAreas(div));
+            document.Add(div);
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        private class DivRendererWithAreas : DivRenderer {
+            public DivRendererWithAreas(Div modelElement)
+                : base(modelElement) {
+            }
+
+            public override IList<Rectangle> InitElementAreas(LayoutArea area) {
+                return iText.IO.Util.JavaUtil.ArraysAsList(new Rectangle(area.GetBBox()).SetWidth(area.GetBBox().GetWidth(
+                    ) / 2), new Rectangle(area.GetBBox()).SetWidth(area.GetBBox().GetWidth() / 2).MoveRight(area.GetBBox()
+                    .GetWidth() / 2));
+            }
+
+            public override IRenderer GetNextRenderer() {
+                return new AreaBreakTest.DivRendererWithAreas((Div)modelElement);
+            }
         }
     }
 }

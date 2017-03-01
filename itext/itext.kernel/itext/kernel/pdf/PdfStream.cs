@@ -234,6 +234,9 @@ namespace iText.Kernel.Pdf {
         /// .
         /// </returns>
         public virtual byte[] GetBytes(bool decoded) {
+            if (IsFlushed()) {
+                throw new PdfException(PdfException.CannotOperateWithFlushedPdfStream);
+            }
             if (inputStream != null) {
                 LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.PdfStream)).Warn("PdfStream was created by InputStream." +
                      "getBytes() always returns null in this case");
@@ -246,6 +249,9 @@ namespace iText.Kernel.Pdf {
                 try {
                     outputStream.GetOutputStream().Flush();
                     bytes = ((ByteArrayOutputStream)outputStream.GetOutputStream()).ToArray();
+                    if (decoded && ContainsKey(PdfName.Filter)) {
+                        bytes = PdfReader.DecodeBytes(bytes, this);
+                    }
                 }
                 catch (System.IO.IOException ioe) {
                     throw new PdfException(PdfException.CannotGetPdfStreamBytes, ioe, this);
@@ -285,14 +291,22 @@ namespace iText.Kernel.Pdf {
         /// Could not be used with streams which were created by <code>InputStream</code>.
         /// </remarks>
         /// <param name="bytes">
-        /// new content for stream; if <code>null</code> and <code>append</code> is false then
-        /// stream's content will be discarded
+        /// New content for stream. These bytes are considered to be a raw data (i.e. not encoded/compressed/encrypted)
+        /// and if it's not true, the corresponding filters shall be set to the PdfStream object manually.
+        /// Data compression generally should be configured via
+        /// <see cref="SetCompressionLevel(int)"/>
+        /// and
+        /// is handled on stream writing to the output document.
+        /// If <code>null</code> and <code>append</code> is false then stream's content will be discarded.
         /// </param>
         /// <param name="append">
-        /// if set to true then <code>bytes</code> will be appended to the end,
-        /// rather then replace original content
+        /// If set to true then <code>bytes</code> will be appended to the end,
+        /// rather then replace original content. The original content will be decoded if needed.
         /// </param>
         public virtual void SetData(byte[] bytes, bool append) {
+            if (IsFlushed()) {
+                throw new PdfException(PdfException.CannotOperateWithFlushedPdfStream);
+            }
             if (inputStream != null) {
                 throw new PdfException(PdfException.CannotSetDataToPdfstreamWhichWasCreatedByInputStream);
             }
@@ -302,7 +316,7 @@ namespace iText.Kernel.Pdf {
             }
             if (append) {
                 if (outputStreamIsUninitialized && GetIndirectReference() != null && GetIndirectReference().GetReader() !=
-                     null) {
+                     null || !outputStreamIsUninitialized && ContainsKey(PdfName.Filter)) {
                     // here is the same as in the getBytes() method: this logic makes sense only when stream is created
                     // by reader and in this case indirect reference won't be null and stream is not in the MustBeIndirect state.
                     byte[] oldBytes;
@@ -312,8 +326,7 @@ namespace iText.Kernel.Pdf {
                     catch (PdfException ex) {
                         throw new PdfException(PdfException.CannotReadAStreamInOrderToAppendNewBytes, ex);
                     }
-                    offset = 0;
-                    outputStream.WriteBytes(oldBytes);
+                    outputStream.AssignBytes(oldBytes, oldBytes.Length);
                 }
                 if (bytes != null) {
                     outputStream.WriteBytes(bytes);
@@ -327,8 +340,11 @@ namespace iText.Kernel.Pdf {
                     outputStream.Reset();
                 }
             }
-            // Only when we remove old filter will the compression logic be triggered on flushing the stream
+            offset = 0;
+            // Bytes that are set shall be not encoded, and moreover the existing bytes in cases of the appending are decoded,
+            // therefore all filters shall be removed. Compression will be handled on stream flushing.
             Remove(PdfName.Filter);
+            Remove(PdfName.DecodeParms);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>

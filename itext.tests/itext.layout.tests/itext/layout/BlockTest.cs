@@ -232,6 +232,77 @@ namespace iText.Layout {
                 , "diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1092")]
+        public virtual void MarginsBordersPaddingOverflow01() {
+            String outFileName = destinationFolder + "marginsBordersPaddingOverflow01.pdf";
+            String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow01.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            div.SetHeight(760).SetBackgroundColor(Color.DARK_GRAY);
+            doc.Add(div);
+            // TODO overflow of this div on second page is of much bigger height than 1pt
+            Div div1 = new Div().SetMarginTop(42).SetMarginBottom(42).SetBackgroundColor(Color.BLUE).SetHeight(1);
+            doc.Add(div1);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1092")]
+        public virtual void MarginsBordersPaddingOverflow02() {
+            String outFileName = destinationFolder + "marginsBordersPaddingOverflow02.pdf";
+            String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            // TODO div with fixed height is bigger than 60pt
+            Div div = new Div();
+            div.SetHeight(60).SetBackgroundColor(Color.DARK_GRAY);
+            Div div1 = new Div().SetMarginTop(200).SetMarginBottom(200).SetBorder(new SolidBorder(6));
+            div.Add(div1);
+            doc.Add(div);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1092")]
+        public virtual void MarginsBordersPaddingOverflow03() {
+            String outFileName = destinationFolder + "marginsBordersPaddingOverflow03.pdf";
+            String cmpFileName = sourceFolder + "cmp_marginsBordersPaddingOverflow03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDocument);
+            Div div = new Div();
+            div.SetHeight(710).SetBackgroundColor(Color.DARK_GRAY);
+            doc.Add(div);
+            // TODO this element is below first page visible area
+            Div div1 = new Div().SetMarginTop(200).SetMarginBottom(200).SetBorder(new SolidBorder(6));
+            doc.Add(div1);
+            doc.Add(new AreaBreak());
+            // TODO same with this one the second page
+            SolidBorder border = new SolidBorder(400);
+            Div div2 = new Div().SetBorderTop(border).SetBorderBottom(border);
+            doc.Add(div);
+            doc.Add(div2);
+            doc.Add(new AreaBreak());
+            // TODO same with this one the third page
+            Div div3 = new Div().SetBorder(new SolidBorder(6)).SetPaddingTop(400).SetPaddingBottom(400);
+            doc.Add(div);
+            doc.Add(div3);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
         private Div CreateDiv(Div innerOverflowDiv, String text, DeviceRgb backgroundColor, bool keepTogether, bool
              fillAlways, bool fillOnSplit) {
             Div div = new Div().SetBorder(new DoubleBorder(10)).SetBackgroundColor(new DeviceRgb(216, 243, 255)).SetFillAvailableAreaOnSplit

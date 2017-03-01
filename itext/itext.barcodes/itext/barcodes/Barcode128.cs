@@ -269,7 +269,7 @@ namespace iText.Barcodes {
                 }
             }
             c = text[0];
-            char currentCode = START_B;
+            char currentCode = GetStartSymbol(codeSet);
             int index = 0;
             if ((codeSet == Barcode128.Barcode128CodeSet.AUTO || codeSet == Barcode128.Barcode128CodeSet.C) && IsNextDigits
                 (text, index, 2)) {

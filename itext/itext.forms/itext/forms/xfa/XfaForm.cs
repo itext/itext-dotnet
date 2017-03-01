@@ -177,34 +177,44 @@ namespace iText.Forms.Xfa
 					PdfStream dStream = new PdfStream(SerializeDocument(form.datasetsNode));
 					dStream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
 					ar.Set(d, dStream);
-					ar.Flush();
+                    ar.SetModified();
+                    ar.Flush();
 					af.Put(PdfName.XFA, new PdfArray(ar));
-					return;
-				}
-			}
+                    af.SetModified();
+                    if (!af.IsIndirect())
+                    {
+                        pdfDocument.GetCatalog().SetModified();
+                    }
+                    return;
+                }
+            }
 			//reader.killXref(af.get(PdfName.XFA));
 			PdfStream stream = new PdfStream(SerializeDocument(form.domDocument));
 			stream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
 			stream.Flush();
 			af.Put(PdfName.XFA, stream);
 			af.SetModified();
-		}
+            if (!af.IsIndirect())
+            {
+                pdfDocument.GetCatalog().SetModified();
+            }
+        }
 
-		/// <summary>Extracts DOM nodes from an XFA document.</summary>
-		/// <param name="domDocument">
-		/// an XFA file as a
-		/// <see cref="Document">
-		/// DOM
-		/// document
-		/// </see>
-		/// </param>
-		/// <returns>
-		/// a
-		/// <see cref="System.Collections.IDictionary{K, V}"/>
-		/// of XFA packet names and their associated
-		/// <see cref="Org.W3c.Dom.Node">DOM nodes</see>
-		/// </returns>
-		public static IDictionary<String, XNode> ExtractXFANodes(XDocument domDocument)
+        /// <summary>Extracts DOM nodes from an XFA document.</summary>
+        /// <param name="domDocument">
+        /// an XFA file as a
+        /// <see cref="Document">
+        /// DOM
+        /// document
+        /// </see>
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="System.Collections.IDictionary{K, V}"/>
+        /// of XFA packet names and their associated
+        /// <see cref="Org.W3c.Dom.Node">DOM nodes</see>
+        /// </returns>
+        public static IDictionary<String, XNode> ExtractXFANodes(XDocument domDocument)
 		{
 			IDictionary<String, XNode> xfaNodes = new Dictionary<String, XNode>();
 		    XNode n = domDocument.FirstNode;

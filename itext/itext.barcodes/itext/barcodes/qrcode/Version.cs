@@ -241,7 +241,6 @@ namespace iText.Barcodes.Qrcode {
                 return ecCodewordsPerBlock * GetNumBlocks();
             }
 
-            /// <returns/>
             public Version.ECB[] GetECBlocks() {
                 return ecBlocks;
             }

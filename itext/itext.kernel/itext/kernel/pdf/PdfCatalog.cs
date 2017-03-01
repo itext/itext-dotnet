@@ -187,7 +187,6 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>This method sets a page layout of the document</summary>
         /// <param name="pageLayout"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetPageLayout(PdfName pageLayout) {
             if (pageLayout.Equals(PdfName.SinglePage) || pageLayout.Equals(PdfName.OneColumn) || pageLayout.Equals(PdfName
                 .TwoColumnLeft) || pageLayout.Equals(PdfName.TwoColumnRight) || pageLayout.Equals(PdfName.TwoPageLeft)
@@ -206,7 +205,6 @@ namespace iText.Kernel.Pdf {
         /// screen
         /// </summary>
         /// <param name="preferences"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetViewerPreferences(PdfViewerPreferences preferences) {
             return Put(PdfName.ViewerPreferences, preferences.GetPdfObject());
         }
@@ -288,7 +286,6 @@ namespace iText.Kernel.Pdf {
         /// stored in the PDF document.
         /// </summary>
         /// <param name="collection"/>
-        /// <returns/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
             GetPdfObject().Put(PdfName.Collection, collection.GetPdfObject());
             return this;
@@ -321,7 +318,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>this method return map containing all pages of the document with associated outlines.</summary>
-        /// <returns/>
+        /// <returns>map containing all pages of the document with associated outlines</returns>
         internal virtual IDictionary<PdfObject, IList<PdfOutline>> GetPagesWithOutlines() {
             return pagesWithOutlines;
         }
@@ -439,9 +436,10 @@ namespace iText.Kernel.Pdf {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
-                        PdfArray array = new PdfArray((PdfArray)dest);
-                        array.Set(0, page2page.Get(oldPage).GetPdfObject());
-                        d = new PdfExplicitDestination(array);
+                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                        PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false);
+                        d = new PdfExplicitDestination(copiedArray);
+                        break;
                     }
                 }
             }
@@ -449,21 +447,43 @@ namespace iText.Kernel.Pdf {
                 if (dest.IsString()) {
                     PdfNameTree destsTree = GetNameTree(PdfName.Dests);
                     IDictionary<String, PdfObject> dests = destsTree.GetNames();
-                    String name = ((PdfString)dest).ToUnicodeString();
-                    PdfArray array = (PdfArray)dests.Get(name);
-                    if (array != null) {
-                        PdfObject pageObject = array.Get(0);
+                    String srcDestName = ((PdfString)dest).ToUnicodeString();
+                    PdfArray srcDestArray = (PdfArray)dests.Get(srcDestName);
+                    if (srcDestArray != null) {
+                        PdfObject pageObject = srcDestArray.Get(0);
                         foreach (PdfPage oldPage in page2page.Keys) {
                             if (oldPage.GetPdfObject() == pageObject) {
-                                array.Set(0, page2page.Get(oldPage).GetPdfObject());
-                                d = new PdfStringDestination(name);
-                                toDocument.AddNamedDestination(name, array);
+                                d = new PdfStringDestination(srcDestName);
+                                if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
+                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                                    PdfArray copiedArray = ((PdfArray)srcDestArray.CopyTo(toDocument, false));
+                                    toDocument.AddNamedDestination(srcDestName, copiedArray);
+                                }
+                                break;
                             }
                         }
                     }
                 }
             }
             return d;
+        }
+
+        private bool IsEqualSameNameDestExist(IDictionary<PdfPage, PdfPage> page2page, PdfDocument toDocument, String
+             srcDestName, PdfArray srcDestArray, PdfPage oldPage) {
+            PdfArray sameNameDest = (PdfArray)toDocument.GetCatalog().GetNameTree(PdfName.Dests).GetNames().Get(srcDestName
+                );
+            bool equalSameNameDestExists = false;
+            if (sameNameDest != null && sameNameDest.GetAsDictionary(0) != null) {
+                PdfIndirectReference existingDestPageRef = sameNameDest.GetAsDictionary(0).GetIndirectReference();
+                PdfIndirectReference newDestPageRef = page2page.Get(oldPage).GetPdfObject().GetIndirectReference();
+                if (equalSameNameDestExists = existingDestPageRef.Equals(newDestPageRef) && sameNameDest.Size() == srcDestArray
+                    .Size()) {
+                    for (int i = 1; i < sameNameDest.Size(); ++i) {
+                        equalSameNameDestExists = equalSameNameDestExists && sameNameDest.Get(i).Equals(srcDestArray.Get(i));
+                    }
+                }
+            }
+            return equalSameNameDestExists;
         }
 
         private void AddOutlineToPage(PdfOutline outline, IDictionary<String, PdfObject> names) {
@@ -488,6 +508,24 @@ namespace iText.Kernel.Pdf {
                 PdfDestination destination = PdfDestination.MakeDestination(dest);
                 outline.SetDestination(destination);
                 AddOutlineToPage(outline, names);
+            }
+            else {
+                //Take into account outlines that specify their destination through an action
+                PdfDictionary action = item.GetAsDictionary(PdfName.A);
+                if (action != null) {
+                    PdfName actionType = action.GetAsName(PdfName.S);
+                    //Check if it a go to action
+                    if (actionType.Equals(PdfName.GoTo)) {
+                        //Retrieve destination if it is.
+                        PdfObject destObject = action.Get(PdfName.D);
+                        if (destObject != null) {
+                            //Page is always the first object
+                            PdfDestination destination = PdfDestination.MakeDestination(destObject);
+                            outline.SetDestination(destination);
+                            AddOutlineToPage(outline, names);
+                        }
+                    }
+                }
             }
             parent.GetAllChildren().Add(outline);
             PdfDictionary processItem = item.GetAsDictionary(PdfName.First);
