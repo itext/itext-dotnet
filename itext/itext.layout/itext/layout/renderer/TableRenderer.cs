@@ -291,6 +291,9 @@ namespace iText.Layout.Renderer {
                 }
             }
             bordersHandler.SetRowRange(rowRange);
+            if (IsOriginalRenderer()) {
+                bordersHandler.NormalizeRowRange();
+            }
             InitializeHeaderAndFooter(0 == rowRange.GetStartRow() || area.IsEmptyArea());
             CollapseAllBorders();
             if (IsOriginalRenderer()) {

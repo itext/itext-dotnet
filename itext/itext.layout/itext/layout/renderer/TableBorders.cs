@@ -18,6 +18,8 @@ namespace iText.Layout.Renderer {
 
         protected internal Table.RowRange rowRange;
 
+        protected internal bool isLargeTable;
+
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             // TODO Maybe Table ?
             this.rows = rows;
@@ -27,9 +29,20 @@ namespace iText.Layout.Renderer {
             tableBoundingBorders = new Border[4];
         }
 
+        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, bool isLargeTable)
+            : this(rows, numberOfColumns) {
+            this.isLargeTable = isLargeTable;
+        }
+
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders)
             : this(rows, numberOfColumns) {
             SetTableBoundingBorders(tableBoundingBorders);
+        }
+
+        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders, bool isLargeTable
+            )
+            : this(rows, numberOfColumns, tableBoundingBorders) {
+            this.isLargeTable = isLargeTable;
         }
 
         protected internal virtual void InitializeBorders(IList<Border> lastFlushedRowBottomBorder, bool isFirstOnPage
@@ -70,6 +83,13 @@ namespace iText.Layout.Renderer {
                 for (int i = 0; i < borders.Length; i++) {
                     tableBoundingBorders[i] = borders[i];
                 }
+            }
+            return this;
+        }
+
+        protected internal virtual iText.Layout.Renderer.TableBorders NormalizeRowRange() {
+            if (isLargeTable) {
+                this.rowRange = new Table.RowRange(0, rowRange.GetFinishRow() - rowRange.GetStartRow());
             }
             return this;
         }

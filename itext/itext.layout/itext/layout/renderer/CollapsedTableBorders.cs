@@ -11,7 +11,7 @@ namespace iText.Layout.Renderer {
         private IList<Border> bottomBorderCollapseWith;
 
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns)
-            : this(rows, numberOfColumns, null) {
+            : base(rows, numberOfColumns) {
         }
 
         public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders
@@ -20,6 +20,12 @@ namespace iText.Layout.Renderer {
             // region constructors
             topBorderCollapseWith = new List<Border>();
             bottomBorderCollapseWith = new List<Border>();
+        }
+
+        public CollapsedTableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders
+            , bool isLargeTable)
+            : this(rows, numberOfColumns, tableBoundingBorders) {
+            this.isLargeTable = isLargeTable;
         }
 
         // endregion
