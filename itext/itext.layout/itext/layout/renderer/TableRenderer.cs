@@ -505,7 +505,8 @@ namespace iText.Layout.Renderer {
                 IRenderer firstCauseOfNothing = null;
                 // the width of the widest bottom border of the row
                 bottomTableBorderWidth = 0;
-                Border widestRowBottomBorder = bordersHandler.GetWidestHorizontalBorder(row + 1);
+                Border widestRowBottomBorder = bordersHandler.GetWidestHorizontalBorder(horizontalBordersIndexOffset + row
+                     + 1);
                 // if cell is in the last row on the page, its borders shouldn't collapse with the next row borders
                 bool processAsLast = false;
                 while (cellProcessingQueue.Count > 0) {
@@ -735,6 +736,7 @@ namespace iText.Layout.Renderer {
                         this.DeleteOwnProperty(Property.BORDER_TOP);
                     }
                     borders = GetBorders();
+                    bordersHandler.SetTableBoundingBorders(borders);
                 }
                 if (split || processAsLast || row == rows.Count - 1) {
                     if (hasContent || 0 != row) {

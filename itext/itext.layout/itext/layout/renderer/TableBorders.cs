@@ -129,21 +129,23 @@ namespace iText.Layout.Renderer {
             int row;
             for (int col = 0; col < numberOfColumns; col++) {
                 if (hasContent || (cellWithBigRowspanAdded && null == rows[splitRow - 1][col])) {
-                    if (0 == curPageIndex) {
-                        lastRowOnCurrentPage[col] = currentRow[col];
-                        curPageIndex = lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN);
-                    }
-                    if (0 == nextPageIndex) {
-                        firstRowOnTheNextPage[col] = currentRow[col];
-                        nextPageIndex = firstRowOnTheNextPage[col].GetPropertyAsInteger(Property.COLSPAN);
+                    if (null != currentRow[col]) {
+                        if (0 >= curPageIndex) {
+                            lastRowOnCurrentPage[col] = currentRow[col];
+                            curPageIndex = lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN);
+                        }
+                        if (0 >= nextPageIndex) {
+                            firstRowOnTheNextPage[col] = currentRow[col];
+                            nextPageIndex = firstRowOnTheNextPage[col].GetPropertyAsInteger(Property.COLSPAN);
+                        }
                     }
                 }
                 else {
-                    if (0 == curPageIndex) {
+                    if (0 >= curPageIndex) {
                         lastRowOnCurrentPage[col] = rows[splitRow - 1][col];
                         curPageIndex = lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN);
                     }
-                    if (0 == nextPageIndex) {
+                    if (0 >= nextPageIndex) {
                         row = splitRow;
                         while (row < rows.Count && null == rows[row][col]) {
                             row++;
@@ -179,26 +181,30 @@ namespace iText.Layout.Renderer {
             // and splitRow + 1 is the first horizontal border index on the next page
             IList<Border> lastBorderOnCurrentPage = horizontalBorders[horizontalBordersIndexOffset + splitRow];
             for (int col = 0; col < numberOfColumns; col++) {
-                CellRenderer cell = lastRowOnCurrentPage[col];
-                Border cellModelBottomBorder = GetCellSideBorder(((Cell)cell.GetModelElement()), Property.BORDER_BOTTOM);
-                Border cellCollapsedBottomBorder = GetCollapsedBorder(cellModelBottomBorder, tableBoundingBorders[2]);
-                // fix the last border on the page
-                for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
-                    lastBorderOnCurrentPage[i] = cellCollapsedBottomBorder;
+                if (null != lastRowOnCurrentPage[col]) {
+                    CellRenderer cell = lastRowOnCurrentPage[col];
+                    Border cellModelBottomBorder = GetCellSideBorder(((Cell)cell.GetModelElement()), Property.BORDER_BOTTOM);
+                    Border cellCollapsedBottomBorder = GetCollapsedBorder(cellModelBottomBorder, tableBoundingBorders[2]);
+                    // fix the last border on the page
+                    for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
+                        lastBorderOnCurrentPage[i] = cellCollapsedBottomBorder;
+                    }
+                    col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
                 }
-                col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
             }
             if (horizontalBordersIndexOffset + splitRow != horizontalBorders.Count - 1) {
                 IList<Border> firstBorderOnTheNextPage = horizontalBorders[horizontalBordersIndexOffset + splitRow + 1];
                 for (int col = 0; col < numberOfColumns; col++) {
-                    CellRenderer cell = firstRowOnTheNextPage[col];
-                    Border cellModelTopBorder = GetCellSideBorder(((Cell)cell.GetModelElement()), Property.BORDER_TOP);
-                    Border cellCollapsedTopBorder = GetCollapsedBorder(cellModelTopBorder, tableBoundingBorders[0]);
-                    // fix the last border on the page
-                    for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
-                        firstBorderOnTheNextPage[i] = cellCollapsedTopBorder;
+                    if (null != firstRowOnTheNextPage[col]) {
+                        CellRenderer cell = firstRowOnTheNextPage[col];
+                        Border cellModelTopBorder = GetCellSideBorder(((Cell)cell.GetModelElement()), Property.BORDER_TOP);
+                        Border cellCollapsedTopBorder = GetCollapsedBorder(cellModelTopBorder, tableBoundingBorders[0]);
+                        // fix the last border on the page
+                        for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
+                            firstBorderOnTheNextPage[i] = cellCollapsedTopBorder;
+                        }
+                        col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
                     }
-                    col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
                 }
             }
             // update row offest
@@ -304,7 +310,7 @@ namespace iText.Layout.Renderer {
         // region getters
         protected internal virtual Border GetWidestHorizontalBorder(int row) {
             Border theWidestBorder = null;
-            if (row < horizontalBorders.Count) {
+            if (row >= 0 && row < horizontalBorders.Count) {
                 theWidestBorder = GetWidestBorder(horizontalBorders[row]);
             }
             return theWidestBorder;
@@ -312,7 +318,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual Border GetWidestVerticalBorder(int col) {
             Border theWidestBorder = null;
-            if (col < verticalBorders.Count) {
+            if (col >= 0 && col < verticalBorders.Count) {
                 theWidestBorder = GetWidestBorder(verticalBorders[col]);
             }
             return theWidestBorder;
@@ -329,7 +335,7 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual float GetMaxRightWidth(Border tableBorder) {
             float width = null == tableBorder ? 0 : tableBorder.GetWidth();
-            Border widestBorder = GetWidestVerticalBorder(horizontalBorders.Count - 1);
+            Border widestBorder = GetWidestVerticalBorder(verticalBorders.Count - 1);
             if (null != widestBorder && widestBorder.GetWidth() >= width) {
                 width = widestBorder.GetWidth();
             }
