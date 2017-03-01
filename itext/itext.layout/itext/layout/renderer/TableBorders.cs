@@ -7,32 +7,45 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
     public class TableBorders {
+        private static Border noBorder;
+
         private IList<IList<Border>> horizontalBorders;
 
         private IList<IList<Border>> verticalBorders;
 
-        private Border[] tableBoundingBorders = null;
+        private readonly int numberOfColumns;
+
+        private Border[] tableBoundingBorders;
 
         private IList<CellRenderer[]> rows;
-
-        private readonly int numberOfColumns;
 
         private int horizontalBordersIndexOffset = 0;
 
         private int verticalBordersIndexOffset = 0;
 
-        private static Border noBorder;
-
         static TableBorders() {
+            // region constructors
             noBorder = new TableBorders.NoBorder();
         }
 
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             this.rows = rows;
             this.numberOfColumns = numberOfColumns;
+            verticalBorders = new List<IList<Border>>();
+            horizontalBorders = new List<IList<Border>>();
+            tableBoundingBorders = null;
         }
 
-        // region collapse methods
+        public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns, Border[] tableBoundingBorders) {
+            this.rows = rows;
+            this.numberOfColumns = numberOfColumns;
+            verticalBorders = new List<IList<Border>>();
+            horizontalBorders = new List<IList<Border>>();
+            SetTableBoundingBorders(tableBoundingBorders);
+        }
+
+        // endregion
+        // region collapsing and correction
         protected internal virtual iText.Layout.Renderer.TableBorders CollapseAllBordersAndEmptyRows(IList<CellRenderer
             []> rows, Border[] tableBorders, int startRow, int finishRow, int colN) {
             CellRenderer[] currentRow;
@@ -208,7 +221,6 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        // endregion
         protected internal virtual iText.Layout.Renderer.TableBorders ProcessEmptyTable(IList<Border> lastFlushedBorder
             ) {
             IList<Border> topHorizontalBorders = new List<Border>();
@@ -218,7 +230,7 @@ namespace iText.Layout.Renderer {
             }
             else {
                 for (int i = 0; i < numberOfColumns; i++) {
-                    topHorizontalBorders.Add(Border.NO_BORDER);
+                    topHorizontalBorders.Add(null);
                 }
             }
             // collapse with table bottom border
@@ -230,7 +242,6 @@ namespace iText.Layout.Renderer {
                 }
                 bottomHorizontalBorders.Add(tableBoundingBorders[2]);
             }
-            // TODO Think about initialization and building border arrays
             horizontalBorders[horizontalBordersIndexOffset] = topHorizontalBorders;
             if (horizontalBorders.Count == horizontalBordersIndexOffset + 1) {
                 horizontalBorders.Add(bottomHorizontalBorders);
@@ -241,7 +252,7 @@ namespace iText.Layout.Renderer {
             if (0 != verticalBorders.Count) {
                 verticalBorders[0][verticalBordersIndexOffset] = (tableBoundingBorders[3]);
                 for (int i = 1; i < numberOfColumns; i++) {
-                    verticalBorders[i][verticalBordersIndexOffset] = Border.NO_BORDER;
+                    verticalBorders[i][verticalBordersIndexOffset] = null;
                 }
                 verticalBorders[verticalBorders.Count - 1][verticalBordersIndexOffset] = (tableBoundingBorders[1]);
             }
@@ -249,7 +260,7 @@ namespace iText.Layout.Renderer {
                 IList<Border> tempBorders;
                 for (int i = 0; i < numberOfColumns + 1; i++) {
                     tempBorders = new List<Border>();
-                    tempBorders.Add(Border.NO_BORDER);
+                    tempBorders.Add(null);
                     verticalBorders.Add(tempBorders);
                 }
                 verticalBorders[0][0] = tableBoundingBorders[3];
@@ -258,12 +269,12 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        // region intialisers
+        // endregion
+        // region intializers
         protected internal virtual void InitializeBorders(IList<Border> lastFlushedRowBottomBorder, bool isFirstOnPage
             ) {
             IList<Border> tempBorders;
             // initialize vertical borders
-            verticalBorders = new List<IList<Border>>();
             if (0 != rows.Count) {
                 while (numberOfColumns + 1 > verticalBorders.Count) {
                     tempBorders = new List<Border>();
@@ -274,7 +285,6 @@ namespace iText.Layout.Renderer {
                 }
             }
             // initialize horizontal borders
-            horizontalBorders = new List<IList<Border>>();
             while (rows.Count + 1 > horizontalBorders.Count) {
                 tempBorders = new List<Border>();
                 while (numberOfColumns > tempBorders.Count) {
@@ -371,24 +381,20 @@ namespace iText.Layout.Renderer {
             return verticalBorders[col];
         }
 
-        // TODO after split this info is not valid
+        // TODO If one will call this method after splitting, the result will be not correct
         public virtual IList<Border> GetFirstHorizontalBorder() {
-            // TODO maybe on page
             return horizontalBorders[horizontalBordersIndexOffset];
         }
 
         public virtual IList<Border> GetLastHorizontalBorder() {
-            // TODO maybe on page
             return horizontalBorders[horizontalBorders.Count - 1];
         }
 
         public virtual IList<Border> GetFirstVerticalBorder() {
-            // TODO maybe on page
             return verticalBorders[0];
         }
 
         public virtual IList<Border> GetLastVerticalBorder() {
-            // TODO maybe on page
             return verticalBorders[verticalBorders.Count - 1];
         }
 
@@ -567,7 +573,7 @@ namespace iText.Layout.Renderer {
         }
 
         // endregion
-        //region static methods
+        //region static
         /// <summary>Returns the collapsed border.</summary>
         /// <remarks>
         /// Returns the collapsed border. We process collapse
@@ -595,12 +601,10 @@ namespace iText.Layout.Renderer {
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
                 cellModelSideBorder = cellModel.GetProperty(Property.BORDER);
                 if (null == cellModelSideBorder && !cellModel.HasProperty(Property.BORDER)) {
-                    //                cellModelSideBorder = cellModel.getDefaultProperty(borderType); // TODO
-                    //                if (null == cellModelSideBorder && !cellModel.hasDefaultProperty(borderType)) {
                     cellModelSideBorder = cellModel.GetDefaultProperty(Property.BORDER);
                 }
             }
-            //                }
+            // TODO Mayvb we need to foresee the possibility of default side border property
             return cellModelSideBorder;
         }
 
@@ -683,7 +687,7 @@ namespace iText.Layout.Renderer {
             else {
                 newBorder = new List<Border>();
                 for (int i = 0; i < numberOfColumns; i++) {
-                    newBorder.Add(Border.NO_BORDER);
+                    newBorder.Add(null);
                 }
             }
             horizontalBorders.Add(index, newBorder);
@@ -694,13 +698,13 @@ namespace iText.Layout.Renderer {
         protected internal virtual iText.Layout.Renderer.TableBorders AddNewVerticalBorder(int index, bool usePrevious
             ) {
             for (int i = 0; i < numberOfColumns + 1; i++) {
-                verticalBorders[i].Add(index, usePrevious ? verticalBorders[i][index] : Border.NO_BORDER);
+                verticalBorders[i].Add(index, usePrevious ? verticalBorders[i][index] : null);
             }
             return this;
         }
 
         // endregion
-        // region footer collapsing methods
+        // region update
         protected internal virtual iText.Layout.Renderer.TableBorders UpdateTopBorder(IList<Border> newBorder, bool
             [] useOldBorders) {
             UpdateBorder(horizontalBorders[horizontalBordersIndexOffset], newBorder, useOldBorders);
