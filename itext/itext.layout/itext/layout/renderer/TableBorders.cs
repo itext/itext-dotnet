@@ -20,6 +20,10 @@ namespace iText.Layout.Renderer {
 
         protected internal int numberOfColumns;
 
+        protected internal int horizontalBordersIndexOffset = 0;
+
+        protected internal int verticalBordersIndexOffset = 0;
+
         public TableBorders(IList<CellRenderer[]> rows, int numberOfColumns) {
             //    protected LayoutResult[] splits;
             //
@@ -82,6 +86,20 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
+        protected internal virtual iText.Layout.Renderer.TableBorders UpdateTopBorder() {
+            // TODO update with header
+            // TODO Update cell properties
+            IList<Border> topBorders = horizontalBorders[horizontalBordersIndexOffset];
+            Border topTableBorder = tableBoundingBorders[0];
+            for (int col = 0; col < numberOfColumns; col++) {
+                if (null == topBorders[col] || (null != topTableBorder && topBorders[col].GetWidth() < topTableBorder.GetWidth
+                    ())) {
+                    topBorders[col] = topTableBorder;
+                }
+            }
+            return this;
+        }
+
         protected internal virtual iText.Layout.Renderer.TableBorders ProcessSplit(int splitRow, bool hasContent, 
             bool cellWithBigRowspanAdded) {
             CellRenderer[] currentRow = rows[splitRow];
@@ -130,8 +148,8 @@ namespace iText.Layout.Renderer {
             }
             AddNewBorder(splitRow + 1);
             // the first row on the next page
+            splitRow += horizontalBordersIndexOffset;
             IList<Border> lastBorderOnCurrentPage = horizontalBorders[splitRow];
-            IList<Border> firstBorderOnTheNextPage = horizontalBorders[splitRow + 1];
             for (int col = 0; col < numberOfColumns; col++) {
                 CellRenderer cell = lastRowOnCurrentPage[col];
                 Border cellModelBottomBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER_BOTTOM);
@@ -145,19 +163,25 @@ namespace iText.Layout.Renderer {
                 }
                 col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
             }
-            for (int col = 0; col < numberOfColumns; col++) {
-                CellRenderer cell = lastRowOnCurrentPage[col];
-                Border cellModelTopBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER_TOP);
-                if (null == cellModelTopBorder) {
-                    cellModelTopBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER);
+            if (splitRow != horizontalBorders.Count - 1) {
+                IList<Border> firstBorderOnTheNextPage = horizontalBorders[splitRow + 1];
+                for (int col = 0; col < numberOfColumns; col++) {
+                    CellRenderer cell = lastRowOnCurrentPage[col];
+                    Border cellModelTopBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER_TOP);
+                    if (null == cellModelTopBorder) {
+                        cellModelTopBorder = ((Cell)cell.GetModelElement()).GetProperty(Property.BORDER);
+                    }
+                    Border cellCollapsedTopBorder = GetCollapsedBorder(cellModelTopBorder, tableBoundingBorders[0]);
+                    // fix the last border on the page
+                    for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
+                        firstBorderOnTheNextPage[i] = cellCollapsedTopBorder;
+                    }
+                    col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
                 }
-                Border cellCollapsedTopBorder = GetCollapsedBorder(cellModelTopBorder, tableBoundingBorders[0]);
-                // fix the last border on the page
-                for (int i = col; i < col + cell.GetPropertyAsInteger(Property.COLSPAN); i++) {
-                    firstBorderOnTheNextPage[i] = cellCollapsedTopBorder;
-                }
-                col += lastRowOnCurrentPage[col].GetPropertyAsInteger(Property.COLSPAN) - 1;
             }
+            // update row offest
+            horizontalBordersIndexOffset = splitRow + 1;
+            // TODO update vertical borders
             return this;
         }
 
@@ -316,6 +340,21 @@ namespace iText.Layout.Renderer {
             return width;
         }
 
+        protected internal virtual int GetCurrentHorizontalBordersIndexOffset() {
+            return horizontalBordersIndexOffset;
+        }
+
+        protected internal virtual int GetCurrentVerticalBordersIndexOffset() {
+            return verticalBordersIndexOffset;
+        }
+
+        //    protected List<List<Border>> getRendererHorizontalBorders(int startIndex, int numOfRows) {
+        //        return horizontalBorders.subList(startIndex, startIndex + numOfRows + 1);
+        //    }
+        //
+        //    protected List<List<Border>> getRendererVerticalBorders(int startIndex, int numOfRows) {
+        //        // return horizontalBorders.subList(startIndex, startIndex + numOfRows + 1);
+        //    }
         // endregion
         // region setters
         protected internal virtual iText.Layout.Renderer.TableBorders SetRows(IList<CellRenderer[]> rows) {

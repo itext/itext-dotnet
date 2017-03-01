@@ -99,6 +99,10 @@ namespace iText.Layout.Renderer {
 
         private TableBorders bordersHandler;
 
+        protected internal int horizontalBordersIndexOffset;
+
+        protected internal int verticalBordersIndexOffset;
+
         private TableRenderer() {
         }
 
@@ -361,6 +365,9 @@ namespace iText.Layout.Renderer {
             //        if (null != rows && 0 != rows.size()) {
             //            bordersHandler.correctFirstRowTopBorders(borders[0], numberOfColumns);
             //        }
+            if (IsOriginalRenderer()) {
+                bordersHandler.UpdateTopBorder();
+            }
             topTableBorderWidth = bordersHandler.GetMaxTopWidth(borders[0]);
             // Apply halves of the borders. The other halves are applied on a Cell level
             layoutBox.ApplyMargins<Rectangle>(0, rightBorderMaxWidth / 2, 0, leftBorderMaxWidth / 2, false);
@@ -646,6 +653,9 @@ namespace iText.Layout.Renderer {
                 }
                 if (split || processAsLast || row == rows.Count - 1) {
                     //if (split) {
+                    horizontalBordersIndexOffset = bordersHandler.GetCurrentHorizontalBordersIndexOffset();
+                    verticalBordersIndexOffset = bordersHandler.GetCurrentVerticalBordersIndexOffset();
+                    //                    bordersHandler.updateTopBorder();
                     bordersHandler.ProcessSplit(row, hasContent, cellWithBigRowspanAdded);
                     //}
                     // Correct layout area of the last row rendered on the page
@@ -808,8 +818,10 @@ namespace iText.Layout.Renderer {
                             }
                             else {
                                 if (currentRow[col] != null) {
-                                    rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
-                                    bool isBigRowspannedCell = 1 != rowspans[col];
+                                    if (hasContent) {
+                                        rowspans[col] = ((Cell)currentRow[col].GetModelElement()).GetRowspan();
+                                    }
+                                    bool isBigRowspannedCell = 1 != ((Cell)currentRow[col].GetModelElement()).GetRowspan();
                                     if (hasContent || isBigRowspannedCell) {
                                         columnsWithCellToBeEnlarged[col] = true;
                                         if (isBigRowspannedCell && !processAsLast) {
@@ -1540,191 +1552,192 @@ namespace iText.Layout.Renderer {
         }
 
         protected internal virtual void DrawBorders(DrawContext drawContext, bool drawTop, bool drawBottom) {
+            float height = occupiedArea.GetBBox().GetHeight();
+            if (null != footerRenderer) {
+                height -= footerRenderer.occupiedArea.GetBBox().GetHeight();
+            }
+            if (null != headerRenderer) {
+                height -= headerRenderer.occupiedArea.GetBBox().GetHeight();
+            }
+            if (height < EPS) {
+                return;
+            }
+            float startX = GetOccupiedArea().GetBBox().GetX();
+            float startY = GetOccupiedArea().GetBBox().GetY() + GetOccupiedArea().GetBBox().GetHeight();
+            foreach (IRenderer child in childRenderers) {
+                CellRenderer cell = (CellRenderer)child;
+                if (((Cell)cell.GetModelElement()).GetRow() == this.rowRange.GetStartRow()) {
+                    startY = cell.GetOccupiedArea().GetBBox().GetY() + cell.GetOccupiedArea().GetBBox().GetHeight();
+                    break;
+                }
+            }
+            foreach (IRenderer child in childRenderers) {
+                CellRenderer cell = (CellRenderer)child;
+                if (((Cell)cell.GetModelElement()).GetCol() == 0) {
+                    startX = cell.GetOccupiedArea().GetBBox().GetX();
+                    break;
+                }
+            }
+            // process halves of the borders here
+            if (childRenderers.Count == 0) {
+                Border[] borders = this.GetBorders();
+                if (null != borders[3]) {
+                    startX += borders[3].GetWidth() / 2;
+                }
+                if (null != borders[0]) {
+                    startY -= borders[0].GetWidth() / 2;
+                    if (null != borders[2]) {
+                        if (0 == heights.Count) {
+                            heights.Add(0, borders[0].GetWidth() / 2 + borders[2].GetWidth() / 2);
+                        }
+                    }
+                }
+                else {
+                    if (null != borders[2]) {
+                        startY -= borders[2].GetWidth() / 2;
+                    }
+                }
+            }
+            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
+            if (isTagged) {
+                drawContext.GetCanvas().OpenTag(new CanvasArtifact());
+            }
+            float y1 = startY;
+            if (heights.Count > 0) {
+                y1 -= (float)heights[0];
+            }
+            for (int i = 1; i < heights.Count; i++) {
+                DrawHorizontalBorder(horizontalBordersIndexOffset + i, startX, y1, drawContext.GetCanvas());
+                if (i < heights.Count) {
+                    y1 -= (float)heights[i];
+                }
+            }
+            float x1 = startX;
+            if (countedColumnWidth.Length > 0) {
+                x1 += countedColumnWidth[0];
+            }
+            for (int i = 1; i < bordersHandler.numberOfColumns; i++) {
+                DrawVerticalBorder(verticalBordersIndexOffset + i, startY, x1, drawContext.GetCanvas());
+                if (i < countedColumnWidth.Length) {
+                    x1 += countedColumnWidth[i];
+                }
+            }
+            // Draw bounding borders. Vertical borders are the last to draw in order to collapse with header / footer
+            if (drawTop) {
+                DrawHorizontalBorder(0, startX, startY, drawContext.GetCanvas());
+            }
+            if (drawBottom) {
+                DrawHorizontalBorder(heights.Count, startX, y1, drawContext.GetCanvas());
+            }
+            // draw left
+            DrawVerticalBorder(0, startY, startX, drawContext.GetCanvas());
+            // draw right
+            DrawVerticalBorder(bordersHandler.numberOfColumns, startY, x1, drawContext.GetCanvas());
+            if (isTagged) {
+                drawContext.GetCanvas().CloseTag();
+            }
         }
 
-        //        float height = occupiedArea.getBBox().getHeight();
-        //        if (null != footerRenderer) {
-        //            height -= footerRenderer.occupiedArea.getBBox().getHeight();
-        //        }
-        //        if (null != headerRenderer) {
-        //            height -= headerRenderer.occupiedArea.getBBox().getHeight();
-        //        }
-        //        if (height < EPS) {
-        //            return;
-        //        }
-        //
-        //        float startX = getOccupiedArea().getBBox().getX();
-        //        float startY = getOccupiedArea().getBBox().getY() + getOccupiedArea().getBBox().getHeight();
-        //
-        //        for (IRenderer child : childRenderers) {
-        //            CellRenderer cell = (CellRenderer) child;
-        //            if (cell.getModelElement().getRow() == this.rowRange.getStartRow()) {
-        //                startY = cell.getOccupiedArea().getBBox().getY() + cell.getOccupiedArea().getBBox().getHeight();
-        //                break;
-        //            }
-        //        }
-        //
-        //        for (IRenderer child : childRenderers) {
-        //            CellRenderer cell = (CellRenderer) child;
-        //            if (cell.getModelElement().getCol() == 0) {
-        //                startX = cell.getOccupiedArea().getBBox().getX();
-        //                break;
-        //            }
-        //        }
-        //
-        //        // process halves of the borders here
-        //        if (childRenderers.size() == 0) {
-        //            Border[] borders = this.getBorders();
-        //            if (null != borders[3]) {
-        //                startX += borders[3].getWidth() / 2;
-        //            }
-        //            if (null != borders[0]) {
-        //                startY -= borders[0].getWidth() / 2;
-        //                if (null != borders[2]) {
-        //                    if (0 == heights.size()) {
-        //                        heights.add(0, borders[0].getWidth() / 2 + borders[2].getWidth() / 2);
-        //                    }
-        //                }
-        //            } else if (null != borders[2]) {
-        //                startY -= borders[2].getWidth() / 2;
-        //            }
-        //        }
-        //
-        //        boolean isTagged = drawContext.isTaggingEnabled() && getModelElement() instanceof IAccessibleElement;
-        //        if (isTagged) {
-        //            drawContext.getCanvas().openTag(new CanvasArtifact());
-        //        }
-        //
-        //        if (drawTop) {
-        //            drawHorizontalBorder(0, startX, startY, drawContext.getCanvas());
-        //        }
-        //
-        //        float y1 = startY;
-        //        if (heights.size() > 0) {
-        //            y1 -= (float) heights.get(0);
-        //        }
-        //        for (int i = 1; i < horizontalBorders.size() - 1; i++) {
-        //            drawHorizontalBorder(i, startX, y1, drawContext.getCanvas());
-        //            if (i < heights.size()) {
-        //                y1 -= (float) heights.get(i);
-        //            }
-        //        }
-        //
-        //        float x1 = startX;
-        //        if (countedColumnWidth.length > 0) {
-        //            x1 += countedColumnWidth[0];
-        //        }
-        //        for (int i = 1; i < verticalBorders.size() - 1; i++) {
-        //            drawVerticalBorder(i, startY, x1, drawContext.getCanvas());
-        //            if (i < countedColumnWidth.length) {
-        //                x1 += countedColumnWidth[i];
-        //            }
-        //        }
-        //
-        //        // Draw bounding borders. Vertical borders are the last to draw in order to collapse with header / footer
-        //        if (drawTop) {
-        //            drawHorizontalBorder(0, startX, startY, drawContext.getCanvas());
-        //        }
-        //        if (drawBottom) {
-        //            drawHorizontalBorder(horizontalBorders.size() - 1, startX, y1, drawContext.getCanvas());
-        //        }
-        //        // draw left
-        //        drawVerticalBorder(0, startY, startX, drawContext.getCanvas());
-        //        // draw right
-        //        drawVerticalBorder(verticalBorders.size() - 1, startY, x1, drawContext.getCanvas());
-        //
-        //        if (isTagged) {
-        //            drawContext.getCanvas().closeTag();
-        //        }
         private void DrawHorizontalBorder(int i, float startX, float y1, PdfCanvas canvas) {
+            IList<Border> borders = bordersHandler.horizontalBorders[horizontalBordersIndexOffset + i];
+            float x1 = startX;
+            float x2 = x1 + countedColumnWidth[0];
+            if (i == 0) {
+                if (bordersHandler.verticalBorders != null && bordersHandler.verticalBorders.Count > 0 && bordersHandler.verticalBorders
+                    [0].Count > verticalBordersIndexOffset && bordersHandler.verticalBorders[bordersHandler.numberOfColumns
+                    ].Count > verticalBordersIndexOffset) {
+                    Border firstBorder = bordersHandler.verticalBorders[0][verticalBordersIndexOffset];
+                    if (firstBorder != null) {
+                        x1 -= firstBorder.GetWidth() / 2;
+                    }
+                }
+            }
+            else {
+                if (i == heights.Count) {
+                    if (bordersHandler.verticalBorders != null && bordersHandler.verticalBorders.Count > 0 && bordersHandler.verticalBorders
+                        [0].Count > verticalBordersIndexOffset && bordersHandler.verticalBorders[bordersHandler.numberOfColumns
+                        ] != null && bordersHandler.verticalBorders[bordersHandler.numberOfColumns].Count > verticalBordersIndexOffset
+                         && bordersHandler.verticalBorders[0] != null) {
+                        Border firstBorder = bordersHandler.verticalBorders[0][verticalBordersIndexOffset + heights.Count - 1];
+                        if (firstBorder != null) {
+                            x1 -= firstBorder.GetWidth() / 2;
+                        }
+                    }
+                }
+            }
+            int j;
+            for (j = 1; j < borders.Count; j++) {
+                Border prevBorder = borders[j - 1];
+                Border curBorder = borders[j];
+                if (prevBorder != null) {
+                    if (!prevBorder.Equals(curBorder)) {
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+                        x1 = x2;
+                    }
+                }
+                else {
+                    x1 += countedColumnWidth[j - 1];
+                    x2 = x1;
+                }
+                if (curBorder != null) {
+                    x2 += countedColumnWidth[j];
+                }
+            }
+            Border lastBorder = borders.Count > j - 1 ? borders[j - 1] : null;
+            if (lastBorder != null) {
+                if (bordersHandler.verticalBorders != null && bordersHandler.verticalBorders.Count > j && bordersHandler.verticalBorders
+                    [j] != null && bordersHandler.verticalBorders[j].Count > verticalBordersIndexOffset) {
+                    if (i == 0) {
+                        if (bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i] != null) {
+                            x2 += bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i].GetWidth() / 2;
+                        }
+                    }
+                    else {
+                        if (i == heights.Count && bordersHandler.verticalBorders[j].Count >= verticalBordersIndexOffset + i - 1 &&
+                             bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i - 1] != null) {
+                            x2 += bordersHandler.verticalBorders[j][verticalBordersIndexOffset + i - 1].GetWidth() / 2;
+                        }
+                    }
+                }
+                lastBorder.DrawCellBorder(canvas, x1, y1, x2, y1);
+            }
         }
 
-        //        List<Border> borders = horizontalBorders.get(i);
-        //        float x1 = startX;
-        //        float x2 = x1 + countedColumnWidth[0];
-        //        if (i == 0) {
-        //            if (verticalBorders != null && verticalBorders.size() > 0 && verticalBorders.get(0).size() > 0 && verticalBorders.get(verticalBorders.size() - 1).size() > 0) {
-        //                Border firstBorder = verticalBorders.get(0).get(0);
-        //                if (firstBorder != null) {
-        //                    x1 -= firstBorder.getWidth() / 2;
-        //                }
-        //            }
-        //        } else if (i == horizontalBorders.size() - 1) {
-        //            if (verticalBorders != null && verticalBorders.size() > 0 && verticalBorders.get(0).size() > 0 &&
-        //                    verticalBorders.get(verticalBorders.size() - 1) != null && verticalBorders.get(verticalBorders.size() - 1).size() > 0
-        //                    && verticalBorders.get(0) != null) {
-        //                Border firstBorder = verticalBorders.get(0).get(verticalBorders.get(0).size() - 1);
-        //                if (firstBorder != null) {
-        //                    x1 -= firstBorder.getWidth() / 2;
-        //                }
-        //            }
-        //        }
-        //
-        //        int j;
-        //        for (j = 1; j < borders.size(); j++) {
-        //            Border prevBorder = borders.get(j - 1);
-        //            Border curBorder = borders.get(j);
-        //            if (prevBorder != null) {
-        //                if (!prevBorder.equals(curBorder)) {
-        //                    prevBorder.drawCellBorder(canvas, x1, y1, x2, y1);
-        //                    prevBorder.drawCellBorder(canvas, x1, y1, x2, y1);
-        //                    x1 = x2;
-        //                }
-        //            } else {
-        //                x1 += countedColumnWidth[j - 1];
-        //                x2 = x1;
-        //            }
-        //            if (curBorder != null) {
-        //                x2 += countedColumnWidth[j];
-        //            }
-        //        }
-        //
-        //        Border lastBorder = borders.size() > j - 1 ? borders.get(j - 1) : null;
-        //        if (lastBorder != null) {
-        //            if (verticalBorders != null && verticalBorders.size() > j && verticalBorders.get(j) != null && verticalBorders.get(j).size() > 0) {
-        //                if (i == 0) {
-        //                    if (verticalBorders.get(j).get(i) != null)
-        //                        x2 += verticalBorders.get(j).get(i).getWidth() / 2;
-        //                } else if (i == horizontalBorders.size() - 1 && verticalBorders.get(j).size() >= i - 1 && verticalBorders.get(j).get(i - 1) != null) {
-        //                    x2 += verticalBorders.get(j).get(i - 1).getWidth() / 2;
-        //                }
-        //            }
-        //
-        //            lastBorder.drawCellBorder(canvas, x1, y1, x2, y1);
-        //        }
         private void DrawVerticalBorder(int i, float startY, float x1, PdfCanvas canvas) {
+            IList<Border> borders = bordersHandler.verticalBorders[i];
+            float y1 = startY;
+            float y2 = y1;
+            if (!heights.IsEmpty()) {
+                y2 = y1 - (float)heights[0];
+            }
+            int j;
+            for (j = 1; j < heights.Count; j++) {
+                Border prevBorder = borders[verticalBordersIndexOffset + j - 1];
+                Border curBorder = borders[verticalBordersIndexOffset + j];
+                if (prevBorder != null) {
+                    if (!prevBorder.Equals(curBorder)) {
+                        prevBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+                        y1 = y2;
+                    }
+                }
+                else {
+                    y1 -= (float)heights[j - 1];
+                    y2 = y1;
+                }
+                if (curBorder != null) {
+                    y2 -= (float)heights[j];
+                }
+            }
+            if (borders.Count == 0) {
+                return;
+            }
+            Border lastBorder = borders[verticalBordersIndexOffset + j - 1];
+            if (lastBorder != null) {
+                lastBorder.DrawCellBorder(canvas, x1, y1, x1, y2);
+            }
         }
 
-        //        List<Border> borders = verticalBorders.get(i);
-        //        float y1 = startY;
-        //        float y2 = y1;
-        //        if (!heights.isEmpty()) {
-        //            y2 = y1 - (float) heights.get(0);
-        //        }
-        //        int j;
-        //        for (j = 1; j < borders.size(); j++) {
-        //            Border prevBorder = borders.get(j - 1);
-        //            Border curBorder = borders.get(j);
-        //            if (prevBorder != null) {
-        //                if (!prevBorder.equals(curBorder)) {
-        //                    prevBorder.drawCellBorder(canvas, x1, y1, x1, y2);
-        //                    y1 = y2;
-        //                }
-        //            } else {
-        //                y1 -= (float) heights.get(j - 1);
-        //                y2 = y1;
-        //            }
-        //            if (curBorder != null) {
-        //                y2 -= (float) heights.get(j);
-        //            }
-        //        }
-        //        if (borders.size() == 0) {
-        //            return;
-        //        }
-        //        Border lastBorder = borders.get(j - 1);
-        //        if (lastBorder != null) {
-        //            lastBorder.drawCellBorder(canvas, x1, y1, x1, y2);
-        //        }
         /// <summary>If there is some space left, we move footer up, because initially footer will be at the very bottom of the area.
         ///     </summary>
         /// <remarks>

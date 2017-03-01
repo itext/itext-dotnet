@@ -1263,7 +1263,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             table.AddCell(new Cell().Add(gretzky));
             table.AddCell(new Cell().Add(gretzky));
             doc.Add(table);
@@ -1283,7 +1283,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
@@ -1310,7 +1310,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             table.AddCell(new Cell().Add(gretzky));
             table.AddCell(new Cell(2, 1).Add(gretzky));
             table.AddCell(new Cell().Add(gretzky));
@@ -1333,15 +1333,15 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
             table.AddCell(new Cell().Add(gretzky));
             table.AddCell(new Cell(2, 1).Add(gretzky));
             table.AddCell(new Cell().Add(image));
-            //        table.addCell(new Cell().add(gretzky));
-            //        table.addCell(new Cell().add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
+            table.AddCell(new Cell().Add(gretzky));
             doc.Add(table);
             doc.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
