@@ -86,6 +86,10 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
+        protected internal virtual iText.Layout.Renderer.TableBorders CorrectTopBorder() {
+            return CorrectTopBorder(null);
+        }
+
         protected internal virtual iText.Layout.Renderer.TableBorders CorrectTopBorder(iText.Layout.Renderer.TableBorders
              headerTableBorders) {
             IList<Border> topBorders;
@@ -112,6 +116,11 @@ namespace iText.Layout.Renderer {
 
         protected internal virtual iText.Layout.Renderer.TableBorders ProcessSplit(int splitRow, bool split, bool 
             hasContent, bool cellWithBigRowspanAdded) {
+            return ProcessSplit(splitRow, split, hasContent, cellWithBigRowspanAdded, null);
+        }
+
+        protected internal virtual iText.Layout.Renderer.TableBorders ProcessSplit(int splitRow, bool split, bool 
+            hasContent, bool cellWithBigRowspanAdded, iText.Layout.Renderer.TableBorders footerTableBorders) {
             CellRenderer[] currentRow = rows[splitRow];
             CellRenderer[] lastRowOnCurrentPage = new CellRenderer[numberOfColumns];
             CellRenderer[] firstRowOnTheNextPage = new CellRenderer[numberOfColumns];

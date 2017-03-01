@@ -823,7 +823,8 @@ namespace iText.Layout.Renderer {
                     bool[] useFooterBorders = new bool[numberOfColumns];
                     if (!tableModel.IsEmpty()) {
                         useFooterBorders = CollapseFooterBorders(0 != lastFlushedRowBottomBorder.Count && 0 == row ? lastFlushedRowBottomBorder
-                             : bordersHandler.horizontalBorders[lastRow], numberOfColumns, rows.Count);
+                             : bordersHandler.horizontalBorders[horizontalBordersIndexOffset + lastRow], numberOfColumns, rows.Count
+                            );
                         layoutBox.IncreaseHeight(bottomTableBorderWidth / 2);
                         occupiedArea.GetBBox().MoveUp(bottomTableBorderWidth / 2).DecreaseHeight(bottomTableBorderWidth / 2);
                     }
@@ -833,7 +834,8 @@ namespace iText.Layout.Renderer {
                     // apply the difference to set footer and table left/right margins identical
                     layoutBox.ApplyMargins<Rectangle>(0, -rightBorderMaxWidth / 2, 0, -leftBorderMaxWidth / 2, false);
                     PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
-                    footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox)));
+                    LayoutResult res = footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox)
+                        ));
                     layoutBox.ApplyMargins<Rectangle>(0, -rightBorderMaxWidth / 2, 0, -leftBorderMaxWidth / 2, true);
                     float footerHeight = footerRenderer.GetOccupiedAreaBBox().GetHeight();
                     footerRenderer.Move(0, -(layoutBox.GetHeight() - footerHeight));
@@ -841,8 +843,8 @@ namespace iText.Layout.Renderer {
                         ) - layoutBox.GetBottom());
                     // fix footer borders
                     if (!tableModel.IsEmpty()) {
-                        bordersHandler.UpdateTopBorder(0 != lastFlushedRowBottomBorder.Count && 0 == row ? lastFlushedRowBottomBorder
-                             : bordersHandler.horizontalBorders[lastRow], useFooterBorders);
+                        footerRenderer.bordersHandler.UpdateTopBorder(0 != lastFlushedRowBottomBorder.Count && 0 == row ? lastFlushedRowBottomBorder
+                             : bordersHandler.horizontalBorders[horizontalBordersIndexOffset + lastRow], useFooterBorders);
                     }
                 }
                 if (!split) {
