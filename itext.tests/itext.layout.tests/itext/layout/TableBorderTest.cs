@@ -34,7 +34,7 @@ namespace iText.Layout {
         /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-1124")]
         public virtual void IncompleteTableTest01() {
             fileName = "incompleteTableTest01.pdf";
             Document doc = CreateDocument();
@@ -60,7 +60,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
+        [NUnit.Framework.Ignore("DEVSIX-1124")]
         public virtual void IncompleteTableTest02() {
             fileName = "incompleteTableTest02.pdf";
             Document doc = CreateDocument();

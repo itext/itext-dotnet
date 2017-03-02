@@ -1374,6 +1374,8 @@ namespace iText.Layout.Renderer {
                     );
                 cumulativeShift += additionalCellHeight;
             }
+            occupiedArea.GetBBox().MoveDown(cumulativeShift).IncreaseHeight(cumulativeShift);
+            layoutBox.DecreaseHeight(cumulativeShift);
         }
 
         private void CorrectRowCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex, int
