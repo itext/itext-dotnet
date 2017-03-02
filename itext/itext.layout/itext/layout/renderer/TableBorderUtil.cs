@@ -52,11 +52,11 @@ namespace iText.Layout.Renderer {
         }
 
         public static Border GetCellSideBorder(Cell cellModel, int borderType) {
-            Border cellModelSideBorder = cellModel.GetProperty(borderType);
+            Border cellModelSideBorder = cellModel.GetProperty<Border>(borderType);
             if (null == cellModelSideBorder && !cellModel.HasProperty(borderType)) {
-                cellModelSideBorder = cellModel.GetProperty(Property.BORDER);
+                cellModelSideBorder = cellModel.GetProperty<Border>(Property.BORDER);
                 if (null == cellModelSideBorder && !cellModel.HasProperty(Property.BORDER)) {
-                    cellModelSideBorder = cellModel.GetDefaultProperty(Property.BORDER);
+                    cellModelSideBorder = cellModel.GetDefaultProperty<Border>(Property.BORDER);
                 }
             }
             // TODO Maybe we need to foresee the possibility of default side border property

@@ -487,7 +487,7 @@ namespace iText.Layout.Renderer {
                                                 //                                                    }
                                                 //                                                }
                                                 //                                            } else
-                                                if (row + addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
+                                                if (row + (int)addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
                                                     cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
                                                 }
                                                 break;
@@ -746,7 +746,7 @@ namespace iText.Layout.Renderer {
                 while (lastInRow >= 0 && null == lastRow[lastInRow]) {
                     lastInRow--;
                 }
-                if (lastInRow < 0 || lastRow.Length != lastInRow + lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
+                if (lastInRow < 0 || lastRow.Length != lastInRow + (int)lastRow[lastInRow].GetPropertyAsInteger(Property.COLSPAN
                     )) {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Layout.Renderer.TableRenderer));
                     logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);

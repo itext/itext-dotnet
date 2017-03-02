@@ -319,8 +319,9 @@ namespace iText.Layout.Renderer {
                         nextCellRow++;
                     }
                 }
-                while (j > 0 && rows.Count != nextCellRow && (j + rows[nextCellRow][j].GetPropertyAsInteger(Property.COLSPAN
-                    ) != col || nextCellRow - rows[nextCellRow][j].GetPropertyAsInteger(Property.ROWSPAN) + 1 != row));
+                while (j > 0 && rows.Count != nextCellRow && (j + (int)rows[nextCellRow][j].GetPropertyAsInteger(Property.
+                    COLSPAN) != col || (int)nextCellRow - rows[nextCellRow][j].GetPropertyAsInteger(Property.ROWSPAN) + 1 
+                    != row));
                 if (j >= 0 && nextCellRow != rows.Count) {
                     CellRenderer nextCell = rows[nextCellRow][j];
                     BuildBordersArrays(nextCell, nextCellRow, true);
@@ -338,7 +339,7 @@ namespace iText.Layout.Renderer {
                 }
                 CellRenderer nextCell = rows[nextCellRow][col + j];
                 // otherwise the border was considered previously
-                if (row == nextCellRow - nextCell.GetPropertyAsInteger(Property.ROWSPAN)) {
+                if (row == nextCellRow - (int)nextCell.GetPropertyAsInteger(Property.ROWSPAN)) {
                     BuildBordersArrays(nextCell, nextCellRow, true);
                 }
                 j += (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
@@ -616,7 +617,7 @@ namespace iText.Layout.Renderer {
 
         protected internal override TableBorders ApplyCellIndents(Rectangle box, float topIndent, float rightIndent
             , float bottomIndent, float leftIndent, bool reverse) {
-            box.ApplyMargins(topIndent / 2, rightIndent / 2, bottomIndent / 2, leftIndent / 2, false);
+            box.ApplyMargins<Rectangle>(topIndent / 2, rightIndent / 2, bottomIndent / 2, leftIndent / 2, false);
             return this;
         }
 
