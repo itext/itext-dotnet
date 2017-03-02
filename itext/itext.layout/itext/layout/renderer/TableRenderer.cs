@@ -91,7 +91,7 @@ namespace iText.Layout.Renderer {
 
         private float topBorderMaxWidth;
 
-        protected internal TableBorders bordersHandler;
+        internal TableBorders bordersHandler;
 
         private TableRenderer() {
         }
