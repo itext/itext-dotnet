@@ -127,6 +127,19 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Reads and parses a PDF document.</summary>
+        /// <param name="file">
+        /// the
+        /// <c>File</c>
+        /// containing the document. Stream is closed automatically, when document is closed,
+        /// if user doesn't want to close stream, he should set closeStream=false;
+        /// </param>
+        /// <exception cref="System.IO.IOException">on error</exception>
+        /// <exception cref="System.IO.FileNotFoundException">when the specified File is not found</exception>
+        public PdfReader(FileInfo file)
+            : this(file.FullName) {
+        }
+
+        /// <summary>Reads and parses a PDF document.</summary>
         /// <param name="is">
         /// the
         /// <c>InputStream</c>

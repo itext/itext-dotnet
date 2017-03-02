@@ -85,8 +85,15 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool isUserWarnedAboutAcroFormCopying;
 
+        /// <summary>Create a PdfWriter writing to the passed File and with default writer properties.</summary>
+        /// <param name="file">File to write to.</param>
+        /// <exception cref="System.IO.FileNotFoundException"/>
+        public PdfWriter(FileInfo file)
+            : this(file.FullName) {
+        }
+
         /// <summary>Create a PdfWriter writing to the passed outputstream and with default writer properties.</summary>
-        /// <param name="os">Outputstream to write too.</param>
+        /// <param name="os">Outputstream to write to.</param>
         public PdfWriter(Stream os)
             : this(os, new WriterProperties()) {
         }
