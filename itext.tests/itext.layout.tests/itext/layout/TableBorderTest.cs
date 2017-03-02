@@ -84,6 +84,23 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void IncompleteTableTest03() {
+            fileName = "incompleteTableTest03.pdf";
+            Document doc = CreateDocument();
+            Table innerTable = new Table(1);
+            Cell cell = new Cell().Add("Inner");
+            innerTable.AddCell(cell);
+            innerTable.StartNewRow();
+            Table outerTable = new Table(1);
+            outerTable.AddCell(innerTable);
+            doc.Add(outerTable);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SimpleBorderTest02() {
             fileName = "simpleBorderTest02.pdf";
             Document doc = CreateDocument();

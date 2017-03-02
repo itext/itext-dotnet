@@ -1187,6 +1187,8 @@ namespace iText.Layout.Renderer {
         private void CleanTableLayoutBorders() {
             footerRenderer = null;
             headerRenderer = null;
+            // we may have deleted empty rows and now need to update table's rowrange
+            this.rowRange = new Table.RowRange(rowRange.GetStartRow(), bordersHandler.GetFinishRow());
             //TODO do we need it?
             // delete set properties
             DeleteOwnProperty(Property.BORDER_BOTTOM);
