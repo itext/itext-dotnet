@@ -804,8 +804,23 @@ namespace iText.Layout.Renderer {
                 }
             }
             // TODO
-            if ((true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) && 0 != rows.Count) {
-                ExtendLastRow(rows[rows.Count - 1], layoutBox);
+            if (0 != rows.Count) {
+                if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
+                    ExtendLastRow(rows[rows.Count - 1], layoutBox);
+                }
+            }
+            else {
+                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight()) {
+                    float blockBottom = Math.Max(occupiedArea.GetBBox().GetBottom() - ((float)blockMinHeight - occupiedArea.GetBBox
+                        ().GetHeight()), layoutBox.GetBottom());
+                    if (0 != heights.Count) {
+                        heights[heights.Count - 1] = heights[heights.Count - 1] + occupiedArea.GetBBox().GetBottom() - blockBottom;
+                    }
+                    else {
+                        heights.Add((occupiedArea.GetBBox().GetBottom() - blockBottom) + occupiedArea.GetBBox().GetHeight() / 2);
+                    }
+                    occupiedArea.GetBBox().IncreaseHeight(occupiedArea.GetBBox().GetBottom() - blockBottom).SetY(blockBottom);
+                }
             }
             if (IsPositioned()) {
                 if (IsFixedLayout()) {
