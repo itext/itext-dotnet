@@ -657,9 +657,10 @@ namespace iText.Layout.Element {
                 }
             }
             childElements.RemoveAll(toRemove);
-            for (int i = 0; i <= lastRow - firstRow; i++) {
+            for (int i = 0; i < lastRow - firstRow; i++) {
                 rows.JRemoveAt(firstRow - rowWindowStart);
             }
+            lastAddedRow = rows.JRemoveAt(firstRow - rowWindowStart);
             rowWindowStart = lastAddedRowGroups[lastAddedRowGroups.Count - 1].GetFinishRow() + 1;
             lastAddedRowGroups = null;
         }

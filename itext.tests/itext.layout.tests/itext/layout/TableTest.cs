@@ -1005,6 +1005,27 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void NestedTablesWithMarginsTest01() {
+            String testName = "nestedTablesWithMarginsTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
+            Table innerTable = new Table(1);
+            for (int i = 0; i < 4; i++) {
+                innerTable.AddCell(new Cell().Add("Hello" + i));
+            }
+            Table outerTable = new Table(1).AddCell(new Cell().Add(innerTable));
+            outerTable.SetMarginTop(10);
+            doc.Add(outerTable);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 1)]
         [NUnit.Framework.Test]
         public virtual void SplitTableOnShortPage() {
@@ -1308,7 +1329,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             table.AddCell(new Cell().Add(gretzky));
             table.AddCell(new Cell().Add(gretzky));
             doc.Add(table);
@@ -1328,7 +1349,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);
@@ -1355,7 +1376,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A8.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             table.AddCell(new Cell().Add(gretzky));
             table.AddCell(new Cell(2, 1).Add(gretzky));
             table.AddCell(new Cell().Add(gretzky));
@@ -1378,7 +1399,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc, PageSize.A7.Rotate());
             Table table = new Table(2);
-            table.SetBorder(new SolidBorder(Color.GREEN, 5));
+            table.SetBorder(new SolidBorder(Color.GREEN, 15));
             PdfImageXObject xObject = new PdfImageXObject(ImageDataFactory.CreatePng(UrlUtil.ToURL(sourceFolder + "itext.png"
                 )));
             iText.Layout.Element.Image image = new iText.Layout.Element.Image(xObject, 50);

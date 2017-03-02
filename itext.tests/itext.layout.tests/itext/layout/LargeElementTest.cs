@@ -241,6 +241,38 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void LargeTableWithHeaderFooterTest01E() {
+            String testName = "largeTableWithHeaderFooterTest01E.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            Table table = new Table(5, true);
+            Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
+            table.AddHeaderCell(cell);
+            cell = new Cell(1, 5).Add(new Paragraph("Continue on next page"));
+            table.AddFooterCell(cell);
+            table.SetSkipFirstHeader(true);
+            table.SetSkipLastFooter(true);
+            for (int i = 0; i < 350; i++) {
+                if (i % 10 == 0) {
+                    doc.Add(table);
+                }
+                table.AddCell(new Cell().Add(new Paragraph((i + 1).ToString())));
+            }
+            // That's the trick. complete() is called when table has non-empty content, so the last row is better laid out.
+            // Compare with #largeTableWithHeaderFooterTest01A. When we flush last row before calling complete(), we don't yet know
+            // if there will be any more rows. Flushing last row implicitly by calling complete solves this problem.
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void LargeTableWithHeaderFooterTest02() {
             String testName = "largeTableWithHeaderFooterTest02.pdf";
             String outFileName = destinationFolder + testName;
