@@ -316,7 +316,6 @@ namespace iText.Layout.Renderer {
                 // the element which was the first to cause Layout.Nothing
                 IRenderer firstCauseOfNothing = null;
                 // the width of the widest bottom border of the row
-                // TODO review this logic once agan
                 bordersHandler.SetFinishRow(rowRange.GetStartRow() + row);
                 Border widestRowBottomBorder = bordersHandler.GetWidestHorizontalBorder(rowRange.GetStartRow() + row + 1);
                 bordersHandler.SetFinishRow(rowRange.GetFinishRow());
@@ -761,7 +760,6 @@ namespace iText.Layout.Renderer {
                 bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, true);
                 PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
                 bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, true);
-                // TODO
                 footerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox)));
                 bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, false);
                 float footerHeight = footerRenderer.GetOccupiedAreaBBox().GetHeight();
@@ -803,7 +801,6 @@ namespace iText.Layout.Renderer {
                     layoutBox.IncreaseHeight(bottomTableBorderWidth);
                 }
             }
-            // TODO
             if (0 != rows.Count) {
                 if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
                     ExtendLastRow(rows[rows.Count - 1], layoutBox);
@@ -1320,7 +1317,6 @@ namespace iText.Layout.Renderer {
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
             Border currentBorder = bordersHandler.GetWidestHorizontalBorder(finish + 1);
-            // TODO
             bordersHandler.SetFinishRow(finish);
             if (skip) {
                 // Update bordersHandler
@@ -1345,7 +1341,6 @@ namespace iText.Layout.Renderer {
                         int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                         int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                         float[] indents = bordersHandler.GetCellBorderIndents(targetOverflowRowIndex[col], col, rowspan, colspan);
-                        // TODO save them with child renderers or call analogical method each row
                         for (int l = heights.Count - 1 - 1; l > targetOverflowRowIndex[col] - rowspan && l >= 0; l--) {
                             height += (float)heights[l];
                         }
@@ -1394,7 +1389,6 @@ namespace iText.Layout.Renderer {
                 int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
                 float[] indents = bordersHandler.GetCellBorderIndents(currentRowIndex < row ? currentRowIndex : targetOverflowRowIndex
                     [col], col, rowspan, colspan);
-                // TODO save them with child renderers or call analogical method each row
                 for (int l = currentRowIndex < row ? currentRowIndex : heights.Count - 1; l > (currentRowIndex < row ? currentRowIndex
                      : targetOverflowRowIndex[col]) - rowspan && l >= 0; l--) {
                     height += (float)heights[l];
