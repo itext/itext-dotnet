@@ -284,6 +284,8 @@ namespace iText.Layout.Renderer {
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
             int[] targetOverflowRowIndex = new int[numberOfColumns];
+            // if this is the last renderer, we will use that information to enlarge rows proportionally
+            IList<bool> rowsHasCellWithSetHeight = new List<bool>();
             for (row = 0; row < rows.Count; row++) {
                 // if forced placement was earlier set, this means the element did not fit into the area, and in this case
                 // we only want to place the first row in a forced way, not the next ones, otherwise they will be invisible
@@ -313,6 +315,7 @@ namespace iText.Layout.Renderer {
                         cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(currentRow[col], col, row));
                     }
                 }
+                bool rowHasCellWithSetHeight = false;
                 // the element which was the first to cause Layout.Nothing
                 IRenderer firstCauseOfNothing = null;
                 // the width of the widest bottom border of the row
@@ -333,6 +336,9 @@ namespace iText.Layout.Renderer {
                     targetOverflowRowIndex[col] = currentCellInfo.finishRowInd;
                     // This cell came from the future (split occurred and we need to place cell with big rowpsan into the current area)
                     bool currentCellHasBigRowspan = (row != currentCellInfo.finishRowInd);
+                    if (cell.HasOwnOrModelProperty(Property.HEIGHT)) {
+                        rowHasCellWithSetHeight = true;
+                    }
                     float cellWidth = 0;
                     float colOffset = 0;
                     for (int k = col; k < col + colspan; k++) {
@@ -511,6 +517,7 @@ namespace iText.Layout.Renderer {
                 }
                 if (hasContent) {
                     heights.Add(rowHeight);
+                    rowsHasCellWithSetHeight.Add(rowHasCellWithSetHeight);
                     occupiedArea.GetBBox().MoveDown(rowHeight);
                     occupiedArea.GetBBox().IncreaseHeight(rowHeight);
                     layoutBox.DecreaseHeight(rowHeight);
@@ -531,8 +538,8 @@ namespace iText.Layout.Renderer {
                         skip = true;
                     }
                     // Correct occupied areas of all added cells
-                    CorrectLayoutedCellsOccupiedAreas(splits, row, targetOverflowRowIndex, blockMinHeight, layoutBox, !hasContent
-                         && cellWithBigRowspanAdded, !split, skip);
+                    CorrectLayoutedCellsOccupiedAreas(splits, row, targetOverflowRowIndex, blockMinHeight, layoutBox, rowsHasCellWithSetHeight
+                        , !split, !hasContent && cellWithBigRowspanAdded, skip);
                 }
                 // process footer with collapsed borders
                 if ((split || row == rows.Count - 1) && null != footerRenderer) {
@@ -1312,7 +1319,8 @@ namespace iText.Layout.Renderer {
         }
 
         private void CorrectLayoutedCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex
-            , float? blockMinHeight, Rectangle layoutBox, bool processBigRowspan, bool isLastRenderer, bool skip) {
+            , float? blockMinHeight, Rectangle layoutBox, IList<bool> rowsHasCellWithSetHeight, bool isLastRenderer
+            , bool processBigRowspan, bool skip) {
             // correct last height
             int finish = bordersHandler.GetFinishRow();
             bordersHandler.SetFinishRow(rowRange.GetFinishRow());
@@ -1331,6 +1339,7 @@ namespace iText.Layout.Renderer {
                      - currentBottomIndent) / 2);
                 layoutBox.DecreaseHeight((realBottomIndent - currentBottomIndent) / 2);
                 if (processBigRowspan) {
+                    // process the last row and correct its height
                     CellRenderer[] currentRow = rows[heights.Count];
                     for (int col = 0; col < currentRow.Length; col++) {
                         CellRenderer cell = null == splits[col] ? currentRow[col] : (CellRenderer)splits[col].GetSplitRenderer();
@@ -1353,30 +1362,45 @@ namespace iText.Layout.Renderer {
                 }
             }
             float additionalCellHeight = 0;
+            int numOfRowsWithFloatHeight = 0;
             if (isLastRenderer) {
-                float bottomTableBorderWidth = bordersHandler.GetMaxBottomWidth();
-                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + bottomTableBorderWidth
-                     / 2) {
-                    additionalCellHeight = Math.Min(layoutBox.GetHeight() - bottomTableBorderWidth / 2, (float)blockMinHeight 
-                        - occupiedArea.GetBBox().GetHeight() - bottomTableBorderWidth / 2) / heights.Count;
-                    for (int i = 0; i < heights.Count; i++) {
-                        heights[i] = heights[i] + additionalCellHeight;
+                float additionalHeight = 0;
+                if (null != blockMinHeight && blockMinHeight > occupiedArea.GetBBox().GetHeight() + realBottomIndent / 2) {
+                    additionalHeight = Math.Min(layoutBox.GetHeight() - realBottomIndent / 2, (float)blockMinHeight - occupiedArea
+                        .GetBBox().GetHeight() - realBottomIndent / 2);
+                    for (int k = 0; k < rowsHasCellWithSetHeight.Count; k++) {
+                        if (false.Equals(rowsHasCellWithSetHeight[k])) {
+                            numOfRowsWithFloatHeight++;
+                        }
+                    }
+                }
+                additionalCellHeight = additionalHeight / (0 == numOfRowsWithFloatHeight ? heights.Count : numOfRowsWithFloatHeight
+                    );
+                for (int k = 0; k < heights.Count; k++) {
+                    if (0 == numOfRowsWithFloatHeight || false.Equals(rowsHasCellWithSetHeight[k])) {
+                        heights[k] = (float)heights[k] + additionalCellHeight;
                     }
                 }
             }
             float cumulativeShift = 0;
             // Correct occupied areas of all added cells
             for (int k = 0; k < heights.Count; k++) {
-                CorrectRowCellsOccupiedAreas(splits, row, targetOverflowRowIndex, k, cumulativeShift, additionalCellHeight
-                    );
-                cumulativeShift += additionalCellHeight;
+                CorrectRowCellsOccupiedAreas(splits, row, targetOverflowRowIndex, k, rowsHasCellWithSetHeight, cumulativeShift
+                    , additionalCellHeight);
+                if (isLastRenderer) {
+                    if (0 == numOfRowsWithFloatHeight || false.Equals(rowsHasCellWithSetHeight[k])) {
+                        cumulativeShift += additionalCellHeight;
+                    }
+                }
             }
+            // extend occupied area, if some rows have been extended
             occupiedArea.GetBBox().MoveDown(cumulativeShift).IncreaseHeight(cumulativeShift);
             layoutBox.DecreaseHeight(cumulativeShift);
         }
 
         private void CorrectRowCellsOccupiedAreas(LayoutResult[] splits, int row, int[] targetOverflowRowIndex, int
-             currentRowIndex, float cumulativeShift, float additionalCellHeight) {
+             currentRowIndex, IList<bool> rowsHasCellWithSetHeight, float cumulativeShift, float additionalCellHeight
+            ) {
             CellRenderer[] currentRow = rows[currentRowIndex];
             for (int col = 0; col < currentRow.Length; col++) {
                 CellRenderer cell = (currentRowIndex < row || null == splits[col]) ? currentRow[col] : (CellRenderer)splits
@@ -1385,21 +1409,27 @@ namespace iText.Layout.Renderer {
                     continue;
                 }
                 float height = 0;
-                int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
                 int colspan = (int)cell.GetPropertyAsInteger(Property.COLSPAN);
+                int rowspan = (int)cell.GetPropertyAsInteger(Property.ROWSPAN);
+                float rowspanOffset = 0;
                 float[] indents = bordersHandler.GetCellBorderIndents(currentRowIndex < row ? currentRowIndex : targetOverflowRowIndex
                     [col], col, rowspan, colspan);
-                for (int l = currentRowIndex < row ? currentRowIndex : heights.Count - 1; l > (currentRowIndex < row ? currentRowIndex
-                     : targetOverflowRowIndex[col]) - rowspan && l >= 0; l--) {
+                // process rowspan
+                for (int l = (currentRowIndex < row ? currentRowIndex : heights.Count - 1) - 1; l > (currentRowIndex < row
+                     ? currentRowIndex : targetOverflowRowIndex[col]) - rowspan && l >= 0; l--) {
                     height += (float)heights[l];
+                    if (false.Equals(rowsHasCellWithSetHeight[l])) {
+                        rowspanOffset += additionalCellHeight;
+                    }
                 }
+                height += (float)heights[currentRowIndex < row ? currentRowIndex : heights.Count - 1];
                 height -= indents[0] / 2 + indents[2] / 2;
                 // Correcting cell bbox only. We don't need #move() here.
                 // This is because of BlockRenderer's specificity regarding occupied area.
                 float shift = height - cell.GetOccupiedArea().GetBBox().GetHeight();
                 Rectangle bBox = cell.GetOccupiedArea().GetBBox();
                 bBox.MoveDown(shift);
-                cell.Move(0, -(cumulativeShift - (rowspan - 1) * additionalCellHeight));
+                cell.Move(0, -(cumulativeShift - rowspanOffset));
                 bBox.SetHeight(height);
                 cell.ApplyVerticalAlignment();
             }

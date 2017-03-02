@@ -1223,6 +1223,67 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TableWithSetHeightProperties03() {
+            String testName = "tableWithSetHeightProperties03.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            String textByron = "When a man hath no freedom to fight for at home,\n" + "    Let him combat for that of his neighbours;\n"
+                 + "Let him think of the glories of Greece and of Rome,\n" + "    And get knocked on the head for his labours.\n";
+            String textFrance = "Liberte Egalite Fraternite";
+            doc.Add(new Paragraph("Default layout:"));
+            Table table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED)).AddCell(new Cell
+                ().Add(textFrance).SetBackgroundColor(Color.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
+                (Color.BLUE));
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Table's height is bigger than needed:"));
+            table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED)).AddCell(new Cell().
+                Add(textFrance).SetBackgroundColor(Color.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
+                (Color.BLUE));
+            table.SetHeight(600);
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Table's height is bigger than needed and some cells have HEIGHT property:"));
+            table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED)).AddCell(new Cell().
+                Add(textFrance).SetBackgroundColor(Color.GREEN).SetHeight(30)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
+                (Color.BLUE));
+            table.SetHeight(600);
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Table's height is bigger than needed and all cells have HEIGHT property:"));
+            table = new Table(1).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED).SetHeight(25)).AddCell
+                (new Cell().Add(textFrance).SetBackgroundColor(Color.GREEN).SetHeight(75)).AddCell(new Cell().Add(textFrance
+                ).SetBackgroundColor(Color.BLUE).SetHeight(50));
+            table.SetHeight(600);
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Table's height is bigger than needed and some cells have HEIGHT property:"));
+            table = new Table(2).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED).SetHeight(25)).AddCell
+                (new Cell().Add(textFrance).SetBackgroundColor(Color.BLUE)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
+                (Color.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED)).AddCell(new Cell().Add
+                (textFrance).SetBackgroundColor(Color.BLUE).SetHeight(50)).AddCell(new Cell().Add(textFrance).SetBackgroundColor
+                (Color.GREEN));
+            table.SetHeight(600);
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            doc.Add(new Paragraph("Table's height is bigger than needed, some cells have big rowspan and HEIGHT property:"
+                ));
+            table = new Table(2).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED)).AddCell(new Cell().
+                Add(textFrance).SetBackgroundColor(Color.BLUE)).AddCell(new Cell(2, 1).Add(textFrance).SetBackgroundColor
+                (Color.GREEN)).AddCell(new Cell().Add(textFrance).SetBackgroundColor(Color.RED)).AddCell(new Cell().Add
+                (textFrance).SetBackgroundColor(Color.GREEN).SetHeight(50));
+            table.SetHeight(600);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void EmptyTableTest01() {
             String testName = "emptyTableTest01.pdf";
