@@ -202,7 +202,7 @@ namespace iText.IO.Util {
 
         private static void LoadITextResourceAssemblies() {
 #if !NETSTANDARD1_6
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where( a=> !a.IsDynamic).ToList();
             var loadedPaths = loadedAssemblies.Select(a => a.Location).ToArray();
             
             var referencedPaths = Directory.GetFiles(FileUtil.GetBaseDirectory(), "*.dll");
