@@ -70,26 +70,32 @@ namespace iText.Layout.Renderer {
         // region collapse
         protected internal virtual iText.Layout.Renderer.CollapsedTableBorders CollapseAllBordersAndEmptyRows() {
             CellRenderer[] currentRow;
-            int[] rowsToDelete = new int[numberOfColumns];
+            int[] rowspansToDeduct = new int[numberOfColumns];
+            int numOfRowsToRemove = 0;
             for (int row = startRow - largeTableIndexOffset; row <= finishRow - largeTableIndexOffset; row++) {
                 currentRow = rows[row];
                 bool hasCells = false;
                 for (int col = 0; col < numberOfColumns; col++) {
                     if (null != currentRow[col]) {
                         int colspan = (int)currentRow[col].GetPropertyAsInteger(Property.COLSPAN);
-                        BuildBordersArrays(currentRow[col], row, col);
-                        hasCells = true;
-                        if (rowsToDelete[col] > 0) {
-                            int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowsToDelete[col];
+                        if (rowspansToDeduct[col] > 0) {
+                            int rowspan = (int)currentRow[col].GetPropertyAsInteger(Property.ROWSPAN) - rowspansToDeduct[col];
                             if (rowspan < 1) {
                                 ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
                                 logger.Warn(iText.IO.LogMessageConstant.UNEXPECTED_BEHAVIOUR_DURING_TABLE_ROW_COLLAPSING);
                                 rowspan = 1;
                             }
                             currentRow[col].SetProperty(Property.ROWSPAN, rowspan);
+                            if (0 != numOfRowsToRemove) {
+                                RemoveRows(row - numOfRowsToRemove, numOfRowsToRemove);
+                                row -= numOfRowsToRemove;
+                                numOfRowsToRemove = 0;
+                            }
                         }
+                        BuildBordersArrays(currentRow[col], row, col, rowspansToDeduct);
+                        hasCells = true;
                         for (int i = 0; i < colspan; i++) {
-                            rowsToDelete[col + i] = 0;
+                            rowspansToDeduct[col + i] = 0;
                         }
                         col += colspan - 1;
                     }
@@ -100,15 +106,19 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 if (!hasCells) {
-                    SetFinishRow(finishRow - 1);
-                    rows.Remove(currentRow);
-                    row--;
-                    for (int i = 0; i < numberOfColumns; i++) {
-                        rowsToDelete[i]++;
-                    }
                     if (row == rows.Count - 1) {
+                        RemoveRows(row - rowspansToDeduct[0], rowspansToDeduct[0]);
+                        // delete current row
+                        rows.JRemoveAt(row - rowspansToDeduct[0]);
+                        SetFinishRow(finishRow - 1);
                         ILogger logger = LoggerFactory.GetLogger(typeof(TableRenderer));
                         logger.Warn(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE);
+                    }
+                    else {
+                        for (int i = 0; i < numberOfColumns; i++) {
+                            rowspansToDeduct[i]++;
+                        }
+                        numOfRowsToRemove++;
                     }
                 }
             }
@@ -300,7 +310,8 @@ namespace iText.Layout.Renderer {
         }
 
         //endregion
-        protected internal virtual void BuildBordersArrays(CellRenderer cell, int row, int col) {
+        protected internal virtual void BuildBordersArrays(CellRenderer cell, int row, int col, int[] rowspansToDeduct
+            ) {
             // We should check if the row number is less than horizontal borders array size. It can happen if the cell with
             // big rowspan doesn't fit current area and is going to be placed partial.
             if (row > horizontalBorders.Count) {
@@ -320,10 +331,17 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 while (j > 0 && rows.Count != nextCellRow && (j + (int)rows[nextCellRow][j].GetPropertyAsInteger(Property.
-                    COLSPAN) != col || (int)nextCellRow - rows[nextCellRow][j].GetPropertyAsInteger(Property.ROWSPAN) + 1 
-                    != row));
-                if (j >= 0 && nextCellRow != rows.Count) {
+                    COLSPAN) != col || (int)nextCellRow - rows[(int)nextCellRow][j].GetPropertyAsInteger(Property.ROWSPAN)
+                     + 1 + rowspansToDeduct[j] != row));
+                // process only valid cells which hasn't been processed yet
+                if (j >= 0 && nextCellRow != rows.Count && nextCellRow > row) {
                     CellRenderer nextCell = rows[nextCellRow][j];
+                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetProperty(Property.ROWSPAN)) - rowspansToDeduct[j]
+                        );
+                    int nextCellColspan = (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
+                    for (int i = j; i < j + nextCellColspan; i++) {
+                        rowspansToDeduct[i] = 0;
+                    }
                     BuildBordersArrays(nextCell, nextCellRow, true);
                 }
             }
@@ -352,6 +370,12 @@ namespace iText.Layout.Renderer {
                 }
                 if (nextCellRow != rows.Count) {
                     CellRenderer nextCell = rows[nextCellRow][col + currCellColspan];
+                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetProperty(Property.ROWSPAN)) - rowspansToDeduct[col
+                         + currCellColspan]);
+                    int nextCellColspan = (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
+                    for (int i = col + currCellColspan; i < col + currCellColspan + nextCellColspan; i++) {
+                        rowspansToDeduct[i] = 0;
+                    }
                     BuildBordersArrays(nextCell, nextCellRow, true);
                 }
             }
@@ -429,6 +453,17 @@ namespace iText.Layout.Renderer {
                 }
             }
             return false;
+        }
+
+        private void RemoveRows(int startRow, int numOfRows) {
+            for (int row = startRow; row < startRow + numOfRows; row++) {
+                rows.JRemoveAt(startRow);
+                horizontalBorders.JRemoveAt(startRow + 1);
+                for (int j = 0; j <= numberOfColumns; j++) {
+                    verticalBorders[j].JRemoveAt(startRow + 1);
+                }
+            }
+            SetFinishRow(finishRow - numOfRows);
         }
 
         // endregion

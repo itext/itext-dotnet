@@ -143,6 +143,23 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
+        public virtual void IncompleteTableTest04() {
+            fileName = "incompleteTableTest04.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(1);
+            table.AddCell(new Cell().Add("Liberte").SetBorderBottom(new SolidBorder(Color.BLUE, 10)).SetHeight(40));
+            table.StartNewRow();
+            table.AddCell(new Cell().Add("Fraternite").SetBorderTop(new SolidBorder(Color.BLUE, 15)).SetBorderBottom(new 
+                SolidBorder(Color.BLUE, 15)).SetHeight(40));
+            table.StartNewRow();
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SimpleBorderTest02() {
             fileName = "simpleBorderTest02.pdf";
             Document doc = CreateDocument();
@@ -1110,7 +1127,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1154")]
         public virtual void BordersWithSpansTest01() {
             fileName = "bordersWithSpansTest01.pdf";
             Document doc = CreateDocument();
@@ -1121,6 +1137,39 @@ namespace iText.Layout {
             table.AddCell(new Cell(6, 1).Add(new Paragraph(6 + "_" + 1 + "_")));
             table.AddCell(new Cell(6, 9).Add(new Paragraph(6 + "_" + 9 + "_")));
             table.FlushContent();
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BordersWithSpansTest02() {
+            fileName = "bordersWithSpansTest02.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(2);
+            table.AddCell(new Cell().Add("Liberte").SetBorder(new SolidBorder(Color.MAGENTA, 1)));
+            table.AddCell(new Cell().Add("Egalite"));
+            table.AddCell(new Cell(3, 1).Add("Fra").SetBorder(new SolidBorder(Color.GREEN, 2)));
+            table.AddCell(new Cell(2, 1).Add("ter").SetBorder(new SolidBorder(Color.YELLOW, 2)));
+            table.AddCell(new Cell().Add("nite").SetBorder(new SolidBorder(Color.CYAN, 5)));
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void BordersWithSpansTest03() {
+            fileName = "bordersWithSpansTest03.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(3);
+            table.AddCell(new Cell(6, 1).Add("Fra").SetBorder(new SolidBorder(Color.ORANGE, 10)));
+            table.AddCell(new Cell().Add("Liberte").SetBorder(new SolidBorder(Color.MAGENTA, 1)));
+            table.AddCell(new Cell().Add("Egalite"));
+            table.AddCell(new Cell(5, 1).Add("ter").SetBorder(new SolidBorder(Color.GREEN, 2)));
+            table.AddCell(new Cell(2, 1).Add("ni").SetBorder(new SolidBorder(Color.YELLOW, 2)));
+            table.AddCell(new Cell(3, 1).Add("te").SetBorder(new SolidBorder(Color.CYAN, 5)));
             doc.Add(table);
             CloseDocumentAndCompareOutputs(doc);
         }

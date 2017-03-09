@@ -1291,14 +1291,14 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
+            doc.Add(new Table(1).SetBorderTop(new SolidBorder(Color.ORANGE, 50)).SetBorderBottom(new SolidBorder(Color
+                .MAGENTA, 100)));
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
             doc.Add(new Table(1).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new 
                 Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin
                 (0).SetBorder(Border.NO_BORDER)).AddCell(new Cell().SetPadding(0).SetMargin(0).SetBorder(Border.NO_BORDER
                 )).AddCell(new Cell().Add("Hello")));
-            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
-            doc.Add(new AreaBreak());
-            doc.Add(new Table(1).SetBorderTop(new SolidBorder(Color.ORANGE, 50)).SetBorderBottom(new SolidBorder(Color
-                .MAGENTA, 100)));
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Add(new AreaBreak());
             doc.Add(new Table(1).SetMinHeight(300).SetBorderRight(new SolidBorder(Color.ORANGE, 5)).SetBorderTop(new SolidBorder
