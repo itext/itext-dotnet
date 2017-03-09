@@ -73,7 +73,7 @@ namespace iText.Layout.Renderer {
     /// <see cref="DrawContext"/>
     /// .
     /// </summary>
-    public class TextRenderer : AbstractRenderer {
+    public class TextRenderer : AbstractRenderer, ILeafElementRenderer {
         protected internal const float TEXT_SPACE_COEFF = FontProgram.UNITS_NORMALIZATION;
 
         private const float ITALIC_ANGLE = 0.21256f;

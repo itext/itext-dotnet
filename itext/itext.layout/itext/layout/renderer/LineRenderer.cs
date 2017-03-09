@@ -123,14 +123,9 @@ namespace iText.Layout.Renderer {
                 }
                 float childAscent = 0;
                 float childDescent = 0;
-                if (childRenderer is TextRenderer) {
-                    childAscent = ((TextRenderer)childRenderer).GetAscent();
-                    childDescent = ((TextRenderer)childRenderer).GetDescent();
-                }
-                else {
-                    if (childRenderer is ImageRenderer) {
-                        childAscent = childRenderer.GetOccupiedArea().GetBBox().GetHeight();
-                    }
+                if (childRenderer is ILeafElementRenderer) {
+                    childAscent = ((ILeafElementRenderer)childRenderer).GetAscent();
+                    childDescent = ((ILeafElementRenderer)childRenderer).GetDescent();
                 }
                 maxAscent = Math.Max(maxAscent, childAscent);
                 maxDescent = Math.Min(maxDescent, childDescent);
@@ -465,16 +460,12 @@ namespace iText.Layout.Renderer {
         protected internal virtual LineRenderer AdjustChildrenYLine() {
             float actualYLine = occupiedArea.GetBBox().GetY() + occupiedArea.GetBBox().GetHeight() - maxAscent;
             foreach (IRenderer renderer in childRenderers) {
-                if (renderer is TextRenderer) {
-                    ((TextRenderer)renderer).MoveYLineTo(actualYLine);
+                if (renderer is ILeafElementRenderer) {
+                    float descent = ((ILeafElementRenderer)renderer).GetDescent();
+                    renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom() + descent);
                 }
                 else {
-                    if (renderer is ImageRenderer) {
-                        renderer.Move(0, actualYLine - renderer.GetOccupiedArea().GetBBox().GetBottom());
-                    }
-                    else {
-                        renderer.Move(0, occupiedArea.GetBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetBottom());
-                    }
+                    renderer.Move(0, occupiedArea.GetBBox().GetY() - renderer.GetOccupiedArea().GetBBox().GetBottom());
                 }
             }
             return this;

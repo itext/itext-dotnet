@@ -56,7 +56,7 @@ using iText.Layout.Minmaxwidth;
 using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer {
-    public class ImageRenderer : AbstractRenderer {
+    public class ImageRenderer : AbstractRenderer, ILeafElementRenderer {
         protected internal float? fixedXPosition;
 
         protected internal float? fixedYPosition;
@@ -476,6 +476,14 @@ namespace iText.Layout.Renderer {
                 rotatedDeltaY += rightBorderWidth;
             }
             occupiedArea.GetBBox().IncreaseHeight(rotatedDeltaY);
+        }
+
+        public virtual float GetAscent() {
+            return occupiedArea.GetBBox().GetHeight();
+        }
+
+        public virtual float GetDescent() {
+            return 0;
         }
     }
 }
