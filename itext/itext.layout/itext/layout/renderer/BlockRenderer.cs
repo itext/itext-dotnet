@@ -74,9 +74,12 @@ namespace iText.Layout.Renderer {
             float? blockWidth = RetrieveWidth(parentBBox.GetWidth());
             MarginsCollapseHandler marginsCollapseHandler = null;
             bool marginsCollapsingEnabled = true.Equals(GetPropertyAsBoolean(Property.COLLAPSING_MARGINS));
+            bool isCellRenderer = this is CellRenderer;
             if (marginsCollapsingEnabled) {
                 marginsCollapseHandler = new MarginsCollapseHandler(this, layoutContext.GetMarginsCollapseInfo());
-                marginsCollapseHandler.StartMarginsCollapse(parentBBox);
+                if (!isCellRenderer) {
+                    marginsCollapseHandler.StartMarginsCollapse(parentBBox);
+                }
             }
             Border[] borders = GetBorders();
             float[] paddings = GetPaddings();
@@ -88,7 +91,7 @@ namespace iText.Layout.Renderer {
             if (!IsFixedLayout() && null != blockMaxHeight && blockMaxHeight < parentBBox.GetHeight() && !true.Equals(
                 GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) {
                 float heightDelta = parentBBox.GetHeight() - (float)blockMaxHeight;
-                if (marginsCollapsingEnabled) {
+                if (marginsCollapsingEnabled && !isCellRenderer) {
                     marginsCollapseHandler.ProcessFixedHeightAdjustment(heightDelta);
                 }
                 parentBBox.MoveUp(heightDelta).SetHeight((float)blockMaxHeight);
@@ -123,7 +126,9 @@ namespace iText.Layout.Renderer {
                         if (result.GetStatus() != LayoutResult.NOTHING) {
                             marginsCollapseHandler.EndChildMarginsHandling(layoutBox);
                         }
-                        marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+                        if (!isCellRenderer) {
+                            marginsCollapseHandler.EndMarginsCollapse(layoutBox);
+                        }
                     }
                     if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA_ON_SPLIT)) || true.Equals(GetPropertyAsBoolean
                         (Property.FILL_AVAILABLE_AREA))) {
@@ -298,7 +303,7 @@ namespace iText.Layout.Renderer {
                     causeOfNothing = result.GetCauseOfNothing();
                 }
             }
-            if (marginsCollapsingEnabled) {
+            if (marginsCollapsingEnabled && !isCellRenderer) {
                 marginsCollapseHandler.EndMarginsCollapse(layoutBox);
             }
             if (true.Equals(GetPropertyAsBoolean(Property.FILL_AVAILABLE_AREA))) {
