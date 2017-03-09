@@ -183,27 +183,13 @@ namespace iText.Layout.Renderer {
             if (index == 0) {
                 IList<Border> borderList = TableBorderUtil.CreateAndFillBorderList(null, tableBoundingBorders[3], verticalBorders
                     [0].Count);
-                IList<Border> leftVerticalBorder = verticalBorders[0];
-                for (int i = 0; i < leftVerticalBorder.Count; i++) {
-                    if (null == borderList[i] || (null != leftVerticalBorder[i] && leftVerticalBorder[i].GetWidth() > borderList
-                        [i].GetWidth())) {
-                        borderList[i] = leftVerticalBorder[i];
-                    }
-                }
-                return borderList;
+                return GetCollapsedList(verticalBorders[0], borderList);
             }
             else {
                 if (index == numberOfColumns) {
                     IList<Border> borderList = TableBorderUtil.CreateAndFillBorderList(null, tableBoundingBorders[1], verticalBorders
                         [0].Count);
-                    IList<Border> rightVerticalBorder = verticalBorders[verticalBorders.Count - 1];
-                    for (int i = 0; i < rightVerticalBorder.Count; i++) {
-                        if (null == borderList[i] || (null != rightVerticalBorder[i] && rightVerticalBorder[i].GetWidth() > borderList
-                            [i].GetWidth())) {
-                            borderList[i] = rightVerticalBorder[i];
-                        }
-                    }
-                    return borderList;
+                    return GetCollapsedList(verticalBorders[verticalBorders.Count - 1], borderList);
                 }
                 else {
                     return verticalBorders[index];
