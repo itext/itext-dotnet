@@ -112,14 +112,63 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        public virtual void LastPageAreaBreakTest() {
+        public virtual void LastPageAreaBreakTest01() {
             String inputFileName = sourceFolder + "input.pdf";
-            String cmpFileName = sourceFolder + "cmp_lastPageAreaBreakTest.pdf";
-            String outFileName = destinationFolder + "lastPageAreaBreakTest.pdf";
+            String cmpFileName = sourceFolder + "cmp_lastPageAreaBreakTest01.pdf";
+            String outFileName = destinationFolder + "lastPageAreaBreakTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
             document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph("Hello there on the last page!").SetFontSize
                 (30).SetWidth(200).SetMarginTop(250));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void LastPageAreaBreakTest02() {
+            String cmpFileName = sourceFolder + "cmp_lastPageAreaBreakTest02.pdf";
+            String outFileName = destinationFolder + "lastPageAreaBreakTest02.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.AddNewPage();
+            Document document = new Document(pdfDocument);
+            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph("Hello there on the last page!").SetFontSize
+                (30).SetWidth(200).SetMarginTop(250));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void LastPageAreaBreakTest03() {
+            String cmpFileName = sourceFolder + "cmp_lastPageAreaBreakTest03.pdf";
+            String outFileName = destinationFolder + "lastPageAreaBreakTest03.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
+            pdfDocument.AddNewPage();
+            pdfDocument.AddNewPage();
+            Document document = new Document(pdfDocument);
+            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph("Hello there on the last page!").SetFontSize
+                (30).SetWidth(200).SetMarginTop(250));
+            document.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void LastPageAreaBreakTest04() {
+            String inputFileName = sourceFolder + "input.pdf";
+            String cmpFileName = sourceFolder + "cmp_lastPageAreaBreakTest04.pdf";
+            String outFileName = destinationFolder + "lastPageAreaBreakTest04.pdf";
+            PdfDocument pdfDocument = new PdfDocument(new PdfReader(inputFileName), new PdfWriter(outFileName));
+            Document document = new Document(pdfDocument);
+            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph
+                ("Hello there on the last page!").SetFontSize(30).SetWidth(200).SetMarginTop(250));
             document.Close();
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));

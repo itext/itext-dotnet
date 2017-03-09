@@ -78,9 +78,12 @@ namespace iText.Layout.Renderer {
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
                 () : null;
-            MoveToNextPage();
-            while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE && currentPageNumber < document
-                .GetPdfDocument().GetNumberOfPages()) {
+            if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {
+                while (currentPageNumber < document.GetPdfDocument().GetNumberOfPages()) {
+                    MoveToNextPage();
+                }
+            }
+            else {
                 MoveToNextPage();
             }
             PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;
