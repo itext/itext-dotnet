@@ -336,8 +336,8 @@ namespace iText.Layout.Renderer {
                 // process only valid cells which hasn't been processed yet
                 if (j >= 0 && nextCellRow != rows.Count && nextCellRow > row) {
                     CellRenderer nextCell = rows[nextCellRow][j];
-                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetProperty(Property.ROWSPAN)) - rowspansToDeduct[j]
-                        );
+                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetPropertyAsInteger(Property.ROWSPAN)) - rowspansToDeduct
+                        [j]);
                     int nextCellColspan = (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
                     for (int i = j; i < j + nextCellColspan; i++) {
                         rowspansToDeduct[i] = 0;
@@ -370,8 +370,8 @@ namespace iText.Layout.Renderer {
                 }
                 if (nextCellRow != rows.Count) {
                     CellRenderer nextCell = rows[nextCellRow][col + currCellColspan];
-                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetProperty(Property.ROWSPAN)) - rowspansToDeduct[col
-                         + currCellColspan]);
+                    nextCell.SetProperty(Property.ROWSPAN, ((int)nextCell.GetPropertyAsInteger(Property.ROWSPAN)) - rowspansToDeduct
+                        [col + currCellColspan]);
                     int nextCellColspan = (int)nextCell.GetPropertyAsInteger(Property.COLSPAN);
                     for (int i = col + currCellColspan; i < col + currCellColspan + nextCellColspan; i++) {
                         rowspansToDeduct[i] = 0;
