@@ -1107,6 +1107,24 @@ namespace iText.Layout {
             CloseDocumentAndCompareOutputs(doc);
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [NUnit.Framework.Ignore("DEVSIX-1154")]
+        public virtual void BordersWithSpansTest01() {
+            fileName = "bordersWithSpansTest01.pdf";
+            Document doc = CreateDocument();
+            Table table = new Table(10);
+            table.SetWidthPercent(100);
+            table.AddCell(new Cell(1, 3).Add(new Paragraph(1 + "_" + 3 + "_")));
+            table.AddCell(new Cell(1, 7).Add(new Paragraph(1 + "_" + 7 + "_")));
+            table.AddCell(new Cell(6, 1).Add(new Paragraph(6 + "_" + 1 + "_")));
+            table.AddCell(new Cell(6, 9).Add(new Paragraph(6 + "_" + 9 + "_")));
+            table.FlushContent();
+            doc.Add(table);
+            CloseDocumentAndCompareOutputs(doc);
+        }
+
         /// <exception cref="System.IO.FileNotFoundException"/>
         private Document CreateDocument() {
             outFileName = destinationFolder + fileName;
