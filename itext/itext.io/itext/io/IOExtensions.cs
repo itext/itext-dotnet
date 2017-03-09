@@ -147,9 +147,10 @@ namespace iText.IO {
             return value;
         }
 
-        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value) {
-            dictionary[key] = value;
-            return value;
+        public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+            if (key != null) {
+                col[key] = value;
+            }
         }
 
         public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {

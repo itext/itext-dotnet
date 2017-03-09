@@ -272,6 +272,27 @@ internal static class KernelExtensions {
         return value;
     }
 
+    public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+        if (key != null) {
+            col[key] = value;
+        }
+    }
+
+    public static Object Get<TKey, TValue>(this IDictionary col, Object key) {
+        Object value = null;
+        if (key != null) {
+            value = col[key];
+        }
+
+        return value;
+    }
+
+    public static void Put(this IDictionary col, Object key, Object value) {
+        if (key != null) {
+            col[key] = value;
+        }
+    }
+
     public static bool Contains<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
         return dictionary.ContainsKey(key);
     }

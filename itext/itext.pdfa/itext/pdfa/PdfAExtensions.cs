@@ -71,6 +71,12 @@ namespace iText.Pdfa {
             return value;
         }
 
+        public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+            if (key != null) {
+                col[key] = value;
+            }
+        }
+
         public static int JRead(this Stream stream, byte[] buffer, int offset, int count) {
             int result = stream.Read(buffer, offset, count);
             return result == 0 ? -1 : result;

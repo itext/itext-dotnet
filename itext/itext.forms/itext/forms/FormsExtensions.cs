@@ -100,6 +100,11 @@ namespace iText.Forms {
 
             return value;
         }
+        public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+            if (key != null) {
+                col[key] = value;
+            }
+        }
 
         public static TValue JRemove<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key) {
             TValue value;
