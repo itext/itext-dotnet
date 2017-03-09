@@ -438,10 +438,10 @@ namespace iText.Layout.Renderer {
                         if (unicode > -1) {
                             UnicodeScript glyphScript = iText.IO.Util.UnicodeScriptUtil.Of(unicode);
                             if (scriptFrequency.ContainsKey(glyphScript)) {
-                                scriptFrequency[glyphScript] = scriptFrequency.Get(glyphScript) + 1;
+                                scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
                             }
                             else {
-                                scriptFrequency[glyphScript] = 1;
+                                scriptFrequency.Put(glyphScript, 1);
                             }
                         }
                     }

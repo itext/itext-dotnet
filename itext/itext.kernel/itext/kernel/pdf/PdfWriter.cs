@@ -283,7 +283,7 @@ namespace iText.Kernel.Pdf {
                 if (copiedObjectRef != null) {
                     PdfIndirectReference copiedIndirectReference = copiedObjects.Get(new PdfDocument.IndirectRefDescription(copiedObjectRef
                         ));
-                    copiedObjects[copiedObjectKey] = copiedIndirectReference;
+                    copiedObjects.Put(copiedObjectKey, copiedIndirectReference);
                     return copiedIndirectReference.GetRefersTo();
                 }
             }
@@ -293,7 +293,7 @@ namespace iText.Kernel.Pdf {
                     copiedObjectKey = new PdfDocument.IndirectRefDescription(indirectReference);
                 }
                 PdfIndirectReference indRef = newObject.MakeIndirect(document).GetIndirectReference();
-                copiedObjects[copiedObjectKey] = indRef;
+                copiedObjects.Put(copiedObjectKey, indRef);
             }
             newObject.CopyContent(obj, document);
             return newObject;
@@ -400,7 +400,7 @@ namespace iText.Kernel.Pdf {
                 if (objectRef != null) {
                     return objectRef;
                 }
-                serializedContentToObjectRef[objectKey] = @object.GetIndirectReference();
+                serializedContentToObjectRef.Put(objectKey, @object.GetIndirectReference());
             }
             return null;
         }
@@ -537,7 +537,7 @@ namespace iText.Kernel.Pdf {
                 }
                 // PdfNull case is also here
                 if (savedBb != null) {
-                    objToSerializedContent[indRefKey] = bb.GetBuffer();
+                    objToSerializedContent.Put(indRefKey, bb.GetBuffer());
                     savedBb.Append(bb);
                 }
             }

@@ -1893,7 +1893,7 @@ namespace iText.Kernel.Utils {
 
             protected internal virtual void AddError(CompareTool.ObjectPath path, String message) {
                 if (this.differences.Count < this.messageLimit) {
-                    this.differences[((CompareTool.ObjectPath)path.Clone())] = message;
+                    this.differences.Put(((CompareTool.ObjectPath)path.Clone()), message);
                 }
             }
 

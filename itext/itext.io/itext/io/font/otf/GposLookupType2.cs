@@ -143,14 +143,14 @@ namespace iText.IO.Font.Otf {
                     openReader.rf.Seek(locationRule[k]);
                     IDictionary<int, GposLookupType2.PairValueFormat> pairs = new Dictionary<int, GposLookupType2.PairValueFormat
                         >();
-                    gposMap[coverageList[k]] = pairs;
+                    gposMap.Put(coverageList[k], pairs);
                     int pairValueCount = openReader.rf.ReadUnsignedShort();
                     for (int j = 0; j < pairValueCount; ++j) {
                         int glyph2 = openReader.rf.ReadUnsignedShort();
                         GposLookupType2.PairValueFormat pair = new GposLookupType2.PairValueFormat();
                         pair.first = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat1);
                         pair.second = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat2);
-                        pairs[glyph2] = pair;
+                        pairs.Put(glyph2, pair);
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace iText.IO.Font.Otf {
                 int class2Count = openReader.rf.ReadUnsignedShort();
                 for (int k = 0; k < class1Count; ++k) {
                     GposLookupType2.PairValueFormat[] pairs = new GposLookupType2.PairValueFormat[class2Count];
-                    posSubs[k] = pairs;
+                    posSubs.Put(k, pairs);
                     for (int j = 0; j < class2Count; ++j) {
                         GposLookupType2.PairValueFormat pair = new GposLookupType2.PairValueFormat();
                         pair.first = OtfReadCommon.ReadGposValueRecord(openReader, valueFormat1);

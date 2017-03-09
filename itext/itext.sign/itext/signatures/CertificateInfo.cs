@@ -119,21 +119,21 @@ namespace iText.Signatures {
 
             static X500Name() {
                 // Inner classes
-                DefaultSymbols[C] = "C";
-                DefaultSymbols[O] = "O";
-                DefaultSymbols[T] = "T";
-                DefaultSymbols[OU] = "OU";
-                DefaultSymbols[CN] = "CN";
-                DefaultSymbols[L] = "L";
-                DefaultSymbols[ST] = "ST";
-                DefaultSymbols[SN] = "SN";
-                DefaultSymbols[EmailAddress] = "E";
-                DefaultSymbols[DC] = "DC";
-                DefaultSymbols[UID] = "UID";
-                DefaultSymbols[SURNAME] = "SURNAME";
-                DefaultSymbols[GIVENNAME] = "GIVENNAME";
-                DefaultSymbols[INITIALS] = "INITIALS";
-                DefaultSymbols[GENERATION] = "GENERATION";
+                DefaultSymbols.Put(C, "C");
+                DefaultSymbols.Put(O, "O");
+                DefaultSymbols.Put(T, "T");
+                DefaultSymbols.Put(OU, "OU");
+                DefaultSymbols.Put(CN, "CN");
+                DefaultSymbols.Put(L, "L");
+                DefaultSymbols.Put(ST, "ST");
+                DefaultSymbols.Put(SN, "SN");
+                DefaultSymbols.Put(EmailAddress, "E");
+                DefaultSymbols.Put(DC, "DC");
+                DefaultSymbols.Put(UID, "UID");
+                DefaultSymbols.Put(SURNAME, "SURNAME");
+                DefaultSymbols.Put(GIVENNAME, "GIVENNAME");
+                DefaultSymbols.Put(INITIALS, "INITIALS");
+                DefaultSymbols.Put(GENERATION, "GENERATION");
             }
 
             /// <summary>A Map with values.</summary>
@@ -154,7 +154,7 @@ namespace iText.Signatures {
                         IList<String> vs = values.Get(id);
                         if (vs == null) {
                             vs = new List<String>();
-                            values[id] = vs;
+                            values.Put(id, vs);
                         }
                         vs.Add(((DerStringBase)s[1]).GetString());
                     }
@@ -177,7 +177,7 @@ namespace iText.Signatures {
                     IList<String> vs = values.Get(id);
                     if (vs == null) {
                         vs = new List<String>();
-                        values[id] = vs;
+                        values.Put(id, vs);
                     }
                     vs.Add(value);
                 }

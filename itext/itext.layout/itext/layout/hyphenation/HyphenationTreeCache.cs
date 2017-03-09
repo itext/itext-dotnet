@@ -89,7 +89,7 @@ namespace iText.Layout.Hyphenation {
         /// <param name="key">the key (ex. "de_CH" or "en")</param>
         /// <param name="hTree">the hyphenation tree</param>
         public virtual void Cache(String key, HyphenationTree hTree) {
-            hyphenTrees[key] = hTree;
+            hyphenTrees.Put(key, hTree);
         }
 
         /// <summary>Notes a key to a hyphenation tree as missing.</summary>

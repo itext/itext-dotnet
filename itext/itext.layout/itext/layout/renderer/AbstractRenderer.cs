@@ -283,7 +283,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public virtual void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         /// <summary><inheritDoc/></summary>

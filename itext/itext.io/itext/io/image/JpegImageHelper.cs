@@ -134,7 +134,7 @@ namespace iText.IO.Image {
             image.filter = "DCTDecode";
             if (image.GetColorTransform() == 0) {
                 IDictionary<String, Object> decodeParms = new Dictionary<String, Object>();
-                decodeParms["ColorTransform"] = 0;
+                decodeParms.Put("ColorTransform", 0);
                 image.decodeParms = decodeParms;
             }
             if (image.GetColorSpace() != 1 && image.GetColorSpace() != 3 && image.IsInverted()) {

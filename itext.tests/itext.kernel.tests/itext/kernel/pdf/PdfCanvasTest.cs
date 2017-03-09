@@ -860,10 +860,10 @@ namespace iText.Kernel.Pdf {
             PdfPage page = document.AddNewPage();
             PdfCanvas canvas = new PdfCanvas(page);
             Dictionary<PdfName, PdfObject> tmpMap = new Dictionary<PdfName, PdfObject>();
-            tmpMap[new PdfName("Tag")] = new PdfNumber(2);
+            tmpMap.Put(new PdfName("Tag"), new PdfNumber(2));
             PdfDictionary tag2 = new PdfDictionary(tmpMap);
             tmpMap = new Dictionary<PdfName, PdfObject>();
-            tmpMap[new PdfName("Tag")] = ((PdfNumber)new PdfNumber(3).MakeIndirect(document));
+            tmpMap.Put(new PdfName("Tag"), ((PdfNumber)new PdfNumber(3).MakeIndirect(document)));
             PdfDictionary tag3 = new PdfDictionary(tmpMap);
             canvas.BeginMarkedContent(new PdfName("Tag1")).EndMarkedContent().BeginMarkedContent(new PdfName("Tag2"), 
                 tag2).EndMarkedContent().BeginMarkedContent(new PdfName("Tag3"), (PdfDictionary)((PdfDictionary)tag3.MakeIndirect

@@ -454,8 +454,8 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         internal virtual void SaveConnectionBetweenStructAndModel(IAccessibleElement element, PdfStructElem structElem
             ) {
-            connectedModelToStruct[element] = structElem;
-            connectedStructToModel[structElem.GetPdfObject()] = element;
+            connectedModelToStruct.Put(element, structElem);
+            connectedStructToModel.Put(structElem.GetPdfObject(), element);
         }
 
         /// <returns>parent of the flushed tag</returns>

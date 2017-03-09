@@ -203,7 +203,7 @@ namespace iText.Layout.Font {
             }
             else {
                 FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, fc);
-                fontSet.GetFontSelectorCache()[key] = fontSelector;
+                fontSet.GetFontSelectorCache().Put(key, fontSelector);
                 return fontSelector;
             }
         }
@@ -279,7 +279,7 @@ namespace iText.Layout.Font {
                     encoding = GetDefaultEncoding(fontProgram);
                 }
                 PdfFont pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, GetDefaultEmbeddingFlag());
-                pdfFonts[fontInfo] = pdfFont;
+                pdfFonts.Put(fontInfo, pdfFont);
                 return pdfFont;
             }
         }

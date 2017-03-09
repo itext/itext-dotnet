@@ -393,7 +393,7 @@ namespace iText.Layout.Renderer {
                         else {
                             rows[currentCellInfo.finishRowInd][col] = null;
                             currentRow[col] = cell;
-                            rowMoves[col] = currentCellInfo.finishRowInd;
+                            rowMoves.Put(col, currentCellInfo.finishRowInd);
                         }
                     }
                     else {

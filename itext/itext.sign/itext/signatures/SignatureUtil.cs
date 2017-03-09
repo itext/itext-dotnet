@@ -234,7 +234,7 @@ namespace iText.Signatures {
                     String name = (String)objs[0];
                     int[] p = (int[])objs[1];
                     p[1] = k + 1;
-                    sigNames[name] = p;
+                    sigNames.Put(name, p);
                     orderedSignatureNames.Add(name);
                 }
             }

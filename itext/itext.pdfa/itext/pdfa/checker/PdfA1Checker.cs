@@ -270,7 +270,7 @@ namespace iText.Pdfa.Checker {
             if (colorSpaceObj != null) {
                 colorSpace = PdfColorSpace.MakeColorSpace(colorSpaceObj);
                 CheckColorSpace(colorSpace, currentColorSpaces, true, null);
-                checkedObjectsColorspace[image] = colorSpace;
+                checkedObjectsColorspace.Put(image, colorSpace);
             }
             if (image.ContainsKey(PdfName.Alternates)) {
                 throw new PdfAConformanceException(PdfAConformanceException.AnImageDictionaryShallNotContainAlternatesKey);

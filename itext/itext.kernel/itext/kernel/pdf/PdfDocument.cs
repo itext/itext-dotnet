@@ -992,13 +992,13 @@ namespace iText.Kernel.Pdf {
                 PdfPage newPage = page.CopyTo(toDocument, copier);
                 copiedPages.Add(newPage);
                 if (!page2page.ContainsKey(page)) {
-                    page2page[page] = newPage;
+                    page2page.Put(page, newPage);
                 }
                 if (lastCopiedPageNum >= pageNum) {
                     rangesOfPagesWithIncreasingNumbers.Add(new Dictionary<PdfPage, PdfPage>());
                 }
                 int lastRangeInd = rangesOfPagesWithIncreasingNumbers.Count - 1;
-                rangesOfPagesWithIncreasingNumbers[lastRangeInd][page] = newPage;
+                rangesOfPagesWithIncreasingNumbers[lastRangeInd].Put(page, newPage);
                 if (insertInBetween) {
                     toDocument.AddPage(pageInsertIndex, newPage);
                 }
@@ -1537,7 +1537,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds PdfFont without an checks</summary>
         /// <returns>the same PdfFont instance.</returns>
         internal virtual PdfFont AddFont(PdfFont font) {
-            documentFonts[font.GetPdfObject().GetIndirectReference()] = font;
+            documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
             return font;
         }
 
@@ -1565,7 +1565,7 @@ namespace iText.Kernel.Pdf {
             IList<PdfLinkAnnotation> pageAnnotations = linkAnnotations.Get(page);
             if (pageAnnotations == null) {
                 pageAnnotations = new List<PdfLinkAnnotation>();
-                linkAnnotations[page] = pageAnnotations;
+                linkAnnotations.Put(page, pageAnnotations);
             }
             pageAnnotations.Add(annotation);
         }

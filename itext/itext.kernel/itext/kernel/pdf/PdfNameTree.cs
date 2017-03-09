@@ -85,7 +85,7 @@ namespace iText.Kernel.Pdf {
                     foreach (String key in keys) {
                         PdfArray arr = GetNameArray(items.Get(key));
                         if (arr != null) {
-                            items[key] = arr;
+                            items.Put(key, arr);
                         }
                         else {
                             items.JRemove(key);
@@ -102,7 +102,7 @@ namespace iText.Kernel.Pdf {
                         if (array == null) {
                             continue;
                         }
-                        items[key.GetValue()] = array;
+                        items.Put(key.GetValue(), array);
                     }
                 }
             }
@@ -125,7 +125,7 @@ namespace iText.Kernel.Pdf {
                 }
             }
             modified = true;
-            items[key] = value;
+            items.Put(key, value);
         }
 
         /// <returns>True if the object has been modified, false otherwise.</returns>
@@ -222,7 +222,7 @@ namespace iText.Kernel.Pdf {
                         leftOver = null;
                     }
                     if (k < names.Size()) {
-                        items[name.ToUnicodeString()] = names.Get(k);
+                        items.Put(name.ToUnicodeString(), names.Get(k));
                     }
                     else {
                         return name;

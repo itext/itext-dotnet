@@ -174,7 +174,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <returns>the existing registered handler, if any</returns>
         public virtual IXObjectDoHandler RegisterXObjectDoHandler(PdfName xobjectSubType, IXObjectDoHandler handler
             ) {
-            return xobjectDoHandlers[xobjectSubType] = handler;
+            return xobjectDoHandlers.Put(xobjectSubType, handler);
         }
 
         /// <summary>Registers a content operator that will be called when the specified operator string is encountered during content processing.
@@ -189,7 +189,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <param name="operator">the operator that will receive notification when the operator is encountered</param>
         /// <returns>the existing registered operator, if any</returns>
         public virtual IContentOperator RegisterContentOperator(String operatorString, IContentOperator @operator) {
-            return operators[operatorString] = @operator;
+            return operators.Put(operatorString, @operator);
         }
 
         /// <summary>
@@ -459,7 +459,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfFont font = (PdfFont)(fontRef == null ? null : fontRef.Target);
             if (font == null) {
                 font = PdfFontFactory.CreateFont(fontDict);
-                cachedFonts[n] = new WeakReference(font);
+                cachedFonts.Put(n, new WeakReference(font));
             }
             return font;
         }

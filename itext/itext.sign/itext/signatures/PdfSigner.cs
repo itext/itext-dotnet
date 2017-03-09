@@ -465,7 +465,7 @@ namespace iText.Signatures {
             // time-stamp will over-rule this
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc[PdfName.Contents] = estimatedSize * 2 + 2;
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
             String hashAlgorithm = externalSignature.GetHashAlgorithm();
             PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
@@ -521,7 +521,7 @@ namespace iText.Signatures {
             externalSignatureContainer.ModifySigningDictionary(dic.GetPdfObject());
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc[PdfName.Contents] = estimatedSize * 2 + 2;
+            exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
             byte[] encodedSig = externalSignatureContainer.Sign(data);
@@ -561,7 +561,7 @@ namespace iText.Signatures {
             dic.Put(PdfName.Type, PdfName.DocTimeStamp);
             cryptoDictionary = dic;
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
-            exc[PdfName.Contents] = contentEstimated * 2 + 2;
+            exc.Put(PdfName.Contents, contentEstimated * 2 + 2);
             PreClose(exc);
             Stream data = GetRangeStream();
             IDigest messageDigest = tsa.GetMessageDigest();
@@ -765,12 +765,12 @@ namespace iText.Signatures {
             }
             exclusionLocations = new Dictionary<PdfName, PdfLiteral>();
             PdfLiteral lit = new PdfLiteral(80);
-            exclusionLocations[PdfName.ByteRange] = lit;
+            exclusionLocations.Put(PdfName.ByteRange, lit);
             cryptoDictionary.Put(PdfName.ByteRange, lit);
             foreach (KeyValuePair<PdfName, int?> entry in exclusionSizes) {
                 PdfName key = entry.Key;
                 lit = new PdfLiteral((int)entry.Value);
-                exclusionLocations[key] = lit;
+                exclusionLocations.Put(key, lit);
                 cryptoDictionary.Put(key, lit);
             }
             if (certificationLevel > 0) {

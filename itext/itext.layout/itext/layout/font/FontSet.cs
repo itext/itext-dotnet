@@ -104,7 +104,7 @@ namespace iText.Layout.Font {
             }
             FontInfo fontInfo = FontInfo.Create(fontProgram, encoding);
             AddFontInfo(fontInfo);
-            fontPrograms[fontInfo] = fontProgram;
+            fontPrograms.Put(fontInfo, fontProgram);
             return true;
         }
 

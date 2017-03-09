@@ -134,7 +134,7 @@ namespace iText.IO.Font.Otf {
                     SubstLookupRecord[] substLookupRecords = openReader.ReadSubstLookupRecords(substCount);
                     subRuleSet.Add(new SubTableLookup5Format1.SubstRuleFormat1(inputGlyphIds, substLookupRecords));
                 }
-                substMap[coverageGlyphIds[i]] = subRuleSet;
+                substMap.Put(coverageGlyphIds[i], subRuleSet);
             }
             subTables.Add(new SubTableLookup5Format1(openReader, lookupFlag, substMap));
         }

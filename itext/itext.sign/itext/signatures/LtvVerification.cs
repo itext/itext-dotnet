@@ -174,7 +174,7 @@ namespace iText.Signatures {
             if (vd.crls.Count == 0 && vd.ocsps.Count == 0) {
                 return false;
             }
-            validated[GetSignatureHashKey(signatureName)] = vd;
+            validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
@@ -229,7 +229,7 @@ namespace iText.Signatures {
                     vd.certs.Add(cert);
                 }
             }
-            validated[GetSignatureHashKey(signatureName)] = vd;
+            validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 

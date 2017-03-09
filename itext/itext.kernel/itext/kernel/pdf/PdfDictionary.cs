@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="entrySet">Set containing Map#Entries to be inserted into PdfDictionary</param>
         public PdfDictionary(ICollection<KeyValuePair<PdfName, PdfObject>> entrySet) {
             foreach (KeyValuePair<PdfName, PdfObject> entry in entrySet) {
-                this.map[entry.Key] = entry.Value;
+                this.map.Put(entry.Key, entry.Value);
             }
         }
 
@@ -286,7 +286,7 @@ namespace iText.Kernel.Pdf {
         /// <returns>the previous PdfObject associated with this key</returns>
         public virtual PdfObject Put(PdfName key, PdfObject value) {
             System.Diagnostics.Debug.Assert(value != null);
-            return map[key] = value;
+            return map.Put(key, value);
         }
 
         /// <summary>Removes the specified key from this PdfDictionary.</summary>
@@ -400,10 +400,10 @@ namespace iText.Kernel.Pdf {
             foreach (KeyValuePair<PdfName, PdfObject> entry in map) {
                 PdfObject value = entry.Value;
                 if (value.IsIndirectReference()) {
-                    directMap[entry.Key] = ((PdfIndirectReference)value).GetRefersTo();
+                    directMap.Put(entry.Key, ((PdfIndirectReference)value).GetRefersTo());
                 }
                 else {
-                    directMap[entry.Key] = value;
+                    directMap.Put(entry.Key, value);
                 }
             }
             return directMap;
@@ -441,7 +441,7 @@ namespace iText.Kernel.Pdf {
             foreach (PdfName key in excludeKeys) {
                 PdfObject obj = map.Get(key);
                 if (obj != null) {
-                    excluded[key] = map.JRemove(key);
+                    excluded.Put(key, map.JRemove(key));
                 }
             }
             iText.Kernel.Pdf.PdfDictionary dictionary = (iText.Kernel.Pdf.PdfDictionary)Clone();
@@ -508,7 +508,7 @@ namespace iText.Kernel.Pdf {
             foreach (PdfName key in excludeKeys) {
                 PdfObject obj = map.Get(key);
                 if (obj != null) {
-                    excluded[key] = map.JRemove(key);
+                    excluded.Put(key, map.JRemove(key));
                 }
             }
             iText.Kernel.Pdf.PdfDictionary dictionary = ((iText.Kernel.Pdf.PdfDictionary)CopyTo(document, allowDuplicating
@@ -551,7 +551,7 @@ namespace iText.Kernel.Pdf {
             base.CopyContent(from, document);
             iText.Kernel.Pdf.PdfDictionary dictionary = (iText.Kernel.Pdf.PdfDictionary)from;
             foreach (KeyValuePair<PdfName, PdfObject> entry in dictionary.map) {
-                map[entry.Key] = entry.Value.ProcessCopying(document, false);
+                map.Put(entry.Key, entry.Value.ProcessCopying(document, false));
             }
         }
 

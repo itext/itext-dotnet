@@ -175,7 +175,7 @@ namespace iText.Layout.Font {
 
         private static void PutFontNamesToCache(FontCacheKey key, FontProgramDescriptor descriptor) {
             if (descriptor != null) {
-                fontNamesCache[key] = descriptor;
+                fontNamesCache.Put(key, descriptor);
             }
         }
     }

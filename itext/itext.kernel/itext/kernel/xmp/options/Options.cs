@@ -212,7 +212,7 @@ namespace iText.Kernel.XMP.Options {
             if (optionsNames.Contains(key)) {
                 result = DefineOptionName(option);
                 if (result != null) {
-                    optionsNames[key] = result;
+                    optionsNames.Put(key, result);
                 }
                 else {
                     result = "<option name not defined>";

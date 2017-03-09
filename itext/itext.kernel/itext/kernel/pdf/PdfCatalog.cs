@@ -229,7 +229,7 @@ namespace iText.Kernel.Pdf {
             PdfNameTree tree = nameTrees.Get(treeType);
             if (tree == null) {
                 tree = new PdfNameTree(this, treeType);
-                nameTrees[treeType] = tree;
+                nameTrees.Put(treeType, tree);
             }
             return tree;
         }
@@ -492,7 +492,7 @@ namespace iText.Kernel.Pdf {
                 IList<PdfOutline> outs = pagesWithOutlines.Get(pageObj);
                 if (outs == null) {
                     outs = new List<PdfOutline>();
-                    pagesWithOutlines[pageObj] = outs;
+                    pagesWithOutlines.Put(pageObj, outs);
                 }
                 outs.Add(outline);
             }

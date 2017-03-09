@@ -65,16 +65,16 @@ namespace iText.Kernel.Pdf.Filters {
             // Dev note:  we eventually want to refactor PdfReader so all of the existing filter functionality is moved into this class
             // it may also be better to split the sub-classes out into a separate package
             IDictionary<PdfName, IFilterHandler> map = new Dictionary<PdfName, IFilterHandler>();
-            map[PdfName.FlateDecode] = new FlateDecodeFilter();
-            map[PdfName.Fl] = new FlateDecodeFilter();
-            map[PdfName.ASCIIHexDecode] = new ASCIIHexDecodeFilter();
-            map[PdfName.AHx] = new ASCIIHexDecodeFilter();
-            map[PdfName.ASCII85Decode] = new ASCII85DecodeFilter();
-            map[PdfName.A85] = new ASCII85DecodeFilter();
-            map[PdfName.LZWDecode] = new LZWDecodeFilter();
-            map[PdfName.CCITTFaxDecode] = new CCITTFaxDecodeFilter();
-            map[PdfName.Crypt] = new DoNothingFilter();
-            map[PdfName.RunLengthDecode] = new RunLengthDecodeFilter();
+            map.Put(PdfName.FlateDecode, new FlateDecodeFilter());
+            map.Put(PdfName.Fl, new FlateDecodeFilter());
+            map.Put(PdfName.ASCIIHexDecode, new ASCIIHexDecodeFilter());
+            map.Put(PdfName.AHx, new ASCIIHexDecodeFilter());
+            map.Put(PdfName.ASCII85Decode, new ASCII85DecodeFilter());
+            map.Put(PdfName.A85, new ASCII85DecodeFilter());
+            map.Put(PdfName.LZWDecode, new LZWDecodeFilter());
+            map.Put(PdfName.CCITTFaxDecode, new CCITTFaxDecodeFilter());
+            map.Put(PdfName.Crypt, new DoNothingFilter());
+            map.Put(PdfName.RunLengthDecode, new RunLengthDecodeFilter());
             defaults = JavaCollectionsUtil.UnmodifiableMap(map);
         }
 

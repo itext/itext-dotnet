@@ -197,7 +197,7 @@ namespace iText.Layout {
         }
 
         public override void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         /// <summary>

@@ -153,7 +153,7 @@ namespace iText.Kernel.Pdf.Tagging {
             SortedDictionary<int, PdfMcr> pageMcrs = pageToPageMcrs.Get(mcrPageObject.GetIndirectReference());
             if (pageMcrs == null) {
                 pageMcrs = new SortedDictionary<int, PdfMcr>();
-                pageToPageMcrs[mcrPageObject.GetIndirectReference()] = pageMcrs;
+                pageToPageMcrs.Put(mcrPageObject.GetIndirectReference(), pageMcrs);
             }
             if (mcr is PdfObjRef) {
                 PdfDictionary obj = ((PdfDictionary)mcr.GetPdfObject()).GetAsDictionary(PdfName.Obj);
@@ -163,14 +163,14 @@ namespace iText.Kernel.Pdf.Tagging {
                 }
                 PdfNumber n = obj.GetAsNumber(PdfName.StructParent);
                 if (n != null) {
-                    pageMcrs[StructParentIndexIntoKey(n.IntValue())] = mcr;
+                    pageMcrs.Put(StructParentIndexIntoKey(n.IntValue()), mcr);
                 }
                 else {
                     throw new PdfException(PdfException.StructParentIndexNotFoundInTaggedObject);
                 }
             }
             else {
-                pageMcrs[mcr.GetMcid()] = mcr;
+                pageMcrs.Put(mcr.GetMcid(), mcr);
             }
             if (!registeringOnInit) {
                 structTreeRoot.SetModified();

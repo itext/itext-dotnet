@@ -297,7 +297,7 @@ namespace iText.IO.Font {
         protected internal virtual void FixSpaceIssue() {
             Glyph space = unicodeToGlyph.Get(32);
             if (space != null) {
-                codeToGlyph[space.GetCode()] = space;
+                codeToGlyph.Put(space.GetCode(), space);
             }
         }
 

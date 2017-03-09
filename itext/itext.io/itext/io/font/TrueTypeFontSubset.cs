@@ -282,7 +282,7 @@ namespace iText.IO.Font {
                 tableLocation[TABLE_CHECKSUM] = rf.ReadInt();
                 tableLocation[TABLE_OFFSET] = rf.ReadInt();
                 tableLocation[TABLE_LENGTH] = rf.ReadInt();
-                tableDirectory[tag] = tableLocation;
+                tableDirectory.Put(tag, tableLocation);
             }
         }
 

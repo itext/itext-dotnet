@@ -97,7 +97,7 @@ namespace iText.IO.Image {
                     IDictionary<String, Object> decodeParms = new Dictionary<String, Object>();
                     //                PdfStream globalsStream = new PdfStream().makeIndirect(pdfStream.getDocument());
                     //                globalsStream.getOutputStream().write(globals);
-                    decodeParms["JBIG2Globals"] = globals;
+                    decodeParms.Put("JBIG2Globals", globals);
                     image.decodeParms = decodeParms;
                 }
                 image.SetFilter("JBIG2Decode");
