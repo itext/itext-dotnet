@@ -73,10 +73,10 @@ namespace iText.Barcodes {
             return value;
         }
 
-        public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
-            if (key != null) {
-                col[key] = value;
-            }
+        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+            TValue oldVal = col.Get(key);
+            col[key] = value;
+            return oldVal;
         }
 
         public static Assembly GetAssembly(this Type type) {

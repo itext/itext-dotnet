@@ -272,13 +272,13 @@ internal static class KernelExtensions {
         return value;
     }
 
-    public static void Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
-        if (key != null) {
-            col[key] = value;
-        }
+    public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+        TValue oldVal = col.Get(key);
+        col[key] = value;
+        return oldVal;
     }
 
-    public static Object Get<TKey, TValue>(this IDictionary col, Object key) {
+    public static Object Get(this IDictionary col, Object key) {
         Object value = null;
         if (key != null) {
             value = col[key];
