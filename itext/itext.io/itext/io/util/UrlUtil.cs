@@ -112,5 +112,9 @@ namespace iText.IO.Util {
         public static Uri ToNormalizedURI(FileInfo file) {
             return new Uri(file.FullName);
         }
+
+        public static Uri GetFinalUri(Uri uri) {
+            return uri;
+        }
     }
 }
