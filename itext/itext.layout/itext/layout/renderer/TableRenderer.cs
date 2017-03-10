@@ -386,6 +386,10 @@ namespace iText.Layout.Renderer {
                         // cell from the future
                         if (cellResult.GetStatus() != LayoutResult.FULL) {
                             splits[col] = cellResult;
+                            if (cellResult.GetStatus() != LayoutResult.NOTHING) {
+                                // one should disable cell alignment if it was split
+                                splits[col].GetSplitRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.TOP);
+                            }
                         }
                         if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
                             currentRow[col] = (CellRenderer)cellResult.GetSplitRenderer();
@@ -456,6 +460,16 @@ namespace iText.Layout.Renderer {
                                         continue;
                                     }
                                     else {
+                                        int reusedRows = 0;
+                                        if (null != res.GetSplitRenderer()) {
+                                            reusedRows = ((iText.Layout.Renderer.TableRenderer)res.GetSplitRenderer()).rows.Count;
+                                        }
+                                        for (int i = 0; i < numberOfColumns; i++) {
+                                            if (null != rows[row + reusedRows][i]) {
+                                                rows[row + reusedRows][i] = (CellRenderer)((Cell)rows[row + reusedRows][i].GetModelElement()).CreateRendererSubTree
+                                                    ();
+                                            }
+                                        }
                                         if (null != headerRenderer) {
                                             bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
                                         }
@@ -471,28 +485,6 @@ namespace iText.Layout.Renderer {
                                         for (int addRow = row + 1; addRow < rows.Count; addRow++) {
                                             if (rows[addRow][addCol] != null) {
                                                 CellRenderer addRenderer = rows[addRow][addCol];
-                                                // TODO DEVSIX-1060
-                                                verticalAlignment = addRenderer.GetProperty<VerticalAlignment?>(Property.VERTICAL_ALIGNMENT);
-                                                //                                            if (verticalAlignment != null && verticalAlignment.equals(VerticalAlignment.BOTTOM)) {
-                                                //                                                if (row + addRenderer.getPropertyAsInteger(Property.ROWSPAN) - 1 < addRow) {
-                                                //                                                    cellProcessingQueue.addLast(new CellRendererInfo(addRenderer, addCol, addRow));
-                                                //                                                } else {
-                                                //                                                    horizontalBorders.get(row + 1).set(addCol, addRenderer.getBorders()[2]);
-                                                //                                                    if (addCol == 0) {
-                                                //                                                        for (int i = row; i >= 0; i--) {
-                                                //                                                            if (!checkAndReplaceBorderInArray(verticalBorders, addCol, i, addRenderer.getBorders()[3], false)) {
-                                                //                                                                break;
-                                                //                                                            }
-                                                //                                                        }
-                                                //                                                    } else if (addCol == numberOfColumns - 1) {
-                                                //                                                        for (int i = row; i >= 0; i--) {
-                                                //                                                            if (!checkAndReplaceBorderInArray(verticalBorders, addCol + 1, i, addRenderer.getBorders()[1], true)) {
-                                                //                                                                break;
-                                                //                                                            }
-                                                //                                                        }
-                                                //                                                    }
-                                                //                                                }
-                                                //                                            } else
                                                 if (row + (int)addRenderer.GetPropertyAsInteger(Property.ROWSPAN) - 1 >= addRow) {
                                                     cellProcessingQueue.AddLast(new TableRenderer.CellRendererInfo(addRenderer, addCol, addRow));
                                                 }
@@ -503,15 +495,19 @@ namespace iText.Layout.Renderer {
                                 }
                             }
                             split = true;
+                            splits[col] = cellResult;
                             if (cellResult.GetStatus() == LayoutResult.NOTHING) {
                                 hasContent = false;
                             }
-                            splits[col] = cellResult;
+                            else {
+                                // one should disable cell alignment if it was split
+                                splits[col].GetSplitRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.TOP);
+                            }
                         }
                     }
                     currChildRenderers.Add(cell);
                     if (cellResult.GetStatus() != LayoutResult.NOTHING) {
-                        rowHeight = Math.Max(rowHeight, cell.GetOccupiedArea().GetBBox().GetHeight() + bordersHandler.GetCellVerticalAddition
+                        rowHeight = Math.Max(rowHeight, cellResult.GetOccupiedArea().GetBBox().GetHeight() + bordersHandler.GetCellVerticalAddition
                             (cellIndents) - rowspanOffset);
                     }
                 }
