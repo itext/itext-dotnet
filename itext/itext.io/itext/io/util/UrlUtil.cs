@@ -113,7 +113,7 @@ namespace iText.IO.Util {
             return new Uri(file.FullName);
         }
 
-        public static Uri GetFinalUri(Uri uri) {
+        public static Uri GetFinalUrl(Uri uri) {
             return uri;
         }
     }
