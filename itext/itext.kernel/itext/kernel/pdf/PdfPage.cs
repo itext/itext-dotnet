@@ -521,7 +521,7 @@ namespace iText.Kernel.Pdf {
         public virtual PdfFormXObject CopyAsFormXObject(PdfDocument toDocument) {
             PdfFormXObject xObject = new PdfFormXObject(GetCropBox());
             IList<PdfName> excludedKeys = new List<PdfName>(iText.IO.Util.JavaUtil.ArraysAsList(PdfName.MediaBox, PdfName
-                .CropBox, PdfName.Contents, PdfName.Group));
+                .CropBox, PdfName.Contents));
             excludedKeys.AddAll(this.excludedKeys);
             PdfDictionary dictionary = GetPdfObject().CopyTo(toDocument, excludedKeys, true);
             xObject.GetPdfObject().GetOutputStream().Write(GetContentBytes());
