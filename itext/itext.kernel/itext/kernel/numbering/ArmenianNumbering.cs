@@ -47,7 +47,7 @@ namespace iText.Kernel.Numbering {
     /// <summary>This class can produce String combinations representing an armenian numeral.</summary>
     /// <remarks>
     /// This class can produce String combinations representing an armenian numeral.
-    /// See https://en.wikipedia.org/wiki/Georgian_numerals
+    /// See https://en.wikipedia.org/wiki/Armenian_numerals
     /// </remarks>
     public class ArmenianNumbering {
         private static readonly ArmenianNumbering.ArmenianDigit[] DIGITS = new ArmenianNumbering.ArmenianDigit[] { 
@@ -88,9 +88,9 @@ namespace iText.Kernel.Numbering {
         }
 
         private class ArmenianDigit {
-            private char digit;
+            internal char digit;
 
-            private int value;
+            internal int value;
 
             internal ArmenianDigit(char digit, int value) {
                 this.digit = digit;

@@ -89,9 +89,9 @@ namespace iText.Kernel.Numbering {
         }
 
         private class GeorgianDigit {
-            private char digit;
+            internal char digit;
 
-            private int value;
+            internal int value;
 
             internal GeorgianDigit(char digit, int value) {
                 this.digit = digit;
