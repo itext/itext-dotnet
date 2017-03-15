@@ -75,7 +75,7 @@ namespace iText.Kernel {
         /// This String contains the version number of this iText release.
         /// For debugging purposes, we request you NOT to change this constant.
         /// </remarks>
-        private static String release = "7.0.2";
+        private static String release = "7.0.2.2";
 
         /// <summary>This String contains the iText version as shown in the producer line.</summary>
         /// <remarks>
