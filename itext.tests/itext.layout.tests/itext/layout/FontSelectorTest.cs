@@ -72,14 +72,15 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "cyrillicAndLatinGroup.pdf";
             String cmpFileName = sourceFolder + "cmp_cyrillicAndLatinGroup.pdf";
             FontProvider sel = new FontProvider();
-            sel.AddFont(fontsFolder + "Puritan2.otf");
             sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
             sel.AddFont(fontsFolder + "FreeSans.ttf");
+            FontInfo puritan = sel.GetFontSet().Add(fontsFolder + "Puritan2.otf");
+            puritan.GetDescriptor().AddAlias("Puritan42");
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
             doc.SetFontProvider(sel);
-            doc.SetProperty(Property.FONT, "Puritan");
+            doc.SetProperty(Property.FONT, "Puritan42");
             Text text = new Text(s).SetBackgroundColor(Color.LIGHT_GRAY);
             Paragraph paragraph = new Paragraph(text);
             doc.Add(paragraph);

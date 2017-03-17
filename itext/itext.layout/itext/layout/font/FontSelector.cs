@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
@@ -109,9 +110,6 @@ namespace iText.Layout.Font {
                         fc.SetMonospaceFlag(true);
                     }
                     res = CharacteristicsSimilarity(fontName, fc, o2) - CharacteristicsSimilarity(fontName, fc, o1);
-                    if (res != 0) {
-                        return res;
-                    }
                 }
                 return res;
             }
@@ -175,13 +173,15 @@ namespace iText.Layout.Font {
                         score -= 1;
                     }
                 }
-                if (fontInfo.GetDescriptor().GetFullNameLowerCase().Equals(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
-                    ().Equals(fontName)) {
+                FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
+                if (descriptor.GetFullNameLowerCase().Equals(fontName) || descriptor.GetFontNameLowerCase().Equals(fontName
+                    ) || descriptor.MatchAlias(fontName)) {
                     score += 10;
                 }
                 else {
-                    if (fontInfo.GetDescriptor().GetFullNameLowerCase().Contains(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
-                        ().Contains(fontName)) {
+                    if (descriptor.GetFullNameLowerCase().Contains(fontName) || descriptor.GetFontNameLowerCase().Contains(fontName
+                        )) {
+                        //yes, we will not find contains for each alias.
                         score += 7;
                     }
                 }

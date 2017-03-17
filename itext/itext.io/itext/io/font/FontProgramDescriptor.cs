@@ -41,6 +41,8 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
+using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontProgramDescriptor {
@@ -61,6 +63,8 @@ namespace iText.IO.Font {
         private String fontNameLowerCase;
 
         private String familyNameLowerCase;
+
+        private ICollection<String> aliases;
 
         internal FontProgramDescriptor(FontNames fontNames, float italicAngle, bool isMonospace) {
             this.fontName = fontNames.GetFontName();
@@ -107,6 +111,19 @@ namespace iText.IO.Font {
             return (macStyle & FontNames.ITALIC_FLAG) != 0;
         }
 
+        /// <summary>Add alias for the font.</summary>
+        /// <param name="alias">case insensitive font name.</param>
+        public virtual iText.IO.Font.FontProgramDescriptor AddAlias(String alias) {
+            GetAliases(true).Add(alias.ToLowerInvariant());
+            return this;
+        }
+
+        /// <summary>Checks, if the font has corresponding alias.</summary>
+        /// <param name="alias">case insensitive font name.</param>
+        public virtual bool MatchAlias(String alias) {
+            return GetAliases(false).Contains(alias.ToLowerInvariant());
+        }
+
         public virtual String GetFullNameLowerCase() {
             return fullNameLowerCase;
         }
@@ -125,6 +142,20 @@ namespace iText.IO.Font {
 
         internal virtual void SetMonospace(bool monospace) {
             isMonospace = monospace;
+        }
+
+        private ICollection<String> GetAliases(bool initialize) {
+            if (aliases != null) {
+                return aliases;
+            }
+            else {
+                if (initialize) {
+                    return aliases = new HashSet<String>();
+                }
+                else {
+                    return JavaCollectionsUtil.EmptySet<String>();
+                }
+            }
         }
     }
 }

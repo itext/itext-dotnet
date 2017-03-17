@@ -93,11 +93,11 @@ namespace iText.Layout.Font {
         }
 
         public virtual bool AddFont(String fontProgram, String encoding) {
-            return fontSet.AddFont(fontProgram, encoding);
+            return fontSet.Add(fontProgram, encoding) != null;
         }
 
         public virtual bool AddFont(byte[] fontProgram, String encoding) {
-            return fontSet.AddFont(fontProgram, encoding);
+            return fontSet.Add(fontProgram, encoding) != null;
         }
 
         public virtual bool AddFont(String fontProgram) {
