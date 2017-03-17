@@ -107,12 +107,17 @@ namespace iText.IO.Util {
         /// <summary>
         /// This method makes a normalized URI from a given file. 
         /// </summary>
-        /// <param name="filename">a given file</param>
+        /// <param name="file">a given file</param>
         /// <returns>a valid Uri</returns>
         public static Uri ToNormalizedURI(FileInfo file) {
             return new Uri(file.FullName);
         }
 
+        /// <summary>
+        /// This method gets the last redirected url.
+        /// </summary>
+        /// <param name="uri">an initial url</param>
+        /// <returns>the last redirected url</returns>
         public static Uri GetFinalUrl(Uri uri) {
             return uri;
         }
