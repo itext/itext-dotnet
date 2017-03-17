@@ -63,6 +63,10 @@ namespace iText.IO.Util {
             return new EmptyDictionary<TKey, TValue>();
         }
 
+        public static ISet<T> EmptySet<T>() {
+            return new EmptySet<T>();
+        }
+
         public static IEnumerator<T> EmptyIterator<T>() {
             return new EmptyEnumerator<T>();
         }
