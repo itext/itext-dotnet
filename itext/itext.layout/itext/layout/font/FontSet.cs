@@ -68,14 +68,12 @@ namespace iText.Layout.Font {
                     if (".afm".Equals(suffix) || ".pfm".Equals(suffix)) {
                         // Add only Type 1 fonts with matching .pfb files.
                         String pfb = file.JSubstring(0, file.Length - 4) + ".pfb";
-                        if (FileUtil.FileExists(pfb)) {
-                            AddFont(file, null);
+                        if (FileUtil.FileExists(pfb) && AddFont(file, null)) {
                             count++;
                         }
                     }
                     else {
-                        if (".ttf".Equals(suffix) || ".otf".Equals(suffix) || ".ttc".Equals(suffix)) {
-                            AddFont(file, null);
+                        if ((".ttf".Equals(suffix) || ".otf".Equals(suffix) || ".ttc".Equals(suffix)) && AddFont(file, null)) {
                             count++;
                         }
                     }
@@ -91,6 +89,57 @@ namespace iText.Layout.Font {
         }
 
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
+        /// <param name="fontProgram">
+        /// 
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// </param>
+        /// <param name="encoding">
+        /// FontEncoding for creating
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// .
+        /// </param>
+        /// <returns>false, if fontProgram is null, otherwise true.</returns>
+        public virtual FontInfo Add(FontProgram fontProgram, String encoding) {
+            if (fontProgram == null) {
+                return null;
+            }
+            FontInfo fontInfo = Add(FontInfo.Create(fontProgram, encoding));
+            fontPrograms.Put(fontInfo, fontProgram);
+            return fontInfo;
+        }
+
+        public virtual FontInfo Add(String fontProgram, String encoding) {
+            return Add(FontInfo.Create(fontProgram, encoding));
+        }
+
+        public virtual FontInfo Add(byte[] fontProgram, String encoding) {
+            return Add(FontInfo.Create(fontProgram, encoding));
+        }
+
+        public virtual FontInfo Add(String fontProgram) {
+            return Add(fontProgram, null);
+        }
+
+        public virtual FontInfo Add(byte[] fontProgram) {
+            return Add(FontInfo.Create(fontProgram, null));
+        }
+
+        public virtual bool Remove(FontInfo fontInfo) {
+            if (fonts.Contains(fontInfo) || fontPrograms.ContainsKey(fontInfo)) {
+                fonts.Remove(fontInfo);
+                fontPrograms.JRemove(fontInfo);
+                fontSelectorCache.Clear();
+                return true;
+            }
+            return false;
+        }
+
+        public virtual ICollection<FontInfo> GetFonts() {
+            return fonts;
+        }
+
+        //region Deprecated addFont methods
+        /// <summary>Add not supported for auto creating FontPrograms.</summary>
         /// <param name="fontProgram"/>
         /// <param name="encoding">
         /// FontEncoding for creating
@@ -98,48 +147,43 @@ namespace iText.Layout.Font {
         /// .
         /// </param>
         /// <returns>false, if fontProgram is null, otherwise true.</returns>
+        [System.ObsoleteAttribute(@"use Add(iText.IO.Font.FontProgram, System.String) instead.")]
         public virtual bool AddFont(FontProgram fontProgram, String encoding) {
             if (fontProgram == null) {
                 return false;
             }
-            FontInfo fontInfo = FontInfo.Create(fontProgram, encoding);
-            AddFontInfo(fontInfo);
+            FontInfo fontInfo = Add(FontInfo.Create(fontProgram, encoding));
             fontPrograms.Put(fontInfo, fontProgram);
             return true;
         }
 
+        [System.ObsoleteAttribute(@"use Add(System.String, System.String) instead.")]
         public virtual bool AddFont(String fontProgram, String encoding) {
-            return AddFont(fontProgram, null, encoding);
+            return Add(FontInfo.Create(fontProgram, encoding)) != null;
         }
 
+        [System.ObsoleteAttribute(@"use Add(byte[], System.String) instead.")]
         public virtual bool AddFont(byte[] fontProgram, String encoding) {
-            return AddFont(null, fontProgram, encoding);
+            return Add(FontInfo.Create(fontProgram, encoding)) != null;
         }
 
+        [System.ObsoleteAttribute(@"use Add(System.String) instead.")]
         public virtual bool AddFont(String fontProgram) {
             return AddFont(fontProgram, null);
         }
 
+        [System.ObsoleteAttribute(@"use Add(byte[]) instead.")]
         public virtual bool AddFont(byte[] fontProgram) {
-            return AddFont(fontProgram, null);
+            return Add(FontInfo.Create(fontProgram, null)) != null;
         }
 
-        public virtual ICollection<FontInfo> GetFonts() {
-            return fonts;
-        }
-
-        internal virtual bool AddFont(String fontName, byte[] fontProgram, String encoding) {
-            if (fontName != null) {
-                return AddFontInfo(FontInfo.Create(fontName, encoding));
+        //endregion
+        internal virtual FontInfo Add(FontInfo fontInfo) {
+            if (fontInfo != null) {
+                fonts.Add(fontInfo);
+                fontSelectorCache.Clear();
             }
-            else {
-                if (fontProgram != null) {
-                    return AddFontInfo(FontInfo.Create(fontProgram, encoding));
-                }
-                else {
-                    return false;
-                }
-            }
+            return fontInfo;
         }
 
         internal virtual IDictionary<FontInfo, FontProgram> GetFontPrograms() {
@@ -148,17 +192,6 @@ namespace iText.Layout.Font {
 
         internal virtual IDictionary<FontSelectorKey, FontSelector> GetFontSelectorCache() {
             return fontSelectorCache;
-        }
-
-        private bool AddFontInfo(FontInfo fontInfo) {
-            if (fontInfo != null) {
-                fonts.Add(fontInfo);
-                fontSelectorCache.Clear();
-                return true;
-            }
-            else {
-                return false;
-            }
         }
     }
 }
