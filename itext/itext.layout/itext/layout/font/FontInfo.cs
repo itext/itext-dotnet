@@ -82,7 +82,7 @@ namespace iText.Layout.Font {
             this.fontData = fontData;
             this.encoding = encoding;
             this.descriptor = descriptor;
-            this.alias = alias;
+            this.alias = alias != null ? alias.ToLowerInvariant() : null;
             this.hash = CalculateHashCode(fontName, fontData, encoding);
         }
 
