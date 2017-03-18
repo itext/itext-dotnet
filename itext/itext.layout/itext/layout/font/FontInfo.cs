@@ -66,7 +66,7 @@ namespace iText.Layout.Font {
 
         private readonly String fontName;
 
-        private readonly byte[] fontProgram;
+        private readonly byte[] fontData;
 
         private readonly FontProgramDescriptor descriptor;
 
@@ -74,12 +74,12 @@ namespace iText.Layout.Font {
 
         private readonly String encoding;
 
-        private FontInfo(String fontName, byte[] fontProgram, String encoding, FontProgramDescriptor descriptor) {
+        private FontInfo(String fontName, byte[] fontData, String encoding, FontProgramDescriptor descriptor) {
             this.fontName = fontName;
-            this.fontProgram = fontProgram;
+            this.fontData = fontData;
             this.encoding = encoding;
             this.descriptor = descriptor;
-            this.hash = CalculateHashCode(fontName, fontProgram, encoding);
+            this.hash = CalculateHashCode(fontName, fontData, encoding);
         }
 
         internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding) {
@@ -120,12 +120,39 @@ namespace iText.Layout.Font {
             return descriptor;
         }
 
+        /// <summary>
+        /// Gets path to font, if
+        /// <see cref="FontInfo"/>
+        /// was created by String.
+        /// Note, to get PostScript or full name, use
+        /// <see cref="GetDescriptor()"/>
+        /// .
+        /// </summary>
         public String GetFontName() {
             return fontName;
         }
 
+        /// <summary>
+        /// Gets font data, if
+        /// <see cref="FontInfo"/>
+        /// was created with
+        /// <c>byte[]</c>
+        /// .
+        /// </summary>
+        [System.ObsoleteAttribute(@"use GetFontData() instead.")]
         public byte[] GetFontProgram() {
-            return fontProgram;
+            return fontData;
+        }
+
+        /// <summary>
+        /// Gets font data, if
+        /// <see cref="FontInfo"/>
+        /// was created with
+        /// <c>byte[]</c>
+        /// .
+        /// </summary>
+        public byte[] GetFontData() {
+            return fontData;
         }
 
         public String GetEncoding() {
@@ -141,8 +168,8 @@ namespace iText.Layout.Font {
             }
             iText.Layout.Font.FontInfo that = (iText.Layout.Font.FontInfo)o;
             return (fontName != null ? fontName.Equals(that.fontName) : that.fontName == null) && iText.IO.Util.JavaUtil.ArraysEquals
-                (fontProgram, that.fontProgram) && (encoding != null ? encoding.Equals(that.encoding) : that.encoding 
-                == null);
+                (fontData, that.fontData) && (encoding != null ? encoding.Equals(that.encoding) : that.encoding == null
+                );
         }
 
         public override int GetHashCode() {

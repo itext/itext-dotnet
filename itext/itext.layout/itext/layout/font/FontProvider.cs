@@ -89,7 +89,7 @@ namespace iText.Layout.Font {
         }
 
         public virtual bool AddFont(FontProgram fontProgram, String encoding) {
-            return fontSet.AddFont(fontProgram, encoding);
+            return fontSet.Add(fontProgram, encoding) != null;
         }
 
         public virtual bool AddFont(String fontProgram, String encoding) {
@@ -267,8 +267,8 @@ namespace iText.Layout.Font {
                     fontProgram = fontSet.GetFontPrograms().Get(fontInfo);
                 }
                 else {
-                    if (fontInfo.GetFontProgram() != null) {
-                        fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontProgram(), GetDefaultCacheFlag());
+                    if (fontInfo.GetFontData() != null) {
+                        fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontData(), GetDefaultCacheFlag());
                     }
                     else {
                         fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontName(), GetDefaultCacheFlag());

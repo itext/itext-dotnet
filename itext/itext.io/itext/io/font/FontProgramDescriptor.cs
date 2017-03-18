@@ -46,23 +46,23 @@ using iText.IO.Util;
 
 namespace iText.IO.Font {
     public class FontProgramDescriptor {
-        private String fontName;
+        private readonly String fontName;
 
-        private String style = "";
+        private readonly String fullNameLowerCase;
 
-        private int macStyle;
+        private readonly String fontNameLowerCase;
 
-        private int weight = FontNames.FW_NORMAL;
+        private readonly String familyNameLowerCase;
 
-        private float italicAngle = 0;
+        private readonly String style;
 
-        private bool isMonospace;
+        private readonly int macStyle;
 
-        private String fullNameLowerCase;
+        private readonly int weight;
 
-        private String fontNameLowerCase;
+        private readonly float italicAngle;
 
-        private String familyNameLowerCase;
+        private readonly bool isMonospace;
 
         private ICollection<String> aliases;
 
@@ -134,14 +134,6 @@ namespace iText.IO.Font {
 
         public virtual String GetFamilyNameLowerCase() {
             return familyNameLowerCase;
-        }
-
-        internal virtual void SetItalicAngle(float italicAngle) {
-            this.italicAngle = italicAngle;
-        }
-
-        internal virtual void SetMonospace(bool monospace) {
-            isMonospace = monospace;
         }
 
         private ICollection<String> GetAliases(bool initialize) {

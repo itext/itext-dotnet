@@ -152,5 +152,25 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
                 , "diff"));
         }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SearchNames() {
+            FontProvider sel = new FontProvider();
+            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
+            sel.AddFont(fontsFolder + "FreeSans.ttf");
+            FontInfo puritan = sel.GetFontSet().Add(fontsFolder + "Puritan2.otf");
+            puritan.GetDescriptor().AddAlias("Puritan42");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("NotoSans"), "NotoSans not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Noto Sans"), "NotoSans not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("FreeSans"), "FreeSans not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Free Sans"), "FreeSans not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 not found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 not found!");
+            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan42"), "Puritan42 found!");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Remove(puritan), "Puritan wasn't removed");
+            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 found!");
+            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 found!");
+        }
     }
 }
