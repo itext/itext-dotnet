@@ -553,6 +553,17 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
+        /// <summary>
+        /// Gets the parent of this
+        /// <see cref="IRenderer"/>
+        /// , if previously set by
+        /// <see cref="SetParent(IRenderer)"/>
+        /// </summary>
+        /// <returns>parent of the renderer</returns>
+        public virtual IRenderer GetParent() {
+            return parent;
+        }
+
         /// <summary><inheritDoc/></summary>
         public virtual void Move(float dxRight, float dyUp) {
             occupiedArea.GetBBox().MoveRight(dxRight);
