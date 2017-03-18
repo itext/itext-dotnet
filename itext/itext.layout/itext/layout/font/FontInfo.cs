@@ -74,17 +74,26 @@ namespace iText.Layout.Font {
 
         private readonly String encoding;
 
-        private FontInfo(String fontName, byte[] fontData, String encoding, FontProgramDescriptor descriptor) {
+        private readonly String alias;
+
+        private FontInfo(String fontName, byte[] fontData, String encoding, FontProgramDescriptor descriptor, String
+             alias) {
             this.fontName = fontName;
             this.fontData = fontData;
             this.encoding = encoding;
             this.descriptor = descriptor;
+            this.alias = alias;
             this.hash = CalculateHashCode(fontName, fontData, encoding);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(iText.Layout.Font.FontInfo fontInfo, String alias) {
+            return new iText.Layout.Font.FontInfo(fontInfo.fontName, fontInfo.fontData, fontInfo.encoding, fontInfo.descriptor
+                , alias);
+        }
+
+        internal static iText.Layout.Font.FontInfo Create(FontProgram fontProgram, String encoding, String alias) {
             FontProgramDescriptor descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
-            return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor);
+            return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor, alias);
         }
 
         internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding) {
@@ -94,7 +103,7 @@ namespace iText.Layout.Font {
                 descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontName);
                 PutFontNamesToCache(cacheKey, descriptor);
             }
-            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor, null) : null;
         }
 
         internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding) {
@@ -104,7 +113,8 @@ namespace iText.Layout.Font {
                 descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
                 PutFontNamesToCache(cacheKey, descriptor);
             }
-            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor, null) : 
+                null;
         }
 
         public PdfFont GetPdfFont(FontProvider fontProvider) {
@@ -157,6 +167,12 @@ namespace iText.Layout.Font {
 
         public String GetEncoding() {
             return encoding;
+        }
+
+        /// <summary>Gets font alias.</summary>
+        /// <returns>alias if exist, otherwise null.</returns>
+        public String GetAlias() {
+            return alias;
         }
 
         public override bool Equals(Object o) {

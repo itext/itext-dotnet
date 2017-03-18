@@ -148,6 +148,12 @@ namespace iText.Layout.Font {
             return 14;
         }
 
+        /// <summary>
+        /// Gets
+        /// <see cref="FontSet"/>
+        /// .
+        /// FontSet allows search and remove fonts.
+        /// </summary>
         public virtual FontSet GetFontSet() {
             return fontSet;
         }

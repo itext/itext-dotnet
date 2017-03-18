@@ -55,7 +55,7 @@ namespace iText.Layout.Font {
         /// <param name="fontFamilies">sorted list of preferred font families.</param>
         public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
-            //Possible issue in .NET, virtual member in constructor.
+            //Possible issue in .NET, virtual protected member in constructor.
             JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, fc));
         }
 
@@ -174,8 +174,10 @@ namespace iText.Layout.Font {
                     }
                 }
                 FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
-                if (descriptor.GetFullNameLowerCase().Equals(fontName) || descriptor.GetFontNameLowerCase().Equals(fontName
-                    ) || descriptor.MatchAlias(fontName)) {
+                // Note, aliases are custom behaviour, so in FontSelector will find only exact name,
+                // it should not be any 'contains' with aliases.
+                if (fontName.Equals(descriptor.GetFullNameLowerCase()) || fontName.Equals(descriptor.GetFontNameLowerCase(
+                    )) || fontName.Equals(fontInfo.GetAlias())) {
                     score += 10;
                 }
                 else {
