@@ -1030,8 +1030,8 @@ namespace iText.Layout.Renderer {
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc);
                     while (!strategy.EndOfText()) {
-                        iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
-                        textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetCurrentFont());
+                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(new GlyphLine(strategy.NextGlyphs()), strategy
+                            .GetCurrentFont());
                         addTo.Add(textRenderer);
                     }
                     return true;
@@ -1040,6 +1040,20 @@ namespace iText.Layout.Renderer {
                     throw new InvalidOperationException("Invalid font type.");
                 }
             }
+        }
+
+        protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
+            this.text = gl;
+            this.font = font;
+            this.otfFeaturesApplied = false;
+            this.strToBeConverted = null;
+            SetProperty(Property.FONT, font);
+        }
+
+        protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
+            iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
+            copy.SetGlyphLineAndFont(gl, font);
+            return copy;
         }
 
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
@@ -1163,14 +1177,6 @@ namespace iText.Layout.Renderer {
                 otfFeaturesApplied = false;
                 strToBeConverted = null;
             }
-        }
-
-        private void SetGlyphLineAndFont(IList<Glyph> glyphs, PdfFont font) {
-            this.text = new GlyphLine(glyphs);
-            this.font = font;
-            this.otfFeaturesApplied = false;
-            this.strToBeConverted = null;
-            SetProperty(Property.FONT, font);
         }
 
         private void SaveWordBreakIfNotYetSaved(Glyph wordBreak) {
