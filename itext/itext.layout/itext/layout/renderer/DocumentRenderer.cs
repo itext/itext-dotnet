@@ -71,8 +71,14 @@ namespace iText.Layout.Renderer {
             throw new InvalidOperationException("Not applicable for DocumentRenderer");
         }
 
+        /// <summary>
+        /// For
+        /// <see cref="DocumentRenderer"/>
+        /// , this has a meaning of the renderer that will be used for relayout.
+        /// </summary>
+        /// <returns>relayout renderer.</returns>
         public override IRenderer GetNextRenderer() {
-            return null;
+            return new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush);
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
