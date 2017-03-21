@@ -388,7 +388,7 @@ namespace iText.Layout.Renderer {
                             splits[col] = cellResult;
                             if (cellResult.GetStatus() != LayoutResult.NOTHING) {
                                 // one should disable cell alignment if it was split
-                                splits[col].GetSplitRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.TOP);
+                                splits[col].GetOverflowRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.TOP);
                             }
                         }
                         if (cellResult.GetStatus() == LayoutResult.PARTIAL) {
@@ -498,10 +498,7 @@ namespace iText.Layout.Renderer {
                             splits[col] = cellResult;
                             if (cellResult.GetStatus() == LayoutResult.NOTHING) {
                                 hasContent = false;
-                            }
-                            else {
-                                // one should disable cell alignment if it was split
-                                splits[col].GetSplitRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, VerticalAlignment.TOP);
+                                splits[col].GetOverflowRenderer().SetProperty(Property.VERTICAL_ALIGNMENT, verticalAlignment);
                             }
                         }
                     }
