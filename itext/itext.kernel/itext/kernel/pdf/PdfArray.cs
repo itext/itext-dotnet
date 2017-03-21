@@ -243,6 +243,10 @@ namespace iText.Kernel.Pdf
 	    public virtual void Add(PdfObject pdfObject)
 		{
 			list.Add(pdfObject);
+
+		    if(indirectReference != null){
+		        this.SetModified();
+		    }
 		}
 
 		public virtual void Remove(PdfObject o)
@@ -260,6 +264,10 @@ namespace iText.Kernel.Pdf
 		        }
 		    if (toDelete != null)
 		        list.Remove(toDelete);
+
+		    if(indirectReference != null){
+		        this.SetModified();
+		    }
         }
 
 		/// <summary>Adds the Collection of PdfObjects.</summary>
