@@ -118,7 +118,7 @@ namespace iText.IO.Util {
         /// </summary>
         /// <param name="uri">an initial url</param>
         /// <returns>the last redirected url</returns>
-        public static Uri GetFinalUrl(Uri uri) {
+        public static Uri GetFinalURL(Uri uri) {
             return uri;
         }
     }
