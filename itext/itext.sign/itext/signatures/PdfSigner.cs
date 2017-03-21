@@ -754,6 +754,12 @@ namespace iText.Signatures {
                 }
                 ap.Put(PdfName.N, appearance.GetAppearance().GetPdfObject());
                 acroForm.AddField(sigField, document.GetPage(pagen));
+                //Check if the pageAnnots are Indirect
+                PdfArray pageAnnots = document.GetPage(pagen).GetPdfObject().GetAsArray(PdfName.Annots);
+                if (pageAnnots.IsIndirect()) {
+                    //Set modified if they are
+                    pageAnnots.SetModified();
+                }
                 if (acroForm.GetPdfObject().IsIndirect()) {
                     acroForm.SetModified();
                 }

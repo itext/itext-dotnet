@@ -41,7 +41,6 @@
     address: sales@itextpdf.com
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
@@ -111,14 +110,7 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", rect, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
                                                                                   + "cmp_" + fileName, destinationFolder,
-                "diff_",
-                new Dictionary<int, IList<Rectangle>> {
-                    {
-                        1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 690, 155, 15
-                            ))
-                    }
-                }
-                ));
+                "diff_", GetTestMap(new Rectangle(67, 690, 155, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -135,10 +127,7 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", null, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
                                                                                   + "cmp_" + fileName, destinationFolder,
-                "diff_",
-                new Dictionary<int, IList<Rectangle>> {
-                    {1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}
-                }));
+                "diff_", GetTestMap(new Rectangle(67, 725, 160, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -155,10 +144,7 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", null, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
                                                                                   + "cmp_" + fileName, destinationFolder,
-                "diff_",
-                new Dictionary<int, IList<Rectangle>> {
-                    {1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}
-                }));
+                "diff_", GetTestMap(new Rectangle(67, 725, 160, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -200,6 +186,22 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", rect, false, true);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SigningDocumentAppendModeIndirectPageAnnots() {
+            String file =  "AnnotsIndirect.pdf";
+            String src = sourceFolder + "simpleTaggedDocument.pdf";
+            String dest = destinationFolder + "signedTaggedDocumentAppendMode.pdf";
+
+            Rectangle rect = new Rectangle(36, 648, 200, 100);
+
+            String fieldName = "Signature1";
+            Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CADES, "Test 1", "TestCity", rect, false, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file, destinationFolder,
+                "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate
@@ -219,6 +221,12 @@ namespace iText.Signatures {
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+        }
+
+        private static Dictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
+            return new Dictionary<int, IList<Rectangle>> {
+                {1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}
+            };
         }
     }
 }
