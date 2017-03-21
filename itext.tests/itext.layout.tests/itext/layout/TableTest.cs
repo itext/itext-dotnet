@@ -1109,7 +1109,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("")]
         public virtual void CellAlignmentAndKeepTogetherTest01() {
             String testName = "cellAlignmentAndKeepTogetherTest01.pdf";
             String outFileName = destinationFolder + testName;
