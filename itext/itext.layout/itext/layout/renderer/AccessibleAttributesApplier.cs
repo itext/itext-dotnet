@@ -301,7 +301,7 @@ namespace iText.Layout.Renderer {
                 if (generalBorderColor is DeviceRgb) {
                     attributes.Put(PdfName.BorderColor, new PdfArray(generalBorderColor.GetColorValue()));
                     attributes.Put(PdfName.BorderStyle, TransformBorderTypeToName(borderType));
-                    attributes.Put(PdfName.BorderThikness, new PdfNumber(borderWidth));
+                    attributes.Put(PdfName.BorderThickness, new PdfNumber(borderWidth));
                 }
             }
             if (specificBorderProperties) {
@@ -362,10 +362,10 @@ namespace iText.Layout.Renderer {
                     attributes.Put(PdfName.BorderStyle, borderTypes);
                 }
                 if (allWidthsEqual) {
-                    attributes.Put(PdfName.BorderThikness, borderWidths.Get(0));
+                    attributes.Put(PdfName.BorderThickness, borderWidths.Get(0));
                 }
                 else {
-                    attributes.Put(PdfName.BorderThikness, borderWidths);
+                    attributes.Put(PdfName.BorderThickness, borderWidths);
                 }
             }
         }

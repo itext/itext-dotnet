@@ -263,6 +263,9 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName BorderStyle = CreateDirectName("BorderStyle");
 
+        public static readonly iText.Kernel.Pdf.PdfName BorderThickness = CreateDirectName("BorderThickness");
+
+        [Obsolete]
         public static readonly iText.Kernel.Pdf.PdfName BorderThikness = CreateDirectName("BorderThikness");
 
         public static readonly iText.Kernel.Pdf.PdfName Bounds = CreateDirectName("Bounds");
