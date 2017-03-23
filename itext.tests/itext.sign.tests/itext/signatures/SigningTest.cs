@@ -189,10 +189,10 @@ namespace iText.Signatures {
         [NUnit.Framework.Test]
         public virtual void SigningDocumentAppendModeIndirectPageAnnots() {
             String file =  "AnnotsIndirect.pdf";
-            String src = sourceFolder + "simpleTaggedDocument.pdf";
-            String dest = destinationFolder + "signedTaggedDocumentAppendMode.pdf";
+            String src = sourceFolder + file;
+            String dest = destinationFolder + file;
 
-            Rectangle rect = new Rectangle(36, 648, 200, 100);
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
 
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
@@ -225,7 +225,7 @@ namespace iText.Signatures {
 
         private static Dictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
             return new Dictionary<int, IList<Rectangle>> {
-                {1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}
+                {1, IO.Util.JavaUtil.ArraysAsList(ignoredArea)}
             };
         }
     }
