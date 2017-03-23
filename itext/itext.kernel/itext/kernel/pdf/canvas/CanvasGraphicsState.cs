@@ -145,12 +145,12 @@ namespace iText.Kernel.Pdf.Canvas {
         private PdfObject htp;
 
         /// <summary>Internal empty & default constructor.</summary>
-        protected internal CanvasGraphicsState() {
+        public CanvasGraphicsState() {
         }
 
         /// <summary>Copy constructor.</summary>
         /// <param name="source">the Graphics State to copy from</param>
-        protected internal CanvasGraphicsState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
+        public CanvasGraphicsState(iText.Kernel.Pdf.Canvas.CanvasGraphicsState source) {
             // color
             // text state
             // horizontal scaling

@@ -94,7 +94,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             ) {
             this.@string = str;
             this.textToUserSpaceTransformMatrix = textMatrix.Multiply(gs.GetCtm());
-            this.gs = gs;
+            this.gs = new CanvasGraphicsState(gs);
             this.canvasTagHierarchy = JavaCollectionsUtil.UnmodifiableList<CanvasTag>(new List<CanvasTag>(canvasTagHierarchy
                 ));
             this.fontMatrix = gs.GetFont().GetFontMatrix();
