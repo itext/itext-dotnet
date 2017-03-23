@@ -1691,7 +1691,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Create a PdfName from the passed string</summary>
-        /// <param name="value"/>
+        /// <param name="value">string value, shall not be null.</param>
         public PdfName(String value)
             : base() {
             System.Diagnostics.Debug.Assert(value != null);
@@ -1704,7 +1704,7 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Create a PdfName from the passed bytes</summary>
-        /// <param name="content"/>
+        /// <param name="content">byte content, shall not be null.</param>
         public PdfName(byte[] content)
             : base(content) {
         }
