@@ -477,6 +477,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Direction = CreateDirectName("Direction");
 
+        public static readonly iText.Kernel.Pdf.PdfName Disc = CreateDirectName("Disc");
+
         public static readonly iText.Kernel.Pdf.PdfName DisplayDocTitle = CreateDirectName("DisplayDocTitle");
 
         public static readonly iText.Kernel.Pdf.PdfName DocMDP = CreateDirectName("DocMDP");
