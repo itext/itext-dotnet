@@ -256,6 +256,11 @@ namespace iText.Kernel.Pdf {
             GetPdfObject().Put(PdfName.Lang, lang);
         }
 
+        public virtual PdfString GetLang() {
+            return GetPdfObject().GetAsString(PdfName.Lang);
+        }
+
+        [Obsolete]
         public virtual PdfString GetLang(PdfName lang) {
             return GetPdfObject().GetAsString(PdfName.Lang);
         }
