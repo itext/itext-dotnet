@@ -361,7 +361,7 @@ namespace iText.Layout.Renderer {
             return GetYLine();
         }
 
-        protected internal virtual void Justify(float width) {
+        public virtual void Justify(float width) {
             float ratio = (float)this.GetPropertyAsFloat(Property.SPACING_RATIO);
             float freeWidth = occupiedArea.GetBBox().GetX() + width - GetLastChildRenderer().GetOccupiedArea().GetBBox
                 ().GetX() - GetLastChildRenderer().GetOccupiedArea().GetBBox().GetWidth();
@@ -480,7 +480,7 @@ namespace iText.Layout.Renderer {
             return this;
         }
 
-        protected internal virtual bool ContainsImage() {
+        public virtual bool ContainsImage() {
             foreach (IRenderer renderer in childRenderers) {
                 if (renderer is ImageRenderer) {
                     return true;
