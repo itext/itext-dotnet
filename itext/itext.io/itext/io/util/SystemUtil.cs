@@ -72,12 +72,6 @@ namespace iText.IO.Util {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         public static bool RunProcessAndWait(String execPath, String @params) {
-            StringTokenizer st = new StringTokenizer(@params);
-            String[] cmdArray = new String[st.CountTokens() + 1];
-            cmdArray[0] = execPath;
-            for (int i = 1; st.HasMoreTokens(); ++i) {
-                cmdArray[i] = st.NextToken();
-            }
             Process p = new Process();
             p.StartInfo = new ProcessStartInfo(execPath, @params);
             p.StartInfo.RedirectStandardOutput = true;

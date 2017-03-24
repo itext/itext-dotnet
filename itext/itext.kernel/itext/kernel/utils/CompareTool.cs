@@ -92,9 +92,9 @@ namespace iText.Kernel.Utils {
 
         private const String ignoredAreasPrefix = "ignored_areas_";
 
-        private const String gsParams = " -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile=<outputfile> <inputfile>";
+        private const String gsParams = " -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile='<outputfile>' '<inputfile>'";
 
-        private const String compareParams = " \"<image1>\" \"<image2>\" \"<difference>\"";
+        private const String compareParams = " '<image1>' '<image2>' '<difference>'";
 
         private String gsExec;
 
@@ -849,10 +849,11 @@ namespace iText.Kernel.Utils {
         private String CompareVisually(String outPath, String differenceImagePrefix, IDictionary<int, IList<Rectangle
             >> ignoredAreas, IList<int> equalPages) {
             if (gsExec == null) {
-                return undefinedGsPath;
+                throw new CompareTool.CompareToolExecutionException(this, undefinedGsPath);
             }
-            if (!(new FileInfo(gsExec).Exists)) {
-                return new FileInfo(gsExec).FullName + " does not exist";
+            if (!(new FileInfo(gsExec).CanExecute())) {
+                throw new CompareTool.CompareToolExecutionException(this, new FileInfo(gsExec).FullName + " is not an executable program"
+                    );
             }
             if (!outPath.EndsWith("/")) {
                 outPath = outPath + "/";
@@ -862,10 +863,7 @@ namespace iText.Kernel.Utils {
             if (ignoredAreas != null && !ignoredAreas.IsEmpty()) {
                 CreateIgnoredAreasPdfs(outPath, ignoredAreas);
             }
-            String imagesGenerationResult = RunGhostScriptImageGeneration(outPath);
-            if (imagesGenerationResult != null) {
-                return imagesGenerationResult;
-            }
+            RunGhostScriptImageGeneration(outPath);
             return CompareImagesOfPdfs(outPath, differenceImagePrefix, equalPages);
         }
 
@@ -882,12 +880,17 @@ namespace iText.Kernel.Utils {
             }
             int cnt = Math.Min(imageFiles.Length, cmpImageFiles.Length);
             if (cnt < 1) {
-                return "No files for comparing.\nThe result or sample pdf file is not processed by GhostScript.";
+                throw new CompareTool.CompareToolExecutionException(this, "No files for comparing. The result or sample pdf file is not processed by GhostScript."
+                    );
             }
             iText.IO.Util.JavaUtil.Sort(imageFiles, new CompareTool.ImageNameComparator(this));
             iText.IO.Util.JavaUtil.Sort(cmpImageFiles, new CompareTool.ImageNameComparator(this));
             String differentPagesFail = null;
-            bool compareExecIsOk = compareExec != null && new FileInfo(compareExec).Exists;
+            bool compareExecIsOk = compareExec != null && new FileInfo(compareExec).CanExecute();
+            if (compareExec != null && !compareExecIsOk) {
+                throw new CompareTool.CompareToolExecutionException(this, new FileInfo(compareExec).FullName + " is not an executable program"
+                    );
+            }
             IList<int> diffPages = new List<int>();
             for (int i = 0; i < cnt; i++) {
                 if (equalPages != null && equalPages.Contains(i)) {
@@ -907,7 +910,7 @@ namespace iText.Kernel.Utils {
                         String currCompareParams = compareParams.Replace("<image1>", imageFiles[i].FullName).Replace("<image2>", cmpImageFiles
                             [i].FullName).Replace("<difference>", outPath + differenceImagePrefix + iText.IO.Util.JavaUtil.IntegerToString
                             (i + 1) + ".png");
-                        if (SystemUtil.RunProcessAndWait(compareExec, currCompareParams)) {
+                        if (!SystemUtil.RunProcessAndWait(compareExec, currCompareParams)) {
                             differentPagesFail += "\nPlease, examine " + outPath + differenceImagePrefix + iText.IO.Util.JavaUtil.IntegerToString
                                 (i + 1) + ".png for more details.";
                         }
@@ -999,22 +1002,22 @@ namespace iText.Kernel.Utils {
 
         /// <summary>Runs ghostscript to create images of pdfs.</summary>
         /// <param name="outPath">Path to the output folder.</param>
-        /// <returns>Returns null if result is successful, else returns error message.</returns>
+        /// <exception cref="CompareToolExecutionException"/>
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private String RunGhostScriptImageGeneration(String outPath) {
+        private void RunGhostScriptImageGeneration(String outPath) {
             if (!FileUtil.DirectoryExists(outPath)) {
-                return cannotOpenOutputDirectory.Replace("<filename>", outPdf);
+                throw new CompareTool.CompareToolExecutionException(this, cannotOpenOutputDirectory.Replace("<filename>", 
+                    outPdf));
             }
             String currGsParams = gsParams.Replace("<outputfile>", outPath + cmpImage).Replace("<inputfile>", cmpPdf);
             if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                return gsFailed.Replace("<filename>", cmpPdf);
+                throw new CompareTool.CompareToolExecutionException(this, gsFailed.Replace("<filename>", cmpPdf));
             }
             currGsParams = gsParams.Replace("<outputfile>", outPath + outImage).Replace("<inputfile>", outPdf);
             if (!SystemUtil.RunProcessAndWait(gsExec, currGsParams)) {
-                return gsFailed.Replace("<filename>", outPdf);
+                throw new CompareTool.CompareToolExecutionException(this, gsFailed.Replace("<filename>", outPdf));
             }
-            return null;
         }
 
         private void PrintOutCmpDirectories() {
@@ -2406,6 +2409,15 @@ namespace iText.Kernel.Utils {
                 return new CompareTool.TrailerPath(cmpDocument, outDocument, (Stack<CompareTool.ObjectPath.LocalPathItem>)
                     path.Clone());
             }
+        }
+
+        public class CompareToolExecutionException : Exception {
+            public CompareToolExecutionException(CompareTool _enclosing, String msg)
+                : base(msg) {
+                this._enclosing = _enclosing;
+            }
+
+            private readonly CompareTool _enclosing;
         }
     }
 }
