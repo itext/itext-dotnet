@@ -273,14 +273,16 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 PdfDictionary existingExtensionDict = extensions.GetAsDictionary(extension.GetPrefix());
-                int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
-                if (diff < 0) {
-                    return;
-                }
-                diff = extension.GetExtensionLevel() - existingExtensionDict.GetAsNumber(PdfName.ExtensionLevel).IntValue(
-                    );
-                if (diff <= 0) {
-                    return;
+                if (existingExtensionDict != null) {
+                    int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
+                    if (diff < 0) {
+                        return;
+                    }
+                    diff = extension.GetExtensionLevel() - existingExtensionDict.GetAsNumber(PdfName.ExtensionLevel).IntValue(
+                        );
+                    if (diff <= 0) {
+                        return;
+                    }
                 }
             }
             extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
@@ -441,7 +443,7 @@ namespace iText.Kernel.Pdf {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
-                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
                         PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false);
                         d = new PdfExplicitDestination(copiedArray);
                         break;
@@ -460,7 +462,7 @@ namespace iText.Kernel.Pdf {
                             if (oldPage.GetPdfObject() == pageObject) {
                                 d = new PdfStringDestination(srcDestName);
                                 if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
-                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
                                     PdfArray copiedArray = ((PdfArray)srcDestArray.CopyTo(toDocument, false));
                                     toDocument.AddNamedDestination(srcDestName, copiedArray);
                                 }
