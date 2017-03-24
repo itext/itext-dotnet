@@ -73,7 +73,7 @@ namespace iText.IO.Util {
         /// <exception cref="System.Exception"/>
         public static bool RunProcessAndWait(String execPath, String @params) {
             Process p = new Process();
-            p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", ""));
+            p.StartInfo = new ProcessStartInfo(execPath, @params.Replace("'", "\""));
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
