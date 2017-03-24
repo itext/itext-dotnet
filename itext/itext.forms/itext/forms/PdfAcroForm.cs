@@ -313,6 +313,18 @@ namespace iText.Forms {
             return fields;
         }
 
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// this
+        /// <see cref="PdfAcroForm"/>
+        /// belongs to.
+        /// </summary>
+        /// <returns>the document of this form</returns>
+        public virtual PdfDocument GetPdfDocument() {
+            return document;
+        }
+
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>NeedAppearances</code> boolean property on the AcroForm.
