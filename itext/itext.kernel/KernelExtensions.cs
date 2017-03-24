@@ -320,6 +320,11 @@ internal static class KernelExtensions {
         return dgst.Digest();
     }
 
+    public static bool CanExecute(this FileInfo fileInfo)
+    {
+        return fileInfo.Exists;
+    }
+
     /// <summary>
     /// IMPORTANT: USE THIS METHOD CAREFULLY.
     /// This method serves as replacement for the java method MessageDigest#digest(byte[] buf, int offset, int len).
