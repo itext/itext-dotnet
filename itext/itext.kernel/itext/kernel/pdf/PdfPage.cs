@@ -1043,7 +1043,12 @@ namespace iText.Kernel.Pdf {
                 annots.Add(index, annotation.SetPage(this).GetPdfObject());
             }
             if (annots.GetIndirectReference() == null) {
+                //Annots are not indirect so page needs to be marked as modified
                 SetModified();
+            }
+            else {
+                //Annots are indirect so need to be marked as modified
+                annots.SetModified();
             }
             return this;
         }
