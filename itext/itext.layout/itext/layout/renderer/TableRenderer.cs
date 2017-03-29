@@ -1546,13 +1546,13 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsTopTablePart() {
-            return (null == headerRenderer || headerRenderer.IsEmpty()) && (!IsFooterRenderer() || IsBottomTablePartEmpty
-                ());
+            return (null == headerRenderer || headerRenderer.IsEmpty()) && (!IsFooterRenderer() || ((iText.Layout.Renderer.TableRenderer
+                )parent).IsTopTablePartEmpty());
         }
 
         private bool IsBottomTablePart() {
-            return (null == footerRenderer || footerRenderer.IsEmpty()) && (!IsHeaderRenderer() || IsTopTablePartEmpty
-                ());
+            return (null == footerRenderer || footerRenderer.IsEmpty()) && (!IsHeaderRenderer() || ((iText.Layout.Renderer.TableRenderer
+                )parent).IsBottomTablePartEmpty());
         }
 
         private bool IsEmpty() {
