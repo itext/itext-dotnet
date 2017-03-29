@@ -1091,6 +1091,7 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE)]
         public virtual void TableWithHeaderFooterTest12() {
             String testName = "tableWithHeaderFooterTest12.pdf";
             String outFileName = destinationFolder + testName;
