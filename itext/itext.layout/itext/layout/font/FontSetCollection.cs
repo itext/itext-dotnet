@@ -16,7 +16,7 @@ namespace iText.Layout.Font
 
         public IEnumerator<FontInfo> GetEnumerator()
         {
-            throw new System.NotImplementedException();
+            return new FontSetCollectionEnumerator(primary, temporary);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -74,11 +74,11 @@ namespace iText.Layout.Font
             private bool isPrimary = true;
 
 
-            public FontSetCollectionEnumerator(IEnumerator<FontInfo> primary, IEnumerator<FontInfo> temporary)
+            public FontSetCollectionEnumerator(ICollection<FontInfo> primary, ICollection<FontInfo> temporary)
             {
-                this.primary = primary;
-                this.temporary = temporary;
-                this.currentIterator = primary;
+                this.primary = primary.GetEnumerator();
+                this.temporary = temporary != null ? temporary.GetEnumerator() : null;
+                this.currentIterator = this.primary;
             }
 
             public void Dispose()
