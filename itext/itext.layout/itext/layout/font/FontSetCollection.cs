@@ -56,8 +56,15 @@ namespace iText.Layout.Font
             throw new System.ApplicationException("Unsupported operation");
         }
 
-        public int Count { get; }
-        public bool IsReadOnly { get; }
+        public int Count
+        {
+            get { return primary.Count + (temporary != null ? temporary.Count : 0); }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return true; }
+        }
 
         private class FontSetCollectionEnumerator : IEnumerator<FontInfo>
         {
