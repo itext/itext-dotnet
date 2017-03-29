@@ -92,24 +92,24 @@ namespace iText.Layout.Font {
             return fontSet.Add(fontProgram, encoding) != null;
         }
 
-        public virtual bool AddFont(String fontProgram, String encoding) {
-            return fontSet.Add(fontProgram, encoding) != null;
+        public virtual bool AddFont(String fontPath, String encoding) {
+            return fontSet.Add(fontPath, encoding, null) != null;
         }
 
-        public virtual bool AddFont(byte[] fontProgram, String encoding) {
-            return fontSet.Add(fontProgram, encoding) != null;
+        public virtual bool AddFont(byte[] fontData, String encoding) {
+            return fontSet.Add(fontData, encoding, null) != null;
         }
 
-        public virtual bool AddFont(String fontProgram) {
-            return AddFont(fontProgram, null);
+        public virtual bool AddFont(String fontPath) {
+            return AddFont(fontPath, null);
         }
 
         public virtual bool AddFont(FontProgram fontProgram) {
             return AddFont(fontProgram, GetDefaultEncoding(fontProgram));
         }
 
-        public virtual bool AddFont(byte[] fontProgram) {
-            return AddFont(fontProgram, null);
+        public virtual bool AddFont(byte[] fontData) {
+            return AddFont(fontData, null);
         }
 
         public virtual int AddDirectory(String dir) {
@@ -176,8 +176,14 @@ namespace iText.Layout.Font {
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
+             fc, TemporaryFontSet tempFonts) {
+            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc, tempFonts), this, tempFonts
+                );
+        }
+
+        public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
              fc) {
-            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc), this);
+            return GetStrategy(text, fontFamilies, fc, null);
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies) {
@@ -204,13 +210,47 @@ namespace iText.Layout.Font {
         ///     ">}</seealso>
         public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc) {
             FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
-            if (fontSet.GetFontSelectorCache().ContainsKey(key)) {
-                return fontSet.GetFontSelectorCache().Get(key);
+            FontSelector fontSelector = fontSet.GetCachedFontSelector(key);
+            if (fontSelector == null) {
+                fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, fc);
+                fontSet.PutCachedFontSelector(key, fontSelector);
+            }
+            return fontSelector;
+        }
+
+        /// <summary>
+        /// Create
+        /// <see cref="FontSelector"/>
+        /// or get from cache.
+        /// </summary>
+        /// <param name="fontFamilies">target font families</param>
+        /// <param name="fc">
+        /// instance of
+        /// <see cref="FontCharacteristics"/>
+        /// .
+        /// </param>
+        /// <param name="tempFonts">set of temporary fonts.</param>
+        /// <returns>
+        /// an instance of
+        /// <see cref="FontSelector"/>
+        /// .
+        /// </returns>
+        /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
+        ///     ">}</seealso>
+        /// <seealso cref="TemporaryFontSet"/>
+        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc, TemporaryFontSet tempFonts
+            ) {
+            if (tempFonts != null) {
+                FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
+                FontSelector fontSelector = tempFonts.GetCachedFontSelector(key);
+                if (fontSelector == null) {
+                    fontSelector = CreateFontSelector(tempFonts.GetFonts(), fontFamilies, fc);
+                    tempFonts.PutCachedFontSelector(key, fontSelector);
+                }
+                return fontSelector;
             }
             else {
-                FontSelector fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, fc);
-                fontSet.GetFontSelectorCache().Put(key, fontSelector);
-                return fontSelector;
+                return GetFontSelector(fontFamilies, fc);
             }
         }
 
@@ -264,15 +304,41 @@ namespace iText.Layout.Font {
         /// .
         /// </exception>
         protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
+            return GetPdfFont(fontInfo, null);
+        }
+
+        /// <summary>
+        /// Get from cache or create a new instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// .
+        /// </summary>
+        /// <param name="fontInfo">
+        /// font info, to create
+        /// <see cref="iText.IO.Font.FontProgram"/>
+        /// and
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// .
+        /// </param>
+        /// <param name="tempFonts">Set of temporary fonts.</param>
+        /// <returns>
+        /// cached or new instance of
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// .
+        /// </returns>
+        /// <exception cref="System.IO.IOException">
+        /// on I/O exceptions in
+        /// <see cref="iText.IO.Font.FontProgramFactory"/>
+        /// .
+        /// </exception>
+        /// <seealso cref="TemporaryFontSet"/>
+        protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo, TemporaryFontSet tempFonts) {
             if (pdfFonts.ContainsKey(fontInfo)) {
                 return pdfFonts.Get(fontInfo);
             }
             else {
-                FontProgram fontProgram;
-                if (fontSet.GetFontPrograms().ContainsKey(fontInfo)) {
-                    fontProgram = fontSet.GetFontPrograms().Get(fontInfo);
-                }
-                else {
+                FontProgram fontProgram = tempFonts != null ? tempFonts.GetFontProgram(fontInfo) : fontSet.GetFontProgram(
+                    fontInfo);
+                if (fontProgram == null) {
                     if (fontInfo.GetFontData() != null) {
                         fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontData(), GetDefaultCacheFlag());
                     }

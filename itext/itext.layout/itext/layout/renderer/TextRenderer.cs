@@ -588,7 +588,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_615();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_622();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -652,8 +652,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_615 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_615() {
+        private sealed class _IGlyphLineFilter_622 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_622() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1022,13 +1022,15 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
+                    //TODO add default font provider at Document level and check number of fonts.
                     if (provider == null) {
                         throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
                             );
                     }
+                    TemporaryFontSet tempFontSet = this.GetProperty<TemporaryFontSet>(Property.FONT_SET);
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font), fc);
+                        (String)font), fc, tempFontSet);
                     while (!strategy.EndOfText()) {
                         iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(new GlyphLine(strategy.NextGlyphs()), strategy
                             .GetCurrentFont());

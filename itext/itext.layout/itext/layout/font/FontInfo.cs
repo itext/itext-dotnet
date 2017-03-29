@@ -96,27 +96,30 @@ namespace iText.Layout.Font {
             return new iText.Layout.Font.FontInfo(descriptor.GetFontName(), null, encoding, descriptor, alias);
         }
 
-        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(String fontName, String encoding, String alias) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontName);
             FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
             if (descriptor == null) {
                 descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontName);
                 PutFontNamesToCache(cacheKey, descriptor);
             }
-            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor, null) : null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(fontName, null, encoding, descriptor, alias) : 
+                null;
         }
 
-        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding) {
+        internal static iText.Layout.Font.FontInfo Create(byte[] fontProgram, String encoding, String alias) {
             FontCacheKey cacheKey = FontCacheKey.Create(fontProgram);
             FontProgramDescriptor descriptor = GetFontNamesFromCache(cacheKey);
             if (descriptor == null) {
                 descriptor = FontProgramDescriptorFactory.FetchDescriptor(fontProgram);
                 PutFontNamesToCache(cacheKey, descriptor);
             }
-            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor, null) : 
-                null;
+            return descriptor != null ? new iText.Layout.Font.FontInfo(null, fontProgram, encoding, descriptor, alias)
+                 : null;
         }
 
+        [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) or FontSelectorStrategy.GetPdfFont(FontInfo) instead."
+            )]
         public PdfFont GetPdfFont(FontProvider fontProvider) {
             try {
                 return fontProvider.GetPdfFont(this);

@@ -61,8 +61,15 @@ namespace iText.Layout.Font {
 
         private FontSelector selector;
 
+        public ComplexFontSelectorStrategy(String text, FontSelector selector, FontProvider provider, TemporaryFontSet
+             tempFonts)
+            : base(text, provider, tempFonts) {
+            this.font = null;
+            this.selector = selector;
+        }
+
         public ComplexFontSelectorStrategy(String text, FontSelector selector, FontProvider provider)
-            : base(text, provider) {
+            : base(text, provider, null) {
             this.font = null;
             this.selector = selector;
         }
@@ -76,7 +83,7 @@ namespace iText.Layout.Font {
             int nextUnignorable = NextSignificantIndex();
             if (nextUnignorable < text.Length) {
                 foreach (FontInfo f in selector.GetFonts()) {
-                    PdfFont currentFont = f.GetPdfFont(provider);
+                    PdfFont currentFont = GetPdfFont(f);
                     if (currentFont.ContainsGlyph(text, nextUnignorable)) {
                         font = currentFont;
                         break;
@@ -105,7 +112,7 @@ namespace iText.Layout.Font {
                 index += numOfAppendedGlyphs;
             }
             if (!anyGlyphsAppended) {
-                font = selector.BestMatch().GetPdfFont(provider);
+                font = GetPdfFont(selector.BestMatch());
                 if (index != nextUnignorable) {
                     index += font.AppendGlyphs(text, index, nextUnignorable - 1, glyphs);
                 }

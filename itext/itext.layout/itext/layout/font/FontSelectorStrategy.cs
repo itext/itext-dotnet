@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font.Otf;
+using iText.Kernel;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
@@ -57,12 +58,15 @@ namespace iText.Layout.Font {
 
         protected internal int index;
 
-        protected internal FontProvider provider;
+        protected internal readonly FontProvider provider;
 
-        protected internal FontSelectorStrategy(String text, FontProvider provider) {
+        protected internal readonly TemporaryFontSet tempFonts;
+
+        protected internal FontSelectorStrategy(String text, FontProvider provider, TemporaryFontSet tempFonts) {
             this.text = text;
             this.index = 0;
             this.provider = provider;
+            this.tempFonts = tempFonts;
         }
 
         public virtual bool EndOfText() {
@@ -72,5 +76,14 @@ namespace iText.Layout.Font {
         public abstract PdfFont GetCurrentFont();
 
         public abstract IList<Glyph> NextGlyphs();
+
+        protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
+            try {
+                return provider.GetPdfFont(fontInfo, tempFonts);
+            }
+            catch (System.IO.IOException e) {
+                throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
+            }
+        }
     }
 }
