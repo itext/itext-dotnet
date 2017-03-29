@@ -143,7 +143,7 @@ namespace iText.Kernel.Pdf {
         [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
 
-        private static long lastDocumentId = new long();
+        private static readonly AtomicLong lastDocumentId = new AtomicLong();
 
         private long documentId;
 
@@ -2079,6 +2079,10 @@ namespace iText.Kernel.Pdf {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
         }
 
+        private long IncrementDocumentId() {
+            return lastDocumentId.IncrementAndGet();
+        }
+
         private long GetDocumentId() {
             return documentId;
         }
@@ -2140,10 +2144,6 @@ namespace iText.Kernel.Pdf {
                 buf.Append(version.GetVersion());
                 return buf.ToString();
             }
-        }
-
-        private long IncrementDocumentId() {
-            return System.Threading.Interlocked.Increment(ref lastDocumentId);
         }
 
         void System.IDisposable.Dispose() {
