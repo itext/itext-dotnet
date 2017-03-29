@@ -44,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
+using iText.Kernel;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
@@ -63,11 +64,23 @@ namespace iText.Layout.Font {
     /// but a new instance of FontProvider could be created with
     /// <see cref="GetFontSet()"/>
     /// .
-    /// FontProvider the only end point for creating PdfFont,
-    /// <see cref="GetPdfFont(FontInfo)"/>
+    /// FontProvider the only end point for creating
+    /// <see cref="iText.Kernel.Font.PdfFont"/>
+    /// .
+    /// <p>
+    /// It is recommended to use only one
+    /// <see cref="FontProvider"/>
+    /// per document. If temporary fonts per element needed,
+    /// additional
+    /// <see cref="FontSet"/>
+    /// can be used. For more details see
+    /// <see cref="iText.Layout.Properties.Property.FONT_SET"/>
     /// ,
-    /// <see cref="FontInfo"/>
-    /// shall call this method.
+    /// <see cref="GetPdfFont(FontInfo, FontSet)"/>
+    /// ,
+    /// <see cref="GetStrategy(System.String, System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/
+    ///     >
+    /// .
     /// <p>
     /// Note, FontProvider does not close created
     /// <see cref="iText.IO.Font.FontProgram"/>
@@ -76,16 +89,23 @@ namespace iText.Layout.Font {
     /// .
     /// </remarks>
     public class FontProvider {
-        private FontSet fontSet;
+        private readonly FontSet fontSet;
 
-        private IDictionary<FontInfo, PdfFont> pdfFonts = new Dictionary<FontInfo, PdfFont>();
+        private readonly IDictionary<FontInfo, PdfFont> pdfFonts;
 
+        private readonly FontSelectorCache fontSelectorCache;
+
+        /// <summary>Creates a new instance of FontProvider</summary>
+        /// <param name="fontSet">predefined set of fonts, could be null.</param>
         public FontProvider(FontSet fontSet) {
-            this.fontSet = fontSet;
+            this.fontSet = fontSet != null ? fontSet : new FontSet();
+            pdfFonts = new Dictionary<FontInfo, PdfFont>();
+            fontSelectorCache = new FontSelectorCache(this.fontSet);
         }
 
-        public FontProvider() {
-            this.fontSet = new FontSet();
+        /// <summary>Creates a new instance of FontProvider.</summary>
+        public FontProvider()
+            : this(new FontSet()) {
         }
 
         public virtual bool AddFont(FontProgram fontProgram, String encoding) {
@@ -152,7 +172,6 @@ namespace iText.Layout.Font {
         /// Gets
         /// <see cref="FontSet"/>
         /// .
-        /// FontSet allows search and remove fonts.
         /// </summary>
         public virtual FontSet GetFontSet() {
             return fontSet;
@@ -176,8 +195,8 @@ namespace iText.Layout.Font {
         }
 
         public virtual FontSelectorStrategy GetStrategy(String text, IList<String> fontFamilies, FontCharacteristics
-             fc, TemporaryFontSet tempFonts) {
-            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc, tempFonts), this, tempFonts
+             fc, FontSet additonalFonts) {
+            return new ComplexFontSelectorStrategy(text, GetFontSelector(fontFamilies, fc, additonalFonts), this, additonalFonts
                 );
         }
 
@@ -207,13 +226,14 @@ namespace iText.Layout.Font {
         /// .
         /// </returns>
         /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
-        ///     ">}</seealso>
+        ///     "/>
+        /// <seealso cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/>
         public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc) {
             FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
-            FontSelector fontSelector = fontSet.GetCachedFontSelector(key);
+            FontSelector fontSelector = fontSelectorCache.Get(key);
             if (fontSelector == null) {
                 fontSelector = CreateFontSelector(fontSet.GetFonts(), fontFamilies, fc);
-                fontSet.PutCachedFontSelector(key, fontSelector);
+                fontSelectorCache.Put(key, fontSelector);
             }
             return fontSelector;
         }
@@ -237,30 +257,23 @@ namespace iText.Layout.Font {
         /// </returns>
         /// <seealso cref="CreateFontSelector(System.Collections.Generic.ICollection{E}, System.Collections.Generic.IList{E}, FontCharacteristics)
         ///     ">}</seealso>
-        /// <seealso cref="TemporaryFontSet"/>
-        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc, TemporaryFontSet tempFonts
-            ) {
-            if (tempFonts != null) {
-                FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
-                FontSelector fontSelector = tempFonts.GetCachedFontSelector(key);
-                if (fontSelector == null) {
-                    fontSelector = CreateFontSelector(tempFonts.GetFonts(), fontFamilies, fc);
-                    tempFonts.PutCachedFontSelector(key, fontSelector);
-                }
-                return fontSelector;
+        public FontSelector GetFontSelector(IList<String> fontFamilies, FontCharacteristics fc, FontSet tempFonts) {
+            FontSelectorKey key = new FontSelectorKey(fontFamilies, fc);
+            FontSelector fontSelector = fontSelectorCache.Get(key, tempFonts);
+            if (fontSelector == null) {
+                fontSelector = CreateFontSelector(fontSet.GetFonts(tempFonts), fontFamilies, fc);
+                fontSelectorCache.Put(key, fontSelector, tempFonts);
             }
-            else {
-                return GetFontSelector(fontFamilies, fc);
-            }
+            return fontSelector;
         }
 
         /// <summary>
         /// Create a new instance of
         /// <see cref="FontSelector"/>
         /// . While caching is main responsibility of
-        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics)"/>
-        /// ,
-        /// this method just create a new instance of
+        /// <see cref="GetFontSelector(System.Collections.Generic.IList{E}, FontCharacteristics, FontSet)"/>
+        /// .
+        /// This method just create a new instance of
         /// <see cref="FontSelector"/>
         /// .
         /// </summary>
@@ -303,7 +316,7 @@ namespace iText.Layout.Font {
         /// <see cref="iText.IO.Font.FontProgramFactory"/>
         /// .
         /// </exception>
-        protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
+        public virtual PdfFont GetPdfFont(FontInfo fontInfo) {
             return GetPdfFont(fontInfo, null);
         }
 
@@ -325,32 +338,37 @@ namespace iText.Layout.Font {
         /// <see cref="iText.Kernel.Font.PdfFont"/>
         /// .
         /// </returns>
-        /// <exception cref="System.IO.IOException">
-        /// on I/O exceptions in
-        /// <see cref="iText.IO.Font.FontProgramFactory"/>
-        /// .
-        /// </exception>
-        /// <seealso cref="TemporaryFontSet"/>
-        protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo, TemporaryFontSet tempFonts) {
+        public virtual PdfFont GetPdfFont(FontInfo fontInfo, FontSet tempFonts) {
             if (pdfFonts.ContainsKey(fontInfo)) {
                 return pdfFonts.Get(fontInfo);
             }
             else {
-                FontProgram fontProgram = tempFonts != null ? tempFonts.GetFontProgram(fontInfo) : fontSet.GetFontProgram(
-                    fontInfo);
+                FontProgram fontProgram = null;
+                if (tempFonts != null) {
+                    fontProgram = tempFonts.GetFontProgram(fontInfo);
+                }
                 if (fontProgram == null) {
-                    if (fontInfo.GetFontData() != null) {
-                        fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontData(), GetDefaultCacheFlag());
-                    }
-                    else {
-                        fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontName(), GetDefaultCacheFlag());
-                    }
+                    fontProgram = fontSet.GetFontProgram(fontInfo);
                 }
-                String encoding = fontInfo.GetEncoding();
-                if (encoding == null || encoding.Length == 0) {
-                    encoding = GetDefaultEncoding(fontProgram);
+                PdfFont pdfFont;
+                try {
+                    if (fontProgram == null) {
+                        if (fontInfo.GetFontData() != null) {
+                            fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontData(), GetDefaultCacheFlag());
+                        }
+                        else {
+                            fontProgram = FontProgramFactory.CreateFont(fontInfo.GetFontName(), GetDefaultCacheFlag());
+                        }
+                    }
+                    String encoding = fontInfo.GetEncoding();
+                    if (encoding == null || encoding.Length == 0) {
+                        encoding = GetDefaultEncoding(fontProgram);
+                    }
+                    pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, GetDefaultEmbeddingFlag());
                 }
-                PdfFont pdfFont = PdfFontFactory.CreateFont(fontProgram, encoding, GetDefaultEmbeddingFlag());
+                catch (System.IO.IOException e) {
+                    throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
+                }
                 pdfFonts.Put(fontInfo, pdfFont);
                 return pdfFont;
             }

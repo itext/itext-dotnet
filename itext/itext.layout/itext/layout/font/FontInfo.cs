@@ -45,7 +45,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using iText.IO.Font;
 using iText.IO.Util;
-using iText.Kernel;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
@@ -60,6 +59,21 @@ namespace iText.Layout.Font {
     /// <see cref="iText.IO.Font.FontProgramDescriptorFactory"/>
     /// .
     /// </summary>
+    /// <seealso cref="FontProvider.GetPdfFont(FontInfo)"/>
+    /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)">
+    /// <p/>
+    /// Note,
+    /// <see cref="GetAlias()"/>
+    /// and
+    /// <see cref="GetDescriptor()"/>
+    /// do not taken into account in
+    /// <see cref="Equals(System.Object)"/>
+    /// ,
+    /// the same font with different aliases will have equal FontInfo's,
+    /// and therefore the same
+    /// <see cref="iText.Kernel.Font.PdfFont"/>
+    /// in the end document.
+    /// </seealso>
     public sealed class FontInfo {
         private static readonly IDictionary<FontCacheKey, FontProgramDescriptor> fontNamesCache = new ConcurrentDictionary
             <FontCacheKey, FontProgramDescriptor>();
@@ -118,15 +132,9 @@ namespace iText.Layout.Font {
                  : null;
         }
 
-        [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) or FontSelectorStrategy.GetPdfFont(FontInfo) instead."
-            )]
+        [System.ObsoleteAttribute(@"use FontProvider.GetPdfFont(FontInfo) instead.")]
         public PdfFont GetPdfFont(FontProvider fontProvider) {
-            try {
-                return fontProvider.GetPdfFont(this);
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
-            }
+            return fontProvider.GetPdfFont(this);
         }
 
         public FontProgramDescriptor GetDescriptor() {

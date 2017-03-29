@@ -1022,15 +1022,14 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
-                    //TODO add default font provider at Document level and check number of fonts.
-                    if (provider == null) {
-                        throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
+                    FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
+                    if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
+                        throw new InvalidOperationException("Invalid font type. FontProvider and FontSet are empty. Cannot resolve font with string value."
                             );
                     }
-                    TemporaryFontSet tempFontSet = this.GetProperty<TemporaryFontSet>(Property.FONT_SET);
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font), fc, tempFontSet);
+                        (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
                         iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(new GlyphLine(strategy.NextGlyphs()), strategy
                             .GetCurrentFont());

@@ -136,12 +136,15 @@ namespace iText.Layout.Properties {
 
         public const int FONT_SCRIPT = 23;
 
-        [Obsolete]
+        /// <summary>
+        /// Shall be instance of
+        /// <see cref="iText.Layout.Font.FontProvider"/>
+        /// </summary>
         public const int FONT_PROVIDER = 91;
 
         /// <summary>
         /// Shall be instance of
-        /// <see cref="iText.Layout.Font.TemporaryFontSet"/>
+        /// <see cref="iText.Layout.Font.FontSet"/>
         /// .
         /// </summary>
         public const int FONT_SET = 98;

@@ -43,13 +43,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using iText.IO.Font.Otf;
-using iText.Kernel;
 using iText.Kernel.Font;
 
 namespace iText.Layout.Font {
     /// <summary>
     /// <see cref="FontSelectorStrategy"/>
-    /// responsible for splitting text into sub texts with font.
+    /// is responsible for splitting text into sub texts with one particular font.
     /// <see cref="NextGlyphs()"/>
     /// will create next sub text and set current font.
     /// </summary>
@@ -60,9 +59,9 @@ namespace iText.Layout.Font {
 
         protected internal readonly FontProvider provider;
 
-        protected internal readonly TemporaryFontSet tempFonts;
+        protected internal readonly FontSet tempFonts;
 
-        protected internal FontSelectorStrategy(String text, FontProvider provider, TemporaryFontSet tempFonts) {
+        protected internal FontSelectorStrategy(String text, FontProvider provider, FontSet tempFonts) {
             this.text = text;
             this.index = 0;
             this.provider = provider;
@@ -77,13 +76,12 @@ namespace iText.Layout.Font {
 
         public abstract IList<Glyph> NextGlyphs();
 
+        /// <summary>Utility method to create PdfFont.</summary>
+        /// <param name="fontInfo">instance of FontInfo.</param>
+        /// <returns>cached or just created PdfFont on success, otherwise null.</returns>
+        /// <seealso cref="FontProvider.GetPdfFont(FontInfo, FontSet)"/>
         protected internal virtual PdfFont GetPdfFont(FontInfo fontInfo) {
-            try {
-                return provider.GetPdfFont(fontInfo, tempFonts);
-            }
-            catch (System.IO.IOException e) {
-                throw new PdfException(PdfException.IoExceptionWhileCreatingFont, e);
-            }
+            return provider.GetPdfFont(fontInfo, tempFonts);
         }
     }
 }

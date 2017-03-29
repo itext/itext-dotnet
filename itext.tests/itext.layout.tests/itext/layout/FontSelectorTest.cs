@@ -161,6 +161,8 @@ namespace iText.Layout {
             sel.AddFont(fontsFolder + "FreeSans.ttf");
             FontInfo puritan = sel.GetFontSet().Add(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan42"
                 );
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Add(puritan, "Puritan42") == null, "Replace existed font");
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Add(puritan) == null, "Replace existed font");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("NotoSans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Noto Sans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("FreeSans"), "FreeSans not found!");
@@ -172,11 +174,6 @@ namespace iText.Layout {
                 );
             NUnit.Framework.Assert.AreEqual(puritan, sel.GetFontSet().Get("puritan2"), "Puritan 2.0 not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan42") == null, "Puritan42 found!");
-            //Assert.assertTrue("Puritan wasn't removed", sel.getFontSet().remove(puritan42));
-            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 found!");
-            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan 2.0 regular") == null, "Puritan 2.0 found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan2") == null, "Puritan 2.0 found!");
         }
 
         /// <exception cref="System.Exception"/>
@@ -202,11 +199,6 @@ namespace iText.Layout {
                 );
             NUnit.Framework.Assert.AreEqual(puritan, sel.GetFontSet().Get("puritan2"), "Puritan 2.0 not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan42") == null, "Puritan42 found!");
-            //Assert.assertTrue("Puritan wasn't removed", sel.getFontSet().remove(puritan42));
-            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 found!");
-            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan 2.0 regular") == null, "Puritan 2.0 found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan2") == null, "Puritan 2.0 found!");
         }
     }
 }

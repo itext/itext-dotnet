@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 using System;
 
 namespace iText.IO.Font {
+    /// <summary>Base font descriptor.</summary>
     public class FontProgramDescriptor {
         private readonly String fontName;
 

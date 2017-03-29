@@ -49,22 +49,30 @@ namespace iText.Layout.Font {
     /// <summary>Reusable font set for FontProgram related data.</summary>
     /// <remarks>
     /// Reusable font set for FontProgram related data.
-    /// Add, remove and search fonts.
+    /// Add and search fonts.
+    /// <p/>
+    /// A FontSet instance could be shared for multiple threads.
+    /// However FontSet filling is not thread safe operation.
     /// </remarks>
     /// <seealso cref="FontProvider"/>
-    public class FontSet {
-        private readonly ICollection<FontInfo> fonts = new HashSet<FontInfo>();
+    public sealed class FontSet {
+        private static AtomicLong lastId = new AtomicLong();
+
+        private readonly ICollection<FontInfo> fonts = new LinkedHashSet<FontInfo>();
 
         private readonly IDictionary<FontInfo, FontProgram> fontPrograms = new Dictionary<FontInfo, FontProgram>();
 
-        private readonly IDictionary<FontSelectorKey, FontSelector> fontSelectorCache = new Dictionary<FontSelectorKey
-            , FontSelector>();
-
         private readonly FontSet.FontNameSet fontNames = new FontSet.FontNameSet();
 
-        // Due to new logic HashSet can be used instead of List.
-        // But FontInfo with or without alias will be the same FontInfo.
-        // TODO Replace with concurrent collections!
+        private long id;
+
+        public FontSet() {
+            // FontSet MUST be final to avoid overriding #add(FontInfo) method or remove functionality.
+            // Due to new logic HashSet can be used instead of List.
+            // But FontInfo with or without alias will be the same FontInfo.
+            this.id = IncrementId();
+        }
+
         /// <summary>Add all the fonts in a directory and possibly its subdirectories.</summary>
         /// <param name="dir">path to directory.</param>
         /// <param name="scanSubdirectories">
@@ -73,7 +81,7 @@ namespace iText.Layout.Font {
         /// .
         /// </param>
         /// <returns>number of added fonts.</returns>
-        public virtual int AddDirectory(String dir, bool scanSubdirectories) {
+        public int AddDirectory(String dir, bool scanSubdirectories) {
             int count = 0;
             String[] files = FileUtil.ListFilesInDirectory(dir, scanSubdirectories);
             if (files == null) {
@@ -105,11 +113,21 @@ namespace iText.Layout.Font {
         /// <summary>Add all the fonts in a directory.</summary>
         /// <param name="dir">path to directory.</param>
         /// <returns>number of added fonts.</returns>
-        public virtual int AddDirectory(String dir) {
+        public int AddDirectory(String dir) {
             return AddDirectory(dir, false);
         }
 
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
+        /// <remarks>
+        /// Add not supported for auto creating FontPrograms.
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </remarks>
         /// <param name="fontProgram">
         /// 
         /// <see cref="iText.IO.Font.FontProgram"/>
@@ -125,7 +143,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo"/>
         /// on success, otherwise null.
         /// </returns>
-        public virtual FontInfo Add(FontProgram fontProgram, String encoding, String alias) {
+        public FontInfo Add(FontProgram fontProgram, String encoding, String alias) {
             if (fontProgram == null) {
                 return null;
             }
@@ -135,6 +153,16 @@ namespace iText.Layout.Font {
         }
 
         /// <summary>Add not supported for auto creating FontPrograms.</summary>
+        /// <remarks>
+        /// Add not supported for auto creating FontPrograms.
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </remarks>
         /// <param name="fontProgram">
         /// 
         /// <see cref="iText.IO.Font.FontProgram"/>
@@ -149,7 +177,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo"/>
         /// on success, otherwise null.
         /// </returns>
-        public virtual FontInfo Add(FontProgram fontProgram, String encoding) {
+        public FontInfo Add(FontProgram fontProgram, String encoding) {
             return Add(fontProgram, encoding, null);
         }
 
@@ -163,6 +191,13 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontPath">path to font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -172,7 +207,7 @@ namespace iText.Layout.Font {
         /// on success, otherwise null.
         /// </returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
-        public virtual FontInfo Add(String fontPath, String encoding, String alias) {
+        public FontInfo Add(String fontPath, String encoding, String alias) {
             return Add(FontInfo.Create(fontPath, encoding, alias));
         }
 
@@ -186,6 +221,13 @@ namespace iText.Layout.Font {
         /// to
         /// <see cref="FontSet"/>
         /// .
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontData">font data.</param>
         /// <param name="encoding">preferred font encoding.</param>
@@ -195,7 +237,7 @@ namespace iText.Layout.Font {
         /// on success, otherwise null.
         /// </returns>
         /// <seealso cref="iText.IO.Font.PdfEncodings"/>
-        public virtual FontInfo Add(byte[] fontData, String encoding, String alias) {
+        public FontInfo Add(byte[] fontData, String encoding, String alias) {
             return Add(FontInfo.Create(fontData, encoding, alias));
         }
 
@@ -211,6 +253,13 @@ namespace iText.Layout.Font {
         /// .
         /// <see cref="FontProvider.GetDefaultEncoding(iText.IO.Font.FontProgram)"/>
         /// will be used to determine encoding.
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontPath">path to font data.</param>
         /// <returns>
@@ -218,7 +267,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo"/>
         /// on success, otherwise null.
         /// </returns>
-        public virtual FontInfo Add(String fontPath) {
+        public FontInfo Add(String fontPath) {
             return Add(fontPath, null, null);
         }
 
@@ -234,6 +283,13 @@ namespace iText.Layout.Font {
         /// .
         /// <see cref="FontProvider.GetDefaultEncoding(iText.IO.Font.FontProgram)"/>
         /// will be used to determine encoding.
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
         /// </summary>
         /// <param name="fontData">font data.</param>
         /// <returns>
@@ -241,8 +297,57 @@ namespace iText.Layout.Font {
         /// <see cref="FontInfo"/>
         /// on success, otherwise null.
         /// </returns>
-        public virtual FontInfo Add(byte[] fontData) {
+        public FontInfo Add(byte[] fontData) {
             return Add(fontData, null, null);
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="FontInfo"/>
+        /// with alias. Could be used to fill temporary font set.
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </summary>
+        /// <param name="fontInfo">font info.</param>
+        /// <param name="alias">font alias.</param>
+        /// <returns>just created object on success or null, if equal FontInfo already exist.</returns>
+        public FontInfo Add(FontInfo fontInfo, String alias) {
+            return Add(FontInfo.Create(fontInfo, alias));
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="FontInfo"/>
+        /// . Could be used to fill temporary font set.
+        /// <p/>
+        /// Note,
+        /// <see cref="FontInfo.GetAlias()"/>
+        /// do not taken into account in
+        /// <see cref="FontInfo.Equals(System.Object)"/>
+        /// .
+        /// The same font with different alias will not be replaced.
+        /// </summary>
+        /// <param name="fontInfo">font info.</param>
+        /// <returns>the same object on success or null, if equal FontInfo already exist.</returns>
+        public FontInfo Add(FontInfo fontInfo) {
+            // This method MUST be final, to avoid inconsistency with FontSelectorCache.
+            // (Yes, FontSet is final. Double check.)
+            if (fontInfo != null) {
+                if (fonts.Contains(fontInfo)) {
+                    // NOTE! We SHALL NOT replace font, because it will influence on FontSelectorCache.
+                    // FontSelectorCache reset cache ONLY if number of fonts has been changed,
+                    // while replacing will modify list of fonts without size change.
+                    return null;
+                }
+                fonts.Add(fontInfo);
+                fontNames.Add(fontInfo);
+            }
+            return fontInfo;
         }
 
         /// <summary>Search in existed fonts for PostScript name or full font name.</summary>
@@ -252,7 +357,7 @@ namespace iText.Layout.Font {
         /// <see cref="FontSet"/>
         /// contains font with given name.
         /// </returns>
-        public virtual bool Contains(String fontName) {
+        public bool Contains(String fontName) {
             return fontNames.Contains(fontName);
         }
 
@@ -267,102 +372,74 @@ namespace iText.Layout.Font {
         /// <see langword="null"/>
         /// .
         /// </returns>
-        public virtual FontInfo Get(String fontName) {
+        public FontInfo Get(String fontName) {
             return fontNames.Get(fontName);
         }
 
-        /// <summary>Set of available fonts.</summary>
+        /// <summary>Gets available fonts.</summary>
         /// <remarks>
-        /// Set of available fonts.
-        /// Note, the set is unmodifiable.
+        /// Gets available fonts.
+        /// Note, the collection is unmodifiable.
         /// </remarks>
-        public virtual ICollection<FontInfo> GetFonts() {
-            return JavaCollectionsUtil.UnmodifiableCollection<FontInfo>(fonts);
+        public ICollection<FontInfo> GetFonts() {
+            return GetFonts(null);
+        }
+
+        /// <summary>Gets union of available and temporary fonts.</summary>
+        /// <remarks>
+        /// Gets union of available and temporary fonts.
+        /// Note, the collection is unmodifiable.
+        /// </remarks>
+        public ICollection<FontInfo> GetFonts(iText.Layout.Font.FontSet tempFonts) {
+            return new FontSetCollection(fonts, tempFonts != null ? tempFonts.fonts : null);
+        }
+
+        public bool IsEmpty() {
+            return Size() == 0;
+        }
+
+        public int Size() {
+            return fonts.Count;
         }
 
         //region Deprecated addFont methods
-        /// <summary>Add not supported for auto creating FontPrograms.</summary>
-        /// <param name="fontProgram">
-        /// instance of
-        /// <see cref="iText.IO.Font.FontProgram"/>
-        /// .
-        /// </param>
-        /// <param name="encoding">
-        /// FontEncoding for creating
-        /// <see cref="iText.Kernel.Font.PdfFont"/>
-        /// .
-        /// </param>
-        /// <returns>false, if fontProgram is null, otherwise true.</returns>
         [System.ObsoleteAttribute(@"use Add(iText.IO.Font.FontProgram, System.String) instead.")]
-        public virtual bool AddFont(FontProgram fontProgram, String encoding) {
+        public bool AddFont(FontProgram fontProgram, String encoding) {
             return Add(fontProgram, encoding) != null;
         }
 
         [System.ObsoleteAttribute(@"use Add(System.String, System.String, System.String) instead.")]
-        public virtual bool AddFont(String fontProgram, String encoding) {
+        public bool AddFont(String fontProgram, String encoding) {
             return Add(FontInfo.Create(fontProgram, encoding, null)) != null;
         }
 
         [System.ObsoleteAttribute(@"use Add(byte[], System.String, System.String) instead.")]
-        public virtual bool AddFont(byte[] fontProgram, String encoding) {
+        public bool AddFont(byte[] fontProgram, String encoding) {
             return Add(FontInfo.Create(fontProgram, encoding, null)) != null;
         }
 
         [System.ObsoleteAttribute(@"use Add(System.String) instead.")]
-        public virtual bool AddFont(String fontProgram) {
+        public bool AddFont(String fontProgram) {
             return Add(fontProgram) != null;
         }
 
         [System.ObsoleteAttribute(@"use Add(byte[]) instead.")]
-        public virtual bool AddFont(byte[] fontProgram) {
+        public bool AddFont(byte[] fontProgram) {
             return Add(fontProgram) != null;
         }
 
         //endregion
         //region Internal members
-        internal virtual FontProgram GetFontProgram(FontInfo fontInfo) {
+        internal long GetId() {
+            return id;
+        }
+
+        internal FontProgram GetFontProgram(FontInfo fontInfo) {
             return fontPrograms.Get(fontInfo);
         }
 
-        internal virtual FontSelector GetCachedFontSelector(FontSelectorKey fontSelectorKey) {
-            return fontSelectorCache.Get(fontSelectorKey);
-        }
-
-        internal virtual void PutCachedFontSelector(FontSelectorKey fontSelectorKey, FontSelector fontSelector) {
-            fontSelectorCache.Put(fontSelectorKey, fontSelector);
-        }
-
-        private FontInfo Add(FontInfo fontInfo) {
-            if (fontInfo != null) {
-                fonts.Add(fontInfo);
-                fontSelectorCache.Clear();
-                fontNames.Add(fontInfo);
-            }
-            return fontInfo;
-        }
-
-        /// <summary>
-        /// Removes pre saved
-        /// <see cref="FontInfo"/>
-        /// .
-        /// </summary>
-        /// <param name="fontInfo">
-        /// 
-        /// <see cref="FontInfo"/>
-        /// from group of
-        /// <c>#add()</c>
-        /// methods.
-        /// </param>
-        /// <returns>true, if font was found and successfully removed.</returns>
-        private bool Remove(FontInfo fontInfo) {
-            if (fonts.Contains(fontInfo) || fontPrograms.ContainsKey(fontInfo)) {
-                fonts.Remove(fontInfo);
-                fontPrograms.JRemove(fontInfo);
-                fontNames.Remove(fontInfo);
-                fontSelectorCache.Clear();
-                return true;
-            }
-            return false;
+        private long IncrementId() {
+            return lastId.IncrementAndGet();
         }
 
         /// <summary>
@@ -372,16 +449,17 @@ namespace iText.Layout.Font {
         /// <remarks>
         /// FontNameSet used for quick search of lowercased fontName or fullName,
         /// supports remove FontInfo at FontSet level.
+        /// <p>
         /// FontInfoName has tricky implementation. Hashcode builds by fontName String,
-        /// but equals() works in different ways, depends whether FontInfoName used for search (no FontInfo)
-        /// or for adding/removing (contains FontInfo).
+        /// but equals() works in different ways, depends whether FontInfoName used to search (no FontInfo)
+        /// or to add (contains FontInfo).
         /// </remarks>
         private class FontNameSet {
             private readonly IDictionary<FontSet.FontInfoName, FontInfo> fontInfoNames = new Dictionary<FontSet.FontInfoName
                 , FontInfo>();
 
             //endregion
-            //region Set for quick search of font names
+            //region Set for font names quick search
             internal virtual bool Contains(String fontName) {
                 return fontInfoNames.ContainsKey(new FontSet.FontInfoName(fontName.ToLowerInvariant()));
             }
@@ -395,11 +473,6 @@ namespace iText.Layout.Font {
                     );
                 fontInfoNames.Put(new FontSet.FontInfoName(fontInfo.GetDescriptor().GetFullNameLowerCase(), fontInfo), fontInfo
                     );
-            }
-
-            internal virtual void Remove(FontInfo fontInfo) {
-                fontInfoNames.JRemove(new FontSet.FontInfoName(fontInfo.GetDescriptor().GetFontNameLowerCase(), fontInfo));
-                fontInfoNames.JRemove(new FontSet.FontInfoName(fontInfo.GetDescriptor().GetFullNameLowerCase(), fontInfo));
             }
         }
 

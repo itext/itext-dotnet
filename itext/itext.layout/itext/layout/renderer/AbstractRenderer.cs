@@ -1238,8 +1238,8 @@ namespace iText.Layout.Renderer {
         // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         // TODO this mechanism does not take text into account
         internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
-            return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch().GetPdfFont(provider
-                );
+            return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
+                ());
         }
 
         public abstract IRenderer GetNextRenderer();
