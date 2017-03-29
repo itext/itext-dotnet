@@ -274,11 +274,9 @@ namespace iText.Layout.Renderer {
                 }
                 else {
                     if (null != footerRenderer) {
-                        footerRenderer.bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, !((Table)footerRenderer
-                            .GetModelElement()).IsEmpty());
+                        footerRenderer.bordersHandler.CollapseTableWithHeader(headerRenderer.bordersHandler, true);
                     }
                 }
-                // TODO
                 topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
                 // first row own top border. We will use it while header processing
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
@@ -770,7 +768,6 @@ namespace iText.Layout.Renderer {
             // process footer renderer with collapsed borders
             if (tableModel.IsComplete() && (0 != lastFlushedRowBottomBorder.Count || tableModel.IsEmpty()) && null != 
                 footerRenderer) {
-                // TODO twice ?
                 layoutBox.MoveDown(footerRenderer.occupiedArea.GetBBox().GetHeight()).IncreaseHeight(footerRenderer.occupiedArea
                     .GetBBox().GetHeight());
                 // apply the difference to set footer and table left/right margins identical
