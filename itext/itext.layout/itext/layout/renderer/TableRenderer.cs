@@ -174,7 +174,8 @@ namespace iText.Layout.Renderer {
             bool wasHeightClipped = false;
             LayoutArea area = layoutContext.GetArea();
             Rectangle layoutBox = area.GetBBox().Clone();
-            if (!((Table)modelElement).IsComplete()) {
+            Table tableModel = (Table)GetModelElement();
+            if (!tableModel.IsComplete()) {
                 SetProperty(Property.MARGIN_BOTTOM, 0);
             }
             if (rowRange.GetStartRow() != 0) {
@@ -204,7 +205,6 @@ namespace iText.Layout.Renderer {
                     layoutBox.SetX(relativeX + x);
                 }
             }
-            Table tableModel = (Table)GetModelElement();
             if (null != blockMaxHeight && blockMaxHeight < layoutBox.GetHeight() && !true.Equals(GetPropertyAsBoolean(
                 Property.FORCED_PLACEMENT))) {
                 layoutBox.MoveUp(layoutBox.GetHeight() - (float)blockMaxHeight).SetHeight((float)blockMaxHeight);
@@ -213,10 +213,11 @@ namespace iText.Layout.Renderer {
             int numberOfColumns = ((Table)GetModelElement()).GetNumberOfColumns();
             // The last flushed row. Empty list if the table hasn't been set incomplete
             IList<Border> lastFlushedRowBottomBorder = tableModel.GetLastRowBottomBorder();
+            bool isAndWasComplete = tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count;
             if (!IsFooterRenderer() && !IsHeaderRenderer()) {
                 if (isOriginalNonSplitRenderer) {
-                    bordersHandler = new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !tableModel.IsComplete() ||
-                         0 != lastFlushedRowBottomBorder.Count ? rowRange.GetStartRow() : 0);
+                    bordersHandler = new CollapsedTableBorders(rows, numberOfColumns, GetBorders(), !isAndWasComplete ? rowRange
+                        .GetStartRow() : 0);
                     bordersHandler.InitializeBorders();
                 }
             }
@@ -239,7 +240,7 @@ namespace iText.Layout.Renderer {
                 // apply the difference to set footer and table left/right margins identical
                 PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
                 // collapse with top footer border
-                if (0 != rows.Count || (!tableModel.IsComplete() || 0 != lastFlushedRowBottomBorder.Count)) {
+                if (0 != rows.Count || !isAndWasComplete) {
                     bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, false);
                 }
                 else {
@@ -277,6 +278,7 @@ namespace iText.Layout.Renderer {
                             .GetModelElement()).IsEmpty());
                     }
                 }
+                // TODO
                 topBorderMaxWidth = bordersHandler.GetMaxTopWidth();
                 // first row own top border. We will use it while header processing
                 LayoutResult result = headerRenderer.Layout(new LayoutContext(new LayoutArea(area.GetPageNumber(), layoutBox
@@ -294,7 +296,7 @@ namespace iText.Layout.Renderer {
             bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, false);
             // Table should have a row and some child elements in order to be considered non empty
             bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, tableModel.IsEmpty() || 0 == rows.Count
-                , tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count, false);
+                , isAndWasComplete, false);
             LayoutResult[] splits = new LayoutResult[numberOfColumns];
             // This represents the target row index for the overflow renderer to be placed to.
             // Usually this is just the current row id of a cell, but it has valuable meaning when a cell has rowspan.
@@ -552,8 +554,7 @@ namespace iText.Layout.Renderer {
                 // process footer with collapsed borders
                 if ((split || row == rows.Count - 1) && null != footerRenderer) {
                     // maybe the table was incomplete and we can process the footer
-                    if ((0 != lastFlushedRowBottomBorder.Count || !tableModel.IsComplete()) && !hasContent && 0 == childRenderers
-                        .Count) {
+                    if (!isAndWasComplete && !hasContent && 0 == childRenderers.Count) {
                         bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                     }
                     else {
@@ -679,7 +680,7 @@ namespace iText.Layout.Renderer {
                         else {
                             bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, true);
                             // process bottom border of the last added row if there is no footer
-                            if (!tableModel.IsComplete() || 0 != lastFlushedRowBottomBorder.Count) {
+                            if (!isAndWasComplete) {
                                 bordersHandler.ApplyTopTableBorder(occupiedArea.GetBBox(), layoutBox, 0 == childRenderers.Count, true, false
                                     );
                             }
@@ -706,8 +707,7 @@ namespace iText.Layout.Renderer {
                     }
                     else {
                         int status = ((occupiedArea.GetBBox().GetHeight() - (null == footerRenderer ? 0 : footerRenderer.GetOccupiedArea
-                            ().GetBBox().GetHeight()) == 0) && (tableModel.IsComplete() && 0 == lastFlushedRowBottomBorder.Count))
-                             ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
+                            ().GetBBox().GetHeight()) == 0) && isAndWasComplete) ? LayoutResult.NOTHING : LayoutResult.PARTIAL;
                         if ((status == LayoutResult.NOTHING && true.Equals(GetPropertyAsBoolean(Property.FORCED_PLACEMENT))) || wasHeightClipped
                             ) {
                             if (wasHeightClipped) {
@@ -770,12 +770,13 @@ namespace iText.Layout.Renderer {
             // process footer renderer with collapsed borders
             if (tableModel.IsComplete() && (0 != lastFlushedRowBottomBorder.Count || tableModel.IsEmpty()) && null != 
                 footerRenderer) {
+                // TODO twice ?
                 layoutBox.MoveDown(footerRenderer.occupiedArea.GetBBox().GetHeight()).IncreaseHeight(footerRenderer.occupiedArea
                     .GetBBox().GetHeight());
                 // apply the difference to set footer and table left/right margins identical
                 bordersHandler.ApplyLeftAndRightTableBorder(layoutBox, true);
                 PrepareFooterOrHeaderRendererForLayout(footerRenderer, layoutBox.GetWidth());
-                if (0 != rows.Count || (!tableModel.IsComplete() || 0 != lastFlushedRowBottomBorder.Count)) {
+                if (0 != rows.Count || !isAndWasComplete) {
                     bordersHandler.CollapseTableWithFooter(footerRenderer.bordersHandler, true);
                 }
                 else {
@@ -1555,30 +1556,6 @@ namespace iText.Layout.Renderer {
                 ).rows.Count && null == ((iText.Layout.Renderer.TableRenderer)parent).footerRenderer));
         }
 
-        //    private boolean isTableEmpty() {
-        //        return (null == rows || rows.isEmpty())
-        //                && (null == headerRenderer || headerRenderer.isTableEmpty())
-        //                && (null == footerRenderer || footerRenderer.isTableEmpty());
-        //    }
-        //    private boolean isBottomTablePartEmpty() {
-        //        if ((null == rows || rows.isEmpty())
-        //                && (null == footerRenderer || footerRenderer.isTableEmpty())) {
-        //            return !(parent instanceof TableRenderer)
-        //                    || (isHeaderRenderer() ? ((TableRenderer) parent).isBottomTablePartEmpty() : ((TableRenderer) parent).isTopTablePartEmpty());
-        //        } else {
-        //            return false;
-        //        }
-        //    }
-        //
-        //    private boolean isTopTablePartEmpty() {
-        //        if ((null == rows || rows.isEmpty())
-        //                && (null == headerRenderer || headerRenderer.isTableEmpty())) {
-        //            return !(parent instanceof TableRenderer)
-        //                    || (isHeaderRenderer() ? ((TableRenderer) parent).isBottomTablePartEmpty() : ((TableRenderer) parent).isTopTablePartEmpty());
-        //        } else {
-        //            return false;
-        //        }
-        //    }
         /// <summary>Returns minWidth</summary>
         private float CalculateColumnWidths(float availableWidth) {
             if (countedColumnWidth == null || totalWidthForColumns != availableWidth) {
