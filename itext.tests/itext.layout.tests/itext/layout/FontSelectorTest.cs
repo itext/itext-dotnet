@@ -41,6 +41,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using iText.IO.Font;
 using iText.Kernel.Colors;
@@ -73,9 +74,10 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "cyrillicAndLatinGroup.pdf";
             String cmpFileName = sourceFolder + "cmp_cyrillicAndLatinGroup.pdf";
             FontProvider sel = new FontProvider();
-            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
-            sel.AddFont(fontsFolder + "FreeSans.ttf");
-            sel.GetFontSet().Add(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan42");
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H
+                , "Puritan42"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
@@ -95,9 +97,9 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "cyrillicAndLatinGroup2.pdf";
             String cmpFileName = sourceFolder + "cmp_cyrillicAndLatinGroup2.pdf";
             FontProvider sel = new FontProvider();
-            sel.AddFont(fontsFolder + "Puritan2.otf");
-            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
-            sel.AddFont(fontsFolder + "FreeSans.ttf");
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
             String s = "Hello world! Здравствуй мир! Hello world! Здравствуй мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
@@ -117,7 +119,7 @@ namespace iText.Layout {
             String outFileName = destinationFolder + "latinAndNotdefGroup.pdf";
             String cmpFileName = sourceFolder + "cmp_latinAndNotdefGroup.pdf";
             FontProvider sel = new FontProvider();
-            sel.AddFont(fontsFolder + "Puritan2.otf");
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "Puritan2.otf"));
             String s = "Hello мир!";
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileStream(outFileName, FileMode.Create)));
             Document doc = new Document(pdfDoc);
@@ -157,12 +159,15 @@ namespace iText.Layout {
         [NUnit.Framework.Test]
         public virtual void SearchNames() {
             FontProvider sel = new FontProvider();
-            sel.AddFont(fontsFolder + "NotoSans-Regular.ttf");
-            sel.AddFont(fontsFolder + "FreeSans.ttf");
-            FontInfo puritan = sel.GetFontSet().Add(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan42"
-                );
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Add(puritan, "Puritan42") == null, "Replace existed font");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Add(puritan) == null, "Replace existed font");
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.AddFont(fontsFolder + "FreeSans.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H
+                , "Puritan42"));
+            ICollection<FontInfo> fonts = sel.GetFontSet().Get("puritan2");
+            NUnit.Framework.Assert.IsTrue(fonts.Count != 0, "Puritan not found!");
+            FontInfo puritan = GetFirst(fonts);
+            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().AddFont(puritan, "Puritan42"), "Replace existed font");
+            NUnit.Framework.Assert.IsFalse(sel.GetFontSet().AddFont(puritan), "Replace existed font");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("NotoSans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Noto Sans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("FreeSans"), "FreeSans not found!");
@@ -170,20 +175,30 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 not found!");
             NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan42"), "Puritan42 found!");
-            NUnit.Framework.Assert.AreEqual(puritan, sel.GetFontSet().Get("puritan 2.0 regular"), "Puritan 2.0 not found!"
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan 2.0 regular")), "Puritan 2.0 not found!"
                 );
-            NUnit.Framework.Assert.AreEqual(puritan, sel.GetFontSet().Get("puritan2"), "Puritan 2.0 not found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan42") == null, "Puritan42 found!");
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan2")), "Puritan 2.0 not found!"
+                );
+            NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
         }
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         public virtual void SearchNames2() {
             FontProvider sel = new FontProvider();
-            FontInfo notoSans = sel.GetFontSet().Add(fontsFolder + "NotoSans-Regular.ttf");
-            FontInfo freeSans = sel.GetFontSet().Add(fontsFolder + "FreeSans.ttf");
-            FontInfo puritan = sel.GetFontSet().Add(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H, "Puritan42"
-                );
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "NotoSans-Regular.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "FreeSans.ttf"));
+            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().AddFont(fontsFolder + "Puritan2.otf", PdfEncodings.IDENTITY_H
+                , "Puritan42"));
+            ICollection<FontInfo> fonts = sel.GetFontSet().Get("puritan2");
+            NUnit.Framework.Assert.IsTrue(fonts.Count != 0, "Puritan not found!");
+            FontInfo puritan = GetFirst(fonts);
+            fonts = sel.GetFontSet().Get("NotoSans");
+            NUnit.Framework.Assert.IsTrue(fonts.Count != 0, "NotoSans not found!");
+            FontInfo notoSans = GetFirst(fonts);
+            fonts = sel.GetFontSet().Get("FreeSans");
+            NUnit.Framework.Assert.IsTrue(fonts.Count != 0, "FreeSans not found!");
+            FontInfo freeSans = GetFirst(fonts);
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("NotoSans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("Noto Sans"), "NotoSans not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("FreeSans"), "FreeSans not found!");
@@ -191,14 +206,30 @@ namespace iText.Layout {
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan 2.0 regular"), "Puritan 2.0 not found!");
             NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Contains("puritan2"), "Puritan 2.0 not found!");
             NUnit.Framework.Assert.IsFalse(sel.GetFontSet().Contains("puritan42"), "Puritan42 found!");
-            NUnit.Framework.Assert.AreEqual(notoSans, sel.GetFontSet().Get("NotoSans"), "NotoSans not found!");
-            NUnit.Framework.Assert.AreEqual(notoSans, sel.GetFontSet().Get("Noto Sans"), "NotoSans not found!");
-            NUnit.Framework.Assert.AreEqual(freeSans, sel.GetFontSet().Get("FreeSans"), "FreeSans not found!");
-            NUnit.Framework.Assert.AreEqual(freeSans, sel.GetFontSet().Get("Free Sans"), "FreeSans not found!");
-            NUnit.Framework.Assert.AreEqual(puritan, sel.GetFontSet().Get("puritan 2.0 regular"), "Puritan 2.0 not found!"
+            NUnit.Framework.Assert.AreEqual(notoSans, GetFirst(sel.GetFontSet().Get("NotoSans")), "NotoSans not found!"
                 );
-            NUnit.Framework.Assert.AreEqual(puritan, sel.GetFontSet().Get("puritan2"), "Puritan 2.0 not found!");
-            NUnit.Framework.Assert.IsTrue(sel.GetFontSet().Get("puritan42") == null, "Puritan42 found!");
+            NUnit.Framework.Assert.AreEqual(notoSans, GetFirst(sel.GetFontSet().Get("Noto Sans")), "NotoSans not found!"
+                );
+            NUnit.Framework.Assert.AreEqual(freeSans, GetFirst(sel.GetFontSet().Get("FreeSans")), "FreeSans not found!"
+                );
+            NUnit.Framework.Assert.AreEqual(freeSans, GetFirst(sel.GetFontSet().Get("Free Sans")), "FreeSans not found!"
+                );
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan 2.0 regular")), "Puritan 2.0 not found!"
+                );
+            NUnit.Framework.Assert.AreEqual(puritan, GetFirst(sel.GetFontSet().Get("puritan2")), "Puritan 2.0 not found!"
+                );
+            NUnit.Framework.Assert.IsTrue(GetFirst(sel.GetFontSet().Get("puritan42")) == null, "Puritan42 found!");
+        }
+
+        private static FontInfo GetFirst(ICollection<FontInfo> fonts) {
+            if (fonts.Count != 1) {
+                return null;
+            }
+            //noinspection LoopStatementThatDoesntLoop
+            foreach (FontInfo fi in fonts) {
+                return fi;
+            }
+            return null;
         }
     }
 }
