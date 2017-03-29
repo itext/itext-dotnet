@@ -808,7 +808,7 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (tableModel.IsEmpty() && null != headerRenderer && !headerRenderer.IsEmpty()) {
+                    if (tableModel.IsEmpty() && null != headerRenderer) {
                         float headerBottomBorderWidth = headerRenderer.bordersHandler.GetMaxBottomWidth();
                         headerRenderer.bordersHandler.ApplyBottomTableBorder(headerRenderer.occupiedArea.GetBBox(), layoutBox, true
                             , true, true);
@@ -1541,56 +1541,44 @@ namespace iText.Layout.Renderer {
         }
 
         private bool IsFooterRendererOfLargeTable() {
-            return IsFooterRenderer() && 0 != ((iText.Layout.Renderer.TableRenderer)parent).GetTable().GetLastRowBottomBorder
-                ().Count;
+            return IsFooterRenderer() && (!GetTable().IsComplete() || 0 != ((iText.Layout.Renderer.TableRenderer)parent
+                ).GetTable().GetLastRowBottomBorder().Count);
         }
 
         private bool IsTopTablePart() {
-            return (null == headerRenderer || headerRenderer.IsEmpty()) && (!IsFooterRenderer() || ((iText.Layout.Renderer.TableRenderer
-                )parent).IsTopTablePartEmpty());
+            return null == headerRenderer && (!IsFooterRenderer() || (0 == ((iText.Layout.Renderer.TableRenderer)parent
+                ).rows.Count && null == ((iText.Layout.Renderer.TableRenderer)parent).headerRenderer));
         }
 
         private bool IsBottomTablePart() {
-            return (null == footerRenderer || footerRenderer.IsEmpty()) && (!IsHeaderRenderer() || ((iText.Layout.Renderer.TableRenderer
-                )parent).IsBottomTablePartEmpty());
+            return null == footerRenderer && (!IsHeaderRenderer() || (0 == ((iText.Layout.Renderer.TableRenderer)parent
+                ).rows.Count && null == ((iText.Layout.Renderer.TableRenderer)parent).footerRenderer));
         }
 
-        private bool IsEmpty() {
-            return (null == rows || rows.IsEmpty()) && (null == headerRenderer || headerRenderer.IsEmpty()) && (null ==
-                 footerRenderer || footerRenderer.IsEmpty());
-        }
-
-        private bool IsParentNotTableOrEmpty() {
-            if ((null == rows || rows.IsEmpty()) && (null == headerRenderer || headerRenderer.IsEmpty()) && (null == footerRenderer
-                 || footerRenderer.IsEmpty())) {
-                return !(parent is iText.Layout.Renderer.TableRenderer) || ((iText.Layout.Renderer.TableRenderer)parent).IsParentNotTableOrEmpty
-                    ();
-            }
-            else {
-                return false;
-            }
-        }
-
-        private bool IsBottomTablePartEmpty() {
-            if ((null == rows || rows.IsEmpty()) && (null == footerRenderer || footerRenderer.IsEmpty())) {
-                return !(parent is iText.Layout.Renderer.TableRenderer) || ((iText.Layout.Renderer.TableRenderer)parent).IsParentNotTableOrEmpty
-                    ();
-            }
-            else {
-                return false;
-            }
-        }
-
-        private bool IsTopTablePartEmpty() {
-            if ((null == rows || rows.IsEmpty()) && (null == headerRenderer || headerRenderer.IsEmpty())) {
-                return !(parent is iText.Layout.Renderer.TableRenderer) || ((iText.Layout.Renderer.TableRenderer)parent).IsParentNotTableOrEmpty
-                    ();
-            }
-            else {
-                return false;
-            }
-        }
-
+        //    private boolean isTableEmpty() {
+        //        return (null == rows || rows.isEmpty())
+        //                && (null == headerRenderer || headerRenderer.isTableEmpty())
+        //                && (null == footerRenderer || footerRenderer.isTableEmpty());
+        //    }
+        //    private boolean isBottomTablePartEmpty() {
+        //        if ((null == rows || rows.isEmpty())
+        //                && (null == footerRenderer || footerRenderer.isTableEmpty())) {
+        //            return !(parent instanceof TableRenderer)
+        //                    || (isHeaderRenderer() ? ((TableRenderer) parent).isBottomTablePartEmpty() : ((TableRenderer) parent).isTopTablePartEmpty());
+        //        } else {
+        //            return false;
+        //        }
+        //    }
+        //
+        //    private boolean isTopTablePartEmpty() {
+        //        if ((null == rows || rows.isEmpty())
+        //                && (null == headerRenderer || headerRenderer.isTableEmpty())) {
+        //            return !(parent instanceof TableRenderer)
+        //                    || (isHeaderRenderer() ? ((TableRenderer) parent).isBottomTablePartEmpty() : ((TableRenderer) parent).isTopTablePartEmpty());
+        //        } else {
+        //            return false;
+        //        }
+        //    }
         /// <summary>Returns minWidth</summary>
         private float CalculateColumnWidths(float availableWidth) {
             if (countedColumnWidth == null || totalWidthForColumns != availableWidth) {
