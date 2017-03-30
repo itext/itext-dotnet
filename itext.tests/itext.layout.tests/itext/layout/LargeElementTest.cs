@@ -360,7 +360,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 1)]
         public virtual void LargeEmptyTableTest() {
             String testName = "largeEmptyTableTest.pdf";
             String outFileName = destinationFolder + testName;
@@ -371,6 +370,74 @@ namespace iText.Layout {
             doc.Add(table);
             table.SetBorderTop(new SolidBorder(Color.ORANGE, 100)).SetBorderBottom(new SolidBorder(Color.MAGENTA, 150)
                 );
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 8)]
+        public virtual void LargeEmptyTableTest02() {
+            String testName = "largeEmptyTableTest02.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc, PageSize.A4.Rotate());
+            Table table = new Table(3, true);
+            doc.Add(table);
+            for (int i = 0; i < 3; i++) {
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
+            table = new Table(3, true);
+            doc.Add(table);
+            for (int i = 0; i < 3; i++) {
+                table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
+            table = new Table(3, true);
+            doc.Add(table);
+            for (int i = 0; i < 3; i++) {
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
+                table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
+            table = new Table(3, true);
+            doc.Add(table);
+            for (int i = 0; i < 3; i++) {
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
+                table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
+            }
+            table.AddCell(new Cell().Add(new Paragraph("Cell")));
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
+            table = new Table(3, true);
+            doc.Add(table);
+            for (int i = 0; i < 2; i++) {
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
+                table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
+            }
+            table.Complete();
+            doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
+            doc.Add(new AreaBreak());
+            table = new Table(3, true);
+            doc.Add(table);
+            for (int i = 0; i < 2; i++) {
+                table.AddHeaderCell(new Cell().Add(new Paragraph("Header" + i)));
+                table.AddFooterCell(new Cell().Add(new Paragraph("Footer" + i)));
+            }
+            table.AddCell(new Cell().Add(new Paragraph("Cell")));
             table.Complete();
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();

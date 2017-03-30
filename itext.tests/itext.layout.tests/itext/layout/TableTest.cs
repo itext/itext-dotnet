@@ -1324,7 +1324,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void EmptyTableTest01() {
             String testName = "emptyTableTest01.pdf";
             String outFileName = destinationFolder + testName;

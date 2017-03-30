@@ -155,8 +155,8 @@ namespace iText.Layout.Renderer {
             }
             Table headerElement = table.GetHeader();
             bool isFirstHeader = rowRange.GetStartRow() == 0 && isOriginalNonSplitRenderer;
-            bool headerShouldBeApplied = !rows.IsEmpty() && (isFirstOnThePage && (!table.IsSkipFirstHeader() || !isFirstHeader
-                )) && !true.Equals(this.GetOwnProperty<bool?>(Property.IGNORE_HEADER));
+            bool headerShouldBeApplied = (table.IsComplete() || !rows.IsEmpty()) && (isFirstOnThePage && (!table.IsSkipFirstHeader
+                () || !isFirstHeader)) && !true.Equals(this.GetOwnProperty<bool?>(Property.IGNORE_HEADER));
             if (headerElement != null && headerShouldBeApplied) {
                 headerRenderer = InitFooterOrHeaderRenderer(false, tableBorder);
             }

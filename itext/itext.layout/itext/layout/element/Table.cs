@@ -468,7 +468,7 @@ namespace iText.Layout.Element {
             // Try to find first empty slot in table.
             // We shall not use colspan or rowspan, 1x1 will be enough.
             while (true) {
-                if (currentColumn >= columnWidths.Length) {
+                if (currentColumn >= columnWidths.Length || currentColumn == -1) {
                     StartNewRow();
                 }
                 if (rows[currentRow - rowWindowStart][currentColumn] != null) {
@@ -773,7 +773,7 @@ namespace iText.Layout.Element {
 
         private void InitializeRows() {
             rows = new List<Cell[]>();
-            StartNewRow();
+            currentColumn = -1;
         }
 
         private bool CellBelongsToAnyRowGroup(Cell cell, IList<Table.RowRange> rowGroups) {
