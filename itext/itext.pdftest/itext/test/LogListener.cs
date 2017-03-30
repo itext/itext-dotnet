@@ -113,7 +113,7 @@ namespace iText.Test {
         * */
 
         private bool EqualsMessageByTemplate(string message, string template) {
-            if (template.IndexOf("{") > 0 && template.IndexOf("}") > 0) {
+            if (template.Contains("{") && template.Contains("}")) {
                 String templateWithoutParameters = Regex.Replace(template.Replace("''", "'"), "\\{[0-9]+?\\}", "(.)*?");
                 return Regex.IsMatch(message, templateWithoutParameters, RegexOptions.Singleline);
             } else {

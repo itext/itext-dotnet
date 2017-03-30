@@ -253,7 +253,7 @@ namespace iText.Kernel.Pdf {
         /// For the content usage dictionary, use PdfName.Language
         /// </remarks>
         public virtual void SetLang(PdfString lang) {
-            GetPdfObject().Put(PdfName.Lang, lang);
+            Put(PdfName.Lang, lang);
         }
 
         public virtual PdfString GetLang() {
@@ -294,17 +294,19 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="collection"/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
-            GetPdfObject().Put(PdfName.Collection, collection.GetPdfObject());
+            Put(PdfName.Collection, collection.GetPdfObject());
             return this;
         }
 
         public virtual iText.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
         public virtual iText.Kernel.Pdf.PdfCatalog Remove(PdfName key) {
             GetPdfObject().Remove(key);
+            SetModified();
             return this;
         }
 

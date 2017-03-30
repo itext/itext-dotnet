@@ -656,7 +656,7 @@ namespace iText.Kernel.Pdf {
                         }
                         PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
                         if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
-                            catalog.GetPdfObject().Put(PdfName.Pages, pageRoot);
+                            catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
                         }
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
