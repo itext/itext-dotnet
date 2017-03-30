@@ -226,6 +226,9 @@ namespace iText.Layout.Renderer {
             // update
             bordersHandler.UpdateBordersOnNewPage(isOriginalNonSplitRenderer, IsFooterRenderer() || IsHeaderRenderer()
                 , this, headerRenderer, footerRenderer);
+            if (isOriginalNonSplitRenderer) {
+                CorrectRowRange();
+            }
             if (IsOriginalRenderer()) {
                 CalculateColumnWidths(layoutBox.GetWidth());
             }
@@ -1208,6 +1211,7 @@ namespace iText.Layout.Renderer {
             InitializeHeaderAndFooter(true);
             bordersHandler.UpdateBordersOnNewPage(isOriginalNonSplitRenderer, IsFooterRenderer() || IsHeaderRenderer()
                 , this, headerRenderer, footerRenderer);
+            CorrectRowRange();
         }
 
         private void CleanTableLayoutBorders() {
@@ -1219,6 +1223,12 @@ namespace iText.Layout.Renderer {
             // delete set properties
             DeleteOwnProperty(Property.BORDER_BOTTOM);
             DeleteOwnProperty(Property.BORDER_TOP);
+        }
+
+        private void CorrectRowRange() {
+            if (rows.Count < rowRange.GetFinishRow() - rowRange.GetStartRow() + 1) {
+                rowRange = new Table.RowRange(rowRange.GetStartRow(), rowRange.GetStartRow() + rows.Count - 1);
+            }
         }
 
         public override void DrawBorder(DrawContext drawContext) {
@@ -1512,6 +1522,7 @@ namespace iText.Layout.Renderer {
             renderer.bordersHandler.InitializeBorders();
             renderer.bordersHandler.SetRowRange(renderer.rowRange.GetStartRow(), renderer.rowRange.GetFinishRow());
             ((CollapsedTableBorders)renderer.bordersHandler).CollapseAllBordersAndEmptyRows();
+            renderer.CorrectRowRange();
             // update bounding borders
             bordersHandler.SetTableBoundingBorders(GetBorders());
             return renderer;
