@@ -490,9 +490,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>This is a proxy to pass only those events to the event listener which are supported by it.</summary>
         /// <param name="data">event data</param>
         /// <param name="type">event type</param>
-        private void EventOccurred(IEventData data, EventType type) {
+        protected internal virtual void EventOccurred(IEventData data, EventType type) {
             if (supportedEvents == null || supportedEvents.Contains(type)) {
                 eventListener.EventOccurred(data, type);
+            }
+            if (data is TextRenderInfo) {
+                ((TextRenderInfo)data).ReleaseGraphicsState();
+            }
+            else {
+                if (data is PathRenderInfo) {
+                    ((PathRenderInfo)data).ReleaseGraphicsState();
+                }
             }
         }
 
@@ -501,8 +509,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         private void DisplayPdfString(PdfString @string) {
             TextRenderInfo renderInfo = new TextRenderInfo(@string, new ParserGraphicsState(GetGraphicsState()), textMatrix
                 , markedContentStack);
-            EventOccurred(renderInfo, EventType.RENDER_TEXT);
             textMatrix = new Matrix(renderInfo.GetUnscaledWidth(), 0).Multiply(textMatrix);
+            EventOccurred(renderInfo, EventType.RENDER_TEXT);
         }
 
         /// <summary>Displays an XObject using the registered handler for this XObject's subtype</summary>
