@@ -73,7 +73,7 @@ namespace iText.Layout.Font {
             // FontSet MUST be final to avoid overriding #add(FontInfo) method or remove functionality.
             // Due to new logic HashSet can be used instead of List.
             // But FontInfo with or without alias will be the same FontInfo.
-            this.id = IncrementId();
+            this.id = lastId.IncrementAndGet();
         }
 
         /// <summary>Add all the fonts in a directory and possibly its subdirectories.</summary>
@@ -483,10 +483,6 @@ namespace iText.Layout.Font {
 
         internal FontProgram GetFontProgram(FontInfo fontInfo) {
             return fontPrograms.Get(fontInfo);
-        }
-
-        private long IncrementId() {
-            return lastId.IncrementAndGet();
         }
         //endregion
     }

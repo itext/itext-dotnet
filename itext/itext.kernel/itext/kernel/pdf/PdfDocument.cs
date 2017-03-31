@@ -162,7 +162,7 @@ namespace iText.Kernel.Pdf {
             if (reader == null) {
                 throw new ArgumentNullException("reader");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -179,7 +179,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -208,7 +208,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
@@ -2077,10 +2077,6 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         private static bool IsXmpMetaHasProperty(XMPMeta xmpMeta, String schemaNS, String propName) {
             return xmpMeta.GetProperty(schemaNS, propName) != null;
-        }
-
-        private long IncrementDocumentId() {
-            return lastDocumentId.IncrementAndGet();
         }
 
         private long GetDocumentId() {
