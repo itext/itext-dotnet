@@ -81,7 +81,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         private double[] fontMatrix = null;
 
-        private bool preserveGraphicsState;
+        private bool graphicsStateIsPreserved;
 
         /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
         ///     </summary>
@@ -393,19 +393,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return unscaledWidth;
         }
 
-        public virtual bool IsPreserveGraphicsState() {
-            return preserveGraphicsState;
+        public virtual bool IsGraphicsStatePreserved() {
+            return graphicsStateIsPreserved;
         }
 
         public virtual void PreserveGraphicsState() {
-            this.preserveGraphicsState = true;
+            this.graphicsStateIsPreserved = true;
+            gs = new CanvasGraphicsState(gs);
         }
 
         public virtual void ReleaseGraphicsState() {
-            if (preserveGraphicsState) {
-                gs = new CanvasGraphicsState(gs);
-            }
-            else {
+            if (!graphicsStateIsPreserved) {
                 gs = null;
             }
         }
