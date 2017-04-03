@@ -425,6 +425,45 @@ namespace iText.Layout {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
+        public virtual void DocWithInvalidMapping09() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping09.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDocument.SetTagged();
+            TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
+            PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardStructureNamespace._2_0);
+            ssn2.AddNamespaceRoleMapping(PdfName.Document, PdfName.Book, ssn2);
+            Document document = new Document(pdfDocument);
+            document.Add(new Paragraph("hello world; root tag mapping"));
+            document.Close();
+            CompareResult("docWithInvalidMapping09");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.CREATED_ROOT_TAG_HAS_MAPPING)]
+        public virtual void DocWithInvalidMapping10() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "docWithInvalidMapping10.pdf", 
+                new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
+            pdfDocument.SetTagged();
+            TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
+            PdfNamespace ssn2 = tagsContext.FetchNamespace(StandardStructureNamespace._2_0);
+            ssn2.AddNamespaceRoleMapping(PdfName.Document, PdfName.Book, ssn2);
+            ssn2.AddNamespaceRoleMapping(PdfName.Book, PdfName.Part, ssn2);
+            Document document = new Document(pdfDocument);
+            document.Add(new Paragraph("hello world; root tag mapping"));
+            document.Close();
+            CompareResult("docWithInvalidMapping10");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
         public virtual void StampTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocOldStdNs.pdf"), new PdfWriter
                 (destinationFolder + "stampTest01.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));

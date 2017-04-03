@@ -602,66 +602,18 @@ namespace iText.Kernel.Pdf.Tagutils {
             bool forbid = forbidUnknownRoles;
             forbidUnknownRoles = false;
             IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
-            IRoleMappingResolver resolvedMapping = null;
+            IRoleMappingResolver mapping = null;
             if (rootKids.Count > 0) {
                 PdfStructElem firstKid = (PdfStructElem)rootKids[0];
-                resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid.GetNamespace()
-                    );
+                mapping = ResolveMappingToStandardOrDomainSpecificRole(firstKid.GetRole(), firstKid.GetNamespace());
             }
-            if (rootKids.Count == 1 && resolvedMapping != null && resolvedMapping.CurrentRoleIsStandard() && IsRoleAllowedToBeRoot
-                (resolvedMapping.GetRole())) {
+            if (rootKids.Count == 1 && mapping != null && mapping.CurrentRoleIsStandard() && IsRoleAllowedToBeRoot(mapping
+                .GetRole())) {
                 rootTagElement = (PdfStructElem)rootKids[0];
             }
             else {
-                PdfStructElem prevRootTag = rootTagElement;
                 document.GetStructTreeRoot().GetPdfObject().Remove(PdfName.K);
-                if (prevRootTag == null) {
-                    rootTagElement = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
-                    if (TargetTagStructureVersionIs2()) {
-                        PdfNamespace ns = GetDocumentDefaultNamespace();
-                        rootTagElement.SetNamespace(ns);
-                        EnsureNamespaceRegistered(ns);
-                    }
-                }
-                else {
-                    document.GetStructTreeRoot().AddKid(rootTagElement);
-                    resolvedMapping = ResolveMappingToStandardOrDomainSpecificRole(rootTagElement.GetRole(), rootTagElement.GetNamespace
-                        ());
-                    if (resolvedMapping.CurrentRoleIsStandard() && !PdfName.Document.Equals(resolvedMapping.GetRole())) {
-                        WrapAllKidsInTag(rootTagElement, rootTagElement.GetRole(), rootTagElement.GetNamespace());
-                        rootTagElement.SetRole(PdfName.Document);
-                    }
-                }
-                int originalRootKidsIndex = 0;
-                bool isBeforeOriginalRoot = true;
-                foreach (IPdfStructElem elem in rootKids) {
-                    // StructTreeRoot kids are always PdfStructElem, so we are save here to cast it
-                    PdfStructElem kid = (PdfStructElem)elem;
-                    if (kid.GetPdfObject() == rootTagElement.GetPdfObject()) {
-                        isBeforeOriginalRoot = false;
-                        continue;
-                    }
-                    // This boolean is used to "flatten" possible deep "stacking" of the tag structure in case of the multiple pages copying operations.
-                    // This could happen due to the wrapping of all the kids in the "(prevRootTag == null)" if-clause above.
-                    // And therefore, we don't need here to resolve mappings, because we exactly know which role we set.
-                    bool kidIsDocument = PdfName.Document.Equals(kid.GetRole());
-                    if (kidIsDocument && kid.GetNamespace() != null && TargetTagStructureVersionIs2()) {
-                        // we flatten only tags of document role in standard structure namespace
-                        PdfString kidNamespaceName = kid.GetNamespace().GetNamespaceName();
-                        kidIsDocument = StandardStructureNamespace._1_7.Equals(kidNamespaceName) || StandardStructureNamespace._2_0
-                            .Equals(kidNamespaceName);
-                    }
-                    if (isBeforeOriginalRoot) {
-                        rootTagElement.AddKid(originalRootKidsIndex, kid);
-                        originalRootKidsIndex += kidIsDocument ? kid.GetKids().Count : 1;
-                    }
-                    else {
-                        rootTagElement.AddKid(kid);
-                    }
-                    if (kidIsDocument) {
-                        RemoveOldRoot(kid);
-                    }
-                }
+                rootTagElement = new RootTagNormalizer(this, rootTagElement, document).MakeSingleStandardRootTag(rootKids);
             }
             forbidUnknownRoles = forbid;
         }
@@ -760,7 +712,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             return parent;
         }
 
-        private bool TargetTagStructureVersionIs2() {
+        internal virtual bool TargetTagStructureVersionIs2() {
             return PdfVersion.PDF_2_0.CompareTo(tagStructureTargetVersion) <= 0;
         }
 
@@ -917,25 +869,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
             elem.Flush();
-        }
-
-        private void WrapAllKidsInTag(PdfStructElem parent, PdfName wrapTagRole, PdfNamespace wrapTagNs) {
-            int kidsNum = parent.GetKids().Count;
-            TagTreePointer tagPointer = new TagTreePointer(parent);
-            tagPointer.AddTag(0, wrapTagRole);
-            if (TargetTagStructureVersionIs2()) {
-                tagPointer.GetProperties().SetNamespace(wrapTagNs);
-            }
-            TagTreePointer newParentOfKids = new TagTreePointer(tagPointer);
-            tagPointer.MoveToParent();
-            for (int i = 0; i < kidsNum; ++i) {
-                tagPointer.RelocateKid(1, newParentOfKids);
-            }
-        }
-
-        private void RemoveOldRoot(PdfStructElem oldRoot) {
-            TagTreePointer tagPointer = new TagTreePointer(document);
-            tagPointer.SetCurrentStructElem(oldRoot).RemoveTag();
         }
 
         private String ComposeExceptionBasedOnNamespacePresence(String role, PdfNamespace @namespace, String withoutNsEx
