@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagging {
+    /// <summary>
+    /// This class encapsulates information about the standard structure namespaces and provides some utility methods
+    /// connected to them.
+    /// </summary>
+    /// <remarks>
+    /// This class encapsulates information about the standard structure namespaces and provides some utility methods
+    /// connected to them. The main purpose of this class is to determine if the given role in the specified namespace
+    /// belongs to the standard or known domain-specific namespace.
+    /// <p>See ISO 32000-2 14.8.6, "Standard structure namespaces"</p>
+    /// </remarks>
     public class StandardStructureNamespace {
         private static ICollection<PdfName> STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<PdfName>();
 
@@ -11,8 +21,10 @@ namespace iText.Kernel.Pdf.Tagging {
         private static readonly PdfString MATH_ML = new PdfString("http://www.w3.org/1998/Math/MathML", null, true
             );
 
+        /// <summary>Specifies the name of the standard structure namespace for PDF 1.7</summary>
         public static readonly PdfString _1_7 = new PdfString("http://www.iso.org/pdf/ssn", null, true);
 
+        /// <summary>Specifies the name of the standard structure namespace for PDF 2.0</summary>
         public static readonly PdfString _2_0 = new PdfString("http://www.iso.org/pdf2/ssn", null, true);
 
         static StandardStructureNamespace() {
@@ -35,14 +47,39 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         // Hn, this type is handled in roleBelongsToStandardNamespace method
+        /// <summary>Gets the name of the default standard structure namespace.</summary>
+        /// <remarks>
+        /// Gets the name of the default standard structure namespace. When a namespace is not
+        /// explicitly specified for a given structure element or attribute, it shall be assumed to be within this
+        /// default standard structure namespace.
+        /// </remarks>
+        /// <returns>the name of the default standard structure namespace.</returns>
         public static PdfString GetDefault() {
             return _1_7;
         }
 
+        /// <summary>
+        /// Checks if the given namespace is identified as the one that is common within broad ranges of documents types
+        /// and doesn't require a role mapping for it's roles.
+        /// </summary>
+        /// <param name="namespace">a namespace to be checked, whether it defines a namespace of the known domain specific language.
+        ///     </param>
+        /// <returns>
+        /// true, if the given
+        /// <see cref="PdfNamespace"/>
+        /// belongs to the domain-specific namespace, false otherwise.
+        /// </returns>
         public static bool IsKnownDomainSpecificNamespace(PdfNamespace @namespace) {
             return MATH_ML.Equals(@namespace.GetNamespaceName());
         }
 
+        /// <summary>Checks if the given role is considered standard in the specified standard namespace.</summary>
+        /// <param name="role">a role to be checked if it is standard in the given standard structure namespace.</param>
+        /// <param name="standardNamespaceName"/>
+        /// <returns>
+        /// false if the given role doesn't belong to the standard roles of the given standard structure namespace or
+        /// if the given namespace name is not standard; true otherwise.
+        /// </returns>
         public static bool RoleBelongsToStandardNamespace(PdfName role, PdfString standardNamespaceName) {
             if (_1_7.Equals(standardNamespaceName)) {
                 return STD_STRUCT_NAMESPACE_1_7_TYPES.Contains(role);
@@ -55,6 +92,19 @@ namespace iText.Kernel.Pdf.Tagging {
             return false;
         }
 
+        /// <summary>
+        /// Checks if the given
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// matches the Hn role pattern. To match this pattern, the given role
+        /// shall always consist of the uppercase letter "H" and one or more digits, representing an unsigned integer
+        /// greater than or equal to 1, without leading zeroes or any other prefix or postfix
+        /// </summary>
+        /// <param name="role">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// that specifies a role to be checked against Hn role pattern.
+        /// </param>
+        /// <returns>true if the role matches, false otherwise.</returns>
         public static bool IsHnRole(PdfName role) {
             String roleStrVal = role.GetValue();
             if (roleStrVal.StartsWith("H") && roleStrVal.Length > 1 && roleStrVal[1] != '0') {

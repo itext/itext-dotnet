@@ -148,6 +148,24 @@ namespace iText.Kernel.Pdf.Tagging {
             return roleMap;
         }
 
+        /// <summary>Gets namespaces used within the document.</summary>
+        /// <remarks>
+        /// Gets namespaces used within the document. Essentially this method returns value of
+        /// <see cref="GetNamespacesObject()"/>
+        /// wrapped in the
+        /// <see cref="PdfNamespace"/>
+        /// and
+        /// <see cref="System.Collections.IList{E}"/>
+        /// classes. Therefore limitations of the referred method are
+        /// applied to this method too.
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="System.Collections.IList{E}"/>
+        /// of
+        /// <see cref="PdfNamespace"/>
+        /// s used within the document.
+        /// </returns>
         public virtual IList<PdfNamespace> GetNamespaces() {
             PdfArray namespacesArray = GetPdfObject().GetAsArray(PdfName.Namespaces);
             if (namespacesArray == null) {
@@ -162,11 +180,33 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
+        /// <summary>
+        /// Adds a
+        /// <see cref="PdfNamespace"/>
+        /// to the list of the namespaces used within the document.
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="PdfNamespace"/>
+        /// to be added.
+        /// </param>
         public virtual void AddNamespace(PdfNamespace @namespace) {
             GetNamespacesObject().Add(@namespace.GetPdfObject());
             SetModified();
         }
 
+        /// <summary>An array of namespaces used within the document.</summary>
+        /// <remarks>
+        /// An array of namespaces used within the document. This value, however, is not automatically updated while
+        /// the document is processed. It identifies only the namespaces that were in the document at the moment of it's
+        /// opening.
+        /// </remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfArray"/>
+        /// of namespaces used within the document.
+        /// </returns>
         public virtual PdfArray GetNamespacesObject() {
             PdfArray namespacesArray = GetPdfObject().GetAsArray(PdfName.Namespaces);
             if (namespacesArray == null) {
@@ -177,6 +217,25 @@ namespace iText.Kernel.Pdf.Tagging {
             return namespacesArray;
         }
 
+        /// <summary>
+        /// A
+        /// <see cref="System.Collections.IList{E}"/>
+        /// containing one or more
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+        /// objects, where each specified file
+        /// is a pronunciation lexicon, which is an XML file conforming to the Pronunciation Lexicon Specification (PLS) Version 1.0.
+        /// These pronunciation lexicons may be used as pronunciation hints when the document’s content is presented via
+        /// text-to-speech. Where two or more pronunciation lexicons apply to the same text, the first match – as defined by
+        /// the order of entries in the array and the order of entries inside the pronunciation lexicon file – should be used.
+        /// See ISO 32000-2 14.9.6, "Pronunciation hints".
+        /// </summary>
+        /// <returns>
+        /// A
+        /// <see cref="System.Collections.IList{E}"/>
+        /// containing one or more
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+        /// .
+        /// </returns>
         public virtual IList<PdfFileSpec> GetPronunciationLexiconsList() {
             PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
             if (pronunciationLexicons == null) {
@@ -191,6 +250,20 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
+        /// <summary>
+        /// Adds a single
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+        /// object, which specifies XML file conforming to PLS.
+        /// For more info see
+        /// <see cref="GetPronunciationLexiconsList()"/>
+        /// .
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="pronunciationLexiconFileSpec">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Filespec.PdfFileSpec"/>
+        /// object, which specifies XML file conforming to PLS.
+        /// </param>
         public virtual void AddPronunciationLexicon(PdfFileSpec pronunciationLexiconFileSpec) {
             PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
             if (pronunciationLexicons == null) {

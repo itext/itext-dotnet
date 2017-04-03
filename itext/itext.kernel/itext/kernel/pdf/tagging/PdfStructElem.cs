@@ -343,6 +343,17 @@ namespace iText.Kernel.Pdf.Tagging {
             return GetPdfObject().Get(PdfName.K);
         }
 
+        /// <summary>
+        /// A
+        /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
+        /// identifies the structure element or elements to which the item of content, contained
+        /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see>List<PdfStructElem></see>
+        /// containing zero, one or more structure elements.
+        /// </returns>
         public virtual IList<iText.Kernel.Pdf.Tagging.PdfStructElem> GetRefsList() {
             PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
             if (refsArray == null) {
@@ -358,6 +369,18 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
+        /// <summary>
+        /// A
+        /// <see cref="iText.Kernel.Pdf.PdfName.Ref"/>
+        /// identifies the structure element to which the item of content, contained
+        /// within this structure element, refers (e.g. footnotes, endnotes, sidebars, etc.).
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="ref">
+        /// a
+        /// <see cref="PdfStructElem"/>
+        /// to which the item of content, contained within this structure element, refers.
+        /// </param>
         public virtual void AddRef(iText.Kernel.Pdf.Tagging.PdfStructElem @ref) {
             PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
             if (refsArray == null) {
@@ -368,11 +391,32 @@ namespace iText.Kernel.Pdf.Tagging {
             SetModified();
         }
 
+        /// <summary>A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").</summary>
+        /// <remarks>
+        /// A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces"). If not present, the
+        /// element shall be considered to be in the default standard structure namespace.
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="PdfNamespace"/>
+        /// this element belongs to.
+        /// </returns>
         public virtual PdfNamespace GetNamespace() {
             PdfDictionary nsDict = GetPdfObject().GetAsDictionary(PdfName.NS);
             return nsDict != null ? new PdfNamespace(nsDict) : null;
         }
 
+        /// <summary>A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").</summary>
+        /// <remarks>
+        /// A namespace this element belongs to (see ISO 32000-2 14.7.4, "Namespaces").
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </remarks>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="PdfNamespace"/>
+        /// this element belongs to, or null if element is desired to be considered
+        /// in the default standard structure namespace.
+        /// </param>
         public virtual void SetNamespace(PdfNamespace @namespace) {
             if (@namespace != null) {
                 Put(PdfName.NS, @namespace.GetPdfObject());
@@ -383,22 +427,94 @@ namespace iText.Kernel.Pdf.Tagging {
             }
         }
 
+        /// <summary>Attribute for a structure element that may be used as pronunciation hint.</summary>
+        /// <remarks>
+        /// Attribute for a structure element that may be used as pronunciation hint. It is an exact replacement for content
+        /// enclosed by the structure element and its children.
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </remarks>
+        /// <param name="elementPhoneme">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// which defines an exact replacement for content enclosed by the structure
+        /// element and its children. This value is to be interpreted based on the PhoneticAlphabet attribute in effect.
+        /// </param>
         public virtual void SetPhoneme(PdfString elementPhoneme) {
             Put(PdfName.Phoneme, elementPhoneme);
         }
 
+        /// <summary>Attribute for a structure element that may be used as pronunciation hint.</summary>
+        /// <remarks>
+        /// Attribute for a structure element that may be used as pronunciation hint. It is an exact replacement for content
+        /// enclosed by the structure element and its children.
+        /// </remarks>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// which defines an exact replacement for content enclosed by the structure
+        /// element and its children. This value is to be interpreted based on the PhoneticAlphabet attribute in effect.
+        /// </returns>
         public virtual PdfString GetPhoneme() {
             return GetPdfObject().GetAsString(PdfName.Phoneme);
         }
 
+        /// <summary>
+        /// Attribute for a structure element that indicates the phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute.
+        /// Applies to the structure element and its children, except where overridden by a child structure element.
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="phoneticAlphabet">
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// which defines phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute. Possible values are:
+        /// <ul>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.ipa"/>
+        /// for the International Phonetic Alphabet by the International Phonetic Association;</li>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.x_sampa"/>
+        /// for Extended Speech Assessment Methods Phonetic Alphabet (X-SAMPA);</li>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_pinyin"/>
+        /// for Pinyin Latin romanization (Mandarin);</li>
+        /// <li>
+        /// <see cref="iText.Kernel.Pdf.PdfName.zh_Latn_wadegile"/>
+        /// for Wade-Giles romanization (Mandarin).</li>
+        /// </ul>
+        /// Other values may be used.
+        /// </param>
         public virtual void SetPhoneticAlphabet(PdfName phoneticAlphabet) {
             Put(PdfName.PhoneticAlphabet, phoneticAlphabet);
         }
 
+        /// <summary>
+        /// Attribute for a structure element that indicates the phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// attribute.
+        /// Applies to the structure element and its children, except where overridden by a child structure element.
+        /// </summary>
+        /// <returns>
+        /// the
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// which defines phonetic alphabet used by a
+        /// <see cref="iText.Kernel.Pdf.PdfName.Phoneme"/>
+        /// , or null if not defined,
+        /// default value
+        /// <see cref="iText.Kernel.Pdf.PdfName.ipa"/>
+        /// . See
+        /// <see cref="SetPhoneticAlphabet(iText.Kernel.Pdf.PdfName)"/>
+        /// for other possible values.
+        /// </returns>
         public virtual PdfName GetPhoneticAlphabet() {
             return GetPdfObject().GetAsName(PdfName.PhoneticAlphabet);
         }
 
+        [System.ObsoleteAttribute(@"shall be removed in iText 7.1. Since PDF 2.0, standard role types are not strictly defined based on element's role, but are rather dependent on the role usage, it kids and position in the tree. Moreover, role types might be different for the different standard structure namespaces."
+            )]
         public static int IdentifyType(PdfDocument doc, PdfName role) {
             PdfDictionary roleMap = doc.GetStructTreeRoot().GetRoleMap();
             if (roleMap.ContainsKey(role)) {

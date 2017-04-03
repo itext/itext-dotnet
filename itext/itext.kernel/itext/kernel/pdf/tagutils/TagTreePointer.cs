@@ -83,6 +83,20 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// instance. After creation
         /// <c>TagTreePointer</c>
         /// points at the root tag.
+        /// <p>
+        /// The
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// for the new tags, which don't explicitly define namespace by the means of
+        /// <see cref="AccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
+        /// , is set to the value returned by
+        /// <see cref="TagStructureContext.GetDocumentDefaultNamespace()"/>
+        /// on
+        /// <see cref="TagTreePointer"/>
+        /// creation.
+        /// See also
+        /// <see cref="SetNamespaceForNewTags(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
+        /// .
+        /// </p>
         /// </summary>
         /// <param name="document">the document, at which tag structure this instance will point.</param>
         public TagTreePointer(PdfDocument document) {
@@ -204,11 +218,48 @@ namespace iText.Kernel.Pdf.Tagutils {
             return tagStructureContext.GetDocument();
         }
 
+        /// <summary>
+        /// Sets a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which will be set to every new tag created by this
+        /// <see cref="TagTreePointer"/>
+        /// instance
+        /// if this tag doesn't explicitly define namespace by the means of
+        /// <see cref="AccessibilityProperties.SetNamespace(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
+        /// .
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// to be set for the new tags created. If set to null - new tags will have
+        /// a namespace set only if it is defined in the corresponding
+        /// <see cref="IAccessibleElement"/>
+        /// .
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="TagTreePointer"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetNamespaceForNewTags(PdfNamespace @namespace) {
             this.currentNamespace = @namespace;
             return this;
         }
 
+        /// <summary>
+        /// Gets a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which will be set to every new tag created by this
+        /// <see cref="TagTreePointer"/>
+        /// instance.
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which is to be set for the new tags created, or null if one is not defined.
+        /// </returns>
+        /// <seealso cref="SetNamespaceForNewTags(iText.Kernel.Pdf.Tagging.PdfNamespace)"/>
         public virtual PdfNamespace GetNamespaceForNewTags() {
             return this.currentNamespace;
         }

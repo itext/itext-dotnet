@@ -787,6 +787,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ImportData = CreateDirectName("ImportData");
 
+        public static readonly iText.Kernel.Pdf.PdfName ipa = CreateDirectName("ipa");
+
         public static readonly iText.Kernel.Pdf.PdfName Include = CreateDirectName("Include");
 
         public static readonly iText.Kernel.Pdf.PdfName Index = CreateDirectName("Index");
@@ -1670,6 +1672,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName X = CreateDirectName("X");
 
+        public static readonly iText.Kernel.Pdf.PdfName x_sampa = CreateDirectName("x-sampa");
+
         public static readonly iText.Kernel.Pdf.PdfName XFA = CreateDirectName("XFA");
 
         public static readonly iText.Kernel.Pdf.PdfName XML = CreateDirectName("XML");
@@ -1692,6 +1696,10 @@ namespace iText.Kernel.Pdf {
             );
 
         public static readonly iText.Kernel.Pdf.PdfName Zoom = CreateDirectName("Zoom");
+
+        public static readonly iText.Kernel.Pdf.PdfName zh_Latn_pinyin = CreateDirectName("zh-Latn-pinyin");
+
+        public static readonly iText.Kernel.Pdf.PdfName zh_Latn_wadegile = CreateDirectName("zh-Latn-wadegile");
 
         protected internal String value = null;
 

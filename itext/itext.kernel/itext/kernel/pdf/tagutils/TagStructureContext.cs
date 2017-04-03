@@ -205,16 +205,91 @@ namespace iText.Kernel.Pdf.Tagutils {
             return autoTaggingPointer;
         }
 
+        /// <summary>
+        /// A namespace that is used as a default value for the tagging for any new
+        /// <see cref="TagTreePointer"/>
+        /// created
+        /// (including the pointer returned by
+        /// <see cref="GetAutoTaggingPointer()"/>
+        /// , which implies that automatically
+        /// created tag structure will be in this namespace by default).
+        /// <p>
+        /// By default, this value is defined based on the PDF document version and the existing tag structure inside
+        /// a document. For the new empty PDF 2.0 documents this namespace is set to
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardStructureNamespace._2_0"/>
+        /// .
+        /// </p>
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which is used as a default value for the document tagging.
+        /// </returns>
         public virtual PdfNamespace GetDocumentDefaultNamespace() {
             return documentDefaultNamespace;
         }
 
+        /// <summary>
+        /// Sets a namespace that will be used as a default value for the tagging for any new
+        /// <see cref="TagTreePointer"/>
+        /// created.
+        /// See
+        /// <see cref="GetDocumentDefaultNamespace()"/>
+        /// for more info.
+        /// <p>
+        /// Be careful when changing this property value. It is most recommended to do it right after the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// was
+        /// created, before any content was added. Changing this value after any content was added might result in the mingled
+        /// tag structure from the namespaces point of view. So in order to maintain the document consistent but in the namespace
+        /// different from default, set this value before any modifications to the document were made and before
+        /// <see cref="GetAutoTaggingPointer()"/>
+        /// method was called for the first time.
+        /// </p>
+        /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
+        /// </summary>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which is to be used as a default value for the document tagging.
+        /// </param>
+        /// <returns>
+        /// current
+        /// <see cref="TagStructureContext"/>
+        /// instance.
+        /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext SetDocumentDefaultNamespace(PdfNamespace @namespace
             ) {
             this.documentDefaultNamespace = @namespace;
             return this;
         }
 
+        /// <summary>
+        /// This method defines a recommended way to obtain
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// class instances.
+        /// <p>
+        /// Returns either a wrapper over an already existing namespace dictionary in the document or over a new one
+        /// if such namespace wasn't encountered before. Calling this method is considered as encountering a namespace,
+        /// i.e. two sequential calls on this method will return the same namespace instance (which is not true in general case
+        /// of two method calls, for instance if several namespace instances with the same name are created via
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// constructors and set to the elements of the tag structure, then the last encountered one
+        /// will be returned by this method). However encountered namespaces will not be added to the document's structure tree root
+        /// <see cref="iText.Kernel.Pdf.PdfName.Namespaces">/Namespaces</see>
+        /// array unless they were set to the certain element of the tag structure.
+        /// </p>
+        /// </summary>
+        /// <param name="namespaceName">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// defining the namespace name (conventionally a uniform resource identifier, or URI).
+        /// </param>
+        /// <returns>
+        /// 
+        /// <see>PdfNamespace) wrapper over either already existing namespace object or over the new one.</see>
+        /// </returns>
         public virtual PdfNamespace FetchNamespace(PdfString namespaceName) {
             PdfNamespace ns = nameToNamespace.Get(namespaceName);
             if (ns == null) {
@@ -224,10 +299,40 @@ namespace iText.Kernel.Pdf.Tagutils {
             return ns;
         }
 
+        /// <summary>
+        /// Gets an instance of the
+        /// <see cref="IRoleMappingResolver"/>
+        /// corresponding to the current tag structure target version.
+        /// This method implies that role is in the default standard structure namespace.
+        /// </summary>
+        /// <param name="role">a role in the default standard structure namespace which mapping is to be resolved.</param>
+        /// <returns>
+        /// a
+        /// <see cref="IRoleMappingResolver"/>
+        /// instance, with the giving role as current.
+        /// </returns>
         public virtual IRoleMappingResolver GetRoleMappingResolver(PdfName role) {
             return GetRoleMappingResolver(role, null);
         }
 
+        /// <summary>
+        /// Gets an instance of the
+        /// <see cref="IRoleMappingResolver"/>
+        /// corresponding to the current tag structure target version.
+        /// </summary>
+        /// <param name="role">a role in the given namespace which mapping is to be resolved.</param>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which this role belongs to.
+        /// </param>
+        /// <returns>
+        /// a
+        /// <see cref="IRoleMappingResolver"/>
+        /// instance, with the giving role in the given
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// as current.
+        /// </returns>
         public virtual IRoleMappingResolver GetRoleMappingResolver(PdfName role, PdfNamespace @namespace) {
             if (TargetTagStructureVersionIs2()) {
                 return new RoleMappingResolverPdf2(role, @namespace, GetDocument());
@@ -237,13 +342,55 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
+        /// <summary>
+        /// Checks if the given role and namespace are specified to be obligatory mapped to the standard structure namespace
+        /// in order to be a valid role in the Tagged PDF.
+        /// </summary>
+        /// <param name="role">a role in the given namespace which mapping necessity is to be checked.</param>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which this role belongs to, null value refers to the default standard
+        /// structure namespace.
+        /// </param>
+        /// <returns>
+        /// true, if the given role in the given namespace is either mapped to the standard structure role or doesn't
+        /// have to; otherwise false.
+        /// </returns>
         public virtual bool CheckIfRoleShallBeMappedToStandardRole(PdfName role, PdfNamespace @namespace) {
             return ResolveMappingToStandardOrDomainSpecificRole(role, @namespace) != null;
         }
 
+        /// <summary>
+        /// Gets an instance of the
+        /// <see cref="IRoleMappingResolver"/>
+        /// which is already in the "resolved" state: it returns
+        /// role in the standard or domain-specific namespace for the
+        /// <see cref="IRoleMappingResolver.GetRole()"/>
+        /// and
+        /// <see cref="IRoleMappingResolver.GetNamespace()"/>
+        /// methods calls which correspond to the mapping of the given role; or null if the given role is not mapped to the standard or domain-specific one.
+        /// </summary>
+        /// <param name="role">a role in the given namespace which mapping is to be resolved.</param>
+        /// <param name="namespace">
+        /// a
+        /// <see cref="iText.Kernel.Pdf.Tagging.PdfNamespace"/>
+        /// which this role belongs to.
+        /// </param>
+        /// <returns>
+        /// an instance of the
+        /// <see cref="IRoleMappingResolver"/>
+        /// which returns false
+        /// for the
+        /// <see cref="IRoleMappingResolver.CurrentRoleShallBeMappedToStandard()"/>
+        /// method call; if mapping cannot be resolved
+        /// to this state, this method returns null, which means that the given role
+        /// in the specified namespace is not mapped to the standard role in the standard namespace.
+        /// </returns>
         public virtual IRoleMappingResolver ResolveMappingToStandardOrDomainSpecificRole(PdfName role, PdfNamespace
              @namespace) {
             IRoleMappingResolver mappingResolver = GetRoleMappingResolver(role, @namespace);
+            // TODO probably have to call resolveNextMapping at least once
             int i = 0;
             // reasonably large arbitrary number that will help to avoid a possible infinite loop
             int maxIters = 100;
@@ -511,6 +658,12 @@ namespace iText.Kernel.Pdf.Tagutils {
             forbidUnknownRoles = forbid;
         }
 
+        /// <summary>
+        /// A utility method that prepares the current instance of the
+        /// <see cref="TagStructureContext"/>
+        /// for
+        /// the closing of document. Essentially it flushes all the "hanging" information to the document.
+        /// </summary>
         public virtual void PrepareToDocumentClosing() {
             RemoveAllConnectionsToTags();
             ActualizeNamespacesInStructTreeRoot();
