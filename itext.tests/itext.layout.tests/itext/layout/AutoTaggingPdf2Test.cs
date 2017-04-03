@@ -470,7 +470,8 @@ namespace iText.Layout {
                 (destinationFolder + "stampTest01.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph("stamped text"));
+            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
+                ("stamped text"));
             document.Close();
             CompareResult("stampTest01");
         }
@@ -485,7 +486,8 @@ namespace iText.Layout {
                 (destinationFolder + "stampTest02.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph("stamped text"));
+            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
+                ("stamped text"));
             document.Close();
             CompareResult("stampTest02");
         }
@@ -500,7 +502,8 @@ namespace iText.Layout {
                 (destinationFolder + "stampTest03.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
-            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new Paragraph("stamped text"));
+            document.Add(new AreaBreak(AreaBreakType.LAST_PAGE)).Add(new AreaBreak(AreaBreakType.NEXT_PAGE)).Add(new Paragraph
+                ("stamped text"));
             document.Close();
             CompareResult("stampTest03");
         }
