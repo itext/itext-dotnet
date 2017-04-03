@@ -526,6 +526,24 @@ namespace iText.Kernel.Pdf {
             CompareResult("structTreeCopyingTest10.pdf", "cmp_structTreeCopyingTest10.pdf", "diff_copying_10_");
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED)]
+        public virtual void StructTreeCopyingTest11() {
+            PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), new PdfWriter
+                (destinationFolder + "structTreeCopyingTest11.pdf"));
+            PdfDocument document1 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox_mapping_mod.pdf"));
+            document1.InitializeOutlines();
+            document1.CopyPagesTo(1, 1, document, 2);
+            PdfDocument document2 = new PdfDocument(new PdfReader(sourceFolder + "quick-brown-fox.pdf"));
+            document2.InitializeOutlines();
+            document2.CopyPagesTo(1, 1, document, 4);
+            document.Close();
+            document1.Close();
+            document2.Close();
+            CompareResult("structTreeCopyingTest11.pdf", "cmp_structTreeCopyingTest11.pdf", "diff_copying_11_");
+        }
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ENCOUNTERED_INVALID_MCR, Count = 72)]

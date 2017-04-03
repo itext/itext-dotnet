@@ -41,7 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -211,6 +213,24 @@ namespace iText.Kernel.Pdf.Tagging {
             if (!structElemCopyingParams.GetCopiedNamespaces().IsEmpty()) {
                 destDocument.GetStructTreeRoot().GetNamespacesObject().AddAll(structElemCopyingParams.GetCopiedNamespaces(
                     ));
+            }
+            if (!copyFromDestDocument) {
+                PdfDictionary srcRoleMap = fromDocument.GetStructTreeRoot().GetRoleMap();
+                PdfDictionary destRoleMap = destDocument.GetStructTreeRoot().GetRoleMap();
+                foreach (KeyValuePair<PdfName, PdfObject> mappingEntry in srcRoleMap.EntrySet()) {
+                    if (!destRoleMap.ContainsKey(mappingEntry.Key)) {
+                        destRoleMap.Put(mappingEntry.Key, mappingEntry.Value);
+                    }
+                    else {
+                        if (!mappingEntry.Value.Equals(destRoleMap.Get(mappingEntry.Key))) {
+                            String srcMapping = mappingEntry.Key + " -> " + mappingEntry.Value;
+                            String destMapping = mappingEntry.Key + " -> " + destRoleMap.Get(mappingEntry.Key);
+                            ILogger logger = LoggerFactory.GetLogger(typeof(StructureTreeCopier));
+                            logger.Warn(String.Format(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED, srcMapping, 
+                                destMapping));
+                        }
+                    }
+                }
             }
         }
 

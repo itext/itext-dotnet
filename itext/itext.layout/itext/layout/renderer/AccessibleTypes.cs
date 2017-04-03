@@ -3,6 +3,37 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
 namespace iText.Layout.Renderer {
+    /// <summary>
+    /// This class is used to identify standard structure role type based only on it's name for the sake of applying
+    /// standard structure attributes.
+    /// </summary>
+    /// <remarks>
+    /// This class is used to identify standard structure role type based only on it's name for the sake of applying
+    /// standard structure attributes.
+    /// <p>
+    /// These types mostly resemble structure type levels in the pdf 1.7 specification, however they are not exact.
+    /// In pdf 2.0 some of these types are not even present and moreover, specific roles with the same name might belong
+    /// to different type levels depending on context (which consists of kids, parents and their types).
+    /// </p>
+    /// <p>
+    /// So, these types are mostly useful for the internal itext usage and are not backed by any spec. They are designed for
+    /// the most part to return the value the most suitable and handy for the purposes of accessibility properties applying.
+    /// </p>
+    /// <p>
+    /// Here are the main reasons to leave these types as is for now, even after introducing of PDF 2.0:
+    /// <ul>
+    /// <li>Standard structure types for pdf 1.7 and 2.0 are very alike. There are some differences, like new/removed roles
+    /// and attributes, however they are not used in current layout auto tagging mechanism.
+    /// </li>
+    /// <li>Differentiating  possible types for the same role based on the context is not supported at the moment.</li>
+    /// </ul>
+    /// In general, the correct way to handle role types would be to have separate classes for every namespace that define type
+    /// and apply attributes. However I believe, that for now it is not feasible at the moment to implement this approach.
+    /// </p>
+    /// The right time to improve and replace this class might be when new roles and attributes (specific to the different standard structure namespaces)
+    /// will be more widely used in the auto tagging mechanism by default, and also when may be there will be more known
+    /// practical examples of utilizing standard structure attributes.
+    /// </remarks>
     internal class AccessibleTypes {
         internal static int Unknown = 0;
 
@@ -24,7 +55,7 @@ namespace iText.Layout.Renderer {
 
         static AccessibleTypes() {
             // Some tag roles are not in any of the sets that define types. Some - because we don't want to write any accessibility
-            // properties for them, some - because they are ambiguous for different pdf versions and don't have any possible
+            // properties for them, some - because they are ambiguous for different pdf versions or don't have any possible
             // properties to set at the moment.
             //        PdfName.Document
             //        PdfName.DocumentFragment
@@ -87,6 +118,30 @@ namespace iText.Layout.Renderer {
             illustrationRoles.Add(PdfName.Form);
         }
 
+        /// <summary>Identifies standard structure role type based only on it's name.</summary>
+        /// <remarks>
+        /// Identifies standard structure role type based only on it's name. The return types might be one of the constants:
+        /// <ul>
+        /// <li>
+        /// <see cref="Unknown"/>
+        /// </li>
+        /// <li>
+        /// <see cref="Grouping"/>
+        /// </li>
+        /// <li>
+        /// <see cref="BlockLevel"/>
+        /// </li>
+        /// <li>
+        /// <see cref="InlineLevel"/>
+        /// </li>
+        /// <li>
+        /// <see cref="Illustration"/>
+        /// </li>
+        /// </ul>
+        /// See also remarks in the
+        /// <see cref="AccessibleTypes"/>
+        /// class documentation.
+        /// </remarks>
         internal static int IdentifyType(PdfName role) {
             if (groupingRoles.Contains(role)) {
                 return Grouping;

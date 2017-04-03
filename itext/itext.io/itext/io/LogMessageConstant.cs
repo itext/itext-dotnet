@@ -150,6 +150,8 @@ namespace iText.IO {
 
         public const String RENDERER_WAS_NOT_ABLE_TO_PROCESS_KEEP_WITH_NEXT = "The renderer was not able to process keep with next property properly";
 
+        public const String ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED = "Role mapping \"{0}\" from source document is not copied. Destination document already has \"{1}\" mapping.";
+
         public const String ROTATION_WAS_NOT_CORRECTLY_PROCESSED_FOR_RENDERER = "Rotation was not correctly processed for {0}";
 
         public const String SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY = "Source document has AcroForm dictionary. The pages you are going to copy may have FormFields, but they will not be copied, because you have not used any IPdfPageExtraCopier";

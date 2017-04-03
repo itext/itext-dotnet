@@ -117,6 +117,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             SetCurrentStructElem(tagPointer.GetCurrentStructElem());
             this.currentPage = tagPointer.currentPage;
             this.contentStream = tagPointer.contentStream;
+            this.currentNamespace = tagPointer.currentNamespace;
         }
 
         internal TagTreePointer(PdfStructElem structElem) {
