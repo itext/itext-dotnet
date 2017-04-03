@@ -111,13 +111,39 @@ namespace iText.Layout.Renderer {
                     TextRenderer) {
                     childRenderer.SetProperty(Property.TAB_ANCHOR, hangingTabStop.GetTabAnchor());
                 }
+                // Normalize child width
+                Object childWidth = childRenderer.GetProperty<Object>(Property.WIDTH);
+                bool childWidthWasReplaced = false;
+                if (childWidth is UnitValue && ((UnitValue)childWidth).IsPercentValue()) {
+                    float normalizedChildWidth = ((UnitValue)childWidth).GetValue() / 100 * layoutContext.GetArea().GetBBox().
+                        GetWidth();
+                    // Decrease the calculated width by margins, paddings and borders so that even for 100% width the content definitely fits
+                    // TODO DEVSIX-1174 fix depending of box-sizing
+                    if (childRenderer is AbstractRenderer) {
+                        Rectangle dummyRect = new Rectangle(normalizedChildWidth, 0);
+                        ((AbstractRenderer)childRenderer).ApplyMargins(dummyRect, false);
+                        ((AbstractRenderer)childRenderer).ApplyBorderBox(dummyRect, false);
+                        ((AbstractRenderer)childRenderer).ApplyPaddings(dummyRect, false);
+                        normalizedChildWidth = dummyRect.GetWidth();
+                    }
+                    if (normalizedChildWidth > 0) {
+                        childRenderer.SetProperty(Property.WIDTH, UnitValue.CreatePointValue(normalizedChildWidth));
+                        childWidthWasReplaced = true;
+                    }
+                }
                 childResult = childRenderer.Layout(new LayoutContext(new LayoutArea(layoutContext.GetArea().GetPageNumber(
                     ), bbox)));
+                // Get back child width so that it's not lost
+                if (childWidthWasReplaced) {
+                    childRenderer.SetProperty(Property.WIDTH, childWidth);
+                }
                 float minChildWidth = 0;
                 float maxChildWidth = 0;
                 if (childResult is MinMaxWidthLayoutResult) {
-                    minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
-                        );
+                    if (!childWidthWasReplaced) {
+                        minChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMinWidth(
+                            );
+                    }
                     maxChildWidth = ((MinMaxWidthLayoutResult)childResult).GetNotNullMinMaxWidth(bbox.GetWidth()).GetMaxWidth(
                         );
                 }
