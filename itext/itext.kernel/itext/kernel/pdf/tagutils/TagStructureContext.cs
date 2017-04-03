@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -87,11 +88,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>PdfStructElem</c>
         /// ) and
         /// layout model elements (
-        /// <c>IAccessibleElement</c>
+        /// <see cref="IAccessibleElement"/>
         /// ). This connection is used as
         /// a sign that tag is not yet finished and therefore should not be flushed or removed
         /// if page tags are flushed or removed. Also, any
-        /// <c>TagTreePointer</c>
+        /// <see cref="TagTreePointer"/>
         /// could be
         /// immediately moved to the tag with connection via it's connected element
         /// <see cref="TagTreePointer.MoveToTag(IAccessibleElement)"/>
@@ -101,6 +102,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         private IDictionary<IAccessibleElement, PdfStructElem> connectedModelToStruct;
 
         private IDictionary<PdfDictionary, IAccessibleElement> connectedStructToModel;
+
+        private ICollection<PdfDictionary> namespaces;
 
         /// <summary>
         /// Do not use this constructor, instead use
@@ -143,6 +146,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             connectedStructToModel = new Dictionary<PdfDictionary, IAccessibleElement>();
             this.tagStructureTargetVersion = tagStructureTargetVersion;
             forbidUnknownRoles = true;
+            InitRegisteredNamespaces();
             NormalizeDocumentRootTag();
         }
 
@@ -428,6 +432,11 @@ namespace iText.Kernel.Pdf.Tagutils {
             forbidUnknownRoles = forbid;
         }
 
+        public virtual void PrepareToDocumentClosing() {
+            RemoveAllConnectionsToTags();
+            ActualizeNamespacesInStructTreeRoot();
+        }
+
         /// <summary>Method for internal usages.</summary>
         /// <remarks>
         /// Method for internal usages.
@@ -441,6 +450,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 structElem.SetRole(element.GetRole());
                 if (element.GetAccessibilityProperties() != null) {
                     element.GetAccessibilityProperties().SetToStructElem(structElem);
+                    EnsureNamespaceRegistered(element.GetAccessibilityProperties().GetNamespace());
                 }
             }
         }
@@ -459,6 +469,15 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         internal virtual IAccessibleElement GetModelConnectedToStruct(PdfStructElem @struct) {
             return connectedStructToModel.Get(@struct.GetPdfObject());
+        }
+
+        internal virtual void EnsureNamespaceRegistered(PdfNamespace @namespace) {
+            if (@namespace != null) {
+                PdfDictionary namespaceObj = @namespace.GetPdfObject();
+                if (!namespaces.Contains(namespaceObj)) {
+                    namespaces.Add(namespaceObj);
+                }
+            }
         }
 
         internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role) {
@@ -484,12 +503,38 @@ namespace iText.Kernel.Pdf.Tagutils {
             return parent;
         }
 
+        private void InitRegisteredNamespaces() {
+            PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
+            namespaces = new LinkedHashSet<PdfDictionary>();
+            foreach (PdfNamespace @namespace in structTreeRoot.GetNamespaces()) {
+                namespaces.Add(@namespace.GetPdfObject());
+            }
+        }
+
+        private void ActualizeNamespacesInStructTreeRoot() {
+            if (namespaces.Count > 0) {
+                PdfStructTreeRoot structTreeRoot = GetDocument().GetStructTreeRoot();
+                PdfArray rootNamespaces = structTreeRoot.GetNamespacesObject();
+                ICollection<PdfDictionary> newNamespaces = new LinkedHashSet<PdfDictionary>(namespaces);
+                for (int i = 0; i < rootNamespaces.Size(); ++i) {
+                    newNamespaces.Remove(rootNamespaces.GetAsDictionary(i));
+                }
+                foreach (PdfDictionary newNs in newNamespaces) {
+                    rootNamespaces.Add(newNs);
+                }
+                if (!newNamespaces.IsEmpty()) {
+                    structTreeRoot.SetModified();
+                }
+            }
+        }
+
         private void RemoveStructToModelConnection(PdfStructElem structElem) {
             if (structElem != null) {
                 IAccessibleElement element = connectedStructToModel.JRemove(structElem.GetPdfObject());
                 structElem.SetRole(element.GetRole());
                 if (element.GetAccessibilityProperties() != null) {
                     element.GetAccessibilityProperties().SetToStructElem(structElem);
+                    EnsureNamespaceRegistered(element.GetAccessibilityProperties().GetNamespace());
                 }
                 if (structElem.GetParent() == null) {
                     // is flushed

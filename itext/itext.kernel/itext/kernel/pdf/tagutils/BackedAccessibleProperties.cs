@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override String GetLanguage() {
-            return backingElem.GetLang().ToUnicodeString();
+            return ToUnicodeString(backingElem.GetLang());
         }
 
         public override AccessibilityProperties SetLanguage(String language) {
@@ -65,7 +65,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override String GetActualText() {
-            return backingElem.GetActualText().ToUnicodeString();
+            return ToUnicodeString(backingElem.GetActualText());
         }
 
         public override AccessibilityProperties SetActualText(String actualText) {
@@ -74,7 +74,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override String GetAlternateDescription() {
-            return backingElem.GetAlt().ToUnicodeString();
+            return ToUnicodeString(backingElem.GetAlt());
         }
 
         public override AccessibilityProperties SetAlternateDescription(String alternateDescription) {
@@ -83,7 +83,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override String GetExpansion() {
-            return backingElem.GetE().ToUnicodeString();
+            return ToUnicodeString(backingElem.GetE());
         }
 
         public override AccessibilityProperties SetExpansion(String expansion) {
@@ -131,7 +131,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override String GetPhoneme() {
-            return backingElem.GetPhoneme().ToUnicodeString();
+            return ToUnicodeString(backingElem.GetPhoneme());
         }
 
         public override AccessibilityProperties SetPhoneticAlphabet(PdfName phoneticAlphabet) {
@@ -141,6 +141,17 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         public override PdfName GetPhoneticAlphabet() {
             return backingElem.GetPhoneticAlphabet();
+        }
+
+        public override AccessibilityProperties SetNamespace(PdfNamespace @namespace) {
+            backingElem.SetNamespace(@namespace);
+            PdfDocument doc = backingElem.GetPdfObject().GetIndirectReference().GetDocument();
+            doc.GetTagStructureContext().EnsureNamespaceRegistered(@namespace);
+            return this;
+        }
+
+        public override PdfNamespace GetNamespace() {
+            return backingElem.GetNamespace();
         }
 
         public override AccessibilityProperties AddRef(TagTreePointer treePointer) {
@@ -163,6 +174,10 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         internal override void SetToStructElem(PdfStructElem elem) {
         }
+
         // ignore, because all attributes are directly set to the structElem
+        private String ToUnicodeString(PdfString pdfString) {
+            return pdfString != null ? pdfString.ToUnicodeString() : null;
+        }
     }
 }

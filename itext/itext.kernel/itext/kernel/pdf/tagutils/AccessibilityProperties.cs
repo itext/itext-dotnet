@@ -62,6 +62,8 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         protected internal PdfName phoneticAlphabet;
 
+        protected internal PdfNamespace @namespace;
+
         protected internal IList<PdfDictionary> refs = new List<PdfDictionary>();
 
         public virtual String GetLanguage() {
@@ -132,6 +134,15 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this.phoneticAlphabet;
         }
 
+        public virtual AccessibilityProperties SetNamespace(PdfNamespace @namespace) {
+            this.@namespace = @namespace;
+            return this;
+        }
+
+        public virtual PdfNamespace GetNamespace() {
+            return this.@namespace;
+        }
+
         public virtual AccessibilityProperties AddRef(TagTreePointer treePointer) {
             refs.Add(treePointer.GetCurrentStructElem().GetPdfObject());
             return this;
@@ -175,6 +186,9 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
             if (GetPhoneticAlphabet() != null) {
                 elem.SetPhoneticAlphabet(GetPhoneticAlphabet());
+            }
+            if (GetNamespace() != null) {
+                elem.SetNamespace(GetNamespace());
             }
             foreach (PdfDictionary @ref in refs) {
                 elem.AddRef(new PdfStructElem(@ref));

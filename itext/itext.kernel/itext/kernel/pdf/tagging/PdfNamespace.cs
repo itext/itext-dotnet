@@ -6,6 +6,7 @@ namespace iText.Kernel.Pdf.Tagging {
     public class PdfNamespace : PdfObjectWrapper<PdfDictionary> {
         public PdfNamespace(PdfDictionary pdfObject)
             : base(pdfObject) {
+            SetForbidRelease();
         }
 
         public PdfNamespace(String namespaceName)

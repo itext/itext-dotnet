@@ -73,6 +73,8 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private PdfStream contentStream;
 
+        private PdfNamespace currentNamespace;
+
         private int nextNewKidIndex = -1;
 
         /// <summary>
@@ -199,6 +201,15 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <returns>the document, at which tag structure this instance points.</returns>
         public virtual PdfDocument GetDocument() {
             return tagStructureContext.GetDocument();
+        }
+
+        public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer SetNamespaceForNewTags(PdfNamespace @namespace) {
+            this.currentNamespace = @namespace;
+            return this;
+        }
+
+        public virtual PdfNamespace GetNamespaceForNewTags() {
+            return this.currentNamespace;
         }
 
         /// <summary>Adds a new tag with given role to the tag structure.</summary>
@@ -365,6 +376,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element, bool
              keepConnectedToTag) {
             tagStructureContext.ThrowExceptionIfRoleIsInvalid(element.GetRole());
+            // TODO pass current namespace and use it to check?
             if (!tagStructureContext.IsElementConnectedToTag(element)) {
                 SetNextNewKidIndex(index);
                 SetCurrentStructElem(AddNewKid(element, keepConnectedToTag));
@@ -919,7 +931,17 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (!keepConnectedToTag && element.GetAccessibilityProperties() != null) {
                 element.GetAccessibilityProperties().SetToStructElem(kid);
             }
+            ProcessKidNamespace(kid);
             return AddNewKid(kid);
+        }
+
+        private void ProcessKidNamespace(PdfStructElem kid) {
+            PdfNamespace kidNamespace = kid.GetNamespace();
+            if (currentNamespace != null && kidNamespace == null) {
+                kid.SetNamespace(currentNamespace);
+                kidNamespace = currentNamespace;
+            }
+            tagStructureContext.EnsureNamespaceRegistered(kidNamespace);
         }
 
         private PdfStructElem AddNewKid(PdfStructElem kid) {

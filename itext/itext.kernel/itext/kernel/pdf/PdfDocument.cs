@@ -640,13 +640,8 @@ namespace iText.Kernel.Pdf {
                     CheckIsoConformance();
                     PdfObject crypto_1 = null;
                     if (properties.appendMode) {
-                        if (structTreeRoot != null && structTreeRoot.GetPdfObject().IsModified()) {
-                            TryFlushTagStructure();
-                        }
-                        else {
-                            if (tagStructureContext != null) {
-                                tagStructureContext.RemoveAllConnectionsToTags();
-                            }
+                        if (structTreeRoot != null) {
+                            TryFlushTagStructure(true);
                         }
                         if (catalog.IsOCPropertiesMayHaveChanged() && catalog.GetOCProperties(false).GetPdfObject().IsModified()) {
                             catalog.GetOCProperties(false).Flush();
@@ -695,7 +690,7 @@ namespace iText.Kernel.Pdf {
                             GetPage(pageNum).Flush();
                         }
                         if (structTreeRoot != null) {
-                            TryFlushTagStructure();
+                            TryFlushTagStructure(false);
                         }
                         catalog.GetPdfObject().Flush(false);
                         info.Flush();
@@ -1930,10 +1925,14 @@ namespace iText.Kernel.Pdf {
             }
         }
 
-        private void TryFlushTagStructure() {
+        private void TryFlushTagStructure(bool isAppendMode) {
             try {
-                GetTagStructureContext().RemoveAllConnectionsToTags();
-                structTreeRoot.Flush();
+                if (tagStructureContext != null) {
+                    tagStructureContext.PrepareToDocumentClosing();
+                }
+                if (!isAppendMode || structTreeRoot.GetPdfObject().IsModified()) {
+                    structTreeRoot.Flush();
+                }
             }
             catch (Exception ex) {
                 throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
