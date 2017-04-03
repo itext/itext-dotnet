@@ -83,11 +83,7 @@ namespace iText.Kernel.Pdf {
         private PdfEncryption decryption;
 
         public PdfString(String value, String encoding)
-            : this(value, encoding, false) {
-        }
-
-        public PdfString(String value, String encoding, bool directOnly)
-            : base(directOnly) {
+            : base() {
             // if it's not null: content shall contain encrypted data; value shall be null
             this.value = value;
             this.encoding = encoding;

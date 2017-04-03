@@ -528,7 +528,7 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED)]
+        [LogMessage(iText.IO.LogMessageConstant.ROLE_MAPPING_FROM_SOURCE_IS_NOT_COPIED_ALREADY_EXIST)]
         public virtual void StructTreeCopyingTest11() {
             PdfDocument document = new PdfDocument(new PdfReader(sourceFolder + "88th_Academy_Awards.pdf"), new PdfWriter
                 (destinationFolder + "structTreeCopyingTest11.pdf"));
