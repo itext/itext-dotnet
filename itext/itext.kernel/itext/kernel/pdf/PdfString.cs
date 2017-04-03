@@ -81,7 +81,11 @@ namespace iText.Kernel.Pdf {
         private int decryptInfoGen = 0;
 
         public PdfString(String value, String encoding)
-            : base() {
+            : this(value, encoding, false) {
+        }
+
+        public PdfString(String value, String encoding, bool directOnly)
+            : base(directOnly) {
             /*
             * using for decryption
             * */

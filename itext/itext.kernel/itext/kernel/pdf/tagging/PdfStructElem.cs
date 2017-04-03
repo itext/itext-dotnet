@@ -57,22 +57,31 @@ namespace iText.Kernel.Pdf.Tagging {
     /// must be indirect.
     /// </summary>
     public class PdfStructElem : PdfObjectWrapper<PdfDictionary>, IPdfStructElem {
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static int Unknown = 0;
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static int Grouping = 1;
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static int BlockLevel = 2;
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static int InlineLevel = 3;
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static int Illustration = 4;
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static ICollection<PdfName> groupingRoles = new HashSet<PdfName>();
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static ICollection<PdfName> blockLevelRoles = new HashSet<PdfName>();
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static ICollection<PdfName> inlineLevelRoles = new HashSet<PdfName>();
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         public static ICollection<PdfName> illustrationRoles = new HashSet<PdfName>();
 
         static PdfStructElem() {
@@ -128,6 +137,7 @@ namespace iText.Kernel.Pdf.Tagging {
             illustrationRoles.Add(PdfName.Form);
         }
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         protected internal int type = Unknown;
 
         /// <param name="pdfObject">must be an indirect object.</param>
@@ -364,7 +374,13 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void SetNamespace(PdfNamespace @namespace) {
-            Put(PdfName.NS, @namespace.GetPdfObject());
+            if (@namespace != null) {
+                Put(PdfName.NS, @namespace.GetPdfObject());
+            }
+            else {
+                GetPdfObject().Remove(PdfName.NS);
+                SetModified();
+            }
         }
 
         public virtual void SetPhoneme(PdfString elementPhoneme) {
@@ -422,6 +438,7 @@ namespace iText.Kernel.Pdf.Tagging {
             base.Flush();
         }
 
+        [System.ObsoleteAttribute(@"See IdentifyType(iText.Kernel.Pdf.PdfDocument, iText.Kernel.Pdf.PdfName) .")]
         protected internal virtual int GetStructElementType() {
             if (type == Unknown) {
                 PdfName role = GetPdfObject().GetAsName(PdfName.S);

@@ -41,12 +41,12 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual PdfDictionary GetNamespaceRoleMap() {
-            return GetPdfObject().GetAsDictionary(PdfName.RoleMapNS);
+            return GetNamespaceRoleMap(false);
         }
 
         public virtual iText.Kernel.Pdf.Tagging.PdfNamespace AddNamespaceRoleMapping(PdfName thisNsRole, PdfName defaultNsRole
             ) {
-            GetNamespaceRoleMap().Put(thisNsRole, defaultNsRole);
+            GetNamespaceRoleMap(true).Put(thisNsRole, defaultNsRole);
             SetModified();
             return this;
         }
@@ -56,7 +56,7 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfArray targetMapping = new PdfArray();
             targetMapping.Add(targetNsRole);
             targetMapping.Add(targetNs.GetPdfObject());
-            GetNamespaceRoleMap().Put(thisNsRole, targetMapping);
+            GetNamespaceRoleMap(true).Put(thisNsRole, targetMapping);
             SetModified();
             return this;
         }
@@ -69,6 +69,15 @@ namespace iText.Kernel.Pdf.Tagging {
             GetPdfObject().Put(key, value);
             SetModified();
             return this;
+        }
+
+        private PdfDictionary GetNamespaceRoleMap(bool createIfNotExist) {
+            PdfDictionary roleMapNs = GetPdfObject().GetAsDictionary(PdfName.RoleMapNS);
+            if (createIfNotExist && roleMapNs == null) {
+                roleMapNs = new PdfDictionary();
+                Put(PdfName.RoleMapNS, roleMapNs);
+            }
+            return roleMapNs;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             // '-1' value of this field means that next new kid will be the last element in the kids array
             tagStructureContext = document.GetTagStructureContext();
             SetCurrentStructElem(tagStructureContext.GetRootTag());
-            SetNamespaceForNewTags(tagStructureContext.GetNamespaceForNewTagsByDefault());
+            SetNamespaceForNewTags(tagStructureContext.GetDocumentDefaultNamespace());
         }
 
         /// <summary>A copy constructor.</summary>
@@ -699,7 +699,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </summary>
         /// <param name="n">
         /// if there is several kids with the given role, pointer will be moved to the kid
-        /// which is the n'th if you count kids with such role.
+        /// which has zero-based index n if you count only the kids with given role.
         /// </param>
         /// <param name="role">role of the current tag kid to which pointer will be moved.</param>
         /// <returns>

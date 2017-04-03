@@ -91,28 +91,28 @@ namespace iText.Layout.Renderer {
         internal static int IdentifyType(PdfDocument doc, PdfName role, PdfNamespace @namespace) {
             IRoleMappingResolver mappingResolver = doc.GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole
                 (role, @namespace);
-            role = mappingResolver != null ? mappingResolver.GetRole() : null;
-            if (groupingRoles.Contains(role)) {
-                return Grouping;
-            }
-            else {
-                if (blockLevelRoles.Contains(role) || StandardStructureNamespace.IsHnRole(role)) {
-                    return BlockLevel;
+            if (mappingResolver != null) {
+                role = mappingResolver.GetRole();
+                if (groupingRoles.Contains(role)) {
+                    return Grouping;
                 }
                 else {
-                    if (inlineLevelRoles.Contains(role)) {
-                        return InlineLevel;
+                    if (blockLevelRoles.Contains(role) || StandardStructureNamespace.IsHnRole(role)) {
+                        return BlockLevel;
                     }
                     else {
-                        if (illustrationRoles.Contains(role)) {
-                            return Illustration;
+                        if (inlineLevelRoles.Contains(role)) {
+                            return InlineLevel;
                         }
                         else {
-                            return Unknown;
+                            if (illustrationRoles.Contains(role)) {
+                                return Illustration;
+                            }
                         }
                     }
                 }
             }
+            return Unknown;
         }
     }
 }

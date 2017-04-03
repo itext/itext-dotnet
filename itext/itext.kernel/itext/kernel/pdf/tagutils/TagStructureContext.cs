@@ -107,7 +107,9 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private ICollection<PdfDictionary> namespaces;
 
-        private PdfNamespace namespaceForNewTagsByDefault;
+        private IDictionary<PdfString, PdfNamespace> nameToNamespace;
+
+        private PdfNamespace documentDefaultNamespace;
 
         /// <summary>
         /// Do not use this constructor, instead use
@@ -149,13 +151,13 @@ namespace iText.Kernel.Pdf.Tagutils {
             connectedModelToStruct = new Dictionary<IAccessibleElement, PdfStructElem>();
             connectedStructToModel = new Dictionary<PdfDictionary, IAccessibleElement>();
             namespaces = new LinkedHashSet<PdfDictionary>();
+            nameToNamespace = new Dictionary<PdfString, PdfNamespace>();
             this.tagStructureTargetVersion = tagStructureTargetVersion;
             forbidUnknownRoles = true;
             if (TargetTagStructureVersionIs2()) {
-                SetNamespaceForNewTagsBasedOnExistingRoot(document);
                 InitRegisteredNamespaces();
+                SetNamespaceForNewTagsBasedOnExistingRoot();
             }
-            NormalizeDocumentRootTag();
         }
 
         /// <summary>
@@ -203,14 +205,23 @@ namespace iText.Kernel.Pdf.Tagutils {
             return autoTaggingPointer;
         }
 
-        public virtual PdfNamespace GetNamespaceForNewTagsByDefault() {
-            return namespaceForNewTagsByDefault;
+        public virtual PdfNamespace GetDocumentDefaultNamespace() {
+            return documentDefaultNamespace;
         }
 
-        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext SetNamespaceForNewTagsByDefault(PdfNamespace 
-            @namespace) {
-            this.namespaceForNewTagsByDefault = @namespace;
+        public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext SetDocumentDefaultNamespace(PdfNamespace @namespace
+            ) {
+            this.documentDefaultNamespace = @namespace;
             return this;
+        }
+
+        public virtual PdfNamespace FetchNamespace(PdfString namespaceName) {
+            PdfNamespace ns = nameToNamespace.Get(namespaceName);
+            if (ns == null) {
+                ns = new PdfNamespace(namespaceName);
+                nameToNamespace[namespaceName] = ns;
+            }
+            return ns;
         }
 
         public virtual IRoleMappingResolver GetRoleMappingResolver(PdfName role) {
@@ -445,7 +456,16 @@ namespace iText.Kernel.Pdf.Tagutils {
             bool forbid = forbidUnknownRoles;
             forbidUnknownRoles = false;
             IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
-            if (rootKids.Count == 1 && IsRoleAllowedToBeRoot(rootKids[0].GetRole())) {
+            PdfName firstKidRole = null;
+            PdfString firstKidNsName = null;
+            if (rootKids.Count > 0) {
+                PdfStructElem firstKid = (PdfStructElem)rootKids[0];
+                firstKidRole = firstKid.GetRole();
+                firstKidNsName = firstKid.GetNamespace() != null ? firstKid.GetNamespace().GetNamespaceName() : StandardStructureNamespace
+                    .GetDefaultStandardStructureNamespace();
+            }
+            if (rootKids.Count == 1 && StandardStructureNamespace.RoleBelongsToStandardNamespace(firstKidRole, firstKidNsName
+                ) && IsRoleAllowedToBeRoot(firstKidRole)) {
                 rootTagElement = (PdfStructElem)rootKids[0];
             }
             else {
@@ -453,6 +473,11 @@ namespace iText.Kernel.Pdf.Tagutils {
                 document.GetStructTreeRoot().GetPdfObject().Remove(PdfName.K);
                 if (prevRootTag == null) {
                     rootTagElement = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+                    if (TargetTagStructureVersionIs2()) {
+                        PdfNamespace ns = GetDocumentDefaultNamespace();
+                        rootTagElement.SetNamespace(ns);
+                        EnsureNamespaceRegistered(ns);
+                    }
                 }
                 else {
                     document.GetStructTreeRoot().AddKid(rootTagElement);
@@ -510,6 +535,9 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         internal virtual PdfStructElem GetRootTag() {
+            if (rootTagElement == null) {
+                NormalizeDocumentRootTag();
+            }
             return rootTagElement;
         }
 
@@ -531,12 +559,14 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (!namespaces.Contains(namespaceObj)) {
                     namespaces.Add(namespaceObj);
                 }
+                nameToNamespace[@namespace.GetNamespaceName()] = @namespace;
             }
         }
 
         internal virtual void ThrowExceptionIfRoleIsInvalid(IAccessibleElement element, PdfNamespace pointerCurrentNamespace
             ) {
-            PdfNamespace @namespace = element.GetAccessibilityProperties().GetNamespace();
+            AccessibilityProperties properties = element.GetAccessibilityProperties();
+            PdfNamespace @namespace = properties != null ? properties.GetNamespace() : null;
             if (@namespace == null) {
                 @namespace = pointerCurrentNamespace;
             }
@@ -569,7 +599,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             return parent;
         }
 
-        internal virtual bool TargetTagStructureVersionIs2() {
+        private bool TargetTagStructureVersionIs2() {
             return PdfVersion.PDF_2_0.CompareTo(tagStructureTargetVersion) <= 0;
         }
 
@@ -582,7 +612,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private void SetNamespaceForNewTagsBasedOnExistingRoot(PdfDocument document) {
+        private void SetNamespaceForNewTagsBasedOnExistingRoot() {
             IList<IPdfStructElem> rootKids = document.GetStructTreeRoot().GetKids();
             if (rootKids.Count > 0) {
                 PdfStructElem firstKid = (PdfStructElem)rootKids[0];
@@ -602,9 +632,11 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
                 if (resolvedMapping == null || !StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7.Equals(resolvedMapping
                     .GetNamespace().GetNamespaceName())) {
-                    namespaceForNewTagsByDefault = new PdfNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                        );
+                    documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0);
                 }
+            }
+            else {
+                documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0);
             }
         }
 
@@ -622,6 +654,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             foreach (PdfNamespace @namespace in structTreeRoot.GetNamespaces()) {
                 namespaces.Add(@namespace.GetPdfObject());
+                nameToNamespace[@namespace.GetNamespaceName()] = @namespace;
             }
         }
 
@@ -663,8 +696,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (!structParent.IsFlushed()) {
                     structParent.RemoveKid(pageTag);
                     PdfDictionary parentObject = structParent.GetPdfObject();
-                    if (!connectedStructToModel.ContainsKey(parentObject) && parent.GetKids().Count == 0 && parentObject != rootTagElement
-                        .GetPdfObject()) {
+                    if (!connectedStructToModel.ContainsKey(parentObject) && parent.GetKids().Count == 0 && parentObject != GetRootTag
+                        ().GetPdfObject()) {
                         RemovePageTagFromParent(structParent, parent.GetParent());
                         parentObject.GetIndirectReference().SetFree();
                     }
@@ -681,7 +714,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         // should never happen as we always should have only one root tag and we don't remove it
         private void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
             if (parent.IsFlushed() || connectedStructToModel.ContainsKey(parent.GetPdfObject()) || parent.GetPdfObject
-                () == rootTagElement.GetPdfObject()) {
+                () == GetRootTag().GetPdfObject()) {
                 return;
             }
             IList<IPdfStructElem> kids = parent.GetKids();

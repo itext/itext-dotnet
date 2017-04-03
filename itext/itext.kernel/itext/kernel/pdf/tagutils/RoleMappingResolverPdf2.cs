@@ -14,8 +14,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             this.currNamespace = @namespace;
             PdfString defaultNsName = StandardStructureNamespace.GetDefaultStandardStructureNamespace();
             PdfDictionary defaultNsRoleMap = document.GetStructTreeRoot().GetRoleMap();
-            this.defaultNamespace = new PdfNamespace(defaultNsName.ToUnicodeString()).SetNamespaceRoleMap(defaultNsRoleMap
-                );
+            this.defaultNamespace = new PdfNamespace(defaultNsName).SetNamespaceRoleMap(defaultNsRoleMap);
             if (currNamespace == null) {
                 currNamespace = defaultNamespace;
             }

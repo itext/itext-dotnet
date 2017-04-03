@@ -9,12 +9,13 @@ namespace iText.Kernel.Pdf.Tagging {
         private static ICollection<PdfName> STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<PdfName>();
 
         public static readonly PdfString STANDARD_STRUCTURE_NAMESPACE_FOR_1_7 = new PdfString("http://www.iso.org/pdf/ssn"
-            );
+            , null, true);
 
         public static readonly PdfString STANDARD_STRUCTURE_NAMESPACE_FOR_2_0 = new PdfString("http://www.iso.org/pdf2/ssn"
-            );
+            , null, true);
 
-        private static readonly PdfString MATH_ML = new PdfString("http://www.w3.org/1998/Math/MathML");
+        private static readonly PdfString MATH_ML = new PdfString("http://www.w3.org/1998/Math/MathML", null, true
+            );
 
         static StandardStructureNamespace() {
             // other namespaces

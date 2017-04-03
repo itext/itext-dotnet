@@ -65,14 +65,12 @@ namespace iText.Layout.Renderer {
             }
             IAccessibleElement modelElement = (IAccessibleElement)renderer.GetModelElement();
             AccessibilityProperties accessibilityProperties = modelElement.GetAccessibilityProperties();
-            int tagType = AccessibleTypes.IdentifyType(doc, role, accessibilityProperties.GetNamespace());
+            PdfNamespace actualNs = accessibilityProperties.GetNamespace() != null ? accessibilityProperties.GetNamespace
+                () : doc.GetTagStructureContext().GetAutoTaggingPointer().GetNamespaceForNewTags();
+            int tagType = AccessibleTypes.IdentifyType(doc, role, actualNs);
             PdfDictionary attributes = new PdfDictionary();
             PdfName attributesType = PdfName.Layout;
             attributes.Put(PdfName.O, attributesType);
-            PdfDictionary roleMap = doc.GetStructTreeRoot().GetRoleMap();
-            if (roleMap.ContainsKey(role)) {
-                role = roleMap.GetAsName(role);
-            }
             //TODO WritingMode attribute applying when needed
             ApplyCommonLayoutAttributes(renderer, attributes);
             if (tagType == AccessibleTypes.BlockLevel) {
