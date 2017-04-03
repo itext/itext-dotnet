@@ -119,20 +119,25 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         /// <returns>the text to render</returns>
         public virtual String GetText() {
-            if (text == null) {
-                GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
-                if (!IsReversedChars()) {
-                    text = gl.ToUnicodeString(gl.start, gl.end);
-                }
-                else {
-                    StringBuilder sb = new StringBuilder(gl.end - gl.start);
-                    for (int i = gl.end - 1; i >= gl.start; i--) {
-                        sb.Append(gl.Get(i).GetUnicodeChars());
+            try {
+                if (text == null) {
+                    GlyphLine gl = gs.GetFont().DecodeIntoGlyphLine(@string);
+                    if (!IsReversedChars()) {
+                        text = gl.ToUnicodeString(gl.start, gl.end);
                     }
-                    text = sb.ToString();
+                    else {
+                        StringBuilder sb = new StringBuilder(gl.end - gl.start);
+                        for (int i = gl.end - 1; i >= gl.start; i--) {
+                            sb.Append(gl.Get(i).GetUnicodeChars());
+                        }
+                        text = sb.ToString();
+                    }
                 }
+                return text;
             }
-            return text;
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <returns>original PDF string</returns>
@@ -196,11 +201,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the baseline line segment</returns>
         public virtual LineSegment GetBaseline() {
-            return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix);
+            try {
+                return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix);
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual LineSegment GetUnscaledBaseline() {
-            return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise());
+            try {
+                return GetUnscaledBaselineWithOffset(0 + gs.GetTextRise());
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <summary>Gets the ascentline for the text (i.e.</summary>
@@ -212,8 +227,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the ascentline line segment</returns>
         public virtual LineSegment GetAscentLine() {
-            return GetUnscaledBaselineWithOffset(GetAscentDescent()[0] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
-                );
+            try {
+                return GetUnscaledBaselineWithOffset(GetAscentDescent()[0] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
+                    );
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <summary>Gets the descentline for the text (i.e.</summary>
@@ -225,14 +245,24 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>the descentline line segment</returns>
         public virtual LineSegment GetDescentLine() {
-            return GetUnscaledBaselineWithOffset(GetAscentDescent()[1] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
-                );
+            try {
+                return GetUnscaledBaselineWithOffset(GetAscentDescent()[1] + gs.GetTextRise()).TransformBy(textToUserSpaceTransformMatrix
+                    );
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <summary>Getter for the font</summary>
         /// <returns>the font</returns>
         public virtual PdfFont GetFont() {
-            return gs.GetFont();
+            try {
+                return gs.GetFont();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <summary>The rise represents how far above the nominal baseline the text should be rendered.</summary>
@@ -248,11 +278,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </remarks>
         /// <returns>The Rise for the text draw operation, in user space units (Ts value, scaled to user space)</returns>
         public virtual float GetRise() {
-            if (gs.GetTextRise() == 0) {
-                return 0;
+            try {
+                if (gs.GetTextRise() == 0) {
+                    return 0;
+                }
+                // optimize the common case
+                return ConvertHeightFromTextSpaceToUserSpace(gs.GetTextRise());
             }
-            // optimize the common case
-            return ConvertHeightFromTextSpaceToUserSpace(gs.GetTextRise());
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <summary>Provides detail useful if a listener needs access to the position of each individual glyph in the text render operation
@@ -272,8 +307,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo subInfo = new iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo
                     (this, str, totalWidth);
                 rslt.Add(subInfo);
-                totalWidth += (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) *
-                     (gs.GetHorizontalScaling() / 100f);
+                try {
+                    totalWidth += (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) *
+                         (gs.GetHorizontalScaling() / 100f);
+                }
+                catch (ArgumentNullException) {
+                    throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+                }
             }
             foreach (iText.Kernel.Pdf.Canvas.Parser.Data.TextRenderInfo tri in rslt) {
                 tri.GetUnscaledWidth();
@@ -301,37 +341,77 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// </ul>
         /// </returns>
         public virtual int GetTextRenderMode() {
-            return gs.GetTextRenderingMode();
+            try {
+                return gs.GetTextRenderingMode();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <returns>the current fill color.</returns>
         public virtual Color GetFillColor() {
-            return gs.GetFillColor();
+            try {
+                return gs.GetFillColor();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <returns>the current stroke color.</returns>
         public virtual Color GetStrokeColor() {
-            return gs.GetStrokeColor();
+            try {
+                return gs.GetStrokeColor();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual float GetFontSize() {
-            return gs.GetFontSize();
+            try {
+                return gs.GetFontSize();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual float GetHorizontalScaling() {
-            return gs.GetHorizontalScaling();
+            try {
+                return gs.GetHorizontalScaling();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual float GetCharSpacing() {
-            return gs.GetCharSpacing();
+            try {
+                return gs.GetCharSpacing();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual float GetWordSpacing() {
-            return gs.GetWordSpacing();
+            try {
+                return gs.GetWordSpacing();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual float GetLeading() {
-            return gs.GetLeading();
+            try {
+                return gs.GetLeading();
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <summary>Gets /ActualText tag entry value if this text chunk is marked content.</summary>
@@ -398,8 +478,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         public virtual void PreserveGraphicsState() {
-            this.graphicsStateIsPreserved = true;
-            gs = new CanvasGraphicsState(gs);
+            try {
+                this.graphicsStateIsPreserved = true;
+                gs = new CanvasGraphicsState(gs);
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         public virtual void ReleaseGraphicsState() {
@@ -412,9 +497,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             // we need to correct the width so we don't have an extra character and word spaces at the end.  The extra character and word spaces
             // are important for tracking relative text coordinate systems, but should not be part of the baseline
             String unicodeStr = @string.ToUnicodeString();
-            float correctedUnscaledWidth = GetUnscaledWidth() - (gs.GetCharSpacing() + (unicodeStr.Length > 0 && unicodeStr
-                [unicodeStr.Length - 1] == ' ' ? gs.GetWordSpacing() : 0)) * (gs.GetHorizontalScaling() / 100f);
-            return new LineSegment(new Vector(0, yOffset, 1), new Vector(correctedUnscaledWidth, yOffset, 1));
+            try {
+                float correctedUnscaledWidth = GetUnscaledWidth() - (gs.GetCharSpacing() + (unicodeStr.Length > 0 && unicodeStr
+                    [unicodeStr.Length - 1] == ' ' ? gs.GetWordSpacing() : 0)) * (gs.GetHorizontalScaling() / 100f);
+                return new LineSegment(new Vector(0, yOffset, 1), new Vector(correctedUnscaledWidth, yOffset, 1));
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         /// <param name="width">the width, in text space</param>
@@ -442,11 +532,16 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>the width of a single space character in text space units</returns>
         private float GetUnscaledFontSpaceWidth() {
             char charToUse = ' ';
-            if (gs.GetFont().GetWidth(charToUse) == 0) {
-                return gs.GetFont().GetFontProgram().GetAvgWidth() / 1000f;
+            try {
+                if (gs.GetFont().GetWidth(charToUse) == 0) {
+                    return gs.GetFont().GetFontProgram().GetAvgWidth() / 1000f;
+                }
+                else {
+                    return GetStringWidth(charToUse.ToString());
+                }
             }
-            else {
-                return GetStringWidth(charToUse.ToString());
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
             }
         }
 
@@ -457,9 +552,14 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             float totalWidth = 0;
             for (int i = 0; i < @string.Length; i++) {
                 char c = @string[i];
-                float w = (float)(gs.GetFont().GetWidth(c) * fontMatrix[0]);
-                float wordSpacing = c == 32 ? gs.GetWordSpacing() : 0f;
-                totalWidth += (w * gs.GetFontSize() + gs.GetCharSpacing() + wordSpacing) * gs.GetHorizontalScaling() / 100f;
+                try {
+                    float w = (float)(gs.GetFont().GetWidth(c) * fontMatrix[0]);
+                    float wordSpacing = c == 32 ? gs.GetWordSpacing() : 0f;
+                    totalWidth += (w * gs.GetFontSize() + gs.GetCharSpacing() + wordSpacing) * gs.GetHorizontalScaling() / 100f;
+                }
+                catch (ArgumentNullException) {
+                    throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+                }
             }
             return totalWidth;
         }
@@ -470,8 +570,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         private float GetPdfStringWidth(PdfString @string, bool singleCharString) {
             if (singleCharString) {
                 float[] widthAndWordSpacing = GetWidthAndWordSpacing(@string);
-                return (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) * gs.GetHorizontalScaling
-                    () / 100f;
+                try {
+                    return (widthAndWordSpacing[0] * gs.GetFontSize() + gs.GetCharSpacing() + widthAndWordSpacing[1]) * gs.GetHorizontalScaling
+                        () / 100f;
+                }
+                catch (ArgumentNullException) {
+                    throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+                }
             }
             else {
                 float totalWidth = 0;
@@ -491,8 +596,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <returns>array of 2 items: first item is a character width, second item is a calculated word spacing.</returns>
         private float[] GetWidthAndWordSpacing(PdfString @string) {
             float[] result = new float[2];
-            result[0] = (float)((gs.GetFont().GetContentWidth(@string) * fontMatrix[0]));
-            result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
+            try {
+                result[0] = (float)((gs.GetFont().GetContentWidth(@string) * fontMatrix[0]));
+                result[1] = " ".Equals(@string.GetValue()) ? gs.GetWordSpacing() : 0;
+            }
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
             return result;
         }
 
@@ -525,7 +635,12 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             String stringValue = @string.GetValue();
             for (int i = 0; i < stringValue.Length; i++) {
                 PdfString newString = new PdfString(stringValue.JSubstring(i, i + 1), @string.GetEncoding());
-                String text = gs.GetFont().Decode(newString);
+                try {
+                    String text = gs.GetFont().Decode(newString);
+                }
+                catch (ArgumentNullException) {
+                    throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+                }
                 if (text.Length == 0 && i < stringValue.Length - 1) {
                     newString = new PdfString(stringValue.JSubstring(i, i + 2), @string.GetEncoding());
                     i++;
@@ -536,16 +651,21 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         }
 
         private float[] GetAscentDescent() {
-            float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender();
-            float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender();
-            // If descent is positive, we consider it a bug and fix it
-            if (descent > 0) {
-                descent = -descent;
+            try {
+                float ascent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoAscender();
+                float descent = gs.GetFont().GetFontProgram().GetFontMetrics().GetTypoDescender();
+                // If descent is positive, we consider it a bug and fix it
+                if (descent > 0) {
+                    descent = -descent;
+                }
+                float scale = ascent - descent < 700 ? ascent - descent : 1000;
+                descent = descent / scale * gs.GetFontSize();
+                ascent = ascent / scale * gs.GetFontSize();
+                return new float[] { ascent, descent };
             }
-            float scale = ascent - descent < 700 ? ascent - descent : 1000;
-            descent = descent / scale * gs.GetFontSize();
-            ascent = ascent / scale * gs.GetFontSize();
-            return new float[] { ascent, descent };
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
     }
 }
