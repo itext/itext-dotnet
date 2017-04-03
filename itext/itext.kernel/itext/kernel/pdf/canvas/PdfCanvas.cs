@@ -1939,8 +1939,9 @@ namespace iText.Kernel.Pdf.Canvas {
             if (tagReference.GetRole() == null) {
                 return this;
             }
-            CanvasTag tag = new CanvasTag(tagReference.GetRole(), tagReference.CreateNextMcid());
-            tag.SetProperties(tagReference.GetProperties());
+            CanvasTag tag = new CanvasTag(tagReference.GetRole());
+            tag.SetProperties(tagReference.GetProperties()).AddProperty(PdfName.MCID, new PdfNumber(tagReference.CreateNextMcid
+                ()));
             return OpenTag(tag);
         }
 

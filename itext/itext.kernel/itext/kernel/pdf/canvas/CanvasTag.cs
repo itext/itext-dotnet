@@ -126,9 +126,9 @@ namespace iText.Kernel.Pdf.Canvas {
         }
 
         /// <summary>
-        /// Adds a dictionary of properties to the
+        /// Sets a dictionary of properties to the
         /// <see cref="CanvasTag">tag</see>
-        /// 's properties.
+        /// 's properties. All existing properties (if any) will be lost.
         /// </summary>
         /// <param name="properties">a dictionary</param>
         /// <returns>
@@ -136,9 +136,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <see cref="CanvasTag"/>
         /// </returns>
         public virtual iText.Kernel.Pdf.Canvas.CanvasTag SetProperties(PdfDictionary properties) {
-            if (properties != null) {
-                this.properties = properties;
-            }
+            this.properties = properties;
             return this;
         }
 
