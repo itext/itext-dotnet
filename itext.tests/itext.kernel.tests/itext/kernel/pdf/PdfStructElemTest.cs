@@ -315,6 +315,43 @@ namespace iText.Kernel.Pdf {
 
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.VERSION_INCOMPATIBILITY_FOR_DICTIONARY_ENTRY, Count = 5)]
+        public virtual void StructElemTest07() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "structElemTest07.pdf");
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            PdfStructElem doc = document.GetStructTreeRoot().AddKid(new PdfStructElem(document, PdfName.Document));
+            PdfPage page = document.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.BeginText();
+            canvas.SetFontAndSize(PdfFontFactory.CreateFont(FontConstants.COURIER), 24);
+            canvas.SetTextMatrix(1, 0, 0, 1, 32, 512);
+            PdfStructElem paragraph = doc.AddKid(new PdfStructElem(document, PdfName.P));
+            PdfStructElem span1 = paragraph.AddKid(new PdfStructElem(document, PdfName.Span, page));
+            canvas.OpenTag(new CanvasTag(span1.AddKid(new PdfMcrNumber(page, span1))));
+            canvas.ShowText("Hello ");
+            canvas.CloseTag();
+            PdfStructElem span2 = paragraph.AddKid(new PdfStructElem(document, new PdfName("Chunk"), page));
+            canvas.OpenTag(new CanvasTag(span2.AddKid(new PdfMcrNumber(page, span2))));
+            canvas.ShowText("World");
+            canvas.CloseTag();
+            canvas.EndText();
+            canvas.Release();
+            PdfNamespace @namespace = new PdfNamespace("http://www.w3.org/1999/xhtml");
+            span1.SetNamespace(@namespace);
+            span1.AddRef(span2);
+            span1.SetPhoneticAlphabet(PdfName.ipa);
+            span1.SetPhoneme(new PdfString("Heeeelllloooooo"));
+            @namespace.AddNamespaceRoleMapping(PdfName.Span, PdfName.Span);
+            document.GetStructTreeRoot().AddNamespace(@namespace);
+            page.Flush();
+            document.Close();
+            CompareResult("structElemTest07.pdf", "cmp_structElemTest07.pdf", "diff_structElem_07_");
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.SOURCE_DOCUMENT_HAS_ACROFORM_DICTIONARY)]
         public virtual void StructTreeCopyingTest01() {
             PdfDocument source = new PdfDocument(new PdfReader(sourceFolder + "iphone_user_guide.pdf"));

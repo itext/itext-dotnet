@@ -1695,11 +1695,11 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName ZapfDingbats = new iText.Kernel.Pdf.PdfName("ZapfDingbats"
             );
 
-        public static readonly iText.Kernel.Pdf.PdfName Zoom = CreateDirectName("Zoom");
-
         public static readonly iText.Kernel.Pdf.PdfName zh_Latn_pinyin = CreateDirectName("zh-Latn-pinyin");
 
         public static readonly iText.Kernel.Pdf.PdfName zh_Latn_wadegile = CreateDirectName("zh-Latn-wadegile");
+
+        public static readonly iText.Kernel.Pdf.PdfName Zoom = CreateDirectName("Zoom");
 
         protected internal String value = null;
 

@@ -208,8 +208,10 @@ namespace iText.Kernel.Pdf.Tagging {
                     ++insertIndex;
                 }
             }
-            destDocument.GetStructTreeRoot().GetNamespacesObject().AddAll(structElemCopyingParams.GetCopiedNamespaces(
-                ));
+            if (!structElemCopyingParams.GetCopiedNamespaces().IsEmpty()) {
+                destDocument.GetStructTreeRoot().GetNamespacesObject().AddAll(structElemCopyingParams.GetCopiedNamespaces(
+                    ));
+            }
         }
 
         private static PdfDictionary CopyObject(PdfDictionary source, StructureTreeCopier.StructElemCopyingParams 

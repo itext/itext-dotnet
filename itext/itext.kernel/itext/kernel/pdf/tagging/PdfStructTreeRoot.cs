@@ -211,6 +211,8 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfArray namespacesArray = GetPdfObject().GetAsArray(PdfName.Namespaces);
             if (namespacesArray == null) {
                 namespacesArray = new PdfArray();
+                VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Namespaces, PdfName
+                    .StructTreeRoot);
                 GetPdfObject().Put(PdfName.Namespaces, namespacesArray);
                 SetModified();
             }
@@ -268,6 +270,8 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
             if (pronunciationLexicons == null) {
                 pronunciationLexicons = new PdfArray();
+                VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.PronunciationLexicon
+                    , PdfName.StructTreeRoot);
                 GetPdfObject().Put(PdfName.PronunciationLexicon, pronunciationLexicons);
             }
             pronunciationLexicons.Add(pronunciationLexiconFileSpec.GetPdfObject());
