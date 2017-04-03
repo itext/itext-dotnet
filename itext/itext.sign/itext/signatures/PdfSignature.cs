@@ -64,6 +64,29 @@ namespace iText.Signatures {
             Put(PdfName.SubFilter, subFilter);
         }
 
+        public PdfSignature(PdfDictionary sigDictionary)
+            : base(sigDictionary) {
+            PdfString contents = GetPdfObject().GetAsString(PdfName.Contents);
+            if (contents != null) {
+                contents.MarkAsUnencryptedObject();
+            }
+        }
+
+        /// <summary>A name that describes the encoding of the signature value and key information in the signature dictionary.
+        ///     </summary>
+        /// <returns>
+        /// a
+        /// <see cref="iText.Kernel.Pdf.PdfName"/>
+        /// which usually has a value either
+        /// <see cref="iText.Kernel.Pdf.PdfName.Adbe_pkcs7_detached"/>
+        /// or
+        /// <see cref="iText.Kernel.Pdf.PdfName.ETSI_CAdES_DETACHED"/>
+        /// .
+        /// </returns>
+        public virtual PdfName GetSubFilter() {
+            return GetPdfObject().GetAsName(PdfName.SubFilter);
+        }
+
         /// <summary>Sets the /ByteRange.</summary>
         /// <param name="range">an array of pairs of integers that specifies the byte range used in the digest calculation. A pair consists of the starting byte offset and the length
         ///     </param>
@@ -75,10 +98,24 @@ namespace iText.Signatures {
             Put(PdfName.ByteRange, array);
         }
 
+        /// <summary>Gets the /ByteRange.</summary>
+        /// <returns>an array of pairs of integers that specifies the byte range used in the digest calculation. A pair consists of the starting byte offset and the length.
+        ///     </returns>
+        public virtual PdfArray GetByteRange() {
+            return GetPdfObject().GetAsArray(PdfName.ByteRange);
+        }
+
         /// <summary>Sets the /Contents value to the specified byte[].</summary>
         /// <param name="contents">a byte[] representing the digest</param>
         public virtual void SetContents(byte[] contents) {
-            Put(PdfName.Contents, new PdfString(contents).SetHexWriting(true));
+            PdfString contentsString = new PdfString(contents).SetHexWriting(true);
+            contentsString.MarkAsUnencryptedObject();
+            Put(PdfName.Contents, contentsString);
+        }
+
+        /// <summary>Gets the /Contents entry value.</summary>
+        public virtual PdfString GetContents() {
+            return GetPdfObject().GetAsString(PdfName.Contents);
         }
 
         /// <summary>Sets the /Cert value of this signature.</summary>
@@ -87,10 +124,28 @@ namespace iText.Signatures {
             Put(PdfName.Cert, new PdfString(cert));
         }
 
+        /// <summary>Gets the /Cert entry value of this signature.</summary>
+        public virtual PdfString GetCert() {
+            return GetPdfObject().GetAsString(PdfName.Cert);
+        }
+
         /// <summary>Sets the /Name of the person signing the document.</summary>
         /// <param name="name">name of the person signing the document</param>
         public virtual void SetName(String name) {
             Put(PdfName.Name, new PdfString(name, PdfEncodings.UNICODE_BIG));
+        }
+
+        /// <summary>gets the /Name of the person signing the document.</summary>
+        /// <returns>name of the person signing the document.</returns>
+        public virtual String GetName() {
+            PdfString nameStr = GetPdfObject().GetAsString(PdfName.Name);
+            PdfName nameName = GetPdfObject().GetAsName(PdfName.Name);
+            if (nameStr != null) {
+                return nameStr.ToUnicodeString();
+            }
+            else {
+                return nameName != null ? nameName.GetValue() : null;
+            }
         }
 
         /// <summary>Sets the /M value.</summary>
@@ -100,16 +155,39 @@ namespace iText.Signatures {
             Put(PdfName.M, date.GetPdfObject());
         }
 
+        /// <summary>Gets the /M value.</summary>
+        /// <remarks>Gets the /M value. Should only be used if the time of signing is not available in the signature.</remarks>
+        /// <returns>
+        /// 
+        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// which denotes time of signing.
+        /// </returns>
+        public virtual PdfString GetDate() {
+            return GetPdfObject().GetAsString(PdfName.M);
+        }
+
         /// <summary>Sets the /Location value.</summary>
         /// <param name="location">physical location of signing</param>
         public virtual void SetLocation(String location) {
             Put(PdfName.Location, new PdfString(location, PdfEncodings.UNICODE_BIG));
         }
 
+        /// <summary>Gets the /Location entry value.</summary>
+        /// <returns>physical location of signing.</returns>
+        public virtual String GetLocation() {
+            PdfString locationStr = GetPdfObject().GetAsString(PdfName.Location);
+            return locationStr != null ? locationStr.ToUnicodeString() : null;
+        }
+
         /// <summary>Sets the /Reason value.</summary>
         /// <param name="reason">reason for signing</param>
         public virtual void SetReason(String reason) {
             Put(PdfName.Reason, new PdfString(reason, PdfEncodings.UNICODE_BIG));
+        }
+
+        public virtual String GetReason() {
+            PdfString reasonStr = GetPdfObject().GetAsString(PdfName.Reason);
+            return reasonStr != null ? reasonStr.ToUnicodeString() : null;
         }
 
         /// <summary>
@@ -132,6 +210,7 @@ namespace iText.Signatures {
 
         public virtual iText.Signatures.PdfSignature Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 

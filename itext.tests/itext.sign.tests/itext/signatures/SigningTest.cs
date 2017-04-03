@@ -53,14 +53,16 @@ using Org.BouncyCastle.Pkcs;
 
 namespace iText.Signatures {
     public class SigningTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
-                                                         .TestDirectory) + "/resources/itext/signatures/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(
+                                                         NUnit.Framework.TestContext.CurrentContext
+                                                             .TestDirectory) + "/resources/itext/signatures/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
                                                               .TestDirectory + "/test/itext/signatures/";
 
-        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
-                                                         .TestDirectory) + "/resources/itext/signatures/ks";
+        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(
+                                                         NUnit.Framework.TestContext.CurrentContext
+                                                             .TestDirectory) + "/resources/itext/signatures/ks";
 
         public static readonly char[] password = "password".ToCharArray();
 
@@ -188,7 +190,7 @@ namespace iText.Signatures {
 
         [NUnit.Framework.Test]
         public virtual void SigningDocumentAppendModeIndirectPageAnnots() {
-            String file =  "AnnotsIndirect.pdf";
+            String file = "AnnotsIndirect.pdf";
             String src = sourceFolder + file;
             String dest = destinationFolder + file;
 
@@ -197,8 +199,42 @@ namespace iText.Signatures {
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
                 .CADES, "Test 1", "TestCity", rect, false, true);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file, destinationFolder,
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file,
+                destinationFolder,
                 "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+
+
+        [NUnit.Framework.Test]
+        public void SignEncryptedDoc() {
+            String fileName = "encrypted.pdf";
+            String src = sourceFolder + fileName;
+            String dest = destinationFolder + "signed_" + fileName;
+
+            String fieldName = "Signature1";
+
+            byte[] ownerPass = iText.IO.Util.EncodingUtil.ISO_8859_1.GetBytes("World");
+            PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(ownerPass));
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), true);
+
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance()
+                .SetReason("Test1")
+                .SetLocation("TestCity");
+
+            signer.SetFieldName(fieldName);
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+
+
+            LtvVerifier verifier =
+                new LtvVerifier(new PdfDocument(new PdfReader(dest, new ReaderProperties().SetPassword(ownerPass))));
+            verifier.SetVerifyRootCertificate(false);
+            verifier.Verify(null);
+
+            // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
         }
 
 
@@ -206,14 +242,14 @@ namespace iText.Signatures {
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate
             [] chain, ICipherParameters pk, String digestAlgorithm, PdfSigner.CryptoStandard
-                subfilter, String reason, String location, Rectangle rectangleForNewField, bool
-                    setReuseAppearance, bool isAppendMode) {
+            subfilter, String reason, String location, Rectangle rectangleForNewField, bool
+            setReuseAppearance, bool isAppendMode) {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode
-                );
+            );
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason
-                ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
+            ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
                 appearance.SetPageRect(rectangleForNewField);
             }

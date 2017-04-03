@@ -602,17 +602,16 @@ namespace iText.Signatures {
         public static void SignDeferred(PdfDocument document, String fieldName, Stream outs, IExternalSignatureContainer
              externalSignatureContainer) {
             SignatureUtil signatureUtil = new SignatureUtil(document);
-            PdfDictionary v = signatureUtil.GetSignatureDictionary(fieldName);
-            if (v == null) {
+            PdfSignature signature = signatureUtil.GetSignature(fieldName);
+            if (signature == null) {
                 throw new PdfException(PdfException.ThereIsNoFieldInTheDocumentWithSuchName1).SetMessageParams(fieldName);
             }
             if (!signatureUtil.SignatureCoversWholeDocument(fieldName)) {
-                new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument).SetMessageParams(fieldName
-                    );
+                throw new PdfException(PdfException.SignatureWithName1IsNotTheLastItDoesntCoverWholeDocument).SetMessageParams
+                    (fieldName);
             }
-            PdfArray b = v.GetAsArray(PdfName.ByteRange);
+            PdfArray b = signature.GetByteRange();
             long[] gaps = SignatureUtil.AsLongArray(b);
-            // TODO: refactor
             if (b.Size() != 4 || gaps[0] != 0) {
                 throw new ArgumentException("Single exclusion space supported");
             }

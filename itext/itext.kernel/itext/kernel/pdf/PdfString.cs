@@ -76,18 +76,15 @@ namespace iText.Kernel.Pdf {
 
         protected internal bool hexWriting = false;
 
-        private int decryptInfoNum = 0;
+        private int decryptInfoNum;
 
-        private int decryptInfoGen = 0;
+        private int decryptInfoGen;
+
+        private PdfEncryption decryption;
 
         public PdfString(String value, String encoding)
             : base() {
-            /*
-            * using for decryption
-            * */
-            /*
-            * using for decryption
-            * */
+            // if it's not null: content shall contain encrypted data; value shall be null
             this.value = value;
             this.encoding = encoding;
         }
@@ -131,8 +128,8 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.PdfString SetHexWriting(bool hexWriting) {
             if (value == null) {
                 GenerateValue();
-                content = null;
             }
+            content = null;
             this.hexWriting = hexWriting;
             return this;
         }
@@ -158,8 +155,8 @@ namespace iText.Kernel.Pdf {
         public virtual void SetEncoding(String encoding) {
             if (value == null) {
                 GenerateValue();
-                this.content = null;
             }
+            this.content = null;
             this.encoding = encoding;
         }
 
@@ -177,7 +174,7 @@ namespace iText.Kernel.Pdf {
             if (content == null) {
                 GenerateContent();
             }
-            byte[] b = PdfTokenizer.DecodeStringContent(content, hexWriting);
+            byte[] b = DecodeContent();
             if (b.Length >= 2 && b[0] == (byte)0xFE && b[1] == (byte)0xFF) {
                 return PdfEncodings.ConvertToString(b, PdfEncodings.UNICODE_BIG);
             }
@@ -264,7 +261,7 @@ namespace iText.Kernel.Pdf {
 
         public override String ToString() {
             if (value == null) {
-                return iText.IO.Util.JavaUtil.GetStringForBytes(PdfTokenizer.DecodeStringContent(content, hexWriting));
+                return iText.IO.Util.JavaUtil.GetStringForBytes(DecodeContent());
             }
             else {
                 return GetValue();
@@ -278,9 +275,23 @@ namespace iText.Kernel.Pdf {
             return 31 * result + (e != null ? e.GetHashCode() : 0);
         }
 
+        public virtual void MarkAsUnencryptedObject() {
+            SetState(PdfObject.UNENCRYPTED);
+        }
+
+        internal virtual void SetDecryption(int decryptInfoNum, int decryptInfoGen, PdfEncryption decryption) {
+            this.decryptInfoNum = decryptInfoNum;
+            this.decryptInfoGen = decryptInfoGen;
+            this.decryption = decryption;
+        }
+
         protected internal virtual void GenerateValue() {
             System.Diagnostics.Debug.Assert(content != null, "No byte[] content to generate value");
-            value = PdfEncodings.ConvertToString(PdfTokenizer.DecodeStringContent(content, hexWriting), null);
+            value = PdfEncodings.ConvertToString(DecodeContent(), null);
+            if (decryption != null) {
+                decryption = null;
+                content = null;
+            }
         }
 
         protected internal override void GenerateContent() {
@@ -292,6 +303,8 @@ namespace iText.Kernel.Pdf {
         /// <c>PdfString</c>
         /// .
         /// </summary>
+        [System.ObsoleteAttribute(@"use DecodeContent() or GetValue() methods, they will decrypt bytes if they are encrypted. Will be removed in iText 7.1"
+            )]
         protected internal virtual iText.Kernel.Pdf.PdfString Decrypt(PdfEncryption decrypt) {
             if (decrypt != null) {
                 System.Diagnostics.Debug.Assert(content != null, "No byte content to decrypt value");
@@ -299,6 +312,7 @@ namespace iText.Kernel.Pdf {
                 content = null;
                 decrypt.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
                 value = PdfEncodings.ConvertToString(decrypt.DecryptByteArray(decodedContent), null);
+                decryption = null;
             }
             return this;
         }
@@ -313,12 +327,29 @@ namespace iText.Kernel.Pdf {
         /// <param name="encrypt">@see PdfEncryption</param>
         /// <returns>true if value was encrypted, otherwise false.</returns>
         protected internal virtual bool Encrypt(PdfEncryption encrypt) {
-            if (encrypt != null && !encrypt.IsEmbeddedFilesOnly()) {
-                byte[] b = encrypt.EncryptByteArray(GetValueBytes());
-                content = EncodeBytes(b);
-                return true;
+            if (CheckState(PdfObject.UNENCRYPTED)) {
+                return false;
+            }
+            if (encrypt != decryption) {
+                if (decryption != null) {
+                    GenerateValue();
+                }
+                if (encrypt != null && !encrypt.IsEmbeddedFilesOnly()) {
+                    byte[] b = encrypt.EncryptByteArray(GetValueBytes());
+                    content = EncodeBytes(b);
+                    return true;
+                }
             }
             return false;
+        }
+
+        protected internal virtual byte[] DecodeContent() {
+            byte[] decodedBytes = PdfTokenizer.DecodeStringContent(content, hexWriting);
+            if (decryption != null && !CheckState(PdfObject.UNENCRYPTED)) {
+                decryption.SetHashKeyForNextObject(decryptInfoNum, decryptInfoGen);
+                decodedBytes = decryption.DecryptByteArray(decodedBytes);
+            }
+            return decodedBytes;
         }
 
         /// <summary>Escape special symbols or convert to hexadecimal string.</summary>
@@ -357,14 +388,9 @@ namespace iText.Kernel.Pdf {
             iText.Kernel.Pdf.PdfString @string = (iText.Kernel.Pdf.PdfString)from;
             value = @string.value;
             hexWriting = @string.hexWriting;
-        }
-
-        internal virtual void SetDecryptInfoNum(int decryptInfoNum) {
-            this.decryptInfoNum = decryptInfoNum;
-        }
-
-        internal virtual void SetDecryptInfoGen(int decryptInfoGen) {
-            this.decryptInfoGen = decryptInfoGen;
+            decryption = @string.decryption;
+            decryptInfoNum = @string.decryptInfoNum;
+            decryptInfoGen = @string.decryptInfoGen;
         }
     }
 }

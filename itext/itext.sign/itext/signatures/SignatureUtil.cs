@@ -87,53 +87,49 @@ namespace iText.Signatures {
         /// <param name="provider">the provider or null for the default provider</param>
         /// <returns>PdfPKCS7 object to continue the verification</returns>
         public virtual PdfPKCS7 VerifySignature(String name) {
-            PdfDictionary v = GetSignatureDictionary(name);
-            if (v == null) {
+            PdfSignature signature = GetSignature(name);
+            if (signature == null) {
                 return null;
             }
             try {
-                PdfName sub = v.GetAsName(PdfName.SubFilter);
-                PdfString contents = v.GetAsString(PdfName.Contents);
+                PdfName sub = signature.GetSubFilter();
+                PdfString contents = signature.GetContents();
                 PdfPKCS7 pk = null;
                 if (sub.Equals(PdfName.Adbe_x509_rsa_sha1)) {
-                    PdfString cert = v.GetAsString(PdfName.Cert);
+                    PdfString cert = signature.GetPdfObject().GetAsString(PdfName.Cert);
                     if (cert == null) {
-                        cert = v.GetAsArray(PdfName.Cert).GetAsString(0);
+                        cert = signature.GetPdfObject().GetAsArray(PdfName.Cert).GetAsString(0);
                     }
                     pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), cert.GetValueBytes());
                 }
                 else {
                     pk = new PdfPKCS7(PdfEncodings.ConvertToBytes(contents.GetValue(), null), sub);
                 }
-                UpdateByteRange(pk, v);
-                PdfString str = v.GetAsString(PdfName.M);
-                if (str != null) {
-                    pk.SetSignDate(PdfDate.Decode(str.ToString()));
+                UpdateByteRange(pk, signature);
+                PdfString date = signature.GetDate();
+                if (date != null) {
+                    pk.SetSignDate(PdfDate.Decode(date.ToString()));
                 }
-                PdfObject obj = v.Get(PdfName.Name);
-                if (obj != null) {
-                    if (obj.IsString()) {
-                        pk.SetSignName(((PdfString)obj).ToUnicodeString());
-                    }
-                    else {
-                        if (obj.IsName()) {
-                            pk.SetSignName(((PdfName)obj).GetValue());
-                        }
-                    }
+                String signName = signature.GetName();
+                pk.SetSignName(signName);
+                String reason = signature.GetReason();
+                if (reason != null) {
+                    pk.SetReason(reason);
                 }
-                str = v.GetAsString(PdfName.Reason);
-                if (str != null) {
-                    pk.SetReason(str.ToUnicodeString());
-                }
-                str = v.GetAsString(PdfName.Location);
-                if (str != null) {
-                    pk.SetLocation(str.ToUnicodeString());
+                String location = signature.GetLocation();
+                if (location != null) {
+                    pk.SetLocation(location);
                 }
                 return pk;
             }
             catch (Exception e) {
                 throw new PdfException(e);
             }
+        }
+
+        public virtual PdfSignature GetSignature(String name) {
+            PdfDictionary sigDict = GetSignatureDictionary(name);
+            return sigDict != null ? new PdfSignature(sigDict) : null;
         }
 
         /// <summary>Gets the signature dictionary, the one keyed by /V.</summary>
@@ -153,8 +149,8 @@ namespace iText.Signatures {
         }
 
         /* Updates the /ByteRange with the provided value */
-        private void UpdateByteRange(PdfPKCS7 pkcs7, PdfDictionary v) {
-            PdfArray b = v.GetAsArray(PdfName.ByteRange);
+        private void UpdateByteRange(PdfPKCS7 pkcs7, PdfSignature signature) {
+            PdfArray b = signature.GetByteRange();
             RandomAccessFileOrArray rf = document.GetReader().GetSafeFile();
             Stream rg = null;
             try {
@@ -204,6 +200,9 @@ namespace iText.Signatures {
                 PdfString contents = v.GetAsString(PdfName.Contents);
                 if (contents == null) {
                     continue;
+                }
+                else {
+                    contents.MarkAsUnencryptedObject();
                 }
                 PdfArray ro = v.GetAsArray(PdfName.ByteRange);
                 if (ro == null) {
