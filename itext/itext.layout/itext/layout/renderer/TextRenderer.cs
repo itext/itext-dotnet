@@ -799,6 +799,7 @@ namespace iText.Layout.Renderer {
         /// <param name="leftPos">the leftmost end of the GlyphLine</param>
         /// <param name="rightPos">the rightmost end of the GlyphLine</param>
         public virtual void SetText(GlyphLine text, int leftPos, int rightPos) {
+            this.strToBeConverted = null;
             this.text = new GlyphLine(text);
             this.text.start = leftPos;
             this.text.end = rightPos;
@@ -832,7 +833,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iText.Layout.Renderer.TextRenderer((Text)modelElement, null);
+            return new iText.Layout.Renderer.TextRenderer((Text)modelElement);
         }
 
         internal virtual IList<int[]> GetReversedRanges() {
