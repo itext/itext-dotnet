@@ -409,8 +409,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// In case it isn't applicable pass any <CODE>byte</CODE> value.
         /// </param>
         protected internal virtual void PaintPath(int operation, int rule) {
-            PathRenderInfo renderInfo = new PathRenderInfo(currentPath, operation, rule, isClip, clippingRule, new ParserGraphicsState
-                (GetGraphicsState()));
+            PathRenderInfo renderInfo = new PathRenderInfo(currentPath, operation, rule, isClip, clippingRule, GetGraphicsState
+                ());
             EventOccurred(renderInfo, EventType.RENDER_PATH);
             if (isClip) {
                 isClip = false;
@@ -507,8 +507,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>Displays text.</summary>
         /// <param name="string">the text to display</param>
         private void DisplayPdfString(PdfString @string) {
-            TextRenderInfo renderInfo = new TextRenderInfo(@string, new ParserGraphicsState(GetGraphicsState()), textMatrix
-                , markedContentStack);
+            TextRenderInfo renderInfo = new TextRenderInfo(@string, GetGraphicsState(), textMatrix, markedContentStack
+                );
             textMatrix = new Matrix(renderInfo.GetUnscaledWidth(), 0).Multiply(textMatrix);
             EventOccurred(renderInfo, EventType.RENDER_TEXT);
         }

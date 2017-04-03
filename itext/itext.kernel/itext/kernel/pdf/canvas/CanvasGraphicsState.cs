@@ -58,6 +58,7 @@ namespace iText.Kernel.Pdf.Canvas {
         ///     </summary>
         /// <remarks>
         /// The current transformation matrix, which maps positions from user coordinates to device coordinates.
+        /// <p>
         /// We use an identity matrix as a default value, but in spec a default value is:
         /// "a matrix that transforms default user coordinates to device coordinates".
         /// </remarks>
@@ -96,8 +97,10 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <summary>A description of the dash pattern to be used when paths are stroked.</summary>
         /// <remarks>
         /// A description of the dash pattern to be used when paths are stroked. Default value is solid line.
+        /// <p>
         /// The line dash pattern is expressed as an array of the form [ dashArray dashPhase ],
         /// where dashArray is itself an array and dashPhase is an integer.
+        /// <p>
         /// An empty dash array (first element in the array) and zero phase (second element in the array)
         /// can be used to restore the dash pattern to a solid line.
         /// </remarks>

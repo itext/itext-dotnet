@@ -263,7 +263,7 @@ namespace iText.Layout.Renderer {
             if (underlines != null) {
                 float? fontSize = renderer.GetPropertyAsFloat(Property.FONT_SIZE);
                 Underline underline = null;
-                if (underlines is IList && !((IList<Object>)underlines).IsEmpty() && ((IList)underlines)[0] is Underline) {
+                if (underlines is IList && ((IList)underlines).Count > 0 && ((IList)underlines)[0] is Underline) {
                     // in standard attributes only one text decoration could be described for an element. That's why we take only the first underline from the list.
                     underline = (Underline)((IList)underlines)[0];
                 }

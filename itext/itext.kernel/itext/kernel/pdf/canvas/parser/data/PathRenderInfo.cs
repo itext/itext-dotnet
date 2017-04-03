@@ -78,7 +78,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         private CanvasGraphicsState gs;
 
-        private bool preserveGraphicsState;
+        private bool graphicsStateIsPreserved;
 
         /// <param name="path">The path to be rendered.</param>
         /// <param name="operation">
@@ -123,6 +123,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvasConstants.FillingRule.NONZERO_WINDING"/>
         /// is used by default.
         /// With this constructor path is considered as not modifying clipping path.
+        /// <p>
         /// See
         /// <see cref="PathRenderInfo(iText.Kernel.Geom.Path, int, int, bool, int, iText.Kernel.Pdf.Canvas.CanvasGraphicsState)
         ///     "/>
@@ -214,19 +215,17 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
             return gs.GetFillColor();
         }
 
-        public virtual bool IsPreserveGraphicsState() {
-            return preserveGraphicsState;
+        public virtual bool IsGraphicsStatePreserved() {
+            return graphicsStateIsPreserved;
         }
 
         public virtual void PreserveGraphicsState() {
-            this.preserveGraphicsState = true;
+            this.graphicsStateIsPreserved = true;
+            gs = new CanvasGraphicsState(gs);
         }
 
         public virtual void ReleaseGraphicsState() {
-            if (preserveGraphicsState) {
-                gs = new CanvasGraphicsState(gs);
-            }
-            else {
+            if (!graphicsStateIsPreserved) {
                 gs = null;
             }
         }
