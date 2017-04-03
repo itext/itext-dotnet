@@ -631,23 +631,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
         /// <param name="string">PDF string to be splitted.</param>
         /// <returns>splitted PDF string.</returns>
         private PdfString[] SplitString(PdfString @string) {
-            IList<PdfString> strings = new List<PdfString>();
-            String stringValue = @string.GetValue();
-            for (int i = 0; i < stringValue.Length; i++) {
-                PdfString newString = new PdfString(stringValue.JSubstring(i, i + 1), @string.GetEncoding());
-                try {
+            try {
+                IList<PdfString> strings = new List<PdfString>();
+                String stringValue = @string.GetValue();
+                for (int i = 0; i < stringValue.Length; i++) {
+                    PdfString newString = new PdfString(stringValue.JSubstring(i, i + 1), @string.GetEncoding());
                     String text = gs.GetFont().Decode(newString);
+                    if (text.Length == 0 && i < stringValue.Length - 1) {
+                        newString = new PdfString(stringValue.JSubstring(i, i + 2), @string.GetEncoding());
+                        i++;
+                    }
+                    strings.Add(newString);
                 }
-                catch (ArgumentNullException) {
-                    throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
-                }
-                if (text.Length == 0 && i < stringValue.Length - 1) {
-                    newString = new PdfString(stringValue.JSubstring(i, i + 2), @string.GetEncoding());
-                    i++;
-                }
-                strings.Add(newString);
+                return strings.ToArray(new PdfString[strings.Count]);
             }
-            return strings.ToArray(new PdfString[strings.Count]);
+            catch (ArgumentNullException) {
+                throw new InvalidOperationException(iText.IO.LogMessageConstant.GRAPHICS_STATE_WAS_DELETED);
+            }
         }
 
         private float[] GetAscentDescent() {
