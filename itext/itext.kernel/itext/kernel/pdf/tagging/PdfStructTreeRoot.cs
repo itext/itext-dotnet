@@ -129,13 +129,19 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void AddRoleMapping(PdfName fromRole, PdfName toRole) {
-            PdfObject prevVal = GetRoleMap().Put(fromRole, toRole);
+            PdfDictionary roleMap = GetRoleMap();
+            PdfObject prevVal = roleMap.Put(fromRole, toRole);
             if (prevVal != null && prevVal is PdfName) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
                 logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, prevVal
                     , toRole));
             }
-            SetModified();
+            if (roleMap.IsIndirect()) {
+                roleMap.SetModified();
+            }
+            else {
+                SetModified();
+            }
         }
 
         public virtual PdfDictionary GetRoleMap() {
@@ -211,7 +217,7 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfArray namespacesArray = GetPdfObject().GetAsArray(PdfName.Namespaces);
             if (namespacesArray == null) {
                 namespacesArray = new PdfArray();
-                VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Namespaces, PdfName
+                VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Namespaces, PdfName
                     .StructTreeRoot);
                 GetPdfObject().Put(PdfName.Namespaces, namespacesArray);
                 SetModified();
@@ -270,7 +276,7 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
             if (pronunciationLexicons == null) {
                 pronunciationLexicons = new PdfArray();
-                VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.PronunciationLexicon
+                VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.PronunciationLexicon
                     , PdfName.StructTreeRoot);
                 GetPdfObject().Put(PdfName.PronunciationLexicon, pronunciationLexicons);
             }

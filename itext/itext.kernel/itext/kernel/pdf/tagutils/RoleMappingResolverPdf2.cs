@@ -29,10 +29,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public virtual bool CurrentRoleIsStandard() {
-            bool stdRole17 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace._1_7) && StandardStructureNamespace
-                .RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace._1_7);
-            bool stdRole20 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace._2_0) && StandardStructureNamespace
-                .RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace._2_0);
+            bool stdRole17 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace.PDF_1_7) && StandardStructureNamespace
+                .RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace.PDF_1_7);
+            bool stdRole20 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace.PDF_2_0) && StandardStructureNamespace
+                .RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace.PDF_2_0);
             return stdRole17 || stdRole20;
         }
 

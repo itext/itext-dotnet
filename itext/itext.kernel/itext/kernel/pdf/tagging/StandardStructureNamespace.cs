@@ -13,19 +13,19 @@ namespace iText.Kernel.Pdf.Tagging {
     /// belongs to the standard or known domain-specific namespace.
     /// <p>See ISO 32000-2 14.8.6, "Standard structure namespaces"</p>
     /// </remarks>
-    public class StandardStructureNamespace {
-        private static ICollection<PdfName> STD_STRUCT_NAMESPACE_1_7_TYPES = new HashSet<PdfName>();
+    public sealed class StandardStructureNamespace {
+        private static readonly ICollection<PdfName> STD_STRUCT_NAMESPACE_1_7_TYPES;
 
-        private static ICollection<PdfName> STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<PdfName>();
+        private static readonly ICollection<PdfName> STD_STRUCT_NAMESPACE_2_0_TYPES;
 
         private static readonly PdfString MATH_ML = new PdfString("http://www.w3.org/1998/Math/MathML", null, true
             );
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 1.7</summary>
-        public static readonly PdfString _1_7 = new PdfString("http://www.iso.org/pdf/ssn", null, true);
+        public static readonly PdfString PDF_1_7 = new PdfString("http://www.iso.org/pdf/ssn", null, true);
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 2.0</summary>
-        public static readonly PdfString _2_0 = new PdfString("http://www.iso.org/pdf2/ssn", null, true);
+        public static readonly PdfString PDF_2_0 = new PdfString("http://www.iso.org/pdf2/ssn", null, true);
 
         static StandardStructureNamespace() {
             // other namespaces
@@ -55,7 +55,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// </remarks>
         /// <returns>the name of the default standard structure namespace.</returns>
         public static PdfString GetDefault() {
-            return _1_7;
+            return PDF_1_7;
         }
 
         /// <summary>
@@ -81,11 +81,11 @@ namespace iText.Kernel.Pdf.Tagging {
         /// if the given namespace name is not standard; true otherwise.
         /// </returns>
         public static bool RoleBelongsToStandardNamespace(PdfName role, PdfString standardNamespaceName) {
-            if (_1_7.Equals(standardNamespaceName)) {
+            if (PDF_1_7.Equals(standardNamespaceName)) {
                 return STD_STRUCT_NAMESPACE_1_7_TYPES.Contains(role);
             }
             else {
-                if (_2_0.Equals(standardNamespaceName)) {
+                if (PDF_2_0.Equals(standardNamespaceName)) {
                     return STD_STRUCT_NAMESPACE_2_0_TYPES.Contains(role) || IsHnRole(role);
                 }
             }

@@ -417,7 +417,7 @@ namespace iText.Layout.Renderer {
         }
 
         private static bool IsTagStructurePdf2(PdfNamespace @namespace) {
-            return @namespace != null && StandardStructureNamespace._2_0.Equals(@namespace.GetNamespaceName());
+            return @namespace != null && StandardStructureNamespace.PDF_2_0.Equals(@namespace.GetNamespaceName());
         }
 
         private static PdfNamespace GetActualNsForElem(AccessibilityProperties accessibilityProperties, TagTreePointer

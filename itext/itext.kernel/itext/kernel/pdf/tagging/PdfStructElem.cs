@@ -382,7 +382,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// to which the item of content, contained within this structure element, refers.
         /// </param>
         public virtual void AddRef(iText.Kernel.Pdf.Tagging.PdfStructElem @ref) {
-            VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Ref, PdfName.StructElem
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Ref, PdfName.StructElem
                 );
             PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
             if (refsArray == null) {
@@ -420,7 +420,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// in the default standard structure namespace.
         /// </param>
         public virtual void SetNamespace(PdfNamespace @namespace) {
-            VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.NS, PdfName.StructElem
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.NS, PdfName.StructElem
                 );
             if (@namespace != null) {
                 Put(PdfName.NS, @namespace.GetPdfObject());
@@ -444,7 +444,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// element and its children. This value is to be interpreted based on the PhoneticAlphabet attribute in effect.
         /// </param>
         public virtual void SetPhoneme(PdfString elementPhoneme) {
-            VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Phoneme, PdfName
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.Phoneme, PdfName
                 .StructElem);
             Put(PdfName.Phoneme, elementPhoneme);
         }
@@ -494,7 +494,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// Other values may be used.
         /// </param>
         public virtual void SetPhoneticAlphabet(PdfName phoneticAlphabet) {
-            VersionConforming.EnsurePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.PhoneticAlphabet
+            VersionConforming.ValidatePdfVersionForDictEntry(GetDocument(), PdfVersion.PDF_2_0, PdfName.PhoneticAlphabet
                 , PdfName.StructElem);
             Put(PdfName.PhoneticAlphabet, phoneticAlphabet);
         }

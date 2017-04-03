@@ -215,7 +215,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <p>
         /// By default, this value is defined based on the PDF document version and the existing tag structure inside
         /// a document. For the new empty PDF 2.0 documents this namespace is set to
-        /// <see cref="iText.Kernel.Pdf.Tagging.StandardStructureNamespace._2_0"/>
+        /// <see cref="iText.Kernel.Pdf.Tagging.StandardStructureNamespace.PDF_2_0"/>
         /// .
         /// </p>
         /// <p>This value has meaning only for the PDF documents of version <b>2.0 and higher</b>.</p>
@@ -743,13 +743,13 @@ namespace iText.Kernel.Pdf.Tagutils {
                     logger.Warn(String.Format(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD, firstKid
                         .GetRole().GetValue(), nsStr));
                 }
-                if (resolvedMapping == null || !StandardStructureNamespace._1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
+                if (resolvedMapping == null || !StandardStructureNamespace.PDF_1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
                     ())) {
-                    documentDefaultNamespace = FetchNamespace(StandardStructureNamespace._2_0);
+                    documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.PDF_2_0);
                 }
             }
             else {
-                documentDefaultNamespace = FetchNamespace(StandardStructureNamespace._2_0);
+                documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.PDF_2_0);
             }
         }
 

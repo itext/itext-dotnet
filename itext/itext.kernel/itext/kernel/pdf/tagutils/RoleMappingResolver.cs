@@ -21,7 +21,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public virtual bool CurrentRoleIsStandard() {
-            return StandardStructureNamespace.RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace._1_7
+            return StandardStructureNamespace.RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace.PDF_1_7
                 );
         }
 

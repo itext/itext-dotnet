@@ -85,8 +85,8 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (kidIsDocument && kid.GetNamespace() != null && context.TargetTagStructureVersionIs2()) {
                     // we flatten only tags of document role in standard structure namespace
                     PdfString kidNamespaceName = kid.GetNamespace().GetNamespaceName();
-                    kidIsDocument = StandardStructureNamespace._1_7.Equals(kidNamespaceName) || StandardStructureNamespace._2_0
-                        .Equals(kidNamespaceName);
+                    kidIsDocument = StandardStructureNamespace.PDF_1_7.Equals(kidNamespaceName) || StandardStructureNamespace.
+                        PDF_2_0.Equals(kidNamespaceName);
                 }
                 if (isBeforeOriginalRoot) {
                     rootTagElement.AddKid(originalRootKidsIndex, kid);
@@ -129,7 +129,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             String mappingRole = " to ";
             if (mapping != null) {
                 mappingRole += "\"" + mapping.GetRole() + "\"";
-                if (mapping.GetNamespace() != null && !StandardStructureNamespace._1_7.Equals(mapping.GetNamespace().GetNamespaceName
+                if (mapping.GetNamespace() != null && !StandardStructureNamespace.PDF_1_7.Equals(mapping.GetNamespace().GetNamespaceName
                     ())) {
                     mappingRole += " in \"" + mapping.GetNamespace().GetNamespaceName() + "\" namespace";
                 }
