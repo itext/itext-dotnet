@@ -119,6 +119,21 @@ namespace iText.Kernel.Pdf.Tagutils {
             : this(document, document.GetPdfVersion()) {
         }
 
+        /// <summary>
+        /// Do not use this constructor, instead use
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.GetTagStructureContext()"/>
+        /// method.
+        /// <br/><br/>
+        /// Creates
+        /// <c>TagStructureContext</c>
+        /// for document. There shall be only one instance of this
+        /// class per
+        /// <c>PdfDocument</c>
+        /// .
+        /// </summary>
+        /// <param name="document">the document which tag structure will be manipulated with this class.</param>
+        /// <param name="tagStructureTargetVersion">the version of the pdf standard to which the tag structure shall adhere.
+        ///     </param>
         public TagStructureContext(PdfDocument document, PdfVersion tagStructureTargetVersion) {
             this.document = document;
             if (!document.IsTagged()) {

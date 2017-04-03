@@ -58,6 +58,12 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         protected internal IList<PdfDictionary> attributesList = new List<PdfDictionary>();
 
+        protected internal String phoneme;
+
+        protected internal PdfName phoneticAlphabet;
+
+        protected internal IList<PdfDictionary> refs = new List<PdfDictionary>();
+
         public virtual String GetLanguage() {
             return language;
         }
@@ -108,6 +114,42 @@ namespace iText.Kernel.Pdf.Tagutils {
             return attributesList;
         }
 
+        public virtual AccessibilityProperties SetPhoneme(String phoneme) {
+            this.phoneme = phoneme;
+            return this;
+        }
+
+        public virtual String GetPhoneme() {
+            return this.phoneme;
+        }
+
+        public virtual AccessibilityProperties SetPhoneticAlphabet(PdfName phoneticAlphabet) {
+            this.phoneticAlphabet = phoneticAlphabet;
+            return this;
+        }
+
+        public virtual PdfName GetPhoneticAlphabet() {
+            return this.phoneticAlphabet;
+        }
+
+        public virtual AccessibilityProperties AddRef(TagTreePointer treePointer) {
+            refs.Add(treePointer.GetCurrentStructElem().GetPdfObject());
+            return this;
+        }
+
+        public virtual IList<TagTreePointer> GetRefsList() {
+            IList<TagTreePointer> refsList = new List<TagTreePointer>();
+            foreach (PdfDictionary @ref in refs) {
+                refsList.Add(new TagTreePointer(new PdfStructElem(@ref)));
+            }
+            return refsList;
+        }
+
+        public virtual AccessibilityProperties ClearRefs() {
+            refs.Clear();
+            return this;
+        }
+
         internal virtual void SetToStructElem(PdfStructElem elem) {
             if (GetActualText() != null) {
                 elem.SetActualText(new PdfString(GetActualText()));
@@ -127,6 +169,15 @@ namespace iText.Kernel.Pdf.Tagutils {
                 PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList, elem.GetPdfObject
                     ().GetAsNumber(PdfName.R));
                 elem.SetAttributes(combinedAttributes);
+            }
+            if (GetPhoneme() != null) {
+                elem.SetPhoneme(new PdfString(GetPhoneme()));
+            }
+            if (GetPhoneticAlphabet() != null) {
+                elem.SetPhoneticAlphabet(GetPhoneticAlphabet());
+            }
+            foreach (PdfDictionary @ref in refs) {
+                elem.AddRef(new PdfStructElem(@ref));
             }
         }
 

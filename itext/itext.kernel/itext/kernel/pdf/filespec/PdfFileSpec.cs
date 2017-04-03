@@ -54,6 +54,20 @@ namespace iText.Kernel.Pdf.Filespec {
             : base(pdfObject) {
         }
 
+        public static iText.Kernel.Pdf.Filespec.PdfFileSpec WrapFileSpecObject(PdfObject fileSpecObject) {
+            if (fileSpecObject != null) {
+                if (fileSpecObject.IsString()) {
+                    return new PdfStringFS((PdfString)fileSpecObject);
+                }
+                else {
+                    if (fileSpecObject.IsDictionary()) {
+                        return new PdfDictionaryFS((PdfDictionary)fileSpecObject);
+                    }
+                }
+            }
+            return null;
+        }
+
         public static iText.Kernel.Pdf.Filespec.PdfFileSpec CreateExternalFileSpec(PdfDocument doc, String filePath
             , bool isUnicodeFileName) {
             PdfDictionary dict = new PdfDictionary();

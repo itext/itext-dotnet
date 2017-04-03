@@ -102,6 +102,12 @@ namespace iText.Kernel.Pdf.Tagutils {
             this.contentStream = tagPointer.contentStream;
         }
 
+        internal TagTreePointer(PdfStructElem structElem) {
+            PdfDocument doc = structElem.GetPdfObject().GetIndirectReference().GetDocument();
+            tagStructureContext = doc.GetTagStructureContext();
+            SetCurrentStructElem(structElem);
+        }
+
         /// <summary>
         /// Sets a page which content will be tagged with this instance of
         /// <c>TagTreePointer</c>
@@ -113,7 +119,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="GetTagReference()"/>
         /// to obtain the reference to the current tag;</li>
         /// <li>Pass
-        /// <c>PdfTagReference</c>
+        /// <see cref="TagReference"/>
         /// to the
         /// <see cref="iText.Kernel.Pdf.Canvas.PdfCanvas.OpenTag(TagReference)"/>
         /// method of the page's

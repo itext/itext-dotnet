@@ -44,6 +44,7 @@ address: sales@itextpdf.com
 using System.Collections.Generic;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Filespec;
 
 namespace iText.Kernel.Pdf.Tagging {
     /// <summary>
@@ -133,6 +134,59 @@ namespace iText.Kernel.Pdf.Tagging {
                 SetModified();
             }
             return roleMap;
+        }
+
+        public virtual IList<PdfNamespace> GetNamespaces() {
+            PdfArray namespacesArray = GetPdfObject().GetAsArray(PdfName.Namespaces);
+            if (namespacesArray == null) {
+                return JavaCollectionsUtil.EmptyList<PdfNamespace>();
+            }
+            else {
+                IList<PdfNamespace> namespacesList = new List<PdfNamespace>(namespacesArray.Size());
+                for (int i = 0; i < namespacesArray.Size(); ++i) {
+                    namespacesList.Add(new PdfNamespace(namespacesArray.GetAsDictionary(i)));
+                }
+                return namespacesList;
+            }
+        }
+
+        public virtual void AddNamespace(PdfNamespace @namespace) {
+            GetNamespacesObject().Add(@namespace.GetPdfObject());
+            SetModified();
+        }
+
+        public virtual PdfArray GetNamespacesObject() {
+            PdfArray namespacesArray = GetPdfObject().GetAsArray(PdfName.Namespaces);
+            if (namespacesArray == null) {
+                namespacesArray = new PdfArray();
+                GetPdfObject().Put(PdfName.Namespaces, namespacesArray);
+                SetModified();
+            }
+            return namespacesArray;
+        }
+
+        public virtual IList<PdfFileSpec> GetPronunciationLexiconsList() {
+            PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
+            if (pronunciationLexicons == null) {
+                return JavaCollectionsUtil.EmptyList<PdfFileSpec>();
+            }
+            else {
+                IList<PdfFileSpec> lexiconsList = new List<PdfFileSpec>(pronunciationLexicons.Size());
+                for (int i = 0; i < pronunciationLexicons.Size(); ++i) {
+                    lexiconsList.Add(PdfFileSpec.WrapFileSpecObject(pronunciationLexicons.Get(i)));
+                }
+                return lexiconsList;
+            }
+        }
+
+        public virtual void AddPronunciationLexicon(PdfFileSpec pronunciationLexiconFileSpec) {
+            PdfArray pronunciationLexicons = GetPdfObject().GetAsArray(PdfName.PronunciationLexicon);
+            if (pronunciationLexicons == null) {
+                pronunciationLexicons = new PdfArray();
+                GetPdfObject().Put(PdfName.PronunciationLexicon, pronunciationLexicons);
+            }
+            pronunciationLexicons.Add(pronunciationLexiconFileSpec.GetPdfObject());
+            SetModified();
         }
 
         /// <summary>Creates and flushes parent tree entry for the page.</summary>

@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -333,6 +334,56 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual PdfObject GetK() {
             return GetPdfObject().Get(PdfName.K);
+        }
+
+        public virtual IList<iText.Kernel.Pdf.Tagging.PdfStructElem> GetRefsList() {
+            PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
+            if (refsArray == null) {
+                return JavaCollectionsUtil.EmptyList<iText.Kernel.Pdf.Tagging.PdfStructElem>();
+            }
+            else {
+                IList<iText.Kernel.Pdf.Tagging.PdfStructElem> refs = new List<iText.Kernel.Pdf.Tagging.PdfStructElem>(refsArray
+                    .Size());
+                for (int i = 0; i < refsArray.Size(); ++i) {
+                    refs.Add(new iText.Kernel.Pdf.Tagging.PdfStructElem(refsArray.GetAsDictionary(i)));
+                }
+                return refs;
+            }
+        }
+
+        public virtual void AddRef(iText.Kernel.Pdf.Tagging.PdfStructElem @ref) {
+            PdfArray refsArray = GetPdfObject().GetAsArray(PdfName.Ref);
+            if (refsArray == null) {
+                refsArray = new PdfArray();
+                Put(PdfName.Ref, refsArray);
+            }
+            refsArray.Add(@ref.GetPdfObject());
+            SetModified();
+        }
+
+        public virtual PdfNamespace GetNamespace() {
+            PdfDictionary nsDict = GetPdfObject().GetAsDictionary(PdfName.NS);
+            return nsDict != null ? new PdfNamespace(nsDict) : null;
+        }
+
+        public virtual void SetNamespace(PdfNamespace @namespace) {
+            Put(PdfName.NS, @namespace.GetPdfObject());
+        }
+
+        public virtual void SetPhoneme(PdfString elementPhoneme) {
+            Put(PdfName.Phoneme, elementPhoneme);
+        }
+
+        public virtual PdfString GetPhoneme() {
+            return GetPdfObject().GetAsString(PdfName.Phoneme);
+        }
+
+        public virtual void SetPhoneticAlphabet(PdfName phoneticAlphabet) {
+            Put(PdfName.PhoneticAlphabet, phoneticAlphabet);
+        }
+
+        public virtual PdfName GetPhoneticAlphabet() {
+            return GetPdfObject().GetAsName(PdfName.PhoneticAlphabet);
         }
 
         public static int IdentifyType(PdfDocument doc, PdfName role) {
