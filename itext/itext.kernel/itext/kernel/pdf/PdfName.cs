@@ -199,6 +199,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName ASCIIHexDecode = CreateDirectName("ASCIIHexDecode");
 
+        public static readonly iText.Kernel.Pdf.PdfName Aside = CreateDirectName("Aside");
+
         public static readonly iText.Kernel.Pdf.PdfName AsIs = CreateDirectName("AsIs");
 
         public static readonly iText.Kernel.Pdf.PdfName AuthEvent = CreateDirectName("AuthEvent");
@@ -484,6 +486,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Document = CreateDirectName("Document");
 
+        public static readonly iText.Kernel.Pdf.PdfName DocumentFragment = CreateDirectName("DocumentFragment");
+
         public static readonly iText.Kernel.Pdf.PdfName Domain = CreateDirectName("Domain");
 
         public static readonly iText.Kernel.Pdf.PdfName Dotted = CreateDirectName("Dotted");
@@ -519,6 +523,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName EFF = CreateDirectName("EFF");
 
         public static readonly iText.Kernel.Pdf.PdfName EFOpen = CreateDirectName("EFOpen");
+
+        public static readonly iText.Kernel.Pdf.PdfName Em = CreateDirectName("Em");
 
         public static readonly iText.Kernel.Pdf.PdfName EmbeddedFile = CreateDirectName("EmbeddedFile");
 
@@ -596,6 +602,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName FFilter = CreateDirectName("FFilter");
 
         public static readonly iText.Kernel.Pdf.PdfName FDecodeParams = CreateDirectName("FDecodeParams");
+
+        public static readonly iText.Kernel.Pdf.PdfName FENote = CreateDirectName("FENote");
 
         public static readonly iText.Kernel.Pdf.PdfName Final = CreateDirectName("Final");
 
@@ -1069,6 +1077,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Order = CreateDirectName("Order");
 
+        public static readonly iText.Kernel.Pdf.PdfName Ordered = CreateDirectName("Ordered");
+
         public static readonly iText.Kernel.Pdf.PdfName Ordering = CreateDirectName("Ordering");
 
         public static readonly iText.Kernel.Pdf.PdfName Outlines = CreateDirectName("Outlines");
@@ -1413,6 +1423,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName StrikeOut = CreateDirectName("StrikeOut");
 
+        public static readonly iText.Kernel.Pdf.PdfName Strong = CreateDirectName("Strong");
+
         public static readonly iText.Kernel.Pdf.PdfName StructElem = CreateDirectName("StructElem");
 
         public static readonly iText.Kernel.Pdf.PdfName StructParent = CreateDirectName("StructParent");
@@ -1422,6 +1434,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName StructTreeRoot = CreateDirectName("StructTreeRoot");
 
         public static readonly iText.Kernel.Pdf.PdfName Style = CreateDirectName("Style");
+
+        public static readonly iText.Kernel.Pdf.PdfName Sub = CreateDirectName("Sub");
 
         public static readonly iText.Kernel.Pdf.PdfName SubFilter = CreateDirectName("SubFilter");
 
@@ -1563,6 +1577,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName UF = CreateDirectName("UF");
 
         public static readonly iText.Kernel.Pdf.PdfName Underline = CreateDirectName("Underline");
+
+        public static readonly iText.Kernel.Pdf.PdfName Unordered = CreateDirectName("Unordered");
 
         public static readonly iText.Kernel.Pdf.PdfName Unspecified = CreateDirectName("Unspecified");
 

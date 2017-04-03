@@ -89,6 +89,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             // '-1' value of this field means that next new kid will be the last element in the kids array
             tagStructureContext = document.GetTagStructureContext();
             SetCurrentStructElem(tagStructureContext.GetRootTag());
+            SetNamespaceForNewTags(tagStructureContext.GetNamespaceForNewTagsByDefault());
         }
 
         /// <summary>A copy constructor.</summary>
@@ -375,8 +376,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </returns>
         public virtual iText.Kernel.Pdf.Tagutils.TagTreePointer AddTag(int index, IAccessibleElement element, bool
              keepConnectedToTag) {
-            tagStructureContext.ThrowExceptionIfRoleIsInvalid(element.GetRole());
-            // TODO pass current namespace and use it to check?
+            tagStructureContext.ThrowExceptionIfRoleIsInvalid(element, currentNamespace);
             if (!tagStructureContext.IsElementConnectedToTag(element)) {
                 SetNextNewKidIndex(index);
                 SetCurrentStructElem(AddNewKid(element, keepConnectedToTag));

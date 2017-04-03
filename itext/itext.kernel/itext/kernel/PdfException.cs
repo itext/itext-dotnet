@@ -302,6 +302,7 @@ namespace iText.Kernel {
 
         public const String IncorrectNumberOfComponents = "Incorrect number of components.";
 
+        [Obsolete]
         public const String InlineLevelOrIllustrationElementCannotContainKids = "Inline level or illustration element cannot contain kids.";
 
         public const String InvalidCodewordSize = "Invalid codeword size.";
@@ -432,7 +433,12 @@ namespace iText.Kernel {
 
         public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = "Resources do not contain ExtGState entry. Unable to process operator {0}.";
 
+        [Obsolete]
         public const String RoleIsNotMappedWithAnyStandardRole = "Role is not mapped with any standard role.";
+
+        public const String RoleIsNotMappedToAnyStandardRole = "Role \"{0}\" is not mapped to any standard role.";
+
+        public const String RoleInNamespaceIsNotMappedToAnyStandardRole = "Role \"{0}\" in namespace {1} is not mapped to any standard role.";
 
         public const String ShadingTypeNotFound = "Shading type not found.";
 

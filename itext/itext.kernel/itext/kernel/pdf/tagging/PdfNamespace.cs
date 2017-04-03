@@ -10,9 +10,13 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public PdfNamespace(String namespaceName)
+            : this(new PdfString(namespaceName)) {
+        }
+
+        public PdfNamespace(PdfString namespaceName)
             : this(new PdfDictionary()) {
             Put(PdfName.Type, PdfName.Namespace);
-            Put(PdfName.NS, new PdfString(namespaceName));
+            Put(PdfName.NS, namespaceName);
         }
 
         public virtual iText.Kernel.Pdf.Tagging.PdfNamespace SetNamespaceName(PdfString namespaceName) {

@@ -63,7 +63,9 @@ namespace iText.Layout.Renderer {
             if (!(renderer.GetModelElement() is IAccessibleElement)) {
                 return;
             }
-            int tagType = PdfStructElem.IdentifyType(doc, role);
+            IAccessibleElement modelElement = (IAccessibleElement)renderer.GetModelElement();
+            AccessibilityProperties accessibilityProperties = modelElement.GetAccessibilityProperties();
+            int tagType = AccessibleTypes.IdentifyType(doc, role, accessibilityProperties.GetNamespace());
             PdfDictionary attributes = new PdfDictionary();
             PdfName attributesType = PdfName.Layout;
             attributes.Put(PdfName.O, attributesType);
@@ -73,24 +75,26 @@ namespace iText.Layout.Renderer {
             }
             //TODO WritingMode attribute applying when needed
             ApplyCommonLayoutAttributes(renderer, attributes);
-            if (tagType == PdfStructElem.BlockLevel) {
+            if (tagType == AccessibleTypes.BlockLevel) {
                 ApplyBlockLevelLayoutAttributes(role, renderer, attributes, doc);
             }
-            if (tagType == PdfStructElem.InlineLevel) {
+            if (tagType == AccessibleTypes.InlineLevel) {
                 ApplyInlineLevelLayoutAttributes(renderer, attributes);
             }
-            if (tagType == PdfStructElem.Illustration) {
+            if (tagType == AccessibleTypes.Illustration) {
                 ApplyIllustrationLayoutAttributes(renderer, attributes);
             }
             if (attributes.Size() > 1) {
-                AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
-                    ();
-                RemoveSameAttributesTypeIfPresent(properties, attributesType);
-                properties.AddAttributes(attributes);
+                RemoveSameAttributesTypeIfPresent(accessibilityProperties, attributesType);
+                accessibilityProperties.AddAttributes(attributes);
             }
         }
 
         public static void ApplyListAttributes(AbstractRenderer renderer) {
+            ApplyListAttributes(renderer, null);
+        }
+
+        public static void ApplyListAttributes(AbstractRenderer renderer, PdfDocument doc) {
             if (!(renderer.GetModelElement() is List)) {
                 return;
             }
@@ -98,9 +102,20 @@ namespace iText.Layout.Renderer {
             PdfName attributesType = PdfName.List;
             attributes.Put(PdfName.O, attributesType);
             Object listSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
+            bool tagStructurePdf2 = IsTagStructurePdf2(doc);
             if (listSymbol is ListNumberingType) {
                 ListNumberingType numberingType = (ListNumberingType)listSymbol;
-                attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType));
+                attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType, tagStructurePdf2));
+            }
+            else {
+                if (tagStructurePdf2) {
+                    if (listSymbol is IListSymbolFactory) {
+                        attributes.Put(PdfName.ListNumbering, PdfName.Ordered);
+                    }
+                    else {
+                        attributes.Put(PdfName.ListNumbering, PdfName.Unordered);
+                    }
+                }
             }
             if (attributes.Size() > 1) {
                 AccessibilityProperties properties = ((IAccessibleElement)renderer.GetModelElement()).GetAccessibilityProperties
@@ -370,6 +385,17 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        private static bool IsTagStructurePdf2(PdfDocument pdfDoc) {
+            if (pdfDoc != null) {
+                TagTreePointer p = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
+                if (p.GetNamespaceForNewTags() != null) {
+                    PdfString namespaceName = p.GetNamespaceForNewTags().GetNamespaceName();
+                    return StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0.Equals(namespaceName);
+                }
+            }
+            return false;
+        }
+
         private static PdfName TransformTextAlignmentValueToName(TextAlignment? textAlignment) {
             //TODO set rightToLeft value according with actual text content if it is possible.
             bool isLeftToRight = true;
@@ -487,7 +513,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType) {
+        private static PdfName TransformNumberingTypeToName(ListNumberingType numberingType, bool isTagStructurePdf2
+            ) {
             switch (numberingType) {
                 case ListNumberingType.DECIMAL:
                 case ListNumberingType.DECIMAL_LEADING_ZERO: {
@@ -513,7 +540,13 @@ namespace iText.Layout.Renderer {
                 }
 
                 default: {
-                    return PdfName.None;
+                    if (isTagStructurePdf2) {
+                        return PdfName.Ordered;
+                    }
+                    else {
+                        return PdfName.None;
+                    }
+                    break;
                 }
             }
         }

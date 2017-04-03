@@ -402,7 +402,7 @@ namespace iText.Layout.Renderer {
                             AccessibleAttributesApplier.ApplyTableAttributes(this);
                         }
                         if (role.Equals(PdfName.L)) {
-                            AccessibleAttributesApplier.ApplyListAttributes(this);
+                            AccessibleAttributesApplier.ApplyListAttributes(this, document);
                         }
                     }
                     tagPointer.AddTag(accessibleElement, true);

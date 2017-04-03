@@ -126,6 +126,10 @@ namespace iText.Kernel.Pdf.Tagging {
             return k;
         }
 
+        public virtual void AddRoleMapping(PdfName fromRole, PdfName toRole) {
+            GetRoleMap().Put(fromRole, toRole);
+        }
+
         public virtual PdfDictionary GetRoleMap() {
             PdfDictionary roleMap = GetPdfObject().GetAsDictionary(PdfName.RoleMap);
             if (roleMap == null) {
