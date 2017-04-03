@@ -275,6 +275,22 @@ namespace iText.Kernel.Pdf {
             return 31 * result + (e != null ? e.GetHashCode() : 0);
         }
 
+        /// <summary>Marks this string object as not encrypted in the encrypted document.</summary>
+        /// <remarks>
+        /// Marks this string object as not encrypted in the encrypted document.
+        /// <p>
+        /// If it's marked so, it will be considered as already in plaintext and decryption will not be performed for it.
+        /// In order to have effect, this method shall be called before
+        /// <see cref="GetValue()"/>
+        /// and
+        /// <see cref="GetValueBytes()"/>
+        /// methods.
+        /// </p>
+        /// <p>
+        /// NOTE: this method is only needed in a very specific cases of encrypted documents. E.g. digital signature dictionary
+        /// /Contents entry shall not be encrypted. Also this method isn't meaningful in non-encrypted documents.
+        /// </p>
+        /// </remarks>
         public virtual void MarkAsUnencryptedObject() {
             SetState(PdfObject.UNENCRYPTED);
         }
