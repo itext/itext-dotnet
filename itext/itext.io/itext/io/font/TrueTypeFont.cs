@@ -307,11 +307,11 @@ namespace iText.IO.Font {
                     continue;
                 }
                 Glyph glyph = new Glyph(index, glyphWidths[index], charCode, bBoxes != null ? bBoxes[index] : null);
-                unicodeToGlyph[charCode] = glyph;
+                unicodeToGlyph.Put(charCode, glyph);
                 // This is done on purpose to keep the mapping to glyphs with smaller unicode values, in contrast with
                 // larger values which often represent different forms of other characters.
                 if (!codeToGlyph.ContainsKey(index)) {
-                    codeToGlyph[index] = glyph;
+                    codeToGlyph.Put(index, glyph);
                 }
                 avgWidth += glyph.GetWidth();
             }
@@ -321,7 +321,7 @@ namespace iText.IO.Font {
                     continue;
                 }
                 Glyph glyph = new Glyph(index, glyphWidths[index], -1);
-                codeToGlyph[index] = glyph;
+                codeToGlyph.Put(index, glyph);
                 avgWidth += glyph.GetWidth();
             }
             if (codeToGlyph.Count != 0) {

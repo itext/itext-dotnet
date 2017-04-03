@@ -95,6 +95,9 @@ namespace iText.Signatures {
         /// <summary>Hash algorithm</summary>
         protected internal String digestAlgorithm;
 
+        /// <summary>TSA request policy</summary>
+        private String tsaReqPolicy;
+
         /// <summary>Creates an instance of a TSAClient that will use BouncyCastle.</summary>
         /// <param name="url">String - Time Stamp Authority URL (i.e. "http://tsatest1.digistamp.com/TSA")</param>
         public TSAClientBouncyCastle(String url)
@@ -144,6 +147,18 @@ namespace iText.Signatures {
             return tokenSizeEstimate;
         }
 
+        /// <summary>Gets the TSA request policy that will be used when retrieving timestamp token.</summary>
+        /// <returns>policy id, or <code>null</code> if not set</returns>
+        public virtual String GetTSAReqPolicy() {
+            return tsaReqPolicy;
+        }
+
+        /// <summary>Sets the TSA request policy that will be used when retrieving timestamp token.</summary>
+        /// <param name="tsaReqPolicy">policy id</param>
+        public virtual void SetTSAReqPolicy(String tsaReqPolicy) {
+            this.tsaReqPolicy = tsaReqPolicy;
+        }
+
         /// <summary>Gets the MessageDigest to digest the data imprint</summary>
         /// <returns>the digest algorithm name</returns>
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -165,6 +180,9 @@ namespace iText.Signatures {
             // Setup the time stamp request
             TimeStampRequestGenerator tsqGenerator = new TimeStampRequestGenerator();
             tsqGenerator.SetCertReq(true);
+            if (tsaReqPolicy != null && tsaReqPolicy.Length > 0) {
+                tsqGenerator.SetReqPolicy(new DerObjectIdentifier(tsaReqPolicy));
+            }
             // tsqGenerator.setReqPolicy("1.3.6.1.4.1.601.10.3.1");
             BigInteger nonce = BigInteger.ValueOf(SystemUtil.GetSystemTimeTicks());
             TimeStampRequest request = tsqGenerator.Generate(new DerObjectIdentifier(DigestAlgorithms.GetAllowedDigest

@@ -236,7 +236,7 @@ namespace iText.Forms {
                 ProcessKids(kids, fieldDic, page);
             }
             GetFields().Add(fieldDic);
-            fields[field.GetFieldName().ToUnicodeString()] = field;
+            fields.Put(field.GetFieldName().ToUnicodeString(), field);
             if (field.GetKids() != null) {
                 IterateFields(field.GetKids(), fields);
             }
@@ -311,6 +311,18 @@ namespace iText.Forms {
                 fields = IterateFields(GetFields());
             }
             return fields;
+        }
+
+        /// <summary>
+        /// Gets the
+        /// <see cref="iText.Kernel.Pdf.PdfDocument"/>
+        /// this
+        /// <see cref="PdfAcroForm"/>
+        /// belongs to.
+        /// </summary>
+        /// <returns>the document of this form</returns>
+        public virtual PdfDocument GetPdfDocument() {
+            return document;
         }
 
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
@@ -691,7 +703,7 @@ namespace iText.Forms {
             IDictionary<int, PdfObject> initialPageResourceClones = new LinkedDictionary<int, PdfObject>();
             for (int i = 1; i <= document.GetNumberOfPages(); i++) {
                 PdfObject resources = document.GetPage(i).GetPdfObject().GetAsDictionary(PdfName.Resources);
-                initialPageResourceClones[i] = resources == null ? null : resources.Clone();
+                initialPageResourceClones.Put(i, resources == null ? null : resources.Clone());
             }
             PdfPage page;
             foreach (PdfFormField field in fields) {
@@ -854,7 +866,7 @@ namespace iText.Forms {
             if (field != null) {
                 field.SetFieldName(newName);
                 fields.JRemove(oldName);
-                fields[newName] = field;
+                fields.Put(newName, field);
             }
         }
 
@@ -939,7 +951,7 @@ namespace iText.Forms {
                 else {
                     name = fieldName.ToUnicodeString();
                 }
-                fields[name] = formField;
+                fields.Put(name, formField);
                 if (formField.GetKids() != null) {
                     IterateFields(formField.GetKids(), fields);
                 }

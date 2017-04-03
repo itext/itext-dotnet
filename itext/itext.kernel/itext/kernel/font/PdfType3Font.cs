@@ -188,7 +188,7 @@ namespace iText.Kernel.Font {
                     // Handle special layout characters like sfthyphen (00AD).
                     // This glyphs will be skipped while converting to bytes
                     glyph = new Glyph(-1, 0, unicode);
-                    notdefGlyphs[unicode] = glyph;
+                    notdefGlyphs.Put(unicode, glyph);
                 }
                 return glyph;
             }

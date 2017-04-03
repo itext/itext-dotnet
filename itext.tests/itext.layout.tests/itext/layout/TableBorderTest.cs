@@ -876,7 +876,6 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [LogMessage(iText.IO.LogMessageConstant.LAST_ROW_IS_NOT_COMPLETE, Count = 2)]
         public virtual void TableWithHeaderFooterTest03() {
             fileName = "tableWithHeaderFooterTest03.pdf";
             Document doc = CreateDocument();
@@ -1091,16 +1090,17 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
-        [NUnit.Framework.Ignore("DEVSIX-1156")]
         public virtual void TableWithHeaderFooterTest12() {
             String testName = "tableWithHeaderFooterTest12.pdf";
             String outFileName = destinationFolder + testName;
             String cmpFileName = sourceFolder + "cmp_" + testName;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
-            Table table = new Table(1);
+            Table table = new Table(2);
+            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 5)));
+            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 35)));
             table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new SolidBorder(Color.YELLOW, 20)));
-            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 15)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new SolidBorder(Color.YELLOW, 20)));
             doc.Add(table);
             doc.Add(new Table(1).SetBorder(new SolidBorder(Color.ORANGE, 2)).AddCell("Is my occupied area correct?"));
             doc.Close();

@@ -63,22 +63,22 @@ namespace iText.IO.Image {
                 int k = typeCCITT - RawImageData.CCITTG3_1D;
                 IDictionary<String, Object> decodeparms = new Dictionary<String, Object>();
                 if (k != 0) {
-                    decodeparms["K"] = k;
+                    decodeparms.Put("K", k);
                 }
                 if ((colorSpace & RawImageData.CCITT_BLACKIS1) != 0) {
-                    decodeparms["BlackIs1"] = true;
+                    decodeparms.Put("BlackIs1", true);
                 }
                 if ((colorSpace & RawImageData.CCITT_ENCODEDBYTEALIGN) != 0) {
-                    decodeparms["EncodedByteAlign"] = true;
+                    decodeparms.Put("EncodedByteAlign", true);
                 }
                 if ((colorSpace & RawImageData.CCITT_ENDOFLINE) != 0) {
-                    decodeparms["EndOfLine"] = true;
+                    decodeparms.Put("EndOfLine", true);
                 }
                 if ((colorSpace & RawImageData.CCITT_ENDOFBLOCK) != 0) {
-                    decodeparms["EndOfBlock"] = false;
+                    decodeparms.Put("EndOfBlock", false);
                 }
-                decodeparms["Columns"] = image.GetWidth();
-                decodeparms["Rows"] = image.GetHeight();
+                decodeparms.Put("Columns", image.GetWidth());
+                decodeparms.Put("Rows", image.GetHeight());
                 image.decodeParms = decodeparms;
             }
             else {

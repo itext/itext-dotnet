@@ -57,8 +57,9 @@ namespace iText.Layout {
                  + "Pur it an; FreeSans\n" + "\"Puritan\"\n" + "Puritan\n" + "'Free Sans',\n" + "Free Sans\n" + "'Free-Sans',\n"
                  + "Free-Sans\n" + "  'Free-Sans' , Puritan\n" + "Free-Sans; Puritan\n" + "  \"Free-Sans\" , Puritan\n"
                  + "Free-Sans; Puritan\n" + "  Free-Sans , Puritan\n" + "Free-Sans; Puritan\n" + "  Free-Sans\n" + "Free-Sans\n"
-                 + "\"Puritan\", Free Sans\n" + "Puritan\n" + "'Puritan' FreeSans\n" + "-\n" + "Pur itan\n" + "-\n" + 
-                "Pur it an\"\n" + "-\n" + "\"Free Sans\n" + "-\n" + "Pur it an'\n" + "-\n" + "'Free Sans\n" + "-";
+                 + "\"Puritan\", Free Sans\n" + "Puritan\n" + "\"Puritan 2.0\"\n" + "-\n" + "'Puritan' FreeSans\n" + "-\n"
+                 + "Pur itan\n" + "-\n" + "Pur it an\"\n" + "-\n" + "\"Free Sans\n" + "-\n" + "Pur it an'\n" + "-\n" +
+                 "'Free Sans\n" + "-";
             String[] splitFontFamilies = iText.IO.Util.StringUtil.Split(fontFamilies, "\n");
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < splitFontFamilies.Length; i += 2) {

@@ -119,7 +119,7 @@ namespace iText.IO.Font.Cmap {
                         tokeniser.ThrowError(iText.IO.IOException.UnexpectedCloseBracket);
                     }
                 }
-                dic[name] = obj;
+                dic.Put(name, obj);
             }
             return new CMapObject(CMapObject.DICTIONARY, dic);
         }

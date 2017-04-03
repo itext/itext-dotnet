@@ -49,7 +49,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -59,7 +58,7 @@ namespace iText.Forms.Xfa
 	/// <summary>Processes XFA forms.</summary>
 	public class XfaForm
 	{
-		private const String DEFAULT_XFA = "iText.Forms.Xfa.default.xml";
+		private const int INIT_SERIALIZER_BUFFER_SIZE = 16 * 1024;
 
 		private XElement templateNode;
 
@@ -140,16 +139,28 @@ namespace iText.Forms.Xfa
 			}
 		}
 
-		/// <summary>Sets the XFA key from a byte array.</summary>
+	    /// <summary>Sets the XFA key from a byte array.</summary>
+	    /// <remarks>Sets the XFA key from a byte array. The old XFA is erased.</remarks>
+	    /// <param name="form">the data</param>
+	    /// <param name="pdfDocument">pdfDocument</param>
+	    /// <exception cref="System.IO.IOException">on IO error</exception>
+	    public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfDocument pdfDocument) {
+	        PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, true);
+	        SetXfaForm(form, acroForm);
+	    }
+
+	    /// <summary>Sets the XFA key from a byte array.</summary>
 		/// <remarks>Sets the XFA key from a byte array. The old XFA is erased.</remarks>
 		/// <param name="form">the data</param>
-		/// <param name="pdfDocument">pdfDocument</param>
+		/// <param name="acroForm">an AcroForm instance</param>
 		/// <exception cref="System.IO.IOException">on IO error</exception>
-		public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfDocument pdfDocument
-			)
+		public static void SetXfaForm(iText.Forms.Xfa.XfaForm form, PdfAcroForm acroForm)
 		{
-			PdfDictionary af = PdfAcroForm.GetAcroForm(pdfDocument, true).GetPdfObject();
-			PdfObject xfa = GetXfaObject(pdfDocument);
+		    if (form == null || acroForm == null || acroForm.GetPdfDocument() == null) {
+		        throw new ArgumentException("XfaForm, PdfAcroForm and PdfAcroForm's document shall not be null");
+		    }
+		    PdfDocument document = acroForm.GetPdfDocument();
+		    PdfObject xfa = GetXfaObject(acroForm);
 			if (xfa != null && xfa.IsArray())
 			{
 				PdfArray ar = (PdfArray)xfa;
@@ -172,29 +183,29 @@ namespace iText.Forms.Xfa
 					//reader.killXref(ar.getAsIndirectObject(t));
 					//reader.killXref(ar.getAsIndirectObject(d));
 					PdfStream tStream = new PdfStream(SerializeDocument(form.templateNode));
-					tStream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
+					tStream.SetCompressionLevel(document.GetWriter().GetCompressionLevel());
 					ar.Set(t, tStream);
 					PdfStream dStream = new PdfStream(SerializeDocument(form.datasetsNode));
-					dStream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
+					dStream.SetCompressionLevel(document.GetWriter().GetCompressionLevel());
 					ar.Set(d, dStream);
 				    ar.SetModified();
 				    ar.Flush();
-					af.Put(PdfName.XFA, new PdfArray(ar));
-				    af.SetModified();
-				    if (!af.IsIndirect()) {
-				        pdfDocument.GetCatalog().SetModified();
+				    acroForm.Put(PdfName.XFA, new PdfArray(ar));
+				    acroForm.SetModified();
+				    if (!acroForm.GetPdfObject().IsIndirect()) {
+				        document.GetCatalog().SetModified();
 				    }
 				    return;
 				}
 			}
 			//reader.killXref(af.get(PdfName.XFA));
 			PdfStream stream = new PdfStream(SerializeDocument(form.domDocument));
-			stream.SetCompressionLevel(pdfDocument.GetWriter().GetCompressionLevel());
+			stream.SetCompressionLevel(document.GetWriter().GetCompressionLevel());
 			stream.Flush();
-			af.Put(PdfName.XFA, stream);
-			af.SetModified();
-		    if (!af.IsIndirect()) {
-		        pdfDocument.GetCatalog().SetModified();
+		    acroForm.Put(PdfName.XFA, stream);
+		    acroForm.SetModified();
+		    if (!acroForm.GetPdfObject().IsIndirect()) {
+		        document.GetCatalog().SetModified();
 		    }
 		}
 
@@ -240,6 +251,14 @@ namespace iText.Forms.Xfa
 		{
 			SetXfaForm(this, document);
 		}
+
+	    /// <summary>Write the XfaForm to the provided PdfDocument.</summary>
+	    /// <param name="acroForm">the PdfAcroForm to write the XFA Form to</param>
+	    /// <exception cref="System.IO.IOException"/>
+	    public virtual void Write(PdfAcroForm acroForm)
+	    {
+	        SetXfaForm(this, acroForm);
+	    }
 
 		/// <summary>Changes a field value in the XFA form.</summary>
 		/// <param name="name">the name of the field to be changed</param>
@@ -599,7 +618,7 @@ namespace iText.Forms.Xfa
 		/// <summary>Return the XFA Object, could be an array, could be a Stream.</summary>
 		/// <remarks>
 		/// Return the XFA Object, could be an array, could be a Stream.
-		/// Returns null f no XFA Object is present.
+		/// Returns null if no XFA Object is present.
 		/// </remarks>
 		/// <param name="pdfDocument">a PdfDocument instance</param>
 		/// <returns>the XFA object</returns>
@@ -610,13 +629,25 @@ namespace iText.Forms.Xfa
 			return af == null ? null : af.Get(PdfName.XFA);
 		}
 
+	    /// <summary>Return the XFA Object, could be an array, could be a Stream.</summary>
+	    /// <remarks>
+	    /// Return the XFA Object, could be an array, could be a Stream.
+	    /// Returns null if no XFA Object is present.
+	    /// </remarks>
+	    /// <param name="acroForm">a PdfAcroForm instance</param>
+	    /// <returns>the XFA object</returns>
+	    private static PdfObject GetXfaObject(PdfAcroForm acroForm)
+	    {
+	        return acroForm == null || acroForm.GetPdfObject() == null ? null : acroForm.GetPdfObject().Get(PdfName.XFA);
+	    }
+
 		/// <summary>Serializes a XML document to a byte array.</summary>
 		/// <param name="n">the XML document</param>
 		/// <returns>the serialized XML document</returns>
 		/// <exception cref="System.IO.IOException">on error</exception>
 		private static byte[] SerializeDocument(XNode n)
 		{
-		    MemoryStream fout = new MemoryStream();
+		    MemoryStream fout = new MemoryStream(INIT_SERIALIZER_BUFFER_SIZE);
 		    if (n != null) {
 		        if (n is XDocument) {
 		            fout.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>".GetBytes(Encoding.UTF8));

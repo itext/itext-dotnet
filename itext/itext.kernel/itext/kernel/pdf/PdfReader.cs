@@ -294,7 +294,7 @@ namespace iText.Kernel.Pdf {
                 file.Seek(stream.GetOffset());
                 bytes = new byte[length];
                 file.ReadFully(bytes);
-                if (decrypt != null) {
+                if (decrypt != null && !decrypt.IsEmbeddedFilesOnly()) {
                     PdfObject filter = stream.Get(PdfName.Filter, true);
                     bool skip = false;
                     if (filter != null) {
@@ -682,11 +682,11 @@ namespace iText.Kernel.Pdf {
 
                 case PdfTokenizer.TokenType.String: {
                     PdfString pdfString = new PdfString(tokens.GetByteContent(), tokens.IsHexString());
-                    if (currentIndirectReference != null) {
-                        pdfString.SetDecryptInfoNum(currentIndirectReference.GetObjNumber());
-                        pdfString.SetDecryptInfoGen(currentIndirectReference.GetGenNumber());
+                    if (IsEncrypted() && !decrypt.IsEmbeddedFilesOnly() && !objStm) {
+                        pdfString.SetDecryption(currentIndirectReference.GetObjNumber(), currentIndirectReference.GetGenNumber(), 
+                            decrypt);
                     }
-                    return !IsEncrypted() || objStm ? pdfString : pdfString.Decrypt(decrypt);
+                    return pdfString;
                 }
 
                 case PdfTokenizer.TokenType.Name: {

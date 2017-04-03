@@ -256,7 +256,7 @@ namespace iText.Layout.Element {
                 SetProperty(Property.TAB_STOPS, tabStops);
             }
             foreach (TabStop tabStop in newTabStops) {
-                tabStops[tabStop.GetTabPosition()] = tabStop;
+                tabStops.Put(tabStop.GetTabPosition(), tabStop);
             }
         }
 

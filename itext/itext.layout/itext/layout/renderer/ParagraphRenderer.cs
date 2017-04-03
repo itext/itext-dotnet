@@ -414,8 +414,10 @@ namespace iText.Layout.Renderer {
         public override void Move(float dxRight, float dyUp) {
             occupiedArea.GetBBox().MoveRight(dxRight);
             occupiedArea.GetBBox().MoveUp(dyUp);
-            foreach (LineRenderer line in lines) {
-                line.Move(dxRight, dyUp);
+            if (null != lines) {
+                foreach (LineRenderer line in lines) {
+                    line.Move(dxRight, dyUp);
+                }
             }
         }
 

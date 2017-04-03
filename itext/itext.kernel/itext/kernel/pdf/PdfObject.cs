@@ -69,21 +69,23 @@ namespace iText.Kernel.Pdf {
 
         protected internal const short FLUSHED = 1;
 
-        protected internal const short FREE = 2;
+        protected internal const short FREE = 1 << 1;
 
-        protected internal const short READING = 4;
+        protected internal const short READING = 1 << 2;
 
-        protected internal const short MODIFIED = 8;
+        protected internal const short MODIFIED = 1 << 3;
 
-        protected internal const short ORIGINAL_OBJECT_STREAM = 16;
+        protected internal const short ORIGINAL_OBJECT_STREAM = 1 << 4;
 
-        protected internal const short MUST_BE_FLUSHED = 32;
+        protected internal const short MUST_BE_FLUSHED = 1 << 5;
 
-        protected internal const short MUST_BE_INDIRECT = 64;
+        protected internal const short MUST_BE_INDIRECT = 1 << 6;
 
-        protected internal const short FORBID_RELEASE = 128;
+        protected internal const short FORBID_RELEASE = 1 << 7;
 
-        protected internal const short READ_ONLY = 256;
+        protected internal const short READ_ONLY = 1 << 8;
+
+        protected internal const short UNENCRYPTED = 1 << 9;
 
         /// <summary>If object is flushed the indirect reference is kept here.</summary>
         protected internal PdfIndirectReference indirectReference = null;
@@ -111,6 +113,8 @@ namespace iText.Kernel.Pdf {
         // The flag is set automatically for some wrappers that need document even in reader mode (FormFields etc).
         // Indicates that we do not want this object to be ever written into the resultant document
         // (because of multiple objects read from the same reference inconsistency).
+        // Indicates that this object is not encrypted in the encrypted document.
+        // E.g. digital signature dictionary /Contents entry shall not be encrypted.
         /// <summary>Gets object type.</summary>
         /// <returns>object type.</returns>
         public abstract byte GetObjectType();

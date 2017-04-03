@@ -300,7 +300,7 @@ namespace iText.Layout.Renderer {
             MethodInfo m = (MethodInfo)cachedMethods.Get(tm);
             if (m == null) {
                 m = FindClass(className).GetMethod(methodName, parameterTypes);
-                cachedMethods[tm] = m;
+                cachedMethods.Put(tm, m);
             }
             return m;
         }
@@ -313,7 +313,7 @@ namespace iText.Layout.Renderer {
             ConstructorInfo c = (ConstructorInfo)cachedMethods.Get(tc);
             if (c == null) {
                 c = FindClass(className).GetConstructor(parameterTypes);
-                cachedMethods[tc] = c;
+                cachedMethods.Put(tc, c);
             }
             return c;
         }
@@ -323,7 +323,7 @@ namespace iText.Layout.Renderer {
             Type c = cachedClasses.Get(className);
             if (c == null) {
                 c = GetTypographyClass(className);
-                cachedClasses[className] = c;
+                cachedClasses.Put(className, c);
             }
             return c;
         }

@@ -55,7 +55,7 @@ namespace iText.IO.Font.Cmap {
         internal override void AddChar(String mark, CMapObject code) {
             if (code.IsNumber()) {
                 byte[] ser = DecodeStringToByte(mark);
-                map[(int)code.GetValue()] = ser;
+                map.Put((int)code.GetValue(), ser);
             }
         }
 

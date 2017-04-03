@@ -174,7 +174,7 @@ namespace iText.Signatures {
             if (vd.crls.Count == 0 && vd.ocsps.Count == 0) {
                 return false;
             }
-            validated[GetSignatureHashKey(signatureName)] = vd;
+            validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
@@ -229,7 +229,7 @@ namespace iText.Signatures {
                     vd.certs.Add(cert);
                 }
             }
-            validated[GetSignatureHashKey(signatureName)] = vd;
+            validated.Put(GetSignatureHashKey(signatureName), vd);
             return true;
         }
 
@@ -250,11 +250,11 @@ namespace iText.Signatures {
         /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
         /// <exception cref="System.IO.IOException"/>
         private PdfName GetSignatureHashKey(String signatureName) {
-            PdfDictionary dic = sgnUtil.GetSignatureDictionary(signatureName);
-            PdfString contents = dic.GetAsString(PdfName.Contents);
+            PdfSignature sig = sgnUtil.GetSignature(signatureName);
+            PdfString contents = sig.GetContents();
             byte[] bc = PdfEncodings.ConvertToBytes(contents.GetValue(), null);
             byte[] bt = null;
-            if (PdfName.ETSI_RFC3161.Equals(dic.GetAsName(PdfName.SubFilter))) {
+            if (PdfName.ETSI_RFC3161.Equals(sig.GetSubFilter())) {
                 Asn1InputStream din = new Asn1InputStream(new MemoryStream(bc));
                 Asn1Object pkcs = din.ReadObject();
                 bc = pkcs.GetEncoded();

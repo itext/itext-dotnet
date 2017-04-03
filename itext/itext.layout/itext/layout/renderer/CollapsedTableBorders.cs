@@ -502,8 +502,8 @@ namespace iText.Layout.Renderer {
                     }
                 }
                 else {
-                    if (i == finishRow - startRow + 1 && GetVerticalBorder(j).Count >= startRow - largeTableIndexOffset + i - 
-                        1 && GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1] != null) {
+                    if (i == finishRow - startRow + 1 && GetVerticalBorder(j).Count > startRow - largeTableIndexOffset + i - 1
+                         && GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1] != null) {
                         x2 += GetVerticalBorder(j)[startRow - largeTableIndexOffset + i - 1].GetWidth() / 2;
                     }
                 }

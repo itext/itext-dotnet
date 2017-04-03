@@ -42,6 +42,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Font;
 using iText.IO.Util;
 
 namespace iText.Layout.Font {
@@ -54,7 +55,7 @@ namespace iText.Layout.Font {
         /// <param name="fontFamilies">sorted list of preferred font families.</param>
         public FontSelector(ICollection<FontInfo> allFonts, IList<String> fontFamilies, FontCharacteristics fc) {
             this.fonts = new List<FontInfo>(allFonts);
-            //Possible issue in .NET, virtual member in constructor.
+            //Possible issue in .NET, virtual protected member in constructor.
             JavaCollectionsUtil.Sort(this.fonts, GetComparator(fontFamilies, fc));
         }
 
@@ -109,9 +110,6 @@ namespace iText.Layout.Font {
                         fc.SetMonospaceFlag(true);
                     }
                     res = CharacteristicsSimilarity(fontName, fc, o2) - CharacteristicsSimilarity(fontName, fc, o1);
-                    if (res != 0) {
-                        return res;
-                    }
                 }
                 return res;
             }
@@ -175,13 +173,17 @@ namespace iText.Layout.Font {
                         score -= 1;
                     }
                 }
-                if (fontInfo.GetDescriptor().GetFullNameLowerCase().Equals(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
-                    ().Equals(fontName)) {
+                FontProgramDescriptor descriptor = fontInfo.GetDescriptor();
+                // Note, aliases are custom behaviour, so in FontSelector will find only exact name,
+                // it should not be any 'contains' with aliases.
+                if (fontName.Equals(descriptor.GetFullNameLowerCase()) || fontName.Equals(descriptor.GetFontNameLowerCase(
+                    )) || fontName.Equals(fontInfo.GetAlias())) {
                     score += 10;
                 }
                 else {
-                    if (fontInfo.GetDescriptor().GetFullNameLowerCase().Contains(fontName) || fontInfo.GetDescriptor().GetFontNameLowerCase
-                        ().Contains(fontName)) {
+                    if (descriptor.GetFullNameLowerCase().Contains(fontName) || descriptor.GetFontNameLowerCase().Contains(fontName
+                        )) {
+                        //yes, we will not find contains for each alias.
                         score += 7;
                     }
                 }

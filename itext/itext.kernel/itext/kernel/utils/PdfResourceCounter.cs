@@ -78,7 +78,7 @@ namespace iText.Kernel.Utils {
             }
             else {
                 if (!resources.ContainsKey(@ref.GetObjNumber())) {
-                    resources[@ref.GetObjNumber()] = obj;
+                    resources.Put(@ref.GetObjNumber(), obj);
                     LoopOver(obj);
                 }
             }

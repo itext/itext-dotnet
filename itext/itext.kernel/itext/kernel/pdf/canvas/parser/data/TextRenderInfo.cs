@@ -75,11 +75,13 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         private readonly Matrix textToUserSpaceTransformMatrix;
 
-        private readonly CanvasGraphicsState gs;
+        private CanvasGraphicsState gs;
 
         private float unscaledWidth = float.NaN;
 
         private double[] fontMatrix = null;
+
+        private bool preserveGraphicsState;
 
         /// <summary>Hierarchy of nested canvas tags for the text from the most inner (nearest to text) tag to the most outer.
         ///     </summary>
@@ -389,6 +391,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
                 unscaledWidth = GetPdfStringWidth(@string, false);
             }
             return unscaledWidth;
+        }
+
+        public virtual bool IsPreserveGraphicsState() {
+            return preserveGraphicsState;
+        }
+
+        public virtual void PreserveGraphicsState() {
+            this.preserveGraphicsState = true;
+        }
+
+        public virtual void ReleaseGraphicsState() {
+            if (preserveGraphicsState) {
+                gs = new CanvasGraphicsState(gs);
+            }
+            else {
+                gs = null;
+            }
         }
 
         private LineSegment GetUnscaledBaselineWithOffset(float yOffset) {

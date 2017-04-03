@@ -614,7 +614,7 @@ namespace iText.IO.Font {
                                 int Subr = (int)((int?)TopElement) + LBias;
                                 // If the subr isn't in the Map -> Put in
                                 if (!hSubr.ContainsKey(Subr)) {
-                                    hSubr[Subr] = null;
+                                    hSubr.Put(Subr, null);
                                     lSubr.Add(Subr);
                                 }
                                 CalcHints(LSubrsOffsets[Subr], LSubrsOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);
@@ -631,7 +631,7 @@ namespace iText.IO.Font {
                                 int Subr = (int)((int?)TopElement) + GBias;
                                 // If the subr isn't in the Map -> Put in
                                 if (!hGSubrsUsed.ContainsKey(Subr)) {
-                                    hGSubrsUsed[Subr] = null;
+                                    hGSubrsUsed.Put(Subr, null);
                                     lGSubrsUsed.Add(Subr);
                                 }
                                 CalcHints(gsubrOffsets[Subr], gsubrOffsets[Subr + 1], LBias, GBias, LSubrsOffsets);

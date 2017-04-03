@@ -41,7 +41,6 @@
     address: sales@itextpdf.com
  */
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Org.BouncyCastle.Crypto;
@@ -54,14 +53,16 @@ using Org.BouncyCastle.Pkcs;
 
 namespace iText.Signatures {
     public class SigningTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
-                                                         .TestDirectory) + "/resources/itext/signatures/";
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(
+                                                         NUnit.Framework.TestContext.CurrentContext
+                                                             .TestDirectory) + "/resources/itext/signatures/";
 
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
                                                               .TestDirectory + "/test/itext/signatures/";
 
-        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext.CurrentContext
-                                                         .TestDirectory) + "/resources/itext/signatures/ks";
+        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(
+                                                         NUnit.Framework.TestContext.CurrentContext
+                                                             .TestDirectory) + "/resources/itext/signatures/ks";
 
         public static readonly char[] password = "password".ToCharArray();
 
@@ -111,14 +112,7 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", rect, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
                                                                                   + "cmp_" + fileName, destinationFolder,
-                "diff_",
-                new Dictionary<int, IList<Rectangle>> {
-                    {
-                        1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 690, 155, 15
-                            ))
-                    }
-                }
-                ));
+                "diff_", GetTestMap(new Rectangle(67, 690, 155, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -135,10 +129,7 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", null, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
                                                                                   + "cmp_" + fileName, destinationFolder,
-                "diff_",
-                new Dictionary<int, IList<Rectangle>> {
-                    {1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}
-                }));
+                "diff_", GetTestMap(new Rectangle(67, 725, 160, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -155,10 +146,7 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", null, false, false);
             NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
                                                                                   + "cmp_" + fileName, destinationFolder,
-                "diff_",
-                new Dictionary<int, IList<Rectangle>> {
-                    {1, IO.Util.JavaUtil.ArraysAsList(new Rectangle(67, 725, 160, 15))}
-                }));
+                "diff_", GetTestMap(new Rectangle(67, 725, 160, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -200,18 +188,68 @@ namespace iText.Signatures {
                 .CADES, "Test 1", "TestCity", rect, false, true);
         }
 
+        [NUnit.Framework.Test]
+        public virtual void SigningDocumentAppendModeIndirectPageAnnots() {
+            String file = "AnnotsIndirect.pdf";
+            String src = sourceFolder + file;
+            String dest = destinationFolder + file;
+
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+
+            String fieldName = "Signature1";
+            Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CADES, "Test 1", "TestCity", rect, false, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file,
+                destinationFolder,
+                "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+
+
+        [NUnit.Framework.Test]
+        public void SignEncryptedDoc() {
+            String fileName = "encrypted.pdf";
+            String src = sourceFolder + fileName;
+            String dest = destinationFolder + "signed_" + fileName;
+
+            String fieldName = "Signature1";
+
+            byte[] ownerPass = iText.IO.Util.EncodingUtil.ISO_8859_1.GetBytes("World");
+            PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(ownerPass));
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), true);
+
+            // Creating the appearance
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance()
+                .SetReason("Test1")
+                .SetLocation("TestCity");
+
+            signer.SetFieldName(fieldName);
+            // Creating the signature
+            IExternalSignature pks = new PrivateKeySignature(pk, DigestAlgorithms.SHA256);
+            signer.SignDetached(pks, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
+
+
+            LtvVerifier verifier =
+                new LtvVerifier(new PdfDocument(new PdfReader(dest, new ReaderProperties().SetPassword(ownerPass))));
+            verifier.SetVerifyRootCertificate(false);
+            verifier.Verify(null);
+
+            // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
+        }
+
+
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate
             [] chain, ICipherParameters pk, String digestAlgorithm, PdfSigner.CryptoStandard
-                subfilter, String reason, String location, Rectangle rectangleForNewField, bool
-                    setReuseAppearance, bool isAppendMode) {
+            subfilter, String reason, String location, Rectangle rectangleForNewField, bool
+            setReuseAppearance, bool isAppendMode) {
             PdfReader reader = new PdfReader(src);
             PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode
-                );
+            );
             // Creating the appearance
             PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason
-                ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
+            ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
                 appearance.SetPageRect(rectangleForNewField);
             }
@@ -219,6 +257,12 @@ namespace iText.Signatures {
             // Creating the signature
             IExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm);
             signer.SignDetached(pks, chain, null, null, null, 0, subfilter);
+        }
+
+        private static Dictionary<int, IList<Rectangle>> GetTestMap(Rectangle ignoredArea) {
+            return new Dictionary<int, IList<Rectangle>> {
+                {1, IO.Util.JavaUtil.ArraysAsList(ignoredArea)}
+            };
         }
     }
 }

@@ -207,8 +207,8 @@ namespace iText.IO.Image {
             }
             int planes = ReadWord(bmp.inputStream);
             bmp.bitsPerPixel = ReadWord(bmp.inputStream);
-            bmp.properties["color_planes"] = planes;
-            bmp.properties["bits_per_pixel"] = bmp.bitsPerPixel;
+            bmp.properties.Put("color_planes", planes);
+            bmp.properties.Put("bits_per_pixel", bmp.bitsPerPixel);
             // As BMP always has 3 rgb bands, except for Version 5,
             // which is bgra
             bmp.numBands = 3;
@@ -217,7 +217,7 @@ namespace iText.IO.Image {
             }
             if (size == 12) {
                 // Windows 2.x and OS/2 1.x
-                bmp.properties["bmp_version"] = "BMP v. 2.x";
+                bmp.properties.Put("bmp_version", "BMP v. 2.x");
                 // Classify the image type
                 if (bmp.bitsPerPixel == 1) {
                     bmp.imageType = VERSION_2_1_BIT;
@@ -275,29 +275,29 @@ namespace iText.IO.Image {
                 long colorsImportant = ReadDWord(bmp.inputStream);
                 switch ((int)bmp.compression) {
                     case BI_RGB: {
-                        bmp.properties["compression"] = "BI_RGB";
+                        bmp.properties.Put("compression", "BI_RGB");
                         break;
                     }
 
                     case BI_RLE8: {
-                        bmp.properties["compression"] = "BI_RLE8";
+                        bmp.properties.Put("compression", "BI_RLE8");
                         break;
                     }
 
                     case BI_RLE4: {
-                        bmp.properties["compression"] = "BI_RLE4";
+                        bmp.properties.Put("compression", "BI_RLE4");
                         break;
                     }
 
                     case BI_BITFIELDS: {
-                        bmp.properties["compression"] = "BI_BITFIELDS";
+                        bmp.properties.Put("compression", "BI_BITFIELDS");
                         break;
                     }
                 }
-                bmp.properties["x_pixels_per_meter"] = bmp.xPelsPerMeter;
-                bmp.properties["y_pixels_per_meter"] = bmp.yPelsPerMeter;
-                bmp.properties["colors_used"] = colorsUsed;
-                bmp.properties["colors_important"] = colorsImportant;
+                bmp.properties.Put("x_pixels_per_meter", bmp.xPelsPerMeter);
+                bmp.properties.Put("y_pixels_per_meter", bmp.yPelsPerMeter);
+                bmp.properties.Put("colors_used", colorsUsed);
+                bmp.properties.Put("colors_important", colorsImportant);
                 if (size == 40 || size == 52 || size == 56) {
                     int sizeOfPalette;
                     switch ((int)bmp.compression) {
@@ -329,9 +329,9 @@ namespace iText.IO.Image {
                                                 bmp.redMask = 0x7C00;
                                                 bmp.greenMask = 0x3E0;
                                                 bmp.blueMask = 0x1F;
-                                                bmp.properties["red_mask"] = bmp.redMask;
-                                                bmp.properties["green_mask"] = bmp.greenMask;
-                                                bmp.properties["blue_mask"] = bmp.blueMask;
+                                                bmp.properties.Put("red_mask", bmp.redMask);
+                                                bmp.properties.Put("green_mask", bmp.greenMask);
+                                                bmp.properties.Put("blue_mask", bmp.blueMask);
                                             }
                                             else {
                                                 if (bmp.bitsPerPixel == 32) {
@@ -339,9 +339,9 @@ namespace iText.IO.Image {
                                                     bmp.redMask = 0x00FF0000;
                                                     bmp.greenMask = 0x0000FF00;
                                                     bmp.blueMask = 0x000000FF;
-                                                    bmp.properties["red_mask"] = bmp.redMask;
-                                                    bmp.properties["green_mask"] = bmp.greenMask;
-                                                    bmp.properties["blue_mask"] = bmp.blueMask;
+                                                    bmp.properties.Put("red_mask", bmp.redMask);
+                                                    bmp.properties.Put("green_mask", bmp.greenMask);
+                                                    bmp.properties.Put("blue_mask", bmp.blueMask);
                                                 }
                                             }
                                         }
@@ -353,14 +353,14 @@ namespace iText.IO.Image {
                                 bmp.redMask = (int)ReadDWord(bmp.inputStream);
                                 bmp.greenMask = (int)ReadDWord(bmp.inputStream);
                                 bmp.blueMask = (int)ReadDWord(bmp.inputStream);
-                                bmp.properties["red_mask"] = bmp.redMask;
-                                bmp.properties["green_mask"] = bmp.greenMask;
-                                bmp.properties["blue_mask"] = bmp.blueMask;
+                                bmp.properties.Put("red_mask", bmp.redMask);
+                                bmp.properties.Put("green_mask", bmp.greenMask);
+                                bmp.properties.Put("blue_mask", bmp.blueMask);
                             }
                             // 56 byte header has mandatory alpha mask
                             if (size == 56) {
                                 bmp.alphaMask = (int)ReadDWord(bmp.inputStream);
-                                bmp.properties["alpha_mask"] = bmp.alphaMask;
+                                bmp.properties.Put("alpha_mask", bmp.alphaMask);
                             }
                             // Read in the palette
                             int numberOfEntries = (int)((bmp.bitmapOffset - 14 - size) / 4);
@@ -390,7 +390,7 @@ namespace iText.IO.Image {
                                 bmp.bitmapOffset = size + sizeOfPalette;
                             }
                             ReadPalette(sizeOfPalette, bmp);
-                            bmp.properties["bmp_version"] = "BMP v. 3.x";
+                            bmp.properties.Put("bmp_version", "BMP v. 3.x");
                             break;
                         }
 
@@ -410,17 +410,17 @@ namespace iText.IO.Image {
                             // 56 byte header has mandatory alpha mask
                             if (size == 56) {
                                 bmp.alphaMask = (int)ReadDWord(bmp.inputStream);
-                                bmp.properties["alpha_mask"] = bmp.alphaMask;
+                                bmp.properties.Put("alpha_mask", bmp.alphaMask);
                             }
-                            bmp.properties["red_mask"] = bmp.redMask;
-                            bmp.properties["green_mask"] = bmp.greenMask;
-                            bmp.properties["blue_mask"] = bmp.blueMask;
+                            bmp.properties.Put("red_mask", bmp.redMask);
+                            bmp.properties.Put("green_mask", bmp.greenMask);
+                            bmp.properties.Put("blue_mask", bmp.blueMask);
                             if (colorsUsed != 0) {
                                 // there is a palette
                                 sizeOfPalette = (int)colorsUsed * 4;
                                 ReadPalette(sizeOfPalette, bmp);
                             }
-                            bmp.properties["bmp_version"] = "BMP v. 3.x NT";
+                            bmp.properties.Put("bmp_version", "BMP v. 3.x NT");
                             break;
                         }
 
@@ -432,7 +432,7 @@ namespace iText.IO.Image {
                 else {
                     if (size == 108) {
                         // Windows 4.x BMP
-                        bmp.properties["bmp_version"] = "BMP v. 4.x";
+                        bmp.properties.Put("bmp_version", "BMP v. 4.x");
                         // rgb masks, valid only if comp is BI_BITFIELDS
                         bmp.redMask = (int)ReadDWord(bmp.inputStream);
                         bmp.greenMask = (int)ReadDWord(bmp.inputStream);
@@ -490,10 +490,10 @@ namespace iText.IO.Image {
                                 }
                             }
                         }
-                        bmp.properties["red_mask"] = bmp.redMask;
-                        bmp.properties["green_mask"] = bmp.greenMask;
-                        bmp.properties["blue_mask"] = bmp.blueMask;
-                        bmp.properties["alpha_mask"] = bmp.alphaMask;
+                        bmp.properties.Put("red_mask", bmp.redMask);
+                        bmp.properties.Put("green_mask", bmp.greenMask);
+                        bmp.properties.Put("blue_mask", bmp.blueMask);
+                        bmp.properties.Put("alpha_mask", bmp.alphaMask);
                         // Read in the palette
                         int numberOfEntries = (int)((bmp.bitmapOffset - 14 - size) / 4);
                         int sizeOfPalette = numberOfEntries * 4;
@@ -525,37 +525,37 @@ namespace iText.IO.Image {
                         switch ((int)csType) {
                             case LCS_CALIBRATED_RGB: {
                                 // All the new fields are valid only for this case
-                                bmp.properties["color_space"] = "LCS_CALIBRATED_RGB";
-                                bmp.properties["redX"] = redX;
-                                bmp.properties["redY"] = redY;
-                                bmp.properties["redZ"] = redZ;
-                                bmp.properties["greenX"] = greenX;
-                                bmp.properties["greenY"] = greenY;
-                                bmp.properties["greenZ"] = greenZ;
-                                bmp.properties["blueX"] = blueX;
-                                bmp.properties["blueY"] = blueY;
-                                bmp.properties["blueZ"] = blueZ;
-                                bmp.properties["gamma_red"] = gammaRed;
-                                bmp.properties["gamma_green"] = gammaGreen;
-                                bmp.properties["gamma_blue"] = gammaBlue;
+                                bmp.properties.Put("color_space", "LCS_CALIBRATED_RGB");
+                                bmp.properties.Put("redX", redX);
+                                bmp.properties.Put("redY", redY);
+                                bmp.properties.Put("redZ", redZ);
+                                bmp.properties.Put("greenX", greenX);
+                                bmp.properties.Put("greenY", greenY);
+                                bmp.properties.Put("greenZ", greenZ);
+                                bmp.properties.Put("blueX", blueX);
+                                bmp.properties.Put("blueY", blueY);
+                                bmp.properties.Put("blueZ", blueZ);
+                                bmp.properties.Put("gamma_red", gammaRed);
+                                bmp.properties.Put("gamma_green", gammaGreen);
+                                bmp.properties.Put("gamma_blue", gammaBlue);
                                 throw new Exception("Not implemented yet.");
                             }
 
                             case LCS_SRGB: {
                                 // Default Windows color space
-                                bmp.properties["color_space"] = "LCS_sRGB";
+                                bmp.properties.Put("color_space", "LCS_sRGB");
                                 break;
                             }
 
                             case LCS_CMYK: {
-                                bmp.properties["color_space"] = "LCS_CMYK";
+                                bmp.properties.Put("color_space", "LCS_CMYK");
                                 //		    break;
                                 throw new Exception("Not implemented yet.");
                             }
                         }
                     }
                     else {
-                        bmp.properties["bmp_version"] = "BMP v. 5.x";
+                        bmp.properties.Put("bmp_version", "BMP v. 5.x");
                         throw new Exception("Not implemented yet.");
                     }
                 }
@@ -818,7 +818,7 @@ namespace iText.IO.Image {
             colorSpace[2] = len / 3 - 1;
             colorSpace[3] = PdfEncodings.ConvertToString(np, null);
             bmp.additional = new Dictionary<String, Object>();
-            bmp.additional["ColorSpace"] = colorSpace;
+            bmp.additional.Put("ColorSpace", colorSpace);
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -835,7 +835,7 @@ namespace iText.IO.Image {
                 }
                 bytesRead += r;
             }
-            bmp.properties["palette"] = bmp.palette;
+            bmp.properties.Put("palette", bmp.palette);
         }
 
         // Deal with 1 Bit images using IndexColorModels

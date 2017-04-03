@@ -174,7 +174,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <returns>the existing registered handler, if any</returns>
         public virtual IXObjectDoHandler RegisterXObjectDoHandler(PdfName xobjectSubType, IXObjectDoHandler handler
             ) {
-            return xobjectDoHandlers[xobjectSubType] = handler;
+            return xobjectDoHandlers.Put(xobjectSubType, handler);
         }
 
         /// <summary>Registers a content operator that will be called when the specified operator string is encountered during content processing.
@@ -189,7 +189,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <param name="operator">the operator that will receive notification when the operator is encountered</param>
         /// <returns>the existing registered operator, if any</returns>
         public virtual IContentOperator RegisterContentOperator(String operatorString, IContentOperator @operator) {
-            return operators[operatorString] = @operator;
+            return operators.Put(operatorString, @operator);
         }
 
         /// <summary>
@@ -409,8 +409,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// In case it isn't applicable pass any <CODE>byte</CODE> value.
         /// </param>
         protected internal virtual void PaintPath(int operation, int rule) {
-            PathRenderInfo renderInfo = new PathRenderInfo(currentPath, operation, rule, isClip, clippingRule, GetGraphicsState
-                ());
+            PathRenderInfo renderInfo = new PathRenderInfo(currentPath, operation, rule, isClip, clippingRule, new ParserGraphicsState
+                (GetGraphicsState()));
             EventOccurred(renderInfo, EventType.RENDER_PATH);
             if (isClip) {
                 isClip = false;
@@ -459,7 +459,7 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
             PdfFont font = (PdfFont)(fontRef == null ? null : fontRef.Target);
             if (font == null) {
                 font = PdfFontFactory.CreateFont(fontDict);
-                cachedFonts[n] = new WeakReference(font);
+                cachedFonts.Put(n, new WeakReference(font));
             }
             return font;
         }
@@ -490,19 +490,27 @@ namespace iText.Kernel.Pdf.Canvas.Parser {
         /// <summary>This is a proxy to pass only those events to the event listener which are supported by it.</summary>
         /// <param name="data">event data</param>
         /// <param name="type">event type</param>
-        private void EventOccurred(IEventData data, EventType type) {
+        protected internal virtual void EventOccurred(IEventData data, EventType type) {
             if (supportedEvents == null || supportedEvents.Contains(type)) {
                 eventListener.EventOccurred(data, type);
+            }
+            if (data is TextRenderInfo) {
+                ((TextRenderInfo)data).ReleaseGraphicsState();
+            }
+            else {
+                if (data is PathRenderInfo) {
+                    ((PathRenderInfo)data).ReleaseGraphicsState();
+                }
             }
         }
 
         /// <summary>Displays text.</summary>
         /// <param name="string">the text to display</param>
         private void DisplayPdfString(PdfString @string) {
-            TextRenderInfo renderInfo = new TextRenderInfo(@string, GetGraphicsState(), textMatrix, markedContentStack
-                );
-            EventOccurred(renderInfo, EventType.RENDER_TEXT);
+            TextRenderInfo renderInfo = new TextRenderInfo(@string, new ParserGraphicsState(GetGraphicsState()), textMatrix
+                , markedContentStack);
             textMatrix = new Matrix(renderInfo.GetUnscaledWidth(), 0).Multiply(textMatrix);
+            EventOccurred(renderInfo, EventType.RENDER_TEXT);
         }
 
         /// <summary>Displays an XObject using the registered handler for this XObject's subtype</summary>

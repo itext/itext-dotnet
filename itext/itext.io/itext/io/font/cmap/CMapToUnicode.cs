@@ -129,7 +129,7 @@ namespace iText.IO.Font.Cmap {
             IDictionary<int, int?> result = new Dictionary<int, int?>();
             foreach (KeyValuePair<int, char[]> entry in byteMappings) {
                 if (entry.Value.Length <= 2) {
-                    result[ConvertToInt(entry.Value)] = entry.Key;
+                    result.Put(ConvertToInt(entry.Value), entry.Key);
                 }
             }
             return result;
@@ -146,19 +146,19 @@ namespace iText.IO.Font.Cmap {
         }
 
         internal virtual void AddChar(int cid, char[] uni) {
-            byteMappings[cid] = uni;
+            byteMappings.Put(cid, uni);
         }
 
         internal override void AddChar(String mark, CMapObject code) {
             try {
                 if (mark.Length == 1) {
                     char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
-                    byteMappings[(int)mark[0]] = dest;
+                    byteMappings.Put((int)mark[0], dest);
                 }
                 else {
                     if (mark.Length == 2) {
                         char[] dest = CreateCharsFromDoubleBytes((byte[])code.GetValue());
-                        byteMappings[(mark[0] << 8) + mark[1]] = dest;
+                        byteMappings.Put((mark[0] << 8) + mark[1], dest);
                     }
                     else {
                         ILogger logger = LoggerFactory.GetLogger(typeof(iText.IO.Font.Cmap.CMapToUnicode));

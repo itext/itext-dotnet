@@ -560,7 +560,7 @@ namespace iText.Layout.Hyphenation {
         /// objects.
         /// </param>
         public virtual void AddException(String word, IList hyphenatedword) {
-            stoplist[word] = hyphenatedword;
+            stoplist.Put(word, hyphenatedword);
         }
 
         /// <summary>Add a pattern to the tree.</summary>

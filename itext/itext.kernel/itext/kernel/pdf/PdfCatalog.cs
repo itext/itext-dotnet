@@ -229,7 +229,7 @@ namespace iText.Kernel.Pdf {
             PdfNameTree tree = nameTrees.Get(treeType);
             if (tree == null) {
                 tree = new PdfNameTree(this, treeType);
-                nameTrees[treeType] = tree;
+                nameTrees.Put(treeType, tree);
             }
             return tree;
         }
@@ -253,9 +253,14 @@ namespace iText.Kernel.Pdf {
         /// For the content usage dictionary, use PdfName.Language
         /// </remarks>
         public virtual void SetLang(PdfString lang) {
-            GetPdfObject().Put(PdfName.Lang, lang);
+            Put(PdfName.Lang, lang);
         }
 
+        public virtual PdfString GetLang() {
+            return GetPdfObject().GetAsString(PdfName.Lang);
+        }
+
+        [Obsolete]
         public virtual PdfString GetLang(PdfName lang) {
             return GetPdfObject().GetAsString(PdfName.Lang);
         }
@@ -268,14 +273,16 @@ namespace iText.Kernel.Pdf {
             }
             else {
                 PdfDictionary existingExtensionDict = extensions.GetAsDictionary(extension.GetPrefix());
-                int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
-                if (diff < 0) {
-                    return;
-                }
-                diff = extension.GetExtensionLevel() - existingExtensionDict.GetAsNumber(PdfName.ExtensionLevel).IntValue(
-                    );
-                if (diff <= 0) {
-                    return;
+                if (existingExtensionDict != null) {
+                    int diff = extension.GetBaseVersion().CompareTo(existingExtensionDict.GetAsName(PdfName.BaseVersion));
+                    if (diff < 0) {
+                        return;
+                    }
+                    diff = extension.GetExtensionLevel() - existingExtensionDict.GetAsNumber(PdfName.ExtensionLevel).IntValue(
+                        );
+                    if (diff <= 0) {
+                        return;
+                    }
                 }
             }
             extensions.Put(extension.GetPrefix(), extension.GetDeveloperExtensions());
@@ -287,17 +294,19 @@ namespace iText.Kernel.Pdf {
         /// </summary>
         /// <param name="collection"/>
         public virtual iText.Kernel.Pdf.PdfCatalog SetCollection(PdfCollection collection) {
-            GetPdfObject().Put(PdfName.Collection, collection.GetPdfObject());
+            Put(PdfName.Collection, collection.GetPdfObject());
             return this;
         }
 
         public virtual iText.Kernel.Pdf.PdfCatalog Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
         public virtual iText.Kernel.Pdf.PdfCatalog Remove(PdfName key) {
             GetPdfObject().Remove(key);
+            SetModified();
             return this;
         }
 
@@ -436,7 +445,7 @@ namespace iText.Kernel.Pdf {
                 PdfObject pageObject = ((PdfArray)dest).Get(0);
                 foreach (PdfPage oldPage in page2page.Keys) {
                     if (oldPage.GetPdfObject() == pageObject) {
-                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                        // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
                         PdfArray copiedArray = (PdfArray)dest.CopyTo(toDocument, false);
                         d = new PdfExplicitDestination(copiedArray);
                         break;
@@ -455,7 +464,7 @@ namespace iText.Kernel.Pdf {
                             if (oldPage.GetPdfObject() == pageObject) {
                                 d = new PdfStringDestination(srcDestName);
                                 if (!IsEqualSameNameDestExist(page2page, toDocument, srcDestName, srcDestArray, oldPage)) {
-                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied  
+                                    // in the copiedArray old page ref will be correctly replaced by the new page ref as this page is already copied
                                     PdfArray copiedArray = ((PdfArray)srcDestArray.CopyTo(toDocument, false));
                                     toDocument.AddNamedDestination(srcDestName, copiedArray);
                                 }
@@ -492,7 +501,7 @@ namespace iText.Kernel.Pdf {
                 IList<PdfOutline> outs = pagesWithOutlines.Get(pageObj);
                 if (outs == null) {
                     outs = new List<PdfOutline>();
-                    pagesWithOutlines[pageObj] = outs;
+                    pagesWithOutlines.Put(pageObj, outs);
                 }
                 outs.Add(outline);
             }

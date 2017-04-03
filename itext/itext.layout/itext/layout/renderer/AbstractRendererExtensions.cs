@@ -46,7 +46,10 @@ using iText.Layout.Properties;
 
 namespace iText.Layout.Renderer
 {
-    static class AbstractRendererExtensions
+    /// <summary>
+    /// Helper class for easier acces for float and int properties.
+    /// </summary>
+    public static class AbstractRendererExtensions
     {
 
         /// <summary>Returns a property with a certain key, as a floating point value.</summary>

@@ -438,10 +438,10 @@ namespace iText.Layout.Renderer {
                         if (unicode > -1) {
                             UnicodeScript glyphScript = iText.IO.Util.UnicodeScriptUtil.Of(unicode);
                             if (scriptFrequency.ContainsKey(glyphScript)) {
-                                scriptFrequency[glyphScript] = scriptFrequency.Get(glyphScript) + 1;
+                                scriptFrequency.Put(glyphScript, scriptFrequency.Get(glyphScript) + 1);
                             }
                             else {
-                                scriptFrequency[glyphScript] = 1;
+                                scriptFrequency.Put(glyphScript, 1);
                             }
                         }
                     }
@@ -588,7 +588,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_615();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_622();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -652,8 +652,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_615 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_615() {
+        private sealed class _IGlyphLineFilter_622 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_622() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1022,16 +1022,17 @@ namespace iText.Layout.Renderer {
             else {
                 if (font is String) {
                     FontProvider provider = this.GetProperty<FontProvider>(Property.FONT_PROVIDER);
-                    if (provider == null) {
-                        throw new InvalidOperationException("Invalid font type. FontProvider expected. Cannot resolve font with string value"
+                    FontSet fontSet = this.GetProperty<FontSet>(Property.FONT_SET);
+                    if (provider.GetFontSet().IsEmpty() && (fontSet == null || fontSet.IsEmpty())) {
+                        throw new InvalidOperationException("Invalid font type. FontProvider and FontSet are empty. Cannot resolve font with string value."
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
-                        (String)font), fc);
+                        (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
-                        iText.Layout.Renderer.TextRenderer textRenderer = new iText.Layout.Renderer.TextRenderer(this);
-                        textRenderer.SetGlyphLineAndFont(strategy.NextGlyphs(), strategy.GetCurrentFont());
+                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(new GlyphLine(strategy.NextGlyphs()), strategy
+                            .GetCurrentFont());
                         addTo.Add(textRenderer);
                     }
                     return true;
@@ -1040,6 +1041,20 @@ namespace iText.Layout.Renderer {
                     throw new InvalidOperationException("Invalid font type.");
                 }
             }
+        }
+
+        protected internal virtual void SetGlyphLineAndFont(GlyphLine gl, PdfFont font) {
+            this.text = gl;
+            this.font = font;
+            this.otfFeaturesApplied = false;
+            this.strToBeConverted = null;
+            SetProperty(Property.FONT, font);
+        }
+
+        protected internal virtual iText.Layout.Renderer.TextRenderer CreateCopy(GlyphLine gl, PdfFont font) {
+            iText.Layout.Renderer.TextRenderer copy = new iText.Layout.Renderer.TextRenderer(this);
+            copy.SetGlyphLineAndFont(gl, font);
+            return copy;
         }
 
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
@@ -1163,14 +1178,6 @@ namespace iText.Layout.Renderer {
                 otfFeaturesApplied = false;
                 strToBeConverted = null;
             }
-        }
-
-        private void SetGlyphLineAndFont(IList<Glyph> glyphs, PdfFont font) {
-            this.text = new GlyphLine(glyphs);
-            this.font = font;
-            this.otfFeaturesApplied = false;
-            this.strToBeConverted = null;
-            SetProperty(Property.FONT, font);
         }
 
         private void SaveWordBreakIfNotYetSaved(Glyph wordBreak) {

@@ -144,7 +144,7 @@ namespace iText.Kernel.Pdf {
         [System.NonSerialized]
         protected internal TagStructureContext tagStructureContext;
 
-        private static long lastDocumentId = new long();
+        private static readonly AtomicLong lastDocumentId = new AtomicLong();
 
         private long documentId;
 
@@ -163,7 +163,7 @@ namespace iText.Kernel.Pdf {
             if (reader == null) {
                 throw new ArgumentNullException("reader");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -180,7 +180,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.writer = writer;
             this.properties = new StampingProperties();
             // default values of the StampingProperties doesn't affect anything
@@ -209,7 +209,7 @@ namespace iText.Kernel.Pdf {
             if (writer == null) {
                 throw new ArgumentNullException("writer");
             }
-            documentId = IncrementDocumentId();
+            documentId = lastDocumentId.IncrementAndGet();
             this.reader = reader;
             this.writer = writer;
             this.properties = properties;
@@ -619,8 +619,7 @@ namespace iText.Kernel.Pdf {
                         xmp.GetOutputStream().Write(xmpMetadata);
                         xmp.Put(PdfName.Type, PdfName.Metadata);
                         xmp.Put(PdfName.Subtype, PdfName.XML);
-                        PdfEncryption crypto = writer.crypto;
-                        if (crypto != null && !crypto.IsMetadataEncrypted()) {
+                        if (writer.crypto != null && !writer.crypto.IsMetadataEncrypted()) {
                             PdfArray ar = new PdfArray();
                             ar.Add(PdfName.Crypt);
                             xmp.Put(PdfName.Filter, ar);
@@ -639,7 +638,7 @@ namespace iText.Kernel.Pdf {
                     }
                     info.GetPdfObject().Put(PdfName.Producer, new PdfString(producer));
                     CheckIsoConformance();
-                    PdfObject crypto_1 = null;
+                    PdfObject crypto = null;
                     if (properties.appendMode) {
                         if (structTreeRoot != null) {
                             TryFlushTagStructure(true);
@@ -652,7 +651,7 @@ namespace iText.Kernel.Pdf {
                         }
                         PdfObject pageRoot = catalog.GetPageTree().GenerateTree();
                         if (catalog.GetPdfObject().IsModified() || pageRoot.IsModified()) {
-                            catalog.GetPdfObject().Put(PdfName.Pages, pageRoot);
+                            catalog.Put(PdfName.Pages, pageRoot);
                             catalog.GetPdfObject().Flush(false);
                         }
                         foreach (KeyValuePair<PdfName, PdfNameTree> entry in catalog.nameTrees) {
@@ -669,7 +668,7 @@ namespace iText.Kernel.Pdf {
                         if (writer.crypto != null) {
                             System.Diagnostics.Debug.Assert(reader.decrypt.GetPdfObject() == writer.crypto.GetPdfObject(), "Conflict with source encryption"
                                 );
-                            crypto_1 = reader.decrypt.GetPdfObject();
+                            crypto = reader.decrypt.GetPdfObject();
                         }
                     }
                     else {
@@ -709,14 +708,14 @@ namespace iText.Kernel.Pdf {
                         }
                     }
                     byte[] originalFileID = null;
-                    if (crypto_1 == null && writer.crypto != null) {
+                    if (crypto == null && writer.crypto != null) {
                         originalFileID = writer.crypto.GetDocumentId();
-                        crypto_1 = writer.crypto.GetPdfObject();
-                        crypto_1.MakeIndirect(this);
+                        crypto = writer.crypto.GetPdfObject();
+                        crypto.MakeIndirect(this);
                         // To avoid encryption of XrefStream and Encryption dictionary remove crypto.
                         // NOTE. No need in reverting, because it is the last operation with the document.
                         writer.crypto = null;
-                        crypto_1.Flush(false);
+                        crypto.Flush(false);
                     }
                     PdfObject fileId;
                     bool isModified = false;
@@ -760,7 +759,7 @@ namespace iText.Kernel.Pdf {
                     // may appear when user gets trailer and explicitly sets new root or info dictionaries.
                     trailer.Put(PdfName.Root, catalog.GetPdfObject());
                     trailer.Put(PdfName.Info, info.GetPdfObject());
-                    xref.WriteXrefTableAndTrailer(this, fileId, crypto_1);
+                    xref.WriteXrefTableAndTrailer(this, fileId, crypto);
                     writer.Flush();
                     Counter counter = GetCounter();
                     if (counter != null) {
@@ -983,13 +982,13 @@ namespace iText.Kernel.Pdf {
                 PdfPage newPage = page.CopyTo(toDocument, copier);
                 copiedPages.Add(newPage);
                 if (!page2page.ContainsKey(page)) {
-                    page2page[page] = newPage;
+                    page2page.Put(page, newPage);
                 }
                 if (lastCopiedPageNum >= pageNum) {
                     rangesOfPagesWithIncreasingNumbers.Add(new Dictionary<PdfPage, PdfPage>());
                 }
                 int lastRangeInd = rangesOfPagesWithIncreasingNumbers.Count - 1;
-                rangesOfPagesWithIncreasingNumbers[lastRangeInd][page] = newPage;
+                rangesOfPagesWithIncreasingNumbers[lastRangeInd].Put(page, newPage);
                 if (insertInBetween) {
                     toDocument.AddPage(pageInsertIndex, newPage);
                 }
@@ -1530,7 +1529,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>Adds PdfFont without an checks</summary>
         /// <returns>the same PdfFont instance.</returns>
         internal virtual PdfFont AddFont(PdfFont font) {
-            documentFonts[font.GetPdfObject().GetIndirectReference()] = font;
+            documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
             return font;
         }
 
@@ -1558,7 +1557,7 @@ namespace iText.Kernel.Pdf {
             IList<PdfLinkAnnotation> pageAnnotations = linkAnnotations.Get(page);
             if (pageAnnotations == null) {
                 pageAnnotations = new List<PdfLinkAnnotation>();
-                linkAnnotations[page] = pageAnnotations;
+                linkAnnotations.Put(page, pageAnnotations);
             }
             pageAnnotations.Add(annotation);
         }
@@ -1622,9 +1621,9 @@ namespace iText.Kernel.Pdf {
                             pdfVersion = catalogVersion;
                         }
                     }
-                    if (catalog.GetPdfObject().ContainsKey(PdfName.Metadata) && null != catalog.GetPdfObject().Get(PdfName.Metadata
-                        )) {
-                        xmpMetadata = catalog.GetPdfObject().GetAsStream(PdfName.Metadata).GetBytes();
+                    PdfStream xmpMetadataStream = catalog.GetPdfObject().GetAsStream(PdfName.Metadata);
+                    if (xmpMetadataStream != null) {
+                        xmpMetadata = xmpMetadataStream.GetBytes();
                         try {
                             reader.pdfAConformanceLevel = PdfAConformanceLevel.GetConformanceLevel(XMPMetaFactory.ParseFromBuffer(xmpMetadata
                                 ));
@@ -2146,10 +2145,6 @@ namespace iText.Kernel.Pdf {
                 buf.Append(version.GetVersion());
                 return buf.ToString();
             }
-        }
-
-        private long IncrementDocumentId() {
-            return System.Threading.Interlocked.Increment(ref lastDocumentId);
         }
 
         void System.IDisposable.Dispose() {

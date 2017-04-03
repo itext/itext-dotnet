@@ -293,7 +293,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfNamespace ns = nameToNamespace.Get(namespaceName);
             if (ns == null) {
                 ns = new PdfNamespace(namespaceName);
-                nameToNamespace[namespaceName] = ns;
+                nameToNamespace.Put(namespaceName, ns);
             }
             return ns;
         }
@@ -672,7 +672,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 if (!namespaces.Contains(namespaceObj)) {
                     namespaces.Add(namespaceObj);
                 }
-                nameToNamespace[@namespace.GetNamespaceName()] = @namespace;
+                nameToNamespace.Put(@namespace.GetNamespaceName(), @namespace);
             }
         }
 
@@ -697,8 +697,8 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         internal virtual void SaveConnectionBetweenStructAndModel(IAccessibleElement element, PdfStructElem structElem
             ) {
-            connectedModelToStruct[element] = structElem;
-            connectedStructToModel[structElem.GetPdfObject()] = element;
+            connectedModelToStruct.Put(element, structElem);
+            connectedStructToModel.Put(structElem.GetPdfObject(), element);
         }
 
         /// <returns>parent of the flushed tag</returns>
@@ -767,7 +767,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             PdfStructTreeRoot structTreeRoot = document.GetStructTreeRoot();
             foreach (PdfNamespace @namespace in structTreeRoot.GetNamespaces()) {
                 namespaces.Add(@namespace.GetPdfObject());
-                nameToNamespace[@namespace.GetNamespaceName()] = @namespace;
+                nameToNamespace.Put(@namespace.GetNamespaceName(), @namespace);
             }
         }
 

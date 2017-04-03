@@ -244,7 +244,7 @@ namespace iText.IO.Codec {
             }
 
             public virtual void AddSegment(Jbig2SegmentReader.Jbig2Segment s) {
-                segs[s.segmentNumber] = s;
+                segs.Put(s.segmentNumber, s);
             }
         }
 
@@ -272,7 +272,7 @@ namespace iText.IO.Codec {
                     // D.1
                     Jbig2SegmentReader.Jbig2Segment tmp = ReadHeader();
                     ReadSegment(tmp);
-                    segments[tmp.segmentNumber] = tmp;
+                    segments.Put(tmp.segmentNumber, tmp);
                 }
                 while (this.ra.GetPosition() < this.ra.Length());
             }
@@ -281,7 +281,7 @@ namespace iText.IO.Codec {
                 Jbig2SegmentReader.Jbig2Segment tmp;
                 do {
                     tmp = ReadHeader();
-                    segments[tmp.segmentNumber] = tmp;
+                    segments.Put(tmp.segmentNumber, tmp);
                 }
                 while (tmp.type != END_OF_FILE);
                 foreach (int integer in segments.Keys) {
@@ -404,7 +404,7 @@ namespace iText.IO.Codec {
             s.page_association_size = page_association_size;
             s.page_association_offset = page_association_offset;
             if (segment_page_association > 0 && !pages.ContainsKey(segment_page_association)) {
-                pages[segment_page_association] = new Jbig2SegmentReader.Jbig2Page(segment_page_association, this);
+                pages.Put(segment_page_association, new Jbig2SegmentReader.Jbig2Page(segment_page_association, this));
             }
             if (segment_page_association > 0) {
                 pages.Get(segment_page_association).AddSegment(s);

@@ -68,7 +68,7 @@ namespace iText.Layout {
         protected internal IDictionary<int, Object> properties = new Dictionary<int, Object>();
 
         public virtual void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         public virtual bool HasProperty(int property) {

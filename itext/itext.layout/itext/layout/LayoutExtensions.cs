@@ -165,6 +165,12 @@ namespace iText.Layout {
             return value;
         }
 
+        public static TValue Put<TKey, TValue>(this IDictionary<TKey, TValue> col, TKey key, TValue value) {
+            TValue oldVal = col.Get(key);
+            col[key] = value;
+            return oldVal;
+        }
+
         public static List<T> SubList<T>(this IList<T> list, int fromIndex, int toIndex) {
             return ((List<T>) list).GetRange(fromIndex, toIndex - fromIndex);
         }

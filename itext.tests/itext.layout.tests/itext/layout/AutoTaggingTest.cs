@@ -301,6 +301,27 @@ namespace iText.Layout {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
+        public virtual void TableTest07() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "tableTest07.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            Table table = new Table(new float[] { 130, 130, 260 }).AddHeaderCell(new Cell().Add(new Paragraph("hcell 1, 1"
+                ))).AddHeaderCell(new Cell().Add(new Paragraph("hcell 1, 2"))).AddHeaderCell(new Cell().Add(new Paragraph
+                ("hcell 1, 3"))).AddCell(new Cell().Add(new Paragraph("cell 2, 1"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 2, 2"))).AddCell(new Cell().Add(new Paragraph("cell 2, 3"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 1"))).AddCell(new Cell().Add(new Paragraph("cell 3, 2"))).AddCell(new Cell().Add(new Paragraph
+                ("cell 3, 3"))).AddFooterCell(new Cell().Add(new Paragraph("fcell 4, 1"))).AddFooterCell(new Cell().Add
+                (new Paragraph("fcell 4, 2"))).AddFooterCell(new Cell().Add(new Paragraph("fcell 4, 3")));
+            doc.Add(table);
+            doc.Close();
+            CompareResult("tableTest07.pdf", "cmp_tableTest07.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
         public virtual void ListTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest01.pdf"));
             pdfDocument.SetTagged();

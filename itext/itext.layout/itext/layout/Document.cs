@@ -206,10 +206,14 @@ namespace iText.Layout {
             if (immediateFlush) {
                 throw new InvalidOperationException("Operation not supported with immediate flush");
             }
+            IRenderer nextRelayoutRenderer = rootRenderer != null ? rootRenderer.GetNextRenderer() : null;
+            if (nextRelayoutRenderer == null || !(nextRelayoutRenderer is RootRenderer)) {
+                nextRelayoutRenderer = new DocumentRenderer(this, immediateFlush);
+            }
             while (pdfDocument.GetNumberOfPages() > 0) {
                 pdfDocument.RemovePage(pdfDocument.GetNumberOfPages());
             }
-            rootRenderer = new DocumentRenderer(this, immediateFlush);
+            rootRenderer = (RootRenderer)nextRelayoutRenderer;
             foreach (IElement element in childElements) {
                 rootRenderer.AddChild(element.CreateRendererSubTree());
             }

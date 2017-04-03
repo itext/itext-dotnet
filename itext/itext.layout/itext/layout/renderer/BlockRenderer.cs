@@ -240,19 +240,20 @@ namespace iText.Layout.Renderer {
                                     overflowRenderer.childRenderers.Clear();
                                     overflowRenderer.childRenderers = new List<IRenderer>(childRenderers);
                                 }
-                                if (HasProperty(Property.MAX_HEIGHT)) {
+                                float? maxHeight = RetrieveMaxHeight();
+                                if (maxHeight != null) {
                                     if (isPositioned) {
                                         CorrectPositionedLayout(layoutBox);
                                     }
-                                    overflowRenderer.SetProperty(Property.MAX_HEIGHT, RetrieveMaxHeight() - occupiedArea.GetBBox().GetHeight()
-                                        );
+                                    overflowRenderer.SetProperty(Property.MAX_HEIGHT, maxHeight - occupiedArea.GetBBox().GetHeight());
                                 }
-                                if (HasProperty(Property.MIN_HEIGHT)) {
-                                    overflowRenderer.SetProperty(Property.MIN_HEIGHT, RetrieveMinHeight() - occupiedArea.GetBBox().GetHeight()
-                                        );
+                                float? minHeight = RetrieveMinHeight();
+                                if (minHeight != null) {
+                                    overflowRenderer.SetProperty(Property.MIN_HEIGHT, minHeight - occupiedArea.GetBBox().GetHeight());
                                 }
-                                if (HasProperty(Property.HEIGHT)) {
-                                    overflowRenderer.SetProperty(Property.HEIGHT, RetrieveHeight() - occupiedArea.GetBBox().GetHeight());
+                                float? height = RetrieveHeight();
+                                if (height != null) {
+                                    overflowRenderer.SetProperty(Property.HEIGHT, height - occupiedArea.GetBBox().GetHeight());
                                 }
                                 if (wasHeightClipped) {
                                     occupiedArea.GetBBox().MoveDown((float)blockMaxHeight - occupiedArea.GetBBox().GetHeight()).SetHeight((float

@@ -78,6 +78,8 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         private CanvasGraphicsState gs;
 
+        private bool preserveGraphicsState;
+
         /// <param name="path">The path to be rendered.</param>
         /// <param name="operation">
         /// One of the possible combinations of
@@ -210,6 +212,23 @@ namespace iText.Kernel.Pdf.Canvas.Parser.Data {
 
         public virtual Color GetFillColor() {
             return gs.GetFillColor();
+        }
+
+        public virtual bool IsPreserveGraphicsState() {
+            return preserveGraphicsState;
+        }
+
+        public virtual void PreserveGraphicsState() {
+            this.preserveGraphicsState = true;
+        }
+
+        public virtual void ReleaseGraphicsState() {
+            if (preserveGraphicsState) {
+                gs = new CanvasGraphicsState(gs);
+            }
+            else {
+                gs = null;
+            }
         }
     }
 }

@@ -71,16 +71,25 @@ namespace iText.Layout.Renderer {
             throw new InvalidOperationException("Not applicable for DocumentRenderer");
         }
 
+        /// <summary>
+        /// For
+        /// <see cref="DocumentRenderer"/>
+        /// , this has a meaning of the renderer that will be used for relayout.
+        /// </summary>
+        /// <returns>relayout renderer.</returns>
         public override IRenderer GetNextRenderer() {
-            return null;
+            return new iText.Layout.Renderer.DocumentRenderer(document, immediateFlush);
         }
 
         protected internal override LayoutArea UpdateCurrentArea(LayoutResult overflowResult) {
             AreaBreak areaBreak = overflowResult != null && overflowResult.GetAreaBreak() != null ? overflowResult.GetAreaBreak
                 () : null;
-            MoveToNextPage();
-            while (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE && currentPageNumber < document
-                .GetPdfDocument().GetNumberOfPages()) {
+            if (areaBreak != null && areaBreak.GetAreaType() == AreaBreakType.LAST_PAGE) {
+                while (currentPageNumber < document.GetPdfDocument().GetNumberOfPages()) {
+                    MoveToNextPage();
+                }
+            }
+            else {
                 MoveToNextPage();
             }
             PageSize customPageSize = areaBreak != null ? areaBreak.GetPageSize() : null;

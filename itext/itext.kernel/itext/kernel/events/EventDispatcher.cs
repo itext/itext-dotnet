@@ -59,7 +59,7 @@ namespace iText.Kernel.Events {
             IList<IEventHandler> handlers = eventHandlers.Get(type);
             if (handlers == null) {
                 handlers = new List<IEventHandler>();
-                eventHandlers[type] = handlers;
+                eventHandlers.Put(type, handlers);
             }
             handlers.Add(handler);
         }

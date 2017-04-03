@@ -171,12 +171,12 @@ namespace iText.Layout.Renderer {
                             }
 
                             case ListNumberingType.GREEK_LOWER: {
-                                numberText = GreekAlphabetNumbering.ToGreekAlphabetNumberLowerCase(index);
+                                numberText = GreekAlphabetNumbering.ToGreekAlphabetNumber(index, false, true);
                                 break;
                             }
 
                             case ListNumberingType.GREEK_UPPER: {
-                                numberText = GreekAlphabetNumbering.ToGreekAlphabetNumberUpperCase(index);
+                                numberText = GreekAlphabetNumbering.ToGreekAlphabetNumber(index, true, true);
                                 break;
                             }
 

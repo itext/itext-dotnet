@@ -283,7 +283,7 @@ namespace iText.Layout.Renderer {
 
         /// <summary><inheritDoc/></summary>
         public virtual void SetProperty(int property, Object value) {
-            properties[property] = value;
+            properties.Put(property, value);
         }
 
         /// <summary><inheritDoc/></summary>
@@ -551,6 +551,17 @@ namespace iText.Layout.Renderer {
         public virtual IRenderer SetParent(IRenderer parent) {
             this.parent = parent;
             return this;
+        }
+
+        /// <summary>
+        /// Gets the parent of this
+        /// <see cref="IRenderer"/>
+        /// , if previously set by
+        /// <see cref="SetParent(IRenderer)"/>
+        /// </summary>
+        /// <returns>parent of the renderer</returns>
+        public virtual IRenderer GetParent() {
+            return parent;
         }
 
         /// <summary><inheritDoc/></summary>
@@ -1227,8 +1238,8 @@ namespace iText.Layout.Renderer {
         // NOTE: It neither change Font Property of renderer, nor is guarantied to contain all glyphs used in renderer.
         // TODO this mechanism does not take text into account
         internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
-            return provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch().GetPdfFont(provider
-                );
+            return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
+                ());
         }
 
         public abstract IRenderer GetNextRenderer();

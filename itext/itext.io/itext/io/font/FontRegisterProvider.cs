@@ -67,46 +67,46 @@ namespace iText.IO.Font {
 
         /// <summary>Creates new FontRegisterProvider</summary>
         internal FontRegisterProvider() {
-            fontNames[FontConstants.COURIER.ToLowerInvariant()] = FontConstants.COURIER;
-            fontNames[FontConstants.COURIER_BOLD.ToLowerInvariant()] = FontConstants.COURIER_BOLD;
-            fontNames[FontConstants.COURIER_OBLIQUE.ToLowerInvariant()] = FontConstants.COURIER_OBLIQUE;
-            fontNames[FontConstants.COURIER_BOLDOBLIQUE.ToLowerInvariant()] = FontConstants.COURIER_BOLDOBLIQUE;
-            fontNames[FontConstants.HELVETICA.ToLowerInvariant()] = FontConstants.HELVETICA;
-            fontNames[FontConstants.HELVETICA_BOLD.ToLowerInvariant()] = FontConstants.HELVETICA_BOLD;
-            fontNames[FontConstants.HELVETICA_OBLIQUE.ToLowerInvariant()] = FontConstants.HELVETICA_OBLIQUE;
-            fontNames[FontConstants.HELVETICA_BOLDOBLIQUE.ToLowerInvariant()] = FontConstants.HELVETICA_BOLDOBLIQUE;
-            fontNames[FontConstants.SYMBOL.ToLowerInvariant()] = FontConstants.SYMBOL;
-            fontNames[FontConstants.TIMES_ROMAN.ToLowerInvariant()] = FontConstants.TIMES_ROMAN;
-            fontNames[FontConstants.TIMES_BOLD.ToLowerInvariant()] = FontConstants.TIMES_BOLD;
-            fontNames[FontConstants.TIMES_ITALIC.ToLowerInvariant()] = FontConstants.TIMES_ITALIC;
-            fontNames[FontConstants.TIMES_BOLDITALIC.ToLowerInvariant()] = FontConstants.TIMES_BOLDITALIC;
-            fontNames[FontConstants.ZAPFDINGBATS.ToLowerInvariant()] = FontConstants.ZAPFDINGBATS;
+            fontNames.Put(FontConstants.COURIER.ToLowerInvariant(), FontConstants.COURIER);
+            fontNames.Put(FontConstants.COURIER_BOLD.ToLowerInvariant(), FontConstants.COURIER_BOLD);
+            fontNames.Put(FontConstants.COURIER_OBLIQUE.ToLowerInvariant(), FontConstants.COURIER_OBLIQUE);
+            fontNames.Put(FontConstants.COURIER_BOLDOBLIQUE.ToLowerInvariant(), FontConstants.COURIER_BOLDOBLIQUE);
+            fontNames.Put(FontConstants.HELVETICA.ToLowerInvariant(), FontConstants.HELVETICA);
+            fontNames.Put(FontConstants.HELVETICA_BOLD.ToLowerInvariant(), FontConstants.HELVETICA_BOLD);
+            fontNames.Put(FontConstants.HELVETICA_OBLIQUE.ToLowerInvariant(), FontConstants.HELVETICA_OBLIQUE);
+            fontNames.Put(FontConstants.HELVETICA_BOLDOBLIQUE.ToLowerInvariant(), FontConstants.HELVETICA_BOLDOBLIQUE);
+            fontNames.Put(FontConstants.SYMBOL.ToLowerInvariant(), FontConstants.SYMBOL);
+            fontNames.Put(FontConstants.TIMES_ROMAN.ToLowerInvariant(), FontConstants.TIMES_ROMAN);
+            fontNames.Put(FontConstants.TIMES_BOLD.ToLowerInvariant(), FontConstants.TIMES_BOLD);
+            fontNames.Put(FontConstants.TIMES_ITALIC.ToLowerInvariant(), FontConstants.TIMES_ITALIC);
+            fontNames.Put(FontConstants.TIMES_BOLDITALIC.ToLowerInvariant(), FontConstants.TIMES_BOLDITALIC);
+            fontNames.Put(FontConstants.ZAPFDINGBATS.ToLowerInvariant(), FontConstants.ZAPFDINGBATS);
             IList<String> family;
             family = new List<String>();
             family.Add(FontConstants.COURIER);
             family.Add(FontConstants.COURIER_BOLD);
             family.Add(FontConstants.COURIER_OBLIQUE);
             family.Add(FontConstants.COURIER_BOLDOBLIQUE);
-            fontFamilies[FontConstants.COURIER.ToLowerInvariant()] = family;
+            fontFamilies.Put(FontConstants.COURIER.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(FontConstants.HELVETICA);
             family.Add(FontConstants.HELVETICA_BOLD);
             family.Add(FontConstants.HELVETICA_OBLIQUE);
             family.Add(FontConstants.HELVETICA_BOLDOBLIQUE);
-            fontFamilies[FontConstants.HELVETICA.ToLowerInvariant()] = family;
+            fontFamilies.Put(FontConstants.HELVETICA.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(FontConstants.SYMBOL);
-            fontFamilies[FontConstants.SYMBOL.ToLowerInvariant()] = family;
+            fontFamilies.Put(FontConstants.SYMBOL.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(FontConstants.TIMES_ROMAN);
             family.Add(FontConstants.TIMES_BOLD);
             family.Add(FontConstants.TIMES_ITALIC);
             family.Add(FontConstants.TIMES_BOLDITALIC);
-            fontFamilies[FontConstants.TIMES.ToLowerInvariant()] = family;
-            fontFamilies[FontConstants.TIMES_ROMAN.ToLowerInvariant()] = family;
+            fontFamilies.Put(FontConstants.TIMES.ToLowerInvariant(), family);
+            fontFamilies.Put(FontConstants.TIMES_ROMAN.ToLowerInvariant(), family);
             family = new List<String>();
             family.Add(FontConstants.ZAPFDINGBATS);
-            fontFamilies[FontConstants.ZAPFDINGBATS.ToLowerInvariant()] = family;
+            fontFamilies.Put(FontConstants.ZAPFDINGBATS.ToLowerInvariant(), family);
         }
 
         /// <summary>Constructs a <CODE>Font</CODE>-object.</summary>
@@ -172,14 +172,14 @@ namespace iText.IO.Font {
         /// <param name="path">the font path</param>
         internal virtual void RegisterFontFamily(String familyName, String fullName, String path) {
             if (path != null) {
-                fontNames[fullName] = path;
+                fontNames.Put(fullName, path);
             }
             IList<String> family;
             lock (fontFamilies) {
                 family = fontFamilies.Get(familyName);
                 if (family == null) {
                     family = new List<String>();
-                    fontFamilies[familyName] = family;
+                    fontFamilies.Put(familyName, family);
                 }
             }
             lock (family) {
@@ -227,10 +227,10 @@ namespace iText.IO.Font {
                     FontProgram fontProgram = FontProgramFactory.CreateFont(path);
                     Object[] allNames = new Object[] { fontProgram.GetFontNames().GetFontName(), fontProgram.GetFontNames().GetFamilyName
                         (), fontProgram.GetFontNames().GetFullName() };
-                    fontNames[((String)allNames[0]).ToLowerInvariant()] = path;
+                    fontNames.Put(((String)allNames[0]).ToLowerInvariant(), path);
                     if (alias != null) {
                         String lcAlias = alias.ToLowerInvariant();
-                        fontNames[lcAlias] = path;
+                        fontNames.Put(lcAlias, path);
                         if (lcAlias.EndsWith("regular")) {
                             //do this job to give higher priority to regular fonts in comparison with light, narrow, etc
                             SaveCopyOfRegularFont(lcAlias, path);
@@ -241,7 +241,7 @@ namespace iText.IO.Font {
                     //full name
                     foreach (String[] name in names) {
                         String lcName = name[3].ToLowerInvariant();
-                        fontNames[lcName] = path;
+                        fontNames.Put(lcName, path);
                         if (lcName.EndsWith("regular")) {
                             //do this job to give higher priority to regular fonts in comparison with light, narrow, etc
                             SaveCopyOfRegularFont(lcName, path);
@@ -301,8 +301,8 @@ namespace iText.IO.Font {
                             String familyName = fontProgram.GetFontNames().GetFamilyName()[0][3].ToLowerInvariant();
                             String psName = fontProgram.GetFontNames().GetFontName().ToLowerInvariant();
                             RegisterFontFamily(familyName, fullName, null);
-                            fontNames[psName] = path;
-                            fontNames[fullName] = path;
+                            fontNames.Put(psName, path);
+                            fontNames.Put(fullName, path);
                         }
                     }
                 }
@@ -320,7 +320,7 @@ namespace iText.IO.Font {
             //remove "regular" at the end of the font name
             String alias = regularFontName.JSubstring(0, regularFontName.Length - 7).Trim();
             if (!fontNames.ContainsKey(alias)) {
-                fontNames[alias] = path;
+                fontNames.Put(alias, path);
                 return true;
             }
             return false;

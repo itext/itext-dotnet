@@ -53,7 +53,7 @@ namespace iText.IO.Codec {
             );
 
         public virtual void AddField(TiffWriter.FieldBase field) {
-            ifd[System.Convert.ToInt32(field.GetTag())] = field;
+            ifd.Put(System.Convert.ToInt32(field.GetTag()), field);
         }
 
         public virtual int GetIfdSize() {

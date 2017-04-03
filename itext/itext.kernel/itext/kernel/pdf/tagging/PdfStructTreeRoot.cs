@@ -406,7 +406,7 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private void FlushAllKids(IPdfStructElem elem) {
             foreach (IPdfStructElem kid in elem.GetKids()) {
-                if (kid is PdfStructElem) {
+                if (kid is PdfStructElem && !((PdfStructElem)kid).IsFlushed()) {
                     FlushAllKids(kid);
                     ((PdfStructElem)kid).Flush();
                 }
