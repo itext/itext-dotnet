@@ -265,7 +265,7 @@ namespace iText.Layout.Renderer {
                 IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
                 PdfName role = accessibleElement.GetRole();
                 if (role != null && !PdfName.Artifact.Equals(role)) {
-                    AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, document);
+                    AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, tagPointer);
                     tagPointer.AddTag(accessibleElement);
                 }
                 else {

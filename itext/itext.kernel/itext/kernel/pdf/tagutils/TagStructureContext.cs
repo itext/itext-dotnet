@@ -462,7 +462,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 PdfStructElem firstKid = (PdfStructElem)rootKids[0];
                 firstKidRole = firstKid.GetRole();
                 firstKidNsName = firstKid.GetNamespace() != null ? firstKid.GetNamespace().GetNamespaceName() : StandardStructureNamespace
-                    .GetDefaultStandardStructureNamespace();
+                    .GetDefault();
             }
             if (rootKids.Count == 1 && StandardStructureNamespace.RoleBelongsToStandardNamespace(firstKidRole, firstKidNsName
                 ) && IsRoleAllowedToBeRoot(firstKidRole)) {
@@ -625,18 +625,18 @@ namespace iText.Kernel.Pdf.Tagutils {
                         nsStr = firstKid.GetNamespace().GetNamespaceName().ToUnicodeString();
                     }
                     else {
-                        nsStr = StandardStructureNamespace.GetDefaultStandardStructureNamespace().ToUnicodeString();
+                        nsStr = StandardStructureNamespace.GetDefault().ToUnicodeString();
                     }
                     logger.Warn(String.Format(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD, firstKid
                         .GetRole().GetValue(), nsStr));
                 }
-                if (resolvedMapping == null || !StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7.Equals(resolvedMapping
-                    .GetNamespace().GetNamespaceName())) {
-                    documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0);
+                if (resolvedMapping == null || !StandardStructureNamespace._1_7.Equals(resolvedMapping.GetNamespace().GetNamespaceName
+                    ())) {
+                    documentDefaultNamespace = FetchNamespace(StandardStructureNamespace._2_0);
                 }
             }
             else {
-                documentDefaultNamespace = FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0);
+                documentDefaultNamespace = FetchNamespace(StandardStructureNamespace._2_0);
             }
         }
 

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
-using iText.Kernel.Pdf.Tagutils;
 
 namespace iText.Layout.Renderer {
     internal class AccessibleTypes {
@@ -88,26 +87,21 @@ namespace iText.Layout.Renderer {
             illustrationRoles.Add(PdfName.Form);
         }
 
-        internal static int IdentifyType(PdfDocument doc, PdfName role, PdfNamespace @namespace) {
-            IRoleMappingResolver mappingResolver = doc.GetTagStructureContext().ResolveMappingToStandardOrDomainSpecificRole
-                (role, @namespace);
-            if (mappingResolver != null) {
-                role = mappingResolver.GetRole();
-                if (groupingRoles.Contains(role)) {
-                    return Grouping;
+        internal static int IdentifyType(PdfName role) {
+            if (groupingRoles.Contains(role)) {
+                return Grouping;
+            }
+            else {
+                if (blockLevelRoles.Contains(role) || StandardStructureNamespace.IsHnRole(role)) {
+                    return BlockLevel;
                 }
                 else {
-                    if (blockLevelRoles.Contains(role) || StandardStructureNamespace.IsHnRole(role)) {
-                        return BlockLevel;
+                    if (inlineLevelRoles.Contains(role)) {
+                        return InlineLevel;
                     }
                     else {
-                        if (inlineLevelRoles.Contains(role)) {
-                            return InlineLevel;
-                        }
-                        else {
-                            if (illustrationRoles.Contains(role)) {
-                                return Illustration;
-                            }
+                        if (illustrationRoles.Contains(role)) {
+                            return Illustration;
                         }
                     }
                 }

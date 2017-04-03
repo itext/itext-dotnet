@@ -1,4 +1,5 @@
 using System;
+using iText.IO.Log;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 
@@ -46,7 +47,8 @@ namespace iText.Kernel.Pdf.Tagging {
 
         public virtual iText.Kernel.Pdf.Tagging.PdfNamespace AddNamespaceRoleMapping(PdfName thisNsRole, PdfName defaultNsRole
             ) {
-            GetNamespaceRoleMap(true).Put(thisNsRole, defaultNsRole);
+            PdfObject prevVal = GetNamespaceRoleMap(true).Put(thisNsRole, defaultNsRole);
+            LogOverwritingOfMappingIfNeeded(thisNsRole, prevVal);
             SetModified();
             return this;
         }
@@ -56,7 +58,8 @@ namespace iText.Kernel.Pdf.Tagging {
             PdfArray targetMapping = new PdfArray();
             targetMapping.Add(targetNsRole);
             targetMapping.Add(targetNs.GetPdfObject());
-            GetNamespaceRoleMap(true).Put(thisNsRole, targetMapping);
+            PdfObject prevVal = GetNamespaceRoleMap(true).Put(thisNsRole, targetMapping);
+            LogOverwritingOfMappingIfNeeded(thisNsRole, prevVal);
             SetModified();
             return this;
         }
@@ -78,6 +81,16 @@ namespace iText.Kernel.Pdf.Tagging {
                 Put(PdfName.RoleMapNS, roleMapNs);
             }
             return roleMapNs;
+        }
+
+        private void LogOverwritingOfMappingIfNeeded(PdfName thisNsRole, PdfObject prevVal) {
+            if (prevVal != null) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
+                PdfString nsName = GetNamespaceName();
+                String nsNameStr = nsName != null ? nsName.ToUnicodeString() : "this";
+                logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole, nsNameStr
+                    ));
+            }
         }
     }
 }

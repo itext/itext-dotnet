@@ -60,21 +60,29 @@ namespace iText.Layout.Renderer {
     /// </summary>
     public class AccessibleAttributesApplier {
         public static void ApplyLayoutAttributes(PdfName role, AbstractRenderer renderer, PdfDocument doc) {
+            ApplyLayoutAttributes(role, renderer, doc.GetTagStructureContext().GetAutoTaggingPointer());
+        }
+
+        public static void ApplyLayoutAttributes(PdfName role, AbstractRenderer renderer, TagTreePointer taggingPointer
+            ) {
             if (!(renderer.GetModelElement() is IAccessibleElement)) {
                 return;
             }
             IAccessibleElement modelElement = (IAccessibleElement)renderer.GetModelElement();
             AccessibilityProperties accessibilityProperties = modelElement.GetAccessibilityProperties();
-            PdfNamespace actualNs = accessibilityProperties.GetNamespace() != null ? accessibilityProperties.GetNamespace
-                () : doc.GetTagStructureContext().GetAutoTaggingPointer().GetNamespaceForNewTags();
-            int tagType = AccessibleTypes.IdentifyType(doc, role, actualNs);
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(role, accessibilityProperties, taggingPointer
+                );
+            if (resolvedMapping == null) {
+                return;
+            }
+            int tagType = AccessibleTypes.IdentifyType(resolvedMapping.GetRole());
             PdfDictionary attributes = new PdfDictionary();
             PdfName attributesType = PdfName.Layout;
             attributes.Put(PdfName.O, attributesType);
             //TODO WritingMode attribute applying when needed
             ApplyCommonLayoutAttributes(renderer, attributes);
             if (tagType == AccessibleTypes.BlockLevel) {
-                ApplyBlockLevelLayoutAttributes(role, renderer, attributes, doc);
+                ApplyBlockLevelLayoutAttributes(role, renderer, attributes, taggingPointer.GetDocument());
             }
             if (tagType == AccessibleTypes.InlineLevel) {
                 ApplyInlineLevelLayoutAttributes(renderer, attributes);
@@ -92,15 +100,22 @@ namespace iText.Layout.Renderer {
             ApplyListAttributes(renderer, null);
         }
 
-        public static void ApplyListAttributes(AbstractRenderer renderer, PdfDocument doc) {
-            if (!(renderer.GetModelElement() is List)) {
+        public static void ApplyListAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
+            IAccessibleElement modelElement = (IAccessibleElement)renderer.GetModelElement();
+            if (!(modelElement is List)) {
+                return;
+            }
+            AccessibilityProperties accessibilityProperties = modelElement.GetAccessibilityProperties();
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(modelElement.GetRole(), accessibilityProperties
+                , taggingPointer);
+            if (resolvedMapping == null || !PdfName.L.Equals(resolvedMapping.GetRole())) {
                 return;
             }
             PdfDictionary attributes = new PdfDictionary();
             PdfName attributesType = PdfName.List;
             attributes.Put(PdfName.O, attributesType);
             Object listSymbol = renderer.GetProperty<Object>(Property.LIST_SYMBOL);
-            bool tagStructurePdf2 = IsTagStructurePdf2(doc);
+            bool tagStructurePdf2 = IsTagStructurePdf2(resolvedMapping.GetNamespace());
             if (listSymbol is ListNumberingType) {
                 ListNumberingType numberingType = (ListNumberingType)listSymbol;
                 attributes.Put(PdfName.ListNumbering, TransformNumberingTypeToName(numberingType, tagStructurePdf2));
@@ -124,15 +139,26 @@ namespace iText.Layout.Renderer {
         }
 
         public static void ApplyTableAttributes(AbstractRenderer renderer) {
+            ApplyTableAttributes(renderer, null);
+        }
+
+        public static void ApplyTableAttributes(AbstractRenderer renderer, TagTreePointer taggingPointer) {
             if (!(renderer.GetModelElement() is IAccessibleElement)) {
                 return;
             }
-            IAccessibleElement accessibleElement = (IAccessibleElement)renderer.GetModelElement();
+            IAccessibleElement modelElement = (IAccessibleElement)renderer.GetModelElement();
+            AccessibilityProperties accessibilityProperties = modelElement.GetAccessibilityProperties();
+            IRoleMappingResolver resolvedMapping = ResolveMappingToStandard(modelElement.GetRole(), accessibilityProperties
+                , taggingPointer);
+            if (resolvedMapping == null || !PdfName.TD.Equals(resolvedMapping.GetRole()) && !PdfName.TH.Equals(resolvedMapping
+                .GetRole())) {
+                return;
+            }
             PdfDictionary attributes = new PdfDictionary();
             PdfName attributesType = PdfName.Table;
             attributes.Put(PdfName.O, attributesType);
-            if (accessibleElement is Cell) {
-                Cell cell = (Cell)accessibleElement;
+            if (modelElement is Cell) {
+                Cell cell = (Cell)modelElement;
                 if (cell.GetRowspan() != 1) {
                     attributes.Put(PdfName.RowSpan, new PdfNumber(cell.GetRowspan()));
                 }
@@ -141,7 +167,7 @@ namespace iText.Layout.Renderer {
                 }
             }
             if (attributes.Size() > 1) {
-                AccessibilityProperties properties = accessibleElement.GetAccessibilityProperties();
+                AccessibilityProperties properties = modelElement.GetAccessibilityProperties();
                 RemoveSameAttributesTypeIfPresent(properties, attributesType);
                 properties.AddAttributes(attributes);
             }
@@ -383,15 +409,29 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private static bool IsTagStructurePdf2(PdfDocument pdfDoc) {
-            if (pdfDoc != null) {
-                TagTreePointer p = pdfDoc.GetTagStructureContext().GetAutoTaggingPointer();
-                if (p.GetNamespaceForNewTags() != null) {
-                    PdfString namespaceName = p.GetNamespaceForNewTags().GetNamespaceName();
-                    return StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0.Equals(namespaceName);
+        private static IRoleMappingResolver ResolveMappingToStandard(PdfName role, AccessibilityProperties accessibilityProperties
+            , TagTreePointer taggingPointer) {
+            TagStructureContext tagContext = taggingPointer.GetDocument().GetTagStructureContext();
+            PdfNamespace @namespace = GetActualNsForElem(accessibilityProperties, taggingPointer);
+            return tagContext.ResolveMappingToStandardOrDomainSpecificRole(role, @namespace);
+        }
+
+        private static bool IsTagStructurePdf2(PdfNamespace @namespace) {
+            return @namespace != null && StandardStructureNamespace._2_0.Equals(@namespace.GetNamespaceName());
+        }
+
+        private static PdfNamespace GetActualNsForElem(AccessibilityProperties accessibilityProperties, TagTreePointer
+             taggingPointer) {
+            PdfNamespace @namespace = null;
+            if (accessibilityProperties != null && accessibilityProperties.GetNamespace() != null) {
+                @namespace = accessibilityProperties.GetNamespace();
+            }
+            else {
+                if (taggingPointer != null) {
+                    @namespace = taggingPointer.GetNamespaceForNewTags();
                 }
             }
-            return false;
+            return @namespace;
         }
 
         private static PdfName TransformTextAlignmentValueToName(TextAlignment? textAlignment) {

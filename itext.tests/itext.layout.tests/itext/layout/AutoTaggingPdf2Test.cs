@@ -31,7 +31,6 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleDocDefault() {
-            // TODO {1}
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocDefault.pdf", new WriterProperties
                 ().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
@@ -52,27 +51,11 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleDocNullNsByDefault() {
-            // TODO {0}
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocNullNsByDefault.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             pdfDocument.GetTagStructureContext().SetDocumentDefaultNamespace(null);
             Document document = new Document(pdfDocument);
-            // TODO test this along with 1.7 doc, also with standard namespace of 1.7 explicitly set
-            //        boolean expectedExcThrown = true;
-            //        try {
-            //            Paragraph h9 = new Paragraph("Header level 9");
-            //            h9.setRole(new PdfName("H9"));
-            //            document.add(h9);
-            //            expectedExcThrown = false;
-            //        } catch (PdfException ex) {
-            //            if (!MessageFormat.format(PdfException.RoleIsNotMappedToAnyStandardRole, "/H9").equals(ex.getMessage())) {
-            //                expectedExcThrown = false;
-            //            }
-            //        }
-            //        if (!expectedExcThrown) {
-            //            Assert.fail("Expected exception was not thrown.");
-            //        }
             Paragraph h1 = new Paragraph("Header level 1");
             h1.SetRole(PdfName.H1);
             Paragraph helloWorldPara = new Paragraph("Hello World from iText7");
@@ -88,13 +71,11 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void SimpleDocExplicitlyOldStdNs() {
-            // TODO {0}
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "simpleDocExplicitlyOldStdNs.pdf"
                 , new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
-            PdfNamespace @namespace = tagsContext.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7
-                );
+            PdfNamespace @namespace = tagsContext.FetchNamespace(StandardStructureNamespace._1_7);
             tagsContext.SetDocumentDefaultNamespace(@namespace);
             Document document = new Document(pdfDocument);
             Paragraph h1 = new Paragraph("Header level 1");
@@ -112,16 +93,11 @@ namespace iText.Layout {
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
         public virtual void CustomRolesMappingPdf2() {
-            // TODO {2}
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "customRolesMappingPdf2.pdf", 
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
-            // TODO still attributes applier didn't apply L unordered type for the list when it's mapped
-            // actually, because at this moment namespace in auto tagging pointer is not std2
-            // TODO would be nice to acquire it somewhere specific to has always same object
-            PdfNamespace stdNamespace2 = tagsContext.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                );
+            PdfNamespace stdNamespace2 = tagsContext.FetchNamespace(StandardStructureNamespace._2_0);
             PdfNamespace xhtmlNs = new PdfNamespace("http://www.w3.org/1999/xhtml");
             PdfNamespace html4Ns = new PdfNamespace("http://www.w3.org/TR/html4");
             PdfName h9 = new PdfName("H9");
@@ -193,8 +169,7 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
             tagsContext.SetDocumentDefaultNamespace(null);
-            PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7
-                );
+            PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace._1_7);
             Document document = new Document(pdfDocument);
             Paragraph hPara = new Paragraph("This is header.");
             hPara.SetRole(PdfName.H);
@@ -249,8 +224,7 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
                 tagsContext.SetDocumentDefaultNamespace(null);
-                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7
-                    );
+                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace._1_7);
                 Document document = new Document(pdfDocument);
                 pdfDocument.GetStructTreeRoot().AddRoleMapping(AutoTaggingPdf2Test.HtmlRoles.p, PdfName.P);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
@@ -276,8 +250,7 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 TagStructureContext tagsContext = pdfDocument.GetTagStructureContext();
                 tagsContext.SetDocumentDefaultNamespace(null);
-                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7
-                    );
+                PdfNamespace explicitDefaultNs = tagsContext.FetchNamespace(StandardStructureNamespace._1_7);
                 Document document = new Document(pdfDocument);
                 explicitDefaultNs.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.p, PdfName.P);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
@@ -323,8 +296,7 @@ namespace iText.Layout {
                 new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             pdfDocument.SetTagged();
             TagStructureContext tagsCntxt = pdfDocument.GetTagStructureContext();
-            PdfNamespace stdNs2 = tagsCntxt.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                );
+            PdfNamespace stdNs2 = tagsCntxt.FetchNamespace(StandardStructureNamespace._2_0);
             stdNs2.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.p, PdfName.P);
             Document document = new Document(pdfDocument);
             Paragraph customRolePara = new Paragraph("Hello world text.");
@@ -346,7 +318,7 @@ namespace iText.Layout {
                 pdfDocument.SetTagged();
                 Document document = new Document(pdfDocument);
                 // deliberately creating namespace via constructor instead of using TagStructureContext#fetchNamespace
-                PdfNamespace stdNs2 = new PdfNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0);
+                PdfNamespace stdNs2 = new PdfNamespace(StandardStructureNamespace._2_0);
                 stdNs2.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.p, PdfName.P, stdNs2);
                 Paragraph customRolePara = new Paragraph("Hello world text.");
                 customRolePara.SetRole(AutoTaggingPdf2Test.HtmlRoles.p);
@@ -375,11 +347,10 @@ namespace iText.Layout {
             pdfDocument.SetTagged();
             Document document = new Document(pdfDocument);
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
-            PdfNamespace pointerNs = tagCntxt.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                );
+            PdfNamespace pointerNs = tagCntxt.FetchNamespace(StandardStructureNamespace._2_0);
             pointerNs.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.span, PdfName.Span, pointerNs);
             // deliberately creating namespace via constructor instead of using TagStructureContext#fetchNamespace
-            PdfNamespace stdNs2 = new PdfNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0);
+            PdfNamespace stdNs2 = new PdfNamespace(StandardStructureNamespace._2_0);
             stdNs2.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.span, PdfName.Em, stdNs2);
             Text customRolePText1 = new Text("Hello world text 1.");
             customRolePText1.SetRole(AutoTaggingPdf2Test.HtmlRoles.span);
@@ -407,8 +378,7 @@ namespace iText.Layout {
                     new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
                 pdfDocument.SetTagged();
                 Document document = new Document(pdfDocument);
-                PdfNamespace stdNs2 = pdfDocument.GetTagStructureContext().FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                    );
+                PdfNamespace stdNs2 = pdfDocument.GetTagStructureContext().FetchNamespace(StandardStructureNamespace._2_0);
                 int numOfTransitiveMappings = 120;
                 PdfName prevRole = AutoTaggingPdf2Test.HtmlRoles.span;
                 for (int i = 0; i < numOfTransitiveMappings; ++i) {
@@ -521,8 +491,7 @@ namespace iText.Layout {
                 (destinationFolder + "stampTest05.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
             PdfNamespace xhtmlNs = tagCntxt.FetchNamespace(new PdfString("http://www.w3.org/1999/xhtml"));
-            PdfNamespace ssn2 = tagCntxt.FetchNamespace(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                );
+            PdfNamespace ssn2 = tagCntxt.FetchNamespace(StandardStructureNamespace._2_0);
             xhtmlNs.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.ul, PdfName.L, ssn2);
             TagTreePointer pointer = new TagTreePointer(pdfDocument);
             pointer.MoveToKid(PdfName.Table).MoveToKid(PdfName.TR).MoveToKid(1, PdfName.TD).MoveToKid(PdfName.L);

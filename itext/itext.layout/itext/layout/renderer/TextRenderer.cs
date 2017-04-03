@@ -179,9 +179,9 @@ namespace iText.Layout.Renderer {
             Glyph wordBreakGlyphAtLineEnding = null;
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
-            // true in situations like "\nHello World" or "Hello\nWorld" 
+            // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
-            // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line  
+            // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line
             bool forcePartialSplitOnFirstChar = false;
             // true in situations like "Hello\nWorld"
             bool ignoreNewLineSymbol = false;
@@ -496,7 +496,7 @@ namespace iText.Layout.Renderer {
                 if (role != null && !PdfName.Artifact.Equals(role)) {
                     tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
                     if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
-                        AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, document);
+                        AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, tagPointer);
                     }
                     tagPointer.AddTag(accessibleElement, true);
                 }
@@ -1179,7 +1179,7 @@ namespace iText.Layout.Renderer {
                     wordBreak = font.GetGlyph('\u0020');
                 }
                 // we don't want to print '\n' in content stream
-                // it's word-break character at the end of the line, which we want to save after trimming 
+                // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
             }
         }

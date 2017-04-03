@@ -12,7 +12,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         internal RoleMappingResolverPdf2(PdfName role, PdfNamespace @namespace, PdfDocument document) {
             this.currRole = role;
             this.currNamespace = @namespace;
-            PdfString defaultNsName = StandardStructureNamespace.GetDefaultStandardStructureNamespace();
+            PdfString defaultNsName = StandardStructureNamespace.GetDefault();
             PdfDictionary defaultNsRoleMap = document.GetStructTreeRoot().GetRoleMap();
             this.defaultNamespace = new PdfNamespace(defaultNsName).SetNamespaceRoleMap(defaultNsRoleMap);
             if (currNamespace == null) {
@@ -29,12 +29,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public virtual bool CurrentRoleIsStandard() {
-            bool stdRole17 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7
-                ) && StandardStructureNamespace.RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_1_7
-                );
-            bool stdRole20 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                ) && StandardStructureNamespace.RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace.STANDARD_STRUCTURE_NAMESPACE_FOR_2_0
-                );
+            bool stdRole17 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace._1_7) && StandardStructureNamespace
+                .RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace._1_7);
+            bool stdRole20 = currNamespace.GetNamespaceName().Equals(StandardStructureNamespace._2_0) && StandardStructureNamespace
+                .RoleBelongsToStandardNamespace(currRole, StandardStructureNamespace._2_0);
             return stdRole17 || stdRole20;
         }
 

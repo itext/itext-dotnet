@@ -864,7 +864,7 @@ namespace iText.Layout.Renderer {
                 TagTreePointer tagPointer = tagStructureContext.GetAutoTaggingPointer();
                 IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
                 if (!tagStructureContext.IsElementConnectedToTag(accessibleElement)) {
-                    AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, document);
+                    AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, tagPointer);
                 }
                 Table modelElement = (Table)GetModelElement();
                 tagPointer.AddTag(accessibleElement, true);

@@ -8,14 +8,12 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private static ICollection<PdfName> STD_STRUCT_NAMESPACE_2_0_TYPES = new HashSet<PdfName>();
 
-        public static readonly PdfString STANDARD_STRUCTURE_NAMESPACE_FOR_1_7 = new PdfString("http://www.iso.org/pdf/ssn"
-            , null, true);
-
-        public static readonly PdfString STANDARD_STRUCTURE_NAMESPACE_FOR_2_0 = new PdfString("http://www.iso.org/pdf2/ssn"
-            , null, true);
-
         private static readonly PdfString MATH_ML = new PdfString("http://www.w3.org/1998/Math/MathML", null, true
             );
+
+        public static readonly PdfString _1_7 = new PdfString("http://www.iso.org/pdf/ssn", null, true);
+
+        public static readonly PdfString _2_0 = new PdfString("http://www.iso.org/pdf2/ssn", null, true);
 
         static StandardStructureNamespace() {
             // other namespaces
@@ -37,8 +35,8 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         // Hn, this type is handled in roleBelongsToStandardNamespace method
-        public static PdfString GetDefaultStandardStructureNamespace() {
-            return STANDARD_STRUCTURE_NAMESPACE_FOR_1_7;
+        public static PdfString GetDefault() {
+            return _1_7;
         }
 
         public static bool IsKnownDomainSpecificNamespace(PdfNamespace @namespace) {
@@ -46,11 +44,11 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public static bool RoleBelongsToStandardNamespace(PdfName role, PdfString standardNamespaceName) {
-            if (STANDARD_STRUCTURE_NAMESPACE_FOR_1_7.Equals(standardNamespaceName)) {
+            if (_1_7.Equals(standardNamespaceName)) {
                 return STD_STRUCT_NAMESPACE_1_7_TYPES.Contains(role);
             }
             else {
-                if (STANDARD_STRUCTURE_NAMESPACE_FOR_2_0.Equals(standardNamespaceName)) {
+                if (_2_0.Equals(standardNamespaceName)) {
                     return STD_STRUCT_NAMESPACE_2_0_TYPES.Contains(role) || IsHnRole(role);
                 }
             }

@@ -41,7 +41,9 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
@@ -127,7 +129,13 @@ namespace iText.Kernel.Pdf.Tagging {
         }
 
         public virtual void AddRoleMapping(PdfName fromRole, PdfName toRole) {
-            GetRoleMap().Put(fromRole, toRole);
+            PdfObject prevVal = GetRoleMap().Put(fromRole, toRole);
+            if (prevVal != null && prevVal is PdfName) {
+                ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfStructTreeRoot));
+                logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_STRUCT_ROOT_OVERWRITTEN, fromRole, prevVal
+                    , toRole));
+            }
+            SetModified();
         }
 
         public virtual PdfDictionary GetRoleMap() {
