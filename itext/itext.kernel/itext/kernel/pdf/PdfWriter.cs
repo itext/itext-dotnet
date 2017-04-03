@@ -103,17 +103,6 @@ namespace iText.Kernel.Pdf {
             // For internal usage only
             //forewarned is forearmed
             this.properties = properties;
-            EncryptionProperties encryptProps = properties.encryptionProperties;
-            if (properties.IsStandardEncryptionUsed()) {
-                crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
-                    , encryptProps.encryptionAlgorithm, PdfEncryption.GenerateNewDocumentId());
-            }
-            else {
-                if (properties.IsPublicKeyEncryptionUsed()) {
-                    crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
-                        .encryptionAlgorithm);
-                }
-            }
             if (properties.debugMode) {
             }
         }
@@ -197,6 +186,20 @@ namespace iText.Kernel.Pdf {
                 }
             }
             return objectStream;
+        }
+
+        protected internal virtual void InitCryptoIfSpecified(PdfVersion version) {
+            EncryptionProperties encryptProps = properties.encryptionProperties;
+            if (properties.IsStandardEncryptionUsed()) {
+                crypto = new PdfEncryption(encryptProps.userPassword, encryptProps.ownerPassword, encryptProps.standardEncryptPermissions
+                    , encryptProps.encryptionAlgorithm, PdfEncryption.GenerateNewDocumentId(), version);
+            }
+            else {
+                if (properties.IsPublicKeyEncryptionUsed()) {
+                    crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
+                        .encryptionAlgorithm);
+                }
+            }
         }
 
         /// <summary>Flushes the object.</summary>

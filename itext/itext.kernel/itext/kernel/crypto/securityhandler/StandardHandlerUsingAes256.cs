@@ -44,6 +44,8 @@ address: sales@itextpdf.com
 using System;
 using System.IO;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Math;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Crypto;
@@ -57,12 +59,20 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private const int SALT_LENGTH = 8;
 
-        private const int OU_LENGTH = 48;
+        private bool isPdf2;
 
         protected internal bool encryptMetadata;
 
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1.")]
         public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
-            , int permissions, bool encryptMetadata, bool embeddedFilesOnly) {
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly)
+            : this(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, embeddedFilesOnly, 
+                null) {
+        }
+
+        public StandardHandlerUsingAes256(PdfDictionary encryptionDictionary, byte[] userPassword, byte[] ownerPassword
+            , int permissions, bool encryptMetadata, bool embeddedFilesOnly, PdfVersion version) {
+            isPdf2 = version != null && version.CompareTo(PdfVersion.PDF_2_0) >= 0;
             InitKeyAndFillDictionary(encryptionDictionary, userPassword, ownerPassword, permissions, encryptMetadata, 
                 embeddedFilesOnly);
         }
@@ -101,40 +111,37 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 if (userPassword == null) {
                     userPassword = new byte[0];
                 }
-                byte[] uvs = IVGenerator.GetIV(8);
-                byte[] uks = IVGenerator.GetIV(8);
+                else {
+                    if (userPassword.Length > 127) {
+                        userPassword = iText.IO.Util.JavaUtil.ArraysCopyOf(userPassword, 127);
+                    }
+                }
+                if (ownerPassword.Length > 127) {
+                    ownerPassword = iText.IO.Util.JavaUtil.ArraysCopyOf(ownerPassword, 127);
+                }
+                // first 8 bytes are validation salt; second 8 bytes are key salt
+                byte[] userValAndKeySalt = IVGenerator.GetIV(16);
+                byte[] ownerValAndKeySalt = IVGenerator.GetIV(16);
                 nextObjectKey = IVGenerator.GetIV(32);
                 nextObjectKeySize = 32;
-                // Algorithm 3.8.1
-                IDigest md = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
-                md.Update(userPassword, 0, Math.Min(userPassword.Length, 127));
-                md.Update(uvs);
-                userKey = new byte[48];
-                md.Digest(userKey, 0, 32);
-                System.Array.Copy(uvs, 0, userKey, 32, 8);
-                System.Array.Copy(uks, 0, userKey, 40, 8);
-                // Algorithm 3.8.2
-                md.Update(userPassword, 0, Math.Min(userPassword.Length, 127));
-                md.Update(uks);
-                AESCipherCBCnoPad ac = new AESCipherCBCnoPad(true, md.Digest());
+                byte[] hash;
+                // Algorithm 8.1
+                hash = ComputeHash(userPassword, userValAndKeySalt, 0, 8);
+                userKey = iText.IO.Util.JavaUtil.ArraysCopyOf(hash, 48);
+                System.Array.Copy(userValAndKeySalt, 0, userKey, 32, 16);
+                // Algorithm 8.2
+                hash = ComputeHash(userPassword, userValAndKeySalt, 8, 8);
+                AESCipherCBCnoPad ac = new AESCipherCBCnoPad(true, hash);
                 ueKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
-                // Algorithm 3.9.1
-                byte[] ovs = IVGenerator.GetIV(8);
-                byte[] oks = IVGenerator.GetIV(8);
-                md.Update(ownerPassword, 0, Math.Min(ownerPassword.Length, 127));
-                md.Update(ovs);
-                md.Update(userKey);
-                ownerKey = new byte[48];
-                md.Digest(ownerKey, 0, 32);
-                System.Array.Copy(ovs, 0, ownerKey, 32, 8);
-                System.Array.Copy(oks, 0, ownerKey, 40, 8);
-                // Algorithm 3.9.2
-                md.Update(ownerPassword, 0, Math.Min(ownerPassword.Length, 127));
-                md.Update(oks);
-                md.Update(userKey);
-                ac = new AESCipherCBCnoPad(true, md.Digest());
+                // Algorithm 9.1
+                hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 0, 8, userKey);
+                ownerKey = iText.IO.Util.JavaUtil.ArraysCopyOf(hash, 48);
+                System.Array.Copy(ownerValAndKeySalt, 0, ownerKey, 32, 16);
+                // Algorithm 9.2
+                hash = ComputeHash(ownerPassword, ownerValAndKeySalt, 8, 8, userKey);
+                ac = new AESCipherCBCnoPad(true, hash);
                 oeKey = ac.ProcessBlock(nextObjectKey, 0, nextObjectKey.Length);
-                // Algorithm 3.10
+                // Algorithm 10
                 byte[] permsp = IVGenerator.GetIV(16);
                 permsp[0] = (byte)permissions;
                 permsp[1] = (byte)(permissions >> 8);
@@ -162,12 +169,14 @@ namespace iText.Kernel.Crypto.Securityhandler {
 
         private void SetAES256DicEntries(PdfDictionary encryptionDictionary, byte[] oeKey, byte[] ueKey, byte[] aes256Perms
             , bool encryptMetadata, bool embeddedFilesOnly) {
-            int aes256Revision = 5;
+            int vAes256 = 5;
+            int rAes256 = 5;
+            int rAes256Pdf2 = 6;
             encryptionDictionary.Put(PdfName.OE, new PdfLiteral(StreamUtil.CreateEscapedString(oeKey)));
             encryptionDictionary.Put(PdfName.UE, new PdfLiteral(StreamUtil.CreateEscapedString(ueKey)));
             encryptionDictionary.Put(PdfName.Perms, new PdfLiteral(StreamUtil.CreateEscapedString(aes256Perms)));
-            encryptionDictionary.Put(PdfName.R, new PdfNumber(aes256Revision));
-            encryptionDictionary.Put(PdfName.V, new PdfNumber(aes256Revision));
+            encryptionDictionary.Put(PdfName.R, new PdfNumber(isPdf2 ? rAes256Pdf2 : rAes256));
+            encryptionDictionary.Put(PdfName.V, new PdfNumber(vAes256));
             PdfDictionary stdcf = new PdfDictionary();
             stdcf.Put(PdfName.Length, new PdfNumber(32));
             if (!encryptMetadata) {
@@ -195,6 +204,12 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 if (password == null) {
                     password = new byte[0];
                 }
+                else {
+                    if (password.Length > 127) {
+                        password = iText.IO.Util.JavaUtil.ArraysCopyOf(password, 127);
+                    }
+                }
+                isPdf2 = encryptionDictionary.GetAsNumber(PdfName.R).GetValue() == 6;
                 byte[] oValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.O));
                 byte[] uValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.U));
                 byte[] oeValue = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.OE));
@@ -202,30 +217,20 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 byte[] perms = GetIsoBytes(encryptionDictionary.GetAsString(PdfName.Perms));
                 PdfNumber pValue = (PdfNumber)encryptionDictionary.Get(PdfName.P);
                 this.permissions = pValue.LongValue();
-                IDigest md = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
-                md.Update(password, 0, Math.Min(password.Length, 127));
-                md.Update(oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
-                md.Update(uValue, 0, OU_LENGTH);
-                byte[] hash = md.Digest();
+                byte[] hash;
+                hash = ComputeHash(password, oValue, VALIDATION_SALT_OFFSET, SALT_LENGTH, uValue);
                 usedOwnerPassword = CompareArray(hash, oValue, 32);
                 if (usedOwnerPassword) {
-                    md.Update(password, 0, Math.Min(password.Length, 127));
-                    md.Update(oValue, KEY_SALT_OFFSET, SALT_LENGTH);
-                    md.Update(uValue, 0, OU_LENGTH);
-                    hash = md.Digest();
+                    hash = ComputeHash(password, oValue, KEY_SALT_OFFSET, SALT_LENGTH, uValue);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
                     nextObjectKey = ac.ProcessBlock(oeValue, 0, oeValue.Length);
                 }
                 else {
-                    md.Update(password, 0, Math.Min(password.Length, 127));
-                    md.Update(uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
-                    hash = md.Digest();
+                    hash = ComputeHash(password, uValue, VALIDATION_SALT_OFFSET, SALT_LENGTH);
                     if (!CompareArray(hash, uValue, 32)) {
                         throw new BadPasswordException(PdfException.BadUserPassword);
                     }
-                    md.Update(password, 0, Math.Min(password.Length, 127));
-                    md.Update(uValue, KEY_SALT_OFFSET, SALT_LENGTH);
-                    hash = md.Digest();
+                    hash = ComputeHash(password, uValue, KEY_SALT_OFFSET, SALT_LENGTH);
                     AESCipherCBCnoPad ac = new AESCipherCBCnoPad(false, hash);
                     nextObjectKey = ac.ProcessBlock(ueValue, 0, ueValue.Length);
                 }
@@ -235,9 +240,19 @@ namespace iText.Kernel.Crypto.Securityhandler {
                 if (decPerms[9] != (byte)'a' || decPerms[10] != (byte)'d' || decPerms[11] != (byte)'b') {
                     throw new BadPasswordException(PdfException.BadUserPassword);
                 }
-                permissions = (decPerms[0] & 0xff) | ((decPerms[1] & 0xff) << 8) | ((decPerms[2] & 0xff) << 16) | ((decPerms
-                    [2] & 0xff) << 24);
-                encryptMetadata = decPerms[8] == (byte)'T';
+                int permissionsDecoded = (decPerms[0] & 0xff) | ((decPerms[1] & 0xff) << 8) | ((decPerms[2] & 0xff) << 16)
+                     | ((decPerms[3] & 0xff) << 24);
+                bool encryptMetadata = decPerms[8] == (byte)'T';
+                bool? encryptMetadataEntry = encryptionDictionary.GetAsBool(PdfName.EncryptMetadata);
+                if (permissionsDecoded != permissions || encryptMetadataEntry != null && encryptMetadata != encryptMetadataEntry
+                    ) {
+                    ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Crypto.Securityhandler.StandardHandlerUsingAes256
+                        ));
+                    logger.Error(iText.IO.LogMessageConstant.ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY
+                        );
+                }
+                this.permissions = permissionsDecoded;
+                this.encryptMetadata = encryptMetadata;
             }
             catch (BadPasswordException ex) {
                 throw;
@@ -245,6 +260,82 @@ namespace iText.Kernel.Crypto.Securityhandler {
             catch (Exception ex) {
                 throw new PdfException(PdfException.PdfEncryption, ex);
             }
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
+        private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen) {
+            return ComputeHash(password, salt, saltOffset, saltLen, null);
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.SecurityUtilityException"/>
+        private byte[] ComputeHash(byte[] password, byte[] salt, int saltOffset, int saltLen, byte[] userKey) {
+            IDigest mdSha256 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-256");
+            mdSha256.Update(password);
+            mdSha256.Update(salt, saltOffset, saltLen);
+            if (userKey != null) {
+                mdSha256.Update(userKey);
+            }
+            byte[] k = mdSha256.Digest();
+            if (isPdf2) {
+                // See 7.6.4.3.3 "Algorithm 2.B"
+                IDigest mdSha384 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-384");
+                IDigest mdSha512 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("SHA-512");
+                int userKeyLen = userKey != null ? userKey.Length : 0;
+                int passAndUserKeyLen = password.Length + userKeyLen;
+                // k1 repetition length
+                int k1RepLen;
+                int roundNum = 0;
+                while (true) {
+                    // a)
+                    k1RepLen = passAndUserKeyLen + k.Length;
+                    byte[] k1 = new byte[k1RepLen * 64];
+                    System.Array.Copy(password, 0, k1, 0, password.Length);
+                    System.Array.Copy(k, 0, k1, password.Length, k.Length);
+                    if (userKey != null) {
+                        System.Array.Copy(userKey, 0, k1, password.Length + k.Length, userKeyLen);
+                    }
+                    for (int i = 1; i < 64; ++i) {
+                        System.Array.Copy(k1, 0, k1, k1RepLen * i, k1RepLen);
+                    }
+                    // b)
+                    AESCipherCBCnoPad cipher = new AESCipherCBCnoPad(true, iText.IO.Util.JavaUtil.ArraysCopyOf(k, 16), iText.IO.Util.JavaUtil.ArraysCopyOfRange
+                        (k, 16, 32));
+                    byte[] e = cipher.ProcessBlock(k1, 0, k1.Length);
+                    // c)
+                    IDigest md = null;
+                    BigInteger i_1 = new BigInteger(1, iText.IO.Util.JavaUtil.ArraysCopyOf(e, 16));
+                    int remainder = i_1.Remainder(BigInteger.ValueOf(3)).IntValue;
+                    switch (remainder) {
+                        case 0: {
+                            md = mdSha256;
+                            break;
+                        }
+
+                        case 1: {
+                            md = mdSha384;
+                            break;
+                        }
+
+                        case 2: {
+                            md = mdSha512;
+                            break;
+                        }
+                    }
+                    // d)
+                    k = md.Digest(e);
+                    ++roundNum;
+                    if (roundNum > 63) {
+                        // e)
+                        int condVal = e[e.Length - 1] & 0xFF;
+                        // interpreting last byte as unsigned integer
+                        if (condVal <= roundNum - 32) {
+                            break;
+                        }
+                    }
+                }
+                k = k.Length == 32 ? k : iText.IO.Util.JavaUtil.ArraysCopyOf(k, 32);
+            }
+            return k;
         }
 
         private static bool CompareArray(byte[] a, byte[] b, int len) {

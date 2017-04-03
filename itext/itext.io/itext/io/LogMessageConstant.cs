@@ -82,11 +82,15 @@ namespace iText.IO {
 
         public const String ENCOUNTERED_INVALID_MCR = "Corrupted tag structure: encountered invalid marked content reference - it doesn't refer to any page or any mcid. This content reference will be ignored.";
 
+        public const String ENCRYPTION_ENTRIES_P_AND_ENCRYPT_METADATA_NOT_CORRESPOND_PERMS_ENTRY = "Encryption dictionary entries P and EncryptMetadata have value that does not correspond to encrypted values in Perms key.";
+
         public const String EXCEPTION_WHILE_UPDATING_XMPMETADATA = "Exception while updating XmpMetadata";
 
         public const String EXCEPTION_WHILE_CREATING_DEFAULT_FONT = "Exception while creating default font (Helvetica, WinAnsi)";
 
         public const String EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD = "Existing tag structure of the document has a root of \"{0}\" role in \"{1}\" namespace that is not mapped to the standard role.";
+
+        public const String FEATURE_IS_DEPRECATED = "{0} is deprecated for the {1} and higher versions. It is highly recommended not to use it.";
 
         public const String FONT_HAS_INVALID_GLYPH = "Font {0} has invalid glyph: {1}";
 

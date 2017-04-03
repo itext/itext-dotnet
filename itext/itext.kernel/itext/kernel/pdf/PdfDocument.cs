@@ -1714,6 +1714,24 @@ namespace iText.Kernel.Pdf {
                             pdfVersion = newPdfVersion;
                         }
                         writer.WriteHeader();
+                        if (writer.crypto == null) {
+                            writer.InitCryptoIfSpecified(pdfVersion);
+                        }
+                        if (writer.crypto != null) {
+                            if (writer.crypto.GetCryptoMode() < EncryptionConstants.ENCRYPTION_AES_256) {
+                                VersionConforming.ValidatePdfVersionForDeprecatedFeature(this, PdfVersion.PDF_2_0, VersionConforming.DEPRECATED_ENCRYPTION_ALGORITHMS
+                                    );
+                            }
+                            else {
+                                if (writer.crypto.GetCryptoMode() == EncryptionConstants.ENCRYPTION_AES_256) {
+                                    PdfNumber r = writer.crypto.GetPdfObject().GetAsNumber(PdfName.R);
+                                    if (r != null && r.IntValue() == 5) {
+                                        VersionConforming.ValidatePdfVersionForDeprecatedFeature(this, PdfVersion.PDF_2_0, VersionConforming.DEPRECATED_AES256_REVISION
+                                            );
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
