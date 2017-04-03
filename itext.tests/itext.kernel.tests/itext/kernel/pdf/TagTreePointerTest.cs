@@ -234,6 +234,28 @@ namespace iText.Kernel.Pdf {
             CompareResult("tagTreePointerTest06.pdf", "cmp_tagTreePointerTest06.pdf", "diff06_");
         }
 
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TagTreePointerTest07() {
+            PdfWriter writer = new PdfWriter(destinationFolder + "tagTreePointerTest07.pdf").SetCompressionLevel(CompressionConstants
+                .NO_COMPRESSION);
+            PdfDocument document = new PdfDocument(writer);
+            document.SetTagged();
+            PdfPage page = document.AddNewPage();
+            TagTreePointer tagPointer = new TagTreePointer(document).SetPageForTagging(page);
+            tagPointer.AddTag(PdfName.Span);
+            PdfCanvas canvas = new PdfCanvas(page);
+            PdfFont standardFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
+            canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
+            canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
+            canvas.OpenTag(tagPointer.GetTagReference().AddProperty(PdfName.E, new PdfString("Big Mister"))).ShowText(
+                " BMr. ").CloseTag();
+            canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("World").CloseTag();
+            canvas.EndText();
+            document.Close();
+            CompareResult("tagTreePointerTest07.pdf", "cmp_tagTreePointerTest07.pdf", "diff07_");
+        }
+
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
