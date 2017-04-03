@@ -54,6 +54,22 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>Sets the string defining the namespace name.</summary>
         /// <param name="namespaceName">
         /// a
+        /// <see cref="System.String"/>
+        /// defining the namespace name (conventionally a uniform
+        /// resource identifier, or URI).
+        /// </param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfNamespace"/>
+        /// instance.
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Tagging.PdfNamespace SetNamespaceName(String namespaceName) {
+            return SetNamespaceName(new PdfString(namespaceName));
+        }
+
+        /// <summary>Sets the string defining the namespace name.</summary>
+        /// <param name="namespaceName">
+        /// a
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// defining the namespace name (conventionally a uniform
         /// resource identifier, or URI).
@@ -70,12 +86,13 @@ namespace iText.Kernel.Pdf.Tagging {
         /// <summary>Gets the string defining the namespace name.</summary>
         /// <returns>
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// <see cref="System.String"/>
         /// defining the namespace name (conventionally a uniform
         /// resource identifier, or URI).
         /// </returns>
-        public virtual PdfString GetNamespaceName() {
-            return GetPdfObject().GetAsString(PdfName.NS);
+        public virtual String GetNamespaceName() {
+            PdfString ns = GetPdfObject().GetAsString(PdfName.NS);
+            return ns != null ? ns.ToUnicodeString() : null;
         }
 
         /// <summary>Sets file specification identifying the schema file, which defines this namespace.</summary>
@@ -239,8 +256,10 @@ namespace iText.Kernel.Pdf.Tagging {
         private void LogOverwritingOfMappingIfNeeded(PdfName thisNsRole, PdfObject prevVal) {
             if (prevVal != null) {
                 ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagging.PdfNamespace));
-                PdfString nsName = GetNamespaceName();
-                String nsNameStr = nsName != null ? nsName.ToUnicodeString() : "this";
+                String nsNameStr = GetNamespaceName();
+                if (nsNameStr == null) {
+                    nsNameStr = "this";
+                }
                 logger.Warn(String.Format(iText.IO.LogMessageConstant.MAPPING_IN_NAMESPACE_OVERWRITTEN, thisNsRole, nsNameStr
                     ));
             }

@@ -106,7 +106,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private ICollection<PdfDictionary> namespaces;
 
-        private IDictionary<PdfString, PdfNamespace> nameToNamespace;
+        private IDictionary<String, PdfNamespace> nameToNamespace;
 
         private PdfNamespace documentDefaultNamespace;
 
@@ -150,7 +150,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             connectedModelToStruct = new Dictionary<IAccessibleElement, PdfStructElem>();
             connectedStructToModel = new Dictionary<PdfDictionary, IAccessibleElement>();
             namespaces = new LinkedHashSet<PdfDictionary>();
-            nameToNamespace = new Dictionary<PdfString, PdfNamespace>();
+            nameToNamespace = new Dictionary<String, PdfNamespace>();
             this.tagStructureTargetVersion = tagStructureTargetVersion;
             forbidUnknownRoles = true;
             if (TargetTagStructureVersionIs2()) {
@@ -282,14 +282,14 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// </summary>
         /// <param name="namespaceName">
         /// a
-        /// <see cref="iText.Kernel.Pdf.PdfString"/>
+        /// <see cref="System.String"/>
         /// defining the namespace name (conventionally a uniform resource identifier, or URI).
         /// </param>
         /// <returns>
         /// 
         /// <see>PdfNamespace) wrapper over either already existing namespace object or over the new one.</see>
         /// </returns>
-        public virtual PdfNamespace FetchNamespace(PdfString namespaceName) {
+        public virtual PdfNamespace FetchNamespace(String namespaceName) {
             PdfNamespace ns = nameToNamespace.Get(namespaceName);
             if (ns == null) {
                 ns = new PdfNamespace(namespaceName);
@@ -735,10 +735,10 @@ namespace iText.Kernel.Pdf.Tagutils {
                     ILogger logger = LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Tagutils.TagStructureContext));
                     String nsStr;
                     if (firstKid.GetNamespace() != null) {
-                        nsStr = firstKid.GetNamespace().GetNamespaceName().ToUnicodeString();
+                        nsStr = firstKid.GetNamespace().GetNamespaceName();
                     }
                     else {
-                        nsStr = StandardStructureNamespace.GetDefault().ToUnicodeString();
+                        nsStr = StandardStructureNamespace.GetDefault();
                     }
                     logger.Warn(String.Format(iText.IO.LogMessageConstant.EXISTING_TAG_STRUCTURE_ROOT_IS_NOT_STANDARD, firstKid
                         .GetRole().GetValue(), nsStr));
@@ -877,7 +877,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 return String.Format(withoutNsEx, role);
             }
             else {
-                String nsName = @namespace.GetNamespaceName().ToUnicodeString();
+                String nsName = @namespace.GetNamespaceName();
                 PdfIndirectReference @ref = @namespace.GetPdfObject().GetIndirectReference();
                 if (@ref != null) {
                     nsName = nsName + " (" + iText.IO.Util.JavaUtil.IntegerToString(@ref.GetObjNumber()) + " " + iText.IO.Util.JavaUtil.IntegerToString

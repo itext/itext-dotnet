@@ -1,3 +1,4 @@
+using System;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Tagging;
 
@@ -12,7 +13,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         internal RoleMappingResolverPdf2(PdfName role, PdfNamespace @namespace, PdfDocument document) {
             this.currRole = role;
             this.currNamespace = @namespace;
-            PdfString defaultNsName = StandardStructureNamespace.GetDefault();
+            String defaultNsName = StandardStructureNamespace.GetDefault();
             PdfDictionary defaultNsRoleMap = document.GetStructTreeRoot().GetRoleMap();
             this.defaultNamespace = new PdfNamespace(defaultNsName).SetNamespaceRoleMap(defaultNsRoleMap);
             if (currNamespace == null) {

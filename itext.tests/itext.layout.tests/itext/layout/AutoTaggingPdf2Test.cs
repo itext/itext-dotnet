@@ -530,7 +530,7 @@ namespace iText.Layout {
             PdfDocument pdfDocument = new PdfDocument(new PdfReader(sourceFolder + "simpleDocNewStdNs.pdf"), new PdfWriter
                 (destinationFolder + "stampTest05.pdf", new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0)));
             TagStructureContext tagCntxt = pdfDocument.GetTagStructureContext();
-            PdfNamespace xhtmlNs = tagCntxt.FetchNamespace(new PdfString("http://www.w3.org/1999/xhtml"));
+            PdfNamespace xhtmlNs = tagCntxt.FetchNamespace("http://www.w3.org/1999/xhtml");
             PdfNamespace ssn2 = tagCntxt.FetchNamespace(StandardStructureNamespace.PDF_2_0);
             xhtmlNs.AddNamespaceRoleMapping(AutoTaggingPdf2Test.HtmlRoles.ul, PdfName.L, ssn2);
             TagTreePointer pointer = new TagTreePointer(pdfDocument);

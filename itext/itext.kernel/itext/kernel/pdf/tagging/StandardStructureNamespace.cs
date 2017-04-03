@@ -18,14 +18,13 @@ namespace iText.Kernel.Pdf.Tagging {
 
         private static readonly ICollection<PdfName> STD_STRUCT_NAMESPACE_2_0_TYPES;
 
-        private static readonly PdfString MATH_ML = new PdfString("http://www.w3.org/1998/Math/MathML", null, true
-            );
+        private const String MATH_ML = "http://www.w3.org/1998/Math/MathML";
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 1.7</summary>
-        public static readonly PdfString PDF_1_7 = new PdfString("http://www.iso.org/pdf/ssn", null, true);
+        public const String PDF_1_7 = "http://www.iso.org/pdf/ssn";
 
         /// <summary>Specifies the name of the standard structure namespace for PDF 2.0</summary>
-        public static readonly PdfString PDF_2_0 = new PdfString("http://www.iso.org/pdf2/ssn", null, true);
+        public const String PDF_2_0 = "http://www.iso.org/pdf2/ssn";
 
         static StandardStructureNamespace() {
             // other namespaces
@@ -54,7 +53,7 @@ namespace iText.Kernel.Pdf.Tagging {
         /// default standard structure namespace.
         /// </remarks>
         /// <returns>the name of the default standard structure namespace.</returns>
-        public static PdfString GetDefault() {
+        public static String GetDefault() {
             return PDF_1_7;
         }
 
@@ -75,12 +74,17 @@ namespace iText.Kernel.Pdf.Tagging {
 
         /// <summary>Checks if the given role is considered standard in the specified standard namespace.</summary>
         /// <param name="role">a role to be checked if it is standard in the given standard structure namespace.</param>
-        /// <param name="standardNamespaceName"/>
+        /// <param name="standardNamespaceName">
+        /// a
+        /// <see cref="System.String"/>
+        /// identifying standard structure namespace against which given role
+        /// will be checked.
+        /// </param>
         /// <returns>
         /// false if the given role doesn't belong to the standard roles of the given standard structure namespace or
         /// if the given namespace name is not standard; true otherwise.
         /// </returns>
-        public static bool RoleBelongsToStandardNamespace(PdfName role, PdfString standardNamespaceName) {
+        public static bool RoleBelongsToStandardNamespace(PdfName role, String standardNamespaceName) {
             if (PDF_1_7.Equals(standardNamespaceName)) {
                 return STD_STRUCT_NAMESPACE_1_7_TYPES.Contains(role);
             }

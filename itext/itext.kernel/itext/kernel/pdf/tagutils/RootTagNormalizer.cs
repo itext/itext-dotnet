@@ -84,7 +84,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                 bool kidIsDocument = PdfName.Document.Equals(kid.GetRole());
                 if (kidIsDocument && kid.GetNamespace() != null && context.TargetTagStructureVersionIs2()) {
                     // we flatten only tags of document role in standard structure namespace
-                    PdfString kidNamespaceName = kid.GetNamespace().GetNamespaceName();
+                    String kidNamespaceName = kid.GetNamespace().GetNamespaceName();
                     kidIsDocument = StandardStructureNamespace.PDF_1_7.Equals(kidNamespaceName) || StandardStructureNamespace.
                         PDF_2_0.Equals(kidNamespaceName);
                 }
