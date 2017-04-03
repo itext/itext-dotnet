@@ -122,6 +122,7 @@ namespace iText.Kernel.Pdf {
 
         protected internal int structParentIndex = -1;
 
+        [Obsolete]
         protected internal bool userProperties;
 
         protected internal bool closeReader = true;
@@ -812,12 +813,7 @@ namespace iText.Kernel.Pdf {
             if (structTreeRoot == null) {
                 structTreeRoot = new PdfStructTreeRoot(this);
                 catalog.GetPdfObject().Put(PdfName.StructTreeRoot, structTreeRoot.GetPdfObject());
-                PdfDictionary markInfo = new PdfDictionary();
-                markInfo.Put(PdfName.Marked, PdfBoolean.TRUE);
-                if (userProperties) {
-                    markInfo.Put(PdfName.UserProperties, new PdfBoolean(true));
-                }
-                catalog.GetPdfObject().Put(PdfName.MarkInfo, markInfo);
+                UpdateValueInMarkInfoDict(PdfName.Marked, PdfBoolean.TRUE);
                 structParentIndex = 0;
             }
         }
@@ -843,7 +839,7 @@ namespace iText.Kernel.Pdf {
         /// <seealso cref="IsTagged()"/>
         /// <seealso cref="GetNextStructParentIndex()"/>
         public virtual int GetNextStructParentIndex() {
-            return structParentIndex++;
+            return structParentIndex < 0 ? -1 : structParentIndex++;
         }
 
         /// <summary>
@@ -1459,6 +1455,8 @@ namespace iText.Kernel.Pdf {
         /// <param name="userProperties">the user properties flag</param>
         public virtual void SetUserProperties(bool userProperties) {
             this.userProperties = userProperties;
+            PdfBoolean userPropsVal = userProperties ? PdfBoolean.TRUE : PdfBoolean.FALSE;
+            UpdateValueInMarkInfoDict(PdfName.UserProperties, userPropsVal);
         }
 
         /// <summary>The /ID entry of a document contains an array with two entries.</summary>
@@ -1937,6 +1935,15 @@ namespace iText.Kernel.Pdf {
             catch (Exception ex) {
                 throw new PdfException(PdfException.TagStructureFlushingFailedItMightBeCorrupted, ex);
             }
+        }
+
+        private void UpdateValueInMarkInfoDict(PdfName key, PdfObject value) {
+            PdfDictionary markInfo = catalog.GetPdfObject().GetAsDictionary(PdfName.MarkInfo);
+            if (markInfo == null) {
+                markInfo = new PdfDictionary();
+                catalog.GetPdfObject().Put(PdfName.MarkInfo, markInfo);
+            }
+            markInfo.Put(key, value);
         }
 
         /// <summary>This method removes all annotation entries from form fields associated with a given page.</summary>
