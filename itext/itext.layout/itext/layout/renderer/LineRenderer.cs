@@ -114,6 +114,7 @@ namespace iText.Layout.Renderer {
                 // Normalize child width
                 Object childWidth = childRenderer.GetProperty<Object>(Property.WIDTH);
                 bool childWidthWasReplaced = false;
+                bool childRendererHasOwnWidthProperty = childRenderer.HasOwnProperty(Property.WIDTH);
                 if (childWidth is UnitValue && ((UnitValue)childWidth).IsPercentValue()) {
                     float normalizedChildWidth = ((UnitValue)childWidth).GetValue() / 100 * layoutContext.GetArea().GetBBox().
                         GetWidth();
@@ -135,7 +136,12 @@ namespace iText.Layout.Renderer {
                     ), bbox)));
                 // Get back child width so that it's not lost
                 if (childWidthWasReplaced) {
-                    childRenderer.SetProperty(Property.WIDTH, childWidth);
+                    if (childRendererHasOwnWidthProperty) {
+                        childRenderer.SetProperty(Property.WIDTH, childWidth);
+                    }
+                    else {
+                        childRenderer.DeleteOwnProperty(Property.WIDTH);
+                    }
                 }
                 float minChildWidth = 0;
                 float maxChildWidth = 0;
