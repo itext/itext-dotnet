@@ -43,13 +43,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.X509;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Test;
+using Org.BouncyCastle.Crypto.Tls;
 using Org.BouncyCastle.Pkcs;
+using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace iText.Signatures {
     public class SigningTest : ExtendedITextTest {
@@ -207,7 +210,7 @@ namespace iText.Signatures {
 
 
         [NUnit.Framework.Test]
-        public void SignEncryptedDoc() {
+        public void SignEncryptedDoc01() {
             String fileName = "encrypted.pdf";
             String src = sourceFolder + fileName;
             String dest = destinationFolder + "signed_" + fileName;
@@ -233,6 +236,36 @@ namespace iText.Signatures {
                 new LtvVerifier(new PdfDocument(new PdfReader(dest, new ReaderProperties().SetPassword(ownerPass))));
             verifier.SetVerifyRootCertificate(false);
             verifier.Verify(null);
+
+            // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
+        }
+
+        [NUnit.Framework.Test]
+        public void SignEncryptedDoc02() {
+            String fileName = "encrypted_cert.pdf";
+            String src = sourceFolder + fileName;
+            String dest = destinationFolder + "signed_" + fileName;
+
+            System.Security.Cryptography.X509Certificates.X509Certificate cert = new System.Security.Cryptography.X509Certificates.X509Certificate();
+            cert.Import(sourceFolder + "test.cer");
+
+            Pkcs12Store pkstore = new Pkcs12Store(new FileStream(sourceFolder + "test.p12", FileMode.Open, FileAccess.Read), "kspass".ToCharArray());
+            string pkalias = null;
+            foreach (object a in pkstore.Aliases)
+            {
+                pkalias = ((string)a);
+                if (pkstore.IsKeyEntry(pkalias))
+                    break;
+            }
+            ICipherParameters certpk = pkstore.GetKey(pkalias).Key;
+            X509Certificate2 signCert = new X509Certificate2(sourceFolder + "test.p12", "kspass");
+            X509Certificate[] chain = { Org.BouncyCastle.Security.DotNetUtilities.FromX509Certificate(cert) };
+
+            PdfReader reader = new PdfReader(src, new ReaderProperties().SetPublicKeySecurityParams(Org.BouncyCastle.Security.DotNetUtilities.FromX509Certificate(cert), certpk));
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), true);
+
+            IExternalSignature externalSignature = new AsymmetricAlgorithmSignature((RSACryptoServiceProvider) signCert.PrivateKey, "SHA-1");
+            signer.SignDetached(externalSignature, chain, null, null, null, 0, PdfSigner.CryptoStandard.CADES);
 
             // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
         }
