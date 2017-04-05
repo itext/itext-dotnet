@@ -694,7 +694,7 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
             if (text != null) {
                 Glyph glyph;
-                while (text.start < text.end && TextUtil.IsSpaceOrWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
+                while (text.start < text.end && TextUtil.IsWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
                     (glyph)) {
                     text.start++;
                 }
@@ -720,7 +720,7 @@ namespace iText.Layout.Renderer {
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!TextUtil.IsSpaceOrWhitespace(currentGlyph)) {
+                if (!TextUtil.IsWhitespace(currentGlyph)) {
                     break;
                 }
                 SaveWordBreakIfNotYetSaved(currentGlyph);
