@@ -179,7 +179,7 @@ internal static class KernelExtensions {
         int n = 0;
         while (n < len) {
             int count = input.Read(b, off + n, len - n);
-            if (count < 0) {
+            if (count <= 0) {
                 throw new EndOfStreamException();
             }
             n += count;
