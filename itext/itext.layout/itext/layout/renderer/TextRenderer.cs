@@ -179,9 +179,9 @@ namespace iText.Layout.Renderer {
             Glyph wordBreakGlyphAtLineEnding = null;
             char? tabAnchorCharacter = this.GetProperty<char?>(Property.TAB_ANCHOR);
             TextLayoutResult result = null;
-            // true in situations like "\nHello World" or "Hello\nWorld" 
+            // true in situations like "\nHello World" or "Hello\nWorld"
             bool isSplitForcedByNewLine = false;
-            // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line  
+            // needed in situation like "\nHello World" or " Hello World", when split occurs on first character, but we want to leave it on previous line
             bool forcePartialSplitOnFirstChar = false;
             // true in situations like "Hello\nWorld"
             bool ignoreNewLineSymbol = false;
@@ -486,24 +486,27 @@ namespace iText.Layout.Renderer {
             }
             // Set up marked content before super.draw so that annotations are placed within marked content
             PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            bool isArtifact = false;
+            bool isTagged = drawContext.IsTaggingEnabled();
+            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
+            bool isArtifact = isTagged && !modelElementIsAccessible;
             TagTreePointer tagPointer = null;
             IAccessibleElement accessibleElement = null;
             if (isTagged) {
-                accessibleElement = (IAccessibleElement)GetModelElement();
-                PdfName role = accessibleElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                    if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
-                        AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, document);
+                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
+                if (modelElementIsAccessible) {
+                    accessibleElement = (IAccessibleElement)GetModelElement();
+                    PdfName role = accessibleElement.GetRole();
+                    if (role != null && !PdfName.Artifact.Equals(role)) {
+                        if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
+                            AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, document);
+                        }
+                        tagPointer.AddTag(accessibleElement, true);
                     }
-                    tagPointer.AddTag(accessibleElement, true);
-                }
-                else {
-                    isTagged = false;
-                    if (PdfName.Artifact.Equals(role)) {
-                        isArtifact = true;
+                    else {
+                        modelElementIsAccessible = false;
+                        if (PdfName.Artifact.Equals(role)) {
+                            isArtifact = true;
+                        }
                     }
                 }
             }
@@ -533,11 +536,11 @@ namespace iText.Layout.Renderer {
                 }
                 PdfCanvas canvas = drawContext.GetCanvas();
                 if (isTagged) {
-                    canvas.OpenTag(tagPointer.GetTagReference());
-                }
-                else {
                     if (isArtifact) {
                         canvas.OpenTag(new CanvasArtifact());
+                    }
+                    else {
+                        canvas.OpenTag(tagPointer.GetTagReference());
                     }
                 }
                 BeginElementOpacityApplying(drawContext);
@@ -588,7 +591,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_622();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_627();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -635,7 +638,7 @@ namespace iText.Layout.Renderer {
                             0);
                     }
                 }
-                if (isTagged || isArtifact) {
+                if (isTagged) {
                     canvas.CloseTag();
                 }
             }
@@ -644,7 +647,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), true);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true);
-            if (isTagged) {
+            if (modelElementIsAccessible) {
                 tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
                     tagPointer.RemoveElementConnectionToTag(accessibleElement);
@@ -652,8 +655,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_622 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_622() {
+        private sealed class _IGlyphLineFilter_627 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_627() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1187,7 +1190,7 @@ namespace iText.Layout.Renderer {
                     wordBreak = font.GetGlyph('\u0020');
                 }
                 // we don't want to print '\n' in content stream
-                // it's word-break character at the end of the line, which we want to save after trimming 
+                // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
             }
         }

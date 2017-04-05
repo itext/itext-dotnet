@@ -610,6 +610,41 @@ namespace iText.Layout {
         }
 
         /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageAndTextNoRole01() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageAndTextNoRole01.pdf", new 
+                WriterProperties().SetCompressionLevel(CompressionConstants.NO_COMPRESSION)));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            doc.Add(new Paragraph("Set Image role to null and add to div with role \"Figure\""));
+            iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
+                )).SetWidth(200);
+            img.SetRole(null);
+            Div div = new Div();
+            div.SetRole(PdfName.Figure);
+            div.Add(img);
+            Paragraph caption = new Paragraph("Caption");
+            caption.SetRole(PdfName.Caption);
+            div.Add(caption);
+            doc.Add(div);
+            doc.Add(new Paragraph("Set Text role to null and add to Paragraph").SetMarginTop(20));
+            div = new Div();
+            div.SetRole(PdfName.Code);
+            iText.Layout.Element.Text txt = new iText.Layout.Element.Text("// Prints Hello world!");
+            txt.SetRole(null);
+            div.Add(new Paragraph(txt).SetMarginBottom(0));
+            txt = new iText.Layout.Element.Text("System.out.println(\"Hello world!\");");
+            txt.SetRole(null);
+            div.Add(new Paragraph(txt).SetMarginTop(0));
+            doc.Add(div);
+            doc.Close();
+            CompareResult("imageAndTextNoRole01.pdf", "cmp_imageAndTextNoRole01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
         private Paragraph CreateParagraph1() {
             PdfFont font = PdfFontFactory.CreateFont(FontConstants.HELVETICA_BOLD);
             Paragraph p = new Paragraph().Add("text chunk. ").Add("explicitly added separate text chunk");
