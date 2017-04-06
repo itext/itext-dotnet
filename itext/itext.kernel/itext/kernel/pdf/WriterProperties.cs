@@ -65,6 +65,12 @@ namespace iText.Kernel.Pdf {
 
         protected internal EncryptionProperties encryptionProperties;
 
+        /// <summary>The ID entry that represents the initial identifier.</summary>
+        protected internal PdfString initialDocumentId;
+
+        /// <summary>The ID entry that represents a change in a document.</summary>
+        protected internal PdfString modifiedDocumentId;
+
         public WriterProperties() {
             smartMode = false;
             debugMode = false;
@@ -212,6 +218,40 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions
             , int encryptionAlgorithm) {
             encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
+            return this;
+        }
+
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
+        /// The second one should be the same entry, unless the document has been modified. iText will by default keep the
+        /// existing initial id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="initialDocumentId">the new initial document id</param>
+        /// <returns>
+        /// this
+        /// <c>WriterProperties</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetInitialDocumentId(PdfString initialDocumentId) {
+            this.initialDocumentId = initialDocumentId;
+            return this;
+        }
+
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
+        /// The second one should be the same entry, unless the document has been modified. iText will by default generate
+        /// a modified id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="modifiedDocumentId">the new modified document id</param>
+        /// <returns>
+        /// this
+        /// <c>WriterProperties</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetModifiedDocumentId(PdfString modifiedDocumentId) {
+            this.modifiedDocumentId = modifiedDocumentId;
             return this;
         }
 

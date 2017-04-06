@@ -108,9 +108,11 @@ namespace iText.Kernel.Pdf {
         protected internal PdfVersion pdfVersion = PdfVersion.PDF_1_7;
 
         /// <summary>The ID entry that represents the initial identifier.</summary>
+        [Obsolete]
         protected internal PdfString initialDocumentId;
 
         /// <summary>The ID entry that represents a change in a document.</summary>
+        [Obsolete]
         protected internal PdfString modifiedDocumentId;
 
         /// <summary>The original second id when the document is read initially.</summary>
@@ -714,7 +716,7 @@ namespace iText.Kernel.Pdf {
                             }
                         }
                     }
-                    PdfObject fileId = GetFileId(crypto);
+                    PdfObject fileId = GetFileId(crypto, writer.properties);
                     if (crypto == null && writer.crypto != null) {
                         crypto = writer.crypto.GetPdfObject();
                         crypto.MakeIndirect(this);
@@ -764,11 +766,16 @@ namespace iText.Kernel.Pdf {
             closed = true;
         }
 
-        private PdfObject GetFileId(PdfObject crypto) {
+        private PdfObject GetFileId(PdfObject crypto, WriterProperties properties) {
             bool isModified = false;
             byte[] originalFileID = null;
-            if (initialDocumentId != null) {
-                originalFileID = ByteUtils.GetIsoBytes(initialDocumentId.GetValue());
+            if (properties.initialDocumentId != null) {
+                originalFileID = ByteUtils.GetIsoBytes(properties.initialDocumentId.GetValue());
+            }
+            else {
+                if (initialDocumentId != null) {
+                    originalFileID = ByteUtils.GetIsoBytes(initialDocumentId.GetValue());
+                }
             }
             if (originalFileID == null && crypto == null && writer.crypto != null) {
                 originalFileID = writer.crypto.GetDocumentId();
@@ -781,8 +788,13 @@ namespace iText.Kernel.Pdf {
                 originalFileID = PdfEncryption.GenerateNewDocumentId();
             }
             byte[] secondId = null;
-            if (modifiedDocumentId != null) {
-                secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
+            if (properties.modifiedDocumentId != null) {
+                secondId = ByteUtils.GetIsoBytes(properties.modifiedDocumentId.GetValue());
+            }
+            else {
+                if (modifiedDocumentId != null) {
+                    secondId = ByteUtils.GetIsoBytes(modifiedDocumentId.GetValue());
+                }
             }
             if (secondId == null && originalModifiedDocumentId != null) {
                 PdfString newModifiedId = reader.trailer.GetAsArray(PdfName.ID).GetAsString(1);
@@ -1472,6 +1484,8 @@ namespace iText.Kernel.Pdf {
         /// existing initial id. But if you'd like you can set this id yourself using this setter.
         /// </remarks>
         /// <param name="initialDocumentId">the new initial document id</param>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use WriterProperties.SetInitialDocumentId(PdfString) instead"
+            )]
         public virtual void SetInitialDocumentId(PdfString initialDocumentId) {
             this.initialDocumentId = initialDocumentId;
         }
@@ -1483,6 +1497,8 @@ namespace iText.Kernel.Pdf {
         /// a modified id. But if you'd like you can set this id yourself using this setter.
         /// </remarks>
         /// <param name="modifiedDocumentId">the new modified document id</param>
+        [System.ObsoleteAttribute(@"Will be removed in 7.1. Use WriterProperties.SetModifiedDocumentId(PdfString) instead"
+            )]
         public virtual void SetModifiedDocumentId(PdfString modifiedDocumentId) {
             this.modifiedDocumentId = modifiedDocumentId;
         }

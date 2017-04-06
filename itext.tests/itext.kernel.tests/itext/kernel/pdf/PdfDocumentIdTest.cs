@@ -42,10 +42,24 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using iText.IO.Source;
+using iText.Kernel.Pdf.Canvas;
+using iText.Test;
 
 namespace iText.Kernel.Pdf {
     /// <author>Michael Demey</author>
-    public class PdfDocumentIdTest {
+    public class PdfDocumentIdTest : ExtendedITextTest {
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfDocumentTestID/";
+
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/kernel/pdf/PdfDocumentTestID/";
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            CreateOrClearDestinationFolder(destinationFolder);
+        }
+
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest() {
@@ -65,6 +79,67 @@ namespace iText.Kernel.Pdf {
             String extractedValue = idArray.GetAsString(1).GetValue();
             pdfDocument.Close();
             NUnit.Framework.Assert.AreEqual(value, extractedValue);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ChangeIdTest02() {
+            MemoryStream baos = new MemoryStream();
+            String value = "Initial ID 56789";
+            PdfWriter writer = new PdfWriter(baos, new WriterProperties().SetInitialDocumentId(new PdfString(value)));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.AddNewPage();
+            pdfDocument.Close();
+            byte[] documentBytes = baos.ToArray();
+            baos.Dispose();
+            PdfReader reader = new PdfReader(new MemoryStream(documentBytes));
+            pdfDocument = new PdfDocument(reader);
+            PdfArray idArray = pdfDocument.GetTrailer().GetAsArray(PdfName.ID);
+            NUnit.Framework.Assert.IsNotNull(idArray);
+            String extractedValue = idArray.GetAsString(1).GetValue();
+            pdfDocument.Close();
+            NUnit.Framework.Assert.AreEqual(value, extractedValue);
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        public virtual void ChangeIdTest03() {
+            String filenameInitial = "changeIdTest03Initial.pdf";
+            String filenameModified = "changeIdTest03Modified.pdf";
+            MemoryStream baosInitial = new MemoryStream();
+            MemoryStream baosModified = new MemoryStream();
+            String initialId = "Initial ID 01234";
+            String modifiedId = "Modified ID 56789";
+            PdfWriter writer = new PdfWriter(baosInitial, new WriterProperties().SetInitialDocumentId(new PdfString(initialId
+                )).SetModifiedDocumentId(new PdfString(modifiedId)));
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.AddNewPage();
+            pdfDocument.Close();
+            PdfReader reader = new PdfReader(new RandomAccessSourceFactory().CreateSource(baosInitial.ToArray()), new 
+                ReaderProperties());
+            pdfDocument = new PdfDocument(reader);
+            PdfArray idArray = pdfDocument.GetTrailer().GetAsArray(PdfName.ID);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(idArray);
+            String extractedInitialValue = idArray.GetAsString(0).GetValue();
+            NUnit.Framework.Assert.AreEqual(initialId, extractedInitialValue);
+            String extractedModifiedValue = idArray.GetAsString(1).GetValue();
+            NUnit.Framework.Assert.AreEqual(modifiedId, extractedModifiedValue);
+            pdfDocument = new PdfDocument(new PdfReader(new RandomAccessSourceFactory().CreateSource(baosInitial.ToArray
+                ()), new ReaderProperties()), new PdfWriter(baosModified));
+            new PdfCanvas(pdfDocument.AddNewPage()).SaveState().LineTo(100, 100).MoveTo(100, 100).Stroke().RestoreState
+                ();
+            pdfDocument.Close();
+            reader = new PdfReader(new RandomAccessSourceFactory().CreateSource(baosModified.ToArray()), new ReaderProperties
+                ());
+            pdfDocument = new PdfDocument(reader);
+            idArray = pdfDocument.GetTrailer().GetAsArray(PdfName.ID);
+            pdfDocument.Close();
+            NUnit.Framework.Assert.IsNotNull(idArray);
+            extractedInitialValue = idArray.GetAsString(0).GetValue();
+            NUnit.Framework.Assert.AreEqual(initialId, extractedInitialValue);
+            extractedModifiedValue = idArray.GetAsString(1).GetValue();
+            NUnit.Framework.Assert.AreNotEqual(modifiedId, extractedModifiedValue);
         }
     }
 }
