@@ -54,7 +54,7 @@ namespace iText.Kernel.Pdf.Canvas.Wmf {
 
         /// <summary>Creates a WmfImage from a file.</summary>
         /// <param name="fileName">pah to the file</param>
-        /// <exception cref="Java.Net.MalformedURLException"/>
+        /// <exception cref="System.UriFormatException"/>
         public WmfImageData(String fileName)
             : this(UrlUtil.ToURL(fileName)) {
         }
