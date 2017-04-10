@@ -1322,16 +1322,14 @@ namespace iText.Kernel.Utils {
                 // References to the same page
                 if (cmpPagesRef == null) {
                     cmpPagesRef = new List<PdfIndirectReference>();
-                    for (int i = 1; i <= cmpObj.GetIndirectReference().GetDocument().GetNumberOfPages(); ++i) {
-                        cmpPagesRef.Add(cmpObj.GetIndirectReference().GetDocument().GetPage(i).GetPdfObject().GetIndirectReference
-                            ());
+                    for (int i = 1; i <= cmpRefKey.GetDocument().GetNumberOfPages(); ++i) {
+                        cmpPagesRef.Add(cmpRefKey.GetDocument().GetPage(i).GetPdfObject().GetIndirectReference());
                     }
                 }
                 if (outPagesRef == null) {
                     outPagesRef = new List<PdfIndirectReference>();
-                    for (int i = 1; i <= outObj.GetIndirectReference().GetDocument().GetNumberOfPages(); ++i) {
-                        outPagesRef.Add(outObj.GetIndirectReference().GetDocument().GetPage(i).GetPdfObject().GetIndirectReference
-                            ());
+                    for (int i = 1; i <= outRefKey.GetDocument().GetNumberOfPages(); ++i) {
+                        outPagesRef.Add(outRefKey.GetDocument().GetPage(i).GetPdfObject().GetIndirectReference());
                     }
                 }
                 if (cmpPagesRef.Contains(cmpRefKey) && cmpPagesRef.IndexOf(cmpRefKey) == outPagesRef.IndexOf(outRefKey)) {
