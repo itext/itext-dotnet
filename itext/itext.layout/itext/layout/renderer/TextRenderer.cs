@@ -1064,7 +1064,7 @@ namespace iText.Layout.Renderer {
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
             int shift = NumberOfElementsLessThan(removedIds, range[0]);
             range[0] -= shift;
-            shift = NumberOfElementsLessThanOrEqual(removedIds, range[1] - 1);
+            shift = NumberOfElementsLessThanOrEqual(removedIds, range[1]);
             range[1] -= shift;
         }
 
