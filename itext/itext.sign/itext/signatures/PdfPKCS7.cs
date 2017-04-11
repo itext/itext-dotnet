@@ -1076,14 +1076,11 @@ namespace iText.Signatures {
                 found = false;
                 for (int k = 0; k < oc.Count; ++k) {
                     X509Certificate issuer = (X509Certificate)oc[k];
-                    try {
-                        v.Verify(issuer.GetPublicKey());
+                    if (SignUtils.VerifyCertificateSignature(v, issuer.GetPublicKey())) {
                         found = true;
                         cc.Add(oc[k]);
                         oc.JRemoveAt(k);
                         break;
-                    }
-                    catch (Exception) {
                     }
                 }
             }

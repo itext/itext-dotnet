@@ -49,6 +49,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using iText.Kernel;
 using iText.Kernel.Pdf;
@@ -64,6 +65,8 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Security.Certificates;
 using Org.BouncyCastle.Tsp;
 using Org.BouncyCastle.X509;
+using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
+using X509Extension = Org.BouncyCastle.Asn1.X509.X509Extension;
 
 namespace iText.Signatures {
     internal static class SignUtils {
@@ -247,6 +250,16 @@ namespace iText.Signatures {
 
         internal static ISigner GetSignatureHelper(String algorithm) {
             return SignerUtilities.GetSigner(algorithm);
+        }
+
+        internal static bool VerifyCertificateSignature(X509Certificate certificate, AsymmetricKeyParameter issuerPublicKey) {
+            bool res = false;
+            try {
+                certificate.Verify(issuerPublicKey);
+                res = true;
+            } catch (Exception ignored) {
+            }
+            return res;
         }
 
         internal static IEnumerable<X509Certificate> GetCertificates(List<X509Certificate> rootStore) {
