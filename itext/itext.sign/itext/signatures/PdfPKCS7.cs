@@ -127,7 +127,7 @@ namespace iText.Signatures {
             }
             // initialize the RSA data
             if (hasRSAdata) {
-                RSAdata = new byte[0];
+                rsaData = new byte[0];
                 messageDigest = DigestAlgorithms.GetMessageDigest(GetHashAlgorithm());
             }
             // initialize the Signature object
@@ -209,7 +209,7 @@ namespace iText.Signatures {
                 Asn1Sequence rsaData = (Asn1Sequence)content[2];
                 if (rsaData.Count > 1) {
                     Asn1OctetString rsaDataContent = (Asn1OctetString)((Asn1TaggedObject)rsaData[1]).GetObject();
-                    RSAdata = rsaDataContent.GetOctets();
+                    this.rsaData = rsaDataContent.GetOctets();
                 }
                 int next = 3;
                 while (content[next] is Asn1TaggedObject) {
@@ -383,7 +383,7 @@ namespace iText.Signatures {
                     messageDigest = DigestAlgorithms.GetMessageDigestFromOid(algOID);
                 }
                 else {
-                    if (RSAdata != null || digestAttr != null) {
+                    if (this.rsaData != null || digestAttr != null) {
                         if (PdfName.Adbe_pkcs7_sha1.Equals(GetFilterSubtype())) {
                             messageDigest = DigestAlgorithms.GetMessageDigest("SHA1");
                         }
@@ -530,7 +530,7 @@ namespace iText.Signatures {
         private byte[] externalDigest;
 
         /// <summary>External RSA data</summary>
-        private byte[] externalRSAdata;
+        private byte[] externalRsaData;
 
         /*
         *	DIGITAL SIGNATURE CREATION
@@ -538,15 +538,15 @@ namespace iText.Signatures {
         // The signature is created externally
         /// <summary>Sets the digest/signature to an external calculated value.</summary>
         /// <param name="digest">the digest. This is the actual signature</param>
-        /// <param name="RSAdata">the extra data that goes into the data tag in PKCS#7</param>
+        /// <param name="rsaData">the extra data that goes into the data tag in PKCS#7</param>
         /// <param name="digestEncryptionAlgorithm">
         /// the encryption algorithm. It may must be <CODE>null</CODE> if the <CODE>digest</CODE>
         /// is also <CODE>null</CODE>. If the <CODE>digest</CODE> is not <CODE>null</CODE>
         /// then it may be "RSA" or "DSA"
         /// </param>
-        public virtual void SetExternalDigest(byte[] digest, byte[] RSAdata, String digestEncryptionAlgorithm) {
+        public virtual void SetExternalDigest(byte[] digest, byte[] rsaData, String digestEncryptionAlgorithm) {
             externalDigest = digest;
-            externalRSAdata = RSAdata;
+            externalRsaData = rsaData;
             if (digestEncryptionAlgorithm != null) {
                 if (digestEncryptionAlgorithm.Equals("RSA")) {
                     this.digestEncryptionAlgorithmOid = SecurityIDs.ID_RSA;
@@ -574,7 +574,7 @@ namespace iText.Signatures {
         private byte[] digest;
 
         /// <summary>The RSA data</summary>
-        private byte[] RSAdata;
+        private byte[] rsaData;
 
         // The signature is created internally
         // Signing functionality.
@@ -610,7 +610,7 @@ namespace iText.Signatures {
         /// <param name="len">the data length</param>
         /// <exception cref="Java.Security.SignatureException">on error</exception>
         public virtual void Update(byte[] buf, int off, int len) {
-            if (RSAdata != null || digestAttr != null || isTsp) {
+            if (rsaData != null || digestAttr != null || isTsp) {
                 messageDigest.Update(buf, off, len);
             }
             else {
@@ -672,20 +672,20 @@ namespace iText.Signatures {
             try {
                 if (externalDigest != null) {
                     digest = externalDigest;
-                    if (RSAdata != null) {
-                        RSAdata = externalRSAdata;
+                    if (rsaData != null) {
+                        rsaData = externalRsaData;
                     }
                 }
                 else {
-                    if (externalRSAdata != null && RSAdata != null) {
-                        RSAdata = externalRSAdata;
-                        sig.Update(RSAdata);
+                    if (externalRsaData != null && rsaData != null) {
+                        rsaData = externalRsaData;
+                        sig.Update(rsaData);
                         digest = sig.GenerateSignature();
                     }
                     else {
-                        if (RSAdata != null) {
-                            RSAdata = messageDigest.Digest();
-                            sig.Update(RSAdata);
+                        if (rsaData != null) {
+                            rsaData = messageDigest.Digest();
+                            sig.Update(rsaData);
                         }
                         digest = sig.GenerateSignature();
                     }
@@ -701,8 +701,8 @@ namespace iText.Signatures {
                 // Create the contentInfo.
                 Asn1EncodableVector v = new Asn1EncodableVector();
                 v.Add(new DerObjectIdentifier(SecurityIDs.ID_PKCS7_DATA));
-                if (RSAdata != null) {
-                    v.Add(new DerTaggedObject(0, new DerOctetString(RSAdata)));
+                if (rsaData != null) {
+                    v.Add(new DerTaggedObject(0, new DerOctetString(rsaData)));
                 }
                 DerSequence contentinfo = new DerSequence(v);
                 // Get all the certificates
@@ -975,9 +975,9 @@ namespace iText.Signatures {
                     bool verifyRSAdata = true;
                     // Stefan Santesson fixed a bug, keeping the code backward compatible
                     bool encContDigestCompare = false;
-                    if (RSAdata != null) {
-                        verifyRSAdata = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, RSAdata);
-                        encContDigest.Update(RSAdata);
+                    if (rsaData != null) {
+                        verifyRSAdata = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, rsaData);
+                        encContDigest.Update(rsaData);
                         encContDigestCompare = iText.IO.Util.JavaUtil.ArraysEquals(encContDigest.Digest(), digestAttr);
                     }
                     bool absentEncContDigestCompare = iText.IO.Util.JavaUtil.ArraysEquals(msgDigestBytes, digestAttr);
@@ -986,7 +986,7 @@ namespace iText.Signatures {
                     verifyResult = concludingDigestCompare && sigVerify && verifyRSAdata;
                 }
                 else {
-                    if (RSAdata != null) {
+                    if (rsaData != null) {
                         sig.Update(messageDigest.Digest());
                     }
                     verifyResult = sig.VerifySignature(digest);

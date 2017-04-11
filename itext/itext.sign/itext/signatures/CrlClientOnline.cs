@@ -96,28 +96,6 @@ namespace iText.Signatures {
             }
         }
 
-        /// <summary>Adds an URL to the list of CRL URLs</summary>
-        /// <param name="url">an URL in the form of a String</param>
-        protected internal virtual void AddUrl(String url) {
-            try {
-                AddUrl(new Uri(url));
-            }
-            catch (System.IO.IOException) {
-                LOGGER.Info("Skipped CRL url (malformed): " + url);
-            }
-        }
-
-        /// <summary>Adds an URL to the list of CRL URLs</summary>
-        /// <param name="url">an URL object</param>
-        protected internal virtual void AddUrl(Uri url) {
-            if (urls.Contains(url)) {
-                LOGGER.Info("Skipped CRL url (duplicate): " + url);
-                return;
-            }
-            urls.Add(url);
-            LOGGER.Info("Added CRL url: " + url);
-        }
-
         /// <summary>Fetches the CRL bytes from an URL.</summary>
         /// <remarks>
         /// Fetches the CRL bytes from an URL.
@@ -171,6 +149,28 @@ namespace iText.Signatures {
                 }
             }
             return ar;
+        }
+
+        /// <summary>Adds an URL to the list of CRL URLs</summary>
+        /// <param name="url">an URL in the form of a String</param>
+        protected internal virtual void AddUrl(String url) {
+            try {
+                AddUrl(new Uri(url));
+            }
+            catch (System.IO.IOException) {
+                LOGGER.Info("Skipped CRL url (malformed): " + url);
+            }
+        }
+
+        /// <summary>Adds an URL to the list of CRL URLs</summary>
+        /// <param name="url">an URL object</param>
+        protected internal virtual void AddUrl(Uri url) {
+            if (urls.Contains(url)) {
+                LOGGER.Info("Skipped CRL url (duplicate): " + url);
+                return;
+            }
+            urls.Add(url);
+            LOGGER.Info("Added CRL url: " + url);
         }
     }
 }
