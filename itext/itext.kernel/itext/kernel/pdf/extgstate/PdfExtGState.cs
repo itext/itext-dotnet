@@ -1098,6 +1098,40 @@ namespace iText.Kernel.Pdf.Extgstate {
             return Put(PdfName.TK, new PdfBoolean(textKnockoutFlag));
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. This graphics state parameter controls whether black point
+        /// compensation is performed while doing CIE-based colour conversions.
+        /// </remarks>
+        /// <param name="useBlackPointCompensation"><code>true</code> to enable, <code>false</code> to disable</param>
+        /// <returns>object itself</returns>
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetUseBlackPointCompensation(bool useBlackPointCompensation
+            ) {
+            return Put(PdfName.UseBlackPtComp, useBlackPointCompensation ? PdfName.ON : PdfName.OFF);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Checks whether the black point compensation is performed while doing CIE-based colour conversions.
+        ///     </remarks>
+        /// <returns>
+        /// <code>true</code> if black point compensation is used, <code>false</code> if it is not used, or
+        /// <code>null</code> is the value is set to Default, or not set at all
+        /// </returns>
+        public virtual bool? IsBlackPointCompensationUsed() {
+            PdfName useBlackPointCompensation = GetPdfObject().GetAsName(PdfName.UseBlackPtComp);
+            if (PdfName.ON.Equals(useBlackPointCompensation)) {
+                return true;
+            }
+            else {
+                if (PdfName.OFF.Equals(useBlackPointCompensation)) {
+                    return false;
+                }
+                else {
+                    return null;
+                }
+            }
+        }
+
         /// <summary>Puts the value into Graphics state parameter dictionary and associates it with the specified key.
         ///     </summary>
         /// <remarks>
@@ -1109,6 +1143,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 

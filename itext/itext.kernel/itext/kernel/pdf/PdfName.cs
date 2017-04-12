@@ -1601,6 +1601,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName UseAttachments = CreateDirectName("UseAttachments");
 
+        public static readonly iText.Kernel.Pdf.PdfName UseBlackPtComp = CreateDirectName("UseBlackPtComp");
+
         public static readonly iText.Kernel.Pdf.PdfName UseNone = CreateDirectName("UseNone");
 
         public static readonly iText.Kernel.Pdf.PdfName UseOC = CreateDirectName("UseOC");
