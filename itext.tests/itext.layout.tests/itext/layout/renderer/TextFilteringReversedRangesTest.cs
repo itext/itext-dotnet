@@ -72,5 +72,14 @@ namespace iText.Layout.Renderer {
             TextRenderer.UpdateRangeBasedOnRemovedCharacters(removedIds, range);
             NUnit.Framework.Assert.AreEqual(new int[] { 0, 3 }, range);
         }
+
+        [NUnit.Framework.Test]
+        public virtual void Test04() {
+            List<int> removedIds = new List<int>();
+            removedIds.Add(1);
+            int[] range = new int[] { 0, 1 };
+            TextRenderer.UpdateRangeBasedOnRemovedCharacters(removedIds, range);
+            NUnit.Framework.Assert.AreEqual(new int[] { 0, 0 }, range);
+        }
     }
 }

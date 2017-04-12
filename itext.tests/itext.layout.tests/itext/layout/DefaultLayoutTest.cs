@@ -136,6 +136,25 @@ namespace iText.Layout {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void TextWithWhitespacesTest01() {
+            String outFileName = destinationFolder + "textWithWhitespacesTest01.pdf";
+            String cmpFileName = sourceFolder + "cmp_textWithWhitespacesTest01.pdf";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            doc.Add(new Paragraph("Test non-breaking spaces"));
+            doc.Add(new Paragraph("\u00a0\u00a0\u00a0\u00a0test test"));
+            doc.Add(new Paragraph("test test\u00a0\u00a0\u00a0\u00a0test test"));
+            doc.Add(new Paragraph("Test usual spaces"));
+            doc.Add(new Paragraph("\u0020\u0020\u0020\u0020test test"));
+            doc.Add(new Paragraph("test test\u0020\u0020\u0020\u0020test test"));
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , "diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void AddParagraphOnShortPage1() {
             String outFileName = destinationFolder + "addParagraphOnShortPage1.pdf";

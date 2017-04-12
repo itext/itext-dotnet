@@ -65,6 +65,12 @@ namespace iText.Kernel.Pdf {
 
         protected internal EncryptionProperties encryptionProperties;
 
+        /// <summary>The ID entry that represents the initial identifier.</summary>
+        protected internal PdfString initialDocumentId;
+
+        /// <summary>The ID entry that represents a change in a document.</summary>
+        protected internal PdfString modifiedDocumentId;
+
         public WriterProperties() {
             smartMode = false;
             debugMode = false;
@@ -176,6 +182,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
         /// .
         /// The permissions can be combined by ORing them.
+        /// <p>
         /// </remarks>
         /// <param name="userPassword">the user password. Can be null or empty</param>
         /// <param name="ownerPassword">the owner password. Can be null or empty</param>
@@ -227,6 +234,7 @@ namespace iText.Kernel.Pdf {
         /// <see cref="EncryptionConstants.ALLOW_DEGRADED_PRINTING"/>
         /// .
         /// The permissions can be combined by ORing them.
+        /// <p>
         /// </remarks>
         /// <param name="certs">the public certificates to be used for the encryption</param>
         /// <param name="permissions">the user permissions for each of the certificates</param>
@@ -252,6 +260,42 @@ namespace iText.Kernel.Pdf {
         public virtual iText.Kernel.Pdf.WriterProperties SetPublicKeyEncryption(X509Certificate[] certs, int[] permissions
             , int encryptionAlgorithm) {
             encryptionProperties.SetPublicKeyEncryption(certs, permissions, encryptionAlgorithm);
+            return this;
+        }
+
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries. The first one (initial id) represents the initial document id.
+        /// It's a permanent identifier based on the contents of the file at the time it was originally created
+        /// and does not change when the file is incrementally updated.
+        /// To help ensure the uniqueness of file identifiers, it is recommend to be computed by means of a message digest algorithm such as MD5.
+        /// iText will by default keep the existing initial id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="initialDocumentId">the new initial document id</param>
+        /// <returns>
+        /// this
+        /// <c>WriterProperties</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetInitialDocumentId(PdfString initialDocumentId) {
+            this.initialDocumentId = initialDocumentId;
+            return this;
+        }
+
+        /// <summary>The /ID entry of a document contains an array with two entries.</summary>
+        /// <remarks>
+        /// The /ID entry of a document contains an array with two entries.
+        /// The second one (modified id) should be the same entry, unless the document has been modified. iText will by default generate
+        /// a modified id. But if you'd like you can set this id yourself using this setter.
+        /// </remarks>
+        /// <param name="modifiedDocumentId">the new modified document id</param>
+        /// <returns>
+        /// this
+        /// <c>WriterProperties</c>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.WriterProperties SetModifiedDocumentId(PdfString modifiedDocumentId) {
+            this.modifiedDocumentId = modifiedDocumentId;
             return this;
         }
 

@@ -67,6 +67,12 @@ namespace iText.Signatures {
     /// </p>
     /// </remarks>
     public class TSAClientBouncyCastle : ITSAClient {
+        /// <summary>The default value for the hash algorithm</summary>
+        public const String DEFAULTHASHALGORITHM = "SHA-256";
+
+        /// <summary>The default value for the hash algorithm</summary>
+        public const int DEFAULTTOKENSIZE = 4096;
+
         /// <summary>The Logger instance.</summary>
         private static readonly ILogger LOGGER = LoggerFactory.GetLogger(typeof(iText.Signatures.TSAClientBouncyCastle
             ));
@@ -83,14 +89,8 @@ namespace iText.Signatures {
         /// <summary>An interface that allows you to inspect the timestamp info.</summary>
         protected internal ITSAInfoBouncyCastle tsaInfo;
 
-        /// <summary>The default value for the hash algorithm</summary>
-        public const int DEFAULTTOKENSIZE = 4096;
-
         /// <summary>Estimate of the received time stamp token</summary>
         protected internal int tokenSizeEstimate;
-
-        /// <summary>The default value for the hash algorithm</summary>
-        public const String DEFAULTHASHALGORITHM = "SHA-256";
 
         /// <summary>Hash algorithm</summary>
         protected internal String digestAlgorithm;

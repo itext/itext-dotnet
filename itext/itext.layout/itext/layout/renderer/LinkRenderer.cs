@@ -87,7 +87,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iText.Layout.Renderer.LinkRenderer((Link)modelElement, null);
+            return new iText.Layout.Renderer.LinkRenderer((Link)modelElement);
         }
     }
 }

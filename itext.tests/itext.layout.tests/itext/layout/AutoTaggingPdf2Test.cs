@@ -589,7 +589,7 @@ namespace iText.Layout {
             internal static PdfName span = new PdfName("span");
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
+        /// <exception cref="System.UriFormatException"/>
         private void AddSimpleContentToDoc(Document document, Paragraph p2) {
             iText.Layout.Element.Image img = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
                 )).SetWidth(100);
@@ -613,7 +613,7 @@ namespace iText.Layout {
             document.Add(table);
         }
 
-        /// <exception cref="Java.Net.MalformedURLException"/>
+        /// <exception cref="System.UriFormatException"/>
         private void AddContentToDocInCustomNs(PdfDocument pdfDocument, PdfNamespace defaultNamespace, PdfNamespace
              xhtmlNs, PdfNamespace html4Ns, PdfName hnRole, Document document) {
             Paragraph h1P = new Paragraph("Header level 1");

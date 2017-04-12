@@ -486,24 +486,27 @@ namespace iText.Layout.Renderer {
             }
             // Set up marked content before super.draw so that annotations are placed within marked content
             PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            bool isArtifact = false;
+            bool isTagged = drawContext.IsTaggingEnabled();
+            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
+            bool isArtifact = isTagged && !modelElementIsAccessible;
             TagTreePointer tagPointer = null;
             IAccessibleElement accessibleElement = null;
             if (isTagged) {
-                accessibleElement = (IAccessibleElement)GetModelElement();
-                PdfName role = accessibleElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                    if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
-                        AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, tagPointer);
+                tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
+                if (modelElementIsAccessible) {
+                    accessibleElement = (IAccessibleElement)GetModelElement();
+                    PdfName role = accessibleElement.GetRole();
+                    if (role != null && !PdfName.Artifact.Equals(role)) {
+                        if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
+                            AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, tagPointer);
+                        }
+                        tagPointer.AddTag(accessibleElement, true);
                     }
-                    tagPointer.AddTag(accessibleElement, true);
-                }
-                else {
-                    isTagged = false;
-                    if (PdfName.Artifact.Equals(role)) {
-                        isArtifact = true;
+                    else {
+                        modelElementIsAccessible = false;
+                        if (PdfName.Artifact.Equals(role)) {
+                            isArtifact = true;
+                        }
                     }
                 }
             }
@@ -533,11 +536,11 @@ namespace iText.Layout.Renderer {
                 }
                 PdfCanvas canvas = drawContext.GetCanvas();
                 if (isTagged) {
-                    canvas.OpenTag(tagPointer.GetTagReference());
-                }
-                else {
                     if (isArtifact) {
                         canvas.OpenTag(new CanvasArtifact());
+                    }
+                    else {
+                        canvas.OpenTag(tagPointer.GetTagReference());
                     }
                 }
                 BeginElementOpacityApplying(drawContext);
@@ -588,7 +591,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_622();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_627();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -635,7 +638,7 @@ namespace iText.Layout.Renderer {
                             0);
                     }
                 }
-                if (isTagged || isArtifact) {
+                if (isTagged) {
                     canvas.CloseTag();
                 }
             }
@@ -644,7 +647,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), true);
             ApplyMargins(occupiedArea.GetBBox(), GetMargins(), true);
-            if (isTagged) {
+            if (modelElementIsAccessible) {
                 tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
                     tagPointer.RemoveElementConnectionToTag(accessibleElement);
@@ -652,8 +655,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_622 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_622() {
+        private sealed class _IGlyphLineFilter_627 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_627() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -694,7 +697,7 @@ namespace iText.Layout.Renderer {
             UpdateFontAndText();
             if (text != null) {
                 Glyph glyph;
-                while (text.start < text.end && TextUtil.IsSpaceOrWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
+                while (text.start < text.end && TextUtil.IsWhitespace(glyph = text.Get(text.start)) && !TextUtil.IsNewLine
                     (glyph)) {
                     text.start++;
                 }
@@ -720,7 +723,7 @@ namespace iText.Layout.Renderer {
             int firstNonSpaceCharIndex = line.end - 1;
             while (firstNonSpaceCharIndex >= line.start) {
                 Glyph currentGlyph = line.Get(firstNonSpaceCharIndex);
-                if (!TextUtil.IsSpaceOrWhitespace(currentGlyph)) {
+                if (!TextUtil.IsWhitespace(currentGlyph)) {
                     break;
                 }
                 SaveWordBreakIfNotYetSaved(currentGlyph);
@@ -799,6 +802,7 @@ namespace iText.Layout.Renderer {
         /// <param name="leftPos">the leftmost end of the GlyphLine</param>
         /// <param name="rightPos">the rightmost end of the GlyphLine</param>
         public virtual void SetText(GlyphLine text, int leftPos, int rightPos) {
+            this.strToBeConverted = null;
             this.text = new GlyphLine(text);
             this.text.start = leftPos;
             this.text.end = rightPos;
@@ -832,7 +836,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override IRenderer GetNextRenderer() {
-            return new iText.Layout.Renderer.TextRenderer((Text)modelElement, null);
+            return new iText.Layout.Renderer.TextRenderer((Text)modelElement);
         }
 
         internal virtual IList<int[]> GetReversedRanges() {
@@ -1060,7 +1064,7 @@ namespace iText.Layout.Renderer {
         internal static void UpdateRangeBasedOnRemovedCharacters(List<int> removedIds, int[] range) {
             int shift = NumberOfElementsLessThan(removedIds, range[0]);
             range[0] -= shift;
-            shift = NumberOfElementsLessThanOrEqual(removedIds, range[1] - 1);
+            shift = NumberOfElementsLessThanOrEqual(removedIds, range[1]);
             range[1] -= shift;
         }
 

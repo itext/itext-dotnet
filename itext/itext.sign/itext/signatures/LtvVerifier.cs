@@ -280,6 +280,7 @@ namespace iText.Signatures {
                 signatureName = names[names.Count - 2];
                 document = new PdfDocument(new PdfReader(sgnUtil.ExtractRevision(signatureName)));
                 this.acroForm = PdfAcroForm.GetAcroForm(document, true);
+                this.sgnUtil = new SignatureUtil(document);
                 names = sgnUtil.GetSignatureNames();
                 signatureName = names[names.Count - 1];
                 pkcs7 = CoversWholeDocument();

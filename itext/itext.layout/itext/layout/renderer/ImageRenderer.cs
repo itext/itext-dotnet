@@ -257,31 +257,34 @@ namespace iText.Layout.Renderer {
                 drawContext.GetCanvas().RestoreState();
             }
             PdfDocument document = drawContext.GetDocument();
-            bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
-            bool isArtifact = false;
+            bool isTagged = drawContext.IsTaggingEnabled();
+            bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
+            bool isArtifact = isTagged && !modelElementIsAccessible;
             TagTreePointer tagPointer = null;
             if (isTagged) {
                 tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                PdfName role = accessibleElement.GetRole();
-                if (role != null && !PdfName.Artifact.Equals(role)) {
-                    AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, tagPointer);
-                    tagPointer.AddTag(accessibleElement);
-                }
-                else {
-                    isTagged = false;
-                    if (PdfName.Artifact.Equals(role)) {
-                        isArtifact = true;
+                if (modelElementIsAccessible) {
+                    IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
+                    PdfName role = accessibleElement.GetRole();
+                    if (role != null && !PdfName.Artifact.Equals(role)) {
+                        AccessibleAttributesApplier.ApplyLayoutAttributes(accessibleElement.GetRole(), this, tagPointer);
+                        tagPointer.AddTag(accessibleElement);
+                    }
+                    else {
+                        modelElementIsAccessible = false;
+                        if (PdfName.Artifact.Equals(role)) {
+                            isArtifact = true;
+                        }
                     }
                 }
             }
             PdfCanvas canvas = drawContext.GetCanvas();
             if (isTagged) {
-                canvas.OpenTag(tagPointer.GetTagReference());
-            }
-            else {
                 if (isArtifact) {
                     canvas.OpenTag(new CanvasArtifact());
+                }
+                else {
+                    canvas.OpenTag(tagPointer.GetTagReference());
                 }
             }
             PdfXObject xObject = ((Image)(GetModelElement())).GetXObject();
@@ -292,7 +295,7 @@ namespace iText.Layout.Renderer {
             if (true.Equals(GetPropertyAsBoolean(Property.FLUSH_ON_DRAW))) {
                 xObject.Flush();
             }
-            if (isTagged || isArtifact) {
+            if (isTagged) {
                 canvas.CloseTag();
             }
             if (isRelativePosition) {
@@ -300,7 +303,7 @@ namespace iText.Layout.Renderer {
             }
             ApplyBorderBox(occupiedArea.GetBBox(), GetBorders(), true);
             ApplyMargins(occupiedArea.GetBBox(), true);
-            if (isTagged) {
+            if (modelElementIsAccessible) {
                 tagPointer.MoveToParent();
             }
         }

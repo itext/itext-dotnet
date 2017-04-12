@@ -58,6 +58,10 @@ namespace iText.Signatures {
             return str.Substring(beginIndex, endIndex - beginIndex);
         }
 
+        public static byte[] GetBytes(this String str) {
+            return System.Text.Encoding.UTF8.GetBytes(str);
+        }
+
         public static void AddAll<T>(this ICollection<T> t, IEnumerable<T> newItems) {
             foreach (T item in newItems) {
                 t.Add(item);

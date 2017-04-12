@@ -52,7 +52,6 @@ namespace iText.Signatures {
     /// Time Stamp Authority providing RFC 3161 compliant time stamp token.
     /// </remarks>
     public interface ITSAClient {
-        // TODO: refactor docs
         /// <summary>Get the time stamp estimated token size.</summary>
         /// <remarks>
         /// Get the time stamp estimated token size.
@@ -81,10 +80,6 @@ namespace iText.Signatures {
         IDigest GetMessageDigest();
 
         /// <summary>Returns RFC 3161 timeStampToken.</summary>
-        /// <remarks>
-        /// Returns RFC 3161 timeStampToken.
-        /// Method may return null indicating that timestamp should be skipped.
-        /// </remarks>
         /// <param name="imprint">byte[] - data imprint to be time-stamped</param>
         /// <returns>byte[] - encoded, TSA signed data of the timeStampToken</returns>
         /// <exception cref="System.Exception">- TSA request failed</exception>
