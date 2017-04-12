@@ -912,7 +912,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// ; array is deprecated in PDF 2.0.
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetBlendMode(PdfObject blendMode) {

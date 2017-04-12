@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Font;
 using iText.Kernel.Colors;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -1734,6 +1735,115 @@ namespace iText.Kernel.Pdf.Annot {
             return GetPdfObject().GetAsArray(PdfName.Rect);
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. A language identifier overriding the document’s language identifier to
+        /// specify the natural language for all text in the annotation except where overridden by
+        /// other explicit language specifications
+        /// </remarks>
+        /// <returns>the lang entry</returns>
+        public virtual String GetLang() {
+            PdfString lang = GetPdfObject().GetAsString(PdfName.Lang);
+            return lang != null ? lang.ToUnicodeString() : null;
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. A language identifier overriding the document’s language identifier to
+        /// specify the natural language for all text in the annotation except where overridden by
+        /// other explicit language specifications
+        /// </remarks>
+        /// <param name="lang">language identifier</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetLang(String lang) {
+            return Put(PdfName.Lang, new PdfString(lang, PdfEncodings.UNICODE_BIG));
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. The blend mode that shall be used when painting the annotation onto the page</remarks>
+        /// <returns>the blend mode</returns>
+        public virtual PdfName GetBlendMode() {
+            return GetPdfObject().GetAsName(PdfName.BM);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. The blend mode that shall be used when painting the annotation onto the page</remarks>
+        /// <param name="blendMode">blend mode</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetBlendMode(PdfName blendMode) {
+            return Put(PdfName.BM, blendMode);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for all nonstroking
+        /// operations on all visible elements of the annotation in its closed state (including its
+        /// background and border) but not the popup window that appears when the annotation is
+        /// opened.
+        /// </remarks>
+        /// <returns>opacity value for nonstroking operations. Returns 1.0 (default value) if entry is not present</returns>
+        public virtual float GetNonStrokingOpacity() {
+            PdfNumber nonStrokingOpacity = GetPdfObject().GetAsNumber(PdfName.ca);
+            return nonStrokingOpacity != null ? nonStrokingOpacity.FloatValue() : 1;
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for all nonstroking
+        /// operations on all visible elements of the annotation in its closed state (including its
+        /// background and border) but not the popup window that appears when the annotation is
+        /// opened.
+        /// </remarks>
+        /// <param name="nonStrokingOpacity">opacity for nonstroking operations</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetNonStrokingOpacity(float nonStrokingOpacity) {
+            return Put(PdfName.ca, new PdfNumber(nonStrokingOpacity));
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for stroking all visible
+        /// elements of the annotation in its closed state, including its background and border, but
+        /// not the popup window that appears when the annotation is opened.
+        /// </remarks>
+        /// <returns>opacity for stroking operations, including background and border</returns>
+        public virtual float GetStrokingOpacity() {
+            PdfNumber strokingOpacity = GetPdfObject().GetAsNumber(PdfName.CA);
+            return strokingOpacity != null ? strokingOpacity.FloatValue() : 1;
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. When regenerating the annotation's appearance stream, this is the
+        /// opacity value that shall be used for stroking all visible
+        /// elements of the annotation in its closed state, including its background and border, but
+        /// not the popup window that appears when the annotation is opened.
+        /// </remarks>
+        /// <param name="strokingOpacity">opacity for stroking operations, including background and border</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfAnnotation"/>
+        /// object
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetStrokingOpacity(float strokingOpacity) {
+            return Put(PdfName.CA, new PdfNumber(strokingOpacity));
+        }
+
         /// <summary>
         /// Inserts the value into into the underlying
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
@@ -1754,6 +1864,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation Put(PdfName key, PdfObject value) {
             GetPdfObject().Put(key, value);
+            SetModified();
             return this;
         }
 
