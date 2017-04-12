@@ -276,8 +276,10 @@ namespace iText.Layout.Renderer {
                     currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                     currentTextPos = nonBreakablePartEnd + 1;
                     currentLineWidth += nonBreakablePartFullWidth;
-                    widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
-                    widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
+                    widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                        + boldSimulationAddition);
+                    widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                        + boldSimulationAddition);
                     anythingPlaced = true;
                 }
                 else {
@@ -327,8 +329,10 @@ namespace iText.Layout.Renderer {
                                             currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                             currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                             currentLineWidth += currentHyphenationChoicePreTextWidth;
-                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth);
-                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth);
+                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                );
+                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                );
                                             currentTextPos += pre.Length;
                                             break;
                                         }
@@ -350,8 +354,10 @@ namespace iText.Layout.Renderer {
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                 currentLineWidth += nonBreakablePartWidthWhichDoesNotExceedAllowedWidth;
-                                widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
-                                widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
+                                widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                                    + boldSimulationAddition);
+                                widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                                    + boldSimulationAddition);
                             }
                             else {
                                 // process empty line (e.g. '\n')

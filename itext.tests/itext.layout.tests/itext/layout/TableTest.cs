@@ -1560,6 +1560,34 @@ namespace iText.Layout {
                 , testName + "_diff"));
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void AutoLayoutTest01() {
+            String testName = "autoLayoutTest01.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            //Initialize PDF document
+            PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
+            // Initialize document
+            Document doc = new Document(pdf);
+            doc.Add(new Paragraph("Simple cell:"));
+            Table table = new Table(new float[1]);
+            table.AddCell("A cell");
+            doc.Add(table);
+            doc.Add(new Paragraph("A cell with bold text:"));
+            table = new Table(new float[1]);
+            table.AddCell("A cell").SetBold();
+            doc.Add(table);
+            doc.Add(new Paragraph("A cell with italic text:"));
+            table = new Table(new float[1]);
+            table.AddCell("A cell").SetItalic();
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
         internal class CustomRenderer : TableRenderer {
             public CustomRenderer(Table modelElement, Table.RowRange rowRange)
                 : base(modelElement, rowRange) {
