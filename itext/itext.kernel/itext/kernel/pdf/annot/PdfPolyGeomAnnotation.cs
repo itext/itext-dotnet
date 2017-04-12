@@ -41,6 +41,7 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using iText.IO.Log;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 
@@ -79,10 +80,18 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(PdfArray vertices) {
+            if (GetPdfObject().ContainsKey(PdfName.Path)) {
+                LoggerFactory.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
+                    );
+            }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, vertices);
         }
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetVertices(float[] vertices) {
+            if (GetPdfObject().ContainsKey(PdfName.Path)) {
+                LoggerFactory.GetLogger(GetType()).Warn(iText.IO.LogMessageConstant.PATH_KEY_IS_PRESENT_VERTICES_WILL_BE_IGNORED
+                    );
+            }
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Vertices, new PdfArray(vertices));
         }
 
@@ -100,6 +109,49 @@ namespace iText.Kernel.Pdf.Annot {
 
         public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetMeasure(PdfDictionary measure) {
             return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Measure, measure);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. An array of n arrays, each supplying the operands for a
+        /// path building operator (m, l or c).
+        /// Each of the n arrays shall contain pairs of values specifying the points (x and
+        /// y values) for a path drawing operation.
+        /// The first array shall be of length 2 and specifies the operand of a moveto
+        /// operator which establishes a current point.
+        /// Subsequent arrays of length 2 specify the operands of lineto operators.
+        /// Arrays of length 6 specify the operands for curveto operators.
+        /// Each array is processed in sequence to construct the path.
+        /// </remarks>
+        /// <returns>path, or <code>null</code> if path is not set</returns>
+        public virtual PdfArray GetPath() {
+            return GetPdfObject().GetAsArray(PdfName.Path);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>
+        /// PDF 2.0. An array of n arrays, each supplying the operands for a
+        /// path building operator (m, l or c).
+        /// Each of the n arrays shall contain pairs of values specifying the points (x and
+        /// y values) for a path drawing operation.
+        /// The first array shall be of length 2 and specifies the operand of a moveto
+        /// operator which establishes a current point.
+        /// Subsequent arrays of length 2 specify the operands of lineto operators.
+        /// Arrays of length 6 specify the operands for curveto operators.
+        /// Each array is processed in sequence to construct the path.
+        /// </remarks>
+        /// <param name="path">the path to set</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPolyGeomAnnotation"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation SetPath(PdfArray path) {
+            if (GetPdfObject().ContainsKey(PdfName.Vertices)) {
+                LoggerFactory.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.IF_PATH_IS_SET_VERTICES_SHALL_NOT_BE_PRESENT
+                    );
+            }
+            return (iText.Kernel.Pdf.Annot.PdfPolyGeomAnnotation)Put(PdfName.Path, path);
         }
 
         private void SetSubtype(PdfName subtype) {

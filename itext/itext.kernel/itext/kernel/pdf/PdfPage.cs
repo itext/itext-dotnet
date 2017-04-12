@@ -1277,6 +1277,11 @@ namespace iText.Kernel.Pdf {
         /// (column order), and
         /// <see cref="PdfName.S"/>
         /// (structure order).
+        /// Beginning with PDF 2.0, the possible values also include
+        /// <see cref="PdfName.A"/>
+        /// (annotations array order) and
+        /// <see cref="PdfName.W"/>
+        /// (widget order).
         /// See ISO 32000 12.5, "Annotations" for details.
         /// </remarks>
         /// <param name="tabOrder">
@@ -1304,6 +1309,11 @@ namespace iText.Kernel.Pdf {
         /// (column order), and
         /// <see cref="PdfName.S"/>
         /// (structure order).
+        /// Beginning with PDF 2.0, the possible values also include
+        /// <see cref="PdfName.A"/>
+        /// (annotations array order) and
+        /// <see cref="PdfName.W"/>
+        /// (widget order).
         /// See ISO 32000 12.5, "Annotations" for details.
         /// </remarks>
         /// <returns>
@@ -1313,6 +1323,36 @@ namespace iText.Kernel.Pdf {
         /// </returns>
         public virtual PdfName GetTabOrder() {
             return GetPdfObject().GetAsName(PdfName.Tabs);
+        }
+
+        /// <summary>
+        /// Adds
+        /// <see cref="PdfOutputIntent"/>
+        /// that shall specify the colour characteristics of output devices
+        /// on which the page might be rendered.
+        /// </summary>
+        /// <param name="outputIntent">
+        /// 
+        /// <see cref="PdfOutputIntent"/>
+        /// to add.
+        /// </param>
+        /// <seealso cref="PdfOutputIntent"/>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// object
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage AddOutputIntent(PdfOutputIntent outputIntent) {
+            if (outputIntent == null) {
+                return this;
+            }
+            PdfArray outputIntents = GetPdfObject().GetAsArray(PdfName.OutputIntents);
+            if (outputIntents == null) {
+                outputIntents = new PdfArray();
+                Put(PdfName.OutputIntents, outputIntents);
+            }
+            outputIntents.Add(outputIntent.GetPdfObject());
+            return this;
         }
 
         /// <summary>

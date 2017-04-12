@@ -501,6 +501,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName DP = CreateDirectName("DP");
 
+        public static readonly iText.Kernel.Pdf.PdfName Dp = CreateDirectName("Dp");
+
         public static readonly iText.Kernel.Pdf.PdfName DR = CreateDirectName("DR");
 
         public static readonly iText.Kernel.Pdf.PdfName Draft = CreateDirectName("Draft");
@@ -719,6 +721,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName GoTo = CreateDirectName("GoTo");
 
         public static readonly iText.Kernel.Pdf.PdfName GoTo3DView = CreateDirectName("GoTo3DView");
+
+        public static readonly iText.Kernel.Pdf.PdfName GoToDp = CreateDirectName("GoToDp");
 
         public static readonly iText.Kernel.Pdf.PdfName GoToE = CreateDirectName("GoToE");
 
@@ -1139,6 +1143,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Part = CreateDirectName("Part");
 
+        public static readonly iText.Kernel.Pdf.PdfName Path = CreateDirectName("Path");
+
         public static readonly iText.Kernel.Pdf.PdfName Pattern = CreateDirectName("Pattern");
 
         public static readonly iText.Kernel.Pdf.PdfName PatternType = CreateDirectName("PatternType");
@@ -1279,6 +1285,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Resume = CreateDirectName("Resume");
 
+        public static readonly iText.Kernel.Pdf.PdfName Requirement = CreateDirectName("Requirement");
+
         public static readonly iText.Kernel.Pdf.PdfName Requirements = CreateDirectName("Requirements");
 
         public static readonly iText.Kernel.Pdf.PdfName Resources = CreateDirectName("Resources");
@@ -1403,6 +1411,10 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName St = CreateDirectName("St");
 
         public static readonly iText.Kernel.Pdf.PdfName Stamp = CreateDirectName("Stamp");
+
+        public static readonly iText.Kernel.Pdf.PdfName StampImage = CreateDirectName("StampImage");
+
+        public static readonly iText.Kernel.Pdf.PdfName StampSnapshot = CreateDirectName("StampSnapshot");
 
         public static readonly iText.Kernel.Pdf.PdfName Standard = CreateDirectName("Standard");
 
