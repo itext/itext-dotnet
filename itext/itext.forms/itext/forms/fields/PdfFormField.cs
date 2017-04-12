@@ -1873,7 +1873,18 @@ namespace iText.Forms.Fields {
         /// <see cref="iText.Kernel.Pdf.PdfString"/>
         /// </returns>
         public virtual PdfString GetDefaultAppearance() {
-            return GetPdfObject().GetAsString(PdfName.DA);
+            PdfString defaultAppearance = GetPdfObject().GetAsString(PdfName.DA);
+            if (defaultAppearance == null) {
+                PdfDictionary parent = GetParent();
+                if (parent != null) {
+                    //If this is not merged form field we should get default appearance from the parent which actually is a
+                    //form field dictionary
+                    if (parent.ContainsKey(PdfName.FT)) {
+                        defaultAppearance = parent.GetAsString(PdfName.DA);
+                    }
+                }
+            }
+            return defaultAppearance;
         }
 
         /// <summary>
