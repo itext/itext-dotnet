@@ -42,7 +42,9 @@ address: sales@itextpdf.com
 */
 using System;
 using System.IO;
+using Org.BouncyCastle.Crypto;
 using iText.IO.Source;
+using iText.Kernel;
 using iText.Kernel.Pdf.Canvas;
 using iText.Test;
 
@@ -85,8 +87,15 @@ namespace iText.Kernel.Pdf {
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest02() {
             MemoryStream baos = new MemoryStream();
-            String value = "Initial ID 56789";
-            PdfWriter writer = new PdfWriter(baos, new WriterProperties().SetInitialDocumentId(new PdfString(value)));
+            IDigest md5;
+            try {
+                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+            }
+            catch (Exception e) {
+                throw new PdfException(e);
+            }
+            PdfString initialId = new PdfString(md5.Digest());
+            PdfWriter writer = new PdfWriter(baos, new WriterProperties().SetInitialDocumentId(initialId));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             pdfDocument.Close();
@@ -96,22 +105,27 @@ namespace iText.Kernel.Pdf {
             pdfDocument = new PdfDocument(reader);
             PdfArray idArray = pdfDocument.GetTrailer().GetAsArray(PdfName.ID);
             NUnit.Framework.Assert.IsNotNull(idArray);
-            String extractedValue = idArray.GetAsString(1).GetValue();
+            PdfString extractedString = idArray.GetAsString(1);
             pdfDocument.Close();
-            NUnit.Framework.Assert.AreEqual(value, extractedValue);
+            NUnit.Framework.Assert.AreEqual(initialId, extractedString);
         }
 
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void ChangeIdTest03() {
-            String filenameInitial = "changeIdTest03Initial.pdf";
-            String filenameModified = "changeIdTest03Modified.pdf";
             MemoryStream baosInitial = new MemoryStream();
             MemoryStream baosModified = new MemoryStream();
-            String initialId = "Initial ID 01234";
-            String modifiedId = "Modified ID 56789";
-            PdfWriter writer = new PdfWriter(baosInitial, new WriterProperties().SetInitialDocumentId(new PdfString(initialId
-                )).SetModifiedDocumentId(new PdfString(modifiedId)));
+            IDigest md5;
+            try {
+                md5 = Org.BouncyCastle.Security.DigestUtilities.GetDigest("MD5");
+            }
+            catch (Exception e) {
+                throw new PdfException(e);
+            }
+            PdfString initialId = new PdfString(md5.Digest());
+            PdfString modifiedId = new PdfString("Modified ID 56789");
+            PdfWriter writer = new PdfWriter(baosInitial, new WriterProperties().SetInitialDocumentId(initialId).SetModifiedDocumentId
+                (modifiedId));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
             pdfDocument.Close();
@@ -121,9 +135,9 @@ namespace iText.Kernel.Pdf {
             PdfArray idArray = pdfDocument.GetTrailer().GetAsArray(PdfName.ID);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNotNull(idArray);
-            String extractedInitialValue = idArray.GetAsString(0).GetValue();
+            PdfString extractedInitialValue = idArray.GetAsString(0);
             NUnit.Framework.Assert.AreEqual(initialId, extractedInitialValue);
-            String extractedModifiedValue = idArray.GetAsString(1).GetValue();
+            PdfString extractedModifiedValue = idArray.GetAsString(1);
             NUnit.Framework.Assert.AreEqual(modifiedId, extractedModifiedValue);
             pdfDocument = new PdfDocument(new PdfReader(new RandomAccessSourceFactory().CreateSource(baosInitial.ToArray
                 ()), new ReaderProperties()), new PdfWriter(baosModified));
@@ -136,9 +150,9 @@ namespace iText.Kernel.Pdf {
             idArray = pdfDocument.GetTrailer().GetAsArray(PdfName.ID);
             pdfDocument.Close();
             NUnit.Framework.Assert.IsNotNull(idArray);
-            extractedInitialValue = idArray.GetAsString(0).GetValue();
+            extractedInitialValue = idArray.GetAsString(0);
             NUnit.Framework.Assert.AreEqual(initialId, extractedInitialValue);
-            extractedModifiedValue = idArray.GetAsString(1).GetValue();
+            extractedModifiedValue = idArray.GetAsString(1);
             NUnit.Framework.Assert.AreNotEqual(modifiedId, extractedModifiedValue);
         }
     }
