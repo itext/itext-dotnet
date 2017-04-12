@@ -56,10 +56,6 @@ using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace iText.Signatures {
     public class SigningTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(
-                                                         NUnit.Framework.TestContext.CurrentContext
-                                                             .TestDirectory) + "/resources/itext/signatures/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
                                                               .TestDirectory + "/test/itext/signatures/";
 
@@ -68,6 +64,10 @@ namespace iText.Signatures {
                                                              .TestDirectory) + "/resources/itext/signatures/ks";
 
         public static readonly char[] password = "password".ToCharArray();
+        
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(
+                                                         NUnit.Framework.TestContext.CurrentContext
+                                                             .TestDirectory) + "/resources/itext/signatures/";
 
         private X509Certificate[] chain;
 

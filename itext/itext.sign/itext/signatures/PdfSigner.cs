@@ -50,6 +50,7 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using iText.Forms;
 using iText.Forms.Fields;
+using iText.IO.Log;
 using iText.IO.Source;
 using iText.IO.Util;
 using iText.Kernel;
@@ -99,6 +100,8 @@ namespace iText.Signatures {
 
         /// <summary>The crypto dictionary.</summary>
         protected internal PdfSignature cryptoDictionary;
+
+        private PdfName digestMethod;
 
         /// <summary>Holds value of property signatureEvent.</summary>
         protected internal PdfSigner.ISignatureEvent signatureEvent;
@@ -431,6 +434,11 @@ namespace iText.Signatures {
             if (closed) {
                 throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
             }
+            if (certificationLevel > 0 && IsDocumentPdf2()) {
+                if (DocumentContainsCertificationOrApprovalSignatures()) {
+                    throw new PdfException(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs);
+                }
+            }
             ICollection<byte[]> crlBytes = null;
             int i = 0;
             while (crlBytes == null && i < chain.Length) {
@@ -452,9 +460,10 @@ namespace iText.Signatures {
             }
             PdfSignatureAppearance appearance = GetSignatureAppearance();
             appearance.SetCertificate(chain[0]);
-            if (sigtype == PdfSigner.CryptoStandard.CADES) {
+            if (sigtype == PdfSigner.CryptoStandard.CADES && !IsDocumentPdf2()) {
                 AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL2);
             }
+            String hashAlgorithm = externalSignature.GetHashAlgorithm();
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, sigtype == PdfSigner.CryptoStandard.CADES ? PdfName
                 .ETSI_CAdES_DETACHED : PdfName.Adbe_pkcs7_detached);
             dic.SetReason(appearance.GetReason());
@@ -464,10 +473,10 @@ namespace iText.Signatures {
             dic.SetDate(new PdfDate(GetSignDate()));
             // time-stamp will over-rule this
             cryptoDictionary = dic;
+            digestMethod = GetHashAlgorithmNameInCompatibleForPdfForm(hashAlgorithm);
             IDictionary<PdfName, int?> exc = new Dictionary<PdfName, int?>();
             exc.Put(PdfName.Contents, estimatedSize * 2 + 2);
             PreClose(exc);
-            String hashAlgorithm = externalSignature.GetHashAlgorithm();
             PdfPKCS7 sgn = new PdfPKCS7((ICipherParameters)null, chain, hashAlgorithm, false);
             if (signaturePolicy != null) {
                 sgn.SetSignaturePolicy(signaturePolicy);
@@ -555,7 +564,9 @@ namespace iText.Signatures {
                 throw new PdfException(PdfException.ThisInstanceOfPdfSignerAlreadyClosed);
             }
             int contentEstimated = tsa.GetTokenSizeEstimate();
-            AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
+            if (!IsDocumentPdf2()) {
+                AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
+            }
             SetFieldName(signatureName);
             PdfSignature dic = new PdfSignature(PdfName.Adobe_PPKLite, PdfName.ETSI_RFC3161);
             dic.Put(PdfName.Type, PdfName.DocTimeStamp);
@@ -972,14 +983,7 @@ namespace iText.Signatures {
             reference.Put(PdfName.TransformMethod, PdfName.DocMDP);
             reference.Put(PdfName.Type, PdfName.SigRef);
             reference.Put(PdfName.TransformParams, transformParams);
-            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_1_6) < 0) {
-                reference.Put(new PdfName("DigestValue"), new PdfString("aa"));
-                PdfArray loc = new PdfArray();
-                loc.Add(new PdfNumber(0));
-                loc.Add(new PdfNumber(0));
-                reference.Put(new PdfName("DigestLocation"), loc);
-                reference.Put(new PdfName("DigestMethod"), new PdfName("MD5"));
-            }
+            SetDigestParamToSigRefIfNeeded(reference);
             reference.Put(PdfName.Data, document.GetTrailer().Get(PdfName.Root));
             PdfArray types = new PdfArray();
             types.Add(reference);
@@ -1001,19 +1005,45 @@ namespace iText.Signatures {
             reference.Put(PdfName.TransformMethod, PdfName.FieldMDP);
             reference.Put(PdfName.Type, PdfName.SigRef);
             reference.Put(PdfName.TransformParams, transformParams);
-            reference.Put(new PdfName("DigestValue"), new PdfString("aa"));
-            PdfArray loc = new PdfArray();
-            loc.Add(new PdfNumber(0));
-            loc.Add(new PdfNumber(0));
-            reference.Put(new PdfName("DigestLocation"), loc);
-            reference.Put(new PdfName("DigestMethod"), new PdfName("MD5"));
+            SetDigestParamToSigRefIfNeeded(reference);
             reference.Put(PdfName.Data, document.GetTrailer().Get(PdfName.Root));
             PdfArray types = crypto.GetPdfObject().GetAsArray(PdfName.Reference);
             if (types == null) {
                 types = new PdfArray();
+                crypto.Put(PdfName.Reference, types);
             }
             types.Add(reference);
-            crypto.Put(PdfName.Reference, types);
+        }
+
+        protected internal virtual bool DocumentContainsCertificationOrApprovalSignatures() {
+            bool containsCertificationOrApprovalSignature = false;
+            PdfDictionary urSignature = null;
+            PdfDictionary catalogPerms = document.GetCatalog().GetPdfObject().GetAsDictionary(PdfName.Perms);
+            if (catalogPerms != null) {
+                urSignature = catalogPerms.GetAsDictionary(PdfName.UR3);
+            }
+            PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(document, false);
+            if (acroForm != null) {
+                foreach (KeyValuePair<String, PdfFormField> entry in acroForm.GetFormFields()) {
+                    PdfDictionary fieldDict = entry.Value.GetPdfObject();
+                    if (!PdfName.Sig.Equals(fieldDict.Get(PdfName.FT))) {
+                        continue;
+                    }
+                    PdfDictionary sigDict = fieldDict.GetAsDictionary(PdfName.V);
+                    if (sigDict == null) {
+                        continue;
+                    }
+                    PdfSignature pdfSignature = new PdfSignature(sigDict);
+                    if (pdfSignature.GetContents() == null || pdfSignature.GetByteRange() == null) {
+                        continue;
+                    }
+                    if (!pdfSignature.GetType().Equals(PdfName.DocTimeStamp) && sigDict != urSignature) {
+                        containsCertificationOrApprovalSignature = true;
+                        break;
+                    }
+                }
+            }
+            return containsCertificationOrApprovalSignature;
         }
 
         /// <summary>Get the rectangle associated to the provided widget.</summary>
@@ -1044,6 +1074,46 @@ namespace iText.Signatures {
                 }
             }
             return pageNumber;
+        }
+
+        private void SetDigestParamToSigRefIfNeeded(PdfDictionary reference) {
+            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_1_6) < 0) {
+                // Don't really know what to say about this if-clause code.
+                // Let's leave it, assuming that it is reasoned in some very specific way, until opposite is not proven.
+                reference.Put(PdfName.DigestValue, new PdfString("aa"));
+                PdfArray loc = new PdfArray();
+                loc.Add(new PdfNumber(0));
+                loc.Add(new PdfNumber(0));
+                reference.Put(PdfName.DigestLocation, loc);
+                reference.Put(PdfName.DigestMethod, new PdfName("MD5"));
+            }
+            else {
+                if (IsDocumentPdf2()) {
+                    if (digestMethod != null) {
+                        reference.Put(PdfName.DigestMethod, digestMethod);
+                    }
+                    else {
+                        ILogger logger = LoggerFactory.GetLogger(typeof(iText.Signatures.PdfSigner));
+                        logger.Error(iText.IO.LogMessageConstant.UNKNOWN_DIGEST_METHOD);
+                    }
+                }
+            }
+        }
+
+        private PdfName GetHashAlgorithmNameInCompatibleForPdfForm(String hashAlgorithm) {
+            PdfName pdfCompatibleName = null;
+            String hashAlgOid = DigestAlgorithms.GetAllowedDigest(hashAlgorithm);
+            if (hashAlgOid != null) {
+                String hashAlgorithmNameInCompatibleForPdfForm = DigestAlgorithms.GetDigest(hashAlgOid);
+                if (hashAlgorithmNameInCompatibleForPdfForm != null) {
+                    pdfCompatibleName = new PdfName(hashAlgorithmNameInCompatibleForPdfForm);
+                }
+            }
+            return pdfCompatibleName;
+        }
+
+        private bool IsDocumentPdf2() {
+            return document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0;
         }
 
         /// <summary>An interface to retrieve the signature dictionary for modification.</summary>

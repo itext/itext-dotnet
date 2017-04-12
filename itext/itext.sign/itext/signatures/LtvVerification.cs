@@ -354,8 +354,9 @@ namespace iText.Signatures {
         private void OutputDss(PdfDictionary dss, PdfDictionary vrim, PdfArray ocsps, PdfArray crls, PdfArray certs
             ) {
             PdfCatalog catalog = document.GetCatalog();
-            catalog.AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
-            catalog.SetModified();
+            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) < 0) {
+                catalog.AddDeveloperExtension(PdfDeveloperExtension.ESIC_1_7_EXTENSIONLEVEL5);
+            }
             foreach (PdfName vkey in validated.Keys) {
                 PdfArray ocsp = new PdfArray();
                 PdfArray crl = new PdfArray();

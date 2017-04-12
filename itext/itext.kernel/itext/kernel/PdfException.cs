@@ -165,6 +165,8 @@ namespace iText.Kernel {
 
         public const String CertificateIsNotProvidedDocumentIsEncryptedWithPublicKeyCertificate = "Certificate is not provided. Document is encrypted with public key certificate, it should be passed to PdfReader constructor with properties. See ReaderProperties#setPublicKeySecurityParams() method.";
 
+        public const String CertificationSignatureCreationFailedDocShallNotContainSigs = "Certification signature creation failed. Document shall not contain any certification or approval signatures before signing with certification signature.";
+
         public const String CfNotFoundEncryption = "/CF not found (encryption)";
 
         [Obsolete]
