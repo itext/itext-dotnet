@@ -43,8 +43,12 @@ address: sales@itextpdf.com
 using System;
 using System.Collections.Generic;
 using System.IO;
+using iText.IO.Image;
 using iText.Kernel;
+using iText.Kernel.Colors;
+using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Xobject;
 using iText.Kernel.Utils;
 using iText.Test;
 using iText.Test.Attributes;
@@ -383,6 +387,21 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(595, pdfDoc.GetPage(1).GetPageSize().GetRight(), eps);
             NUnit.Framework.Assert.AreEqual(842, pdfDoc.GetPage(1).GetPageSize().GetTop(), eps);
             pdfDoc.Close();
+        }
+
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void PageThumbnailTest() {
+            String filename = "pageThumbnail.pdf";
+            String imageSrc = "icon.jpg";
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename).SetCompressionLevel(CompressionConstants
+                .NO_COMPRESSION));
+            PdfPage page = pdfDoc.AddNewPage().SetThumbnailImage(new PdfImageXObject(ImageDataFactory.Create(sourceFolder
+                 + imageSrc)));
+            new PdfCanvas(page).SetFillColor(Color.RED).Rectangle(100, 100, 400, 400).Fill();
+            pdfDoc.Close();
+            new CompareTool().CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename, destinationFolder
+                , "diff");
         }
     }
 }

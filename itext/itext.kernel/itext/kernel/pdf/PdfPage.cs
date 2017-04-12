@@ -1325,6 +1325,32 @@ namespace iText.Kernel.Pdf {
             return GetPdfObject().GetAsName(PdfName.Tabs);
         }
 
+        /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
+        /// <remarks>
+        /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
+        /// its pages in miniature form
+        /// </remarks>
+        /// <param name="thumb">the thumbnail image</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfPage"/>
+        /// object
+        /// </returns>
+        public virtual iText.Kernel.Pdf.PdfPage SetThumbnailImage(PdfImageXObject thumb) {
+            return Put(PdfName.Thumb, thumb.GetPdfObject());
+        }
+
+        /// <summary>Sets a stream object that shall define the page’s thumbnail image.</summary>
+        /// <remarks>
+        /// Sets a stream object that shall define the page’s thumbnail image. Thumbnail images represent the contents of
+        /// its pages in miniature form
+        /// </remarks>
+        /// <returns>the thumbnail image, or <code>null</code> if it is not present</returns>
+        public virtual PdfImageXObject GetThumbnailImage() {
+            PdfStream thumbStream = GetPdfObject().GetAsStream(PdfName.Thumb);
+            return thumbStream != null ? new PdfImageXObject(thumbStream) : null;
+        }
+
         /// <summary>
         /// Adds
         /// <see cref="PdfOutputIntent"/>

@@ -47,6 +47,7 @@ using iText.IO.Font;
 using iText.IO.Util;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Collection;
+using iText.Kernel.Pdf.Xobject;
 
 namespace iText.Kernel.Pdf.Filespec {
     public class PdfFileSpec : PdfObjectWrapper<PdfObject> {
@@ -199,8 +200,29 @@ namespace iText.Kernel.Pdf.Filespec {
             return Put(PdfName.CI, item.GetPdfObject());
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Sets a stream object defining the thumbnail image for the file specification.</remarks>
+        /// <param name="thumbnailImage">image used as a thumbnail</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfFileSpec"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec SetThumbnailImage(PdfImageXObject thumbnailImage) {
+            return Put(PdfName.Thumb, thumbnailImage.GetPdfObject());
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Gets a stream object defining the thumbnail image for the file specification.</remarks>
+        /// <returns>image used as a thumbnail, or <code>null</code> if it is not set</returns>
+        public virtual PdfImageXObject GetThumbnailImage() {
+            PdfStream thumbnailStream = ((PdfDictionary)GetPdfObject()).GetAsStream(PdfName.Thumb);
+            return thumbnailStream != null ? new PdfImageXObject(thumbnailStream) : null;
+        }
+
         public virtual iText.Kernel.Pdf.Filespec.PdfFileSpec Put(PdfName key, PdfObject value) {
             ((PdfDictionary)GetPdfObject()).Put(key, value);
+            SetModified();
             return this;
         }
 

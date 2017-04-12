@@ -1517,6 +1517,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName THead = CreateDirectName("THead");
 
+        public static readonly iText.Kernel.Pdf.PdfName Thumb = CreateDirectName("Thumb");
+
         public static readonly iText.Kernel.Pdf.PdfName TI = CreateDirectName("TI");
 
         public static readonly iText.Kernel.Pdf.PdfName TilingType = CreateDirectName("TilingType");
