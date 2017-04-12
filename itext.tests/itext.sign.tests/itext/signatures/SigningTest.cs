@@ -45,6 +45,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using iText.Kernel;
 using Org.BouncyCastle.Crypto;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -52,22 +53,21 @@ using iText.Kernel.Utils;
 using iText.Test;
 using Org.BouncyCastle.Crypto.Tls;
 using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Security;
 using X509Certificate = Org.BouncyCastle.X509.X509Certificate;
 
 namespace iText.Signatures {
     public class SigningTest : ExtendedITextTest {
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext
-                                                              .TestDirectory + "/test/itext/signatures/";
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/signatures/";
 
-        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(
-                                                         NUnit.Framework.TestContext.CurrentContext
-                                                             .TestDirectory) + "/resources/itext/signatures/ks";
+        public static readonly String keystorePath = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/ks";
 
         public static readonly char[] password = "password".ToCharArray();
-        
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(
-                                                         NUnit.Framework.TestContext.CurrentContext
-                                                             .TestDirectory) + "/resources/itext/signatures/";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/signatures/";
 
         private X509Certificate[] chain;
 
@@ -113,9 +113,8 @@ namespace iText.Signatures {
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
                 .CADES, "Test 1", "TestCity", rect, false, false);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder
-                                                                                  + "cmp_" + fileName, destinationFolder,
-                "diff_", GetTestMap(new Rectangle(67, 690, 155, 15))));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + fileName, destinationFolder
+                , "diff_", GetTestMap(new Rectangle(67, 690, 155, 15))));
         }
 
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
@@ -167,25 +166,17 @@ namespace iText.Signatures {
         public virtual void SigningTaggedDocument() {
             String src = sourceFolder + "simpleTaggedDocument.pdf";
             String dest = destinationFolder + "signedTaggedDocument.pdf";
-
             Rectangle rect = new Rectangle(36, 648, 200, 100);
-
             String fieldName = "Signature1";
-
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
                 .CADES, "Test 1", "TestCity", rect, false, false);
-//            Sign(src, fieldName, dest, chain, pk,
-//                DigestAlgorithms.SHA256, provider.getName(),
-//                PdfSigner.CryptoStandard.CADES, "Test 1", "TestCity", rect, false, false);
         }
 
         [NUnit.Framework.Test]
         public virtual void SigningTaggedDocumentAppendMode() {
             String src = sourceFolder + "simpleTaggedDocument.pdf";
             String dest = destinationFolder + "signedTaggedDocumentAppendMode.pdf";
-
             Rectangle rect = new Rectangle(36, 648, 200, 100);
-
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
                 .CADES, "Test 1", "TestCity", rect, false, true);
@@ -195,19 +186,65 @@ namespace iText.Signatures {
         public virtual void SigningDocumentAppendModeIndirectPageAnnots() {
             String file = "AnnotsIndirect.pdf";
             String src = sourceFolder + file;
-            String dest = destinationFolder + file;
-
+            String dest = destinationFolder + "signed" + file;
             Rectangle rect = new Rectangle(30, 200, 200, 100);
-
             String fieldName = "Signature1";
             Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
                 .CADES, "Test 1", "TestCity", rect, false, true);
-            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file,
-                destinationFolder,
-                "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_" + file, destinationFolder
+                , "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
         }
 
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2Cms() {
+            String file = "simpleDocPdf2.pdf";
+            String src = sourceFolder + file;
+            String dest = destinationFolder + "signedCms_" + file;
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CMS, "Test 1", "TestCity", rect, false, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_signedCms_" + file
+                , destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
 
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2Cades() {
+            String file = "simpleDocPdf2.pdf";
+            String src = sourceFolder + file;
+            String dest = destinationFolder + "signedCades_" + file;
+            Rectangle rect = new Rectangle(30, 200, 200, 100);
+            String fieldName = "Signature1";
+            Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard
+                .CADES, "Test 1", "TestCity", rect, false, true);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(dest, sourceFolder + "cmp_signedCades_" + 
+                file, destinationFolder, "diff_", GetTestMap(new Rectangle(30, 245, 200, 12))));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void SignPdf2CertificationAfterApproval() {
+            NUnit.Framework.Assert.That(() =>  {
+                String srcFile = "approvalSignedDocPdf2.pdf";
+                String file = "signedPdf2CertificationAfterApproval.pdf";
+                String src = sourceFolder + srcFile;
+                String dest = destinationFolder + file;
+                Rectangle rect = new Rectangle(30, 50, 200, 100);
+                String fieldName = "Signature2";
+                Sign(src, fieldName, dest, chain, pk, DigestAlgorithms.RIPEMD160, PdfSigner.CryptoStandard
+                    .CADES, "Test 1", "TestCity", rect, false, true, PdfSigner.CERTIFIED_NO_CHANGES_ALLOWED);
+            }
+            , NUnit.Framework.Throws.TypeOf<PdfException>().With.Message.EqualTo(PdfException.CertificationSignatureCreationFailedDocShallNotContainSigs));
+;
+        }
 
         [NUnit.Framework.Test]
         public void SignEncryptedDoc01() {
@@ -270,19 +307,29 @@ namespace iText.Signatures {
             // TODO improve checking in future. At the moment, if the certificate or the signature itself has problems exception will be thrown
         }
 
-
+        // TODO improve testing, e.g. check ID. For not at least we assert that exception is not thrown
         /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
         /// <exception cref="System.IO.IOException"/>
         protected internal virtual void Sign(String src, String name, String dest, X509Certificate
             [] chain, ICipherParameters pk, String digestAlgorithm, PdfSigner.CryptoStandard
             subfilter, String reason, String location, Rectangle rectangleForNewField, bool
             setReuseAppearance, bool isAppendMode) {
+            Sign(src, name, dest, chain, pk, digestAlgorithm, subfilter, reason, location, rectangleForNewField,
+                setReuseAppearance, isAppendMode, PdfSigner.NOT_CERTIFIED);
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        protected internal virtual void Sign(String src, String name, String dest, X509Certificate
+            [] chain, ICipherParameters pk, String digestAlgorithm, PdfSigner.CryptoStandard
+            subfilter, String reason, String location, Rectangle rectangleForNewField, bool
+            setReuseAppearance, bool isAppendMode, int certificationLevel) {
             PdfReader reader = new PdfReader(src);
-            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode
-            );
+            PdfSigner signer = new PdfSigner(reader, new FileStream(dest, FileMode.Create), isAppendMode);
+            signer.SetCertificationLevel(certificationLevel);
             // Creating the appearance
-            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason
-            ).SetLocation(location).SetReuseAppearance(setReuseAppearance);
+            PdfSignatureAppearance appearance = signer.GetSignatureAppearance().SetReason(reason).SetLocation(location
+                ).SetReuseAppearance(setReuseAppearance);
             if (rectangleForNewField != null) {
                 appearance.SetPageRect(rectangleForNewField);
             }
