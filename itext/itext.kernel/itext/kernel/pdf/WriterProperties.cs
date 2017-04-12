@@ -168,6 +168,7 @@ namespace iText.Kernel.Pdf {
         /// AllowPrinting, AllowModifyContents, AllowCopy, AllowModifyAnnotations,
         /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
         /// The permissions can be combined by ORing them.
+        /// <p>
         /// See
         /// <see cref="EncryptionConstants"/>
         /// .
@@ -200,6 +201,7 @@ namespace iText.Kernel.Pdf {
         /// AllowFillIn, AllowScreenReaders, AllowAssembly and AllowDegradedPrinting.
         /// The permissions can be combined by ORing them.
         /// Optionally DO_NOT_ENCRYPT_METADATA can be ored to output the metadata in cleartext
+        /// <p>
         /// See
         /// <see cref="EncryptionConstants"/>
         /// .
@@ -223,9 +225,11 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>The /ID entry of a document contains an array with two entries.</summary>
         /// <remarks>
-        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
-        /// The second one should be the same entry, unless the document has been modified. iText will by default keep the
-        /// existing initial id. But if you'd like you can set this id yourself using this setter.
+        /// The /ID entry of a document contains an array with two entries. The first one (initial id) represents the initial document id.
+        /// It's a permanent identifier based on the contents of the file at the time it was originally created
+        /// and does not change when the file is incrementally updated.
+        /// To help ensure the uniqueness of file identifiers, it is recommend to be computed by means of a message digest algorithm such as MD5.
+        /// iText will by default keep the existing initial id. But if you'd like you can set this id yourself using this setter.
         /// </remarks>
         /// <param name="initialDocumentId">the new initial document id</param>
         /// <returns>
@@ -240,8 +244,8 @@ namespace iText.Kernel.Pdf {
 
         /// <summary>The /ID entry of a document contains an array with two entries.</summary>
         /// <remarks>
-        /// The /ID entry of a document contains an array with two entries. The first one represents the initial document id.
-        /// The second one should be the same entry, unless the document has been modified. iText will by default generate
+        /// The /ID entry of a document contains an array with two entries.
+        /// The second one (modified id) should be the same entry, unless the document has been modified. iText will by default generate
         /// a modified id. But if you'd like you can set this id yourself using this setter.
         /// </remarks>
         /// <param name="modifiedDocumentId">the new modified document id</param>
