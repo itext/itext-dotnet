@@ -772,6 +772,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName HT = CreateDirectName("HT");
 
+        public static readonly iText.Kernel.Pdf.PdfName HTO = CreateDirectName("HTO");
+
         public static readonly iText.Kernel.Pdf.PdfName HTP = CreateDirectName("HTP");
 
         public static readonly iText.Kernel.Pdf.PdfName Hue = CreateDirectName("Hue");

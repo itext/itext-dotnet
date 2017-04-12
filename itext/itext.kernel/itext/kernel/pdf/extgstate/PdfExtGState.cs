@@ -1132,6 +1132,38 @@ namespace iText.Kernel.Pdf.Extgstate {
             }
         }
 
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Sets halftone origin</remarks>
+        /// <param name="x">X location of the halftone origin in the current coordinate system</param>
+        /// <param name="y">Y location of the halftone origin in the current coordinate system</param>
+        /// <returns>
+        /// this
+        /// <see cref="PdfExtGState"/>
+        /// instance
+        /// </returns>
+        public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetHalftoneOrigin(float x, float y) {
+            PdfArray hto = new PdfArray();
+            hto.Add(new PdfNumber(x));
+            hto.Add(new PdfNumber(y));
+            return Put(PdfName.HTO, hto);
+        }
+
+        /// <summary>PDF 2.0.</summary>
+        /// <remarks>PDF 2.0. Gets halftone origin</remarks>
+        /// <returns>
+        /// an array of two values specifying X and Y values of the halftone origin in the current coordinate system,
+        /// respectively, or <code>null</code> if halftone origin is not specified
+        /// </returns>
+        public virtual float[] GetHalftoneOrigin() {
+            PdfArray hto = GetPdfObject().GetAsArray(PdfName.HTO);
+            if (hto != null && hto.Size() == 2 && hto.Get(0).IsNumber() && hto.Get(1).IsNumber()) {
+                return new float[] { hto.GetAsNumber(0).FloatValue(), hto.GetAsNumber(1).FloatValue() };
+            }
+            else {
+                return null;
+            }
+        }
+
         /// <summary>Puts the value into Graphics state parameter dictionary and associates it with the specified key.
         ///     </summary>
         /// <remarks>
