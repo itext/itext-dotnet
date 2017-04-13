@@ -59,6 +59,7 @@ namespace iText.Kernel.Pdf.Navigation {
             return ((PdfArray)GetPdfObject()).Get(0);
         }
 
+        [System.ObsoleteAttribute(@"do not use this method. Will be removed in 7.1")]
         public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {
             return this;
         }
