@@ -141,6 +141,7 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
+            strToBeConverted = GetStringWithSpacesInsteadOfTabs(strToBeConverted);
             UpdateFontAndText();
             LayoutArea area = layoutContext.GetArea();
             float[] margins = GetMargins();
@@ -605,7 +606,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_636();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_637();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -669,8 +670,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_636 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_636() {
+        private sealed class _IGlyphLineFilter_637 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_637() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1046,6 +1047,7 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
+                    strToBeConverted = GetStringWithSpacesInsteadOfTabs(strToBeConverted);
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
@@ -1206,6 +1208,15 @@ namespace iText.Layout.Renderer {
                 // we don't want to print '\n' in content stream
                 // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
+            }
+        }
+
+        private String GetStringWithSpacesInsteadOfTabs(String text) {
+            if (null != text) {
+                return iText.IO.Util.StringUtil.ReplaceAll(text, "\t", "    ");
+            }
+            else {
+                return text;
             }
         }
 
