@@ -218,10 +218,18 @@ namespace iText.Layout.Renderer {
                             // Notice that in that case we do not need to ignore the new line symbol ('\n')
                             forcePartialSplitOnFirstChar = true;
                         }
+                        if (line.start == -1) {
+                            line.start = currentTextPos;
+                        }
+                        line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
                         break;
                     }
                     Glyph currentGlyph = text.Get(ind);
                     if (NoPrint(currentGlyph)) {
+                        if (splitCharacters.IsSplitCharacter(text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
+                            nonBreakablePartEnd = ind;
+                            break;
+                        }
                         continue;
                     }
                     if (tabAnchorCharacter != null && tabAnchorCharacter == text.Get(ind).GetUnicode()) {
@@ -597,7 +605,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_627();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_636();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -661,8 +669,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_627 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_627() {
+        private sealed class _IGlyphLineFilter_636 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_636() {
             }
 
             public bool Accept(Glyph glyph) {

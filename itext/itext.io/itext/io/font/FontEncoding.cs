@@ -223,7 +223,7 @@ namespace iText.IO.Font {
         /// could be encoded.
         /// </returns>
         public virtual bool CanEncode(int unicode) {
-            return unicodeToCode.ContainsKey(unicode);
+            return unicodeToCode.ContainsKey(unicode) || TextUtil.IsNonPrintable(unicode);
         }
 
         /// <summary>

@@ -292,15 +292,18 @@ namespace iText.Kernel.Font {
                     else {
                         val = text[k];
                     }
-                    Glyph glyph = fontProgram.GetGlyph(val);
-                    if (glyph == null) {
-                        glyph = fontProgram.GetGlyphByCode(0);
+                    Glyph glyph = GetGlyph(val);
+                    if (glyph.GetCode() > 0) {
+                        if (!longTag.ContainsKey(glyph.GetCode())) {
+                            longTag.Put(glyph.GetCode(), new int[] { glyph.GetCode(), glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
+                                .GetUnicode() : 0 });
+                        }
+                        glyphs[i++] = (char)cmapEncoding.GetCmapCode(glyph.GetCode());
                     }
-                    if (!longTag.ContainsKey(glyph.GetCode())) {
-                        longTag.Put(glyph.GetCode(), new int[] { glyph.GetCode(), glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
-                            .GetUnicode() : 0 });
+                    else {
+                        //getCode() could be either -1 or 0
+                        glyphs[i++] = (char)cmapEncoding.GetCmapCode(0);
                     }
-                    glyphs[i++] = (char)cmapEncoding.GetCmapCode(glyph.GetCode());
                 }
             }
             return PdfEncodings.ConvertToBytes(new String(glyphs, 0, i), PdfEncodings.UNICODE_BIG_UNMARKED);
