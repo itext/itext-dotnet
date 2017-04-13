@@ -94,7 +94,7 @@ namespace iText.Kernel.Pdf {
             catch (Exception e) {
                 throw new PdfException(e);
             }
-            PdfString initialId = new PdfString(md5.Digest());
+            PdfString initialId = new PdfString(md5.Digest("Initial ID 56789".GetBytes()));
             PdfWriter writer = new PdfWriter(baos, new WriterProperties().SetInitialDocumentId(initialId));
             PdfDocument pdfDocument = new PdfDocument(writer);
             pdfDocument.AddNewPage();
@@ -122,7 +122,7 @@ namespace iText.Kernel.Pdf {
             catch (Exception e) {
                 throw new PdfException(e);
             }
-            PdfString initialId = new PdfString(md5.Digest());
+            PdfString initialId = new PdfString(md5.Digest("Initial ID 56789".GetBytes()));
             PdfString modifiedId = new PdfString("Modified ID 56789");
             PdfWriter writer = new PdfWriter(baosInitial, new WriterProperties().SetInitialDocumentId(initialId).SetModifiedDocumentId
                 (modifiedId));
