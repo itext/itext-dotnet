@@ -141,8 +141,10 @@ namespace iText.Layout.Renderer {
         }
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
-            strToBeConverted = GetStringWithSpacesInsteadOfTabs(strToBeConverted);
             UpdateFontAndText();
+            if (null != text) {
+                text = GetGlyphlineWithSpacesInsteadOfTabs(text);
+            }
             LayoutArea area = layoutContext.GetArea();
             float[] margins = GetMargins();
             Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
@@ -606,7 +608,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_637();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_639();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -670,8 +672,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_637 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_637() {
+        private sealed class _IGlyphLineFilter_639 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_639() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1047,12 +1049,11 @@ namespace iText.Layout.Renderer {
                             );
                     }
                     FontCharacteristics fc = CreateFontCharacteristics();
-                    strToBeConverted = GetStringWithSpacesInsteadOfTabs(strToBeConverted);
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
-                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(new GlyphLine(strategy.NextGlyphs()), strategy
-                            .GetCurrentFont());
+                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(GetGlyphlineWithSpacesInsteadOfTabs(new GlyphLine
+                            (strategy.NextGlyphs())), strategy.GetCurrentFont());
                         addTo.Add(textRenderer);
                     }
                     return true;
@@ -1211,13 +1212,19 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private String GetStringWithSpacesInsteadOfTabs(String text) {
-            if (null != text) {
-                return iText.IO.Util.StringUtil.ReplaceAll(text, "\t", "    ");
+        private GlyphLine GetGlyphlineWithSpacesInsteadOfTabs(GlyphLine line) {
+            if (null != line) {
+                Glyph space = new Glyph(ResolveFirstPdfFont().GetGlyph('\u0020'));
+                space.SetXAdvance((short)(3 * space.GetWidth()));
+                Glyph glyph;
+                for (int i = 0; i < line.Size(); i++) {
+                    glyph = line.Get(i);
+                    if ('\t' == glyph.GetUnicode()) {
+                        line.Set(i, space);
+                    }
+                }
             }
-            else {
-                return text;
-            }
+            return line;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {
