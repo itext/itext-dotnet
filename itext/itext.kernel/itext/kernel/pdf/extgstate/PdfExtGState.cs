@@ -897,7 +897,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <see cref="iText.Kernel.Pdf.PdfName"/>
         /// or
         /// <see cref="iText.Kernel.Pdf.PdfArray"/>
-        /// .
+        /// . array is deprecated in PDF 2.0.
         /// </returns>
         public virtual PdfObject GetBlendMode() {
             return GetPdfObject().Get(PdfName.BM);

@@ -886,6 +886,11 @@ namespace iText.Kernel.Font {
                     }
                     // getPdfObject().getIndirectReference() != null by assertion of PdfType0Font#flush()
                     // This means, that fontDescriptor, cidFont and fontStream already are indirects
+                    if (GetPdfObject().GetIndirectReference().GetDocument().GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0
+                        ) {
+                        // CIDSet is deprecated in PDF 2.0
+                        fontDescriptor.Remove(PdfName.CIDSet);
+                    }
                     fontDescriptor.Flush();
                     cidFont.Flush();
                     fontStream.Flush();

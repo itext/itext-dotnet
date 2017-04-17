@@ -477,6 +477,37 @@ namespace iText.Kernel.Pdf {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void CreateDocumentWithTrueTypeOtfFontPdf20() {
+            String filename = destinationFolder + "DocumentWithTrueTypeOtfFontPdf20.pdf";
+            String cmpFilename = sourceFolder + "cmp_DocumentWithTrueTypeOtfFontPdf20.pdf";
+            PdfWriter writer = new PdfWriter(filename, new WriterProperties().SetPdfVersion(PdfVersion.PDF_2_0));
+            writer.SetCompressionLevel(CompressionConstants.NO_COMPRESSION);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            String font = fontsFolder + "Puritan2.otf";
+            PdfFont pdfTrueTypeFont = PdfFontFactory.CreateFont(font, PdfEncodings.IDENTITY_H);
+            PdfPage page = pdfDoc.AddNewPage();
+            PdfCanvas canvas = new PdfCanvas(page);
+            canvas.SaveState().BeginText().MoveText(36, 700).SetFontAndSize(pdfTrueTypeFont, 72).ShowText("Hello world"
+                ).EndText().RestoreState();
+            canvas.Release();
+            page.Flush();
+            pdfDoc.Close();
+            // Assert no CIDSet is written. It is deprecated in PDF 2.0
+            PdfDocument generatedDoc = new PdfDocument(new PdfReader(filename));
+            PdfFont pdfFont = PdfFontFactory.CreateFont(generatedDoc.GetPage(1).GetResources().GetResource(PdfName.Font
+                ).GetAsDictionary(new PdfName("F1")));
+            PdfDictionary descriptor = pdfFont.GetPdfObject().GetAsArray(PdfName.DescendantFonts).GetAsDictionary(0).GetAsDictionary
+                (PdfName.FontDescriptor);
+            NUnit.Framework.Assert.IsFalse(descriptor.ContainsKey(PdfName.CIDSet), "CIDSet is deprecated in PDF 2.0 and should not be written"
+                );
+            generatedDoc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(filename, cmpFilename, destinationFolder, 
+                "diff_"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void CreateDocumentWithType0OtfFont() {
             String filename = destinationFolder + "DocumentWithType0OtfFont.pdf";
             String cmpFilename = sourceFolder + "cmp_DocumentWithType0OtfFont.pdf";
