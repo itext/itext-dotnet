@@ -88,6 +88,8 @@ namespace iText.Forms.Fields {
         /// <summary>Size of text in form fields when font size is not explicitly set.</summary>
         public const int DEFAULT_FONT_SIZE = 12;
 
+        public const int MIN_FONT_SIZE = 4;
+
         public const int DA_FONT = 0;
 
         public const int DA_SIZE = 1;
@@ -131,6 +133,8 @@ namespace iText.Forms.Fields {
         public static readonly int FF_REQUIRED = MakeFieldFlag(2);
 
         public static readonly int FF_NO_EXPORT = MakeFieldFlag(3);
+
+        public const float X_OFFSET = 2;
 
         protected internal static String[] typeChars = new String[] { "4", "l", "8", "u", "n", "H" };
 
@@ -2192,14 +2196,14 @@ namespace iText.Forms.Fields {
                     if (fontSizeAutoScale) {
                         float height = bBox.ToRectangle().GetHeight() - borderWidth * 2;
                         int[] fontBbox = localFont.GetFontProgram().GetFontMetrics().GetBbox();
-                        fontSize = height / ((fontBbox[2] - fontBbox[1]) / 1000f);
+                        fontSize = height / ((fontBbox[2] - fontBbox[1]) / FontProgram.UNITS_NORMALIZATION);
                         float baseWidth = localFont.GetWidth(value, 1);
-                        float offsetX = Math.Max(borderWidth + 2, 1);
+                        float offsetX = Math.Max(borderWidth + X_OFFSET, 1);
                         if (baseWidth != 0) {
-                            fontSize = Math.Min(fontSize, (bBox.ToRectangle().GetWidth() - 4 * offsetX) / baseWidth);
+                            fontSize = Math.Min(fontSize, (bBox.ToRectangle().GetWidth() - X_OFFSET * 2 * offsetX) / baseWidth);
                         }
-                        if (fontSize < 4) {
-                            fontSize = 4;
+                        if (fontSize < MIN_FONT_SIZE) {
+                            fontSize = MIN_FONT_SIZE;
                         }
                     }
                     else {
@@ -3004,7 +3008,7 @@ namespace iText.Forms.Fields {
             }
             canvas.BeginVariableText().SaveState().NewPath();
             Paragraph paragraph = new Paragraph(value).SetFont(font).SetFontSize(fontSize).SetMultipliedLeading(1).SetPaddings
-                (0, 2, 0, 2);
+                (0, X_OFFSET, 0, X_OFFSET);
             if (color != null) {
                 paragraph.SetFontColor(color);
             }
@@ -3012,7 +3016,7 @@ namespace iText.Forms.Fields {
             if (justification == null) {
                 justification = 0;
             }
-            float x = 2;
+            float x = X_OFFSET;
             TextAlignment? textAlignment = TextAlignment.LEFT;
             if (justification == ALIGN_RIGHT) {
                 textAlignment = TextAlignment.RIGHT;
