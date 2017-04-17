@@ -1147,18 +1147,18 @@ namespace iText.Layout {
             Table table = new Table(new float[3]);
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddHeaderCell(new Cell().Add(String.Format("header row %d col %d", r, c)).SetBorder(Border.NO_BORDER
+                    table.AddHeaderCell(new Cell().Add(String.Format("header row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
                         ));
                 }
             }
             for (int r = 0; r < 3; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddCell(new Cell().Add(String.Format("row %d col %d", r, c)).SetBorder(Border.NO_BORDER));
+                    table.AddCell(new Cell().Add(String.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER));
                 }
             }
             for (int r = 0; r < 1; r++) {
                 for (int c = 0; c < 3; c++) {
-                    table.AddFooterCell(new Cell().Add(String.Format("footer row %d col %d", r, c)).SetBorder(Border.NO_BORDER
+                    table.AddFooterCell(new Cell().Add(String.Format("footer row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
                         ));
                 }
             }
