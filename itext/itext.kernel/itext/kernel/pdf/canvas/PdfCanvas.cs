@@ -2030,6 +2030,7 @@ namespace iText.Kernel.Pdf.Canvas {
             ConcatMatrix(a, b, c, d, e, f);
             PdfOutputStream os = contentStream.GetOutputStream();
             os.WriteBytes(BI);
+            byte[] imageBytes = imageXObject.GetPdfObject().GetBytes(false);
             foreach (KeyValuePair<PdfName, PdfObject> entry in imageXObject.GetPdfObject().EntrySet()) {
                 PdfName key = entry.Key;
                 if (!PdfName.Type.Equals(key) && !PdfName.Subtype.Equals(key) && !PdfName.Length.Equals(key)) {
@@ -2037,8 +2038,12 @@ namespace iText.Kernel.Pdf.Canvas {
                     os.Write(entry.Value).WriteNewLine();
                 }
             }
+            if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                os.Write(PdfName.Length).WriteSpace();
+                os.Write(new PdfNumber(imageBytes.Length)).WriteNewLine();
+            }
             os.WriteBytes(ID);
-            os.WriteBytes(imageXObject.GetPdfObject().GetBytes(false)).WriteNewLine().WriteBytes(EI).WriteNewLine();
+            os.WriteBytes(imageBytes).WriteNewLine().WriteBytes(EI).WriteNewLine();
             RestoreState();
         }
 
