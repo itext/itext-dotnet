@@ -635,7 +635,7 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        public virtual void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent) {
+        public static void CheckDecryptedWithPasswordContent(String src, byte[] password, String pageContent) {
             PdfReader reader = new PdfReader(src, new ReaderProperties().SetPassword(password));
             PdfDocument document = new PdfDocument(reader);
             PdfPage page = document.GetPage(1);
@@ -755,7 +755,7 @@ namespace iText.Kernel.Crypto {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void WriteTextBytesOnPageContent(PdfPage page, String text) {
+        internal static void WriteTextBytesOnPageContent(PdfPage page, String text) {
             page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
                  + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
             page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(FontConstants.HELVETICA));
@@ -763,7 +763,7 @@ namespace iText.Kernel.Crypto {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
-        private void CompareEncryptedPdf(String filename) {
+        internal static void CompareEncryptedPdf(String filename) {
             CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, pageTextContent);
             CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, pageTextContent);
             CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
