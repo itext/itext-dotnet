@@ -439,6 +439,9 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// Sets font and size,
         /// <c>Font</c>
         /// key.
+        /// NOTE: If you want add the font object which has just been created, make sure to register the font with
+        /// <see cref="iText.Kernel.Pdf.PdfDocument.AddFont(iText.Kernel.Font.PdfFont)"/>
+        /// method first.
         /// </summary>
         /// <param name="font">
         /// a

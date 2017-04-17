@@ -1542,7 +1542,6 @@ namespace iText.Kernel.Pdf {
             if (defaultFont == null) {
                 try {
                     defaultFont = PdfFontFactory.CreateFont();
-                    defaultFont.MakeIndirect(this);
                     AddFont(defaultFont);
                 }
                 catch (System.IO.IOException e) {
@@ -1554,17 +1553,23 @@ namespace iText.Kernel.Pdf {
             return defaultFont;
         }
 
+        /// <summary>
+        /// Adds a
+        /// <see cref="iText.Kernel.Font.PdfFont"/>
+        /// instance to this document so that this font is flushed automatically
+        /// on document close. As a side effect, the underlying font dictionary is made indirect if it wasn't the case yet
+        /// </summary>
+        /// <returns>the same PdfFont instance.</returns>
+        public virtual PdfFont AddFont(PdfFont font) {
+            font.MakeIndirect(this);
+            documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
+            return font;
+        }
+
         /// <summary>Gets list of indirect references.</summary>
         /// <returns>list of indirect references.</returns>
         internal virtual PdfXrefTable GetXref() {
             return xref;
-        }
-
-        /// <summary>Adds PdfFont without an checks</summary>
-        /// <returns>the same PdfFont instance.</returns>
-        internal virtual PdfFont AddFont(PdfFont font) {
-            documentFonts.Put(font.GetPdfObject().GetIndirectReference(), font);
-            return font;
         }
 
         /// <summary>

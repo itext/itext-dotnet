@@ -611,6 +611,7 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            EnsureUnderlyingObjectHasIndirectReference();
             if (newFont) {
                 FlushFontData();
             }
@@ -818,11 +819,10 @@ namespace iText.Kernel.Font {
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
-                if (GetPdfObject().GetIndirectReference() != null) {
-                    //this means, that fontDescriptor and cidFont already are indirects
-                    fontDescriptor.Flush();
-                    cidFont.Flush();
-                }
+                // getPdfObject().getIndirectReference() != null by assertion of PdfType0Font#flush()
+                //this means, that fontDescriptor and cidFont already are indirects
+                fontDescriptor.Flush();
+                cidFont.Flush();
             }
             else {
                 if (cidFontType == CID_FONT_TYPE_2) {
@@ -884,12 +884,11 @@ namespace iText.Kernel.Font {
                             toUnicode.Flush();
                         }
                     }
-                    if (GetPdfObject().GetIndirectReference() != null) {
-                        //this means, that fontDescriptor, cidFont and fontStream already are indirects
-                        fontDescriptor.Flush();
-                        cidFont.Flush();
-                        fontStream.Flush();
-                    }
+                    // getPdfObject().getIndirectReference() != null by assertion of PdfType0Font#flush()
+                    // This means, that fontDescriptor, cidFont and fontStream already are indirects
+                    fontDescriptor.Flush();
+                    cidFont.Flush();
+                    fontStream.Flush();
                 }
                 else {
                     throw new InvalidOperationException("Unsupported CID Font");
