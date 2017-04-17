@@ -49,6 +49,8 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using iText.IO;
+using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Layout;
@@ -160,6 +162,9 @@ namespace iText.Forms.Xfa
 		        throw new ArgumentException("XfaForm, PdfAcroForm and PdfAcroForm's document shall not be null");
 		    }
 		    PdfDocument document = acroForm.GetPdfDocument();
+			if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
+				LoggerFactory.GetLogger(typeof(XfaForm)).Warn(LogMessageConstant.XFA_DEPRECATED_IN_PDF20);
+			}
 		    PdfObject xfa = GetXfaObject(acroForm);
 			if (xfa != null && xfa.IsArray())
 			{

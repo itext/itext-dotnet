@@ -78,11 +78,15 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName _3DB = CreateDirectName("3DB");
 
+        public static readonly iText.Kernel.Pdf.PdfName _3DCrossSection = CreateDirectName("3DCrossSection");
+
         public static readonly iText.Kernel.Pdf.PdfName _3DD = CreateDirectName("3DD");
 
         public static readonly iText.Kernel.Pdf.PdfName _3DI = CreateDirectName("3DI");
 
         public static readonly iText.Kernel.Pdf.PdfName _3DV = CreateDirectName("3DV");
+
+        public static readonly iText.Kernel.Pdf.PdfName _3DView = CreateDirectName("3DView");
 
         public static readonly iText.Kernel.Pdf.PdfName a = CreateDirectName("a");
 
@@ -207,6 +211,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Author = CreateDirectName("Author");
 
+        public static readonly iText.Kernel.Pdf.PdfName B = CreateDirectName("B");
+
         public static readonly iText.Kernel.Pdf.PdfName BackgroundColor = CreateDirectName("BackgroundColor");
 
         public static readonly iText.Kernel.Pdf.PdfName BaseFont = CreateDirectName("BaseFont");
@@ -217,7 +223,7 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName BaseVersion = CreateDirectName("BaseVersion");
 
-        public static readonly iText.Kernel.Pdf.PdfName B = CreateDirectName("B");
+        public static readonly iText.Kernel.Pdf.PdfName Bates = CreateDirectName("Bates");
 
         public static readonly iText.Kernel.Pdf.PdfName BBox = CreateDirectName("BBox");
 
@@ -684,6 +690,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName FontStretch = CreateDirectName("FontStretch");
 
+        public static readonly iText.Kernel.Pdf.PdfName Footer = CreateDirectName("Footer");
+
         public static readonly iText.Kernel.Pdf.PdfName ForComment = CreateDirectName("ForComment");
 
         public static readonly iText.Kernel.Pdf.PdfName Form = CreateDirectName("Form");
@@ -755,6 +763,10 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName HalftoneName = CreateDirectName("HalftoneName");
 
         public static readonly iText.Kernel.Pdf.PdfName HardLight = CreateDirectName("HardLight");
+
+        public static readonly iText.Kernel.Pdf.PdfName Header = CreateDirectName("Header");
+
+        public static readonly iText.Kernel.Pdf.PdfName Headers = CreateDirectName("Headers");
 
         public static readonly iText.Kernel.Pdf.PdfName Height = CreateDirectName("Height");
 
@@ -891,6 +903,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName Line = CreateDirectName("Line");
 
         public static readonly iText.Kernel.Pdf.PdfName LineHeight = CreateDirectName("LineHeight");
+
+        public static readonly iText.Kernel.Pdf.PdfName LineNum = CreateDirectName("LineNum");
 
         public static readonly iText.Kernel.Pdf.PdfName LineThrough = CreateDirectName("LineThrough");
 
@@ -1127,7 +1141,11 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName PageMode = CreateDirectName("PageMode");
 
+        public static readonly iText.Kernel.Pdf.PdfName PageNum = CreateDirectName("PageNum");
+
         public static readonly iText.Kernel.Pdf.PdfName Pages = CreateDirectName("Pages");
+
+        public static readonly iText.Kernel.Pdf.PdfName Pagination = CreateDirectName("Pagination");
 
         public static readonly iText.Kernel.Pdf.PdfName PaintType = CreateDirectName("PaintType");
 
@@ -1270,6 +1288,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Redact = CreateDirectName("Redact");
 
+        public static readonly iText.Kernel.Pdf.PdfName Redaction = CreateDirectName("Redaction");
+
         public static readonly iText.Kernel.Pdf.PdfName Reference = CreateDirectName("Reference");
 
         public static readonly iText.Kernel.Pdf.PdfName Registry = CreateDirectName("Registry");
@@ -1347,6 +1367,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName Schema = CreateDirectName("Schema");
 
+        public static readonly iText.Kernel.Pdf.PdfName Scope = CreateDirectName("Scope");
+
         public static readonly iText.Kernel.Pdf.PdfName Screen = CreateDirectName("Screen");
 
         public static readonly iText.Kernel.Pdf.PdfName Sect = CreateDirectName("Sect");
@@ -1363,6 +1385,8 @@ namespace iText.Kernel.Pdf {
         public static readonly iText.Kernel.Pdf.PdfName SetOCGState = CreateDirectName("SetOCGState");
 
         public static readonly iText.Kernel.Pdf.PdfName SetState = CreateDirectName("SetState");
+
+        public static readonly iText.Kernel.Pdf.PdfName Short = CreateDirectName("Short");
 
         public static readonly iText.Kernel.Pdf.PdfName Sig = CreateDirectName("Sig");
 

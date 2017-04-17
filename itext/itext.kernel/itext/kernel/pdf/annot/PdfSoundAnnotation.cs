@@ -47,20 +47,37 @@ using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Annot {
     public class PdfSoundAnnotation : PdfMarkupAnnotation {
+        /// <summary>Creates a new Sound annotation.</summary>
+        /// <remarks>
+        /// Creates a new Sound annotation.
+        /// There is a problem playing *.wav files via internal player in Acrobat.
+        /// The first byte of the audio stream data should be deleted, then wav file will be played correctly.
+        /// Otherwise it will be broken. Other supporting file types don't have such problem.
+        /// Sound annotations are deprecated in PDF 2.0.
+        /// </remarks>
+        /// <param name="rect"/>
+        /// <param name="sound"/>
         public PdfSoundAnnotation(Rectangle rect, PdfStream sound)
             : base(rect) {
-            /*
-            There is a problem playing *.wav files via internal player in Acrobat.
-            The first byte of the audio stream data should be deleted, then wav file will be played correctly.
-            Otherwise it will be broken. Other supporting file types don't have such problem.
-            */
             Put(PdfName.Sound, sound);
         }
 
+        /// <summary>Creates a sound annotation.</summary>
+        /// <remarks>Creates a sound annotation. Sound annotations are deprecated in PDF 2.0.</remarks>
+        /// <param name="pdfObject">dictionary to create annotation from</param>
         public PdfSoundAnnotation(PdfDictionary pdfObject)
             : base(pdfObject) {
         }
 
+        /// <summary>Creates a sound annotation.</summary>
+        /// <remarks>Creates a sound annotation. Sound annotations are deprecated in PDF 2.0.</remarks>
+        /// <param name="document"/>
+        /// <param name="rect"/>
+        /// <param name="soundStream"/>
+        /// <param name="sampleRate"/>
+        /// <param name="encoding"/>
+        /// <param name="channels"/>
+        /// <param name="sampleSizeInBits"/>
         /// <exception cref="System.IO.IOException"/>
         public PdfSoundAnnotation(PdfDocument document, Rectangle rect, Stream soundStream, float sampleRate, PdfName
              encoding, int channels, int sampleSizeInBits)

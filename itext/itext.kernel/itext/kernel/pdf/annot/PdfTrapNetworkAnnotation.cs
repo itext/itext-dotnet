@@ -55,6 +55,8 @@ namespace iText.Kernel.Pdf.Annot {
     /// may be used to define the trapping characteristics for a page
     /// of a PDF document. Trapping is the process of adding marks to a page along colour boundaries
     /// to avoid unwanted visual artifacts resulting from misregistration of colorants when the page is printed.
+    /// TrapNet annotations are deprecated in PDF 2.0.
+    /// <p>
     /// See ISO-320001 14.11.6 "Trapping Support" and 14.11.6.2 "Trap Network Annotations" in particular.
     /// </summary>
     public class PdfTrapNetworkAnnotation : PdfAnnotation {
@@ -63,6 +65,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="PdfTrapNetworkAnnotation"/>
         /// instance. Note that there shall be at most one trap network annotation
         /// per page, which shall be the last element in the page’s Annots array.
+        /// TrapNet annotations are deprecated in PDF 2.0.
         /// </summary>
         /// <param name="rect">
         /// the annotation rectangle, defining the location of the annotation on the page
@@ -95,6 +98,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfDictionary"/>
         /// that represents annotation object. This method is useful for property reading in reading mode or
         /// modifying in stamping mode.
+        /// TrapNet annotations are deprecated in PDF 2.0.
         /// </summary>
         /// <param name="pdfObject">
         /// a
@@ -157,6 +161,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// An unordered array of all objects present in the page description at the time the trap networks
         /// were generated and that, if changed, could affect the appearance of the page.
         /// <p>
+        /// <p>
         /// This entry is required if /AnnotStates (
         /// <see cref="GetAnnotStates()"/>
         /// ) is present;
@@ -209,6 +214,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// <see cref="iText.Kernel.Pdf.PdfNull"/>
         /// .
         /// No appearance state shall be included for the trap network annotation itself.
+        /// <p>
         /// <p>
         /// Required if /Version (
         /// <see cref="GetVersion()"/>

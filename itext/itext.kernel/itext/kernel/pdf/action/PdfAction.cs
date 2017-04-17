@@ -337,6 +337,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
+        /// <remarks>Creates a Sound action (section 12.6.4.8 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
         ///     </param>
         /// <returns>created action</returns>
@@ -345,6 +346,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Sound action (section 12.6.4.8 of ISO 32000-1).</summary>
+        /// <remarks>Creates a Sound action (section 12.6.4.8 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="sound">a sound object defining the sound that shall be played (see section 13.3 of ISO 32000-1)
         ///     </param>
         /// <param name="volume">the volume at which to play the sound, in the range -1.0 to 1.0. Default value: 1.0</param>
@@ -371,6 +373,7 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Movie annotation (section 12.6.4.9 of ISO 32000-1).</summary>
+        /// <remarks>Creates a Movie annotation (section 12.6.4.9 of ISO 32000-1). Deprecated in PDF 2.0.</remarks>
         /// <param name="annotation">a movie annotation identifying the movie that shall be played</param>
         /// <param name="title">the title of a movie annotation identifying the movie that shall be played</param>
         /// <param name="operation">
