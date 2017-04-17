@@ -77,7 +77,7 @@ namespace iText.Kernel.Pdf.Annot {
         }
 
         public virtual iText.Kernel.Pdf.Annot.Pdf3DAnnotation SetInteractive(bool interactive) {
-            return (iText.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, new PdfBoolean(interactive));
+            return (iText.Kernel.Pdf.Annot.Pdf3DAnnotation)Put(PdfName._3DI, PdfBoolean.ValueOf(interactive));
         }
 
         public virtual PdfBoolean IsInteractive() {

@@ -184,7 +184,7 @@ namespace iText.Kernel.Pdf.Collection {
         /// <summary>Sets the initial visibility of the field.</summary>
         /// <param name="visible"/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetVisibility(bool visible) {
-            GetPdfObject().Put(PdfName.V, new PdfBoolean(visible));
+            GetPdfObject().Put(PdfName.V, PdfBoolean.ValueOf(visible));
             return this;
         }
 
@@ -195,7 +195,7 @@ namespace iText.Kernel.Pdf.Collection {
         /// <summary>Indication if the field value should be editable in the viewer.</summary>
         /// <param name="editable"/>
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionField SetEditable(bool editable) {
-            GetPdfObject().Put(PdfName.E, new PdfBoolean(editable));
+            GetPdfObject().Put(PdfName.E, PdfBoolean.ValueOf(editable));
             return this;
         }
 

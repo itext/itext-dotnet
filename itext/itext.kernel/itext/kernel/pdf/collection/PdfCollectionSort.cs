@@ -70,7 +70,7 @@ namespace iText.Kernel.Pdf.Collection {
         public virtual iText.Kernel.Pdf.Collection.PdfCollectionSort SetSortOrder(bool ascending) {
             PdfObject obj = GetPdfObject().Get(PdfName.S);
             if (obj.IsName()) {
-                GetPdfObject().Put(PdfName.A, new PdfBoolean(ascending));
+                GetPdfObject().Put(PdfName.A, PdfBoolean.ValueOf(ascending));
             }
             else {
                 throw new PdfException(PdfException.YouHaveToDefineABooleanArrayForThisCollectionSortDictionary);
