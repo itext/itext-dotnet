@@ -91,13 +91,7 @@ namespace iText.Layout {
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
             Document doc = new Document(pdfDoc);
             doc.Add(new AreaBreak()).Add(new AreaBreak());
-            PdfArray array = new PdfArray();
-            array.Add(doc.GetPdfDocument().GetPage(1).GetPdfObject());
-            array.Add(PdfName.XYZ);
-            array.Add(new PdfNumber(36));
-            array.Add(new PdfNumber(100));
-            array.Add(new PdfNumber(1));
-            PdfDestination dest = PdfDestination.MakeDestination(array);
+            PdfDestination dest = PdfExplicitDestination.CreateXYZ(pdfDoc.GetPage(1), 36, 100, 1);
             PdfAction action = PdfAction.CreateGoTo(dest);
             Link link = new Link("TestLink", action);
             doc.Add(new Paragraph(link));
