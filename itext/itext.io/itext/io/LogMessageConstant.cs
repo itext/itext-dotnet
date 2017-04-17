@@ -172,6 +172,8 @@ namespace iText.IO {
 
         public const String START_MARKER_MISSING_IN_PFB_FILE = "Start marker is missing in the pfb file";
 
+        public const String STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION = "Structure destinations shall specify structure element ID in remote go-to actions. Structure element has been replaced with its ID in the structure destination";
+
         public const String SUM_OF_TABLE_COLUMNS_IS_GREATER_THAN_100 = "Sum of table columns is greater than 100%.";
 
         public const String TABLE_WIDTH_IS_MORE_THAN_EXPECTED_DUE_TO_MIN_WIDTH = "Table width is more than expected due to min width of cell(s).";

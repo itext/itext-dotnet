@@ -43,6 +43,7 @@ address: sales@itextpdf.com
 */
 using System;
 using System.Collections.Generic;
+using iText.IO.Log;
 using iText.Kernel;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
@@ -146,8 +147,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             , bool newWindow) {
-            return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
-                ()).Put(PdfName.D, destination.GetPdfObject()).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
+            return CreateGoToR(fileSpec, destination).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
         }
 
         /// <summary>Creates a GoToR action, or remote action (section 12.6.4.3 of ISO 32000-1).</summary>
@@ -156,6 +156,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateGoToR(PdfFileSpec fileSpec, PdfDestination destination
             ) {
+            ValidateRemoteDestination(destination);
             return new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.GoToR).Put(PdfName.F, fileSpec.GetPdfObject
                 ()).Put(PdfName.D, destination.GetPdfObject());
         }
@@ -672,11 +673,47 @@ namespace iText.Kernel.Pdf.Action {
                         array.Add(((PdfAnnotation)obj).GetPdfObject());
                     }
                     else {
-                        throw new PdfException("the.array.must.contain.string.or.pdfannotation");
+                        throw new PdfException("The array must contain string or PDFAnnotation");
                     }
                 }
             }
             return array;
+        }
+
+        private static void ValidateRemoteDestination(PdfDestination destination) {
+            if (destination is PdfExplicitDestination) {
+                // No page object can be specified for a destination associated with a remote go-to action because the
+                // destination page is in a different PDF document. In this case, the page parameter specifies an integer
+                // page number within the remote document instead of a page object in the current document.
+                PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
+                if (firstObj.IsDictionary()) {
+                    throw new ArgumentException("Explicit destinations shall specify page number in remote go-to actions instead of page dictionary"
+                        );
+                }
+            }
+            else {
+                if (destination is PdfStructureDestination) {
+                    // No structure element dictionary can be specified for a structure destination associated with a remote
+                    // go-to action because the destination structure element is in a
+                    // different PDF document. In this case, the indirect reference to the structure element dictionary shall be
+                    // replaced by a byte string representing a structure element ID
+                    PdfObject firstObj = ((PdfArray)destination.GetPdfObject()).Get(0);
+                    if (firstObj.IsDictionary()) {
+                        PdfDictionary structElemObj = (PdfDictionary)firstObj;
+                        PdfString id = structElemObj.GetAsString(PdfName.ID);
+                        if (id == null) {
+                            throw new ArgumentException("Structure destinations shall specify structure element ID in remote go-to actions. Structure element that has no ID is specified instead"
+                                );
+                        }
+                        else {
+                            LoggerFactory.GetLogger(typeof(iText.Kernel.Pdf.Action.PdfAction)).Warn(iText.IO.LogMessageConstant.STRUCTURE_ELEMENT_REPLACED_BY_ITS_ID_IN_STRUCTURE_DESTINATION
+                                );
+                            ((PdfArray)destination.GetPdfObject()).Set(0, id);
+                            destination.GetPdfObject().SetModified();
+                        }
+                    }
+                }
+            }
         }
     }
 }

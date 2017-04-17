@@ -450,6 +450,8 @@ namespace iText.Kernel {
 
         public const String StructParentIndexNotFoundInTaggedObject = "StructParent index not found in tagged object.";
 
+        public const String StructureElementInStructureDestinationShallBeAnIndirectObject = "Structure element referenced by a structure destination shall be an indirect object.";
+
         public const String StructureElementShallContainParentObject = "StructureElement shall contain parent object.";
 
         public const String TagCannotBeMovedToTheAnotherDocumentsTagStructure = "Tag cannot be moved to the another document's tag structure.";
