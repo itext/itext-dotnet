@@ -46,8 +46,8 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.X509;
 using iText.IO.Font;
 using iText.Kernel;
-using iText.Kernel.Crypto;
 using iText.Kernel.Font;
+using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Filespec;
 using iText.Kernel.Utils;
 using iText.Kernel.XMP;
@@ -55,7 +55,7 @@ using iText.Kernel.XMP.Properties;
 using iText.Test;
 using iText.Test.Attributes;
 
-namespace iText.Kernel.Pdf {
+namespace iText.Kernel.Crypto {
     /// <summary>
     /// Due to import control restrictions by the governments of a few countries,
     /// the encryption libraries shipped by default with the Java SDK restrict the
@@ -76,11 +76,17 @@ namespace iText.Kernel.Pdf {
     /// are available for download from http://java.oracle.com/ in eligible countries.
     /// </remarks>
     public class PdfEncryptionTest : ExtendedITextTest {
-        /// <summary>User password.</summary>
-        public static byte[] USER = "Hello".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/kernel/crypto/PdfEncryptionTest/";
 
-        /// <summary>Owner password.</summary>
-        public static byte[] OWNER = "World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/kernel/crypto/PdfEncryptionTest/";
+
+        public static readonly char[] PRIVATE_KEY_PASS = "kspass".ToCharArray();
+
+        public static readonly String CERT = sourceFolder + "test.cer";
+
+        public static readonly String PRIVATE_KEY = sourceFolder + "test.p12";
 
         internal const String author = "Alexander Chingarev";
 
@@ -88,17 +94,11 @@ namespace iText.Kernel.Pdf {
 
         internal const String pageTextContent = "Hello world!";
 
-        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
-             + "/test/itext/kernel/pdf/PdfEncryptionTest/";
+        /// <summary>User password.</summary>
+        public static byte[] USER = "Hello".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
 
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/kernel/pdf/PdfEncryptionTest/";
-
-        public static readonly String CERT = sourceFolder + "test.cer";
-
-        public static readonly String PRIVATE_KEY = sourceFolder + "test.p12";
-
-        public static readonly char[] PRIVATE_KEY_PASS = "kspass".ToCharArray();
+        /// <summary>Owner password.</summary>
+        public static byte[] OWNER = "World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
 
         private ICipherParameters privateKey;
 
@@ -618,13 +618,6 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <exception cref="System.IO.IOException"/>
-        private void WriteTextBytesOnPageContent(PdfPage page, String text) {
-            page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
-                 + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
-            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(FontConstants.HELVETICA));
-        }
-
-        /// <exception cref="System.IO.IOException"/>
         /// <exception cref="Java.Security.Cert.CertificateException"/>
         public virtual X509Certificate GetPublicCertificate(String path) {
             FileStream @is = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -667,19 +660,6 @@ namespace iText.Kernel.Pdf {
             NUnit.Framework.Assert.AreEqual(author, document.GetDocumentInfo().GetAuthor(), "Encrypted author");
             NUnit.Framework.Assert.AreEqual(creator, document.GetDocumentInfo().GetCreator(), "Encrypted creator");
             document.Close();
-        }
-
-        /// <exception cref="System.IO.IOException"/>
-        /// <exception cref="System.Exception"/>
-        private void CompareEncryptedPdf(String filename) {
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, pageTextContent);
-            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, pageTextContent);
-            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
-            String compareResult = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + 
-                filename, destinationFolder, "diff_", USER, USER);
-            if (compareResult != null) {
-                NUnit.Framework.Assert.Fail(compareResult);
-            }
         }
 
         // basically this is comparing content of decrypted by itext document with content of encrypted document
@@ -769,6 +749,26 @@ namespace iText.Kernel.Pdf {
             compareTool.GetCmpReaderProperties().SetPublicKeySecurityParams(certificate, GetPrivateKey());
             String compareResult = compareTool.CompareByContent(outFileName, sourceFolder + "cmp_appended_" + filename
                 , destinationFolder, "diff_");
+            if (compareResult != null) {
+                NUnit.Framework.Assert.Fail(compareResult);
+            }
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        private void WriteTextBytesOnPageContent(PdfPage page, String text) {
+            page.GetFirstContentStream().GetOutputStream().WriteBytes(("q\n" + "BT\n" + "36 706 Td\n" + "0 0 Td\n" + "/F1 24 Tf\n"
+                 + "(" + text + ")Tj\n" + "0 0 Td\n" + "ET\n" + "Q ").GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1));
+            page.GetResources().AddFont(page.GetDocument(), PdfFontFactory.CreateFont(FontConstants.HELVETICA));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        private void CompareEncryptedPdf(String filename) {
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, OWNER, pageTextContent);
+            CheckDecryptedWithPasswordContent(destinationFolder + filename, USER, pageTextContent);
+            CompareTool compareTool = new CompareTool().EnableEncryptionCompare();
+            String compareResult = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + 
+                filename, destinationFolder, "diff_", USER, USER);
             if (compareResult != null) {
                 NUnit.Framework.Assert.Fail(compareResult);
             }
