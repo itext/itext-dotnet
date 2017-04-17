@@ -147,6 +147,19 @@ namespace iText.Kernel.Pdf {
             return (value ? 1 : 0);
         }
 
+        /// <summary>Gets PdfBoolean existing static class variable equivalent for given boolean value.</summary>
+        /// <remarks>
+        /// Gets PdfBoolean existing static class variable equivalent for given boolean value.
+        /// Note, returned object will be direct.
+        /// If needed to set
+        /// <see cref="PdfPrimitiveObject.directOnly"/>
+        /// manually for required PdfBoolean,
+        /// use
+        /// <see cref="PdfBoolean(bool, bool)"/>
+        /// constructor instead.
+        /// </remarks>
+        /// <param name="value">boolean variable defining value of PdfBoolean to return.</param>
+        /// <returns>existing static PdfBoolean class variable.</returns>
         public static iText.Kernel.Pdf.PdfBoolean ValueOf(bool value) {
             return value ? TRUE : FALSE;
         }
