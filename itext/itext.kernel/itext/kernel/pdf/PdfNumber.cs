@@ -125,14 +125,7 @@ namespace iText.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            if (!directOnly) {
-                return (iText.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
-            }
-            else {
-                ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
-                logger.Warn(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
-            }
-            return this;
+            return (iText.Kernel.Pdf.PdfNumber)base.MakeIndirect(document);
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
