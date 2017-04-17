@@ -163,7 +163,8 @@ namespace iText.Forms.Xfa
 		    }
 		    PdfDocument document = acroForm.GetPdfDocument();
 			if (document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
-				LoggerFactory.GetLogger(typeof(XfaForm)).Warn(LogMessageConstant.XFA_DEPRECATED_IN_PDF20);
+				LoggerFactory.GetLogger(typeof(XfaForm)).Error(LogMessageConstant.XFA_DEPRECATED_IN_PDF20);
+				return;
 			}
 		    PdfObject xfa = GetXfaObject(acroForm);
 			if (xfa != null && xfa.IsArray())

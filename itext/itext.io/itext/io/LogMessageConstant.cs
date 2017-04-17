@@ -130,6 +130,8 @@ namespace iText.IO {
 
         public const String NAME_ALREADY_EXISTS_IN_THE_NAME_TREE = "Name \"{0}\" already exists in the name tree; old value will be replaced by the new one.";
 
+        public const String NEED_APPEARANCES_DEPRECATED_IN_PDF20 = "NeedAppearances has been deprecated in PDF 2.0. Appearance streams are required in PDF 2.0.";
+
         public const String NOT_TAGGED_PAGES_IN_TAGGED_DOCUMENT = "Not tagged pages are copied to the tagged document. Destination document now may contain not tagged content.";
 
         public const String PDF_READER_CLOSING_FAILED = "PdfReader closing failed due to the error occurred!";
@@ -200,7 +202,7 @@ namespace iText.IO {
 
         public const String WRITER_ENCRYPTION_IS_IGNORED_PRESERVE = "Writer encryption will be ignored, because preservation of encryption is enabled. Document will preserve the original encryption (or will stay unencrypted)";
 
-        public const String XFA_DEPRECATED_IN_PDF20 = "XFA is deprecated in PDF 2.0.";
+        public const String XFA_DEPRECATED_IN_PDF20 = "XFA is deprecated in PDF 2.0. The XFA form will not be written to the document";
 
         public const String XREF_ERROR = "Error occurred while reading cross reference table. Cross reference table will be rebuilt.";
     }

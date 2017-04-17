@@ -45,6 +45,7 @@ using System;
 using System.Collections.Generic;
 using iText.Forms.Fields;
 using iText.Forms.Xfa;
+using iText.IO.Log;
 using iText.IO.Util;
 using iText.Kernel;
 using iText.Kernel.Geom;
@@ -328,6 +329,7 @@ namespace iText.Forms {
         /// <summary>Sets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Sets the <code>NeedAppearances</code> boolean property on the AcroForm.
+        /// NeedAppearances has been deprecated in PDF 2.0.
         /// <p>
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance
@@ -339,12 +341,20 @@ namespace iText.Forms {
         /// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
         /// <returns>current AcroForm.</returns>
         public virtual iText.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances) {
-            return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
+            if (document != null && document.GetPdfVersion().CompareTo(PdfVersion.PDF_2_0) >= 0) {
+                LoggerFactory.GetLogger(GetType()).Error(iText.IO.LogMessageConstant.NEED_APPEARANCES_DEPRECATED_IN_PDF20);
+                GetPdfObject().Remove(PdfName.NeedAppearances);
+                return this;
+            }
+            else {
+                return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
+            }
         }
 
         /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
         /// <remarks>
         /// Gets the <code>NeedAppearances</code> boolean property on the AcroForm.
+        /// NeedAppearances has been deprecated in PDF 2.0.
         /// <p>
         /// <blockquote>
         /// NeedAppearances is a flag specifying whether to construct appearance

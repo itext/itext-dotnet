@@ -249,7 +249,7 @@ namespace iText.Kernel.Pdf.Action {
         /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
         /// <returns>created action</returns>
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, bool newWindow) {
-            return CreateLaunch(fileSpec, null, newWindow);
+            return CreateLaunch(fileSpec).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
         }
 
         /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
@@ -266,18 +266,19 @@ namespace iText.Kernel.Pdf.Action {
         }
 
         /// <summary>Creates a Launch action (section 12.6.4.5 of ISO 32000-1).</summary>
+        /// <remarks>
+        /// Creates a Launch action (section 12.6.4.5 of ISO 32000-1).
+        /// OS-specific parameters (like win) are deprecated in PDF 2.0
+        /// </remarks>
         /// <param name="fileSpec">the application that shall be launched or the document that shall beopened or printed
         ///     </param>
         /// <param name="win">A dictionary containing Windows-specific launch parameters</param>
         /// <param name="newWindow">a flag specifying whether to open the destination document in a new window</param>
         /// <returns>created action</returns>
+        [Obsolete]
         public static iText.Kernel.Pdf.Action.PdfAction CreateLaunch(PdfFileSpec fileSpec, PdfWin win, bool newWindow
             ) {
-            iText.Kernel.Pdf.Action.PdfAction action = new iText.Kernel.Pdf.Action.PdfAction().Put(PdfName.S, PdfName.
-                Launch).Put(PdfName.NewWindow, new PdfBoolean(newWindow));
-            if (fileSpec != null) {
-                action.Put(PdfName.F, fileSpec.GetPdfObject());
-            }
+            iText.Kernel.Pdf.Action.PdfAction action = CreateLaunch(fileSpec, newWindow);
             if (win != null) {
                 action.Put(PdfName.Win, win.GetPdfObject());
             }

@@ -635,12 +635,20 @@ namespace iText.Kernel.Pdf {
         }
 
         /// <summary>Gets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).</summary>
+        /// <remarks>
+        /// Gets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <returns>the array of predefined procedure set names.</returns>
         public virtual PdfArray GetProcSet() {
             return GetPdfObject().GetAsArray(PdfName.ProcSet);
         }
 
         /// <summary>Sets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).</summary>
+        /// <remarks>
+        /// Sets the array of predefined procedure set names (see ISO-320001 Paragraph 14.2).
+        /// Deprecated in PDF 2.0.
+        /// </remarks>
         /// <param name="array">the array of predefined procedure set names to be set.</param>
         public virtual void SetProcSet(PdfArray array) {
             GetPdfObject().Put(PdfName.ProcSet, array);
