@@ -154,7 +154,7 @@ namespace iText.Kernel.Pdf {
         public PdfArray(bool[] values) {
             list = new List<PdfObject>(values.Length);
             foreach (bool b in values) {
-                list.Add(new PdfBoolean(b));
+                list.Add(PdfBoolean.ValueOf(b));
             }
         }
 

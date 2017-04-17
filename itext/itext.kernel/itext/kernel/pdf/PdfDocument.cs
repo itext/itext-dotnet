@@ -831,7 +831,7 @@ namespace iText.Kernel.Pdf {
                 PdfDictionary markInfo = new PdfDictionary();
                 markInfo.Put(PdfName.Marked, PdfBoolean.TRUE);
                 if (userProperties) {
-                    markInfo.Put(PdfName.UserProperties, new PdfBoolean(true));
+                    markInfo.Put(PdfName.UserProperties, PdfBoolean.ValueOf(true));
                 }
                 catalog.GetPdfObject().Put(PdfName.MarkInfo, markInfo);
                 structParentIndex = 0;

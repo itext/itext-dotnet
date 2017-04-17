@@ -146,5 +146,9 @@ namespace iText.Kernel.Pdf {
         public override int GetHashCode() {
             return (value ? 1 : 0);
         }
+
+        public static iText.Kernel.Pdf.PdfBoolean ValueOf(bool value) {
+            return value ? TRUE : FALSE;
+        }
     }
 }

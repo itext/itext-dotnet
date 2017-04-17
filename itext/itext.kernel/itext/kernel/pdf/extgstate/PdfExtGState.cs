@@ -350,7 +350,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetStrokeOverPrintFlag(bool strokeOverPrintFlag) {
-            return Put(PdfName.OP, new PdfBoolean(strokeOverPrintFlag));
+            return Put(PdfName.OP, PdfBoolean.ValueOf(strokeOverPrintFlag));
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetFillOverPrintFlag(bool fillOverprintFlag) {
-            return Put(PdfName.op, new PdfBoolean(fillOverprintFlag));
+            return Put(PdfName.op, PdfBoolean.ValueOf(fillOverprintFlag));
         }
 
         /// <summary>
@@ -879,7 +879,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetAutomaticStrokeAdjustmentFlag(bool strokeAdjustment
             ) {
-            return Put(PdfName.SA, new PdfBoolean(strokeAdjustment));
+            return Put(PdfName.SA, PdfBoolean.ValueOf(strokeAdjustment));
         }
 
         /// <summary>
@@ -1062,7 +1062,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetAlphaSourceFlag(bool alphaSourceFlag) {
-            return Put(PdfName.AIS, new PdfBoolean(alphaSourceFlag));
+            return Put(PdfName.AIS, PdfBoolean.ValueOf(alphaSourceFlag));
         }
 
         /// <summary>
@@ -1095,7 +1095,7 @@ namespace iText.Kernel.Pdf.Extgstate {
         /// </param>
         /// <returns>object itself.</returns>
         public virtual iText.Kernel.Pdf.Extgstate.PdfExtGState SetTextKnockoutFlag(bool textKnockoutFlag) {
-            return Put(PdfName.TK, new PdfBoolean(textKnockoutFlag));
+            return Put(PdfName.TK, PdfBoolean.ValueOf(textKnockoutFlag));
         }
 
         /// <summary>Puts the value into Graphics state parameter dictionary and associates it with the specified key.

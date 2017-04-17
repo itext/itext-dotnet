@@ -339,7 +339,7 @@ namespace iText.Forms {
         /// <param name="needAppearances">a boolean. Default value is <code>false</code></param>
         /// <returns>current AcroForm.</returns>
         public virtual iText.Forms.PdfAcroForm SetNeedAppearances(bool needAppearances) {
-            return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
+            return Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
         }
 
         /// <summary>Gets the <code>NeedAppearances</code> boolean property on the AcroForm.</summary>
