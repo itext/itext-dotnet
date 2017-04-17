@@ -244,6 +244,15 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        /// <exception cref="System.IO.IOException"/>
+        [NUnit.Framework.Test]
+        [LogMessage(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT)]
+        public virtual void MakeIndirectDirectOnlyPdfBoolean() {
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new ByteArrayOutputStream()));
+            PdfBoolean t = PdfBoolean.ValueOf(true);
+            t.MakeIndirect(pdfDoc);
+        }
+
         [NUnit.Framework.Test]
         public virtual void EqualStrings() {
             PdfString a = ((PdfString)new PdfString("abcd").MakeIndirect(new PdfDocument(new PdfWriter(new ByteArrayOutputStream
