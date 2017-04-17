@@ -989,6 +989,33 @@ namespace iText.Layout.Renderer {
             }
         }
 
+        protected internal virtual void DrawBackgrounds(DrawContext drawContext) {
+            bool shrinkBackgroundArea = bordersHandler is CollapsedTableBorders && (IsHeaderRenderer() || IsFooterRenderer
+                ());
+            if (shrinkBackgroundArea) {
+                occupiedArea.GetBBox().ApplyMargins(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
+                    () / 2, bordersHandler.GetMaxBottomWidth() / 2, bordersHandler.GetLeftBorderMaxWidth() / 2, false);
+            }
+            base.DrawBackground(drawContext);
+            if (shrinkBackgroundArea) {
+                occupiedArea.GetBBox().ApplyMargins(bordersHandler.GetMaxTopWidth() / 2, bordersHandler.GetRightBorderMaxWidth
+                    () / 2, bordersHandler.GetMaxBottomWidth() / 2, bordersHandler.GetLeftBorderMaxWidth() / 2, true);
+            }
+            if (null != headerRenderer) {
+                headerRenderer.DrawBackgrounds(drawContext);
+            }
+            if (null != footerRenderer) {
+                footerRenderer.DrawBackgrounds(drawContext);
+            }
+        }
+
+        public override void DrawBackground(DrawContext drawContext) {
+            // draw background once for body/header/footer
+            if (!IsFooterRenderer() && !IsHeaderRenderer()) {
+                DrawBackgrounds(drawContext);
+            }
+        }
+
         /// <summary><inheritDoc/></summary>
         public override IRenderer GetNextRenderer() {
             iText.Layout.Renderer.TableRenderer nextTable = new iText.Layout.Renderer.TableRenderer();
