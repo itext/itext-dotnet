@@ -197,7 +197,7 @@ namespace iText.Kernel.Pdf {
             else {
                 if (properties.IsPublicKeyEncryptionUsed()) {
                     crypto = new PdfEncryption(encryptProps.publicCertificates, encryptProps.publicKeyEncryptPermissions, encryptProps
-                        .encryptionAlgorithm);
+                        .encryptionAlgorithm, version);
                 }
             }
         }
