@@ -1856,7 +1856,7 @@ namespace iText.Kernel.Pdf.Canvas {
         /// <returns>current canvas.</returns>
         public virtual iText.Kernel.Pdf.Canvas.PdfCanvas SetExtGState(PdfExtGState extGState) {
             if (!extGState.IsFlushed()) {
-                currentGs.UpdateFromExtGState(extGState);
+                currentGs.UpdateFromExtGState(extGState, document);
             }
             PdfName name = resources.AddExtGState(extGState);
             contentStream.GetOutputStream().Write(name).WriteSpace().WriteBytes(gs);

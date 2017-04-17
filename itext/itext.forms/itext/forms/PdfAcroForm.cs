@@ -347,7 +347,7 @@ namespace iText.Forms {
                 return this;
             }
             else {
-                return Put(PdfName.NeedAppearances, new PdfBoolean(needAppearances));
+                return Put(PdfName.NeedAppearances, PdfBoolean.ValueOf(needAppearances));
             }
         }
 

@@ -292,15 +292,18 @@ namespace iText.Kernel.Font {
                     else {
                         val = text[k];
                     }
-                    Glyph glyph = fontProgram.GetGlyph(val);
-                    if (glyph == null) {
-                        glyph = fontProgram.GetGlyphByCode(0);
+                    Glyph glyph = GetGlyph(val);
+                    if (glyph.GetCode() > 0) {
+                        if (!longTag.ContainsKey(glyph.GetCode())) {
+                            longTag.Put(glyph.GetCode(), new int[] { glyph.GetCode(), glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
+                                .GetUnicode() : 0 });
+                        }
+                        glyphs[i++] = (char)cmapEncoding.GetCmapCode(glyph.GetCode());
                     }
-                    if (!longTag.ContainsKey(glyph.GetCode())) {
-                        longTag.Put(glyph.GetCode(), new int[] { glyph.GetCode(), glyph.GetWidth(), glyph.HasValidUnicode() ? glyph
-                            .GetUnicode() : 0 });
+                    else {
+                        //getCode() could be either -1 or 0
+                        glyphs[i++] = (char)cmapEncoding.GetCmapCode(0);
                     }
-                    glyphs[i++] = (char)cmapEncoding.GetCmapCode(glyph.GetCode());
                 }
             }
             return PdfEncodings.ConvertToBytes(new String(glyphs, 0, i), PdfEncodings.UNICODE_BIG_UNMARKED);
@@ -608,6 +611,7 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            EnsureUnderlyingObjectHasIndirectReference();
             if (newFont) {
                 FlushFontData();
             }
@@ -815,11 +819,10 @@ namespace iText.Kernel.Font {
                 PdfDictionary cidFont = GetCidFontType2(null, fontDescriptor, fontProgram.GetFontNames().GetFontName(), metrics
                     );
                 GetPdfObject().Put(PdfName.DescendantFonts, new PdfArray(cidFont));
-                if (GetPdfObject().GetIndirectReference() != null) {
-                    //this means, that fontDescriptor and cidFont already are indirects
-                    fontDescriptor.Flush();
-                    cidFont.Flush();
-                }
+                // getPdfObject().getIndirectReference() != null by assertion of PdfType0Font#flush()
+                //this means, that fontDescriptor and cidFont already are indirects
+                fontDescriptor.Flush();
+                cidFont.Flush();
             }
             else {
                 if (cidFontType == CID_FONT_TYPE_2) {
@@ -881,12 +884,11 @@ namespace iText.Kernel.Font {
                             toUnicode.Flush();
                         }
                     }
-                    if (GetPdfObject().GetIndirectReference() != null) {
-                        //this means, that fontDescriptor, cidFont and fontStream already are indirects
-                        fontDescriptor.Flush();
-                        cidFont.Flush();
-                        fontStream.Flush();
-                    }
+                    // getPdfObject().getIndirectReference() != null by assertion of PdfType0Font#flush()
+                    // This means, that fontDescriptor, cidFont and fontStream already are indirects
+                    fontDescriptor.Flush();
+                    cidFont.Flush();
+                    fontStream.Flush();
                 }
                 else {
                     throw new InvalidOperationException("Unsupported CID Font");

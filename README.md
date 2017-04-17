@@ -34,7 +34,7 @@ please read our [Contribution Guidelines][contributing].
 
 AGPL is a free / open source software license.
 
-This doesn't mean the software is gratis!
+This doesn't mean the software is [gratis][gratis]!
 
 Buying a license is mandatory as soon as you develop commercial activities
 distributing the iText software inside your product or deploying it on a network
@@ -50,10 +50,10 @@ Contact [sales] for more info.
 [agpl]: LICENSE.md
 [building]: BUILDING.md
 [contributing]: CONTRIBUTING.md
-[extrajars]: EXTRAJARS.md
 [itext]: http://itextpdf.com/
-[github]: https://github.com/itext/itext7
+[github]: https://github.com/itext/itext7-dotnet
 [github-rups]: http://github.com/itext/rups
-[latest]: https://github.com/itext/itext7/releases/latest
+[latest]: https://github.com/itext/itext7-dotnet/releases/latest
 [nuget]: https://www.nuget.org/packages/itext7
 [sales]: http://itextpdf.com/sales
+[gratis]: https://en.wikipedia.org/wiki/Gratis_versus_libre

@@ -142,6 +142,9 @@ namespace iText.Layout.Renderer {
 
         public override LayoutResult Layout(LayoutContext layoutContext) {
             UpdateFontAndText();
+            if (null != text) {
+                text = GetGlyphlineWithSpacesInsteadOfTabs(text);
+            }
             LayoutArea area = layoutContext.GetArea();
             float[] margins = GetMargins();
             Rectangle layoutBox = ApplyMargins(area.GetBBox().Clone(), margins, false);
@@ -218,10 +221,18 @@ namespace iText.Layout.Renderer {
                             // Notice that in that case we do not need to ignore the new line symbol ('\n')
                             forcePartialSplitOnFirstChar = true;
                         }
+                        if (line.start == -1) {
+                            line.start = currentTextPos;
+                        }
+                        line.end = Math.Max(line.end, firstCharacterWhichExceedsAllowedWidth - 1);
                         break;
                     }
                     Glyph currentGlyph = text.Get(ind);
                     if (NoPrint(currentGlyph)) {
+                        if (splitCharacters.IsSplitCharacter(text, ind + 1) && TextUtil.IsSpaceOrWhitespace(text.Get(ind + 1))) {
+                            nonBreakablePartEnd = ind;
+                            break;
+                        }
                         continue;
                     }
                     if (tabAnchorCharacter != null && tabAnchorCharacter == text.Get(ind).GetUnicode()) {
@@ -276,8 +287,10 @@ namespace iText.Layout.Renderer {
                     currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                     currentTextPos = nonBreakablePartEnd + 1;
                     currentLineWidth += nonBreakablePartFullWidth;
-                    widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
-                    widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
+                    widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                        + boldSimulationAddition);
+                    widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                        + boldSimulationAddition);
                     anythingPlaced = true;
                 }
                 else {
@@ -327,8 +340,10 @@ namespace iText.Layout.Renderer {
                                             currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                             currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                             currentLineWidth += currentHyphenationChoicePreTextWidth;
-                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth);
-                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth);
+                                            widthHandler.UpdateMinChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                );
+                                            widthHandler.UpdateMaxChildWidth(currentHyphenationChoicePreTextWidth + italicSkewAddition + boldSimulationAddition
+                                                );
                                             currentTextPos += pre.Length;
                                             break;
                                         }
@@ -350,8 +365,10 @@ namespace iText.Layout.Renderer {
                                 currentLineDescender = Math.Min(currentLineDescender, nonBreakablePartMaxDescender);
                                 currentLineHeight = Math.Max(currentLineHeight, nonBreakablePartMaxHeight);
                                 currentLineWidth += nonBreakablePartWidthWhichDoesNotExceedAllowedWidth;
-                                widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
-                                widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth);
+                                widthHandler.UpdateMinChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                                    + boldSimulationAddition);
+                                widthHandler.UpdateMaxChildWidth(nonBreakablePartWidthWhichDoesNotExceedAllowedWidth + italicSkewAddition 
+                                    + boldSimulationAddition);
                             }
                             else {
                                 // process empty line (e.g. '\n')
@@ -591,7 +608,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_627();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_639();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -655,8 +672,8 @@ namespace iText.Layout.Renderer {
             }
         }
 
-        private sealed class _IGlyphLineFilter_627 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_627() {
+        private sealed class _IGlyphLineFilter_639 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_639() {
             }
 
             public bool Accept(Glyph glyph) {
@@ -1035,8 +1052,8 @@ namespace iText.Layout.Renderer {
                     FontSelectorStrategy strategy = provider.GetStrategy(strToBeConverted, FontFamilySplitter.SplitFontFamily(
                         (String)font), fc, fontSet);
                     while (!strategy.EndOfText()) {
-                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(new GlyphLine(strategy.NextGlyphs()), strategy
-                            .GetCurrentFont());
+                        iText.Layout.Renderer.TextRenderer textRenderer = CreateCopy(GetGlyphlineWithSpacesInsteadOfTabs(new GlyphLine
+                            (strategy.NextGlyphs())), strategy.GetCurrentFont());
                         addTo.Add(textRenderer);
                     }
                     return true;
@@ -1193,6 +1210,21 @@ namespace iText.Layout.Renderer {
                 // it's word-break character at the end of the line, which we want to save after trimming
                 savedWordBreakAtLineEnding = new GlyphLine(JavaCollectionsUtil.SingletonList<Glyph>(wordBreak));
             }
+        }
+
+        private GlyphLine GetGlyphlineWithSpacesInsteadOfTabs(GlyphLine line) {
+            if (null != line) {
+                Glyph space = new Glyph(ResolveFirstPdfFont().GetGlyph('\u0020'));
+                space.SetXAdvance((short)(3 * space.GetWidth()));
+                Glyph glyph;
+                for (int i = 0; i < line.Size(); i++) {
+                    glyph = line.Get(i);
+                    if ('\t' == glyph.GetUnicode()) {
+                        line.Set(i, space);
+                    }
+                }
+            }
+            return line;
         }
 
         private class ReversedCharsIterator : IEnumerator<GlyphLine.GlyphLinePart> {

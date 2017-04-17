@@ -126,6 +126,12 @@ namespace iText.Kernel.Pdf {
             }
         }
 
+        protected internal virtual void EnsureUnderlyingObjectHasIndirectReference() {
+            if (GetPdfObject().GetIndirectReference() == null) {
+                throw new PdfException(PdfException.ToFlushThisWrapperUnderlyingObjectMustBeAddedToDocument);
+            }
+        }
+
         protected internal static void MarkObjectAsIndirect(PdfObject pdfObject) {
             if (pdfObject.GetIndirectReference() == null) {
                 pdfObject.SetState(PdfObject.MUST_BE_INDIRECT);

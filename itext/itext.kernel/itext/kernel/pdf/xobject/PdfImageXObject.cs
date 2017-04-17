@@ -490,7 +490,7 @@ namespace iText.Kernel.Pdf.Xobject {
                                 }
                                 else {
                                     if (value is bool?) {
-                                        dictionary.Put(new PdfName(key), new PdfBoolean((bool)value));
+                                        dictionary.Put(new PdfName(key), PdfBoolean.ValueOf((bool)value));
                                     }
                                     else {
                                         if (value is Object[]) {

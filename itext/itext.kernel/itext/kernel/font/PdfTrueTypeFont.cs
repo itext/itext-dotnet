@@ -116,6 +116,7 @@ namespace iText.Kernel.Font {
         }
 
         public override void Flush() {
+            EnsureUnderlyingObjectHasIndirectReference();
             //TODO make subtype class member and simplify this method
             if (newFont) {
                 PdfName subtype;

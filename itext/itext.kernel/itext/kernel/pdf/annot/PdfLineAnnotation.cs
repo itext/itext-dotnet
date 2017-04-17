@@ -394,7 +394,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfLineAnnotation SetContentsAsCaption(bool contentsAsCaption) {
-            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.Cap, new PdfBoolean(contentsAsCaption));
+            return (iText.Kernel.Pdf.Annot.PdfLineAnnotation)Put(PdfName.Cap, PdfBoolean.ValueOf(contentsAsCaption));
         }
 
         /// <summary>A name describing the annotation's caption positioning.</summary>

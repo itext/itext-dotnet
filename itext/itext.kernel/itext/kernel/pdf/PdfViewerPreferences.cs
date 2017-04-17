@@ -80,37 +80,37 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method sets HideToolBar flag to true or false</summary>
         /// <param name="hideToolbar"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideToolbar(bool hideToolbar) {
-            return Put(PdfName.HideToolbar, new PdfBoolean(hideToolbar));
+            return Put(PdfName.HideToolbar, PdfBoolean.ValueOf(hideToolbar));
         }
 
         /// <summary>This method sets HideMenuBar flag to true or false</summary>
         /// <param name="hideMenubar"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideMenubar(bool hideMenubar) {
-            return Put(PdfName.HideMenubar, new PdfBoolean(hideMenubar));
+            return Put(PdfName.HideMenubar, PdfBoolean.ValueOf(hideMenubar));
         }
 
         /// <summary>This method sets HideWindowUI flag to true or false</summary>
         /// <param name="hideWindowUI"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetHideWindowUI(bool hideWindowUI) {
-            return Put(PdfName.HideWindowUI, new PdfBoolean(hideWindowUI));
+            return Put(PdfName.HideWindowUI, PdfBoolean.ValueOf(hideWindowUI));
         }
 
         /// <summary>This method sets FitWindow flag to true or false</summary>
         /// <param name="fitWindow"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetFitWindow(bool fitWindow) {
-            return Put(PdfName.FitWindow, new PdfBoolean(fitWindow));
+            return Put(PdfName.FitWindow, PdfBoolean.ValueOf(fitWindow));
         }
 
         /// <summary>This method sets CenterWindow flag to true or false</summary>
         /// <param name="centerWindow"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetCenterWindow(bool centerWindow) {
-            return Put(PdfName.CenterWindow, new PdfBoolean(centerWindow));
+            return Put(PdfName.CenterWindow, PdfBoolean.ValueOf(centerWindow));
         }
 
         /// <summary>This method sets DisplayDocTitle flag to true or false</summary>
         /// <param name="displayDocTitle"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetDisplayDocTitle(bool displayDocTitle) {
-            return Put(PdfName.DisplayDocTitle, new PdfBoolean(displayDocTitle));
+            return Put(PdfName.DisplayDocTitle, PdfBoolean.ValueOf(displayDocTitle));
         }
 
         /// <summary>This method sets NonFullScreenPageMode property.</summary>
@@ -295,7 +295,7 @@ namespace iText.Kernel.Pdf {
         /// <summary>This method sets PickTrayByPDFSize flag to true or false.</summary>
         /// <param name="pickTrayByPdfSize"/>
         public virtual iText.Kernel.Pdf.PdfViewerPreferences SetPickTrayByPDFSize(bool pickTrayByPdfSize) {
-            return Put(PdfName.PickTrayByPDFSize, new PdfBoolean(pickTrayByPdfSize));
+            return Put(PdfName.PickTrayByPDFSize, PdfBoolean.ValueOf(pickTrayByPdfSize));
         }
 
         /// <summary>This method sets the page numbers used to initialize the print dialog box when the file is printed.

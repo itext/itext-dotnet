@@ -1434,7 +1434,7 @@ namespace iText.Kernel.Pdf.Annot {
         /// instance.
         /// </returns>
         public virtual iText.Kernel.Pdf.Annot.PdfAnnotation SetOpen(bool open) {
-            return Put(PdfName.Open, new PdfBoolean(open));
+            return Put(PdfName.Open, PdfBoolean.ValueOf(open));
         }
 
         /// <summary>An array of 8 × n numbers specifying the coordinates of n quadrilaterals in default user space.</summary>

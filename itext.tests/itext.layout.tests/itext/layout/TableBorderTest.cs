@@ -1110,6 +1110,91 @@ namespace iText.Layout {
 
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Ignore("DEVSIX-1219")]
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest13() {
+            String testName = "tableWithHeaderFooterTest13.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(1);
+            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new SolidBorder(Color.BLUE, 5)));
+            table.AddCell(new Cell().SetHeight(30).Add("Make Gretzky great again!").SetBorder(Border.NO_BORDER));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new SolidBorder(Color.YELLOW, 5)));
+            doc.Add(table);
+            doc.Add(new AreaBreak());
+            table = new Table(1);
+            table.AddCell(new Cell().SetHeight(30).Add("Make Gretzky great again!").SetBorderLeft(Border.NO_BORDER).SetBorderRight
+                (Border.NO_BORDER));
+            table.AddCell(new Cell().SetHeight(30).Add("Make Gretzky great again!").SetBorderLeft(new SolidBorder(Color
+                .GREEN, 0.5f)).SetBorderRight(new SolidBorder(Color.RED, 0.5f)));
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest14() {
+            String testName = "tableWithHeaderFooterTest14.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(new float[3]);
+            for (int r = 0; r < 1; r++) {
+                for (int c = 0; c < 3; c++) {
+                    table.AddHeaderCell(new Cell().Add(String.Format("header row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
+                        ));
+                }
+            }
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    table.AddCell(new Cell().Add(String.Format("row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER));
+                }
+            }
+            for (int r = 0; r < 1; r++) {
+                for (int c = 0; c < 3; c++) {
+                    table.AddFooterCell(new Cell().Add(String.Format("footer row {0} col {1}", r, c)).SetBorder(Border.NO_BORDER
+                        ));
+                }
+            }
+            table.GetHeader().SetBorderTop(new SolidBorder(2)).SetBorderBottom(new SolidBorder(1));
+            table.GetFooter().SetBold().SetBorderTop(new SolidBorder(10)).SetBorderBottom(new SolidBorder(1)).SetBackgroundColor
+                (Color.LIGHT_GRAY);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
+        public virtual void TableWithHeaderFooterTest15() {
+            String testName = "tableWithHeaderFooterTest15.pdf";
+            String outFileName = destinationFolder + testName;
+            String cmpFileName = sourceFolder + "cmp_" + testName;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(outFileName));
+            Document doc = new Document(pdfDoc);
+            Table table = new Table(1);
+            table.AddHeaderCell(new Cell().SetHeight(30).Add("Header").SetBorder(new DottedBorder(Color.RED, 20)));
+            table.AddCell(new Cell().SetHeight(30).Add("Body").SetBorder(new DottedBorder(Color.GREEN, 20)));
+            table.AddFooterCell(new Cell().SetHeight(30).Add("Footer").SetBorder(new DottedBorder(Color.BLUE, 20)));
+            table.SetBackgroundColor(Color.MAGENTA);
+            table.GetHeader().SetBackgroundColor(Color.ORANGE);
+            table.GetFooter().SetBackgroundColor(Color.ORANGE);
+            doc.Add(table);
+            doc.Close();
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareByContent(outFileName, cmpFileName, destinationFolder
+                , testName + "_diff"));
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
         [LogMessage(iText.IO.LogMessageConstant.ELEMENT_DOES_NOT_FIT_AREA, Count = 2)]
         public virtual void ForcedPlacementTest01() {
