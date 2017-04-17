@@ -561,6 +561,8 @@ namespace iText.Kernel.Pdf {
 
         public static readonly iText.Kernel.Pdf.PdfName EndOfLine = CreateDirectName("EndOfLine");
 
+        public static readonly iText.Kernel.Pdf.PdfName Enforce = CreateDirectName("Enforce");
+
         public static readonly iText.Kernel.Pdf.PdfName ESIC = CreateDirectName("ESIC");
 
         public static readonly iText.Kernel.Pdf.PdfName ETSI_CAdES_DETACHED = CreateDirectName("ETSI.CAdES.detached"

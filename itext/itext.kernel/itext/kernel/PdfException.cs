@@ -431,6 +431,8 @@ namespace iText.Kernel {
 
         public const String PngFilterUnknown = "PNG filter unknown.";
 
+        public const String PrintScalingEnforceEntryInvalid = "/PrintScaling shall may appear in the Enforce array only if the corresponding entry in the viewer preferences dictionary specifies a valid value other than AppDefault";
+
         public const String ResourcesCannotBeNull = "Resources cannot be null.";
 
         public const String ResourcesDoNotContainExtgstateEntryUnableToProcessOperator1 = "Resources do not contain ExtGState entry. Unable to process operator {0}.";
