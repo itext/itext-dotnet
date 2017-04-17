@@ -83,7 +83,10 @@ namespace iText.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
+            if (!directOnly) {
+                return (iText.Kernel.Pdf.PdfBoolean)base.MakeIndirect(document);
+            }
+            return this;
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
@@ -150,12 +153,10 @@ namespace iText.Kernel.Pdf {
         /// <summary>Gets PdfBoolean existing static class variable equivalent for given boolean value.</summary>
         /// <remarks>
         /// Gets PdfBoolean existing static class variable equivalent for given boolean value.
-        /// Note, returned object will be direct.
-        /// If needed to set
-        /// <see cref="PdfPrimitiveObject.directOnly"/>
-        /// manually for required PdfBoolean,
+        /// Note, returned object will be direct only, which means it is impossible to make in indirect.
+        /// If required PdfBoolean has to be indirect,
         /// use
-        /// <see cref="PdfBoolean(bool, bool)"/>
+        /// <see cref="PdfBoolean(bool)"/>
         /// constructor instead.
         /// </remarks>
         /// <param name="value">boolean variable defining value of PdfBoolean to return.</param>

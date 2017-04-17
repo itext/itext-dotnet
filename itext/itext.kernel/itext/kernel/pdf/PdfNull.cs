@@ -42,6 +42,7 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.IO.Log;
 using iText.IO.Source;
 
 namespace iText.Kernel.Pdf {
@@ -68,7 +69,14 @@ namespace iText.Kernel.Pdf {
         /// <param name="document">a document the indirect reference will belong to.</param>
         /// <returns>object itself.</returns>
         public override PdfObject MakeIndirect(PdfDocument document) {
-            return (iText.Kernel.Pdf.PdfNull)base.MakeIndirect(document);
+            if (!directOnly) {
+                return (iText.Kernel.Pdf.PdfNull)base.MakeIndirect(document);
+            }
+            else {
+                ILogger logger = LoggerFactory.GetLogger(typeof(PdfObject));
+                logger.Warn(iText.IO.LogMessageConstant.DIRECTONLY_OBJECT_CANNOT_BE_INDIRECT);
+            }
+            return this;
         }
 
         /// <summary>Marks object to be saved as indirect.</summary>
