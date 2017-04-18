@@ -1027,9 +1027,6 @@ namespace iText.Kernel.Pdf {
             // structure are not copied in case if their's OBJ key is annotation and doesn't contain /P entry.
             if (toDocument.IsTagged()) {
                 if (IsTagged()) {
-                    if (tagStructureContext != null) {
-                        tagStructureContext.ActualizeTagsProperties();
-                    }
                     try {
                         foreach (IDictionary<PdfPage, PdfPage> increasingPagesRange in rangesOfPagesWithIncreasingNumbers) {
                             if (insertInBetween) {

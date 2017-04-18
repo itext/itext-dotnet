@@ -41,9 +41,11 @@ source product.
 For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
+using System;
 using iText.Kernel.Pdf;
 
 namespace iText.Kernel.Pdf.Tagutils {
+    [System.ObsoleteAttribute(@"Will be removed in iText 7.1.")]
     internal class DummyAccessibleElement : IAccessibleElement {
         private PdfName role;
 

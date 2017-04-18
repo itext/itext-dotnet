@@ -103,7 +103,18 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public virtual AccessibilityProperties AddAttributes(PdfDictionary attributes) {
-            attributesList.Add(attributes);
+            return AddAttributes(-1, attributes);
+        }
+
+        public virtual AccessibilityProperties AddAttributes(int index, PdfDictionary attributes) {
+            if (attributes != null) {
+                if (index > 0) {
+                    attributesList.Add(index, attributes);
+                }
+                else {
+                    attributesList.Add(attributes);
+                }
+            }
             return this;
         }
 
@@ -177,7 +188,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             IList<PdfDictionary> newAttributesList = GetAttributesList();
             if (newAttributesList.Count > 0) {
                 PdfObject attributesObject = elem.GetAttributes(false);
-                PdfObject combinedAttributes = CombineAttributesList(attributesObject, newAttributesList, elem.GetPdfObject
+                PdfObject combinedAttributes = CombineAttributesList(attributesObject, -1, newAttributesList, elem.GetPdfObject
                     ().GetAsNumber(PdfName.R));
                 elem.SetAttributes(combinedAttributes);
             }
@@ -195,45 +206,63 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
+        [Obsolete]
         protected internal virtual PdfObject CombineAttributesList(PdfObject attributesObject, IList<PdfDictionary
             > newAttributesList, PdfNumber revision) {
+            return CombineAttributesList(attributesObject, -1, newAttributesList, revision);
+        }
+
+        [Obsolete]
+        protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary> newAttributesList, 
+            PdfNumber revision, PdfArray attributesArray) {
+            AddNewAttributesToAttributesArray(-1, newAttributesList, revision, attributesArray);
+        }
+
+        protected internal static PdfObject CombineAttributesList(PdfObject attributesObject, int insertIndex, IList
+            <PdfDictionary> newAttributesList, PdfNumber revision) {
             PdfObject combinedAttributes;
             if (attributesObject is PdfDictionary) {
                 PdfArray combinedAttributesArray = new PdfArray();
                 combinedAttributesArray.Add(attributesObject);
-                AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray);
+                AddNewAttributesToAttributesArray(insertIndex, newAttributesList, revision, combinedAttributesArray);
                 combinedAttributes = combinedAttributesArray;
             }
             else {
                 if (attributesObject is PdfArray) {
                     PdfArray combinedAttributesArray = (PdfArray)attributesObject;
-                    AddNewAttributesToAttributesArray(newAttributesList, revision, combinedAttributesArray);
+                    AddNewAttributesToAttributesArray(insertIndex, newAttributesList, revision, combinedAttributesArray);
                     combinedAttributes = combinedAttributesArray;
                 }
                 else {
                     if (newAttributesList.Count == 1) {
+                        if (insertIndex > 0) {
+                            throw new IndexOutOfRangeException();
+                        }
                         combinedAttributes = newAttributesList[0];
                     }
                     else {
                         combinedAttributes = new PdfArray();
-                        AddNewAttributesToAttributesArray(newAttributesList, revision, (PdfArray)combinedAttributes);
+                        AddNewAttributesToAttributesArray(insertIndex, newAttributesList, revision, (PdfArray)combinedAttributes);
                     }
                 }
             }
             return combinedAttributes;
         }
 
-        protected internal virtual void AddNewAttributesToAttributesArray(IList<PdfDictionary> newAttributesList, 
-            PdfNumber revision, PdfArray attributesArray) {
+        protected internal static void AddNewAttributesToAttributesArray(int insertIndex, IList<PdfDictionary> newAttributesList
+            , PdfNumber revision, PdfArray attributesArray) {
+            if (insertIndex < 0) {
+                insertIndex = attributesArray.Size();
+            }
             if (revision != null) {
                 foreach (PdfDictionary attributes in newAttributesList) {
-                    attributesArray.Add(attributes);
-                    attributesArray.Add(revision);
+                    attributesArray.Add(insertIndex++, attributes);
+                    attributesArray.Add(insertIndex++, revision);
                 }
             }
             else {
                 foreach (PdfDictionary newAttribute in newAttributesList) {
-                    attributesArray.Add(newAttribute);
+                    attributesArray.Add(insertIndex++, newAttribute);
                 }
             }
         }

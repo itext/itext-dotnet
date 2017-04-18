@@ -52,6 +52,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         private PdfStructElem backingElem;
 
         internal BackedAccessibleProperties(PdfStructElem backingElem) {
+            // TODO introduce IAccessibleProperties interface before iText 7.1 released
+            // TODO move getRole/setRole from IAccessibleElement to it?
             this.backingElem = backingElem;
         }
 
@@ -92,9 +94,16 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         public override AccessibilityProperties AddAttributes(PdfDictionary attributes) {
+            return AddAttributes(-1, attributes);
+        }
+
+        public override AccessibilityProperties AddAttributes(int index, PdfDictionary attributes) {
+            if (attributes == null) {
+                return this;
+            }
             PdfObject attributesObject = backingElem.GetAttributes(false);
-            PdfObject combinedAttributes = CombineAttributesList(attributesObject, JavaCollectionsUtil.SingletonList(attributes
-                ), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
+            PdfObject combinedAttributes = CombineAttributesList(attributesObject, index, JavaCollectionsUtil.SingletonList
+                (attributes), backingElem.GetPdfObject().GetAsNumber(PdfName.R));
             backingElem.SetAttributes(combinedAttributes);
             return this;
         }

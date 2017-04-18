@@ -222,14 +222,16 @@ namespace iText.Kernel.Pdf {
             tagPointer.MoveToKid(PdfName.TR).MoveToKid(PdfName.TD).MoveToKid(PdfName.P);
             String actualText1 = "Some looong latin text";
             tagPointer.GetProperties().SetActualText(actualText1);
-            NUnit.Framework.Assert.IsNull(tagPointer.GetConnectedElement(false));
-            IAccessibleElement connectedElement = tagPointer.GetConnectedElement(true);
+            WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
+            NUnit.Framework.Assert.IsNull(waitingTagsManager.GetAssociatedObject(tagPointer));
+            Object associatedObj = new Object();
+            waitingTagsManager.AssignWaitingTagStatus(tagPointer, associatedObj);
             tagPointer.MoveToRoot().MoveToKid(PdfName.Table).MoveToKid(1, PdfName.TR).GetProperties().SetActualText("More latin text"
                 );
-            connectedElement.SetRole(PdfName.Div);
-            connectedElement.GetAccessibilityProperties().SetLanguage("en-Us");
-            NUnit.Framework.Assert.AreEqual(connectedElement.GetAccessibilityProperties().GetActualText(), actualText1
-                );
+            waitingTagsManager.MovePointerToWaitingTag(tagPointer, associatedObj);
+            tagPointer.SetRole(PdfName.Div);
+            tagPointer.GetProperties().SetLanguage("en-Us");
+            NUnit.Framework.Assert.AreEqual(tagPointer.GetProperties().GetActualText(), actualText1);
             document.Close();
             CompareResult("tagTreePointerTest06.pdf", "cmp_tagTreePointerTest06.pdf", "diff06_");
         }
@@ -363,7 +365,9 @@ namespace iText.Kernel.Pdf {
             PdfCanvas canvas = new PdfCanvas(page1);
             tagPointer.AddTag(PdfName.Div);
             tagPointer.AddTag(PdfName.P);
-            IAccessibleElement paragraphElement = tagPointer.GetConnectedElement(true);
+            WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
+            Object pWaitingTagObj = new Object();
+            waitingTagsManager.AssignWaitingTagStatus(tagPointer, pWaitingTagObj);
             canvas.BeginText();
             PdfFont standardFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
             canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
@@ -375,11 +379,11 @@ namespace iText.Kernel.Pdf {
             // object. On removing connection between paragraphElement and /P tag, /P tag shall be flushed.
             // When tag is flushed, tagPointer begins to point to tag's parent. If parent is also flushed - to the root.
             tagPointer.FlushTag();
-            tagPointer.MoveToTag(paragraphElement);
+            waitingTagsManager.MovePointerToWaitingTag(tagPointer, pWaitingTagObj);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("again").CloseTag();
-            tagPointer.RemoveElementConnectionToTag(paragraphElement);
+            waitingTagsManager.RemoveWaitingTagStatus(pWaitingTagObj);
             tagPointer.MoveToRoot();
             canvas.EndText().Release();
             PdfPage page2 = document.AddNewPage();
@@ -458,7 +462,9 @@ namespace iText.Kernel.Pdf {
             tagPointer.SetPageForTagging(page);
             PdfCanvas canvas = new PdfCanvas(page);
             tagPointer.AddTag(PdfName.P);
-            IAccessibleElement paragraphElement = tagPointer.GetConnectedElement(true);
+            WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
+            Object pWaitingTagObj = new Object();
+            waitingTagsManager.AssignWaitingTagStatus(tagPointer, pWaitingTagObj);
             PdfFont standardFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.Span);
@@ -470,7 +476,8 @@ namespace iText.Kernel.Pdf {
             PdfPage newPage = document.AddNewPage();
             canvas = new PdfCanvas(newPage);
             tagPointer.SetPageForTagging(newPage);
-            tagPointer.MoveToTag(paragraphElement).AddTag(PdfName.Span);
+            waitingTagsManager.MovePointerToWaitingTag(tagPointer, pWaitingTagObj);
+            tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 
                 0, 0, 1, 32, 512).ShowText("Hello.").EndText().CloseTag();
             document.Close();
@@ -490,6 +497,167 @@ namespace iText.Kernel.Pdf {
             document.RemovePage(1);
             document.Close();
             CompareResult("tagStructureRemovingTest04.pdf", "cmp_tagStructureRemovingTest04.pdf", "diffRemoving04_");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        [NUnit.Framework.Test]
+        public virtual void AccessibleAttributesInsertionTest01() {
+            PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest01.pdf");
+            PdfDocument document = new PdfDocument(reader, writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            AccessibilityProperties properties = pointer.MoveToKid(0).GetProperties();
+            // 2 attributes
+            PdfDictionary testAttrDict = new PdfDictionary();
+            testAttrDict.Put(PdfName.N, new PdfNumber(4));
+            properties.AddAttributes(testAttrDict);
+            testAttrDict = new PdfDictionary();
+            testAttrDict.Put(PdfName.N, new PdfNumber(0));
+            properties.AddAttributes(0, testAttrDict);
+            testAttrDict = new PdfDictionary();
+            testAttrDict.Put(PdfName.N, new PdfNumber(5));
+            properties.AddAttributes(4, testAttrDict);
+            testAttrDict = new PdfDictionary();
+            testAttrDict.Put(PdfName.N, new PdfNumber(2));
+            properties.AddAttributes(2, testAttrDict);
+            try {
+                properties.AddAttributes(10, testAttrDict);
+                NUnit.Framework.Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException) {
+            }
+            document.Close();
+            CompareResult("accessibleAttributesInsertionTest01.pdf", "cmp_accessibleAttributesInsertionTest01.pdf", "diffAttributes01_"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        [NUnit.Framework.Test]
+        public virtual void AccessibleAttributesInsertionTest02() {
+            PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest02.pdf");
+            PdfDocument document = new PdfDocument(reader, writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            PdfDictionary testAttrDict = new PdfDictionary();
+            pointer.MoveToKid(1).GetProperties().AddAttributes(testAttrDict);
+            // 1 attribute array
+            pointer.MoveToRoot();
+            pointer.MoveToKid(2).GetProperties().AddAttributes(testAttrDict);
+            // 3 attributes
+            pointer.MoveToRoot();
+            pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(testAttrDict
+                );
+            // 1 attribute dictionary
+            pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(testAttrDict);
+            // no attributes
+            document.Close();
+            CompareResult("accessibleAttributesInsertionTest02.pdf", "cmp_accessibleAttributesInsertionTest02.pdf", "diffAttributes02_"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        [NUnit.Framework.Test]
+        public virtual void AccessibleAttributesInsertionTest03() {
+            PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest03.pdf");
+            PdfDocument document = new PdfDocument(reader, writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            PdfDictionary testAttrDict = new PdfDictionary();
+            pointer.MoveToKid(1).GetProperties().AddAttributes(0, testAttrDict);
+            // 1 attribute array
+            pointer.MoveToRoot();
+            pointer.MoveToKid(2).GetProperties().AddAttributes(0, testAttrDict);
+            // 3 attributes
+            pointer.MoveToRoot();
+            pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(0, testAttrDict
+                );
+            // 1 attribute dictionary
+            pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(0, testAttrDict);
+            // no attributes
+            document.Close();
+            CompareResult("accessibleAttributesInsertionTest03.pdf", "cmp_accessibleAttributesInsertionTest03.pdf", "diffAttributes03_"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        [NUnit.Framework.Test]
+        public virtual void AccessibleAttributesInsertionTest04() {
+            PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest04.pdf");
+            PdfDocument document = new PdfDocument(reader, writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            PdfDictionary testAttrDict = new PdfDictionary();
+            pointer.MoveToKid(1).GetProperties().AddAttributes(1, testAttrDict);
+            // 1 attribute array
+            pointer.MoveToRoot();
+            pointer.MoveToKid(2).GetProperties().AddAttributes(3, testAttrDict);
+            // 3 attributes
+            pointer.MoveToRoot();
+            pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(1, testAttrDict
+                );
+            // 1 attribute dictionary
+            document.Close();
+            CompareResult("accessibleAttributesInsertionTest04.pdf", "cmp_accessibleAttributesInsertionTest04.pdf", "diffAttributes04_"
+                );
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        [NUnit.Framework.Test]
+        public virtual void AccessibleAttributesInsertionTest05() {
+            PdfReader reader = new PdfReader(sourceFolder + "taggedDocumentWithAttributes.pdf");
+            PdfWriter writer = new PdfWriter(destinationFolder + "accessibleAttributesInsertionTest05.pdf");
+            PdfDocument document = new PdfDocument(reader, writer);
+            TagTreePointer pointer = new TagTreePointer(document);
+            PdfDictionary testAttrDict = new PdfDictionary();
+            try {
+                pointer.MoveToKid(1).GetProperties().AddAttributes(5, testAttrDict);
+                // 1 attribute array
+                NUnit.Framework.Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException) {
+            }
+            pointer.MoveToRoot();
+            try {
+                pointer.MoveToKid(2).GetProperties().AddAttributes(5, testAttrDict);
+                // 3 attributes
+                NUnit.Framework.Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException) {
+            }
+            pointer.MoveToRoot();
+            try {
+                pointer.MoveToKid(0).MoveToKid(PdfName.LI).MoveToKid(PdfName.LBody).GetProperties().AddAttributes(5, testAttrDict
+                    );
+                // 1 attribute dictionary
+                NUnit.Framework.Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException) {
+            }
+            try {
+                pointer.MoveToKid(PdfName.P).MoveToKid(PdfName.Span).GetProperties().AddAttributes(5, testAttrDict);
+                // no attributes
+                NUnit.Framework.Assert.Fail();
+            }
+            catch (IndexOutOfRangeException) {
+            }
+            document.Close();
+            CompareResult("accessibleAttributesInsertionTest05.pdf", "cmp_accessibleAttributesInsertionTest05.pdf", "diffAttributes05_"
+                );
         }
 
         /// <exception cref="System.IO.IOException"/>

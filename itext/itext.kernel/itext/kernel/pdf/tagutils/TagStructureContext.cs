@@ -84,25 +84,7 @@ namespace iText.Kernel.Pdf.Tagutils {
 
         private bool forbidUnknownRoles;
 
-        /// <summary>
-        /// These two fields define the connections between tags (
-        /// <c>PdfStructElem</c>
-        /// ) and
-        /// layout model elements (
-        /// <see cref="IAccessibleElement"/>
-        /// ). This connection is used as
-        /// a sign that tag is not yet finished and therefore should not be flushed or removed
-        /// if page tags are flushed or removed. Also, any
-        /// <see cref="TagTreePointer"/>
-        /// could be
-        /// immediately moved to the tag with connection via it's connected element
-        /// <see cref="TagTreePointer.MoveToTag(IAccessibleElement)"/>
-        /// .
-        /// When connection is removed, accessible element role and properties are set to the structure element.
-        /// </summary>
-        private IDictionary<IAccessibleElement, PdfStructElem> connectedModelToStruct;
-
-        private IDictionary<PdfDictionary, IAccessibleElement> connectedStructToModel;
+        private WaitingTagsManager waitingTagsManager;
 
         private ICollection<PdfDictionary> namespaces;
 
@@ -147,8 +129,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (!document.IsTagged()) {
                 throw new PdfException(PdfException.MustBeATaggedDocument);
             }
-            connectedModelToStruct = new Dictionary<IAccessibleElement, PdfStructElem>();
-            connectedStructToModel = new Dictionary<PdfDictionary, IAccessibleElement>();
+            waitingTagsManager = new WaitingTagsManager();
             namespaces = new LinkedHashSet<PdfDictionary>();
             nameToNamespace = new Dictionary<String, PdfNamespace>();
             this.tagStructureTargetVersion = tagStructureTargetVersion;
@@ -202,6 +183,21 @@ namespace iText.Kernel.Pdf.Tagutils {
                 autoTaggingPointer = new TagTreePointer(document);
             }
             return autoTaggingPointer;
+        }
+
+        /// <summary>
+        /// Gets
+        /// <see cref="WaitingTagsManager"/>
+        /// for the current document. It allows to mark tags as waiting,
+        /// which would indicate that they are incomplete and are not ready to be flushed.
+        /// </summary>
+        /// <returns>
+        /// document's
+        /// <see cref="WaitingTagsManager"/>
+        /// class instance.
+        /// </returns>
+        public virtual WaitingTagsManager GetWaitingTagsManager() {
+            return waitingTagsManager;
         }
 
         /// <summary>
@@ -407,18 +403,33 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
+        /// <p>NOTE: this method has been deprecated, use
+        /// <see cref="WaitingTagsManager"/>
+        /// class functionality instead
+        /// (can be obtained via
+        /// <see cref="GetWaitingTagsManager()"/>
+        /// ).</p>
         /// Checks if given
         /// <c>IAccessibleElement</c>
         /// is connected to some tag.
         /// </summary>
         /// <param name="element">element to check if it has a connected tag.</param>
         /// <returns>true, if there is a tag which retains the connection to the given accessible element.</returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
+            )]
         public virtual bool IsElementConnectedToTag(IAccessibleElement element) {
-            return connectedModelToStruct.ContainsKey(element);
+            return waitingTagsManager.GetStructForObj(element) != null;
         }
 
-        /// <summary>Destroys the connection between the given accessible element and the tag to which this element is connected to.
-        ///     </summary>
+        /// <summary>
+        /// <p>NOTE: this method has been deprecated, use
+        /// <see cref="WaitingTagsManager"/>
+        /// class functionality instead
+        /// (can be obtained via
+        /// <see cref="GetWaitingTagsManager()"/>
+        /// ).</p>
+        /// Destroys the connection between the given accessible element and the tag to which this element is connected to.
+        /// </summary>
         /// <param name="element">
         /// 
         /// <c>IAccessibleElement</c>
@@ -429,10 +440,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
+            )]
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag(IAccessibleElement
              element) {
-            PdfStructElem structElem = connectedModelToStruct.JRemove(element);
-            RemoveStructToModelConnection(structElem);
+            waitingTagsManager.RemoveWaitingTagStatus(element);
             return this;
         }
 
@@ -519,6 +531,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
+        /// <p>NOTE: this method has been deprecated, use
+        /// <see cref="WaitingTagsManager"/>
+        /// class functionality instead
+        /// (can be obtained via
+        /// <see cref="GetWaitingTagsManager()"/>
+        /// ).</p>
         /// Sets the tag, which is connected with the given accessible element, as a current tag for the given
         /// <see cref="TagTreePointer"/>
         /// . An exception will be thrown, if given accessible element is not connected to any tag.
@@ -534,27 +552,34 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
+            )]
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag(IAccessibleElement element
             , TagTreePointer tagPointer) {
-            PdfStructElem connectedStructElem = connectedModelToStruct.Get(element);
-            if (connectedStructElem == null) {
+            if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, element)) {
                 throw new PdfException(PdfException.GivenAccessibleElementIsNotConnectedToAnyTag);
             }
-            tagPointer.SetCurrentStructElem(connectedStructElem);
             return this;
         }
 
-        /// <summary>Destroys all the retained connections.</summary>
+        /// <summary>
+        /// <p>NOTE: this method has been deprecated, use
+        /// <see cref="WaitingTagsManager"/>
+        /// class functionality instead
+        /// (can be obtained via
+        /// <see cref="GetWaitingTagsManager()"/>
+        /// ).</p>
+        /// Destroys all the retained connections.
+        /// </summary>
         /// <returns>
         /// current
         /// <see cref="TagStructureContext"/>
         /// instance.
         /// </returns>
+        [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
+            )]
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags() {
-            foreach (PdfStructElem structElem in connectedModelToStruct.Values) {
-                RemoveStructToModelConnection(structElem);
-            }
-            connectedModelToStruct.Clear();
+            waitingTagsManager.RemoveWaitingStatusOfAllTags();
             return this;
         }
 
@@ -567,8 +592,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// to belong to the page. If tag has descenders from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
         /// <br /><br />
-        /// If some of the page's tags are still connected to the accessible elements, in this case these tags are considered
-        /// as not yet finished ones, and they won't be flushed.
+        /// If some of the page's tags have waiting status (see
+        /// <see cref="WaitingTagsManager"/>
+        /// these tags are considered
+        /// as not yet finished ones, and they and their children won't be flushed.
         /// </remarks>
         /// <param name="page">a page which tags will be flushed.</param>
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext FlushPageTags(PdfPage page) {
@@ -583,19 +610,24 @@ namespace iText.Kernel.Pdf.Tagutils {
             return this;
         }
 
-        /// <summary>Transforms root tags in a way that complies with the PDF References.</summary>
+        /// <summary>Transforms root tags in a way that complies with the tagged PDF specification.</summary>
         /// <remarks>
-        /// Transforms root tags in a way that complies with the PDF References.
-        /// <br/><br/>
-        /// PDF Reference
-        /// 10.7.3 Grouping Elements:
-        /// <br/><br/>
-        /// For most content extraction formats, the document must be a tree with a single top-level element;
-        /// the structure tree root (identified by the StructTreeRoot entry in the document catalog) must have
-        /// only one child in its K (kids) array. If the PDF file contains a complete document, the structure
-        /// type Document is recommended for this top-level element in the logical structure hierarchy. If the
-        /// file contains a well-formed document fragment, one of the structure types Part, Art, Sect, or Div
-        /// may be used instead.
+        /// Transforms root tags in a way that complies with the tagged PDF specification.
+        /// Depending on PDF version behaviour may differ.
+        /// <p>
+        /// ISO 32000-1 (PDF 1.7 and lower)
+        /// 14.8.4.2 Grouping Elements
+        /// </p>
+        /// <p>
+        /// "In a tagged PDF document, the structure tree shall contain a single top-level element; that is,
+        /// the structure tree root (identified by the StructTreeRoot entry in the document catalogue) shall
+        /// have only one child in its K (kids) array. If the PDF file contains a complete document, the structure
+        /// type Document should be used for this top-level element in the logical structure hierarchy. If the file
+        /// contains a well-formed document fragment, one of the structure types Part, Art, Sect, or Div may be used instead."
+        /// </p>
+        /// <p>
+        /// For PDF 2.0 and higher root tag is allowed to have only the Document role.
+        /// </p>
         /// </remarks>
         public virtual void NormalizeDocumentRootTag() {
             // in this method we could deal with existing document, so we don't won't to throw exceptions here
@@ -625,7 +657,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// the closing of document. Essentially it flushes all the "hanging" information to the document.
         /// </summary>
         public virtual void PrepareToDocumentClosing() {
-            RemoveAllConnectionsToTags();
+            waitingTagsManager.RemoveWaitingStatusOfAllTags();
             ActualizeNamespacesInStructTreeRoot();
         }
 
@@ -635,18 +667,12 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Essentially, all it does is just making sure that for connected tags the properties are
         /// up to date with the connected accessible elements properties.
         /// </remarks>
+        [System.ObsoleteAttribute(@"This method will be removed in iText 7.1. It's needless to call this method, because properties are always up to date."
+            )]
         public virtual void ActualizeTagsProperties() {
-            foreach (KeyValuePair<IAccessibleElement, PdfStructElem> structToModel in connectedModelToStruct) {
-                IAccessibleElement element = structToModel.Key;
-                PdfStructElem structElem = structToModel.Value;
-                structElem.SetRole(element.GetRole());
-                if (element.GetAccessibilityProperties() != null) {
-                    element.GetAccessibilityProperties().SetToStructElem(structElem);
-                    EnsureNamespaceRegistered(element.GetAccessibilityProperties().GetNamespace());
-                }
-            }
         }
 
+        // nothing is needed to be done, properties are always up to date
         /// <summary>
         /// <p>
         /// Gets
@@ -716,14 +742,6 @@ namespace iText.Kernel.Pdf.Tagutils {
             return document;
         }
 
-        internal virtual PdfStructElem GetStructConnectedToModel(IAccessibleElement element) {
-            return connectedModelToStruct.Get(element);
-        }
-
-        internal virtual IAccessibleElement GetModelConnectedToStruct(PdfStructElem @struct) {
-            return connectedStructToModel.Get(@struct.GetPdfObject());
-        }
-
         internal virtual void EnsureNamespaceRegistered(PdfNamespace @namespace) {
             if (@namespace != null) {
                 PdfDictionary namespaceObj = @namespace.GetPdfObject();
@@ -741,8 +759,12 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (@namespace == null) {
                 @namespace = pointerCurrentNamespace;
             }
-            if (!CheckIfRoleShallBeMappedToStandardRole(element.GetRole(), @namespace)) {
-                String exMessage = ComposeInvalidRoleException(element, @namespace);
+            ThrowExceptionIfRoleIsInvalid(element.GetRole(), @namespace);
+        }
+
+        internal virtual void ThrowExceptionIfRoleIsInvalid(PdfName role, PdfNamespace @namespace) {
+            if (!CheckIfRoleShallBeMappedToStandardRole(role, @namespace)) {
+                String exMessage = ComposeInvalidRoleException(role, @namespace);
                 if (forbidUnknownRoles) {
                     throw new PdfException(exMessage);
                 }
@@ -751,23 +773,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                     logger.Warn(exMessage);
                 }
             }
-        }
-
-        internal virtual void SaveConnectionBetweenStructAndModel(IAccessibleElement element, PdfStructElem structElem
-            ) {
-            connectedModelToStruct.Put(element, structElem);
-            connectedStructToModel.Put(structElem.GetPdfObject(), element);
-        }
-
-        /// <returns>parent of the flushed tag</returns>
-        internal virtual IPdfStructElem FlushTag(PdfStructElem tagStruct) {
-            IAccessibleElement modelElement = connectedStructToModel.JRemove(tagStruct.GetPdfObject());
-            if (modelElement != null) {
-                connectedModelToStruct.JRemove(modelElement);
-            }
-            IPdfStructElem parent = tagStruct.GetParent();
-            FlushStructElementAndItKids(tagStruct);
-            return parent;
         }
 
         internal virtual bool TargetTagStructureVersionIs2() {
@@ -811,8 +816,8 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private String ComposeInvalidRoleException(IAccessibleElement element, PdfNamespace @namespace) {
-            return ComposeExceptionBasedOnNamespacePresence(element.GetRole().ToString(), @namespace, PdfException.RoleIsNotMappedToAnyStandardRole
+        private String ComposeInvalidRoleException(PdfName role, PdfNamespace @namespace) {
+            return ComposeExceptionBasedOnNamespacePresence(role.ToString(), @namespace, PdfException.RoleIsNotMappedToAnyStandardRole
                 , PdfException.RoleInNamespaceIsNotMappedToAnyStandardRole);
         }
 
@@ -846,31 +851,16 @@ namespace iText.Kernel.Pdf.Tagutils {
             }
         }
 
-        private void RemoveStructToModelConnection(PdfStructElem structElem) {
-            if (structElem != null) {
-                IAccessibleElement element = connectedStructToModel.JRemove(structElem.GetPdfObject());
-                structElem.SetRole(element.GetRole());
-                if (element.GetAccessibilityProperties() != null) {
-                    element.GetAccessibilityProperties().SetToStructElem(structElem);
-                    EnsureNamespaceRegistered(element.GetAccessibilityProperties().GetNamespace());
-                }
-                if (structElem.GetParent() == null) {
-                    // is flushed
-                    FlushStructElementAndItKids(structElem);
-                }
-            }
-        }
-
         private void RemovePageTagFromParent(IPdfStructElem pageTag, IPdfStructElem parent) {
             if (parent is PdfStructElem) {
                 PdfStructElem structParent = (PdfStructElem)parent;
                 if (!structParent.IsFlushed()) {
                     structParent.RemoveKid(pageTag);
-                    PdfDictionary parentObject = structParent.GetPdfObject();
-                    if (!connectedStructToModel.ContainsKey(parentObject) && parent.GetKids().Count == 0 && parentObject != GetRootTag
-                        ().GetPdfObject()) {
+                    PdfDictionary parentStructDict = structParent.GetPdfObject();
+                    if (waitingTagsManager.GetObjForStructDict(parentStructDict) == null && parent.GetKids().Count == 0 && parentStructDict
+                         != GetRootTag().GetPdfObject()) {
                         RemovePageTagFromParent(structParent, parent.GetParent());
-                        parentObject.GetIndirectReference().SetFree();
+                        parentStructDict.GetIndirectReference().SetFree();
                     }
                 }
                 else {
@@ -884,8 +874,8 @@ namespace iText.Kernel.Pdf.Tagutils {
         // it is StructTreeRoot
         // should never happen as we always should have only one root tag and we don't remove it
         private void FlushParentIfBelongsToPage(PdfStructElem parent, PdfPage currentPage) {
-            if (parent.IsFlushed() || connectedStructToModel.ContainsKey(parent.GetPdfObject()) || parent.GetPdfObject
-                () == GetRootTag().GetPdfObject()) {
+            if (parent.IsFlushed() || waitingTagsManager.GetObjForStructDict(parent.GetPdfObject()) != null || parent.
+                GetPdfObject() == GetRootTag().GetPdfObject()) {
                 return;
             }
             IList<IPdfStructElem> kids = parent.GetKids();
@@ -915,18 +905,6 @@ namespace iText.Kernel.Pdf.Tagutils {
                 }
             }
             return;
-        }
-
-        private void FlushStructElementAndItKids(PdfStructElem elem) {
-            if (connectedStructToModel.ContainsKey(elem.GetPdfObject())) {
-                return;
-            }
-            foreach (IPdfStructElem kid in elem.GetKids()) {
-                if (kid is PdfStructElem) {
-                    FlushStructElementAndItKids((PdfStructElem)kid);
-                }
-            }
-            elem.Flush();
         }
 
         private String ComposeExceptionBasedOnNamespacePresence(String role, PdfNamespace @namespace, String withoutNsEx
