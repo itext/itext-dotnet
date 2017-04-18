@@ -48,7 +48,7 @@ using iText.Kernel.Utils;
 using iText.Test;
 
 namespace iText.Forms {
-    public class PdfEncryptionTest {
+    public class PdfEncryptionTest : ExtendedITextTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfEncryptionTest/";
 
@@ -86,10 +86,43 @@ namespace iText.Forms {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="iText.Kernel.XMP.XMPException"/>
         [NUnit.Framework.Test]
-        public virtual void EncryptAes256Pdf2Permissions() {
-            String filename = "encryptAes256Pdf2Permissions.pdf";
+        public virtual void EncryptAes256Pdf2PermissionsTest01() {
+            String filename = "encryptAes256Pdf2PermissionsTest01.pdf";
             int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
                 .ALLOW_DEGRADED_PRINTING;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
+                )));
+            pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField textField1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 600, 200, 30), "Name", "Enter your name"
+                );
+            form.AddField(textField1);
+            PdfTextFormField textField2 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 550, 200, 30), "Surname", 
+                "Enter your surname");
+            form.AddField(textField2);
+            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "Sex", "Male");
+            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(100, 530, 10, 10), group, "Male");
+            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(120, 530, 10, 10), group, "Female");
+            form.AddField(group);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_", USER, USER);
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256Pdf2PermissionsTest02() {
+            String filename = "encryptAes256Pdf2PermissionsTest02.pdf";
+            // This test differs from the previous one (encryptAes256Pdf2PermissionsTest01) only in permissions.
+            // Here we do not allow to fill the form in.
+            int permissions = EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants.ALLOW_DEGRADED_PRINTING;
             PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
                 (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
                 )));
