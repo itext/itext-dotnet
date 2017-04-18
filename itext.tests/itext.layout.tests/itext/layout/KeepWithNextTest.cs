@@ -153,7 +153,7 @@ namespace iText.Layout {
             for (int i = 0; i < 22; i++) {
                 document.Add(new Paragraph("dummy"));
             }
-            document.SetProperty(Property.FIRST_LINE_INDENT, 20);
+            document.SetProperty(Property.FIRST_LINE_INDENT, 20f);
             Paragraph title = new Paragraph(MIDDLE_TEXT);
             title.SetKeepWithNext(true);
             document.Add(title);
@@ -174,7 +174,7 @@ namespace iText.Layout {
             for (int i = 0; i < 22; i++) {
                 document.Add(new Paragraph("dummy"));
             }
-            document.SetProperty(Property.FIRST_LINE_INDENT, 20);
+            document.SetProperty(Property.FIRST_LINE_INDENT, 20f);
             Paragraph title = new Paragraph(MIDDLE_TEXT);
             title.SetKeepTogether(true);
             title.SetKeepWithNext(true);
@@ -207,7 +207,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_keepWithNextTest07.pdf";
             PdfDocument pdf = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdf, PageSize.A4);
-            document.SetProperty(Property.FIRST_LINE_INDENT, 20);
+            document.SetProperty(Property.FIRST_LINE_INDENT, 20f);
             document.Add(new Paragraph(LONG_TEXT).SetKeepWithNext(true));
             document.Add(new Paragraph(LONG_TEXT));
             document.Close();

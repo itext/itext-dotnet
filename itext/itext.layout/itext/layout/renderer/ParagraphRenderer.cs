@@ -481,7 +481,7 @@ namespace iText.Layout.Renderer {
             // Reset first line indent in case of overflow.
             float firstLineIndent = (float)overflowRenderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
             if (firstLineIndent != 0) {
-                overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0);
+                overflowRenderer.SetProperty(Property.FIRST_LINE_INDENT, 0f);
             }
         }
     }

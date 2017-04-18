@@ -137,7 +137,7 @@ namespace iText.Layout {
             String cmpFileName = sourceFolder + "cmp_firstLineIndentTest01.pdf";
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(outFileName));
             Document document = new Document(pdfDocument);
-            document.SetProperty(Property.FIRST_LINE_INDENT, 25);
+            document.SetProperty(Property.FIRST_LINE_INDENT, 25f);
             document.Add(new Paragraph("Portable Document Format (PDF) is a file format used to present documents in a manner "
                  + "independent of application software, hardware, and operating systems.[2] Each PDF file encapsulates a complete "
                  + "description of a fixed-layout flat document, including the text, fonts, graphics, and other information needed to "

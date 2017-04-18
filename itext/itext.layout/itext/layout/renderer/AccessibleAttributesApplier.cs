@@ -230,7 +230,7 @@ namespace iText.Layout.Renderer {
             if (endIndent != null && endIndent != 0) {
                 attributes.Put(PdfName.EndIndent, new PdfNumber((float)endIndent));
             }
-            float? firstLineIndent = renderer.GetProperty<float?>(Property.FIRST_LINE_INDENT);
+            float? firstLineIndent = renderer.GetPropertyAsFloat(Property.FIRST_LINE_INDENT);
             if (firstLineIndent != null && firstLineIndent != 0) {
                 attributes.Put(PdfName.TextIndent, new PdfNumber((float)firstLineIndent));
             }
