@@ -444,7 +444,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             )]
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveElementConnectionToTag(IAccessibleElement
              element) {
-            waitingTagsManager.RemoveWaitingTagStatus(element);
+            waitingTagsManager.RemoveWaitingState(element);
             return this;
         }
 
@@ -556,7 +556,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             )]
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext MoveTagPointerToTag(IAccessibleElement element
             , TagTreePointer tagPointer) {
-            if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, element)) {
+            if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, element)) {
                 throw new PdfException(PdfException.GivenAccessibleElementIsNotConnectedToAnyTag);
             }
             return this;
@@ -579,7 +579,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and GetWaitingTagsManager() instead."
             )]
         public virtual iText.Kernel.Pdf.Tagutils.TagStructureContext RemoveAllConnectionsToTags() {
-            waitingTagsManager.RemoveWaitingStatusOfAllTags();
+            waitingTagsManager.RemoveAllWaitingStates();
             return this;
         }
 
@@ -592,7 +592,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// to belong to the page. If tag has descenders from several pages - it is flushed, if all other pages except the
         /// current one are flushed.
         /// <br /><br />
-        /// If some of the page's tags have waiting status (see
+        /// If some of the page's tags have waiting state (see
         /// <see cref="WaitingTagsManager"/>
         /// these tags are considered
         /// as not yet finished ones, and they and their children won't be flushed.
@@ -657,7 +657,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// the closing of document. Essentially it flushes all the "hanging" information to the document.
         /// </summary>
         public virtual void PrepareToDocumentClosing() {
-            waitingTagsManager.RemoveWaitingStatusOfAllTags();
+            waitingTagsManager.RemoveAllWaitingStates();
             ActualizeNamespacesInStructTreeRoot();
         }
 

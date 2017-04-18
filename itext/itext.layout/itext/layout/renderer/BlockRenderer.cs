@@ -399,9 +399,9 @@ namespace iText.Layout.Renderer {
                 if (role != null && !PdfName.Artifact.Equals(role)) {
                     tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
                     waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-                    if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, accessibleElement)) {
+                    if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, accessibleElement)) {
                         tagPointer.AddTag(accessibleElement);
-                        waitingTagsManager.AssignWaitingTagStatus(tagPointer, accessibleElement);
+                        waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
                         tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetListAttributes(this, tagPointer
                             )).AddAttributes(0, AccessibleAttributesApplier.GetTableAttributes(this, tagPointer)).AddAttributes(0, 
                             AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer));
@@ -429,7 +429,7 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
-                    waitingTagsManager.RemoveWaitingTagStatus(accessibleElement);
+                    waitingTagsManager.RemoveWaitingState(accessibleElement);
                 }
             }
             flushed = true;

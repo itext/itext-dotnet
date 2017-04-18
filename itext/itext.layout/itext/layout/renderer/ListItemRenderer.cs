@@ -104,7 +104,7 @@ namespace iText.Layout.Renderer {
                     tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                     WaitingTagsManager waitingTagsManager = drawContext.GetDocument().GetTagStructureContext().GetWaitingTagsManager
                         ();
-                    bool lBodyTagIsCreated = waitingTagsManager.MovePointerToWaitingTag(tagPointer, modelElement);
+                    bool lBodyTagIsCreated = waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, modelElement);
                     if (lBodyTagIsCreated) {
                         tagPointer.MoveToParent();
                     }

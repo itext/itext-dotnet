@@ -225,10 +225,10 @@ namespace iText.Kernel.Pdf {
             WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
             NUnit.Framework.Assert.IsNull(waitingTagsManager.GetAssociatedObject(tagPointer));
             Object associatedObj = new Object();
-            waitingTagsManager.AssignWaitingTagStatus(tagPointer, associatedObj);
+            waitingTagsManager.AssignWaitingState(tagPointer, associatedObj);
             tagPointer.MoveToRoot().MoveToKid(PdfName.Table).MoveToKid(1, PdfName.TR).GetProperties().SetActualText("More latin text"
                 );
-            waitingTagsManager.MovePointerToWaitingTag(tagPointer, associatedObj);
+            waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, associatedObj);
             tagPointer.SetRole(PdfName.Div);
             tagPointer.GetProperties().SetLanguage("en-Us");
             NUnit.Framework.Assert.AreEqual(tagPointer.GetProperties().GetActualText(), actualText1);
@@ -367,7 +367,7 @@ namespace iText.Kernel.Pdf {
             tagPointer.AddTag(PdfName.P);
             WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
             Object pWaitingTagObj = new Object();
-            waitingTagsManager.AssignWaitingTagStatus(tagPointer, pWaitingTagObj);
+            waitingTagsManager.AssignWaitingState(tagPointer, pWaitingTagObj);
             canvas.BeginText();
             PdfFont standardFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
             canvas.SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
@@ -379,11 +379,11 @@ namespace iText.Kernel.Pdf {
             // object. On removing connection between paragraphElement and /P tag, /P tag shall be flushed.
             // When tag is flushed, tagPointer begins to point to tag's parent. If parent is also flushed - to the root.
             tagPointer.FlushTag();
-            waitingTagsManager.MovePointerToWaitingTag(tagPointer, pWaitingTagObj);
+            waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, pWaitingTagObj);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).ShowText("Hello ").CloseTag();
             canvas.SetFontAndSize(standardFont, 30).OpenTag(tagPointer.GetTagReference()).ShowText("again").CloseTag();
-            waitingTagsManager.RemoveWaitingTagStatus(pWaitingTagObj);
+            waitingTagsManager.RemoveWaitingState(pWaitingTagObj);
             tagPointer.MoveToRoot();
             canvas.EndText().Release();
             PdfPage page2 = document.AddNewPage();
@@ -464,7 +464,7 @@ namespace iText.Kernel.Pdf {
             tagPointer.AddTag(PdfName.P);
             WaitingTagsManager waitingTagsManager = tagPointer.GetContext().GetWaitingTagsManager();
             Object pWaitingTagObj = new Object();
-            waitingTagsManager.AssignWaitingTagStatus(tagPointer, pWaitingTagObj);
+            waitingTagsManager.AssignWaitingState(tagPointer, pWaitingTagObj);
             PdfFont standardFont = PdfFontFactory.CreateFont(FontConstants.COURIER);
             canvas.BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 0, 0, 1, 32, 512);
             tagPointer.AddTag(PdfName.Span);
@@ -476,7 +476,7 @@ namespace iText.Kernel.Pdf {
             PdfPage newPage = document.AddNewPage();
             canvas = new PdfCanvas(newPage);
             tagPointer.SetPageForTagging(newPage);
-            waitingTagsManager.MovePointerToWaitingTag(tagPointer, pWaitingTagObj);
+            waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, pWaitingTagObj);
             tagPointer.AddTag(PdfName.Span);
             canvas.OpenTag(tagPointer.GetTagReference()).BeginText().SetFontAndSize(standardFont, 24).SetTextMatrix(1, 
                 0, 0, 1, 32, 512).ShowText("Hello.").EndText().CloseTag();

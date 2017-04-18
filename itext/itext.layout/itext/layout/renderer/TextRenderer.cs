@@ -516,11 +516,11 @@ namespace iText.Layout.Renderer {
                     PdfName role = accessibleElement.GetRole();
                     if (role != null && !PdfName.Artifact.Equals(role)) {
                         waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
-                        if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, accessibleElement)) {
+                        if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, accessibleElement)) {
                             tagPointer.AddTag(accessibleElement);
                             tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
                                 ));
-                            waitingTagsManager.AssignWaitingTagStatus(tagPointer, accessibleElement);
+                            waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
                         }
                     }
                     else {
@@ -671,7 +671,7 @@ namespace iText.Layout.Renderer {
             if (modelElementIsAccessible) {
                 tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
-                    waitingTagsManager.RemoveWaitingTagStatus(accessibleElement);
+                    waitingTagsManager.RemoveWaitingState(accessibleElement);
                 }
             }
         }

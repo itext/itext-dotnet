@@ -478,7 +478,7 @@ namespace iText.Kernel.Pdf.Tagutils {
                     SetCurrentStructElem(waitingStruct);
                 }
                 else {
-                    waitingTagsManager.RemoveWaitingTagStatus(element);
+                    waitingTagsManager.RemoveWaitingState(element);
                     AddTag(index, element);
                     if (keepWaiting) {
                         waitingTagsManager.SaveAssociatedObjectForWaitingTag(element, GetCurrentStructElem());
@@ -601,7 +601,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         [System.ObsoleteAttribute(@"Will be removed in iText 7.1. Use WaitingTagsManager and TagStructureContext.GetWaitingTagsManager() instead."
             )]
         public virtual TagStructureContext RemoveElementConnectionToTag(IAccessibleElement element) {
-            tagStructureContext.GetWaitingTagsManager().RemoveWaitingTagStatus(element);
+            tagStructureContext.GetWaitingTagsManager().RemoveWaitingState(element);
             return tagStructureContext;
         }
 
@@ -631,10 +631,10 @@ namespace iText.Kernel.Pdf.Tagutils {
             if (parent.IsFlushed()) {
                 throw new PdfException(PdfException.CannotRemoveTagBecauseItsParentIsFlushed);
             }
-            // remove waiting tag status if tag is removed
+            // remove waiting tag state if tag is removed
             Object objForStructDict = tagStructureContext.GetWaitingTagsManager().GetObjForStructDict(currentStructElem
                 .GetPdfObject());
-            tagStructureContext.GetWaitingTagsManager().RemoveWaitingTagStatus(objForStructDict);
+            tagStructureContext.GetWaitingTagsManager().RemoveWaitingState(objForStructDict);
             int removedKidIndex = parent.RemoveKid(currentStructElem);
             PdfIndirectReference indRef = currentStructElem.GetPdfObject().GetIndirectReference();
             if (indRef != null) {
@@ -912,11 +912,11 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <c>TagTreePointer</c>
         /// to the current tag parent.
         /// <p>
-        /// If some of the descender tags of the current tag have waiting status (see
+        /// If some of the descender tags of the current tag have waiting state (see
         /// <see cref="WaitingTagsManager"/>
         /// ),
         /// then these tags are considered as not yet finished ones, and they won't be flushed immediately,
-        /// but they will be flushed, when waiting status is removed.
+        /// but they will be flushed, when waiting state is removed.
         /// </p>
         /// </remarks>
         /// <returns>

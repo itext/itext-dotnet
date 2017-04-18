@@ -888,17 +888,17 @@ namespace iText.Layout.Renderer {
                 WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
                 IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
                 TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, accessibleElement)) {
+                if (!waitingTagsManager.TryMovePointerToWaitingTag(tagPointer, accessibleElement)) {
                     tagPointer.AddTag(accessibleElement);
                     tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
                         ));
-                    waitingTagsManager.AssignWaitingTagStatus(tagPointer, accessibleElement);
+                    waitingTagsManager.AssignWaitingState(tagPointer, accessibleElement);
                 }
                 base.Draw(drawContext);
                 tagPointer.MoveToParent();
                 bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
                 if (toRemoveConnectionsWithTag) {
-                    waitingTagsManager.RemoveWaitingTagStatus(accessibleElement);
+                    waitingTagsManager.RemoveWaitingState(accessibleElement);
                 }
             }
             else {

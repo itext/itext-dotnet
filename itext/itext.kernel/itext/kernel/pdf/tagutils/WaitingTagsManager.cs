@@ -6,20 +6,20 @@ using iText.Kernel.Pdf.Tagging;
 namespace iText.Kernel.Pdf.Tagutils {
     /// <summary>
     /// <p>
-    /// This class is used to manage waiting tags status.
+    /// This class is used to manage waiting tags state.
     /// </summary>
     /// <remarks>
     /// <p>
-    /// This class is used to manage waiting tags status.
-    /// Any tag in the structure tree could be marked as "waiting". This status indicates that
+    /// This class is used to manage waiting tags state.
+    /// Any tag in the structure tree could be marked as "waiting". This state indicates that
     /// tag is not yet finished and therefore should not be flushed or removed if page tags are
     /// flushed or removed or if parent tags are flushed.
     /// </p>
     /// <p>
-    /// Waiting status of tags is defined by the association with arbitrary objects instances.
+    /// Waiting state of tags is defined by the association with arbitrary objects instances.
     /// This mapping is one to one: for every waiting tag there is always exactly one associated object.
     /// </p>
-    /// Waiting status could also be perceived as a temporal association of the object to some particular tag.
+    /// Waiting state could also be perceived as a temporal association of the object to some particular tag.
     /// </remarks>
     public class WaitingTagsManager {
         private IDictionary<Object, PdfStructElem> associatedObjToWaitingTag;
@@ -32,7 +32,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
-        /// Assigns waiting status to the tag at which given
+        /// Assigns waiting state to the tag at which given
         /// <see cref="TagTreePointer"/>
         /// points, associating it with the given
         /// <see cref="System.Object"/>
@@ -50,10 +50,10 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// <param name="associatedObj">an object that is to be associated with the waiting tag. A null value is forbidden.
         ///     </param>
         /// <returns>
-        /// the previous associated object with the tag if it have already had waiting status,
+        /// the previous associated object with the tag if it has already had waiting state,
         /// or null if it was not waiting tag.
         /// </returns>
-        public virtual Object AssignWaitingTagStatus(TagTreePointer pointer, Object associatedObj) {
+        public virtual Object AssignWaitingState(TagTreePointer pointer, Object associatedObj) {
             if (associatedObj == null) {
                 throw new ArgumentNullException();
             }
@@ -61,7 +61,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         }
 
         /// <summary>
-        /// Checks if there is waiting tag which status was assigned using given
+        /// Checks if there is waiting tag which state was assigned using given
         /// <see cref="System.Object"/>
         /// .
         /// </summary>
@@ -103,7 +103,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// was moved
         /// in order to point at it.
         /// </returns>
-        public virtual bool MovePointerToWaitingTag(TagTreePointer tagPointer, Object associatedObject) {
+        public virtual bool TryMovePointerToWaitingTag(TagTreePointer tagPointer, Object associatedObject) {
             if (associatedObject == null) {
                 return false;
             }
@@ -119,7 +119,7 @@ namespace iText.Kernel.Pdf.Tagutils {
         /// Gets an object that is associated with the tag (if there is one) at which given
         /// <see cref="TagTreePointer"/>
         /// points.
-        /// Essentially, this method could be used as indication that current tag has waiting status.
+        /// Essentially, this method could be used as indication that current tag has waiting state.
         /// </summary>
         /// <param name="pointer">
         /// a
@@ -138,33 +138,33 @@ namespace iText.Kernel.Pdf.Tagutils {
             return GetObjForStructDict(pointer.GetCurrentStructElem().GetPdfObject());
         }
 
-        /// <summary>Removes waiting status of the tag which is associated with the given object.</summary>
+        /// <summary>Removes waiting state of the tag which is associated with the given object.</summary>
         /// <remarks>
-        /// Removes waiting status of the tag which is associated with the given object.
+        /// Removes waiting state of the tag which is associated with the given object.
         /// <p>NOTE: if parent of the waiting tag is already flushed, the tag and it's children
         /// (unless they are waiting tags on their own) will be also immediately flushed right after
-        /// the waiting status removal.</p>
+        /// the waiting state removal.</p>
         /// </remarks>
         /// <param name="associatedObject">an object which association with the waiting tag is to be removed.</param>
         /// <returns>true if object was actually associated with some tag and it's association was removed.</returns>
-        public virtual bool RemoveWaitingTagStatus(Object associatedObject) {
+        public virtual bool RemoveWaitingState(Object associatedObject) {
             if (associatedObject != null) {
                 PdfStructElem structElem = associatedObjToWaitingTag.JRemove(associatedObject);
-                RemoveWaitingStatusAndFlushIfParentFlushed(structElem);
+                RemoveWaitingStateAndFlushIfParentFlushed(structElem);
                 return structElem != null;
             }
             return false;
         }
 
-        /// <summary>Removes waiting status of all waiting tags by removing association with objects.</summary>
+        /// <summary>Removes waiting state of all waiting tags by removing association with objects.</summary>
         /// <remarks>
-        /// Removes waiting status of all waiting tags by removing association with objects.
+        /// Removes waiting state of all waiting tags by removing association with objects.
         /// <p>NOTE: if parent of the waiting tag is already flushed, the tag and it's children
-        /// will be also immediately flushed right after the waiting status removal.</p>
+        /// will be also immediately flushed right after the waiting state removal.</p>
         /// </remarks>
-        public virtual void RemoveWaitingStatusOfAllTags() {
+        public virtual void RemoveAllWaitingStates() {
             foreach (PdfStructElem structElem in associatedObjToWaitingTag.Values) {
-                RemoveWaitingStatusAndFlushIfParentFlushed(structElem);
+                RemoveWaitingStateAndFlushIfParentFlushed(structElem);
             }
             associatedObjToWaitingTag.Clear();
         }
@@ -205,7 +205,7 @@ namespace iText.Kernel.Pdf.Tagutils {
             elem.Flush();
         }
 
-        private void RemoveWaitingStatusAndFlushIfParentFlushed(PdfStructElem structElem) {
+        private void RemoveWaitingStateAndFlushIfParentFlushed(PdfStructElem structElem) {
             if (structElem != null) {
                 waitingTagToAssociatedObj.JRemove(structElem.GetPdfObject());
                 IPdfStructElem parent = structElem.GetParent();
