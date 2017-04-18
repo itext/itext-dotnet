@@ -41,13 +41,36 @@ For more information, please contact iText Software Corp. at this
 address: sales@itextpdf.com
 */
 using System;
+using iText.Forms.Fields;
+using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
+using iText.Kernel.Utils;
+using iText.Test;
 
 namespace iText.Forms {
     public class PdfEncryptionTest {
         public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
             .CurrentContext.TestDirectory) + "/resources/itext/forms/PdfEncryptionTest/";
 
+        public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
+             + "/test/itext/forms/PdfEncryptionTest/";
+
+        /// <summary>User password.</summary>
+        public static byte[] USER = "Hello".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
+
+        /// <summary>Owner password.</summary>
+        public static byte[] OWNER = "World".GetBytes(iText.IO.Util.EncodingUtil.ISO_8859_1);
+
+        [NUnit.Framework.OneTimeSetUp]
+        public static void BeforeClass() {
+            ITextTest.CreateOrClearDestinationFolder(destinationFolder);
+        }
+
+        internal const String customInfoEntryKey = "Custom";
+
+        internal const String customInfoEntryValue = "String";
+
+        // Custom entry in Info dictionary is used because standard entried are gone into metadata in PDF 2.0
         /// <exception cref="System.IO.IOException"/>
         [NUnit.Framework.Test]
         public virtual void EncryptedDocumentWithFormFields() {
@@ -57,6 +80,38 @@ namespace iText.Forms {
             PdfAcroForm acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
             acroForm.GetField("personal.name").GetPdfObject();
             pdfDocument.Close();
+        }
+
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="iText.Kernel.XMP.XMPException"/>
+        [NUnit.Framework.Test]
+        public virtual void EncryptAes256Pdf2Permissions() {
+            String filename = "encryptAes256Pdf2Permissions.pdf";
+            int permissions = EncryptionConstants.ALLOW_FILL_IN | EncryptionConstants.ALLOW_SCREENREADERS | EncryptionConstants
+                .ALLOW_DEGRADED_PRINTING;
+            PdfDocument pdfDoc = new PdfDocument(new PdfWriter(destinationFolder + filename, new WriterProperties().SetPdfVersion
+                (PdfVersion.PDF_2_0).SetStandardEncryption(USER, OWNER, permissions, EncryptionConstants.ENCRYPTION_AES_256
+                )));
+            pdfDoc.GetDocumentInfo().SetMoreInfo(customInfoEntryKey, customInfoEntryValue);
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+            PdfTextFormField textField1 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 600, 200, 30), "Name", "Enter your name"
+                );
+            form.AddField(textField1);
+            PdfTextFormField textField2 = PdfFormField.CreateText(pdfDoc, new Rectangle(100, 550, 200, 30), "Surname", 
+                "Enter your surname");
+            form.AddField(textField2);
+            PdfButtonFormField group = PdfFormField.CreateRadioGroup(pdfDoc, "Sex", "Male");
+            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(100, 530, 10, 10), group, "Male");
+            PdfFormField.CreateRadioButton(pdfDoc, new Rectangle(120, 530, 10, 10), group, "Female");
+            form.AddField(group);
+            pdfDoc.Close();
+            CompareTool compareTool = new CompareTool();
+            String errorMessage = compareTool.CompareByContent(destinationFolder + filename, sourceFolder + "cmp_" + filename
+                , destinationFolder, "diff_", USER, USER);
+            if (errorMessage != null) {
+                NUnit.Framework.Assert.Fail(errorMessage);
+            }
         }
     }
 }
