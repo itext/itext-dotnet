@@ -112,6 +112,37 @@ namespace iText.Signatures.Sign {
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="System.Exception"/>
         [NUnit.Framework.Test]
+        public virtual void SignedTwiceTest() {
+            String src = sourceFolder + "simpleDocument.pdf";
+            String fileName1 = "signedOnce.pdf";
+            String fileName2 = "updated.pdf";
+            String fileName3 = "signedTwice.pdf";
+            // sign document
+            Rectangle rectangle1 = new Rectangle(36, 448, 200, 100);
+            Sign(src, "Signature1", destinationFolder + fileName1, chain, pk, DigestAlgorithms.SHA256, PdfSigner.CryptoStandard
+                .CADES, "Sign 1", "TestCity", rectangle1, false, true);
+            // update document
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(destinationFolder + fileName1), new PdfWriter(destinationFolder
+                 + fileName2), new StampingProperties().UseAppendMode());
+            pdfDoc.AddNewPage();
+            pdfDoc.Close();
+            // sign document again
+            Rectangle rectangle2 = new Rectangle(36, 100, 200, 100);
+            Sign(destinationFolder + fileName2, "Signature2", destinationFolder + fileName3, chain, pk, DigestAlgorithms
+                .SHA256, PdfSigner.CryptoStandard.CADES, "Sign 2", "TestCity", rectangle2, false, true);
+            IDictionary<int, IList<Rectangle>> map = new Dictionary<int, IList<Rectangle>>();
+            IList<Rectangle> list = new List<Rectangle>();
+            list.Add(rectangle1);
+            list.Add(rectangle2);
+            map.Put(1, list);
+            NUnit.Framework.Assert.IsNull(new CompareTool().CompareVisually(destinationFolder + fileName3, sourceFolder
+                 + "cmp_" + fileName3, destinationFolder, "diff_", map));
+        }
+
+        /// <exception cref="Org.BouncyCastle.Security.GeneralSecurityException"/>
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        [NUnit.Framework.Test]
         public virtual void SigningIntoExistingFieldTest01() {
             String src = sourceFolder + "emptySignature01.pdf";
             //field is merged with widget and has /P key
