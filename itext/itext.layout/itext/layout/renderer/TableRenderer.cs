@@ -885,17 +885,17 @@ namespace iText.Layout.Renderer {
                 ignoreTag = isHeaderOrFooter && ignoreHeaderFooterTag;
             }
             if (role != null && !role.Equals(PdfName.Artifact) && !ignoreTag) {
-                TagStructureContext tagStructureContext = document.GetTagStructureContext();
-                TagTreePointer tagPointer = tagStructureContext.GetAutoTaggingPointer();
+                TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
                 IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                if (!tagStructureContext.IsElementConnectedToTag(accessibleElement)) {
-                    AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, tagPointer);
-                }
-                Table modelElement = (Table)GetModelElement();
+                bool alreadyCreated = tagPointer.IsElementConnectedToTag(accessibleElement);
                 tagPointer.AddTag(accessibleElement, true);
+                if (!alreadyCreated) {
+                    PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
+                    ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                }
                 base.Draw(drawContext);
                 tagPointer.MoveToParent();
-                bool toRemoveConnectionsWithTag = isLastRendererForModelElement && modelElement.IsComplete();
+                bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
                 if (toRemoveConnectionsWithTag) {
                     tagPointer.RemoveElementConnectionToTag(accessibleElement);
                 }

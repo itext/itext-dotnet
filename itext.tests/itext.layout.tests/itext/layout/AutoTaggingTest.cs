@@ -49,6 +49,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Action;
+using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Kernel.Utils;
 using iText.Layout.Borders;
 using iText.Layout.Element;
@@ -103,6 +104,30 @@ namespace iText.Layout {
             document.Add(image);
             document.Close();
             CompareResult("imageTest01.pdf", "cmp_imageTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ImageTest02() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "imageTest02.pdf"));
+            pdfDocument.SetTagged();
+            Document document = new Document(pdfDocument);
+            Div div = new Div();
+            div.Add(new Paragraph("text before"));
+            iText.Layout.Element.Image image = new iText.Layout.Element.Image(ImageDataFactory.Create(sourceFolder + imageName
+                )).SetWidth(200);
+            PdfDictionary imgAttributes = new PdfDictionary();
+            imgAttributes.Put(PdfName.O, PdfName.Layout);
+            imgAttributes.Put(PdfName.Placement, PdfName.Block);
+            image.GetAccessibilityProperties().AddAttributes(imgAttributes);
+            div.Add(image);
+            div.Add(new Paragraph("text after"));
+            document.Add(div);
+            document.Close();
+            CompareResult("imageTest02.pdf", "cmp_imageTest02.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>
@@ -333,6 +358,87 @@ namespace iText.Layout {
             doc.Add(list);
             doc.Close();
             CompareResult("listTest01.pdf", "cmp_listTest01.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ListTest02() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest02.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            doc.SetFont(PdfFontFactory.CreateFont(sourceFolder + "../fonts/NotoSans-Regular.ttf", PdfEncodings.IDENTITY_H
+                ));
+            PdfDictionary attributesDisc = new PdfDictionary();
+            attributesDisc.Put(PdfName.O, PdfName.List);
+            attributesDisc.Put(PdfName.ListNumbering, PdfName.Disc);
+            PdfDictionary attributesSquare = new PdfDictionary();
+            attributesSquare.Put(PdfName.O, PdfName.List);
+            attributesSquare.Put(PdfName.ListNumbering, PdfName.Square);
+            PdfDictionary attributesCircle = new PdfDictionary();
+            attributesCircle.Put(PdfName.O, PdfName.List);
+            attributesCircle.Put(PdfName.ListNumbering, PdfName.Circle);
+            String discSymbol = "\u2022";
+            String squareSymbol = "\u25AA";
+            String circleSymbol = "\u25E6";
+            List list = new List(ListNumberingType.ROMAN_UPPER);
+            // setting numbering type for now
+            list.Add("item 1");
+            ListItem listItem = new ListItem("item 2");
+ {
+                List subList = new List().SetListSymbol(discSymbol).SetMarginLeft(30);
+                subList.GetAccessibilityProperties().AddAttributes(attributesDisc);
+                ListItem subListItem = new ListItem("sub item 1");
+ {
+                    List subSubList = new List().SetListSymbol(squareSymbol).SetMarginLeft(30);
+                    subSubList.GetAccessibilityProperties().AddAttributes(attributesSquare);
+                    subSubList.Add("sub sub item 1");
+                    subSubList.Add("sub sub item 2");
+                    subSubList.Add("sub sub item 3");
+                    subListItem.Add(subSubList);
+                }
+                subList.Add(subListItem);
+                subList.Add("sub item 2");
+                subList.Add("sub item 3");
+                listItem.Add(subList);
+            }
+            list.Add(listItem);
+            list.Add("item 3");
+            doc.Add(list);
+            doc.Add(new LineSeparator(new SolidLine()));
+            doc.Add(list.SetListSymbol(circleSymbol));
+            // setting circle symbol, not setting attributes
+            doc.Add(new LineSeparator(new SolidLine()));
+            list.GetAccessibilityProperties().AddAttributes(attributesCircle);
+            doc.Add(list);
+            // circle symbol set, setting attributes
+            doc.Close();
+            CompareResult("listTest02.pdf", "cmp_listTest02.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
+        public virtual void ListTest03() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest03.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            PdfDictionary attributesSquare = new PdfDictionary();
+            attributesSquare.Put(PdfName.O, PdfName.List);
+            attributesSquare.Put(PdfName.ListNumbering, PdfName.Square);
+            List list = new List(ListNumberingType.DECIMAL);
+            // explicitly overriding ListNumbering attribute
+            list.GetAccessibilityProperties().AddAttributes(attributesSquare);
+            list.Add("item 1");
+            list.Add("item 2");
+            list.Add("item 3");
+            doc.Add(list);
+            doc.Close();
+            CompareResult("listTest03.pdf", "cmp_listTest03.pdf");
         }
 
         /// <exception cref="System.IO.IOException"/>

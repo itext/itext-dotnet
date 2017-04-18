@@ -54,6 +54,7 @@ using iText.Kernel.Pdf.Action;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Extgstate;
+using iText.Kernel.Pdf.Tagging;
 using iText.Kernel.Pdf.Tagutils;
 using iText.Layout;
 using iText.Layout.Borders;
@@ -1240,6 +1241,33 @@ namespace iText.Layout.Renderer {
         internal virtual PdfFont ResolveFirstPdfFont(String font, FontProvider provider, FontCharacteristics fc) {
             return provider.GetPdfFont(provider.GetFontSelector(FontFamilySplitter.SplitFontFamily(font), fc).BestMatch
                 ());
+        }
+
+        internal static void ApplyGeneratedAccessibleAttributes(TagTreePointer tagPointer, PdfDictionary attributes
+            ) {
+            if (attributes == null) {
+                return;
+            }
+            // TODO if taggingPointer.getProperties will always write directly to struct elem, use it instead (add addAttributes overload with index)
+            PdfStructElem structElem = tagPointer.GetDocument().GetTagStructureContext().GetPointerStructElem(tagPointer
+                );
+            PdfObject structElemAttr = structElem.GetAttributes(false);
+            if (structElemAttr == null || !structElemAttr.IsDictionary() && !structElemAttr.IsArray()) {
+                structElem.SetAttributes(attributes);
+            }
+            else {
+                if (structElemAttr.IsDictionary()) {
+                    PdfArray attrArr = new PdfArray();
+                    attrArr.Add(attributes);
+                    attrArr.Add(structElemAttr);
+                    structElem.SetAttributes(attrArr);
+                }
+                else {
+                    // isArray
+                    PdfArray attrArr = (PdfArray)structElemAttr;
+                    attrArr.Add(0, attributes);
+                }
+            }
         }
 
         public abstract IRenderer GetNextRenderer();

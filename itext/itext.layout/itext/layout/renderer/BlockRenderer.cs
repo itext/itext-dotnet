@@ -397,12 +397,16 @@ namespace iText.Layout.Renderer {
                 PdfName role = accessibleElement.GetRole();
                 if (role != null && !PdfName.Artifact.Equals(role)) {
                     tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                    if (!tagPointer.IsElementConnectedToTag(accessibleElement)) {
-                        AccessibleAttributesApplier.ApplyLayoutAttributes(role, this, tagPointer);
-                        AccessibleAttributesApplier.ApplyTableAttributes(this, tagPointer);
-                        AccessibleAttributesApplier.ApplyListAttributes(this, tagPointer);
-                    }
+                    bool alreadyCreated = tagPointer.IsElementConnectedToTag(accessibleElement);
                     tagPointer.AddTag(accessibleElement, true);
+                    if (!alreadyCreated) {
+                        PdfDictionary listAttributes = AccessibleAttributesApplier.GetListAttributes(this, tagPointer);
+                        ApplyGeneratedAccessibleAttributes(tagPointer, listAttributes);
+                        PdfDictionary tableAttributes = AccessibleAttributesApplier.GetTableAttributes(this, tagPointer);
+                        ApplyGeneratedAccessibleAttributes(tagPointer, tableAttributes);
+                        PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
+                        ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                    }
                 }
                 else {
                     isTagged = false;
