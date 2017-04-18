@@ -507,6 +507,7 @@ namespace iText.Layout.Renderer {
             bool modelElementIsAccessible = isTagged && GetModelElement() is IAccessibleElement;
             bool isArtifact = isTagged && !modelElementIsAccessible;
             TagTreePointer tagPointer = null;
+            WaitingTagsManager waitingTagsManager = null;
             IAccessibleElement accessibleElement = null;
             if (isTagged) {
                 tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
@@ -514,12 +515,12 @@ namespace iText.Layout.Renderer {
                     accessibleElement = (IAccessibleElement)GetModelElement();
                     PdfName role = accessibleElement.GetRole();
                     if (role != null && !PdfName.Artifact.Equals(role)) {
-                        bool alreadyCreated = tagPointer.IsElementConnectedToTag(accessibleElement);
-                        tagPointer.AddTag(accessibleElement, true);
-                        if (!alreadyCreated) {
-                            PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(accessibleElement.GetRole
-                                (), this, tagPointer);
-                            ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                        waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
+                        if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, accessibleElement)) {
+                            tagPointer.AddTag(accessibleElement);
+                            tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                                ));
+                            waitingTagsManager.AssignWaitingTagStatus(tagPointer, accessibleElement);
                         }
                     }
                     else {
@@ -611,7 +612,7 @@ namespace iText.Layout.Renderer {
                 if (horizontalScaling != null && horizontalScaling != 1) {
                     canvas.SetHorizontalScaling((float)horizontalScaling * 100);
                 }
-                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_642();
+                GlyphLine.IGlyphLineFilter filter = new _IGlyphLineFilter_643();
                 bool appearanceStreamLayout = true.Equals(GetPropertyAsBoolean(Property.APPEARANCE_STREAM_LAYOUT));
                 if (GetReversedRanges() != null) {
                     bool writeReversedChars = !appearanceStreamLayout;
@@ -670,13 +671,13 @@ namespace iText.Layout.Renderer {
             if (modelElementIsAccessible) {
                 tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
-                    tagPointer.RemoveElementConnectionToTag(accessibleElement);
+                    waitingTagsManager.RemoveWaitingTagStatus(accessibleElement);
                 }
             }
         }
 
-        private sealed class _IGlyphLineFilter_642 : GlyphLine.IGlyphLineFilter {
-            public _IGlyphLineFilter_642() {
+        private sealed class _IGlyphLineFilter_643 : GlyphLine.IGlyphLineFilter {
+            public _IGlyphLineFilter_643() {
             }
 
             public bool Accept(Glyph glyph) {

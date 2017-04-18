@@ -391,21 +391,20 @@ namespace iText.Layout.Renderer {
             PdfDocument document = drawContext.GetDocument();
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             TagTreePointer tagPointer = null;
+            WaitingTagsManager waitingTagsManager = null;
             IAccessibleElement accessibleElement = null;
             if (isTagged) {
                 accessibleElement = (IAccessibleElement)GetModelElement();
                 PdfName role = accessibleElement.GetRole();
                 if (role != null && !PdfName.Artifact.Equals(role)) {
                     tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
-                    bool alreadyCreated = tagPointer.IsElementConnectedToTag(accessibleElement);
-                    tagPointer.AddTag(accessibleElement, true);
-                    if (!alreadyCreated) {
-                        PdfDictionary listAttributes = AccessibleAttributesApplier.GetListAttributes(this, tagPointer);
-                        ApplyGeneratedAccessibleAttributes(tagPointer, listAttributes);
-                        PdfDictionary tableAttributes = AccessibleAttributesApplier.GetTableAttributes(this, tagPointer);
-                        ApplyGeneratedAccessibleAttributes(tagPointer, tableAttributes);
-                        PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
-                        ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                    waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
+                    if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, accessibleElement)) {
+                        tagPointer.AddTag(accessibleElement);
+                        waitingTagsManager.AssignWaitingTagStatus(tagPointer, accessibleElement);
+                        tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetListAttributes(this, tagPointer
+                            )).AddAttributes(0, AccessibleAttributesApplier.GetTableAttributes(this, tagPointer)).AddAttributes(0, 
+                            AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer));
                     }
                 }
                 else {
@@ -430,7 +429,7 @@ namespace iText.Layout.Renderer {
             if (isTagged) {
                 tagPointer.MoveToParent();
                 if (isLastRendererForModelElement) {
-                    document.GetTagStructureContext().RemoveElementConnectionToTag(accessibleElement);
+                    waitingTagsManager.RemoveWaitingTagStatus(accessibleElement);
                 }
             }
             flushed = true;

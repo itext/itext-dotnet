@@ -59,13 +59,13 @@ using iText.Test.Attributes;
 
 namespace iText.Layout {
     public class AutoTaggingTest : ExtendedITextTest {
-        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
-            .CurrentContext.TestDirectory) + "/resources/itext/layout/AutoTaggingTest/";
-
         public static readonly String destinationFolder = NUnit.Framework.TestContext.CurrentContext.TestDirectory
              + "/test/itext/layout/AutoTaggingTest/";
 
         public const String imageName = "Desert.jpg";
+
+        public static readonly String sourceFolder = iText.Test.TestUtil.GetParentProjectDirectory(NUnit.Framework.TestContext
+            .CurrentContext.TestDirectory) + "/resources/itext/layout/AutoTaggingTest/";
 
         [NUnit.Framework.OneTimeSetUp]
         public static void BeforeClass() {
@@ -446,6 +446,26 @@ namespace iText.Layout {
         /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
         /// <exception cref="Org.Xml.Sax.SAXException"/>
         [NUnit.Framework.Test]
+        public virtual void ListTest04() {
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "listTest04.pdf"));
+            pdfDocument.SetTagged();
+            Document doc = new Document(pdfDocument);
+            List list = new List(ListNumberingType.DECIMAL);
+            ListItem listItem = new ListItem();
+            listItem.Add(CreateParagraph2()).SetMarginBottom(15);
+            for (int i = 0; i < 10; ++i) {
+                list.Add(listItem);
+            }
+            doc.Add(list);
+            doc.Close();
+            CompareResult("listTest04.pdf", "cmp_listTest04.pdf");
+        }
+
+        /// <exception cref="System.IO.IOException"/>
+        /// <exception cref="System.Exception"/>
+        /// <exception cref="Javax.Xml.Parsers.ParserConfigurationException"/>
+        /// <exception cref="Org.Xml.Sax.SAXException"/>
+        [NUnit.Framework.Test]
         public virtual void LinkTest01() {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(destinationFolder + "linkTest01.pdf"));
             pdfDocument.SetTagged();
@@ -550,7 +570,6 @@ namespace iText.Layout {
             Document doc = new Document(pdfDocument);
             Table table = new Table(5, true);
             doc.Add(table);
-            //        TODO solve header/footer problems with tagging. Currently, partial flushing when header/footer is used leads to crash.
             Cell cell = new Cell(1, 5).Add(new Paragraph("Table XYZ (Continued)"));
             table.AddHeaderCell(cell);
             for (int i = 0; i < 5; ++i) {

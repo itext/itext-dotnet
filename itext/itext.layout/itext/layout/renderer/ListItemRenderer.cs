@@ -98,16 +98,18 @@ namespace iText.Layout.Renderer {
             bool isTagged = drawContext.IsTaggingEnabled() && GetModelElement() is IAccessibleElement;
             TagTreePointer tagPointer = null;
             if (isTagged) {
-                tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
                 IAccessibleElement modelElement = (IAccessibleElement)GetModelElement();
                 PdfName role = modelElement.GetRole();
                 if (role != null && !PdfName.Artifact.Equals(role)) {
-                    bool lBodyTagIsCreated = tagPointer.IsElementConnectedToTag(modelElement);
-                    if (!lBodyTagIsCreated) {
-                        tagPointer.AddTag(PdfName.LI);
+                    tagPointer = drawContext.GetDocument().GetTagStructureContext().GetAutoTaggingPointer();
+                    WaitingTagsManager waitingTagsManager = drawContext.GetDocument().GetTagStructureContext().GetWaitingTagsManager
+                        ();
+                    bool lBodyTagIsCreated = waitingTagsManager.MovePointerToWaitingTag(tagPointer, modelElement);
+                    if (lBodyTagIsCreated) {
+                        tagPointer.MoveToParent();
                     }
                     else {
-                        tagPointer.MoveToTag(modelElement).MoveToParent();
+                        tagPointer.AddTag(PdfName.LI);
                     }
                 }
                 else {

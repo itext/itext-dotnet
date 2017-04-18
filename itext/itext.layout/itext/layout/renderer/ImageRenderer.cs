@@ -268,9 +268,8 @@ namespace iText.Layout.Renderer {
                     PdfName role = accessibleElement.GetRole();
                     if (role != null && !PdfName.Artifact.Equals(role)) {
                         tagPointer.AddTag(accessibleElement);
-                        PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(accessibleElement.GetRole
-                            (), this, tagPointer);
-                        ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                        tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                            ));
                     }
                     else {
                         modelElementIsAccessible = false;

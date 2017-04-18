@@ -885,19 +885,20 @@ namespace iText.Layout.Renderer {
                 ignoreTag = isHeaderOrFooter && ignoreHeaderFooterTag;
             }
             if (role != null && !role.Equals(PdfName.Artifact) && !ignoreTag) {
-                TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
+                WaitingTagsManager waitingTagsManager = document.GetTagStructureContext().GetWaitingTagsManager();
                 IAccessibleElement accessibleElement = (IAccessibleElement)GetModelElement();
-                bool alreadyCreated = tagPointer.IsElementConnectedToTag(accessibleElement);
-                tagPointer.AddTag(accessibleElement, true);
-                if (!alreadyCreated) {
-                    PdfDictionary layoutAttributes = AccessibleAttributesApplier.GetLayoutAttributes(role, this, tagPointer);
-                    ApplyGeneratedAccessibleAttributes(tagPointer, layoutAttributes);
+                TagTreePointer tagPointer = document.GetTagStructureContext().GetAutoTaggingPointer();
+                if (!waitingTagsManager.MovePointerToWaitingTag(tagPointer, accessibleElement)) {
+                    tagPointer.AddTag(accessibleElement);
+                    tagPointer.GetProperties().AddAttributes(0, AccessibleAttributesApplier.GetLayoutAttributes(this, tagPointer
+                        ));
+                    waitingTagsManager.AssignWaitingTagStatus(tagPointer, accessibleElement);
                 }
                 base.Draw(drawContext);
                 tagPointer.MoveToParent();
                 bool toRemoveConnectionsWithTag = isLastRendererForModelElement && ((Table)GetModelElement()).IsComplete();
                 if (toRemoveConnectionsWithTag) {
-                    tagPointer.RemoveElementConnectionToTag(accessibleElement);
+                    waitingTagsManager.RemoveWaitingTagStatus(accessibleElement);
                 }
             }
             else {
