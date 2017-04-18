@@ -59,25 +59,28 @@ namespace iText.Kernel.Pdf.Navigation {
         }
 
         public override PdfObject GetDestinationPage(IDictionary<String, PdfObject> names) {
-            PdfStructElem structElem = new PdfStructElem((PdfDictionary)((PdfArray)GetPdfObject()).Get(0));
-            while (true) {
-                IList<IPdfStructElem> kids = structElem.GetKids();
-                if (kids.Count > 0) {
-                    IPdfStructElem firstKid = kids[0];
-                    if (firstKid is PdfMcr) {
-                        return ((PdfMcr)firstKid).GetPageObject();
-                    }
-                    else {
-                        if (firstKid is PdfStructElem) {
-                            structElem = (PdfStructElem)firstKid;
+            PdfObject firstObj = ((PdfArray)GetPdfObject()).Get(0);
+            if (firstObj.IsDictionary()) {
+                PdfStructElem structElem = new PdfStructElem((PdfDictionary)firstObj);
+                while (true) {
+                    IList<IPdfStructElem> kids = structElem.GetKids();
+                    if (kids.Count > 0) {
+                        IPdfStructElem firstKid = kids[0];
+                        if (firstKid is PdfMcr) {
+                            return ((PdfMcr)firstKid).GetPageObject();
                         }
                         else {
-                            break;
+                            if (firstKid is PdfStructElem) {
+                                structElem = (PdfStructElem)firstKid;
+                            }
+                            else {
+                                break;
+                            }
                         }
                     }
                 }
             }
-            return null;
+            return PdfNull.PDF_NULL;
         }
 
         public override PdfDestination ReplaceNamedDestination(IDictionary<Object, PdfObject> names) {
